@@ -19,7 +19,6 @@ package com.consol.citrus.main;
 import com.consol.citrus.Citrus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.util.StringUtils;
 import org.testng.TestNG;
 import org.testng.xml.*;
@@ -40,9 +39,6 @@ public class CitrusApp {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusApp.class);
-
-    /** Citrus framework instance */
-    private Citrus instance;
 
     /** Endpoint configuration */
     private final CitrusAppConfiguration configuration;
@@ -91,9 +87,21 @@ public class CitrusApp {
             });
         }
 
-        Citrus citrus = citrusApp.createInstance(citrusApp.configuration);
-        if (!citrusApp.configuration.isSkipTests()) {
-            citrusApp.run(citrus);
+        if (citrusApp.configuration.isSkipTests()) {
+            Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
+            if (citrusApp.configuration.getConfigClass() != null) {
+                Citrus.newInstance(citrusApp.configuration.getConfigClass());
+            } else {
+                Citrus.newInstance();
+            }
+        } else {
+            try {
+                citrusApp.run();
+            } finally {
+                if (citrusApp.configuration.getTimeToLive() == 0) {
+                    citrusApp.stop();
+                }
+            }
         }
 
         if (citrusApp.configuration.isSystemExit()) {
@@ -108,81 +116,53 @@ public class CitrusApp {
     }
 
     /**
-     * Run application with new/created Citrus instance.
-     */
-    public void run() {
-        this.run(createInstance(configuration));
-    }
-
-    /**
      * Run application with prepared Citrus instance.
      */
-    public void run(Citrus citrus) {
-        try {
-            if (isCompleted()) {
-                log.info("Not executing tests as application state is completed!");
-                return;
-            }
-
-            TestNG testng = new TestNG();
-
-            XmlSuite suite = new XmlSuite();
-            testng.setXmlSuites(Collections.singletonList(suite));
-            XmlTest test = null;
-
-            if (configuration.getTestClass() != null) {
-                log.info(String.format("Running test %s", Optional.ofNullable(configuration.getTestMethod()).map(method -> configuration.getTestClass().getName() + "#" + method).orElse(configuration.getTestClass().getName())));
-
-                test = new XmlTest(suite);
-                XmlClass clazz = new XmlClass();
-                clazz.setClass(configuration.getTestClass());
-
-                if (StringUtils.hasText(configuration.getTestMethod())) {
-                    clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(configuration.getTestMethod())));
-                }
-
-                test.setClasses(Collections.singletonList(clazz));
-            }
-
-            if (StringUtils.hasText(configuration.getPackageName())) {
-                log.info(String.format("Running tests in package %s", configuration.getPackageName()));
-
-                test = new XmlTest(suite);
-                XmlPackage xmlPackage = new XmlPackage();
-                xmlPackage.setName(configuration.getPackageName());
-                test.setPackages(Collections.singletonList(xmlPackage));
-            }
-
-            if (test == null) {
-                log.info("Running all tests in project");
-                
-                test = new XmlTest(suite);
-                XmlPackage xmlPackage = new XmlPackage();
-                xmlPackage.setName(".*");
-                test.setPackages(Collections.singletonList(xmlPackage));
-            }
-
-            testng.run();
-        } finally {
-            if (configuration.getTimeToLive() == 0) {
-                stop();
-            }
-        }
-    }
-
-    /**
-     * Create new Citrus instance if not already set.
-     */
-    public Citrus createInstance(CitrusAppConfiguration configuration) {
-        if (instance == null) {
-            if (configuration.getConfigClass() != null) {
-                instance = Citrus.newInstance(configuration.getConfigClass());
-            } else {
-                instance = Citrus.newInstance();
-            }
+    public void run() {
+        if (isCompleted()) {
+            log.info("Not executing tests as application state is completed!");
+            return;
         }
 
-        return instance;
+        TestNG testng = new TestNG();
+
+        XmlSuite suite = new XmlSuite();
+        testng.setXmlSuites(Collections.singletonList(suite));
+        XmlTest test = null;
+
+        if (configuration.getTestClass() != null) {
+            log.info(String.format("Running test %s", Optional.ofNullable(configuration.getTestMethod()).map(method -> configuration.getTestClass().getName() + "#" + method).orElse(configuration.getTestClass().getName())));
+
+            test = new XmlTest(suite);
+            XmlClass clazz = new XmlClass();
+            clazz.setClass(configuration.getTestClass());
+
+            if (StringUtils.hasText(configuration.getTestMethod())) {
+                clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(configuration.getTestMethod())));
+            }
+
+            test.setClasses(Collections.singletonList(clazz));
+        }
+
+        if (StringUtils.hasText(configuration.getPackageName())) {
+            log.info(String.format("Running tests in package %s", configuration.getPackageName()));
+
+            test = new XmlTest(suite);
+            XmlPackage xmlPackage = new XmlPackage();
+            xmlPackage.setName(configuration.getPackageName());
+            test.setPackages(Collections.singletonList(xmlPackage));
+        }
+
+        if (test == null) {
+            log.info("Running all tests in project");
+
+            test = new XmlTest(suite);
+            XmlPackage xmlPackage = new XmlPackage();
+            xmlPackage.setName(".*");
+            test.setPackages(Collections.singletonList(xmlPackage));
+        }
+
+        testng.run();
     }
 
     /**
@@ -212,27 +192,11 @@ public class CitrusApp {
     private void stop() {
         complete();
 
-        if (instance != null && instance.getApplicationContext() instanceof ConfigurableApplicationContext) {
-            ((ConfigurableApplicationContext) instance.getApplicationContext()).close();
+        Citrus citrus = Citrus.CitrusInstanceManager.getSingleton();
+        if (citrus != null) {
+            log.info("Closing Citrus and its application context");
+            citrus.close();
         }
-    }
-
-    /**
-     * Gets the value of the instance property.
-     *
-     * @return the instance
-     */
-    public Citrus getInstance() {
-        return instance;
-    }
-
-    /**
-     * Sets the instance property.
-     *
-     * @param instance
-     */
-    public void setInstance(Citrus instance) {
-        this.instance = instance;
     }
 
     /**

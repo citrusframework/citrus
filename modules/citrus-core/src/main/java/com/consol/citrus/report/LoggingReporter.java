@@ -29,11 +29,8 @@ import org.springframework.util.StringUtils;
  * 
  * @author Christoph Deppisch
  */
-public class LoggingReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener, TestReporter {
+public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener, TestReporter {
     
-    /** Collect test results for overall result overview at the very end of test execution */
-    private TestResults testResults = new TestResults();
-
     /** Inbound message logger */
     private static Logger inboundMsgLogger = LoggerFactory.getLogger("Logger.Message_IN");
 
@@ -44,38 +41,28 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
 
     @Override
-    public void clearTestResults() {
-        testResults = new TestResults();
-    }
-
-    @Override
     public void generateTestResults() {
         separator();
         newLine();
-        log.info("CITRUS TEST RESULTS");
+        info("CITRUS TEST RESULTS");
         newLine();
 
-        testResults.doWithResults(new TestResults.ResultCallback() {
-            @Override
-            public void doWithResult(TestResult testResult) {
-                log.info(testResult.toString());
+        getTestResults().doWithResults(testResult -> {
+            info(testResult.toString());
 
-                if (testResult.isFailed()) {
-                    log.info(testResult.getFailureCause());
-                }
+            if (testResult.isFailed()) {
+                info(testResult.getFailureCause());
             }
         });
 
         newLine();
 
-        log.info("TOTAL:\t" + (testResults.getFailed() + testResults.getSuccess()));
+        info("TOTAL:\t" + (getTestResults().getFailed() + getTestResults().getSuccess()));
 
-        if (log.isDebugEnabled()) {
-            log.debug("SKIPPED:\t" + testResults.getSkipped() + " (" + testResults.getSkippedPercentage() + "%)");
-        }
+        debug("SKIPPED:\t" + getTestResults().getSkipped() + " (" + getTestResults().getSkippedPercentage() + "%)");
 
-        log.info("FAILED:\t" + testResults.getFailed() + " (" + testResults.getFailedPercentage() + "%)");
-        log.info("SUCCESS:\t" + testResults.getSuccess() + " (" + testResults.getSuccessPercentage() + "%)");
+        info("FAILED:\t" + getTestResults().getFailed() + " (" + getTestResults().getFailedPercentage() + "%)");
+        info("SUCCESS:\t" + getTestResults().getSuccess() + " (" + getTestResults().getSuccessPercentage() + "%)");
         newLine();
 
         separator();
@@ -83,47 +70,43 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
-        testResults.addResult(TestResult.failed(test.getName(), cause, test.getParameters()));
+        super.onTestFailure(test, cause);
 
         newLine();
-        log.error("TEST FAILED " + test.getName() + " <" + test.getPackageName() + "> Nested exception is: ", cause);
+        error("TEST FAILED " + test.getName() + " <" + test.getPackageName() + "> Nested exception is: ", cause);
         separator();
         newLine();
     }
 
     @Override
     public void onTestSkipped(TestCase test) {
-        if (log.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             newLine();
             separator();
-            log.debug("SKIPPING TEST: " + test.getName());
+            debug("SKIPPING TEST: " + test.getName());
             separator();
             newLine();
         }
 
-        testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
+        super.onTestSkipped(test);
     }
 
     @Override
     public void onTestStart(TestCase test) {
-        if (log.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             newLine();
             separator();
-            log.debug("STARTING TEST " + test.getName() + " <" + test.getPackageName() + ">");
+            debug("STARTING TEST " + test.getName() + " <" + test.getPackageName() + ">");
             newLine();
         }
     }
 
     @Override
-    public void onTestFinish(TestCase test) {
-    }
-
-    @Override
     public void onTestSuccess(TestCase test) {
-        testResults.addResult(TestResult.success(test.getName(), test.getParameters()));
+        super.onTestSuccess(test);
 
         newLine();
-        log.info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")");
+        info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")");
         separator();
         newLine();
     }
@@ -132,7 +115,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     public void onFinish() {
         newLine();
         separator();
-        log.debug("AFTER TEST SUITE");
+        debug("AFTER TEST SUITE");
         newLine();
     }
 
@@ -140,26 +123,26 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     public void onStart() {
         newLine();
         separator();
-        log.info("       .__  __                       ");
-        log.info("  ____ |__|/  |________ __ __  ______");
-        log.info("_/ ___\\|  \\   __\\_  __ \\  |  \\/  ___/");
-        log.info("\\  \\___|  ||  |  |  | \\/  |  /\\___ \\ ");
-        log.info(" \\___  >__||__|  |__|  |____//____  >");
-        log.info("     \\/                           \\/");
+        info("       .__  __                       ");
+        info("  ____ |__|/  |________ __ __  ______");
+        info("_/ ___\\|  \\   __\\_  __ \\  |  \\/  ___/");
+        info("\\  \\___|  ||  |  |  | \\/  |  /\\___ \\ ");
+        info(" \\___  >__||__|  |__|  |____//____  >");
+        info("     \\/                           \\/");
 
         newLine();
-        log.info("C I T R U S  T E S T S  " + Citrus.getVersion());
+        info("C I T R U S  T E S T S  " + Citrus.getVersion());
         newLine();
 
         separator();
-        log.debug("BEFORE TEST SUITE");
+        debug("BEFORE TEST SUITE");
         newLine();
     }
 
     @Override
     public void onFinishFailure(Throwable cause) {
         newLine();
-        log.info("AFTER TEST SUITE: FAILED");
+        info("AFTER TEST SUITE: FAILED");
         separator();
         newLine();
     }
@@ -167,7 +150,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     @Override
     public void onFinishSuccess() {
         newLine();
-        log.info("AFTER TEST SUITE: SUCCESS");
+        info("AFTER TEST SUITE: SUCCESS");
         separator();
         newLine();
     }
@@ -175,7 +158,7 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     @Override
     public void onStartFailure(Throwable cause) {
         newLine();
-        log.info("BEFORE TEST SUITE: FAILED");
+        info("BEFORE TEST SUITE: FAILED");
         separator();
         newLine();
     }
@@ -183,55 +166,55 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
     @Override
     public void onStartSuccess() {
         newLine();
-        log.info("BEFORE TEST SUITE: SUCCESS");
+        info("BEFORE TEST SUITE: SUCCESS");
         separator();
         newLine();
     }
 
     @Override
     public void onTestActionStart(TestCase testCase, TestAction testAction) {
-        if (log.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             newLine();
             if (testCase.isTestRunner()) {
-                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             } else {
-                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + ": " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()));
             }
 
             if (testAction instanceof TestActionContainer) {
-                log.debug("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
+                debug("TEST ACTION CONTAINER with " + ((TestActionContainer)testAction).getActionCount() + " embedded actions");
             }
 
             if (StringUtils.hasText(testAction.getDescription())) {
-                log.debug("");
-                log.debug(testAction.getDescription());
-                log.debug("");
+                debug("");
+                debug(testAction.getDescription());
+                debug("");
             }
         }
     }
 
     @Override
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
-        if (log.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             newLine();
             if (testCase.isTestRunner()) {
-                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + " SUCCESS");
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + " SUCCESS");
             } else {
-                log.debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
+                debug("TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount() + " SUCCESS");
             }
         }
     }
 
     @Override
     public void onTestActionSkipped(TestCase testCase, TestAction testAction) {
-        if (log.isDebugEnabled()) {
+        if (isDebugEnabled()) {
             newLine();
             if (testCase.isTestRunner()) {
-                log.debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1));
+                debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1));
             } else {
-                log.debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
+                debug("SKIPPING TEST STEP " + (testCase.getActionIndex(testAction) + 1) + "/" + testCase.getActionCount());
             }
-            log.debug("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
+            debug("TEST ACTION " + (testAction.getName() != null ? testAction.getName() : testAction.getClass().getName()) + " SKIPPED");
         }
     }
 
@@ -249,13 +232,48 @@ public class LoggingReporter implements MessageListener, TestSuiteListener, Test
      * Helper method to build consistent separators
      */
     private void separator() {
-        log.info("------------------------------------------------------------------------");
+        info("------------------------------------------------------------------------");
     }
 
     /**
      * Adds new line to console logging output.
      */
     private void newLine() {
-        log.info("");
+        info("");
+    }
+
+    /**
+     * Write info level output.
+     * @param line
+     */
+    protected void info(String line) {
+        log.info(line);
+    }
+
+    /**
+     * Write error level output.
+     * @param line
+     * @param cause
+     */
+    protected void error(String line, Throwable cause) {
+        log.error(line, cause);
+    }
+
+    /**
+     * Write debug level output.
+     * @param line
+     */
+    protected void debug(String line) {
+        if (isDebugEnabled()) {
+            log.debug(line);
+        }
+    }
+
+    /**
+     * Is debug level enabled.
+     * @return
+     */
+    protected boolean isDebugEnabled() {
+        return log.isDebugEnabled();
     }
 }

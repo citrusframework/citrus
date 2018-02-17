@@ -18,21 +18,24 @@ package com.consol.citrus.remote;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.controller.RunController;
+import com.consol.citrus.remote.job.RunJob;
+import com.consol.citrus.remote.reporter.LatestTestResultReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.util.StringUtils;
 import spark.Filter;
 import spark.servlet.SparkApplication;
 
 import java.net.URLDecoder;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static spark.Spark.*;
 
 /**
+ * Remote application creates routes for this web application.
+ *
  * @author Christoph Deppisch
  * @since 2.7.4
  */
@@ -41,55 +44,70 @@ public class CitrusRemoteApplication implements SparkApplication {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusRemoteApplication.class);
 
-    /** Cached instance of Citrus */
-    private Citrus citrus;
-
+    /** Application configuration */
     private final CitrusRemoteConfiguration configuration;
 
+    /** Single thread job scheduler */
+    private final ExecutorService jobs = Executors.newSingleThreadExecutor();
+
+    /** Latest test reports */
+    private LatestTestResultReporter latestTestResultReporter = new LatestTestResultReporter();
+
+    /**
+     * Default constructor using default configuration.
+     */
     public CitrusRemoteApplication() {
         this(new CitrusRemoteConfiguration());
     }
 
+    /**
+     * Constructor with given application configuration.
+     * @param configuration
+     */
     public CitrusRemoteApplication(CitrusRemoteConfiguration configuration) {
         this.configuration = configuration;
     }
 
     @Override
     public void init() {
+        Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
+        Citrus.CitrusInstanceManager.addInstanceProcessor(citrus -> {
+            citrus.addTestReporter(latestTestResultReporter);
+            citrus.addTestSuiteListener(latestTestResultReporter);
+            citrus.addTestListener(latestTestResultReporter);
+        });
+
         before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
 
         get("/run", (req, res) -> {
-            CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
+            RunController runController = new RunController(configuration);
 
             if (req.queryParams().contains("package")) {
-                citrusAppConfiguration.setPackageName(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
+                runController.runPackage(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
             }
 
             if (req.queryParams().contains("class")) {
-                String value = URLDecoder.decode(req.queryParams("class"), "UTF-8");
-                String className;
-                String methodName = null;
-                if (value.contains("#")) {
-                    className = value.substring(0, value.indexOf("#"));
-                    methodName = value.substring(value.indexOf("#") + 1);
-                } else {
-                    className = value;
-                }
-
-                if (StringUtils.hasText(methodName)) {
-                    citrusAppConfiguration.setTestMethod(methodName);
-                }
-
-                try {
-                    citrusAppConfiguration.setTestClass(Class.forName(className));
-                } catch (ClassNotFoundException e) {
-                    throw new CitrusRuntimeException("Unable to test class: " + className, e);
-                }
+                runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
             }
 
-            citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
+            return latestTestResultReporter.getLatest();
+        });
 
-            new RunController().run(getCitrus(), citrusAppConfiguration);
+        put("/run", (req, res) -> {
+            jobs.submit((RunJob) () -> {
+                RunController runController = new RunController(configuration);
+
+                if (req.queryParams().contains("package")) {
+                    runController.runPackage(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
+                }
+
+                if (req.queryParams().contains("class")) {
+                    runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
+                }
+
+                return "";
+            });
+
             return "";
         });
 
@@ -101,24 +119,10 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     @Override
     public void destroy() {
-        if (citrus != null && citrus.getApplicationContext() instanceof ConfigurableApplicationContext) {
-            ((ConfigurableApplicationContext) citrus.getApplicationContext()).close();
+        Citrus citrus = Citrus.CitrusInstanceManager.getSingleton();
+        if (citrus != null) {
+            log.info("Closing Citrus and its application context");
+            citrus.close();
         }
-    }
-
-    /**
-     * Gets the Citrus instance.
-     * @return
-     */
-    public Citrus getCitrus() {
-        if (citrus == null)  {
-            if (configuration.getConfigClass() != null) {
-                citrus = Citrus.newInstance(configuration.getConfigClass());
-            } else {
-                citrus = Citrus.newInstance();
-            }
-        }
-
-        return citrus;
     }
 }

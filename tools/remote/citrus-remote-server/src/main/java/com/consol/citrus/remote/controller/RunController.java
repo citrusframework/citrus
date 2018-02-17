@@ -16,9 +16,11 @@
 
 package com.consol.citrus.remote.controller;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.CitrusApp;
 import com.consol.citrus.main.CitrusAppConfiguration;
+import com.consol.citrus.remote.CitrusRemoteConfiguration;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -26,12 +28,72 @@ import com.consol.citrus.main.CitrusAppConfiguration;
  */
 public class RunController {
 
+    private final CitrusRemoteConfiguration configuration;
+
     /**
-     * Run Citrus application with given configuration.
+     * Constructor with given configuration.
      * @param configuration
      */
-    public void run(Citrus citrus, CitrusAppConfiguration configuration) {
-        CitrusApp citrusApp = new CitrusApp(configuration);
-        citrusApp.run(citrus);
+    public RunController(CitrusRemoteConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
+    /**
+     * Run Citrus application with given test package name.
+     * @param testPackage
+     */
+    public void runPackage(String testPackage) {
+        CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
+        citrusAppConfiguration.setPackageName(testPackage);
+        citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
+
+        run(citrusAppConfiguration);
+    }
+
+    /**
+     * Run Citrus application with given test class name.
+     * @param testClass
+     */
+    public void runClass(String testClass) {
+        CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
+
+        String className;
+        String methodName = null;
+        if (testClass.contains("#")) {
+            className = testClass.substring(0, testClass.indexOf("#"));
+            methodName = testClass.substring(testClass.indexOf("#") + 1);
+        } else {
+            className = testClass;
+        }
+
+        if (StringUtils.hasText(methodName)) {
+            citrusAppConfiguration.setTestMethod(methodName);
+        }
+
+        try {
+            citrusAppConfiguration.setTestClass(Class.forName(className));
+        } catch (ClassNotFoundException e) {
+            throw new CitrusRuntimeException("Unable to test class: " + className, e);
+        }
+
+        citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
+
+        run(citrusAppConfiguration);
+    }
+
+    /**
+     * Run tests with default configuration.
+     */
+    public void run() {
+        this.run(configuration);
+    }
+
+    /**
+     * Run Citrus application with given configuration and cached Citrus instance.
+     * @param citrusAppConfiguration
+     */
+    private void run(CitrusAppConfiguration citrusAppConfiguration) {
+        CitrusApp citrusApp = new CitrusApp(citrusAppConfiguration);
+        citrusApp.run();
     }
 }

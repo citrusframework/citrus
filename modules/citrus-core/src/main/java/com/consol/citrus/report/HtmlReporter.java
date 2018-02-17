@@ -37,13 +37,10 @@ import java.util.*;
  * 
  * @author Philipp Komninos, Christoph Deppisch
  */
-public class HtmlReporter extends AbstractTestListener implements TestReporter {
+public class HtmlReporter extends AbstractTestReporter {
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(HtmlReporter.class);
-    
-    /** Collect test results for test report */
-    private TestResults testResults = new TestResults();
     
     /** Map holding additional information of test cases */
     private Map<String, ResultDetail> details = new HashMap<String, ResultDetail>();
@@ -75,13 +72,6 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     @Value("${citrus.html.report.enabled:true}")
     private String enabled;
     
-    /**
-     * @see com.consol.citrus.report.TestReporter#clearTestResults()
-     */
-    public void clearTestResults() {
-        testResults = new TestResults();
-    }
-
     @Override
     public void generateTestResults() {
         if (StringUtils.hasText(enabled) &&
@@ -98,7 +88,7 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             final String testDetails = FileUtils.readToString(testDetailTemplate);
             final String unknown = "N/A";
 
-            testResults.doWithResults(result -> {
+            getTestResults().doWithResults(result -> {
                 ResultDetail detail = details.get(result.getTestName());
 
                 Properties detailProps = new Properties();
@@ -120,13 +110,13 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
             });
 
             Properties reportProps = new Properties();
-            reportProps.put("test.cnt", Integer.toString(testResults.getSize()));
-            reportProps.put("skipped.test.cnt", Integer.toString(testResults.getSkipped()));
-            reportProps.put("skipped.test.pct", testResults.getSkippedPercentage());
-            reportProps.put("failed.test.cnt", Integer.toString(testResults.getFailed()));
-            reportProps.put("failed.test.pct", testResults.getFailedPercentage());
-            reportProps.put("success.test.cnt", Integer.toString(testResults.getSuccess()));
-            reportProps.put("success.test.pct", testResults.getSuccessPercentage());
+            reportProps.put("test.cnt", Integer.toString(getTestResults().getSize()));
+            reportProps.put("skipped.test.cnt", Integer.toString(getTestResults().getSkipped()));
+            reportProps.put("skipped.test.pct", getTestResults().getSkippedPercentage());
+            reportProps.put("failed.test.cnt", Integer.toString(getTestResults().getFailed()));
+            reportProps.put("failed.test.pct", getTestResults().getFailedPercentage());
+            reportProps.put("success.test.cnt", Integer.toString(getTestResults().getSuccess()));
+            reportProps.put("success.test.pct", getTestResults().getSuccessPercentage());
             reportProps.put("test.results", reportDetails.toString());
             reportProps.put("logo.data", getLogoImageData());
             report = PropertyUtils.replacePropertiesInString(FileUtils.readToString(reportTemplate), reportProps);
@@ -298,21 +288,19 @@ public class HtmlReporter extends AbstractTestListener implements TestReporter {
     @Override
     public void onTestSuccess(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
-        
-        testResults.addResult(TestResult.success(test.getName(), test.getParameters()));
+        super.onTestSuccess(test);
     }
     
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         details.put(test.getName(), ResultDetail.build(test));
-        testResults.addResult(TestResult.failed(test.getName(), cause, test.getParameters()));
+        super.onTestFailure(test, cause);
     }
     
     @Override
     public void onTestSkipped(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
-        
-        testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
+        super.onTestSkipped(test);
     }
 
     /**

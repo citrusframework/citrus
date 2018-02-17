@@ -16,7 +16,6 @@
 
 package com.consol.citrus.main;
 
-import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -65,10 +64,4 @@ public class CitrusAppTest {
             Assert.assertEquals(e.getCause().getClass(), ClassNotFoundException.class);
         }
     }
-
-    @Test
-    public void testCustomCitrusInstance() {
-        new CitrusApp(new String[] { "-p", "com.consol.citrus.foo", "-d", "200"}).run(Citrus.newInstance());
-    }
-
 }

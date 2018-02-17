@@ -99,7 +99,7 @@ public class CitrusRemoteServer {
         application.init();
 
         if (!configuration.isSkipTests()) {
-            new RunController().run(application.getCitrus(), configuration);
+            new RunController(configuration).run();
         }
 
         if (configuration.getTimeToLive() == 0) {
