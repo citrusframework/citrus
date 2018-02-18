@@ -24,6 +24,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.util.Optional;
+
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
  * 
@@ -51,7 +53,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
             info(testResult.toString());
 
             if (testResult.isFailed()) {
-                info(testResult.getFailureCause());
+                info(Optional.ofNullable(testResult.getCause())
+                        .filter(cause -> StringUtils.hasText(cause.getLocalizedMessage()))
+                        .map(cause -> " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " +  cause.getLocalizedMessage())
+                        .orElse(" FAILURE: Caused by: Unknown error"));
             }
         });
 

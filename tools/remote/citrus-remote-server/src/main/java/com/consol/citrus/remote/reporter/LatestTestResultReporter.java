@@ -16,39 +16,34 @@
 
 package com.consol.citrus.remote.reporter;
 
+import com.consol.citrus.report.AbstractTestReporter;
 import com.consol.citrus.report.OutputStreamReporter;
 
 import java.io.StringWriter;
-import java.io.Writer;
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class LatestTestResultReporter extends OutputStreamReporter {
+public class LatestTestResultReporter extends AbstractTestReporter {
 
-    /** Latest test results */
-    private StringWriter latest;
-
-    public LatestTestResultReporter() {
-        super((Writer) null);
-    }
+    /** Test report */
+    private String testReport;
 
     @Override
     public void generateTestResults() {
-        latest = new StringWriter();
-        setLogWriter(latest);
-        super.generateTestResults();
-        setLogWriter(null);
+        StringWriter results = new StringWriter();
+        OutputStreamReporter reporter = new OutputStreamReporter(results);
+        getTestResults().doWithResults(result -> reporter.getTestResults().addResult(result));
+        reporter.generateTestResults();
+        this.testReport = results.toString();
     }
 
     /**
      * Gets the latest.
-     *
      * @return
      */
-    public String getLatest() {
-        return Optional.ofNullable(latest).map(Object::toString).orElse("");
+    public String getTestReport() {
+        return testReport;
     }
 }

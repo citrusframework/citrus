@@ -177,18 +177,6 @@ public final class TestResult {
     }
 
     /**
-     * Provide failure cause message for test results.
-     * @return
-     */
-    public String getFailureCause() {
-        if (cause != null && StringUtils.hasText(cause.getLocalizedMessage())) {
-            return " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " +  cause.getLocalizedMessage();
-        } else {
-            return " FAILURE: Caused by: Unknown error";
-        }
-    }
-
-    /**
      * Checks successful result state.
      * @return
      */

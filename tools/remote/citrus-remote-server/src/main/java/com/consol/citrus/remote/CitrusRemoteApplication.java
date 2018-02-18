@@ -17,17 +17,21 @@
 package com.consol.citrus.remote;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestResult;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.remote.controller.RunController;
 import com.consol.citrus.remote.job.RunJob;
 import com.consol.citrus.remote.reporter.LatestTestResultReporter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Filter;
 import spark.servlet.SparkApplication;
 
 import java.net.URLDecoder;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -73,7 +77,6 @@ public class CitrusRemoteApplication implements SparkApplication {
         Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
         Citrus.CitrusInstanceManager.addInstanceProcessor(citrus -> {
             citrus.addTestReporter(latestTestResultReporter);
-            citrus.addTestSuiteListener(latestTestResultReporter);
             citrus.addTestListener(latestTestResultReporter);
         });
 
@@ -90,7 +93,17 @@ public class CitrusRemoteApplication implements SparkApplication {
                 runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
             }
 
-            return latestTestResultReporter.getLatest();
+            List<TestResult> results = new ArrayList<>();
+            latestTestResultReporter.getTestResults().doWithResults(results::add);
+            return results;
+        }, model -> {
+            try {
+                ObjectMapper mapper = new ObjectMapper();
+                mapper.enable(SerializationFeature.INDENT_OUTPUT);
+                return mapper.writeValueAsString(model);
+            } catch (JsonProcessingException e) {
+                throw new CitrusRuntimeException("Failed to write json test results", e);
+            }
         });
 
         put("/run", (req, res) -> {
