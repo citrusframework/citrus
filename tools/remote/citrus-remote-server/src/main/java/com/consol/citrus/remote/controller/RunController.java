@@ -20,13 +20,24 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.CitrusApp;
 import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.CitrusRemoteConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class RunController {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(RunController.class);
 
     private final CitrusRemoteConfiguration configuration;
 
@@ -36,6 +47,40 @@ public class RunController {
      */
     public RunController(CitrusRemoteConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    /**
+     * Run all tests found in classpath.
+     */
+    public void runAll() {
+        try {
+            List<String> packages = Stream.of(new PathMatchingResourcePatternResolver().getResources("classpath*:**/*IT.class"))
+                    .parallel()
+                    .map(resource -> {
+                        try {
+                            return resource.getFile().getPath();
+                        } catch (IOException e) {
+                            log.warn(String.format("Unable to access class %s in classpath", resource.getFilename()), e);
+                            return "";
+                        }
+                    })
+                    .filter(StringUtils::hasText)
+                    .map(className -> {
+                        try {
+                            return Class.forName(className).getPackage().getName();
+                        } catch (ClassNotFoundException e) {
+                            log.warn(String.format("Unable to access class for name %s", className), e);
+                            return "";
+                        }
+                    })
+                    .filter(StringUtils::hasText)
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            packages.forEach(this::runPackage);
+        } catch (IOException e) {
+            log.warn("Unable to find test classes in classpath", e);
+        }
     }
 
     /**

@@ -54,9 +54,9 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
             if (testResult.isFailed()) {
                 info(Optional.ofNullable(testResult.getCause())
-                        .filter(cause -> StringUtils.hasText(cause.getLocalizedMessage()))
-                        .map(cause -> " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " +  cause.getLocalizedMessage())
-                        .orElse(" FAILURE: Caused by: Unknown error"));
+                        .filter(cause -> StringUtils.hasText(cause.getMessage()))
+                        .map(cause -> " FAILURE: Caused by: " + cause.getClass().getSimpleName() + ": " +  cause.getMessage())
+                        .orElse(" FAILURE: Caused by: " + Optional.ofNullable(testResult.getErrorMessage()).orElse("Unknown error")));
             }
         });
 

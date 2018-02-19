@@ -78,9 +78,11 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
 
     @Override
     public final void execute() throws MojoExecutionException, MojoFailureException {
-        if (!skip) {
-            doExecute();
+        if (skip) {
+            return;
         }
+
+        doExecute();
     }
 
     /**

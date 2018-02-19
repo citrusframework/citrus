@@ -25,7 +25,7 @@ import java.io.StringWriter;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class LatestTestResultReporter extends AbstractTestReporter {
+public class RemoteTestResultReporter extends AbstractTestReporter {
 
     /** Test report */
     private String testReport;

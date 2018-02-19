@@ -16,7 +16,10 @@
 
 package com.consol.citrus.remote.plugin;
 
+import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.plugin.config.RunConfiguration;
+import com.consol.citrus.report.OutputStreamReporter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.RequestBuilder;
@@ -27,17 +30,19 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 
 import java.io.IOException;
+import java.io.StringWriter;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Mojo(name = "run", defaultPhase = LifecyclePhase.INTEGRATION_TEST)
+@Mojo(name = "test", defaultPhase = LifecyclePhase.INTEGRATION_TEST, requiresDependencyResolution = ResolutionScope.TEST)
 public class RunTestMojo extends AbstractCitrusRemoteMojo {
 
-    @Parameter(property = "citrus.skip.run", defaultValue = "false")
+    @Parameter(property = "citrus.remote.skip.test", defaultValue = "false")
     protected boolean skipRun;
 
     /**
@@ -65,7 +70,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         }
     }
 
-    private void runPackages(List<String> packages) throws MojoExecutionException {
+    private void runPackages(List<String> packages) throws MojoExecutionException, MojoFailureException {
         for (String testPackage : packages) {
             HttpResponse response = null;
             try {
@@ -76,6 +81,8 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
                 if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
                     throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
                 }
+
+                handleTestResults(response);
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to run tests on remote server", e);
             } finally {
@@ -84,7 +91,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         }
     }
 
-    private void runClasses(List<String> classes) throws MojoExecutionException {
+    private void runClasses(List<String> classes) throws MojoExecutionException, MojoFailureException {
         for (String testClass : classes) {
             HttpResponse response = null;
             try {
@@ -95,6 +102,8 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
                 if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
                     throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
                 }
+
+                handleTestResults(response);
             } catch (IOException e) {
                 throw new MojoExecutionException("Failed to run tests on remote server", e);
             } finally {
@@ -103,20 +112,41 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         }
     }
 
-    private void runAllTests() throws MojoExecutionException {
+    private void runAllTests() throws MojoExecutionException, MojoFailureException {
         HttpResponse response = null;
         try {
             response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
-                    .addParameter("package", URLEncoder.encode(project.getGroupId() + ".*", "UTF-8"))
                     .build());
 
             if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
                 throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
             }
+
+            handleTestResults(response);
         } catch (IOException e) {
             throw new MojoExecutionException("Failed to run tests on remote server", e);
         } finally {
             HttpClientUtils.closeQuietly(response);
+        }
+    }
+
+    /**
+     * Check test results for failures.
+     * @param response
+     * @throws MojoFailureException
+     */
+    private void handleTestResults(HttpResponse response) throws MojoFailureException, IOException {
+        RemoteResult[] results = new ObjectMapper().readValue(response.getEntity().getContent(), RemoteResult[].class);
+
+        StringWriter resultWriter = new StringWriter();
+        resultWriter.append(String.format("%n"));
+        OutputStreamReporter reporter = new OutputStreamReporter(resultWriter);
+        Stream.of(results).forEach(result -> reporter.getTestResults().addResult(RemoteResult.toTestResult(result)));
+        reporter.generateTestResults();
+        getLog().info(resultWriter.toString());
+
+        if (Stream.of(results).anyMatch(RemoteResult::isFailed)) {
+            throw new MojoFailureException("Remote test execution returned failed test results");
         }
     }
 

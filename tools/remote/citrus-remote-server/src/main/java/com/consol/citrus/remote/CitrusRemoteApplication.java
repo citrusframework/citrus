@@ -17,11 +17,11 @@
 package com.consol.citrus.remote;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.TestResult;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.remote.controller.RunController;
 import com.consol.citrus.remote.job.RunJob;
-import com.consol.citrus.remote.reporter.LatestTestResultReporter;
+import com.consol.citrus.remote.model.RemoteResult;
+import com.consol.citrus.remote.reporter.RemoteTestResultReporter;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -55,7 +55,7 @@ public class CitrusRemoteApplication implements SparkApplication {
     private final ExecutorService jobs = Executors.newSingleThreadExecutor();
 
     /** Latest test reports */
-    private LatestTestResultReporter latestTestResultReporter = new LatestTestResultReporter();
+    private RemoteTestResultReporter remoteTestResultReporter = new RemoteTestResultReporter();
 
     /**
      * Default constructor using default configuration.
@@ -76,14 +76,18 @@ public class CitrusRemoteApplication implements SparkApplication {
     public void init() {
         Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
         Citrus.CitrusInstanceManager.addInstanceProcessor(citrus -> {
-            citrus.addTestReporter(latestTestResultReporter);
-            citrus.addTestListener(latestTestResultReporter);
+            citrus.addTestReporter(remoteTestResultReporter);
+            citrus.addTestListener(remoteTestResultReporter);
         });
 
         before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
 
         get("/run", (req, res) -> {
             RunController runController = new RunController(configuration);
+
+            if (!req.queryParams().contains("package") && !req.queryParams().contains("class")) {
+                runController.runAll();
+            }
 
             if (req.queryParams().contains("package")) {
                 runController.runPackage(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
@@ -93,8 +97,8 @@ public class CitrusRemoteApplication implements SparkApplication {
                 runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
             }
 
-            List<TestResult> results = new ArrayList<>();
-            latestTestResultReporter.getTestResults().doWithResults(results::add);
+            List<RemoteResult> results = new ArrayList<>();
+            remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
             return results;
         }, model -> {
             try {

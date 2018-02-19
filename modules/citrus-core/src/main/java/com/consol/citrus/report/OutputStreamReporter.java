@@ -35,7 +35,7 @@ public class OutputStreamReporter extends LoggingReporter {
     private Writer logWriter;
 
     /** Line format */
-    private String format = "%s: %s%n";
+    private String format = "%s\t| %s%n";
 
     /**
      * Count down for failed output stream write operations.
