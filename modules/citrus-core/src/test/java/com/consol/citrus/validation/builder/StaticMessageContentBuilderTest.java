@@ -42,7 +42,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     private StaticMessageContentBuilder messageBuilder;
 
     @Test
-    public void testBuildMessageContent() throws Exception {
+    public void testBuildMessageContent() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -56,7 +56,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithAdditionalHeader() throws Exception {
+    public void testBuildMessageContentWithAdditionalHeader() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -71,7 +71,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithAdditionalHeaderData() throws Exception {
+    public void testBuildMessageContentWithAdditionalHeaderData() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -86,7 +86,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithMultipleHeaderData() throws Exception {
+    public void testBuildMessageContentWithMultipleHeaderData() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -104,7 +104,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithAdditionalHeaderResource() throws Exception {
+    public void testBuildMessageContentWithAdditionalHeaderResource() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -120,7 +120,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithMessageInterceptor() throws Exception {
+    public void testBuildMessageContentWithMessageInterceptor() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -138,7 +138,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithDataDictionary() throws Exception {
+    public void testBuildMessageContentWithDataDictionary() {
         final Message testMessage = new DefaultMessage("TestMessage")
                 .setHeader("header1", "value1");
 
@@ -152,7 +152,7 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithVariableSupport() throws Exception {
+    public void testBuildMessageContentWithVariableSupport() {
         context.setVariable("payload", "TestMessage");
         context.setVariable("header", "value1");
 
@@ -168,9 +168,9 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testBuildMessageContentWithObjectPayload() throws Exception {
-        final Message testMessage = new DefaultMessage(new Integer(1000))
-                .setHeader("header1", new Integer(1000));
+    public void testBuildMessageContentWithObjectPayload() {
+        final Message testMessage = new DefaultMessage(1000)
+                .setHeader("header1", 1000);
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
 
