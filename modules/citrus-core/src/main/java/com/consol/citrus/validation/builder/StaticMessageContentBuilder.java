@@ -54,8 +54,8 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public Map<String, Object> buildMessageHeaders(TestContext context) {
-        Map<String, Object> headers = super.buildMessageHeaders(context);
+    public Map<String, Object> buildMessageHeaders(TestContext context, String messageType) {
+        Map<String, Object> headers = super.buildMessageHeaders(context, messageType);
         headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders().entrySet()
                                     .stream()
                                     .filter(entry -> !entry.getKey().equals(MessageHeaders.ID) && !entry.getKey().equals(MessageHeaders.TIMESTAMP))

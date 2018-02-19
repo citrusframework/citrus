@@ -18,14 +18,22 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract control message builder is aware of message headers and delegates message payload
@@ -72,7 +80,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         Object payload = buildMessagePayload(context, messageType);
 
         try {
-            Message message = new DefaultMessage(payload, buildMessageHeaders(context));
+            Message message = new DefaultMessage(payload, buildMessageHeaders(context, messageType));
             message.setName(messageName);
 
             if (payload != null) {
@@ -118,12 +126,14 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
 
     /**
      * Build message headers.
-     * @param context
-     * @return
+     * @param context The test context of the message
+     * @param messageType The message type of the Message
+     * @return A Map containing all headers as key value pairs
      */
-    public Map<String, Object> buildMessageHeaders(TestContext context) {
+    public Map<String, Object> buildMessageHeaders(TestContext context, String messageType) {
         try {
             Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
+            headers.put(MessageHeaders.MESSAGE_TYPE, messageType);
 
             for (Map.Entry<String, Object> entry : headers.entrySet()) {
                 String value = entry.getValue().toString();
