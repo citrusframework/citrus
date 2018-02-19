@@ -37,7 +37,7 @@ public class DataSetCreator {
         try {
             if (response.getPayload() instanceof DataSet) {
                 return response.getPayload(DataSet.class);
-            } else if (response.getPayload() != null) {
+            } else if (isMarshallable(response, messageType)) {
                 return marshalResponse(response, messageType);
             } else {
                 return new DataSet();
@@ -55,20 +55,30 @@ public class DataSetCreator {
      * @throws SQLException In case the marshalling failed
      */
     private DataSet marshalResponse(final Message response, final MessageType messageType) throws SQLException {
-        if (isJsonRequested(messageType)) {
+        if (isJsonResponse(messageType)) {
             return new JsonDataSetProducer(response.getPayload(String.class)).produce();
-        } else if (isXmlRequested(messageType)) {
+        } else if (isXmlResponse(messageType)) {
             return new XmlDataSetProducer(response.getPayload(String.class)).produce();
         } else {
             throw new CitrusRuntimeException("Unable to create dataSet from data type " + messageType.name());
         }
     }
 
-    private boolean isXmlRequested(final MessageType messageType) {
+    private boolean isMarshallable(final Message response, final MessageType messageType) {
+        return response.getPayload() != null &&
+                !response.getPayload(String.class).isEmpty() &&
+                isKnownMessageType(messageType);
+    }
+
+    private boolean isKnownMessageType(final MessageType messageType) {
+        return isXmlResponse(messageType) || isJsonResponse(messageType);
+    }
+
+    private boolean isXmlResponse(final MessageType messageType) {
         return Objects.equals(MessageType.XML, messageType);
     }
 
-    private boolean isJsonRequested(final MessageType messageType) {
+    private boolean isJsonResponse(final MessageType messageType) {
         return Objects.equals(MessageType.JSON, messageType);
     }
 }

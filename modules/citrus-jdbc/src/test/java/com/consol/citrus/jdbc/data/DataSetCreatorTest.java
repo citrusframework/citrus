@@ -17,9 +17,9 @@
 package com.consol.citrus.jdbc.data;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.sql.SQLException;
@@ -95,7 +95,7 @@ public class DataSetCreatorTest {
         assertEquals(dataSet.getNextRow().getValues().toString(), "{foo=bar}");
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test
     public void testCreateDataSetFromNotImplementedType() {
 
         //GIVEN
@@ -104,9 +104,9 @@ public class DataSetCreatorTest {
         when(message.getPayload(String.class)).thenReturn("");
 
         //WHEN
-        dataSetCreator.createDataSet(message, MessageType.BINARY_BASE64);
+        final DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.BINARY_BASE64);
 
         //THEN
-        //Exception is thrown
+        Assert.assertEquals(dataSet, new DataSet());
     }
 }

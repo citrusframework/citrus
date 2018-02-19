@@ -25,6 +25,7 @@ import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.model.message.jdbc.Operation;
 import org.springframework.xml.transform.StringResult;
@@ -359,11 +360,8 @@ public class JdbcEndpointAdapterControllerTest {
         final JdbcEndpointAdapterController jdbcEndpointAdapterController =
                 spy(new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter, dataSetCreator));
 
-        final JdbcMarshaller marshaller = mock(JdbcMarshaller.class);
-        when(marshaller.getType()).thenReturn("JSON");
-        when(jdbcEndpointConfiguration.getMarshaller()).thenReturn(marshaller);
-
         final Message messageToMarshal = mock(Message.class);
+        when(messageToMarshal.getHeader(MessageHeaders.MESSAGE_TYPE)).thenReturn(MessageType.JSON.toString());
         doReturn(messageToMarshal).when(jdbcEndpointAdapterController).handleMessage(any());
 
         final String query = "some query";
@@ -400,7 +398,16 @@ public class JdbcEndpointAdapterControllerTest {
     public void testExecute(){
 
         //GIVEN
-        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        final DataSet expectedDataSet = mock(DataSet.class);
+        final DataSetCreator dataSetCreator = mock(DataSetCreator.class);
+        when(dataSetCreator.createDataSet(any(), any())).thenReturn(expectedDataSet);
+
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController =
+                spy(new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter, dataSetCreator));
+
+        final Message messageToMarshal = mock(Message.class);
+        when(messageToMarshal.getHeader(MessageHeaders.MESSAGE_TYPE)).thenReturn(MessageType.JSON.toString());
+        doReturn(messageToMarshal).when(jdbcEndpointAdapterController).handleMessage(any());
 
         //WHEN
         jdbcEndpointAdapterController.executeStatement("statement");

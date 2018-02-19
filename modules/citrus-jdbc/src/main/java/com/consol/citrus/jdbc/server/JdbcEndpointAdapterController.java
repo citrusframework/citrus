@@ -25,8 +25,8 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.model.message.jdbc.OpenConnection;
 import com.consol.citrus.model.message.jdbc.Operation;
@@ -172,7 +172,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     public DataSet executeQuery(final String query) throws JdbcServerException {
         log.info("Received execute query request: " + query);
         final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
-        final MessageType responseMessageType = determineMessageType(endpointConfiguration.getMarshaller());
+        final MessageType responseMessageType = determineMessageType(response);
         return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
@@ -182,9 +182,11 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the execution was not successful
      */
     @Override
-    public void executeStatement(final String stmt) throws JdbcServerException {
+    public DataSet executeStatement(final String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
-        handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
+        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
+        final MessageType responseMessageType = determineMessageType(response);
+        return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
     /**
@@ -281,17 +283,15 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
-     * Determines the MessageType of the given marshaller
-     * @param marshaller The marshaller to get the message type from
-     * @return The MessageType of the marshaller
+     * Determines the MessageType of the given response
+     * @param response The response to get the message type from
+     * @return The MessageType of the response
      */
-    private MessageType determineMessageType(final JdbcMarshaller marshaller) {
-        if(MessageType.XML.name().equalsIgnoreCase(marshaller.getType())){
-            return MessageType.XML;
-        }else if(MessageType.JSON.name().equalsIgnoreCase(marshaller.getType())){
-            return MessageType.JSON;
+    private MessageType determineMessageType(final Message response) {
+        final String messageTypeString = (String) response.getHeader(MessageHeaders.MESSAGE_TYPE);
+        if (MessageType.knows(messageTypeString)){
+            return MessageType.valueOf(messageTypeString);
         }
-
         return null;
     }
 

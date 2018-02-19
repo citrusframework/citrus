@@ -75,7 +75,7 @@ public class JdbcOperationGenerator {
 
         operation.setExecute(execute);
 
-        return new Operation();
+        return operation;
     }
 
     public Operation generateTransactionStarted() {
