@@ -651,4 +651,52 @@ public class JdbcEndpointAdapterControllerTest {
         //THEN
         //Exception is thrown
     }
+
+
+
+    @Test
+    public void testCreateCallableStatementWithAutoCreateStatement(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(true);
+
+        //WHEN
+        jdbcEndpointAdapterController.createCallableStatement("some statement");
+
+        //THEN
+        verify(jdbcEndpointAdapterController, never()).handleMessage(any());
+    }
+
+    @Test
+    public void testCreateCallableStatementWithoutAutoCreateStatement(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(false);
+
+        //WHEN
+        jdbcEndpointAdapterController.createCallableStatement("some statement");
+
+        //THEN
+        verify(jdbcEndpointAdapterController).handleMessage(any());
+    }
+
+    @Test(expectedExceptions = JdbcServerException.class)
+    public void testCreateCallableStatementWithoutAutoCreateStatementAndFailure(){
+
+        //GIVEN
+        final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
+        when(jdbcEndpointConfiguration.isAutoCreateStatement()).thenReturn(false);
+
+        final Message errorMessage = mock(Message.class);
+        when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
+        doReturn(errorMessage).when(jdbcEndpointAdapterController).handleMessage(any());
+
+        //WHEN
+        jdbcEndpointAdapterController.createCallableStatement("some statement");
+
+        //THEN
+        //Exception is thrown
+    }
 }
