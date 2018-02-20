@@ -26,6 +26,7 @@ import com.consol.citrus.jdbc.server.JdbcServer;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -102,5 +103,22 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
         //THEN
         receive(jdbcServer)
                 .message(JdbcMessage.closeStatement());
+    }
+
+    @CitrusTest
+    public void testCreateCallableStatementCredential() throws Exception{
+
+        //GIVEN
+        final Connection connection =
+                jdbcDriver.connect(serverUrl, new Properties());
+        final String sql = "SELECT whatever FROM table";
+
+        //WHEN
+        final CallableStatement callableStatement = connection.prepareCall(sql);
+
+        //THEN
+        receive(jdbcServer)
+                .message(JdbcMessage.createCallableStatement(sql));
+        assertNotNull(callableStatement);
     }
 }
