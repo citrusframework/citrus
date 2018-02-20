@@ -112,10 +112,10 @@ public void testAddTodoEntry() {
         .accept("text/html");
 
     receive(jdbcServer)
-            .messageType(MessageType.JSON)
             .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));<3>
 
     send(jdbcServer)
+            .messageType(MessageType.JSON)
             .message(JdbcMessage.result().dataSet("[ {" +
                         "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
                         "\"title\": \"${todoName}\"," +
@@ -357,14 +357,14 @@ send(jdbcServer).message(JdbcMessage.result().dataSet(userDataSet));
 
 If you use the XML or JSON notation as string or within a resource, you'll have to specify that in your test setup.
 
-.Java dataset creation example
+.Java json dataset creation example
 [source,java]
 ----
 receive(jdbcServer)
-                .messageType(MessageType.JSON)<1>
                 .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));
 
 send(jdbcServer)
+        .messageType(MessageType.JSON)<1>
         .message(JdbcMessage.result().dataSet("[ {" +
                     "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
                     "\"title\": \"${todoName}\"," +
@@ -374,3 +374,29 @@ send(jdbcServer)
 ----
 <1> Tells Citrus that the response has to be interpreted as JSON.
 
+.Java xml dataset creation example
+[source,java]
+----
+receive(jdbcServer)
+                .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));
+send(jdbcServer)
+                .messageType(MessageType.XML)
+                .message(JdbcMessage.result().dataSet("" +
+                        "<dataset>" +
+                            "<row>" +
+                                "<id>${todoId}</id>"+
+                                "<title>${todoName}</title>"+
+                                "<description>${todoDescription}</description>" +
+                                "<done>false</done>" +
+                             "</row>" +
+                        "</dataset>"));
+----
+<1> Tells Citrus that the response has to be interpreted as XML.
+
+NOTE: Technically it is not required to specify the messages as `MessageType.XML`, because the default message type
+in citrus currently *is* XML. Nevertheless we highly recommend to specify the message type. This will ensure that your
+tests sustain future changes.
+
+=== Prepared statements
+
+=== Callable statements / stored procedures
