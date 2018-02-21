@@ -25,7 +25,42 @@ To enable the JDBC support for your test project, you'll have to add the followi
 The Citrus-JDBC-Driver is a JDBC conform driver that realizes the communication with the Citrus-JDBC-Server. To be able
 to use Citrus-JDBC within a CI/CD setup, we recommend to ensure that your software is able to exchange the JDBC driver
 by configuration. The Citrus-JDBC-Driver is available on maven central under
-`com.consol.citrus.citrus-db.citrus-db-driver`.
+`com.consol.citrus.citrus-db.citrus-db-driver`. After the driver has been downloaded and configured to be used by your
+application, please make sure that the driver configuration matches the Citrus-JDBC-Server configuration in your
+tests.
+
+.Examplce jdbc driver configuration
+[source,xml]
+----
+<systemProperties>
+    <systemProperty>
+      <name>todo.persistence.type</name>
+      <value>jdbc</value>
+    </systemProperty>
+    <systemProperty>
+      <name>todo.jdbc.driverClassName</name>
+      <value>com.consol.citrus.db.driver.JdbcDriver</value>
+    </systemProperty>
+    <systemProperty>
+      <name>todo.jdbc.url</name>
+      <value>jdbc:citrus:http://localhost:3306/testdb</value>
+    </systemProperty>
+</systemProperties>
+----
+
+.Citrus-JDBC-Server matching the driver config
+[source,java]
+----
+@Bean
+public JdbcServer jdbcServer() {
+    return CitrusEndpoints.jdbc()
+            .server()
+            .host("localhost")
+            .databaseName("testdb")
+            .port(3306)
+            .build();
+}
+----
 
 [[jdbc-server]]
 == The Citrus-JDBC-Server
@@ -135,6 +170,11 @@ public void testAddTodoEntry() {
 <2> Responds with a result set stating, that one row has been updated/created.
 <3> Expects a `SELECT` statement matching the given statement.
 <4> Responds with the DataSet specified as JSON string.
+
+
+=== Prepared statements
+
+=== Callable statements / stored procedures
 
 [[jdbc-server-configuration]]
 === Configuration
@@ -396,7 +436,3 @@ send(jdbcServer)
 NOTE: Technically it is not required to specify the messages as `MessageType.XML`, because the default message type
 in citrus currently *is* XML. Nevertheless we highly recommend to specify the message type. This will ensure that your
 tests sustain future changes.
-
-=== Prepared statements
-
-=== Callable statements / stored procedures
