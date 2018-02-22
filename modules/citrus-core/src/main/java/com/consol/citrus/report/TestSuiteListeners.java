@@ -36,7 +36,15 @@ public class TestSuiteListeners {
     /** List of testsuite reporter **/
     @Autowired
     private List<TestReporter> testReporters = new ArrayList<TestReporter>();
-    
+
+    /**
+     * Adds new test reporter.
+     * @param reporter
+     */
+    public void addTestReporter(TestReporter reporter) {
+        this.testReporters.add(reporter);
+    }
+
     /**
      * Adds a new test suite listener. 
      * @param testSuiteListener the listener.
