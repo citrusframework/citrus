@@ -171,7 +171,51 @@ public void testAddTodoEntry() {
 <3> Expects a `SELECT` statement matching the given statement.
 <4> Responds with the DataSet specified as JSON string.
 
+[[jdbc-server-transactions]]
 === Transactions
+When it comes to complex modifications of your database, transactions are a common way to ensure atomicity of those
+operations. Citrus is able to verify the behavior of your system under test concerning start, commit and rollback
+actions of transactions. The verification of transactions has to be enabled in the server Citrus-JDBC-Server
+configuration. For more information, please have a look at the <<jdbc-server-configuration>> section.
+
+.Verifiying transaction commit
+[source,java]
+----
+receive(jdbcServer)
+        .message(JdbcMessage.startTransaction());<1>
+
+
+receive(jdbcServer)
+        .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
+
+send(jdbcServer)
+        .message(JdbcMessage.result().rowsUpdated(1));
+
+receive(jdbcServer)
+        .message(JdbcMessage.commitTransaction());<2>
+----
+<1> Verify, that the Transaction has been started.
+<2> Verify, that the modification of the database has been committed.
+
+It is also possible to simulate an erroneous modification including the verification of a rollback.
+
+.Verifiying transaction rollback
+[source,java]
+----
+eceive(jdbcServer)
+        .message(JdbcMessage.startTransaction());<1>
+
+receive(jdbcServer)
+        .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
+
+send(jdbcServer)
+        .message(JdbcMessage.result().exception("Could not execute something"));
+
+receive(jdbcServer)
+        .message(JdbcMessage.rollbackTransaction());<2>
+----
+<1> Verify, that the Transaction has been started.
+<2> Verify, that a rollback occurred after the database exception has been send.
 
 [[jdbc-server-prepared-statements]]
 === Prepared statements
