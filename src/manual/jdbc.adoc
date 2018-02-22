@@ -173,8 +173,8 @@ public void testAddTodoEntry() {
 
 [[jdbc-server-transactions]]
 === Transactions
-When it comes to complex modifications of your database, transactions are a common way to ensure atomicity of those
-operations. Citrus is able to verify the behavior of your system under test concerning start, commit and rollback
+When it comes to complex modifications of your database, transactions are commonly used.
+Citrus is able to verify the behavior of your system under test concerning start, commit and rollback
 actions of transactions. The verification of transactions has to be enabled in the server Citrus-JDBC-Server
 configuration. For more information, please have a look at the <<jdbc-server-configuration>> section.
 
