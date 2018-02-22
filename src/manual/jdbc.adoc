@@ -191,11 +191,44 @@ receive(jdbcServer)
 receive(jdbcServer)
                 .message(JdbcMessage.closeStatement());<3>
 ----
-<1> Verify that the given prepared statement has been created.
+<1> Verify that the given prepared statement has been created correctly.
 <2> Verify that the statement has been executed with the parameters `1,sample,A sample todo,false`.
 <3> Verify that the prepared statement has been closed.
 
 === Callable statements / stored procedures
+As well as prepared statements, callable statements are different from simple queries. Callable statements are used
+on jdbc level to access stored procedures, functions, etc. on the database server.
+
+.Verifying callable statement
+[source,java]
+----
+receive(jdbcServer)
+        .message(JdbcMessage.createCallableStatement("{CALL limitedToDoList(?)}"));<1>
+
+receive(jdbcServer)
+        .message(JdbcMessage.execute("{CALL limitedToDoList(?)} - (1)"));<2>
+
+send(jdbcServer)
+        .messageType(MessageType.XML)
+        .message(JdbcMessage.result().dataSet("" +
+                "<dataset>" +
+                    "<row>" +
+                        "<id>1</id>"+
+                        "<title>sample</title>"+
+                        "<description>A sample todo</description>" +
+                        "<done>false</done>" +
+                     "</row>" +
+                "</dataset>"));
+
+receive(jdbcServer)
+        .message(JdbcMessage.closeStatement());<3>
+----
+<1> Verify that the given callable statement has been created correctly.
+<2> Verify that the statement has been executed with the parameters `1,sample,A sample todo,false`.
+<3> Verify that the prepared statement has been closed.
+
+As you might have noticed, callable statements and prepared statements have nearly the same workflow in Citrus. The only
+difference in the creation of the statement itself.
 
 [[jdbc-server-configuration]]
 === Configuration
