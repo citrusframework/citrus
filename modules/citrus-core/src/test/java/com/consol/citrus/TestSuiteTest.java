@@ -22,12 +22,9 @@ import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestSuiteListener;
-import com.consol.citrus.report.TestSuiteListeners;
+import com.consol.citrus.report.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.*;
@@ -40,16 +37,9 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  */
 public class TestSuiteTest extends AbstractTestNGUnitTest {
-    @Autowired
-    private TestSuiteListeners testSuiteListeners;
 
-    @Autowired
-    @Qualifier("mockListener")
-    private TestSuiteListener testSuiteListener;
-
-    @Autowired
-    private TestContextFactory testContextFactory;
-
+    private TestSuiteListeners testSuiteListeners = new TestSuiteListeners();
+    private TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
     private Citrus citrus;
 
@@ -58,23 +48,24 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
+        testSuiteListeners.addTestSuiteListener(testSuiteListener);
+
         when(applicationContextMock.getBean(TestContextFactory.class)).thenReturn(testContextFactory);
         when(applicationContextMock.getBeansOfType(SequenceAfterSuite.class)).thenReturn(Collections.singletonMap("afterActions", afterActions));
         when(applicationContextMock.getBeansOfType(SequenceBeforeSuite.class)).thenReturn(Collections.singletonMap("beforeActions", beforeActions));
         when(applicationContextMock.getBean(TestSuiteListeners.class)).thenReturn(testSuiteListeners);
+        when(applicationContextMock.getBean(TestListeners.class)).thenReturn(new TestListeners());
 
         citrus = Citrus.newInstance(applicationContextMock);
     }
 
-    @AfterClass
-    public void cleanUpTest() {
+    @BeforeMethod
+    public void resetMocks() {
         reset(testSuiteListener);
     }
 
     @Test
     public void testBeforeSuite() {
-        reset(testSuiteListener);
-
         beforeActions.getActions().clear();
         beforeActions.addTestAction(new EchoAction());
 
@@ -86,8 +77,6 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBeforeSuite() {
-        reset(testSuiteListener);
-
         beforeActions.getActions().clear();
         beforeActions.addTestAction(new FailAction());
 
@@ -108,8 +97,6 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
         afterActions.getActions().clear();
         afterActions.addTestAction(afterSuiteAction);
         
-        reset(testSuiteListener, afterSuiteAction);
-
         beforeActions.getActions().clear();
         beforeActions.addTestAction(new FailAction());
 
@@ -129,8 +116,6 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testAfterSuite() {
-        reset(testSuiteListener);
-
         afterActions.getActions().clear();
         afterActions.addTestAction(new EchoAction());
 
@@ -142,8 +127,6 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
     
     @Test
     public void testFailAfterSuite() {
-        reset(testSuiteListener);
-
         afterActions.getActions().clear();
         afterActions.addTestAction(new FailAction());
 

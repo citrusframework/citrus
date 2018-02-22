@@ -22,10 +22,11 @@ import com.consol.citrus.container.SequenceBeforeSuite;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.report.TestSuiteListeners;
+import com.consol.citrus.report.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.CollectionUtils;
@@ -49,6 +50,106 @@ public final class Citrus {
 
     /** Citrus version */
     private static String version;
+
+    /** Strategy decides which instances are created */
+    private static InstanceStrategy strategy = InstanceStrategy.NEW;
+
+    /**
+     * Citrus instance processor takes part in instance creation process.
+     */
+    public interface InstanceProcessor {
+        void process(Citrus instance);
+    }
+
+    /**
+     * Instance creation strategy.
+     */
+    public enum InstanceStrategy {
+        NEW,
+        SINGLETON
+    }
+
+    /**
+     * Instance creation manager creates new Citrus instances or always a singleton based on instance creation strategy.
+     */
+    public static class CitrusInstanceManager {
+
+        /** Singleton */
+        private static Citrus citrus;
+
+        /** List of instance resolvers capable of taking part in Citrus instance creation process */
+        private static List<InstanceProcessor> instanceProcessors = new ArrayList<>();
+
+        /**
+         * Add instance processor.
+         * @param processor
+         */
+        public static void addInstanceProcessor(InstanceProcessor processor) {
+            instanceProcessors.add(processor);
+        }
+
+        /**
+         * Initializing method loads Spring application context and reads bean definitions
+         * such as test listeners and test context factory.
+         * @return
+         */
+        public static Citrus newInstance() {
+            if (strategy.equals(InstanceStrategy.NEW)) {
+                Citrus instance = newInstance(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
+                instanceProcessors.forEach(processor -> processor.process(instance));
+                return instance;
+            } else if (citrus == null) {
+                citrus = newInstance(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
+                instanceProcessors.forEach(processor -> processor.process(citrus));
+            }
+
+            return citrus;
+        }
+
+        /**
+         * Initializing method with Spring application context Java configuration class
+         * that gets loaded as application context.
+         * @return
+         */
+        public static Citrus newInstance(Class<? extends CitrusSpringConfig> configClass) {
+            if (strategy.equals(InstanceStrategy.NEW)) {
+                Citrus instance = newInstance(new AnnotationConfigApplicationContext(configClass));
+                instanceProcessors.forEach(processor -> processor.process(instance));
+                return instance;
+            } else if (citrus == null) {
+                citrus = newInstance(new AnnotationConfigApplicationContext(configClass));
+                instanceProcessors.forEach(processor -> processor.process(citrus));
+            }
+
+            return citrus;
+        }
+
+        /**
+         * Create new Citrus instance with given Spring bean application context.
+         * @param applicationContext
+         * @return
+         */
+        public static Citrus newInstance(ApplicationContext applicationContext) {
+            if (strategy.equals(InstanceStrategy.NEW)) {
+                Citrus instance = new Citrus(applicationContext);
+                instanceProcessors.forEach(processor -> processor.process(instance));
+                return instance;
+            } else if (citrus == null) {
+                citrus = new Citrus(applicationContext);
+                instanceProcessors.forEach(processor -> processor.process(citrus));
+            }
+
+            return citrus;
+        }
+
+        /**
+         * Gets the singleton instance of Citrus.
+         * @return
+         */
+        public static Citrus getSingleton() {
+            return citrus;
+        }
+    }
 
     /* Load Citrus version */
     static {
@@ -156,6 +257,7 @@ public final class Citrus {
     /** Test context factory **/
     private TestContextFactory testContextFactory;
     private TestSuiteListeners testSuiteListener;
+    private TestListeners testListener;
 
     private Collection<SequenceBeforeSuite> beforeSuite;
     private Collection<SequenceAfterSuite> afterSuite;
@@ -171,6 +273,7 @@ public final class Citrus {
     private Citrus(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
 
+        this.testListener = applicationContext.getBean(TestListeners.class);
         this.testSuiteListener = applicationContext.getBean(TestSuiteListeners.class);
         this.testContextFactory = applicationContext.getBean(TestContextFactory.class);
         this.beforeSuite = applicationContext.getBeansOfType(SequenceBeforeSuite.class).values();
@@ -183,7 +286,7 @@ public final class Citrus {
      * @return
      */
     public static Citrus newInstance() {
-        return newInstance(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
+        return CitrusInstanceManager.newInstance(new AnnotationConfigApplicationContext(CitrusSpringConfig.class));
     }
 
     /**
@@ -192,7 +295,7 @@ public final class Citrus {
      * @return
      */
     public static Citrus newInstance(Class<? extends CitrusSpringConfig> configClass) {
-        return newInstance(new AnnotationConfigApplicationContext(configClass));
+        return CitrusInstanceManager.newInstance(new AnnotationConfigApplicationContext(configClass));
     }
 
     /**
@@ -201,7 +304,7 @@ public final class Citrus {
      * @return
      */
     public static Citrus newInstance(ApplicationContext applicationContext) {
-        return new Citrus(applicationContext);
+        return CitrusInstanceManager.newInstance(applicationContext);
     }
 
     /**
@@ -312,5 +415,48 @@ public final class Citrus {
      */
     public static String getVersion() {
         return version;
+    }
+
+    /**
+     * Adds new test reporter.
+     * @param reporter
+     */
+    public void addTestReporter(TestReporter reporter) {
+        this.testSuiteListener.addTestReporter(reporter);
+    }
+
+    /**
+     * Adds new test suite listener.
+     * @param suiteListener
+     */
+    public void addTestSuiteListener(TestSuiteListener suiteListener) {
+        this.testSuiteListener.addTestSuiteListener(suiteListener);
+    }
+
+    /**
+     * Adds new test listener.
+     * @param testListener
+     */
+    public void addTestListener(TestListener testListener) {
+        this.testListener.addTestListener(testListener);
+    }
+
+    /**
+     * Sets the instance creation strategy.
+     * @param mode
+     */
+    public static void mode(InstanceStrategy mode) {
+        strategy = mode;
+    }
+
+    /**
+     * Closing Citrus and its application context.
+     */
+    public void close() {
+        if (applicationContext instanceof ConfigurableApplicationContext) {
+            if (((ConfigurableApplicationContext) applicationContext).isActive()) {
+                ((ConfigurableApplicationContext) applicationContext).close();
+            }
+        }
     }
 }

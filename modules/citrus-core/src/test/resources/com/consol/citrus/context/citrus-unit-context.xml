@@ -55,10 +55,6 @@
       <constructor-arg value="com.consol.citrus.validation.matcher.ValidationMatcher"/>
     </bean>
     
-    <bean id="mockListener" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="com.consol.citrus.report.TestSuiteListener"/>
-    </bean>
-    
     <bean id="mockChannel" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
     </bean>
