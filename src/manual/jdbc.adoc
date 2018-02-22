@@ -54,11 +54,11 @@ tests.
 @Bean
 public JdbcServer jdbcServer() {
     return CitrusEndpoints.jdbc()
-            .server()
-            .host("localhost")
-            .databaseName("testdb")
-            .port(3306)
-            .build();
+        .server()
+        .host("localhost")
+        .databaseName("testdb")
+        .port(3306)
+        .build();
 }
 ----
 
@@ -85,14 +85,14 @@ Citrus Annotations.
 @Bean
 public JdbcServer jdbcServer() {
     return CitrusEndpoints.jdbc()
-            .server()
-            .host("localhost")
-            .databaseName("testdb")
-            .port(4567)
-            .timeout(10000L)
-            .autoStart(true)
-            .autoTransactions(false)
-            .build();
+        .server()
+        .host("localhost")
+        .databaseName("testdb")
+        .port(4567)
+        .timeout(10000L)
+        .autoStart(true)
+        .autoTransactions(false)
+        .build();
 }
 ----
 
@@ -150,13 +150,13 @@ public void testAddTodoEntry() {
             .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));<3>
 
     send(jdbcServer)
-            .messageType(MessageType.JSON)
-            .message(JdbcMessage.result().dataSet("[ {" +
-                        "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
-                        "\"title\": \"${todoName}\"," +
-                        "\"description\": \"${todoDescription}\"," +
-                        "\"done\": \"false\"" +
-                    "} ]"));<4>
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.result().dataSet("[ {" +
+                    "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
+                    "\"title\": \"${todoName}\"," +
+                    "\"description\": \"${todoDescription}\"," +
+                    "\"done\": \"false\"" +
+                "} ]"));<4>
 
     http()
         .client(todoClient)
@@ -182,19 +182,18 @@ configuration. For more information, please have a look at the <<jdbc-server-con
 [source,java]
 ----
 receive(jdbcServer)
-        .message(JdbcMessage.startTransaction());<1>
-
+    .message(JdbcMessage.startTransaction());<1>
 
 receive(jdbcServer)
-        .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
+    .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
 
 send(jdbcServer)
-        .message(JdbcMessage.result().rowsUpdated(1));
+    .message(JdbcMessage.result().rowsUpdated(1));
 
 receive(jdbcServer)
-        .message(JdbcMessage.commitTransaction());<2>
+    .message(JdbcMessage.commitTransaction());<2>
 ----
-<1> Verify, that the Transaction has been started.
+<1> Verify, that the transaction has been started.
 <2> Verify, that the modification of the database has been committed.
 
 It is also possible to simulate an erroneous modification including the verification of a rollback.
@@ -203,18 +202,18 @@ It is also possible to simulate an erroneous modification including the verifica
 [source,java]
 ----
 eceive(jdbcServer)
-        .message(JdbcMessage.startTransaction());<1>
+    .message(JdbcMessage.startTransaction());<1>
 
 receive(jdbcServer)
-        .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
+    .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
 
 send(jdbcServer)
-        .message(JdbcMessage.result().exception("Could not execute something"));
+    .message(JdbcMessage.result().exception("Could not execute something"));
 
 receive(jdbcServer)
-        .message(JdbcMessage.rollbackTransaction());<2>
+    .message(JdbcMessage.rollbackTransaction());<2>
 ----
-<1> Verify, that the Transaction has been started.
+<1> Verify, that the transaction has been started.
 <2> Verify, that a rollback occurred after the database exception has been send.
 
 [[jdbc-server-prepared-statements]]
@@ -230,15 +229,15 @@ receive(jdbcServer)
     .message(JdbcMessage.createPreparedStatement("INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)"));<1>
 
 receive(jdbcServer)
-                .message(JdbcMessage.execute(
-                    "INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?) - (1,sample,A sample todo,false)"));<2>
+    .message(JdbcMessage.execute(
+        "INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?) - (1,sample,A sample todo,false)"));<2>
 
 receive(jdbcServer)
-                .message(JdbcMessage.closeStatement());<3>
+    .message(JdbcMessage.closeStatement());<3>
 ----
-<1> Verify that the given prepared statement has been created correctly.
+<1> Verify that the given prepared statement has been created.
 <2> Verify that the statement has been executed with the parameters `1,sample,A sample todo,false`.
-<3> Verify that the prepared statement has been closed.
+<3> Verify that the statement has been closed.
 
 Please notice, that the verification of `createPreparedStatement` and `closeStatement` messages has to be activated
 via configuration. For more information, please have a look at the <<jdbc-server-configuration>> section.
@@ -252,32 +251,32 @@ on jdbc level to access stored procedures, functions, etc. on the database serve
 [source,java]
 ----
 receive(jdbcServer)
-        .message(JdbcMessage.createCallableStatement("{CALL limitedToDoList(?)}"));<1>
+    .message(JdbcMessage.createCallableStatement("{CALL limitedToDoList(?)}"));<1>
 
 receive(jdbcServer)
-        .message(JdbcMessage.execute("{CALL limitedToDoList(?)} - (1)"));<2>
+    .message(JdbcMessage.execute("{CALL limitedToDoList(?)} - (1)"));<2>
 
 send(jdbcServer)
-        .messageType(MessageType.XML)
-        .message(JdbcMessage.result().dataSet("" +
-                "<dataset>" +
-                    "<row>" +
-                        "<id>1</id>"+
-                        "<title>sample</title>"+
-                        "<description>A sample todo</description>" +
-                        "<done>false</done>" +
-                     "</row>" +
+    .messageType(MessageType.XML)
+    .message(JdbcMessage.result().dataSet("" +
+            "<dataset>" +
+                "<row>" +
+                    "<id>1</id>"+
+                    "<title>sample</title>"+
+                    "<description>A sample todo</description>" +
+                    "<done>false</done>" +
+                 "</row>" +
                 "</dataset>"));
 
 receive(jdbcServer)
-        .message(JdbcMessage.closeStatement());<3>
+    .message(JdbcMessage.closeStatement());<3>
 ----
-<1> Verify that the given callable statement has been created correctly.
-<2> Verify that the statement has been executed with the parameters `1,sample,A sample todo,false`.
-<3> Verify that the prepared statement has been closed.
+<1> Verify that the given callable statement has been created.
+<2> Verify that the statement has been executed with the parameter `1`.
+<3> Verify that the statement has been closed.
 
 As you might have noticed, callable statements and prepared statements have nearly the same workflow in Citrus. The only
-difference in the creation of the statement itself. It is also the case that the verification of
+difference is the creation of the statement itself. It is also the case that the verification of
 `createCallableStatement` and `closeStatement` messages has to be activated via configuration. For more information,
 please have a look at the <<jdbc-server-configuration>> section.
 
@@ -299,19 +298,19 @@ The following properties are available to configure the server for your test sce
 | auto connect
 | No
 | true
-| Determines whether the server should automatically accept or validate connection related messages.
+| Determines whether the server should automatically accept connection related messages or validate them.
 This includes `openConnection` and `closeConnection`.
 
 | auto create statement
 | No
 | true
-| Determines whether the server should automatically accept or validate statement related messages.
-This includes `createPreparedStatement`, `createStatement` and `closeStatement`.
+| Determines whether the server should automatically accept statement related messages or validate them.
+This includes `createStatement`, `createPreparedStatement`, `createCallableStatement` and `closeStatement`.
 
 | auto transactions
 | No
 | true
-| Determines whether the server should automatically accept or validate transaction related messages.
+| Determines whether the server should automatically accept transaction related messages or validate them.
 This includes `startTransaction`, `commitTransaction` and `rollbackTransaction`.
 
 | host
