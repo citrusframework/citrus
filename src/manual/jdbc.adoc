@@ -171,8 +171,29 @@ public void testAddTodoEntry() {
 <3> Expects a `SELECT` statement matching the given statement.
 <4> Responds with the DataSet specified as JSON string.
 
+=== Transactions
 
 === Prepared statements
+Because prepared statements work slightly different than simple database queries, the validation of those is also
+slightly different. Currently, Citrus offers you the possibility to verify that your application has created the
+correct prepared statement, that it was executed with the correct parameters and that it has been closed.
+
+.Verifying prepared statement
+[source,java]
+----
+receive(jdbcServer)
+    .message(JdbcMessage.createPreparedStatement("INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)"));<1>
+
+receive(jdbcServer)
+                .message(JdbcMessage.execute(
+                    "INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?) - (1,sample,A sample todo,false)"));<2>
+
+receive(jdbcServer)
+                .message(JdbcMessage.closeStatement());<3>
+----
+<1> Verify that the given prepared statement has been created.
+<2> Verify that the statement has been executed with the parameters `1,sample,A sample todo,false`.
+<3> Verify that the prepared statement has been closed.
 
 === Callable statements / stored procedures
 
