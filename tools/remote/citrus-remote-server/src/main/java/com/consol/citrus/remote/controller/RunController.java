@@ -16,19 +16,25 @@
 
 package com.consol.citrus.remote.controller;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.TestClass;
 import com.consol.citrus.main.CitrusApp;
 import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.CitrusRemoteConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.type.ClassMetadata;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  * @author Christoph Deppisch
@@ -53,45 +59,55 @@ public class RunController {
      * Run all tests found in classpath.
      */
     public void runAll() {
-        try {
-            List<String> packages = Stream.of(new PathMatchingResourcePatternResolver().getResources("classpath*:**/*IT.class"))
-                    .parallel()
-                    .map(resource -> {
-                        try {
-                            return resource.getFile().getPath();
-                        } catch (IOException e) {
-                            log.warn(String.format("Unable to access class %s in classpath", resource.getFilename()), e);
-                            return "";
-                        }
-                    })
-                    .filter(StringUtils::hasText)
-                    .map(className -> {
-                        try {
-                            return Class.forName(className).getPackage().getName();
-                        } catch (ClassNotFoundException e) {
-                            log.warn(String.format("Unable to access class for name %s", className), e);
-                            return "";
-                        }
-                    })
-                    .filter(StringUtils::hasText)
-                    .distinct()
-                    .collect(Collectors.toList());
-
-            packages.forEach(this::runPackage);
-        } catch (IOException e) {
-            log.warn("Unable to find test classes in classpath", e);
-        }
+        runPackage("");
     }
 
     /**
-     * Run Citrus application with given test package name.
-     * @param testPackage
+     * Run Citrus application with given base test package name.
+     * @param basePackage
      */
-    public void runPackage(String testPackage) {
+    public void runPackage(String basePackage) {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
-        citrusAppConfiguration.setPackageName(testPackage);
-        citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
+        
+        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
+        provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "\\.class$"))));
+        provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
+            @Override
+            protected boolean match(ClassMetadata metadata) {
+                try {
+                    Class<?> clazz = Class.forName(metadata.getClassName());
+                    if (clazz.isAnnotationPresent(Test.class)) {
+                        return true;
+                    }
 
+                    AtomicBoolean hasTestMethod = new AtomicBoolean(false);
+                    ReflectionUtils.doWithMethods(clazz, method -> hasTestMethod.set(true), method -> AnnotationUtils.findAnnotation(method, Test.class) != null);
+                    return hasTestMethod.get();
+                } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                    log.warn("Unable to access class: " + metadata.getClassName());
+                    return false;
+                }
+            }
+        });
+
+
+        provider.findCandidateComponents(basePackage)
+                        .stream()
+                        .map(BeanDefinition::getBeanClassName)
+                        .distinct()
+                        .map(className -> {
+                            try {
+                                return Class.forName(className);
+                            } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                                log.warn("Unable to access test class: " + className);
+                                return Void.class;
+                            }
+                        })
+                        .filter(clazz -> !clazz.equals(Void.class))
+                        .map(clazz -> new TestClass(clazz.getName()))
+                        .forEach(citrusAppConfiguration.getTestClasses()::add);
+
+        citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
         run(citrusAppConfiguration);
     }
 
@@ -111,16 +127,12 @@ public class RunController {
             className = testClass;
         }
 
+        TestClass test = new TestClass(className);
         if (StringUtils.hasText(methodName)) {
-            citrusAppConfiguration.setTestMethod(methodName);
+            test.setMethod(methodName);
         }
 
-        try {
-            citrusAppConfiguration.setTestClass(Class.forName(className));
-        } catch (ClassNotFoundException e) {
-            throw new CitrusRuntimeException("Unable to test class: " + className, e);
-        }
-
+        citrusAppConfiguration.getTestClasses().add(test);
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
 
         run(citrusAppConfiguration);

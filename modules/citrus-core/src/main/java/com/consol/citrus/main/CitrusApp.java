@@ -17,15 +17,24 @@
 package com.consol.citrus.main;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.type.ClassMetadata;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
+import org.springframework.core.type.filter.RegexPatternTypeFilter;
+import org.springframework.util.*;
 import org.testng.TestNG;
+import org.testng.annotations.Test;
 import org.testng.xml.*;
 
-import java.util.Collections;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.regex.Pattern;
 
 /**
  * Main command line application callable via static run methods and command line main method invocation.
@@ -128,38 +137,72 @@ public class CitrusApp {
 
         XmlSuite suite = new XmlSuite();
         testng.setXmlSuites(Collections.singletonList(suite));
-        XmlTest test = null;
 
-        if (configuration.getTestClass() != null) {
-            log.info(String.format("Running test %s", Optional.ofNullable(configuration.getTestMethod()).map(method -> configuration.getTestClass().getName() + "#" + method).orElse(configuration.getTestClass().getName())));
+        for (TestClass testClass : configuration.getTestClasses()) {
+            log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName())));
 
-            test = new XmlTest(suite);
-            XmlClass clazz = new XmlClass();
-            clazz.setClass(configuration.getTestClass());
+            XmlTest test = new XmlTest(suite);
+            test.setClasses(new ArrayList<>());
 
-            if (StringUtils.hasText(configuration.getTestMethod())) {
-                clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(configuration.getTestMethod())));
+            XmlClass clazz = new XmlClass(testClass.getName());
+
+            if (StringUtils.hasText(testClass.getMethod())) {
+                clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
             }
 
-            test.setClasses(Collections.singletonList(clazz));
+            test.getClasses().add(clazz);
         }
 
-        if (StringUtils.hasText(configuration.getPackageName())) {
-            log.info(String.format("Running tests in package %s", configuration.getPackageName()));
+        for (String packageName : configuration.getPackages()) {
+            log.info(String.format("Running tests in package %s", packageName));
 
-            test = new XmlTest(suite);
+            XmlTest test = new XmlTest(suite);
             XmlPackage xmlPackage = new XmlPackage();
-            xmlPackage.setName(configuration.getPackageName());
+            xmlPackage.setName(packageName);
             test.setPackages(Collections.singletonList(xmlPackage));
         }
 
-        if (test == null) {
+        if (CollectionUtils.isEmpty(configuration.getPackages()) && CollectionUtils.isEmpty(configuration.getTestClasses())) {
             log.info("Running all tests in project");
 
-            test = new XmlTest(suite);
-            XmlPackage xmlPackage = new XmlPackage();
-            xmlPackage.setName(".*");
-            test.setPackages(Collections.singletonList(xmlPackage));
+            XmlTest test = new XmlTest(suite);
+            ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
+            provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "\\.class$"))));
+            provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
+                @Override
+                protected boolean match(ClassMetadata metadata) {
+                    try {
+                        Class<?> clazz = Class.forName(metadata.getClassName());
+                        if (clazz.isAnnotationPresent(Test.class)) {
+                            return true;
+                        }
+
+                        AtomicBoolean hasTestMethod = new AtomicBoolean(false);
+                        ReflectionUtils.doWithMethods(clazz, method -> hasTestMethod.set(true), method -> AnnotationUtils.findAnnotation(method, Test.class) != null);
+                        return hasTestMethod.get();
+                    } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                        log.warn("Unable to access class: " + metadata.getClassName());
+                        return false;
+                    }
+                }
+            });
+
+
+            provider.findCandidateComponents("")
+                    .stream()
+                    .map(BeanDefinition::getBeanClassName)
+                    .distinct()
+                    .map(className -> {
+                        try {
+                            return Class.forName(className);
+                        } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                            log.warn("Unable to access test class: " + className);
+                            return Void.class;
+                        }
+                    })
+                    .filter(clazz -> !clazz.equals(Void.class))
+                    .map(clazz -> new XmlClass(clazz.getName()))
+                    .forEach(test.getClasses()::add);
         }
 
         testng.run();

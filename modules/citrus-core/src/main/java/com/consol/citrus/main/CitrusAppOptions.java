@@ -16,6 +16,7 @@
 
 package com.consol.citrus.main;
 
+import com.consol.citrus.TestClass;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
@@ -92,7 +93,7 @@ public class CitrusAppOptions {
             @Override
             protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
-                    configuration.setPackageName(value);
+                    configuration.getPackages().add(value);
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -p/-package option");
                 }
@@ -122,15 +123,12 @@ public class CitrusAppOptions {
                         methodName = value.substring(value.indexOf("#") + 1);
                     }
 
+                    TestClass testClass = new TestClass(className);
                     if (StringUtils.hasText(methodName)) {
-                        configuration.setTestMethod(methodName);
+                        testClass.setMethod(methodName);
                     }
 
-                    try {
-                        configuration.setTestClass(Class.forName(className));
-                    } catch (ClassNotFoundException e) {
-                        throw new CitrusRuntimeException("Unable to test class: " + className, e);
-                    }
+                    configuration.getTestClasses().add(testClass);
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -t/-test option");
                 }
