@@ -97,7 +97,6 @@ public class CitrusApp {
         }
 
         if (citrusApp.configuration.isSkipTests()) {
-            Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
             if (citrusApp.configuration.getConfigClass() != null) {
                 Citrus.newInstance(citrusApp.configuration.getConfigClass());
             } else {
