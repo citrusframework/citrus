@@ -18,8 +18,19 @@ package com.consol.citrus.jdbc.message;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jdbc.model.*;
+import com.consol.citrus.jdbc.model.CloseConnection;
+import com.consol.citrus.jdbc.model.CloseStatement;
+import com.consol.citrus.jdbc.model.CreatePreparedStatement;
+import com.consol.citrus.jdbc.model.CreateStatement;
+import com.consol.citrus.jdbc.model.Execute;
+import com.consol.citrus.jdbc.model.JdbcMarshaller;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.TransactionCommitted;
+import com.consol.citrus.jdbc.model.TransactionRollback;
+import com.consol.citrus.jdbc.model.TransactionStarted;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.transform.StringResult;
@@ -45,23 +56,23 @@ public class JdbcMessage extends DefaultMessage {
 
     /**
      * Constructor initializes new JDBC operation.
-     * @param operation
+     * @param operation The Operation to encapsulate in the message
      */
-    private JdbcMessage(Operation operation) {
+    private JdbcMessage(final Operation operation) {
         super(operation);
         this.operation = operation;
     }
 
-    public static JdbcMessage openConnection(OpenConnection.Property ... properties) {
-        OpenConnection openConnection = new OpenConnection();
+    public static JdbcMessage openConnection(final OpenConnection.Property ... properties) {
+        final OpenConnection openConnection = new OpenConnection();
         if (properties.length > 0) {
             openConnection.getProperties().addAll(Arrays.asList(properties));
         }
         return new JdbcMessage(new Operation(openConnection));
     }
 
-    public static JdbcMessage openConnection(List<OpenConnection.Property> properties) {
-        OpenConnection openConnection = new OpenConnection();
+    public static JdbcMessage openConnection(final List<OpenConnection.Property> properties) {
+        final OpenConnection openConnection = new OpenConnection();
         openConnection.getProperties().addAll(properties);
         return new JdbcMessage(new Operation(openConnection));
     }
@@ -70,7 +81,7 @@ public class JdbcMessage extends DefaultMessage {
         return new JdbcMessage(new Operation(new CloseConnection()));
     }
 
-    public static JdbcMessage createPreparedStatement(String sql) {
+    public static JdbcMessage createPreparedStatement(final String sql) {
         return new JdbcMessage(new Operation(new CreatePreparedStatement(sql)));
     }
 
@@ -82,7 +93,7 @@ public class JdbcMessage extends DefaultMessage {
         return new JdbcMessage(new Operation(new CloseStatement()));
     }
 
-    public static JdbcMessage execute(String sql) {
+    public static JdbcMessage execute(final String sql) {
         return new JdbcMessage(new Operation(new Execute(new Execute.Statement(sql))));
     }
 
@@ -90,41 +101,41 @@ public class JdbcMessage extends DefaultMessage {
         return result(true);
     }
 
-    public static JdbcMessage result(boolean success) {
-        JdbcMessage message = new JdbcMessage();
+    public static JdbcMessage result(final boolean success) {
+        final JdbcMessage message = new JdbcMessage();
         message.setHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS, success);
         return message;
     }
 
-    public JdbcMessage exception(String message) {
+    public JdbcMessage exception(final String message) {
         error();
         setHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION, message);
         return this;
     }
 
-    public JdbcMessage rowsUpdated(int number) {
+    public JdbcMessage rowsUpdated(final int number) {
         success();
         setHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED, number);
         return this;
     }
 
-    public JdbcMessage dataSet(DataSet dataSet) {
+    public JdbcMessage dataSet(final DataSet dataSet) {
         success();
         setPayload(dataSet);
         return this;
     }
 
-    public JdbcMessage dataSet(String dataSet) {
+    public JdbcMessage dataSet(final String dataSet) {
         success();
         setPayload(dataSet);
         return this;
     }
 
-    public JdbcMessage dataSet(Resource dataSet) {
+    public JdbcMessage dataSet(final Resource dataSet) {
         success();
         try {
             setPayload(FileUtils.readToString(dataSet));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to read data set file", e);
         }
         return this;
@@ -140,8 +151,20 @@ public class JdbcMessage extends DefaultMessage {
         return this;
     }
 
+    public static Message startTransaction() {
+        return new JdbcMessage(new Operation(new TransactionStarted()));
+    }
+
+    public static Message commitTransaction(){
+        return new JdbcMessage(new Operation(new TransactionCommitted()));
+    }
+
+    public static Message rollbackTransaction(){
+        return new JdbcMessage(new Operation(new TransactionRollback()));
+    }
+
     @Override
-    public <T> T getPayload(Class<T> type) {
+    public <T> T getPayload(final Class<T> type) {
         if (String.class.equals(type)) {
             return (T) getPayload();
         } else {
@@ -151,7 +174,7 @@ public class JdbcMessage extends DefaultMessage {
 
     @Override
     public Object getPayload() {
-        StringResult payloadResult = new StringResult();
+        final StringResult payloadResult = new StringResult();
         if (operation != null) {
             marshaller.marshal(operation, payloadResult);
             return payloadResult.toString();

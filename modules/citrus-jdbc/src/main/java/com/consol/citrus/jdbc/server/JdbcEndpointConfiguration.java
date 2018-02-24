@@ -36,8 +36,12 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     /** Auto accept connection requests */
     private boolean autoConnect = true;
+
     /** Auto accept create statement requests */
     private boolean autoCreateStatement = true;
+
+    /** Auto accept transaction operations  */
+    private boolean autoTransactions = true;
 
     /** Marshaller converts from XML to Jdbc model objects */
     private JdbcMarshaller marshaller = new JdbcMarshaller();
@@ -135,5 +139,23 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setServerConfiguration(JdbcServerConfiguration serverConfiguration) {
         this.serverConfiguration = serverConfiguration;
+    }
+
+    /**
+     * Gets the autoTransactions.
+     *
+     * @return Whether to accept transaction commands
+     */
+    public boolean isAutoTransactions() {
+        return autoTransactions;
+    }
+
+    /**
+     * Sets the autoTransactions.
+     *
+     * @param autoTransactions Determines whether to accept transaction commands
+     */
+    public void setAutoTransactions(boolean autoTransactions) {
+        this.autoTransactions = autoTransactions;
     }
 }

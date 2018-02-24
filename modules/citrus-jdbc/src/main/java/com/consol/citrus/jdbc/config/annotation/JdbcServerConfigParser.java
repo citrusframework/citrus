@@ -78,6 +78,8 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
             builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
         }
 
+        builder.autoTransactions(annotation.autoTransactions());
+
         return builder.initialize().build();
     }
 }

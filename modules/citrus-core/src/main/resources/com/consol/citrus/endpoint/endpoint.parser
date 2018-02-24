@@ -21,3 +21,4 @@ endpoint.parser.vertx=com.consol.citrus.vertx.config.annotation.VertxEndpointCon
 endpoint.parser.vertx.sync=com.consol.citrus.vertx.config.annotation.VertxSyncEndpointConfigParser
 endpoint.parser.websocket.client=com.consol.citrus.websocket.config.annotation.WebSocketClientConfigParser
 endpoint.parser.websocket.server=com.consol.citrus.websocket.config.annotation.WebSocketServerConfigParser
+endpoint.parser.jdbc.server=com.consol.citrus.jdbc.config.annotation.JdbcServerConfigParser

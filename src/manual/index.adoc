@@ -67,6 +67,7 @@ include::cucumber.adoc[]
 include::zookeeper.adoc[]
 include::restdocs.adoc[]
 include::selenium.adoc[]
+include::jdbc.adoc[]
 include::endpoint-component.adoc[]
 include::endpoint-adapter.adoc[]
 

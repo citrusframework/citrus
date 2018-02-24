@@ -1,0 +1,376 @@
+[[jdbc]]
+= JDBC support
+
+Database communication is an essential part of many applications, when persistent data storage is required.
+May it be orders, customer data, product recommendations or product information, if persistent storage is in place,
+the data contains a certain business value. Therefore it's important that your software handles your persistent storage
+the right way. To ensure that, Citrus offers a JDBC server endpoint that allows you to verify the communication between
+your application and a real database server which is accessible via the Citrus-JDBC-Driver.
+
+To enable the JDBC support for your test project, you'll have to add the following dependency.
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-jdbc</artifactId>
+  <version>${citrus.version}</version>
+  <scope>test</scope>
+</dependency>
+----
+
+[[jdbc-driver]]
+== The Citrus-JDBC-Driver
+
+The Citrus-JDBC-Driver is a JDBC conform driver that realizes the communication with the Citrus-JDBC-Server. To be able
+to use Citrus-JDBC within a CI/CD setup, we recommend to ensure that your software is able to exchange the JDBC driver
+by configuration. The Citrus-JDBC-Driver is available on maven central under
+`com.consol.citrus.citrus-db.citrus-db-driver`.
+
+[[jdbc-server]]
+== The Citrus-JDBC-Server
+
+To setup a JDBC endpoint within your tests, just configure it as any other endpoint via e.g.  XML, Spring Bean or by
+Citrus Annotations.
+
+.XML DSL example
+[source,xml]
+----
+<citrus-jdbc:server id="testServer"
+                      host="citrus-jdbc-test-server"
+                      port="4567"
+                      database-name="test-db"
+                      max-connections="50"
+                      auto-start="true"/>
+----
+
+.Spring Bean example
+[source,java]
+----
+@Bean
+public JdbcServer jdbcServer() {
+    return CitrusEndpoints.jdbc()
+            .server()
+            .host("localhost")
+            .databaseName("testdb")
+            .port(4567)
+            .timeout(10000L)
+            .autoStart(true)
+            .autoTransactions(false)
+            .build();
+}
+----
+
+.Citrus Annotations example
+[source,java]
+----
+@CitrusEndpoint
+@JdbcServerConfig(
+            databaseName = "testdb",
+            autoStart = true,
+            port = 4567)
+private JdbcServer jdbcServer;
+----
+
+After that configuration has been done, you'll be able to use the Server within your tests to receive and send messages
+from or to your system under test.
+
+[source,java]
+----
+@Test
+@CitrusTest
+public void testAddTodoEntry() {
+    variable("todoName", "citrus:concat('todo_', citrus:randomNumber(4))");
+    variable("todoDescription", "Description: ${todoName}");
+
+    http()
+        .client(todoClient)
+        .send()
+        .post("/todolist")
+        .fork(true)
+        .contentType("application/x-www-form-urlencoded")
+        .payload("title=${todoName}&description=${todoDescription}");
+
+    receive(jdbcServer)
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.execute(
+            "@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));<1>
+
+    send(jdbcServer)
+        .message(JdbcMessage.result().rowsUpdated(1));<2>
+
+    http()
+        .client(todoClient)
+        .receive()
+        .response(HttpStatus.FOUND);
+
+    http()
+        .client(todoClient)
+        .send()
+        .get("/todolist")
+        .fork(true)
+        .accept("text/html");
+
+    receive(jdbcServer)
+            .messageType(MessageType.JSON)
+            .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));<3>
+
+    send(jdbcServer)
+            .message(JdbcMessage.result().dataSet("[ {" +
+                        "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
+                        "\"title\": \"${todoName}\"," +
+                        "\"description\": \"${todoDescription}\"," +
+                        "\"done\": \"false\"" +
+                    "} ]"));<4>
+
+    http()
+        .client(todoClient)
+        .receive()
+        .response(HttpStatus.OK)
+        .messageType(MessageType.XHTML)
+        .xpath("(//xh:li[@class='list-group-item']/xh:span)[last()]", "${todoName}");
+}
+----
+<1> Expects a `INSERT` statement matching the given expression.
+<2> Responds with a result set stating, that one row has been updated/created.
+<3> Expects a `SELECT` statement matching the given statement.
+<4> Responds with the DataSet specified as JSON string.
+
+[[jdbc-server-configuration]]
+=== Configuration
+
+As already mentioned, you're able to configure the JDBC endpoint in different ways (XML, Spring Bean, etc. ).
+The following properties are available to configure the server for your test scenario.
+
+[cols="2,2,2,5a"]
+|===
+| Property | Mandatory | Default | Description
+
+| id
+| Yes
+|
+| Only required for XML configuration.
+
+| auto connect
+| No
+| true
+| Determines whether the server should automatically accept or validate connection related messages.
+This includes `openConnection` and `closeConnection`.
+
+| auto create statement
+| No
+| true
+| Determines whether the server should automatically accept or validate statement related messages.
+This includes `createPreparedStatement`, `createStatement` and `closeStatement`.
+
+| auto transactions
+| No
+| true
+| Determines whether the server should automatically accept or validate transaction related messages.
+This includes `startTransaction`, `commitTransaction` and `rollbackTransaction`.
+
+| host
+| Yes
+|
+| The hostname of the server. There has to be a valid route between the test suite, the system under test and the
+database server.
+
+| port
+| No
+| 4567
+| The port the server listens to.
+
+| database name
+| Yes
+|
+| The database name to work on
+
+| max connections
+| No
+| 20
+| The maximum amount of open connections to be accepted by the server.
+
+| polling interval
+| No
+| 500
+| Polling interval when waiting for synchronous reply message to arrive.
+
+| timeout
+| No
+| 5000
+| Send/receive timeout setting
+
+| debug logging
+| No
+| false
+| Determines whether the inbound channel debug logging should be enabled.
+
+|===
+
+In addition, there are advanced configuration possibilities to customize the behavior of the JDBC server.
+
+[cols="2,2,2,5a"]
+|===
+| Property | Mandatory | Default | Description
+
+| correlator
+| No
+| DefaultMessageCorrelator
+| A MessageCorrelator implementation to identify messages.
+
+| endpoint adapter
+| No
+| JdbcEndpointAdapterController
+| A Endpoint adapter implementation creating the messages for validation.
+
+|===
+
+[[jdbc-message]]
+== JdbcMessage
+
+The JdbcMessage class is the central location to specifying your expected inbound and outbound communication for the
+JDBC endpoint.
+
+[cols="5,2,5a"]
+|===
+| Message | receive/send | Description
+
+| `JdbcMessage.openConnection(Properties properties)`
+| receive
+| States that a connection has been opened with the given properties. The evaluation of connections has to be enabled
+via the endpoint configuration.
+
+| `JdbcMessage.closeConnection()`
+| receive
+| States that the connection has been closed. The evaluation of connections has to be enabled
+via the endpoint configuration.
+
+| `JdbcMessage.createPreparedStatement(String sql)`
+| receive
+| States that a SQL statement matching the given expression has been created. The evaluation of statement handling
+has to be enabled via the endpoint configuration.
+
+| `JdbcMessage.createStatement()`
+| receive
+| States that a statement has been created. The evaluation of statement handling has to be enabled via the endpoint
+configuration.
+
+| `JdbcMessage.closeStatement()`
+| receive
+| States that a statement has been closed. The evaluation of statement handling has to be enabled via the endpoint
+configuration.
+
+| `JdbcMessage.execute(String sql)`
+| receive
+| States that a SQL statement matching the given expression has been executed.
+
+| `JdbcMessage.startTransaction()`
+| receive
+| States that a transaction start has been received. The evaluation of transaction handling has to be enabled via
+the endpoint configuration.
+
+| `JdbcMessage.commitTransaction()`
+| receive
+| States that a commit for a transaction has been received. The evaluation of transaction handling has to be enabled via
+the endpoint configuration.
+
+| `JdbcMessage.rollbackTransaction()`
+| receive
+| States that a rollback of the transaction has been received. The evaluation of transaction handling has to be enabled
+via the endpoint configuration.
+
+| `JdbcMessage.result()`
+| send
+| Sends a positive empty result to the system under test.
+
+| `JdbcMessage.result(boolean success)`
+| send
+| Sends empty result to the system under test which is a success or a failure based on the given boolean value.
+
+| `JdbcMessage.exception(String exceptionText)`
+| send
+| Sends a exception to the system under test. Regarding to the driver documentation, the error will be an SQLException.
+
+| `JdbcMessage.rowsUpdated(int number)`
+| send
+| Sends a positive result to the system under test where the payload is the number of updated rows.
+
+| `JdbcMessage.dataSet(DataSet dataSet)`
+| send
+| Sends a positive result to the system under test where the payload is the specified DataSet.
+
+| `JdbcMessage.dataSet(String dataSet)`
+| send
+| Sends a positive result to the system under test where the payload is the specified DataSet. To use this, you have
+to specify the format of the dataSet String. Please refer to the section <<jdbc-message-dataset-parsing>>.
+
+| `JdbcMessage.dataSet(Resource dataSet)`
+| send
+| Sends a positive result to the system under test where the payload is the content of the specified resource.
+To use this, you have to specify the format of the dataSet String. Please refer to the section
+<<jdbc-message-dataset-parsing>>.
+
+| `JdbcMessage.success()`
+| send
+| Sends a positive empty result to the system under test.
+
+| `JdbcMessage.error()`
+| send
+| Sends a empty error result to the system under test.
+
+|===
+
+[[jdbc-message-dataset-parsing]]
+=== DataSet parsing
+
+Citrus provides different ways to prepare the response DataSets for your system under test. You can specify your
+DataSets as Java Objects, as XML or JSON Strings or as resource file containing your XML or JSON DataSet as text.
+
+.Java dataset creation example
+[source,java]
+----
+Row sheldon = new Row();
+sheldon.getValues().put("id", "1");
+sheldon.getValues().put("name", "Sheldon");
+sheldon.getValues().put("profession", "physicist");
+
+Row leonard = new Row();
+leonard.getValues().put("id", "2");
+leonard.getValues().put("name", "Leonard");
+leonard.getValues().put("profession", "physicist");
+leonard.getValues().put("email", "leo@bigbangtheory.org");
+
+Row penny = new Row();
+penny.getValues().put("id", "3");
+penny.getValues().put("name", "Penny");
+penny.getValues().put("profession", "this_and_that");
+
+Table table = new Table("user");
+table.getRows().add(sheldon);
+table.getRows().add(leonard);
+table.getRows().add(penny);
+
+DataSet userDataSet = new TableDataSetProducer(table).produce();
+
+send(jdbcServer).message(JdbcMessage.result().dataSet(userDataSet));
+----
+
+If you use the XML or JSON notation as string or within a resource, you'll have to specify that in your test setup.
+
+.Java dataset creation example
+[source,java]
+----
+receive(jdbcServer)
+                .messageType(MessageType.JSON)<1>
+                .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));
+
+send(jdbcServer)
+        .message(JdbcMessage.result().dataSet("[ {" +
+                    "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
+                    "\"title\": \"${todoName}\"," +
+                    "\"description\": \"${todoDescription}\"," +
+                    "\"done\": \"false\"" +
+                "} ]"));
+----
+<1> Tells Citrus that the response has to be interpreted as JSON.
+
