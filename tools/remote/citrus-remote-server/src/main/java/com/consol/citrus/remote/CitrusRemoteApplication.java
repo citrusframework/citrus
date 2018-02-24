@@ -18,13 +18,13 @@ package com.consol.citrus.remote;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.controller.RunController;
 import com.consol.citrus.remote.job.RunJob;
 import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.reporter.RemoteTestResultReporter;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.consol.citrus.remote.transformer.JsonRequestTransformer;
+import com.consol.citrus.remote.transformer.JsonResponseTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import spark.Filter;
@@ -82,6 +82,20 @@ public class CitrusRemoteApplication implements SparkApplication {
 
         before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
 
+        get("/health", (req, res) -> {
+            res.type("application/json");
+            return "{ \"status\": \"UP\" }";
+        });
+
+        get("/results", "application/json", (req, res) -> {
+            res.type("application/json");
+            List<RemoteResult> results = new ArrayList<>();
+            remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+            return results;
+        }, new JsonResponseTransformer());
+
+        get("/results", (req, res) -> remoteTestResultReporter.getTestReport());
+
         get("/run", (req, res) -> {
             RunController runController = new RunController(configuration);
 
@@ -97,22 +111,20 @@ public class CitrusRemoteApplication implements SparkApplication {
                 runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
             }
 
+            res.type("application/json");
+
             List<RemoteResult> results = new ArrayList<>();
             remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
             return results;
-        }, model -> {
-            try {
-                ObjectMapper mapper = new ObjectMapper();
-                mapper.enable(SerializationFeature.INDENT_OUTPUT);
-                return mapper.writeValueAsString(model);
-            } catch (JsonProcessingException e) {
-                throw new CitrusRuntimeException("Failed to write json test results", e);
-            }
-        });
+        }, new JsonResponseTransformer());
 
         put("/run", (req, res) -> {
             jobs.submit((RunJob) () -> {
                 RunController runController = new RunController(configuration);
+
+                if (!req.queryParams().contains("package") && !req.queryParams().contains("class")) {
+                    runController.runAll();
+                }
 
                 if (req.queryParams().contains("package")) {
                     runController.runPackage(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
@@ -125,6 +137,16 @@ public class CitrusRemoteApplication implements SparkApplication {
                 return "";
             });
 
+            return "";
+        });
+
+        get("/configuration", (req, res) -> {
+            res.type("application/json");
+            return configuration;
+        }, new JsonResponseTransformer());
+
+        put("/configuration", (req, res) -> {
+            configuration.apply(new JsonRequestTransformer().read(req.body(), CitrusAppConfiguration.class));
             return "";
         });
 

@@ -28,6 +28,11 @@
       <useProjectAttachments>true</useProjectAttachments>
       <unpack>false</unpack>
       <scope>test</scope>
+      <excludes>
+        <exclude>org.eclipse.jetty:jetty-webapp</exclude>
+        <exclude>org.eclipse.jetty.websocket:websocket-server</exclude>
+        <exclude>org.eclipse.jetty.websocket:websocket-servlet</exclude>
+      </excludes>
     </dependencySet>
   </dependencySets>
 </assembly>

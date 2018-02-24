@@ -16,7 +16,11 @@
 
 package com.consol.citrus.main;
 
+import com.consol.citrus.TestClass;
 import com.consol.citrus.config.CitrusSpringConfig;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -31,19 +35,22 @@ public class CitrusAppConfiguration {
     private Class<? extends CitrusSpringConfig> configClass;
 
     /** Test to execute at runtime */
-    private Class<?> testClass;
-
-    /** Test method to execute at runtime */
-    private String testMethod;
+    private List<TestClass> testClasses = new ArrayList<>();
 
     /** Package to execute at runtime */
-    private String packageName;
+    private List<String> packages = new ArrayList<>();
 
     /** Skip test execution at runtime */
     private boolean skipTests;
 
     /** Force system exit when application is finished using {@code System.exit()} */
     private boolean systemExit = false;
+
+    /** Test class name suffix */
+    private String testNameSuffix = "IT";
+
+    /** Test name pattern */
+    private String testNamePattern;
 
     /**
      * Gets the timeToLive.
@@ -82,57 +89,39 @@ public class CitrusAppConfiguration {
     }
 
     /**
-     * Gets the testClass.
+     * Gets the testClasses.
      *
      * @return
      */
-    public Class<?> getTestClass() {
-        return testClass;
+    public List<TestClass> getTestClasses() {
+        return testClasses;
     }
 
     /**
-     * Sets the testClass.
+     * Sets the testClasses.
      *
-     * @param testClass
+     * @param testClasses
      */
-    public void setTestClass(Class<?> testClass) {
-        this.testClass = testClass;
+    public void setTestClasses(List<TestClass> testClasses) {
+        this.testClasses = testClasses;
     }
 
     /**
-     * Gets the testMethod.
-     *
-     * @return
-     */
-    public String getTestMethod() {
-        return testMethod;
-    }
-
-    /**
-     * Sets the testMethod.
-     *
-     * @param testMethod
-     */
-    public void setTestMethod(String testMethod) {
-        this.testMethod = testMethod;
-    }
-
-    /**
-     * Gets the packageName.
+     * Gets the packages.
      *
      * @return
      */
-    public String getPackageName() {
-        return packageName;
+    public List<String> getPackages() {
+        return packages;
     }
 
     /**
-     * Sets the packageName.
+     * Sets the packages.
      *
-     * @param packageName
+     * @param packages
      */
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
+    public void setPackages(List<String> packages) {
+        this.packages = packages;
     }
 
     /**
@@ -169,5 +158,41 @@ public class CitrusAppConfiguration {
      */
     public void setSystemExit(boolean systemExit) {
         this.systemExit = systemExit;
+    }
+
+    /**
+     * Gets the testNameSuffix.
+     *
+     * @return
+     */
+    public String getTestNameSuffix() {
+        return testNameSuffix;
+    }
+
+    /**
+     * Sets the testNameSuffix.
+     *
+     * @param testNameSuffix
+     */
+    public void setTestNameSuffix(String testNameSuffix) {
+        this.testNameSuffix = testNameSuffix;
+    }
+
+    /**
+     * Gets the testNamePattern.
+     *
+     * @return
+     */
+    public String getTestNamePattern() {
+        return testNamePattern;
+    }
+
+    /**
+     * Sets the testNamePattern.
+     *
+     * @param testNamePattern
+     */
+    public void setTestNamePattern(String testNamePattern) {
+        this.testNamePattern = testNamePattern;
     }
 }

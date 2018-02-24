@@ -44,4 +44,15 @@ public class CitrusRemoteConfiguration extends CitrusAppConfiguration {
     public void setPort(int port) {
         this.port = port;
     }
+
+    /**
+     * Applies configuration with settable properties at runtime.
+     * @param configuration
+     */
+    public void apply(CitrusAppConfiguration configuration) {
+        setPackages(configuration.getPackages());
+        setTestClasses(configuration.getTestClasses());
+        setTestNamePattern(configuration.getTestNamePattern());
+        setTestNameSuffix(configuration.getTestNameSuffix());
+    }
 }

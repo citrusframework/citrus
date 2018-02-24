@@ -20,10 +20,10 @@ import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.plugin.config.RunConfiguration;
 import com.consol.citrus.report.OutputStreamReporter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
+import org.apache.http.*;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -75,6 +75,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
             HttpResponse response = null;
             try {
                 response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
+                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
                         .addParameter("package", URLEncoder.encode(testPackage, "UTF-8"))
                         .build());
 
@@ -96,6 +97,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
             HttpResponse response = null;
             try {
                 response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
+                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
                         .addParameter("class", URLEncoder.encode(testClass, "UTF-8"))
                         .build());
 
@@ -116,6 +118,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         HttpResponse response = null;
         try {
             response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
+                    .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
                     .build());
 
             if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
