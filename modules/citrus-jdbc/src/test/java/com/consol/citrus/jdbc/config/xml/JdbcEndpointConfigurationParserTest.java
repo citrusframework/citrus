@@ -90,7 +90,7 @@ public class JdbcEndpointConfigurationParserTest extends AbstractBeanDefinitionP
                 testServer.getEndpointConfiguration().getTimeout(),
                 10L);
         assertEquals(
-                testServer.getEndpointConfiguration().isAutoTransactions(),
+                testServer.getEndpointConfiguration().isAutoTransactionHandling(),
                 false);
     }
 }

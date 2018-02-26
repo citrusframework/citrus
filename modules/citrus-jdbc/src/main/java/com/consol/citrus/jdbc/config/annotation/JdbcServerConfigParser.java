@@ -63,6 +63,7 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
 
         builder.autoConnect(annotation.autoConnect());
         builder.autoCreateStatement(annotation.autoCreateStatement());
+        builder.autoTransactionHandling(annotation.autoTransactionHandling());
 
         if (StringUtils.hasText(annotation.correlator())) {
             builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
@@ -77,8 +78,6 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
         if (StringUtils.hasText(annotation.actor())) {
             builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
         }
-
-        builder.autoTransactions(annotation.autoTransactions());
 
         return builder.initialize().build();
     }

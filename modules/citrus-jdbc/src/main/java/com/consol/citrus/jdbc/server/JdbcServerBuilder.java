@@ -155,12 +155,12 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
     }
 
     /**
-     * Sets the autoTransactions property.
-     * @param autoTransactions Determines whether to auto accept transaction
+     * Sets the autoTransactionHandling property.
+     * @param autoTransactionHandling Determines whether to auto accept transaction
      * @return The builder
      */
-    public JdbcServerBuilder autoTransactions(final boolean autoTransactions) {
-        endpoint.getEndpointConfiguration().setAutoTransactions(autoTransactions);
+    public JdbcServerBuilder autoTransactionHandling(final boolean autoTransactionHandling) {
+        endpoint.getEndpointConfiguration().setAutoTransactionHandling(autoTransactionHandling);
         return this;
     }
 

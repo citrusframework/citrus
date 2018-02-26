@@ -41,7 +41,7 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     private boolean autoCreateStatement = true;
 
     /** Auto accept transaction operations  */
-    private boolean autoTransactions = true;
+    private boolean autoTransactionHandling = true;
 
     /** Marshaller converts from XML to Jdbc model objects */
     private JdbcMarshaller marshaller = new JdbcMarshaller();
@@ -142,20 +142,20 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     }
 
     /**
-     * Gets the autoTransactions.
+     * Gets the autoTransactionHandling.
      *
      * @return Whether to accept transaction commands
      */
-    public boolean isAutoTransactions() {
-        return autoTransactions;
+    public boolean isAutoTransactionHandling() {
+        return autoTransactionHandling;
     }
 
     /**
-     * Sets the autoTransactions.
+     * Sets the autoTransactionHandling.
      *
-     * @param autoTransactions Determines whether to accept transaction commands
+     * @param autoTransactionHandling Determines whether to accept transaction commands
      */
-    public void setAutoTransactions(boolean autoTransactions) {
-        this.autoTransactions = autoTransactions;
+    public void setAutoTransactionHandling(boolean autoTransactionHandling) {
+        this.autoTransactionHandling = autoTransactionHandling;
     }
 }

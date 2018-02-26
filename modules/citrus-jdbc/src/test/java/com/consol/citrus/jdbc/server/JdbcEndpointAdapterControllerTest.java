@@ -521,7 +521,7 @@ public class JdbcEndpointAdapterControllerTest {
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
         final boolean expectedBoolean = new Random().nextBoolean();
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(true);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(true);
 
         //WHEN
         jdbcEndpointAdapterController.setTransactionState(expectedBoolean);
@@ -533,11 +533,11 @@ public class JdbcEndpointAdapterControllerTest {
     }
 
     @Test
-    public void testSetTransactionStateWithoutAutoTransactions(){
+    public void testSetTransactionStateWithoutAutoTransactionHandling(){
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(false);
 
         //WHEN
         jdbcEndpointAdapterController.setTransactionState(true);
@@ -551,7 +551,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(false);
 
         //WHEN
         jdbcEndpointAdapterController.setTransactionState(false);
@@ -565,7 +565,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(true);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(true);
 
         //WHEN
         jdbcEndpointAdapterController.commitStatements();
@@ -579,7 +579,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(false);
 
         //WHEN
         jdbcEndpointAdapterController.commitStatements();
@@ -593,7 +593,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(false);
 
         final Message errorMessage = mock(Message.class);
         when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");
@@ -611,7 +611,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(true);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(true);
 
         //WHEN
         jdbcEndpointAdapterController.rollbackStatements();
@@ -625,7 +625,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(false);
 
         //WHEN
         jdbcEndpointAdapterController.rollbackStatements();
@@ -639,7 +639,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final JdbcEndpointAdapterController jdbcEndpointAdapterController = spy(this.jdbcEndpointAdapterController);
-        when(jdbcEndpointConfiguration.isAutoTransactions()).thenReturn(false);
+        when(jdbcEndpointConfiguration.isAutoTransactionHandling()).thenReturn(false);
 
         final Message errorMessage = mock(Message.class);
         when(errorMessage.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS)).thenReturn("false");

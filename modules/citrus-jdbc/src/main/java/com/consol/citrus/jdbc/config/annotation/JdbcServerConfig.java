@@ -112,8 +112,8 @@ public @interface JdbcServerConfig {
     String actor() default "";
 
     /**
-     * Auto transactions
-     * @return Whether auto transactions are enabled
+     * Auto transaction handling
+     * @return Whether autoTransactionHandling is enabled
      */
-    boolean autoTransactions() default true;
+    boolean autoTransactionHandling() default true;
 }

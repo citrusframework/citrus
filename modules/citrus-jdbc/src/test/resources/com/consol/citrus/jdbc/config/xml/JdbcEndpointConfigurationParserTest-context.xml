@@ -36,7 +36,7 @@
                       actor="testActor"
                       debug-logging="true"
                       message-correlator="replyMessageCorrelator"
-                      auto-transactions="false"
+                      auto-transaction-handling="false"
                       endpoint-adapter="endpointAdapter"/>
 
     <bean id="testActor" class="org.mockito.Mockito" factory-method="mock">

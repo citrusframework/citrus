@@ -228,7 +228,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
 
         this.transactionState = transactionState;
-        if(!endpointConfiguration.isAutoTransactions() && transactionState){
+        if(!endpointConfiguration.isAutoTransactionHandling() && transactionState){
             handleMessageAndCheckResponse(JdbcMessage.startTransaction());
         }
     }
@@ -252,7 +252,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
                     endpointConfiguration.getServerConfiguration().getDatabaseName()));
         }
 
-        if(!endpointConfiguration.isAutoTransactions()){
+        if(!endpointConfiguration.isAutoTransactionHandling()){
             handleMessageAndCheckResponse(JdbcMessage.commitTransaction());
         }
     }
@@ -267,7 +267,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
                     endpointConfiguration.getServerConfiguration().getDatabaseName()));
         }
 
-        if(!endpointConfiguration.isAutoTransactions()){
+        if(!endpointConfiguration.isAutoTransactionHandling()){
             handleMessageAndCheckResponse(JdbcMessage.rollbackTransaction());
         }
     }

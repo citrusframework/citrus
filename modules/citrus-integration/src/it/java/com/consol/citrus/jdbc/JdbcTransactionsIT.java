@@ -41,7 +41,7 @@ public class JdbcTransactionsIT extends TestNGCitrusTestDesigner{
             databaseName = "testdb",
             autoStart = true,
             port = 4569,
-            autoTransactions = false)
+            autoTransactionHandling = false)
     private JdbcServer jdbcServer;
 
     private JdbcDriver jdbcDriver = new JdbcDriver();
