@@ -27,7 +27,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="host" type="xs:string"/>
+      <xs:attribute name="host" type="xs:string" default="localhost"/>
       <xs:attribute name="port" type="xs:string"/>
       <xs:attribute name="database-name" type="xs:string" use="required"/>
       <xs:attribute name="auto-connect" type="xs:boolean"/>
