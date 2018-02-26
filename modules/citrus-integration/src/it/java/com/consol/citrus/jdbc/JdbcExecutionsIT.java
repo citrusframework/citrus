@@ -29,6 +29,7 @@ import com.consol.citrus.message.MessageType;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -85,25 +86,49 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
         });
 
         receive(jdbcServer)
-                .messageType(MessageType.JSON)
                 .message(JdbcMessage.execute(sql));
 
         send(jdbcServer)
+                .messageType(MessageType.JSON)
                 .message(JdbcMessage.result().dataSet("[ { \"foo\": \"bar\" } ]"));
     }
 
     @CitrusTest
     public void textExecuteStatement() throws Exception{
 
+
         final Connection connection =
                 jdbcDriver.connect(serverUrl, new Properties());
-        final Statement statement = connection.createStatement();
-        final String sql = "some statement";
+        final String sql = "{CALL someFunction(?)}";
 
-        statement.execute(sql);
+        action(new AbstractTestAction() {
+            @Override
+            public void doExecute(final TestContext context) {
+                Executors.newSingleThreadExecutor().submit(() -> {
+                            try {
+                                final CallableStatement statement = connection.prepareCall(sql);
+                                statement.setInt(1, 5);
+                                final boolean isResultSet  = statement.execute();
+                                final ResultSet resultSet = statement.getResultSet();
+
+                                assertTrue(isResultSet);
+                                assertTrue(resultSet.next());
+                                assertEquals(resultSet.getString("foo"), "bar");
+                            } catch (final SQLException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                );
+            }
+        });
 
         receive(jdbcServer)
-                .message(JdbcMessage.execute(sql));
+                .message(JdbcMessage.execute(sql + " - (5)"));
+
+        send(jdbcServer)
+                .messageType(MessageType.JSON)
+                .message(JdbcMessage.result().dataSet("[ { \"foo\": \"bar\" } ]"));
     }
 
     @CitrusTest

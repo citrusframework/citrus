@@ -18,14 +18,22 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Abstract control message builder is aware of message headers and delegates message payload
@@ -59,7 +67,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * @param messageType
      * @return
      */
-    public Message buildMessageContent(TestContext context, String messageType) {
+    public Message buildMessageContent(final TestContext context, final String messageType) {
         return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
     }
 
@@ -68,15 +76,18 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * subclass implementation.
      */
     @Override
-    public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
-        Object payload = buildMessagePayload(context, messageType);
+    public Message buildMessageContent(
+            final TestContext context,
+            final String messageType,
+            final MessageDirection direction) {
+        final Object payload = buildMessagePayload(context, messageType);
 
         try {
-            Message message = new DefaultMessage(payload, buildMessageHeaders(context));
+            Message message = new DefaultMessage(payload, buildMessageHeaders(context, messageType));
             message.setName(messageName);
 
             if (payload != null) {
-                for (MessageConstructionInterceptor interceptor: context.getGlobalMessageConstructionInterceptors().getMessageConstructionInterceptors()) {
+                for (final MessageConstructionInterceptor interceptor: context.getGlobalMessageConstructionInterceptors().getMessageConstructionInterceptors()) {
                     if (direction.equals(MessageDirection.UNBOUND)
                             || interceptor.getDirection().equals(MessageDirection.UNBOUND)
                             || direction.equals(interceptor.getDirection())) {
@@ -88,7 +99,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
                     message = dataDictionary.interceptMessageConstruction(message, messageType, context);
                 }
 
-                for (MessageConstructionInterceptor interceptor : messageInterceptors) {
+                for (final MessageConstructionInterceptor interceptor : messageInterceptors) {
                     if (direction.equals(MessageDirection.UNBOUND)
                             || interceptor.getDirection().equals(MessageDirection.UNBOUND)
                             || direction.equals(interceptor.getDirection())) {
@@ -100,9 +111,9 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             message.getHeaderData().addAll(buildMessageHeaderData(context));
 
             return message;
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
 
@@ -118,19 +129,21 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
 
     /**
      * Build message headers.
-     * @param context
-     * @return
+     * @param context The test context of the message
+     * @param messageType The message type of the Message
+     * @return A Map containing all headers as key value pairs
      */
-    public Map<String, Object> buildMessageHeaders(TestContext context) {
+    public Map<String, Object> buildMessageHeaders(final TestContext context, final String messageType) {
         try {
-            Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
+            final Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
+            headers.put(MessageHeaders.MESSAGE_TYPE, messageType);
 
-            for (Map.Entry<String, Object> entry : headers.entrySet()) {
-                String value = entry.getValue().toString();
+            for (final Map.Entry<String, Object> entry : headers.entrySet()) {
+                final String value = entry.getValue().toString();
                 
                 if (MessageHeaderType.isTyped(value)) {
-                    MessageHeaderType type = MessageHeaderType.fromTypedValue(value);
-                    Constructor<?> constr = type.getHeaderClass().getConstructor(new Class[] { String.class });
+                    final MessageHeaderType type = MessageHeaderType.fromTypedValue(value);
+                    final Constructor<?> constr = type.getHeaderClass().getConstructor(String.class);
                     entry.setValue(constr.newInstance(MessageHeaderType.removeTypeDefinition(value)));
                 }
             }
@@ -138,9 +151,9 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             MessageHeaderUtils.checkHeaderTypes(headers);
 
             return headers;
-        } catch (RuntimeException e) {
+        } catch (final RuntimeException e) {
             throw e;
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new CitrusRuntimeException("Failed to build message content", e);
         }
     }
@@ -150,17 +163,21 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * @param context
      * @return
      */
-    public List<String> buildMessageHeaderData(TestContext context) {
-        List<String> headerDataList = new ArrayList<>();
-        for (String headerResourcePath : headerResources) {
+    public List<String> buildMessageHeaderData(final TestContext context) {
+        final List<String> headerDataList = new ArrayList<>();
+        for (final String headerResourcePath : headerResources) {
             try {
-                headerDataList.add(context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(headerResourcePath, context), FileUtils.getCharset(headerResourcePath))));
-            } catch (IOException e) {
+                headerDataList.add(
+                        context.replaceDynamicContentInString(
+                                FileUtils.readToString(
+                                        FileUtils.getFileResource(headerResourcePath, context),
+                                        FileUtils.getCharset(headerResourcePath))));
+            } catch (final IOException e) {
                 throw new CitrusRuntimeException("Failed to read message header data resource", e);
             }
         }
 
-        for (String data : headerData) {
+        for (final String data : headerData) {
             headerDataList.add(context.replaceDynamicContentInString(data.trim()));
         }
 
@@ -172,7 +189,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      *
      * @param messageName
      */
-    public void setMessageName(String messageName) {
+    public void setMessageName(final String messageName) {
         this.messageName = messageName;
     }
 
@@ -186,7 +203,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     }
 
     @Override
-    public void setDataDictionary(DataDictionary dataDictionary) {
+    public void setDataDictionary(final DataDictionary dataDictionary) {
         this.dataDictionary = dataDictionary;
     }
 
@@ -202,7 +219,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * Sets the message headers for this control message.
      * @param messageHeaders the controlMessageHeaders to set
      */
-    public void setMessageHeaders(Map<String, Object> messageHeaders) {
+    public void setMessageHeaders(final Map<String, Object> messageHeaders) {
         this.messageHeaders = messageHeaders;
     }
 
@@ -210,7 +227,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * Sets the message header resource paths.
      * @param headerResources the messageHeaderResource to set
      */
-    public void setHeaderResources(List<String> headerResources) {
+    public void setHeaderResources(final List<String> headerResources) {
         this.headerResources = headerResources;
     }
 
@@ -218,7 +235,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * Sets the message header data.
      * @param headerData
      */
-    public void setHeaderData(List<String> headerData) {
+    public void setHeaderData(final List<String> headerData) {
         this.headerData = headerData;
     }
 
@@ -250,7 +267,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * Adds a new interceptor to the message construction process.
      * @param interceptor
      */
-    public void add(MessageConstructionInterceptor interceptor) {
+    public void add(final MessageConstructionInterceptor interceptor) {
         messageInterceptors.add(interceptor);
     }
 
@@ -267,7 +284,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * @param messageInterceptors the messageInterceptors to set
      */
     public void setMessageInterceptors(
-            List<MessageConstructionInterceptor> messageInterceptors) {
+            final List<MessageConstructionInterceptor> messageInterceptors) {
         this.messageInterceptors = messageInterceptors;
     }
 }

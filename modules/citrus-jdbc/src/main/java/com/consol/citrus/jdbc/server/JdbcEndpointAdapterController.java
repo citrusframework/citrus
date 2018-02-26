@@ -25,11 +25,11 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.JdbcMarshaller;
-import com.consol.citrus.jdbc.model.OpenConnection;
-import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.model.message.jdbc.OpenConnection;
+import com.consol.citrus.model.message.jdbc.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
@@ -172,7 +172,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     public DataSet executeQuery(final String query) throws JdbcServerException {
         log.info("Received execute query request: " + query);
         final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
-        final MessageType responseMessageType = determineMessageType(endpointConfiguration.getMarshaller());
+        final MessageType responseMessageType = determineMessageType(response);
         return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
@@ -182,9 +182,11 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the execution was not successful
      */
     @Override
-    public void execute(final String stmt) throws JdbcServerException {
+    public DataSet executeStatement(final String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
-        handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
+        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
+        final MessageType responseMessageType = determineMessageType(response);
+        return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
     /**
@@ -271,17 +273,25 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     }
 
     /**
-     * Determines the MessageType of the given marshaller
-     * @param marshaller The marshaller to get the message type from
-     * @return The MessageType of the marshaller
+     * Creates a callable statement
      */
-    private MessageType determineMessageType(final JdbcMarshaller marshaller) {
-        if(MessageType.XML.name().equalsIgnoreCase(marshaller.getType())){
-            return MessageType.XML;
-        }else if(MessageType.JSON.name().equalsIgnoreCase(marshaller.getType())){
-            return MessageType.JSON;
+    @Override
+    public void createCallableStatement(final String sql) {
+        if (!endpointConfiguration.isAutoCreateStatement()) {
+            handleMessageAndCheckResponse(JdbcMessage.createCallableStatement(sql));
         }
+    }
 
+    /**
+     * Determines the MessageType of the given response
+     * @param response The response to get the message type from
+     * @return The MessageType of the response
+     */
+    private MessageType determineMessageType(final Message response) {
+        final String messageTypeString = (String) response.getHeader(MessageHeaders.MESSAGE_TYPE);
+        if (MessageType.knows(messageTypeString)){
+            return MessageType.valueOf(messageTypeString);
+        }
         return null;
     }
 
@@ -293,9 +303,21 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     private List<OpenConnection.Property> convertToPropertyList(final Map<String, String> properties) {
         return properties.entrySet()
                 .stream()
-                .map(entry -> new OpenConnection.Property(entry.getKey(), entry.getValue()))
+                .map(this::convertToProperty)
                 .sorted(Comparator.comparingInt(OpenConnection.Property::hashCode))
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Converts a Map entry into a OpenConnection.Property
+     * @param entry The entry to convert
+     * @return the OpenConnection.Property representation
+     */
+    private OpenConnection.Property convertToProperty(final Map.Entry<String, String> entry) {
+        final OpenConnection.Property property = new OpenConnection.Property();
+        property.setName(entry.getKey());
+        property.setValue(entry.getValue());
+        return property;
     }
 
     /**

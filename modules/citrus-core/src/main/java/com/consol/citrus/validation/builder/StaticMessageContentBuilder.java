@@ -39,13 +39,13 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     /**
      * Default constructor with static message to be built by this message builder.
      */
-    public StaticMessageContentBuilder(Message message) {
+    public StaticMessageContentBuilder(final Message message) {
         this.message = message;
         this.setMessageName(message.getName());
     }
 
     @Override
-    public Object buildMessagePayload(TestContext context, String messageType) {
+    public Object buildMessagePayload(final TestContext context, final String messageType) {
         if (message.getPayload() instanceof String) {
             return context.replaceDynamicContentInString(message.getPayload(String.class));
         } else {
@@ -54,8 +54,8 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public Map<String, Object> buildMessageHeaders(TestContext context) {
-        Map<String, Object> headers = super.buildMessageHeaders(context);
+    public Map<String, Object> buildMessageHeaders(final TestContext context, final String messageType) {
+        final Map<String, Object> headers = super.buildMessageHeaders(context, messageType);
         headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders().entrySet()
                                     .stream()
                                     .filter(entry -> !entry.getKey().equals(MessageHeaders.ID) && !entry.getKey().equals(MessageHeaders.TIMESTAMP))
@@ -65,8 +65,8 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public List<String> buildMessageHeaderData(TestContext context) {
-        List<String> headerData = super.buildMessageHeaderData(context);
+    public List<String> buildMessageHeaderData(final TestContext context) {
+        final List<String> headerData = super.buildMessageHeaderData(context);
         headerData.addAll(context.resolveDynamicValuesInList(message.getHeaderData()));
 
         return headerData;
@@ -75,7 +75,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     /**
      * Default constructor with static message to be built by this message builder.
      */
-    public static StaticMessageContentBuilder withMessage(Message message) {
+    public static StaticMessageContentBuilder withMessage(final Message message) {
         return new StaticMessageContentBuilder(message);
     }
 

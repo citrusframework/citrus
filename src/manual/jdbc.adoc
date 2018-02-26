@@ -25,7 +25,42 @@ To enable the JDBC support for your test project, you'll have to add the followi
 The Citrus-JDBC-Driver is a JDBC conform driver that realizes the communication with the Citrus-JDBC-Server. To be able
 to use Citrus-JDBC within a CI/CD setup, we recommend to ensure that your software is able to exchange the JDBC driver
 by configuration. The Citrus-JDBC-Driver is available on maven central under
-`com.consol.citrus.citrus-db.citrus-db-driver`.
+`com.consol.citrus.citrus-db.citrus-db-driver`. After the driver has been downloaded and configured to be used by your
+application, please make sure that the driver configuration matches the Citrus-JDBC-Server configuration in your
+tests.
+
+.Examplce jdbc driver configuration
+[source,xml]
+----
+<systemProperties>
+    <systemProperty>
+      <name>todo.persistence.type</name>
+      <value>jdbc</value>
+    </systemProperty>
+    <systemProperty>
+      <name>todo.jdbc.driverClassName</name>
+      <value>com.consol.citrus.db.driver.JdbcDriver</value>
+    </systemProperty>
+    <systemProperty>
+      <name>todo.jdbc.url</name>
+      <value>jdbc:citrus:http://localhost:3306/testdb</value>
+    </systemProperty>
+</systemProperties>
+----
+
+.Citrus-JDBC-Server matching the driver config
+[source,java]
+----
+@Bean
+public JdbcServer jdbcServer() {
+    return CitrusEndpoints.jdbc()
+        .server()
+        .host("localhost")
+        .databaseName("testdb")
+        .port(3306)
+        .build();
+}
+----
 
 [[jdbc-server]]
 == The Citrus-JDBC-Server
@@ -50,14 +85,14 @@ Citrus Annotations.
 @Bean
 public JdbcServer jdbcServer() {
     return CitrusEndpoints.jdbc()
-            .server()
-            .host("localhost")
-            .databaseName("testdb")
-            .port(4567)
-            .timeout(10000L)
-            .autoStart(true)
-            .autoTransactions(false)
-            .build();
+        .server()
+        .host("localhost")
+        .databaseName("testdb")
+        .port(4567)
+        .timeout(10000L)
+        .autoStart(true)
+        .autoTransactions(false)
+        .build();
 }
 ----
 
@@ -112,16 +147,16 @@ public void testAddTodoEntry() {
         .accept("text/html");
 
     receive(jdbcServer)
-            .messageType(MessageType.JSON)
             .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));<3>
 
     send(jdbcServer)
-            .message(JdbcMessage.result().dataSet("[ {" +
-                        "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
-                        "\"title\": \"${todoName}\"," +
-                        "\"description\": \"${todoDescription}\"," +
-                        "\"done\": \"false\"" +
-                    "} ]"));<4>
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.result().dataSet("[ {" +
+                    "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
+                    "\"title\": \"${todoName}\"," +
+                    "\"description\": \"${todoDescription}\"," +
+                    "\"done\": \"false\"" +
+                "} ]"));<4>
 
     http()
         .client(todoClient)
@@ -135,6 +170,115 @@ public void testAddTodoEntry() {
 <2> Responds with a result set stating, that one row has been updated/created.
 <3> Expects a `SELECT` statement matching the given statement.
 <4> Responds with the DataSet specified as JSON string.
+
+[[jdbc-server-transactions]]
+=== Transactions
+When it comes to complex modifications of your database, transactions are commonly used.
+Citrus is able to verify the behavior of your system under test concerning start, commit and rollback
+actions of transactions. The verification of transactions has to be enabled in the server Citrus-JDBC-Server
+configuration. For more information, please have a look at the <<jdbc-server-configuration>> section.
+
+.Verifiying transaction commit
+[source,java]
+----
+receive(jdbcServer)
+    .message(JdbcMessage.startTransaction());<1>
+
+receive(jdbcServer)
+    .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
+
+send(jdbcServer)
+    .message(JdbcMessage.result().rowsUpdated(1));
+
+receive(jdbcServer)
+    .message(JdbcMessage.commitTransaction());<2>
+----
+<1> Verify, that the transaction has been started.
+<2> Verify, that the modification of the database has been committed.
+
+It is also possible to simulate an erroneous modification including the verification of a rollback.
+
+.Verifiying transaction rollback
+[source,java]
+----
+eceive(jdbcServer)
+    .message(JdbcMessage.startTransaction());<1>
+
+receive(jdbcServer)
+    .message(JdbcMessage.execute("@startsWith('INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)')@"));
+
+send(jdbcServer)
+    .message(JdbcMessage.result().exception("Could not execute something"));
+
+receive(jdbcServer)
+    .message(JdbcMessage.rollbackTransaction());<2>
+----
+<1> Verify, that the transaction has been started.
+<2> Verify, that a rollback occurred after the database exception has been send.
+
+[[jdbc-server-prepared-statements]]
+=== Prepared statements
+Because prepared statements work slightly different than simple database queries, the validation of those is also
+slightly different. Currently, Citrus offers you the possibility to verify that your application has created the
+correct prepared statement, that it was executed with the correct parameters and that it has been closed.
+
+.Verifying prepared statement
+[source,java]
+----
+receive(jdbcServer)
+    .message(JdbcMessage.createPreparedStatement("INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?)"));<1>
+
+receive(jdbcServer)
+    .message(JdbcMessage.execute(
+        "INSERT INTO todo_entries (id, title, description, done) VALUES (?, ?, ?, ?) - (1,sample,A sample todo,false)"));<2>
+
+receive(jdbcServer)
+    .message(JdbcMessage.closeStatement());<3>
+----
+<1> Verify that the given prepared statement has been created.
+<2> Verify that the statement has been executed with the parameters `1,sample,A sample todo,false`.
+<3> Verify that the statement has been closed.
+
+Please notice, that the verification of `createPreparedStatement` and `closeStatement` messages has to be activated
+via configuration. For more information, please have a look at the <<jdbc-server-configuration>> section.
+
+[[jdbc-server-callable-statements]]
+=== Callable statements / stored procedures
+As well as prepared statements, callable statements are different from simple queries. Callable statements are used
+on jdbc level to access stored procedures, functions, etc. on the database server.
+
+.Verifying callable statement
+[source,java]
+----
+receive(jdbcServer)
+    .message(JdbcMessage.createCallableStatement("{CALL limitedToDoList(?)}"));<1>
+
+receive(jdbcServer)
+    .message(JdbcMessage.execute("{CALL limitedToDoList(?)} - (1)"));<2>
+
+send(jdbcServer)
+    .messageType(MessageType.XML)
+    .message(JdbcMessage.result().dataSet("" +
+            "<dataset>" +
+                "<row>" +
+                    "<id>1</id>"+
+                    "<title>sample</title>"+
+                    "<description>A sample todo</description>" +
+                    "<done>false</done>" +
+                 "</row>" +
+                "</dataset>"));
+
+receive(jdbcServer)
+    .message(JdbcMessage.closeStatement());<3>
+----
+<1> Verify that the given callable statement has been created.
+<2> Verify that the statement has been executed with the parameter `1`.
+<3> Verify that the statement has been closed.
+
+As you might have noticed, callable statements and prepared statements have nearly the same workflow in Citrus. The only
+difference is the creation of the statement itself. It is also the case that the verification of
+`createCallableStatement` and `closeStatement` messages has to be activated via configuration. For more information,
+please have a look at the <<jdbc-server-configuration>> section.
 
 [[jdbc-server-configuration]]
 === Configuration
@@ -154,19 +298,19 @@ The following properties are available to configure the server for your test sce
 | auto connect
 | No
 | true
-| Determines whether the server should automatically accept or validate connection related messages.
+| Determines whether the server should automatically accept connection related messages or validate them.
 This includes `openConnection` and `closeConnection`.
 
 | auto create statement
 | No
 | true
-| Determines whether the server should automatically accept or validate statement related messages.
-This includes `createPreparedStatement`, `createStatement` and `closeStatement`.
+| Determines whether the server should automatically accept statement related messages or validate them.
+This includes `createStatement`, `createPreparedStatement`, `createCallableStatement` and `closeStatement`.
 
 | auto transactions
 | No
 | true
-| Determines whether the server should automatically accept or validate transaction related messages.
+| Determines whether the server should automatically accept transaction related messages or validate them.
 This includes `startTransaction`, `commitTransaction` and `rollbackTransaction`.
 
 | host
@@ -245,15 +389,20 @@ via the endpoint configuration.
 | States that the connection has been closed. The evaluation of connections has to be enabled
 via the endpoint configuration.
 
+| `JdbcMessage.createStatement()`
+| receive
+| States that a statement has been created. The evaluation of statement handling has to be enabled via the endpoint
+configuration.
+
 | `JdbcMessage.createPreparedStatement(String sql)`
 | receive
 | States that a SQL statement matching the given expression has been created. The evaluation of statement handling
 has to be enabled via the endpoint configuration.
 
-| `JdbcMessage.createStatement()`
+| `JdbcMessage.createCallableStatement(String sql)`
 | receive
-| States that a statement has been created. The evaluation of statement handling has to be enabled via the endpoint
-configuration.
+| States that a callable statement referencing a function or procedure that is matching the given expression has been
+created. The evaluation of statement handling has to be enabled via the endpoint configuration.
 
 | `JdbcMessage.closeStatement()`
 | receive
@@ -357,14 +506,14 @@ send(jdbcServer).message(JdbcMessage.result().dataSet(userDataSet));
 
 If you use the XML or JSON notation as string or within a resource, you'll have to specify that in your test setup.
 
-.Java dataset creation example
+.Java json dataset creation example
 [source,java]
 ----
 receive(jdbcServer)
-                .messageType(MessageType.JSON)<1>
                 .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));
 
 send(jdbcServer)
+        .messageType(MessageType.JSON)<1>
         .message(JdbcMessage.result().dataSet("[ {" +
                     "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
                     "\"title\": \"${todoName}\"," +
@@ -374,3 +523,25 @@ send(jdbcServer)
 ----
 <1> Tells Citrus that the response has to be interpreted as JSON.
 
+.Java xml dataset creation example
+[source,java]
+----
+receive(jdbcServer)
+        .message(JdbcMessage.execute("SELECT id, title, description FROM todo_entries"));
+send(jdbcServer)
+        .messageType(MessageType.XML)<1>
+        .message(JdbcMessage.result().dataSet("" +
+                "<dataset>" +
+                    "<row>" +
+                        "<id>${todoId}</id>"+
+                        "<title>${todoName}</title>"+
+                        "<description>${todoDescription}</description>" +
+                        "<done>false</done>" +
+                     "</row>" +
+                "</dataset>"));
+----
+<1> Tells Citrus that the response has to be interpreted as XML.
+
+NOTE: Technically it is not required to specify the messages as `MessageType.XML`, because the default message type
+in citrus currently *is* XML. Nevertheless we highly recommend to specify the message type. This will ensure that your
+tests sustain future changes.

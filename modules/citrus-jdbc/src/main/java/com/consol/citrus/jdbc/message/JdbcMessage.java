@@ -18,19 +18,12 @@ package com.consol.citrus.jdbc.message;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jdbc.model.CloseConnection;
-import com.consol.citrus.jdbc.model.CloseStatement;
-import com.consol.citrus.jdbc.model.CreatePreparedStatement;
-import com.consol.citrus.jdbc.model.CreateStatement;
-import com.consol.citrus.jdbc.model.Execute;
+import com.consol.citrus.jdbc.generator.JdbcOperationGenerator;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
-import com.consol.citrus.jdbc.model.OpenConnection;
-import com.consol.citrus.jdbc.model.Operation;
-import com.consol.citrus.jdbc.model.TransactionCommitted;
-import com.consol.citrus.jdbc.model.TransactionRollback;
-import com.consol.citrus.jdbc.model.TransactionStarted;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.model.message.jdbc.OpenConnection;
+import com.consol.citrus.model.message.jdbc.Operation;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.transform.StringResult;
@@ -48,6 +41,8 @@ public class JdbcMessage extends DefaultMessage {
     private Operation operation;
 
     private JdbcMarshaller marshaller = new JdbcMarshaller();
+
+    private static JdbcOperationGenerator operationGenerator = new JdbcOperationGenerator();
 
     /**
      * Prevent traditional instantiation.
@@ -68,33 +63,33 @@ public class JdbcMessage extends DefaultMessage {
         if (properties.length > 0) {
             openConnection.getProperties().addAll(Arrays.asList(properties));
         }
-        return new JdbcMessage(new Operation(openConnection));
+        return new JdbcMessage(operationGenerator.generateOpenConnection(openConnection));
     }
 
     public static JdbcMessage openConnection(final List<OpenConnection.Property> properties) {
         final OpenConnection openConnection = new OpenConnection();
         openConnection.getProperties().addAll(properties);
-        return new JdbcMessage(new Operation(openConnection));
+        return new JdbcMessage(operationGenerator.generateOpenConnection(openConnection));
     }
 
     public static JdbcMessage closeConnection() {
-        return new JdbcMessage(new Operation(new CloseConnection()));
+        return new JdbcMessage(operationGenerator.generateCloseConnection());
     }
 
     public static JdbcMessage createPreparedStatement(final String sql) {
-        return new JdbcMessage(new Operation(new CreatePreparedStatement(sql)));
+        return new JdbcMessage(operationGenerator.generatePreparedStatement(sql));
     }
 
     public static JdbcMessage createStatement() {
-        return new JdbcMessage(new Operation(new CreateStatement()));
+        return new JdbcMessage(operationGenerator.generateCreateStatement());
     }
 
     public static JdbcMessage closeStatement() {
-        return new JdbcMessage(new Operation(new CloseStatement()));
+        return new JdbcMessage(operationGenerator.generateCloseStatement());
     }
 
     public static JdbcMessage execute(final String sql) {
-        return new JdbcMessage(new Operation(new Execute(new Execute.Statement(sql))));
+        return new JdbcMessage(operationGenerator.generateExecuteStatement(sql));
     }
 
     public static JdbcMessage result() {
@@ -152,15 +147,19 @@ public class JdbcMessage extends DefaultMessage {
     }
 
     public static Message startTransaction() {
-        return new JdbcMessage(new Operation(new TransactionStarted()));
+        return new JdbcMessage(operationGenerator.generateTransactionStarted());
     }
 
     public static Message commitTransaction(){
-        return new JdbcMessage(new Operation(new TransactionCommitted()));
+        return new JdbcMessage(operationGenerator.generateTransactionCommitted());
     }
 
     public static Message rollbackTransaction(){
-        return new JdbcMessage(new Operation(new TransactionRollback()));
+        return new JdbcMessage(operationGenerator.generateTransactionRollback());
+    }
+
+    public static Message createCallableStatement(final String sql) {
+        return new JdbcMessage(operationGenerator.generateCreateCallableStatement(sql));
     }
 
     @Override
@@ -182,5 +181,4 @@ public class JdbcMessage extends DefaultMessage {
 
         return super.getPayload();
     }
-
 }

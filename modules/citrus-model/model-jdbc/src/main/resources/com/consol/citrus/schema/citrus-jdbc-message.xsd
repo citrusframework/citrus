@@ -32,6 +32,7 @@
           <xs:element ref="create-statement"/>
           <xs:element ref="close-statement"/>
           <xs:element ref="create-prepared-statement"/>
+          <xs:element ref="create-callable-statement"/>
           <xs:element ref="execute"/>
           <xs:element ref="transaction-started"/>
           <xs:element ref="transaction-committed"/>
@@ -92,6 +93,17 @@
           <xs:element name="sql" type="xs:string"/>
         </xs:sequence>
       </xs:complexType>
+    </xs:element>
+
+    <xs:element name="create-callable-statement">
+        <xs:annotation>
+            <xs:documentation>Create callable statement operation.</xs:documentation>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sql" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
     </xs:element>
 
     <xs:element name="execute">
