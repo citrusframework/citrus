@@ -28,8 +28,8 @@ import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.message.jdbc.OpenConnection;
-import com.consol.citrus.model.message.jdbc.Operation;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
@@ -64,8 +64,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param delegate The endpoint adapter to delegate to
      */
     JdbcEndpointAdapterController(
-            final JdbcEndpointConfiguration endpointConfiguration,
-            final EndpointAdapter delegate) {
+            JdbcEndpointConfiguration endpointConfiguration,
+            EndpointAdapter delegate) {
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
         this.dataSetCreator = new DataSetCreator();
@@ -78,18 +78,18 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param dataSetCreator The DataSetCreator to use for DataSetGeneration
      */
     JdbcEndpointAdapterController(
-            final JdbcEndpointConfiguration endpointConfiguration,
-            final EndpointAdapter delegate,
-            final DataSetCreator dataSetCreator) {
+            JdbcEndpointConfiguration endpointConfiguration,
+            EndpointAdapter delegate,
+            DataSetCreator dataSetCreator) {
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
         this.dataSetCreator = dataSetCreator;
     }
 
     @Override
-    public Message handleMessage(final Message request) {
+    public Message handleMessage(Message request) {
         if (request.getPayload() instanceof Operation) {
-            final StringResult result = new StringResult();
+            StringResult result = new StringResult();
             endpointConfiguration.getMarshaller().marshal(request.getPayload(Operation.class), result);
             request.setPayload(result.toString());
         }
@@ -110,9 +110,9 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the maximum connections have been reached
      */
     @Override
-    public void openConnection(final Map<String, String> properties) throws JdbcServerException {
+    public void openConnection(Map<String, String> properties) throws JdbcServerException {
         if (!endpointConfiguration.isAutoConnect()) {
-            final List<OpenConnection.Property> propertyList = convertToPropertyList(properties);
+            List<OpenConnection.Property> propertyList = convertToPropertyList(properties);
             handleMessageAndCheckResponse(JdbcMessage.openConnection(propertyList));
         }
 
@@ -145,7 +145,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the statement was not successful
      */
     @Override
-    public void createPreparedStatement(final String stmt) throws JdbcServerException {
+    public void createPreparedStatement(String stmt) throws JdbcServerException {
         if (!endpointConfiguration.isAutoCreateStatement()) {
             handleMessageAndCheckResponse(JdbcMessage.createPreparedStatement(stmt));
         }
@@ -169,10 +169,10 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the query was not successful
      */
     @Override
-    public DataSet executeQuery(final String query) throws JdbcServerException {
+    public DataSet executeQuery(String query) throws JdbcServerException {
         log.info("Received execute query request: " + query);
-        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
-        final MessageType responseMessageType = determineMessageType(response);
+        Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
+        MessageType responseMessageType = determineMessageType(response);
         return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
@@ -182,10 +182,10 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the execution was not successful
      */
     @Override
-    public DataSet executeStatement(final String stmt) throws JdbcServerException {
+    public DataSet executeStatement(String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
-        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
-        final MessageType responseMessageType = determineMessageType(response);
+        Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
+        MessageType responseMessageType = determineMessageType(response);
         return dataSetCreator.createDataSet(response, responseMessageType);
     }
 
@@ -195,9 +195,9 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the execution was not successful
      */
     @Override
-    public int executeUpdate(final String updateSql) throws JdbcServerException {
+    public int executeUpdate(String updateSql) throws JdbcServerException {
         log.info("Received execute update request: " + updateSql);
-        final Message response = handleMessageAndCheckResponse(JdbcMessage.execute(updateSql));
+        Message response = handleMessageAndCheckResponse(JdbcMessage.execute(updateSql));
         return Optional.ofNullable(
                 response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED))
                 .map(Object::toString).map(Integer::valueOf)
@@ -220,7 +220,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param transactionState The boolean value whether the server is in transaction state.
      */
     @Override
-    public void setTransactionState(final boolean transactionState) {
+    public void setTransactionState(boolean transactionState) {
         if (log.isDebugEnabled()) {
             log.debug(String.format("Received transaction state change: '%s':%n%s",
                     endpointConfiguration.getServerConfiguration().getDatabaseName(),
@@ -276,7 +276,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * Creates a callable statement
      */
     @Override
-    public void createCallableStatement(final String sql) {
+    public void createCallableStatement(String sql) {
         if (!endpointConfiguration.isAutoCreateStatement()) {
             handleMessageAndCheckResponse(JdbcMessage.createCallableStatement(sql));
         }
@@ -287,8 +287,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param response The response to get the message type from
      * @return The MessageType of the response
      */
-    private MessageType determineMessageType(final Message response) {
-        final String messageTypeString = (String) response.getHeader(MessageHeaders.MESSAGE_TYPE);
+    private MessageType determineMessageType(Message response) {
+        String messageTypeString = (String) response.getHeader(MessageHeaders.MESSAGE_TYPE);
         if (MessageType.knows(messageTypeString)){
             return MessageType.valueOf(messageTypeString);
         }
@@ -300,7 +300,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param properties The map to convert
      * @return A list of Properties
      */
-    private List<OpenConnection.Property> convertToPropertyList(final Map<String, String> properties) {
+    private List<OpenConnection.Property> convertToPropertyList(Map<String, String> properties) {
         return properties.entrySet()
                 .stream()
                 .map(this::convertToProperty)
@@ -313,8 +313,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param entry The entry to convert
      * @return the OpenConnection.Property representation
      */
-    private OpenConnection.Property convertToProperty(final Map.Entry<String, String> entry) {
-        final OpenConnection.Property property = new OpenConnection.Property();
+    private OpenConnection.Property convertToProperty(Map.Entry<String, String> entry) {
+        OpenConnection.Property property = new OpenConnection.Property();
         property.setName(entry.getKey());
         property.setValue(entry.getValue());
         return property;
@@ -326,8 +326,8 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @return The response Message
      * @throws JdbcServerException Thrown when the response has some exception header.
      */
-    private Message handleMessageAndCheckResponse(final Message request) throws JdbcServerException {
-        final Message response = handleMessage(request);
+    private Message handleMessageAndCheckResponse(Message request) throws JdbcServerException {
+        Message response = handleMessage(request);
         checkSuccess(response);
         return response;
     }
@@ -339,7 +339,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param response The response message to check
      * @throws JdbcServerException In case the message contains a error.
      */
-    private void checkSuccess(final Message response) throws JdbcServerException {
+    private void checkSuccess(Message response) throws JdbcServerException {
         if (!success(response)) {
             throw new JdbcServerException(
                     Optional.ofNullable(
@@ -348,7 +348,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
     }
 
-    private boolean success(final Message response) {
+    private boolean success(Message response) {
         return Optional.ofNullable(
                 response.getHeader(
                         JdbcMessageHeaders.JDBC_SERVER_SUCCESS))

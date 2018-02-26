@@ -16,17 +16,17 @@
 
 package com.consol.citrus.jdbc.generator;
 
-import com.consol.citrus.model.message.jdbc.CloseConnection;
-import com.consol.citrus.model.message.jdbc.CloseStatement;
-import com.consol.citrus.model.message.jdbc.CreateCallableStatement;
-import com.consol.citrus.model.message.jdbc.CreatePreparedStatement;
-import com.consol.citrus.model.message.jdbc.CreateStatement;
-import com.consol.citrus.model.message.jdbc.Execute;
-import com.consol.citrus.model.message.jdbc.OpenConnection;
-import com.consol.citrus.model.message.jdbc.Operation;
-import com.consol.citrus.model.message.jdbc.TransactionCommitted;
-import com.consol.citrus.model.message.jdbc.TransactionRollback;
-import com.consol.citrus.model.message.jdbc.TransactionStarted;
+import com.consol.citrus.jdbc.model.CloseConnection;
+import com.consol.citrus.jdbc.model.CloseStatement;
+import com.consol.citrus.jdbc.model.CreateCallableStatement;
+import com.consol.citrus.jdbc.model.CreatePreparedStatement;
+import com.consol.citrus.jdbc.model.CreateStatement;
+import com.consol.citrus.jdbc.model.Execute;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.TransactionCommitted;
+import com.consol.citrus.jdbc.model.TransactionRollback;
+import com.consol.citrus.jdbc.model.TransactionStarted;
 
 public class JdbcOperationGenerator {
 

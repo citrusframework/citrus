@@ -18,15 +18,12 @@ package com.consol.citrus.jdbc.model;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.message.jdbc.Operation;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
-import org.springframework.oxm.XmlMappingException;
+import org.springframework.oxm.*;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.xml.transform.StringResult;
 
@@ -52,7 +49,7 @@ public class JdbcMarshaller extends ObjectMapper implements Marshaller, Unmarsha
     private Jaxb2Marshaller jaxbDelegate = new Jaxb2Marshaller();
 
     /** Message type format: XML or JSON */
-    private String type = MessageType.JSON.name();
+    private String type;
 
     /**
      * Default constructor
@@ -61,7 +58,7 @@ public class JdbcMarshaller extends ObjectMapper implements Marshaller, Unmarsha
         jaxbDelegate.setClassesToBeBound(Operation.class);
         jaxbDelegate.setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-jdbc-message.xsd"));
 
-        type = System.getProperty(JDBC_MARSHALLER_TYPE_PROPERTY, type);
+        type = System.getProperty(JDBC_MARSHALLER_TYPE_PROPERTY, MessageType.JSON.name());
 
         try {
             jaxbDelegate.afterPropertiesSet();

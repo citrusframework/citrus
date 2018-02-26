@@ -27,7 +27,7 @@ import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.model.message.jdbc.Operation;
+import com.consol.citrus.jdbc.model.Operation;
 import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Test;

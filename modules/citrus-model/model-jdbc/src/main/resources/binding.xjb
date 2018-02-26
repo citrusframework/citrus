@@ -27,7 +27,7 @@
 
   <bindings schemaLocation="com/consol/citrus/schema/citrus-jdbc-message.xsd">
     <schemaBindings>
-      <package name="com.consol.citrus.model.message.jdbc"/>
+      <package name="com.consol.citrus.jdbc.model"/>
     </schemaBindings>
   </bindings>
 
