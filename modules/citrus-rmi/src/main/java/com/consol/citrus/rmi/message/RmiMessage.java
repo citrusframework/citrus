@@ -118,7 +118,11 @@ public class RmiMessage extends DefaultMessage {
 
     @Override
     public <T> T getPayload(Class<T> type) {
-        if (String.class.equals(type)) {
+        if (RmiServiceInvocation.class.equals(type) && serviceInvocation != null) {
+            return (T) serviceInvocation;
+        } else if (RmiServiceResult.class.equals(type) && serviceResult != null) {
+            return (T) serviceResult;
+        } else if (String.class.equals(type)) {
             return (T) getPayload();
         } else {
             return super.getPayload(type);

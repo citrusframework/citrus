@@ -32,7 +32,7 @@ public class RmiMarshaller extends Jaxb2Marshaller {
 
     public RmiMarshaller() {
         setClassesToBeBound(RmiServiceInvocation.class,
-                RmiServiceResult.class);
+                            RmiServiceResult.class);
 
         setSchema(new ClassPathResource("com/consol/citrus/schema/citrus-rmi-message.xsd"));
 
