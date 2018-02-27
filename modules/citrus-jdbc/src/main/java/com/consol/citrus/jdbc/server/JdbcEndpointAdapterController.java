@@ -19,25 +19,19 @@ package com.consol.citrus.jdbc.server;
 import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.db.server.controller.JdbcController;
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.endpoint.*;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.jdbc.model.OpenConnection;
-import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.*;
+import com.consol.citrus.message.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -101,7 +95,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         }
 
         return Optional.ofNullable(delegate.handleMessage(request))
-                .orElse(JdbcMessage.result(true));
+                       .orElse(JdbcMessage.success());
     }
 
     /**
@@ -332,29 +326,35 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         return response;
     }
 
-
-
     /**
      * Check that response is not having an exception message.
      * @param response The response message to check
      * @throws JdbcServerException In case the message contains a error.
      */
     private void checkSuccess(Message response) throws JdbcServerException {
-        if (!success(response)) {
-            throw new JdbcServerException(
-                    Optional.ofNullable(
-                            response.getHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION))
-                            .map(Object::toString).orElse(""));
+        OperationResult operationResult = null;
+        if (response instanceof JdbcMessage || response.getPayload() instanceof OperationResult) {
+            operationResult = response.getPayload(OperationResult.class);
+        } else if (response.getPayload() != null && StringUtils.hasText(response.getPayload(String.class))) {
+            operationResult = (OperationResult) endpointConfiguration.getMarshaller().unmarshal(new StringSource(response.getPayload(String.class)));
+        }
+
+        if (!success(response, operationResult)) {
+            throw new JdbcServerException(getExceptionMessage(response, operationResult));
         }
     }
 
-    private boolean success(Message response) {
-        return Optional.ofNullable(
-                response.getHeader(
-                        JdbcMessageHeaders.JDBC_SERVER_SUCCESS))
+    private String getExceptionMessage(Message response, OperationResult operationResult) {
+        return Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION))
+                        .map(Object::toString)
+                        .orElse(Optional.ofNullable(operationResult).map(OperationResult::getException).orElse(""));
+    }
+
+    private boolean success(Message response, OperationResult result) {
+        return Optional.ofNullable(response.getHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS))
                 .map(Object::toString)
                 .map(Boolean::valueOf)
-                .orElse(true);
+                .orElse(Optional.ofNullable(result).map(OperationResult::isSuccess).orElse(true));
     }
 
     @Override

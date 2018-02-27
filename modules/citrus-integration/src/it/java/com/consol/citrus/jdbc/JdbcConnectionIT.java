@@ -16,22 +16,25 @@
 
 package com.consol.citrus.jdbc;
 
+import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
-import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.server.JdbcServer;
+import org.junit.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Properties;
-
-import static org.junit.Assert.assertNotNull;
 
 @SuppressWarnings("SqlNoDataSourceInspection")
 @Test
@@ -54,83 +57,118 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
     }
 
     @CitrusTest
-    public void testOpenConnection() throws Exception{
-
+    public void testOpenConnection() {
         //GIVEN
 
         //WHEN
-        final Connection connection =
-                jdbcDriver.connect(serverUrl, new Properties());
-
+        async().actions(
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    try {
+                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
         //THEN
-        assertNotNull(connection);
+                        Assert.assertNotNull(connection);
+                    } catch (SQLException e) {
+                        throw new CitrusRuntimeException("Failed to connect");
+                    }
+                }
+            }
+        );
     }
 
     @CitrusTest
-    public void testConnectionWithWithVerification() throws Exception{
-
+    public void testConnectionWithWithVerification() {
         //GIVEN
-        final OpenConnection.Property database = new OpenConnection.Property();
+        OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
-
         //WHEN
-        final Connection connection =
-                jdbcDriver.connect(serverUrl, new Properties());
+        async().actions(
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    try {
+                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        Assert.assertNotNull(connection);
+                    } catch (SQLException e) {
+                        throw new CitrusRuntimeException("Failed to connect");
+                    }
+                }
+            }
+        );
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.openConnection(database));
-        assertNotNull(connection);
+        receive(jdbcServer).message(JdbcMessage.openConnection(database));
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
-    public void testOpenConnectionWithWrongCredential() throws Exception{
-
+    public void testOpenConnectionWithWrongCredentials() {
         //GIVEN
-        final Properties properties = new Properties();
+        Properties properties = new Properties();
         properties.setProperty("username", "wrongUser");
         properties.setProperty("password", "wrongPassword");
 
-        final OpenConnection.Property database = new OpenConnection.Property();
+        OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
-        final OpenConnection.Property username = new OpenConnection.Property();
+        OpenConnection.Property username = new OpenConnection.Property();
         username.setName("username");
         username.setValue("user");
 
-        final OpenConnection.Property password = new OpenConnection.Property();
+        OpenConnection.Property password = new OpenConnection.Property();
         password.setName("password");
         password.setValue("password");
 
-
         //WHEN
-        jdbcDriver.connect(serverUrl, properties);
+        async().actions(
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    try {
+                        Connection connection = jdbcDriver.connect(serverUrl, properties);
+                        Assert.assertNotNull(connection);
+                    } catch (SQLException e) {
+                        throw new CitrusRuntimeException("Failed to connect");
+                    }
+                }
+            }
+        );
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.openConnection(username, password, database));
+        assertException()
+                .exception(ValidationException.class)
+                .when(receive(jdbcServer)
+                                .message(JdbcMessage.openConnection(username, password, database)));
     }
 
     @CitrusTest
-    public void testCloseConnection() throws Exception{
-
+    public void testCloseConnection() {
         //GIVEN
-        final OpenConnection.Property database = new OpenConnection.Property();
+        OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
-        final Connection connection =
-                jdbcDriver.connect(serverUrl, new Properties());
+        async().actions(
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    try {
+                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        Assert.assertNotNull(connection);
+        //WHEN
+                        connection.close();
+                    } catch (SQLException e) {
+                        throw new CitrusRuntimeException("Failed to connect");
+                    }
+                }
+            }
+        );
 
         receive(jdbcServer)
                 .message(JdbcMessage.openConnection(database));
-
-        //WHEN
-        connection.close();
 
         //THEN
         receive(jdbcServer)

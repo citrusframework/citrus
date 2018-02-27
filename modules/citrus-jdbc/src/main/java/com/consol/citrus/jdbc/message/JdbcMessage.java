@@ -16,17 +16,15 @@
 
 package com.consol.citrus.jdbc.message;
 
-import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.generator.JdbcOperationGenerator;
-import com.consol.citrus.jdbc.model.JdbcMarshaller;
+import com.consol.citrus.jdbc.model.*;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.jdbc.model.OpenConnection;
-import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -38,6 +36,7 @@ import java.util.List;
  */
 public class JdbcMessage extends DefaultMessage {
 
+    private OperationResult operationResult;
     private Operation operation;
 
     private JdbcMarshaller marshaller = new JdbcMarshaller();
@@ -53,21 +52,30 @@ public class JdbcMessage extends DefaultMessage {
      * Constructor initializes new JDBC operation.
      * @param operation The Operation to encapsulate in the message
      */
-    private JdbcMessage(final Operation operation) {
+    private JdbcMessage(Operation operation) {
         super(operation);
         this.operation = operation;
     }
 
-    public static JdbcMessage openConnection(final OpenConnection.Property ... properties) {
-        final OpenConnection openConnection = new OpenConnection();
+    /**
+     * Constructor initializes new JDBC operation result.
+     * @param operationResult The operation result to encapsulate in the message
+     */
+    private JdbcMessage(OperationResult operationResult) {
+        super(operationResult);
+        this.operationResult = operationResult;
+    }
+
+    public static JdbcMessage openConnection(OpenConnection.Property ... properties) {
+        OpenConnection openConnection = new OpenConnection();
         if (properties.length > 0) {
             openConnection.getProperties().addAll(Arrays.asList(properties));
         }
         return new JdbcMessage(operationGenerator.generateOpenConnection(openConnection));
     }
 
-    public static JdbcMessage openConnection(final List<OpenConnection.Property> properties) {
-        final OpenConnection openConnection = new OpenConnection();
+    public static JdbcMessage openConnection(List<OpenConnection.Property> properties) {
+        OpenConnection openConnection = new OpenConnection();
         openConnection.getProperties().addAll(properties);
         return new JdbcMessage(operationGenerator.generateOpenConnection(openConnection));
     }
@@ -76,7 +84,7 @@ public class JdbcMessage extends DefaultMessage {
         return new JdbcMessage(operationGenerator.generateCloseConnection());
     }
 
-    public static JdbcMessage createPreparedStatement(final String sql) {
+    public static JdbcMessage createPreparedStatement(String sql) {
         return new JdbcMessage(operationGenerator.generatePreparedStatement(sql));
     }
 
@@ -88,61 +96,76 @@ public class JdbcMessage extends DefaultMessage {
         return new JdbcMessage(operationGenerator.generateCloseStatement());
     }
 
-    public static JdbcMessage execute(final String sql) {
+    public static JdbcMessage execute(String sql) {
         return new JdbcMessage(operationGenerator.generateExecuteStatement(sql));
     }
 
-    public static JdbcMessage result() {
+    public static JdbcMessage success() {
         return result(true);
     }
 
-    public static JdbcMessage result(final boolean success) {
-        final JdbcMessage message = new JdbcMessage();
+    public static JdbcMessage error() {
+        return result(false);
+    }
+
+    private static JdbcMessage result(boolean success) {
+        OperationResult operationResult = new OperationResult();
+        operationResult.setSuccess(success);
+
+        JdbcMessage message = new JdbcMessage(operationResult);
         message.setHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS, success);
         return message;
     }
 
-    public JdbcMessage exception(final String message) {
-        error();
+    public static JdbcMessage result(OperationResult operationResult) {
+        JdbcMessage message = new JdbcMessage(operationResult);
+        message.setHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS, operationResult.isSuccess());
+
+        if (!operationResult.isSuccess()) {
+            message.exception(operationResult.getException());
+        }
+
+        return message;
+    }
+
+    public JdbcMessage exception(String message) {
+        if (operationResult == null) {
+            throw new CitrusRuntimeException("Invalid access to operation result exception for JDBC message");
+        }
+
+        if (operationResult.isSuccess()) {
+            throw new CitrusRuntimeException("Unable to set operation result exception on 'success' JDBC result");
+        }
+
         setHeader(JdbcMessageHeaders.JDBC_SERVER_EXCEPTION, message);
         return this;
     }
 
-    public JdbcMessage rowsUpdated(final int number) {
-        success();
+    public JdbcMessage rowsUpdated(int number) {
+        if (operationResult == null) {
+            throw new CitrusRuntimeException("Invalid access to operation result exception for JDBC message");
+        }
+
+        operationResult.setAffectedRows(number);
         setHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED, number);
         return this;
     }
 
-    public JdbcMessage dataSet(final DataSet dataSet) {
-        success();
-        setPayload(dataSet);
+    public JdbcMessage dataSet(String dataSet) {
+        if (operationResult == null) {
+            throw new CitrusRuntimeException("Invalid access to operation result exception for JDBC message");
+        }
+
+        operationResult.setDataSet(dataSet);
         return this;
     }
 
-    public JdbcMessage dataSet(final String dataSet) {
-        success();
-        setPayload(dataSet);
-        return this;
-    }
-
-    public JdbcMessage dataSet(final Resource dataSet) {
-        success();
+    public JdbcMessage dataSet(Resource dataSet) {
         try {
-            setPayload(FileUtils.readToString(dataSet));
-        } catch (final IOException e) {
+            dataSet(FileUtils.readToString(dataSet));
+        } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read data set file", e);
         }
-        return this;
-    }
-
-    public JdbcMessage success() {
-        setHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS, true);
-        return this;
-    }
-
-    public JdbcMessage error() {
-        setHeader(JdbcMessageHeaders.JDBC_SERVER_SUCCESS, false);
         return this;
     }
 
@@ -158,13 +181,17 @@ public class JdbcMessage extends DefaultMessage {
         return new JdbcMessage(operationGenerator.generateTransactionRollback());
     }
 
-    public static Message createCallableStatement(final String sql) {
+    public static Message createCallableStatement(String sql) {
         return new JdbcMessage(operationGenerator.generateCreateCallableStatement(sql));
     }
 
     @Override
-    public <T> T getPayload(final Class<T> type) {
-        if (String.class.equals(type)) {
+    public <T> T getPayload(Class<T> type) {
+        if (Operation.class.equals(type)) {
+            return (T) getOperation();
+        } else if (OperationResult.class.equals(type)) {
+            return (T) getOperationResult();
+        } else if (String.class.equals(type)) {
             return (T) getPayload();
         } else {
             return super.getPayload(type);
@@ -173,12 +200,39 @@ public class JdbcMessage extends DefaultMessage {
 
     @Override
     public Object getPayload() {
-        final StringResult payloadResult = new StringResult();
+        StringResult payloadResult = new StringResult();
         if (operation != null) {
             marshaller.marshal(operation, payloadResult);
+            return payloadResult.toString();
+        } else if (operationResult != null) {
+            marshaller.marshal(operationResult, payloadResult);
             return payloadResult.toString();
         }
 
         return super.getPayload();
+    }
+
+    /**
+     * Gets the operation result if any or tries to unmarshal String payload representation to an operation result model.
+     * @return
+     */
+    private OperationResult getOperationResult() {
+        if (operationResult == null) {
+            this.operationResult = (OperationResult) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+        }
+
+        return operationResult;
+    }
+
+    /**
+     * Gets the operation if any or tries to unmarshal String payload representation to an operation model.
+     * @return
+     */
+    private Operation getOperation() {
+        if (operation == null) {
+            this.operation = (Operation) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+        }
+
+        return operation;
     }
 }

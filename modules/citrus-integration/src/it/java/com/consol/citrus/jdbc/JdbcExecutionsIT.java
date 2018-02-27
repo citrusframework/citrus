@@ -22,20 +22,17 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageType;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Properties;
-import java.util.concurrent.Executors;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -60,66 +57,59 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     }
 
     @CitrusTest
-    public void textExecuteQuery() throws Exception{
+    public void textExecuteQuery() {
+        String sql = "SELECT whatever FROM somewhere";
 
-        final Connection connection =
-                jdbcDriver.connect(serverUrl, new Properties());
-        final Statement statement = connection.createStatement();
-        final String sql = "SELECT whatever FROM somewhere";
+        async().actions(
+            new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    try {
+                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        Assert.assertNotNull(connection);
 
-        action(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
-                Executors.newSingleThreadExecutor().submit(() -> {
-                        try {
-                            final ResultSet resultSet  = statement.executeQuery(sql);
+                        Statement statement = connection.createStatement();
+                        ResultSet resultSet  = statement.executeQuery(sql);
 
-                            assertTrue(resultSet.next());
-                            assertEquals(resultSet.getString("foo"), "bar");
-                        } catch (final SQLException e) {
-                            e.printStackTrace();
-                        }
-
+                        assertTrue(resultSet.next());
+                        assertEquals(resultSet.getString("foo"), "bar");
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                     }
-                );
+                }
             }
-        });
+        );
 
         receive(jdbcServer)
                 .message(JdbcMessage.execute(sql));
 
         send(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.result().dataSet("[ { \"foo\": \"bar\" } ]"));
+                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]"));
     }
 
     @CitrusTest
-    public void textExecuteStatement() throws Exception{
+    public void textExecuteStatement() {
+        String sql = "{CALL someFunction(?)}";
 
-
-        final Connection connection =
-                jdbcDriver.connect(serverUrl, new Properties());
-        final String sql = "{CALL someFunction(?)}";
-
-        action(new AbstractTestAction() {
+        async().actions(new AbstractTestAction() {
             @Override
-            public void doExecute(final TestContext context) {
-                Executors.newSingleThreadExecutor().submit(() -> {
-                            try {
-                                final CallableStatement statement = connection.prepareCall(sql);
-                                statement.setInt(1, 5);
-                                final boolean isResultSet  = statement.execute();
-                                final ResultSet resultSet = statement.getResultSet();
+            public void doExecute(TestContext context) {
+                try {
+                    Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                    Assert.assertNotNull(connection);
 
-                                assertTrue(isResultSet);
-                                assertTrue(resultSet.next());
-                                assertEquals(resultSet.getString("foo"), "bar");
-                            } catch (final SQLException e) {
-                                e.printStackTrace();
-                            }
+                    CallableStatement statement = connection.prepareCall(sql);
+                    statement.setInt(1, 5);
+                    boolean isResultSet  = statement.execute();
+                    ResultSet resultSet = statement.getResultSet();
 
-                        }
-                );
+                    assertTrue(isResultSet);
+                    assertTrue(resultSet.next());
+                    assertEquals(resultSet.getString("foo"), "bar");
+                } catch (SQLException e) {
+                    throw new CitrusRuntimeException(e);
+                }
             }
         });
 
@@ -128,38 +118,34 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
         send(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.result().dataSet("[ { \"foo\": \"bar\" } ]"));
+                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]"));
     }
 
     @CitrusTest
-    public void textExecuteUpdate() throws Exception{
+    public void textExecuteUpdate() {
+        String sql = "UPDATE something WHERE condition";
 
-        final Connection connection =
-                jdbcDriver.connect(serverUrl, new Properties());
-        final Statement statement = connection.createStatement();
-        final String sql = "UPDATE something WHERE condition";
+        async().actions(new AbstractTestAction() {
+                @Override
+                public void doExecute(TestContext context) {
+                    try {
+                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        Assert.assertNotNull(connection);
 
-        action(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
-                Executors.newSingleThreadExecutor().submit(() -> {
-                            try {
-                                final int updatedRows = statement.executeUpdate(sql);
-
-                                assertEquals(updatedRows, 42);
-                            } catch (final SQLException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                );
+                        Statement statement = connection.createStatement();
+                        int updatedRows = statement.executeUpdate(sql);
+                        assertEquals(updatedRows, 42);
+                    } catch (SQLException e) {
+                        throw new CitrusRuntimeException(e);
+                    }
+                }
             }
-        });
+        );
 
         receive(jdbcServer)
                 .message(JdbcMessage.execute(sql));
 
         send(jdbcServer)
-                .message(JdbcMessage.result().rowsUpdated(42));
+                .message(JdbcMessage.success().rowsUpdated(42));
     }
 }

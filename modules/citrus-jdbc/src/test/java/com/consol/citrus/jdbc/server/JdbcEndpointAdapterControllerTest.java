@@ -83,7 +83,7 @@ public class JdbcEndpointAdapterControllerTest {
 
         //GIVEN
         final Message request = mock(Message.class);
-        final Message expectedResponse = JdbcMessage.result(true);
+        final Message expectedResponse = JdbcMessage.success();
 
         when(endpointAdapter.handleMessage(request)).thenReturn(null);
 

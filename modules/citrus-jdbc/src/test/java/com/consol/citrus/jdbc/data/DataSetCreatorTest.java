@@ -17,6 +17,8 @@
 package com.consol.citrus.jdbc.data;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
+import com.consol.citrus.jdbc.message.JdbcMessage;
+import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import org.testng.Assert;
@@ -34,16 +36,15 @@ public class DataSetCreatorTest {
 
     @Test
     public void testCreateDataSetWithDataSetPayload(){
-
         //GIVEN
-        final DataSet expectedDataSet = mock(DataSet.class);
+        DataSet expectedDataSet = mock(DataSet.class);
 
-        final Message message = mock(Message.class);
+        Message message = mock(Message.class);
         when(message.getPayload()).thenReturn(expectedDataSet);
         when(message.getPayload(DataSet.class)).thenReturn(expectedDataSet);
 
         //WHEN
-        final DataSet dataSet = dataSetCreator.createDataSet(message, null);
+        DataSet dataSet = dataSetCreator.createDataSet(message, null);
 
         //THEN
         assertEquals(dataSet, expectedDataSet);
@@ -51,11 +52,10 @@ public class DataSetCreatorTest {
 
     @Test
     public void testCreateDataSetWithUnknownType(){
-
         //GIVEN
 
         //WHEN
-        final DataSet dataSet = dataSetCreator.createDataSet(mock(Message.class), null);
+        DataSet dataSet = dataSetCreator.createDataSet(mock(Message.class), null);
 
         //THEN
         assertEquals(dataSet, new DataSet());
@@ -63,15 +63,38 @@ public class DataSetCreatorTest {
 
     @Test
     public void testCreateDataSetFromJson() throws SQLException {
-
         //GIVEN
-        final String payload = "[{ \"foo\": \"bar\" }]";
-        final Message message = mock(Message.class);
+        String payload = "[{ \"foo\": \"bar\" }]";
+        Message message = mock(Message.class);
         when(message.getPayload()).thenReturn(payload);
         when(message.getPayload(String.class)).thenReturn(payload);
 
         //WHEN
-        final DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.JSON);
+        DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.JSON);
+
+        //THEN
+        assertEquals(dataSet.getColumns().toString(), "[foo]");
+        assertEquals(dataSet.getNextRow().getValues().toString(), "{foo=bar}");
+
+        OperationResult operationResult = new OperationResult();
+        operationResult.setDataSet(payload);
+        JdbcMessage jdbcMessage = mock(JdbcMessage.class);
+        when(jdbcMessage.getPayload(OperationResult.class)).thenReturn(operationResult);
+        when(jdbcMessage.getPayload()).thenReturn(operationResult);
+
+        //WHEN
+        dataSet = dataSetCreator.createDataSet(jdbcMessage, MessageType.JSON);
+
+        //THEN
+        assertEquals(dataSet.getColumns().toString(), "[foo]");
+        assertEquals(dataSet.getNextRow().getValues().toString(), "{foo=bar}");
+
+        Message operationResultMessage = mock(Message.class);
+        when(operationResultMessage.getPayload(OperationResult.class)).thenReturn(operationResult);
+        when(operationResultMessage.getPayload()).thenReturn(operationResult);
+
+        //WHEN
+        dataSet = dataSetCreator.createDataSet(operationResultMessage, MessageType.JSON);
 
         //THEN
         assertEquals(dataSet.getColumns().toString(), "[foo]");
@@ -80,15 +103,38 @@ public class DataSetCreatorTest {
 
     @Test
     public void testCreateDataSetFromXml() throws SQLException {
-
         //GIVEN
-        final String payload = "<dataset><row><foo>bar</foo></row></dataset>";
-        final Message message = mock(Message.class);
+        String payload = "<dataset><row><foo>bar</foo></row></dataset>";
+        Message message = mock(Message.class);
         when(message.getPayload()).thenReturn(payload);
         when(message.getPayload(String.class)).thenReturn(payload);
 
         //WHEN
-        final DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.XML);
+        DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.XML);
+
+        //THEN
+        assertEquals(dataSet.getColumns().toString(), "[foo]");
+        assertEquals(dataSet.getNextRow().getValues().toString(), "{foo=bar}");
+
+        OperationResult operationResult = new OperationResult();
+        operationResult.setDataSet(payload);
+        JdbcMessage jdbcMessage = mock(JdbcMessage.class);
+        when(jdbcMessage.getPayload(OperationResult.class)).thenReturn(operationResult);
+        when(jdbcMessage.getPayload()).thenReturn(operationResult);
+
+        //WHEN
+        dataSet = dataSetCreator.createDataSet(jdbcMessage, MessageType.XML);
+
+        //THEN
+        assertEquals(dataSet.getColumns().toString(), "[foo]");
+        assertEquals(dataSet.getNextRow().getValues().toString(), "{foo=bar}");
+
+        Message operationResultMessage = mock(Message.class);
+        when(operationResultMessage.getPayload(OperationResult.class)).thenReturn(operationResult);
+        when(operationResultMessage.getPayload()).thenReturn(operationResult);
+
+        //WHEN
+        dataSet = dataSetCreator.createDataSet(operationResultMessage, MessageType.XML);
 
         //THEN
         assertEquals(dataSet.getColumns().toString(), "[foo]");
@@ -97,14 +143,13 @@ public class DataSetCreatorTest {
 
     @Test
     public void testCreateDataSetFromNotImplementedType() {
-
         //GIVEN
-        final Message message = mock(Message.class);
+        Message message = mock(Message.class);
         when(message.getPayload()).thenReturn("");
         when(message.getPayload(String.class)).thenReturn("");
 
         //WHEN
-        final DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.BINARY_BASE64);
+        DataSet dataSet = dataSetCreator.createDataSet(message, MessageType.BINARY_BASE64);
 
         //THEN
         Assert.assertEquals(dataSet, new DataSet());

@@ -20,8 +20,13 @@ import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.db.driver.json.JsonDataSetProducer;
 import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jdbc.message.JdbcMessage;
+import com.consol.citrus.jdbc.model.JdbcMarshaller;
+import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.transform.StringSource;
 
 import java.sql.SQLException;
 import java.util.Objects;
@@ -37,7 +42,7 @@ public class DataSetCreator {
         try {
             if (response.getPayload() instanceof DataSet) {
                 return response.getPayload(DataSet.class);
-            } else if (isMarshallable(response, messageType)) {
+            } else if (isReadyToMarshal(response, messageType)) {
                 return marshalResponse(response, messageType);
             } else {
                 return new DataSet();
@@ -55,18 +60,35 @@ public class DataSetCreator {
      * @throws SQLException In case the marshalling failed
      */
     private DataSet marshalResponse(final Message response, final MessageType messageType) throws SQLException {
+        String dataSet = "[]";
+
+        if (response instanceof JdbcMessage || response.getPayload() instanceof OperationResult) {
+            dataSet = response.getPayload(OperationResult.class).getDataSet();
+        } else {
+            try {
+                JdbcMarshaller jdbcMarshaller = new JdbcMarshaller();
+                jdbcMarshaller.setType(messageType.name());
+                Object object = jdbcMarshaller.unmarshal(new StringSource(response.getPayload(String.class)));
+                if (object instanceof OperationResult && StringUtils.hasText(((OperationResult) object).getDataSet())) {
+                    dataSet = ((OperationResult) object).getDataSet();
+                }
+            } catch (CitrusRuntimeException e) {
+                dataSet = response.getPayload(String.class);
+            }
+        }
+        
         if (isJsonResponse(messageType)) {
-            return new JsonDataSetProducer(response.getPayload(String.class)).produce();
+            return new JsonDataSetProducer(dataSet).produce();
         } else if (isXmlResponse(messageType)) {
-            return new XmlDataSetProducer(response.getPayload(String.class)).produce();
+            return new XmlDataSetProducer(dataSet).produce();
         } else {
             throw new CitrusRuntimeException("Unable to create dataSet from data type " + messageType.name());
         }
     }
 
-    private boolean isMarshallable(final Message response, final MessageType messageType) {
+    private boolean isReadyToMarshal(final Message response, final MessageType messageType) {
         return response.getPayload() != null &&
-                !response.getPayload(String.class).isEmpty() &&
+                (response.getPayload() instanceof OperationResult || StringUtils.hasText(response.getPayload(String.class))) &&
                 isKnownMessageType(messageType);
     }
 
