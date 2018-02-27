@@ -307,7 +307,7 @@ This includes `openConnection` and `closeConnection`.
 | Determines whether the server should automatically accept statement related messages or validate them.
 This includes `createStatement`, `createPreparedStatement`, `createCallableStatement` and `closeStatement`.
 
-| auto transactions
+| auto transaction handling
 | No
 | true
 | Determines whether the server should automatically accept transaction related messages or validate them.
