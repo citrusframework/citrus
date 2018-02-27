@@ -16,8 +16,7 @@
 
 package com.consol.citrus.testng;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
@@ -25,6 +24,7 @@ import com.consol.citrus.common.XmlTestLoader;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -69,9 +69,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                 try {
                     run(testResult, method, methodTestLoaders.get(testResult.getMethod().getCurrentInvocationCount() % methodTestLoaders.size()),
                             testResult.getMethod().getCurrentInvocationCount());
-                } catch (RuntimeException e) {
-                    testResult.setThrowable(e);
-                    testResult.setStatus(ITestResult.FAILURE);
                 } catch (Exception e) {
                     testResult.setThrowable(e);
                     testResult.setStatus(ITestResult.FAILURE);
@@ -108,9 +105,30 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         TestCase testCase = testLoader.load();
         testCase.setGroups(testResult.getMethod().getGroups());
 
-        resolveParameter(testResult, method, testCase, ctx, invocationCount);
+        invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
+    }
 
-        citrus.run(testCase, ctx);
+    /**
+     * Invokes test method based on designer or runner environment.
+     * @param testResult
+     * @param method
+     * @param testCase
+     * @param context
+     * @param invocationCount
+     */
+    protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
+        try {
+            ReflectionUtils.invokeMethod(method, this,
+                    resolveParameter(testResult, method, testCase, context, invocationCount));
+
+            citrus.run(testCase, context);
+        } catch (TestCaseFailedException e) {
+            throw e;
+        } catch (Exception | AssertionError e) {
+            testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+            testCase.finish(context);
+            throw new TestCaseFailedException(e);
+        }
     }
 
     /**
@@ -129,23 +147,15 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         if (method.getAnnotation(Test.class) != null &&
                 StringUtils.hasText(method.getAnnotation(Test.class).dataProvider())) {
             final Method[] dataProvider = new Method[1];
-            ReflectionUtils.doWithMethods(method.getDeclaringClass(), new ReflectionUtils.MethodCallback() {
-                @Override
-                public void doWith(Method current) throws IllegalArgumentException, IllegalAccessException {
-                    if (StringUtils.hasText(current.getAnnotation(DataProvider.class).name()) &&
-                            current.getAnnotation(DataProvider.class).name().equals(method.getAnnotation(Test.class).dataProvider())) {
-                        dataProvider[0] = current;
-                    } else if (current.getName().equals(method.getAnnotation(Test.class).dataProvider())) {
-                        dataProvider[0] = current;
-                    }
+            ReflectionUtils.doWithMethods(method.getDeclaringClass(), current -> {
+                if (StringUtils.hasText(current.getAnnotation(DataProvider.class).name()) &&
+                        current.getAnnotation(DataProvider.class).name().equals(method.getAnnotation(Test.class).dataProvider())) {
+                    dataProvider[0] = current;
+                } else if (current.getName().equals(method.getAnnotation(Test.class).dataProvider())) {
+                    dataProvider[0] = current;
+                }
 
-                }
-            }, new ReflectionUtils.MethodFilter() {
-                @Override
-                public boolean matches(Method method) {
-                    return method.getAnnotation(DataProvider.class) != null;
-                }
-            });
+            }, toFilter -> toFilter.getAnnotation(DataProvider.class) != null);
 
             if (dataProvider[0] == null) {
                 throw new CitrusRuntimeException("Unable to find data provider: " + method.getAnnotation(Test.class).dataProvider());
@@ -167,7 +177,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             for (Annotation annotation : parameterAnnotations) {
                 if (annotation instanceof CitrusResource) {
                     values[i] = resolveAnnotatedResource(testResult, parameterType, context);
-                    continue;
                 }
             }
 
@@ -286,9 +295,17 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * Executes the test case.
      */
     protected void executeTest() {
+        if (citrus == null) {
+            citrus = Citrus.newInstance(applicationContext);
+        }
+
         ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
-        Method method = testNGMethod.getConstructorOrMethod().getMethod();
-        run(Reporter.getCurrentTestResult(), method, createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
+        TestContext context = prepareTestContext(citrus.createTestContext());
+        TestLoader testLoader = createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName());
+        TestCase testCase = testLoader.load();
+        testCase.setGroups(testNGMethod.getGroups());
+
+        citrus.run(testCase, context);
     }
 
     /**

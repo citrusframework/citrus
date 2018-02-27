@@ -115,14 +115,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
         }
     }
 
-    /**
-     * Invokes test method based on designer or runner environment.
-     * @param testResult
-     * @param method
-     * @param testCase
-     * @param context
-     * @param invocationCount
-     */
+    @Override
     protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
         if (testResult.getAttribute(DESIGNER_ATTRIBUTE) != null) {
             try {
