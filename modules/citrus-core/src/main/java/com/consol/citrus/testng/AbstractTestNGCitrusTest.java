@@ -293,17 +293,23 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
     /**
      * Executes the test case.
+     * @deprecated in favor of using {@link com.consol.citrus.annotations.CitrusXmlTest} or {@link com.consol.citrus.annotations.CitrusTest} annotations on test methods.
      */
+    @Deprecated
     protected void executeTest() {
         if (citrus == null) {
             citrus = Citrus.newInstance(applicationContext);
         }
 
-        ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
+        ITestResult result = Reporter.getCurrentTestResult();
+        ITestNGMethod testNGMethod = result.getMethod();
+
         TestContext context = prepareTestContext(citrus.createTestContext());
         TestLoader testLoader = createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName());
         TestCase testCase = testLoader.load();
         testCase.setGroups(testNGMethod.getGroups());
+
+        resolveParameter(result, testNGMethod.getConstructorOrMethod().getMethod(), testCase, context, testNGMethod.getCurrentInvocationCount());
 
         citrus.run(testCase, context);
     }
