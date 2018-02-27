@@ -35,6 +35,21 @@ public class DataSetCreatorTest {
     private DataSetCreator dataSetCreator = new DataSetCreator();
 
     @Test
+    public void testCreateDataSetEmpty() throws SQLException {
+        //GIVEN
+        Message message = mock(Message.class);
+        when(message.getPayload()).thenReturn("");
+        when(message.getPayload(String.class)).thenReturn("");
+
+        //WHEN
+        DataSet dataSet = dataSetCreator.createDataSet(message, null);
+
+        //THEN
+        assertEquals(dataSet.getColumns().size(), 0L);
+        assertEquals(dataSet.getRows().size(), 0L);
+    }
+
+    @Test
     public void testCreateDataSetWithDataSetPayload(){
         //GIVEN
         DataSet expectedDataSet = mock(DataSet.class);

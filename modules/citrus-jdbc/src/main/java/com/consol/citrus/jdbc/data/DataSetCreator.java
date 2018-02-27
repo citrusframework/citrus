@@ -30,6 +30,7 @@ import org.springframework.xml.transform.StringSource;
 
 import java.sql.SQLException;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DataSetCreator {
 
@@ -60,7 +61,7 @@ public class DataSetCreator {
      * @throws SQLException In case the marshalling failed
      */
     private DataSet marshalResponse(final Message response, final MessageType messageType) throws SQLException {
-        String dataSet = "[]";
+        String dataSet = null;
 
         if (response instanceof JdbcMessage || response.getPayload() instanceof OperationResult) {
             dataSet = response.getPayload(OperationResult.class).getDataSet();
@@ -78,9 +79,9 @@ public class DataSetCreator {
         }
         
         if (isJsonResponse(messageType)) {
-            return new JsonDataSetProducer(dataSet).produce();
+            return new JsonDataSetProducer(Optional.ofNullable(dataSet).orElse("[]")).produce();
         } else if (isXmlResponse(messageType)) {
-            return new XmlDataSetProducer(dataSet).produce();
+            return new XmlDataSetProducer(Optional.ofNullable(dataSet).orElse("<dataset></dataset>")).produce();
         } else {
             throw new CitrusRuntimeException("Unable to create dataSet from data type " + messageType.name());
         }

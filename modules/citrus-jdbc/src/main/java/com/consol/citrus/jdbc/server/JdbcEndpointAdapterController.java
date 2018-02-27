@@ -166,8 +166,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     public DataSet executeQuery(String query) throws JdbcServerException {
         log.info("Received execute query request: " + query);
         Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
-        MessageType responseMessageType = determineMessageType(response);
-        return dataSetCreator.createDataSet(response, responseMessageType);
+        return dataSetCreator.createDataSet(response, getMessageType(response));
     }
 
     /**
@@ -179,8 +178,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     public DataSet executeStatement(String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
         Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
-        MessageType responseMessageType = determineMessageType(response);
-        return dataSetCreator.createDataSet(response, responseMessageType);
+        return dataSetCreator.createDataSet(response, getMessageType(response));
     }
 
     /**
@@ -281,10 +279,10 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @param response The response to get the message type from
      * @return The MessageType of the response
      */
-    private MessageType determineMessageType(Message response) {
+    private MessageType getMessageType(Message response) {
         String messageTypeString = (String) response.getHeader(MessageHeaders.MESSAGE_TYPE);
         if (MessageType.knows(messageTypeString)){
-            return MessageType.valueOf(messageTypeString);
+            return MessageType.valueOf(messageTypeString.toUpperCase());
         }
         return null;
     }
