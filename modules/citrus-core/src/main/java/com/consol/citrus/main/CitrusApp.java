@@ -24,7 +24,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.util.*;
 import org.testng.TestNG;
@@ -166,10 +165,13 @@ public class CitrusApp {
 
             XmlTest test = new XmlTest(suite);
             ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-            provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "\\.class$"))));
-            provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
+            provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "$"))) {
                 @Override
                 protected boolean match(ClassMetadata metadata) {
+                    if (!super.match(metadata)) {
+                        return false;
+                    }
+
                     try {
                         Class<?> clazz = Class.forName(metadata.getClassName());
                         if (clazz.isAnnotationPresent(Test.class)) {
@@ -186,14 +188,15 @@ public class CitrusApp {
                 }
             });
 
-
             provider.findCandidateComponents("")
                     .stream()
                     .map(BeanDefinition::getBeanClassName)
                     .distinct()
                     .map(className -> {
                         try {
-                            return Class.forName(className);
+                            Class<?> clazz = Class.forName(className);
+                            log.debug("Found test candidate: " + className);
+                            return clazz;
                         } catch (NoClassDefFoundError | ClassNotFoundException e) {
                             log.warn("Unable to access test class: " + className);
                             return Void.class;
@@ -202,6 +205,8 @@ public class CitrusApp {
                     .filter(clazz -> !clazz.equals(Void.class))
                     .map(clazz -> new XmlClass(clazz.getName()))
                     .forEach(test.getClasses()::add);
+
+            log.info(String.format("Found %s test classes to execute", test.getClasses().size()));
         }
 
         testng.run();

@@ -26,7 +26,6 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -70,10 +69,13 @@ public class RunController {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
         
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-        provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "\\.class$"))));
-        provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
+        provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "$"))) {
             @Override
             protected boolean match(ClassMetadata metadata) {
+                if (!super.match(metadata)) {
+                    return false;
+                }
+
                 try {
                     Class<?> clazz = Class.forName(metadata.getClassName());
                     if (clazz.isAnnotationPresent(Test.class)) {
@@ -90,22 +92,29 @@ public class RunController {
             }
         });
 
-
         provider.findCandidateComponents(basePackage)
-                        .stream()
-                        .map(BeanDefinition::getBeanClassName)
-                        .distinct()
-                        .map(className -> {
-                            try {
-                                return Class.forName(className);
-                            } catch (NoClassDefFoundError | ClassNotFoundException e) {
-                                log.warn("Unable to access test class: " + className);
-                                return Void.class;
-                            }
-                        })
-                        .filter(clazz -> !clazz.equals(Void.class))
-                        .map(clazz -> new TestClass(clazz.getName()))
-                        .forEach(citrusAppConfiguration.getTestClasses()::add);
+                .stream()
+                .map(BeanDefinition::getBeanClassName)
+                .distinct()
+                .map(className -> {
+                    try {
+                        Class<?> clazz = Class.forName(className);
+                        log.debug("Found test candidate: " + className);
+                        return clazz;
+                    } catch (NoClassDefFoundError | ClassNotFoundException e) {
+                        log.warn("Unable to access test class: " + className);
+                        return Void.class;
+                    }
+                })
+                .filter(clazz -> !clazz.equals(Void.class))
+                .map(clazz -> new TestClass(clazz.getName()))
+                .forEach(citrusAppConfiguration.getTestClasses()::add);
+
+        log.info(String.format("Found %s test classes to execute", citrusAppConfiguration.getTestClasses().size()));
+
+        if (citrusAppConfiguration.getTestClasses().isEmpty()) {
+            citrusAppConfiguration.getPackages().add(basePackage);
+        }
 
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
         run(citrusAppConfiguration);
