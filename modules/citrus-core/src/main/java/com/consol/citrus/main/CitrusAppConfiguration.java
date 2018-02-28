@@ -46,11 +46,8 @@ public class CitrusAppConfiguration {
     /** Force system exit when application is finished using {@code System.exit()} */
     private boolean systemExit = false;
 
-    /** Test class name suffix */
-    private String testNameSuffix = "IT";
-
     /** Test name pattern */
-    private String testNamePattern;
+    private String[] testNamePatterns = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
 
     /**
      * Gets the timeToLive.
@@ -161,38 +158,20 @@ public class CitrusAppConfiguration {
     }
 
     /**
-     * Gets the testNameSuffix.
+     * Gets the testNamePatterns.
      *
      * @return
      */
-    public String getTestNameSuffix() {
-        return testNameSuffix;
+    public String[] getTestNamePatterns() {
+        return testNamePatterns;
     }
 
     /**
-     * Sets the testNameSuffix.
+     * Sets the testNamePatterns.
      *
-     * @param testNameSuffix
+     * @param testNamePatterns
      */
-    public void setTestNameSuffix(String testNameSuffix) {
-        this.testNameSuffix = testNameSuffix;
-    }
-
-    /**
-     * Gets the testNamePattern.
-     *
-     * @return
-     */
-    public String getTestNamePattern() {
-        return testNamePattern;
-    }
-
-    /**
-     * Sets the testNamePattern.
-     *
-     * @param testNamePattern
-     */
-    public void setTestNamePattern(String testNamePattern) {
-        this.testNamePattern = testNamePattern;
+    public void setTestNamePatterns(String[] testNamePatterns) {
+        this.testNamePatterns = testNamePatterns;
     }
 }

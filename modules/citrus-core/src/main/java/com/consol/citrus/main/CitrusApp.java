@@ -24,7 +24,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.RegexPatternTypeFilter;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.util.*;
 import org.testng.TestNG;
 import org.testng.annotations.Test;
@@ -34,6 +34,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Main command line application callable via static run methods and command line main method invocation.
@@ -165,10 +166,13 @@ public class CitrusApp {
 
             XmlTest test = new XmlTest(suite);
             ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-            provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "$"))) {
+            provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
                 @Override
                 protected boolean match(ClassMetadata metadata) {
-                    if (!super.match(metadata)) {
+                    if (Stream.of(configuration.getTestNamePatterns())
+                                .parallel()
+                                .map(Pattern::compile)
+                                .noneMatch(pattern -> pattern.matcher(metadata.getClassName()).matches())) {
                         return false;
                     }
 

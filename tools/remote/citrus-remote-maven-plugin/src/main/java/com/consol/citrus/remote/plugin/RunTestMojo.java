@@ -32,6 +32,7 @@ import org.apache.maven.plugins.annotations.*;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -40,6 +41,9 @@ import java.util.stream.Stream;
  */
 @Mojo(name = "test", defaultPhase = LifecyclePhase.INTEGRATION_TEST, requiresDependencyResolution = ResolutionScope.TEST)
 public class RunTestMojo extends AbstractCitrusRemoteMojo {
+
+    /** Global url encoding */
+    private static final String ENCODING = "UTF-8";
 
     @Parameter(property = "citrus.remote.skip.test", defaultValue = "false")
     protected boolean skipRun;
@@ -73,14 +77,19 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         }
     }
 
-    private void runPackages(List<String> packages) throws MojoExecutionException, MojoFailureException {
+    private void runPackages(List<String> packages) throws MojoExecutionException {
         for (String testPackage : packages) {
             HttpResponse response = null;
             try {
-                response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
-                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
-                        .addParameter("package", URLEncoder.encode(testPackage, "UTF-8"))
-                        .build());
+                RequestBuilder requestBuilder = RequestBuilder.get(getServer().getUrl() + "/run")
+                                                            .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
+                                                            .addParameter("package", URLEncoder.encode(testPackage, ENCODING));
+
+                if (run.getIncludes() != null) {
+                    requestBuilder.addParameter("includes", URLEncoder.encode(run.getIncludes().stream().collect(Collectors.joining(",")), ENCODING));
+                }
+
+                response = getHttpClient().execute(requestBuilder.build());
 
                 if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
                     throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
@@ -95,13 +104,13 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         }
     }
 
-    private void runClasses(List<String> classes) throws MojoExecutionException, MojoFailureException {
+    private void runClasses(List<String> classes) throws MojoExecutionException {
         for (String testClass : classes) {
             HttpResponse response = null;
             try {
                 response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
                         .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
-                        .addParameter("class", URLEncoder.encode(testClass, "UTF-8"))
+                        .addParameter("class", URLEncoder.encode(testClass, ENCODING))
                         .build());
 
                 if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
@@ -117,12 +126,17 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         }
     }
 
-    private void runAllTests() throws MojoExecutionException, MojoFailureException {
+    private void runAllTests() throws MojoExecutionException {
         HttpResponse response = null;
         try {
-            response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
-                    .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
-                    .build());
+            RequestBuilder requestBuilder = RequestBuilder.get(getServer().getUrl() + "/run")
+                                                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"));
+
+            if (run.getIncludes() != null) {
+                requestBuilder.addParameter("includes", URLEncoder.encode(run.getIncludes().stream().collect(Collectors.joining(",")), ENCODING));
+            }
+
+            response = getHttpClient().execute(requestBuilder.build());
 
             if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
                 throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));

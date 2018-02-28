@@ -27,6 +27,7 @@ import com.consol.citrus.remote.transformer.JsonRequestTransformer;
 import com.consol.citrus.remote.transformer.JsonResponseTransformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import spark.Filter;
 import spark.servlet.SparkApplication;
 
@@ -47,6 +48,9 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusRemoteApplication.class);
+
+    /** Global url encoding */
+    private static final String ENCODING = "UTF-8";
 
     /** Application configuration */
     private final CitrusRemoteConfiguration configuration;
@@ -99,16 +103,20 @@ public class CitrusRemoteApplication implements SparkApplication {
         get("/run", (req, res) -> {
             RunController runController = new RunController(configuration);
 
+            if (req.queryParams().contains("includes")) {
+                runController.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
+            }
+
             if (!req.queryParams().contains("package") && !req.queryParams().contains("class")) {
                 runController.runAll();
             }
 
             if (req.queryParams().contains("package")) {
-                runController.runPackage(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
+                runController.runPackage(URLDecoder.decode(req.queryParams("package"), ENCODING));
             }
 
             if (req.queryParams().contains("class")) {
-                runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
+                runController.runClass(URLDecoder.decode(req.queryParams("class"), ENCODING));
             }
 
             res.type("application/json");
@@ -122,16 +130,20 @@ public class CitrusRemoteApplication implements SparkApplication {
             jobs.submit((RunJob) () -> {
                 RunController runController = new RunController(configuration);
 
+                if (req.queryParams().contains("includes")) {
+                    runController.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
+                }
+
                 if (!req.queryParams().contains("package") && !req.queryParams().contains("class")) {
                     runController.runAll();
                 }
 
                 if (req.queryParams().contains("package")) {
-                    runController.runPackage(URLDecoder.decode(req.queryParams("package"), "UTF-8"));
+                    runController.runPackage(URLDecoder.decode(req.queryParams("package"), ENCODING));
                 }
 
                 if (req.queryParams().contains("class")) {
-                    runController.runClass(URLDecoder.decode(req.queryParams("class"), "UTF-8"));
+                    runController.runClass(URLDecoder.decode(req.queryParams("class"), ENCODING));
                 }
 
                 return "";

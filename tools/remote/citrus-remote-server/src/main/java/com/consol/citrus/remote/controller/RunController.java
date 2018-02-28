@@ -26,7 +26,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.RegexPatternTypeFilter;
+import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
@@ -34,6 +34,7 @@ import org.testng.annotations.Test;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -43,6 +44,9 @@ public class RunController {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RunController.class);
+
+    /** Include tests based on these test names patterns */
+    private String[] includes;
 
     private final CitrusRemoteConfiguration configuration;
 
@@ -69,10 +73,13 @@ public class RunController {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
         
         ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-        provider.addIncludeFilter(new RegexPatternTypeFilter(Pattern.compile(Optional.ofNullable(configuration.getTestNamePattern()).orElse("^.*" + configuration.getTestNameSuffix() + "$"))) {
+        provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
             @Override
             protected boolean match(ClassMetadata metadata) {
-                if (!super.match(metadata)) {
+                if (Stream.of(Optional.ofNullable(includes).orElse(configuration.getTestNamePatterns()))
+                        .parallel()
+                        .map(Pattern::compile)
+                        .noneMatch(pattern -> pattern.matcher(metadata.getClassName()).matches())) {
                     return false;
                 }
 
@@ -113,6 +120,7 @@ public class RunController {
         log.info(String.format("Found %s test classes to execute", citrusAppConfiguration.getTestClasses().size()));
 
         if (citrusAppConfiguration.getTestClasses().isEmpty()) {
+            citrusAppConfiguration.setTestNamePatterns(Optional.ofNullable(includes).orElse(configuration.getTestNamePatterns()));
             citrusAppConfiguration.getPackages().add(basePackage);
         }
 
@@ -161,5 +169,23 @@ public class RunController {
     private void run(CitrusAppConfiguration citrusAppConfiguration) {
         CitrusApp citrusApp = new CitrusApp(citrusAppConfiguration);
         citrusApp.run();
+    }
+
+    /**
+     * Gets the includes.
+     *
+     * @return
+     */
+    public String[] getIncludes() {
+        return includes;
+    }
+
+    /**
+     * Sets the includes.
+     *
+     * @param includes
+     */
+    public void setIncludes(String[] includes) {
+        this.includes = includes;
     }
 }

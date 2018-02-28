@@ -32,6 +32,9 @@ public class RunConfiguration {
     @Parameter
     private List<String> packages;
 
+    @Parameter
+    private List<String> includes;
+
     /**
      * Gets the classes.
      *
@@ -82,5 +85,23 @@ public class RunConfiguration {
      */
     public boolean hasPackages() {
         return getPackages() != null && !getPackages().isEmpty();
+    }
+
+    /**
+     * Gets the includes.
+     *
+     * @return
+     */
+    public List<String> getIncludes() {
+        return includes;
+    }
+
+    /**
+     * Sets the includes.
+     *
+     * @param includes
+     */
+    public void setIncludes(List<String> includes) {
+        this.includes = includes;
     }
 }
