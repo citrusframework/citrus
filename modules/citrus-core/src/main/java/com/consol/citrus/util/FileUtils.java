@@ -81,6 +81,16 @@ public abstract class FileUtils {
     }
     
     /**
+     * Read file content to string value with default charset settings.
+     * @param file
+     * @return
+     * @throws IOException
+     */
+    public static String readToString(File file) throws IOException {
+         return readToString(new FileInputStream(file), getDefaultCharset());
+    }
+
+    /**
      * Read file resource to string value.
      * @param resource
      * @param charset
@@ -227,6 +237,19 @@ public abstract class FileUtils {
         } else {
             return new PathMatchingResourcePatternResolver().getResource(
                     context.replaceDynamicContentInString(filePath));
+        }
+    }
+
+    /**
+     * Reads file resource from path with variable replacement support.
+     * @param filePath
+     * @return
+     */
+    public static Resource getFileResource(String filePath) {
+        if (filePath.contains(FILE_PATH_CHARSET_PARAMETER)) {
+            return new PathMatchingResourcePatternResolver().getResource(filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER)));
+        } else {
+            return new PathMatchingResourcePatternResolver().getResource(filePath);
         }
     }
 

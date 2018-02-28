@@ -18,12 +18,17 @@ package com.consol.citrus.report;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestResult;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public abstract class AbstractTestReporter extends AbstractTestListener implements TestReporter, TestListener {
+
+    /** Report output directory */
+    @Value("${citrus.report.directory:target/citrus-reports}")
+    private String reportDirectory = "target/citrus-reports";
 
     /** Collect test results for overall result overview at the very end of test execution */
     private TestResults testResults = new TestResults();
@@ -55,5 +60,23 @@ public abstract class AbstractTestReporter extends AbstractTestListener implemen
     @Override
     public void onTestSkipped(TestCase test) {
         testResults.addResult(TestResult.skipped(test.getName(), test.getParameters()));
+    }
+
+    /**
+     * Gets the reportDirectory.
+     *
+     * @return
+     */
+    public String getReportDirectory() {
+        return reportDirectory;
+    }
+
+    /**
+     * Sets the reportDirectory.
+     *
+     * @param reportDirectory
+     */
+    public void setReportDirectory(String reportDirectory) {
+        this.reportDirectory = reportDirectory;
     }
 }

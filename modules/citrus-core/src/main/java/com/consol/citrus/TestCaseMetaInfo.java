@@ -31,7 +31,7 @@ public class TestCaseMetaInfo {
     private Date creationDate;
 
     /** Status of testcase */
-    public static enum Status {DRAFT, READY_FOR_REVIEW, FINAL, DISABLED};
+    public enum Status {DRAFT, READY_FOR_REVIEW, FINAL, DISABLED}
     
     private Status status = Status.DRAFT;
 

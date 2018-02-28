@@ -27,7 +27,7 @@ import java.io.Serializable;
 public class ServerConfiguration implements Serializable {
 
     @Parameter(property = "citrus.remote.server.url", required = true, defaultValue = "http://localhost:8686")
-    private String url;
+    private String url = "http://localhost:8686";
 
     /**
      * Gets the url.

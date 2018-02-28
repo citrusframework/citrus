@@ -76,12 +76,6 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
     private String mainClass;
 
     /**
-     * The output directory of the assembled distribution file.
-     */
-    @Parameter(defaultValue = "${project.build.directory}", readonly = true, required = true)
-    private File outputDirectory;
-
-    /**
      * Directory to unpack JARs into if needed
      */
     @Parameter(defaultValue = "${project.build.directory}/assembly/work", readonly = true, required = true)
@@ -118,7 +112,7 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
             assembly.setDescriptor(descriptorConfiguration);
         }
 
-        assembly.setOutputDirectory(outputDirectory);
+        assembly.setOutputDirectory(getOutputDirectory());
         assembly.setWorkingDirectory(workingDirectory);
         assembly.setTemporaryRootDirectory(temporaryRootDirectory);
 
@@ -225,15 +219,6 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
         }
 
         return testJar;
-    }
-
-    /**
-     * Gets the outputDirectory.
-     *
-     * @return
-     */
-    public File getOutputDirectory() {
-        return outputDirectory;
     }
 
     /**

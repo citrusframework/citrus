@@ -16,6 +16,7 @@
 
 package com.consol.citrus.remote.plugin;
 
+import com.consol.citrus.remote.plugin.config.ReportConfiguration;
 import com.consol.citrus.remote.plugin.config.ServerConfiguration;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
@@ -24,6 +25,8 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.*;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+
+import java.io.File;
 
 /**
  * @author Christoph Deppisch
@@ -47,10 +50,22 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
     private int timeout;
 
     /**
+     * The output directory of the assembled distribution file.
+     */
+    @Parameter(defaultValue = "${project.build.directory}", readonly = true, required = true)
+    private File outputDirectory;
+
+    /**
      * Remote server configuration.
      */
     @Parameter
     private ServerConfiguration server;
+
+    /**
+     * Report configuration such as output directory and file names.
+     */
+    @Parameter
+    private ReportConfiguration report;
 
     /** Http client */
     private final HttpClient httpClient;
@@ -106,7 +121,42 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
      * @return
      */
     public ServerConfiguration getServer() {
+        if (server == null) {
+            server = new ServerConfiguration();
+        }
+
         return server;
+    }
+
+    /**
+     * Sets the report.
+     *
+     * @param report
+     */
+    public void setReport(ReportConfiguration report) {
+        this.report = report;
+    }
+
+    /**
+     * Gets the report.
+     *
+     * @return
+     */
+    public ReportConfiguration getReport() {
+        if (report == null) {
+            report = new ReportConfiguration();
+        }
+
+        return report;
+    }
+
+    /**
+     * Gets the outputDirectory.
+     *
+     * @return
+     */
+    public File getOutputDirectory() {
+        return outputDirectory;
     }
 
     /**

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<citrus-test-summary>
+    <completed>@test.cnt@</completed>
+    <success>@success.test.cnt@</success>
+    <failures>@failed.test.cnt@</failures>
+    <skipped>@skipped.test.cnt@</skipped>
+</citrus-test-summary>

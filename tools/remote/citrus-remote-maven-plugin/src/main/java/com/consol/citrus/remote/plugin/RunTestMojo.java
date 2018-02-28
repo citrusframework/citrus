@@ -18,7 +18,7 @@ package com.consol.citrus.remote.plugin;
 
 import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.plugin.config.RunConfiguration;
-import com.consol.citrus.report.OutputStreamReporter;
+import com.consol.citrus.report.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.methods.RequestBuilder;
@@ -29,8 +29,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.*;
 
-import java.io.IOException;
-import java.io.StringWriter;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.stream.Stream;
@@ -53,8 +52,12 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
 
     @Override
     public void doExecute() throws MojoExecutionException, MojoFailureException {
-        if (skipRun || run == null) {
+        if (skipRun) {
             return;
+        }
+
+        if (run == null) {
+            run = new RunConfiguration();
         }
 
         if (!run.hasClasses() && !run.hasPackages()) {
@@ -136,9 +139,9 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     /**
      * Check test results for failures.
      * @param response
-     * @throws MojoFailureException
+     * @throws IOException
      */
-    private void handleTestResults(HttpResponse response) throws MojoFailureException, IOException {
+    private void handleTestResults(HttpResponse response) throws IOException {
         RemoteResult[] results = new ObjectMapper().readValue(response.getEntity().getContent(), RemoteResult[].class);
 
         StringWriter resultWriter = new StringWriter();
@@ -148,9 +151,18 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         reporter.generateTestResults();
         getLog().info(resultWriter.toString());
 
-        if (Stream.of(results).anyMatch(RemoteResult::isFailed)) {
-            throw new MojoFailureException("Remote test execution returned failed test results");
+        if (getReport().isHtmlReport()) {
+            HtmlReporter htmlReporter = new HtmlReporter();
+            htmlReporter.setReportDirectory(getOutputDirectory().getPath() + File.separator + getReport().getDirectory());
+            Stream.of(results).forEach(result -> htmlReporter.getTestResults().addResult(RemoteResult.toTestResult(result)));
+            htmlReporter.generateTestResults();
         }
+
+        SummaryReporter summaryReporter = new SummaryReporter();
+        Stream.of(results).forEach(result -> summaryReporter.getTestResults().addResult(RemoteResult.toTestResult(result)));
+        summaryReporter.setReportDirectory(getOutputDirectory().getPath() + File.separator + getReport().getDirectory());
+        summaryReporter.setReportFileName(getReport().getSummaryFile());
+        summaryReporter.generateTestResults();
     }
 
     /**
