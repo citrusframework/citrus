@@ -25,7 +25,7 @@ To enable the JDBC support for your test project, you'll have to add the followi
 The Citrus-JDBC-Driver is a JDBC conform driver that realizes the communication with the Citrus-JDBC-Server. To be able
 to use Citrus-JDBC within a CI/CD setup, we recommend to ensure that your software is able to exchange the JDBC driver
 by configuration. The Citrus-JDBC-Driver is available on maven central under
-`com.consol.citrus.citrus-db.citrus-db-driver`. After the driver has been downloaded and configured to be used by your
+`com.consol.citrus.citrus-db-driver`. After the driver has been downloaded and configured to be used by your
 application, please make sure that the driver configuration matches the Citrus-JDBC-Server configuration in your
 tests.
 
