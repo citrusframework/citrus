@@ -17,7 +17,7 @@ just providing a system property or environment variable on your local environme
 |System properties |Description
 
 | citrus.application.properties
-| File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="citrus-application.properties")
+| File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="classpath:citrus-application.properties")
 
 | citrus.spring.application.context
 | File location for Spring XML configurations (default="classpath*:citrus-context.xml")
@@ -54,7 +54,7 @@ Same properties are settable via environment variables.
 |Environment variable |Description
 
 | CITRUS_APPLICATION_PROPERTIES
-| File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="citrus-application.properties")
+| File location for application property file that holds other settings. These properties get loaded as system properties on startup. (default="classpath:citrus-application.properties")
 
 | CITRUS_SPRING_APPLICATION_CONTEXT
 | File location for Spring XML configurations (default="classpath*:citrus-context.xml")
@@ -103,8 +103,12 @@ Citrus automatically loads these application properties at startup. All properti
 
 [source,java]
 ----
-System.setProperty("citrus.application.properties", "custom/path/to/citrus-application.properties")
+System.setProperty("citrus.application.properties", "file:/custom/path/to/citrus-application.properties")
 ----
+
+.Note
+
+You can use *classpath:* and *file:* path prefix in order to give locate a classpath or file-system resource.
 
 [[spring-xml-application-context]]
 == Spring XML application context

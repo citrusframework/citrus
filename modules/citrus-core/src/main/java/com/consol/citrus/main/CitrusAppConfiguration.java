@@ -16,17 +16,13 @@
 
 package com.consol.citrus.main;
 
-import com.consol.citrus.TestClass;
 import com.consol.citrus.config.CitrusSpringConfig;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class CitrusAppConfiguration {
+public class CitrusAppConfiguration extends TestRunConfiguration {
 
     /** Server time to live in milliseconds */
     private long timeToLive = 0;
@@ -34,20 +30,11 @@ public class CitrusAppConfiguration {
     /** Optional custom configuration class for Spring application context */
     private Class<? extends CitrusSpringConfig> configClass;
 
-    /** Test to execute at runtime */
-    private List<TestClass> testClasses = new ArrayList<>();
-
-    /** Package to execute at runtime */
-    private List<String> packages = new ArrayList<>();
-
     /** Skip test execution at runtime */
     private boolean skipTests;
 
     /** Force system exit when application is finished using {@code System.exit()} */
     private boolean systemExit = false;
-
-    /** Test name pattern */
-    private String[] testNamePatterns = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
 
     /**
      * Gets the timeToLive.
@@ -86,42 +73,6 @@ public class CitrusAppConfiguration {
     }
 
     /**
-     * Gets the testClasses.
-     *
-     * @return
-     */
-    public List<TestClass> getTestClasses() {
-        return testClasses;
-    }
-
-    /**
-     * Sets the testClasses.
-     *
-     * @param testClasses
-     */
-    public void setTestClasses(List<TestClass> testClasses) {
-        this.testClasses = testClasses;
-    }
-
-    /**
-     * Gets the packages.
-     *
-     * @return
-     */
-    public List<String> getPackages() {
-        return packages;
-    }
-
-    /**
-     * Sets the packages.
-     *
-     * @param packages
-     */
-    public void setPackages(List<String> packages) {
-        this.packages = packages;
-    }
-
-    /**
      * Gets the skipTests.
      *
      * @return
@@ -157,21 +108,4 @@ public class CitrusAppConfiguration {
         this.systemExit = systemExit;
     }
 
-    /**
-     * Gets the testNamePatterns.
-     *
-     * @return
-     */
-    public String[] getTestNamePatterns() {
-        return testNamePatterns;
-    }
-
-    /**
-     * Sets the testNamePatterns.
-     *
-     * @param testNamePatterns
-     */
-    public void setTestNamePatterns(String[] testNamePatterns) {
-        this.testNamePatterns = testNamePatterns;
-    }
 }

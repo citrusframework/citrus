@@ -29,6 +29,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -167,27 +169,30 @@ public final class Citrus {
     private static final String APPLICATION_PROPERTY_FILE_PROPERTY = "citrus.application.properties";
     private static final String APPLICATION_PROPERTY_FILE_ENV = "CITRUS_APPLICATION_PROPERTIES";
     private static final String APPLICATION_PROPERTY_FILE = System.getProperty(APPLICATION_PROPERTY_FILE_PROPERTY, System.getenv(APPLICATION_PROPERTY_FILE_ENV) != null ?
-            System.getenv(APPLICATION_PROPERTY_FILE_ENV) : "citrus-application.properties");
+            System.getenv(APPLICATION_PROPERTY_FILE_ENV) : "classpath:citrus-application.properties");
 
     /* Load application properties */
     static {
-        try (final InputStream in = new ClassPathResource(APPLICATION_PROPERTY_FILE).getInputStream()) {
-            Properties applicationProperties = new Properties();
-            applicationProperties.load(in);
+        Resource appPropertiesResource = new PathMatchingResourcePatternResolver().getResource(APPLICATION_PROPERTY_FILE);
+        if (appPropertiesResource.exists()) {
+            try (final InputStream in = appPropertiesResource.getInputStream()) {
+                Properties applicationProperties = new Properties();
+                applicationProperties.load(in);
 
-            log.debug("Loading Citrus application properties");
+                log.debug("Loading Citrus application properties");
 
-            for (Map.Entry<Object, Object> property : applicationProperties.entrySet()) {
-                if (StringUtils.isEmpty(System.getProperty(property.getKey().toString()))) {
-                    log.debug(String.format("Setting application property %s=%s", property.getKey(), property.getValue()));
-                    System.setProperty(property.getKey().toString(), property.getValue().toString());
+                for (Map.Entry<Object, Object> property : applicationProperties.entrySet()) {
+                    if (StringUtils.isEmpty(System.getProperty(property.getKey().toString()))) {
+                        log.debug(String.format("Setting application property %s=%s", property.getKey(), property.getValue()));
+                        System.setProperty(property.getKey().toString(), property.getValue().toString());
+                    }
                 }
-            }
-        } catch (Exception e) {
-            if (log.isTraceEnabled()) {
-                log.trace("Unable to locate Citrus application properties", e);
-            } else {
-                log.info("Unable to locate Citrus application properties");
+            } catch (Exception e) {
+                if (log.isTraceEnabled()) {
+                    log.trace("Unable to locate Citrus application properties", e);
+                } else {
+                    log.info("Unable to locate Citrus application properties");
+                }
             }
         }
     }

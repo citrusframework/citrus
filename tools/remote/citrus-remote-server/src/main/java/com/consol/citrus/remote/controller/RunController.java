@@ -22,19 +22,9 @@ import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.CitrusRemoteConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.type.ClassMetadata;
-import org.springframework.core.type.filter.AbstractClassTestingTypeFilter;
-import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import org.testng.annotations.Test;
 
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.regex.Pattern;
-import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -71,59 +61,8 @@ public class RunController {
      */
     public void runPackage(String basePackage) {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
-        
-        ClassPathScanningCandidateComponentProvider provider = new ClassPathScanningCandidateComponentProvider(false);
-        provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
-            @Override
-            protected boolean match(ClassMetadata metadata) {
-                if (Stream.of(Optional.ofNullable(includes).orElse(configuration.getTestNamePatterns()))
-                        .parallel()
-                        .map(Pattern::compile)
-                        .noneMatch(pattern -> pattern.matcher(metadata.getClassName()).matches())) {
-                    return false;
-                }
-
-                try {
-                    Class<?> clazz = Class.forName(metadata.getClassName());
-                    if (clazz.isAnnotationPresent(Test.class)) {
-                        return true;
-                    }
-
-                    AtomicBoolean hasTestMethod = new AtomicBoolean(false);
-                    ReflectionUtils.doWithMethods(clazz, method -> hasTestMethod.set(true), method -> AnnotationUtils.findAnnotation(method, Test.class) != null);
-                    return hasTestMethod.get();
-                } catch (NoClassDefFoundError | ClassNotFoundException e) {
-                    log.warn("Unable to access class: " + metadata.getClassName());
-                    return false;
-                }
-            }
-        });
-
-        provider.findCandidateComponents(basePackage)
-                .stream()
-                .map(BeanDefinition::getBeanClassName)
-                .distinct()
-                .map(className -> {
-                    try {
-                        Class<?> clazz = Class.forName(className);
-                        log.debug("Found test candidate: " + className);
-                        return clazz;
-                    } catch (NoClassDefFoundError | ClassNotFoundException e) {
-                        log.warn("Unable to access test class: " + className);
-                        return Void.class;
-                    }
-                })
-                .filter(clazz -> !clazz.equals(Void.class))
-                .map(clazz -> new TestClass(clazz.getName()))
-                .forEach(citrusAppConfiguration.getTestClasses()::add);
-
-        log.info(String.format("Found %s test classes to execute", citrusAppConfiguration.getTestClasses().size()));
-
-        if (citrusAppConfiguration.getTestClasses().isEmpty()) {
-            citrusAppConfiguration.setTestNamePatterns(Optional.ofNullable(includes).orElse(configuration.getTestNamePatterns()));
-            citrusAppConfiguration.getPackages().add(basePackage);
-        }
-
+        citrusAppConfiguration.setIncludes(Optional.ofNullable(includes).orElse(configuration.getIncludes()));
+        citrusAppConfiguration.getPackages().add(basePackage);
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
         run(citrusAppConfiguration);
     }
