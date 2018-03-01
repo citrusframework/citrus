@@ -54,9 +54,7 @@ public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
     private void createReportFile(String reportFileName, String content) {
         File targetDirectory = new File(getReportDirectory());
         if (!targetDirectory.exists()) {
-            boolean success = targetDirectory.mkdirs();
-
-            if (!success) {
+            if (!targetDirectory.mkdirs()) {
                 throw new CitrusRuntimeException("Unable to create report output directory: " + getReportDirectory());
             }
         }

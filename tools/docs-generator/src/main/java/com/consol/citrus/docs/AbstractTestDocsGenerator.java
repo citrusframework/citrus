@@ -125,9 +125,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     protected FileOutputStream getFileOutputStream(String fileName) throws IOException {
         File file = new File(OUTPUT_DIRECTORY);
         if (!file.exists()) {
-            boolean success = file.mkdirs();
-            
-            if (!success) {
+            if (!file.mkdirs()) {
                 throw new CitrusRuntimeException("Unable to create folder structure for test documentation");
             }
         }

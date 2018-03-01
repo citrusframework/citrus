@@ -45,6 +45,12 @@ public class ReportConfiguration implements Serializable {
     private boolean htmlReport = true;
 
     /**
+     * Get reporting files from server and save them in report output directory.
+     */
+    @Parameter(property = "citrus.report.save.files", defaultValue = "true")
+    private boolean saveReportFiles = true;
+
+    /**
      * Gets the summaryFile.
      *
      * @return
@@ -96,5 +102,23 @@ public class ReportConfiguration implements Serializable {
      */
     public String getDirectory() {
         return directory;
+    }
+
+    /**
+     * Gets the saveReportFiles.
+     *
+     * @return
+     */
+    public boolean isSaveReportFiles() {
+        return saveReportFiles;
+    }
+
+    /**
+     * Sets the saveReportFiles.
+     *
+     * @param saveReportFiles
+     */
+    public void setSaveReportFiles(boolean saveReportFiles) {
+        this.saveReportFiles = saveReportFiles;
     }
 }

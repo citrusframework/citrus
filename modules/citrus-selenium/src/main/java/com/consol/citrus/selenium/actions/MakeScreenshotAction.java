@@ -67,9 +67,7 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
                 try {
                     File targetDir = new File(context.replaceDynamicContentInString(outputDir));
                     if (!targetDir.exists()) {
-                        boolean success = targetDir.mkdirs();
-
-                        if (!success) {
+                        if (!targetDir.mkdirs()) {
                             throw new CitrusRuntimeException("Failed to create screenshot output directory: " + outputDir);
                         }
                     }

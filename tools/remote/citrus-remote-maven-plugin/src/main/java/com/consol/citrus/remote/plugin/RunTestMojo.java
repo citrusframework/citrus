@@ -16,9 +16,11 @@
 
 package com.consol.citrus.remote.plugin;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.plugin.config.RunConfiguration;
 import com.consol.citrus.report.*;
+import com.consol.citrus.util.FileUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.methods.RequestBuilder;
@@ -53,6 +55,11 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
      */
     @Parameter
     private RunConfiguration run;
+
+    /**
+     * Object mapper for JSON response to object conversion.
+     */
+    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void doExecute() throws MojoExecutionException, MojoFailureException {
@@ -156,7 +163,7 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
      * @throws IOException
      */
     private void handleTestResults(HttpResponse response) throws IOException {
-        RemoteResult[] results = new ObjectMapper().readValue(response.getEntity().getContent(), RemoteResult[].class);
+        RemoteResult[] results = objectMapper.readValue(response.getEntity().getContent(), RemoteResult[].class);
 
         StringWriter resultWriter = new StringWriter();
         resultWriter.append(String.format("%n"));
@@ -177,6 +184,62 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
         summaryReporter.setReportDirectory(getOutputDirectory().getPath() + File.separator + getReport().getDirectory());
         summaryReporter.setReportFileName(getReport().getSummaryFile());
         summaryReporter.generateTestResults();
+
+        getAndSaveReports();
+    }
+
+    private void getAndSaveReports() {
+        if (!getReport().isSaveReportFiles()) {
+            return;
+        }
+
+        HttpResponse response = null;
+        String[] reportFiles = {};
+        try {
+            response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/results/files")
+                    .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/xml"))
+                    .build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                getLog().warn("Failed to get test reports from remote server");
+            }
+
+            reportFiles = objectMapper.readValue(response.getEntity().getContent(), String[].class);
+        } catch (IOException e) {
+            getLog().warn("Failed to get test reports from remote server", e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
+        }
+
+        File junitReportsDirectory = new File(getOutputDirectory() + File.separator + getReport().getDirectory(), "junitreports");
+
+        if (!junitReportsDirectory.exists()) {
+            if (!junitReportsDirectory.mkdirs()) {
+                throw new CitrusRuntimeException("Unable to create message JUnit reports output directory: " + junitReportsDirectory.getPath());
+            }
+        }
+
+        Stream.of(reportFiles)
+            .map(reportFile -> new File(junitReportsDirectory, reportFile))
+            .forEach(reportFile -> {
+                HttpResponse fileResponse = null;
+                try {
+                    fileResponse = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/results/file/" + URLEncoder.encode(reportFile.getName(), ENCODING))
+                            .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/xml"))
+                            .build());
+
+                    if (HttpStatus.SC_OK != fileResponse.getStatusLine().getStatusCode()) {
+                        getLog().warn("Failed to get report file for test: " + reportFile.getName());
+                    }
+
+                    getLog().info("Writing report file: " + reportFile);
+                    FileUtils.writeToFile(fileResponse.getEntity().getContent(), reportFile);
+                } catch (IOException e) {
+                    getLog().warn("Failed to get report file for test: " + reportFile.getName(), e);
+                } finally {
+                    HttpClientUtils.closeQuietly(fileResponse);
+                }
+            });
     }
 
     /**

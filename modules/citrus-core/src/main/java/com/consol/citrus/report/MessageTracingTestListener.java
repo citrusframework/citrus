@@ -136,9 +136,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     public void afterPropertiesSet() throws Exception {
         File targetDirectory = new File(outputDirectory);
         if (!targetDirectory.exists()) {
-            boolean success = targetDirectory.mkdirs();
-
-            if (!success) {
+            if (!targetDirectory.mkdirs()) {
                 throw new CitrusRuntimeException("Unable to create message tracing output directory: " + outputDirectory);
             }
         }

@@ -126,6 +126,19 @@ public abstract class FileUtils {
     }
 
     /**
+     * Writes inputStream content to file. Uses default charset encoding.
+     * @param inputStream
+     * @param file
+     */
+    public static void writeToFile(InputStream inputStream, File file) {
+        try (InputStreamReader inputStreamReader = new InputStreamReader(inputStream)) {
+            writeToFile(FileCopyUtils.copyToString(inputStreamReader), file, getDefaultCharset());
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to write file", e);
+        }
+    }
+
+    /**
      * Writes String content to file. Uses default charset encoding.
      * @param content
      * @param file
@@ -145,9 +158,7 @@ public abstract class FileUtils {
         }
 
         if (!file.getParentFile().exists()) {
-            boolean success = file.getParentFile().mkdirs();
-
-            if (!success) {
+            if (!file.getParentFile().mkdirs()) {
                 throw new CitrusRuntimeException("Unable to create folder structure for file: " + file.getPath());
             }
         }

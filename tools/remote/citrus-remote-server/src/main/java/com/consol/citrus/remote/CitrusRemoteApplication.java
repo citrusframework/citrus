@@ -25,16 +25,20 @@ import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.reporter.RemoteTestResultReporter;
 import com.consol.citrus.remote.transformer.JsonRequestTransformer;
 import com.consol.citrus.remote.transformer.JsonResponseTransformer;
+import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import spark.Filter;
 import spark.servlet.SparkApplication;
 
+import java.io.File;
 import java.net.URLDecoder;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static spark.Spark.*;
 
@@ -100,6 +104,29 @@ public class CitrusRemoteApplication implements SparkApplication {
 
         get("/results", (req, res) -> remoteTestResultReporter.getTestReport());
 
+        get("/results/files", (req, res) -> {
+            res.type("application/json");
+            File junitReportsFolder = new File("test-output/junitreports");
+
+            if (junitReportsFolder.exists()) {
+                return Stream.of(Optional.ofNullable(junitReportsFolder.list()).orElse(new String[] {})).collect(Collectors.toList());
+            }
+
+            return Collections.emptyList();
+        }, new JsonResponseTransformer());
+
+        get("/results/file/:name", (req, res) -> {
+            res.type("application/xml");
+            File junitReportsFolder = new File("test-output/junitreports");
+            File testResultFile = new File(junitReportsFolder, req.params(":name"));
+
+            if (junitReportsFolder.exists() && testResultFile.exists()) {
+                return FileUtils.readToString(testResultFile);
+            }
+
+            throw halt(404, "Failed to find test result file: " + req.params(":name"));
+        });
+
         get("/run", (req, res) -> {
             RunController runController = new RunController(configuration);
 
@@ -161,7 +188,7 @@ public class CitrusRemoteApplication implements SparkApplication {
             configuration.apply(new JsonRequestTransformer().read(req.body(), CitrusAppConfiguration.class));
             return "";
         });
-
+        
         exception(CitrusRuntimeException.class, (exception, request, response) -> {
             response.status(500);
             response.body(exception.getMessage());
