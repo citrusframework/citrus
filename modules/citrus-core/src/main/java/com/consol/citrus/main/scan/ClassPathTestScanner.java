@@ -17,7 +17,6 @@
 package com.consol.citrus.main.scan;
 
 import com.consol.citrus.TestClass;
-import com.consol.citrus.main.TestRunConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -43,15 +42,15 @@ public class ClassPathTestScanner {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ClassPathTestScanner.class);
 
-    /** Run configuration */
-    private final TestRunConfiguration configuration;
+    /** Test name patterns to include */
+    private final String[] includes;
 
     /**
      * Default constructor using run configuration.
-     * @param configuration
+     * @param includes
      */
-    public ClassPathTestScanner(TestRunConfiguration configuration) {
-        this.configuration = configuration;
+    public ClassPathTestScanner(String... includes) {
+        this.includes = includes;
     }
 
     /**
@@ -65,7 +64,7 @@ public class ClassPathTestScanner {
         provider.addIncludeFilter(new AbstractClassTestingTypeFilter() {
             @Override
             protected boolean match(ClassMetadata metadata) {
-                if (Stream.of(configuration.getIncludes())
+                if (Stream.of(includes)
                         .parallel()
                         .map(Pattern::compile)
                         .noneMatch(pattern -> pattern.matcher(metadata.getClassName()).matches())) {

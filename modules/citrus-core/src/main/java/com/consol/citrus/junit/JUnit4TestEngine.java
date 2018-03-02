@@ -21,9 +21,8 @@ import com.consol.citrus.main.AbstractTestEngine;
 import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.main.scan.ClassPathTestScanner;
 import org.junit.Test;
-import org.junit.runner.Request;
-import org.junit.runner.Runner;
-import org.junit.runner.notification.RunNotifier;
+import org.junit.runner.JUnitCore;
+import org.junit.runner.notification.RunListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -40,6 +39,8 @@ public class JUnit4TestEngine extends AbstractTestEngine {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JUnit4TestEngine.class);
 
+    private List<RunListener> listeners = new ArrayList<>();
+
     /**
      * Default constructor using run configuration.
      * @param configuration
@@ -52,25 +53,25 @@ public class JUnit4TestEngine extends AbstractTestEngine {
     public void run() {
         if (!CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
             run(getConfiguration().getTestClasses());
-        }
-
-        List<String> packagesToRun = getConfiguration().getPackages();
-        if (CollectionUtils.isEmpty(packagesToRun)) {
-            packagesToRun = Collections.singletonList("");
-            log.info("Running all tests in project");
-        }
-
-        List<TestClass> classesToRun = new ArrayList<>();
-        for (String packageName : packagesToRun) {
-            if (StringUtils.hasText(packageName)) {
-                log.info(String.format("Running tests in package %s", packageName));
+        } else {
+            List<String> packagesToRun = getConfiguration().getPackages();
+            if (CollectionUtils.isEmpty(packagesToRun) && CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
+                packagesToRun = Collections.singletonList("");
+                log.info("Running all tests in project");
             }
 
-            classesToRun.addAll(new ClassPathTestScanner(getConfiguration()).findTestsInPackage(packageName, Test.class));
-        }
+            List<TestClass> classesToRun = new ArrayList<>();
+            for (String packageName : packagesToRun) {
+                if (StringUtils.hasText(packageName)) {
+                    log.info(String.format("Running tests in package %s", packageName));
+                }
 
-        log.info(String.format("Found %s test classes to execute", classesToRun.size()));
-        run(classesToRun);
+                classesToRun.addAll(new ClassPathTestScanner(getConfiguration().getIncludes()).findTestsInPackage(packageName, Test.class));
+            }
+
+            log.info(String.format("Found %s test classes to execute", classesToRun.size()));
+            run(classesToRun);
+        }
     }
 
     /**
@@ -78,7 +79,13 @@ public class JUnit4TestEngine extends AbstractTestEngine {
      * @param classesToRun
      */
     private void run(List<TestClass> classesToRun) {
-        Runner junitRunner = Request.classes(classesToRun
+        JUnitCore junit = new JUnitCore();
+
+        for (RunListener listener : listeners) {
+            junit.addListener(listener);
+        }
+
+        junit.run(classesToRun
                 .stream()
                 .peek(testClass -> log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName()))))
                 .map(testClass -> {
@@ -92,10 +99,15 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                     }
                 })
                 .filter(clazz -> !clazz.equals(Void.class))
-                .toArray(Class[]::new))
-                .getRunner();
+                .toArray(Class[]::new));
+    }
 
-        RunNotifier notifier = new RunNotifier();
-        junitRunner.run(notifier);
+    /**
+     * Adds run listener in fluent API.
+     * @param listener
+     */
+    public JUnit4TestEngine addRunListener(RunListener listener) {
+        this.listeners.add(listener);
+        return this;
     }
 }

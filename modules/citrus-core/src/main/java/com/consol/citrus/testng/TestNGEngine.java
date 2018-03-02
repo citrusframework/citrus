@@ -24,7 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.testng.TestNG;
+import org.testng.*;
 import org.testng.annotations.Test;
 import org.testng.xml.*;
 
@@ -39,6 +39,8 @@ public class TestNGEngine extends AbstractTestEngine {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestNGEngine.class);
 
+    private List<ITestNGListener> listeners = new ArrayList<>();
+
     /**
      * Default constructor using run configuration.
      * @param configuration
@@ -50,46 +52,61 @@ public class TestNGEngine extends AbstractTestEngine {
     public void run() {
         TestNG testng = new TestNG();
 
+        for (ITestNGListener listener : listeners) {
+            testng.addListener(listener);
+        }
+
         XmlSuite suite = new XmlSuite();
         testng.setXmlSuites(Collections.singletonList(suite));
 
-        for (TestClass testClass : getConfiguration().getTestClasses()) {
-            log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName())));
+        if (!CollectionUtils.isEmpty(getConfiguration().getTestClasses())) {
+            for (TestClass testClass : getConfiguration().getTestClasses()) {
+                log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName())));
 
-            XmlTest test = new XmlTest(suite);
-            test.setClasses(new ArrayList<>());
+                XmlTest test = new XmlTest(suite);
+                test.setClasses(new ArrayList<>());
 
-            XmlClass clazz = new XmlClass(testClass.getName());
-            if (StringUtils.hasText(testClass.getMethod())) {
-                clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
+                XmlClass clazz = new XmlClass(testClass.getName());
+                if (StringUtils.hasText(testClass.getMethod())) {
+                    clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
+                }
+
+                test.getClasses().add(clazz);
+            }
+        } else {
+            List<String> packagesToRun = getConfiguration().getPackages();
+            if (CollectionUtils.isEmpty(packagesToRun)) {
+                packagesToRun = Collections.singletonList("");
+                log.info("Running all tests in project");
             }
 
-            test.getClasses().add(clazz);
-        }
+            for (String packageName : packagesToRun) {
+                if (StringUtils.hasText(packageName)) {
+                    log.info(String.format("Running tests in package %s", packageName));
+                }
 
-        List<String> packagesToRun = getConfiguration().getPackages();
-        if (CollectionUtils.isEmpty(packagesToRun)) {
-            packagesToRun = Collections.singletonList("");
-            log.info("Running all tests in project");
-        }
+                XmlTest test = new XmlTest(suite);
+                test.setClasses(new ArrayList<>());
 
-        for (String packageName : packagesToRun) {
-            if (StringUtils.hasText(packageName)) {
-                log.info(String.format("Running tests in package %s", packageName));
+                new ClassPathTestScanner(getConfiguration().getIncludes()).findTestsInPackage(packageName, Test.class)
+                        .stream()
+                        .peek(testClass -> log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName()))))
+                        .map(clazz -> new XmlClass(clazz.getName()))
+                        .forEach(test.getClasses()::add);
+
+                log.info(String.format("Found %s test classes to execute", test.getClasses().size()));
             }
-
-            XmlTest test = new XmlTest(suite);
-            test.setClasses(new ArrayList<>());
-
-            new ClassPathTestScanner(getConfiguration()).findTestsInPackage(packageName, Test.class)
-                    .stream()
-                    .peek(testClass -> log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName()))))
-                    .map(clazz -> new XmlClass(clazz.getName()))
-                    .forEach(test.getClasses()::add);
-
-            log.info(String.format("Found %s test classes to execute", test.getClasses().size()));
         }
-
+        
         testng.run();
+    }
+
+    /**
+     * Adds run listener in fluent API.
+     * @param listener
+     */
+    public TestNGEngine addTestListener(ITestNGListener listener) {
+        this.listeners.add(listener);
+        return this;
     }
 }
