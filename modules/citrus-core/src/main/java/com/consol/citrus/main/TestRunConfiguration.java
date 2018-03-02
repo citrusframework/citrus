@@ -18,6 +18,7 @@ package com.consol.citrus.main;
 
 import com.consol.citrus.TestClass;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +36,9 @@ public class TestRunConfiguration {
 
     /** Include tests based on these test name pattern */
     private String[] includes = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
+
+    /** Optional test jar artifact holding tests */
+    private File testJar;
 
     /**
      * Gets the testClasses.
@@ -88,5 +92,23 @@ public class TestRunConfiguration {
      */
     public void setIncludes(String[] includes) {
         this.includes = includes;
+    }
+
+    /**
+     * Gets the testJar.
+     *
+     * @return
+     */
+    public File getTestJar() {
+        return testJar;
+    }
+
+    /**
+     * Sets the testJar.
+     *
+     * @param testJar
+     */
+    public void setTestJar(File testJar) {
+        this.testJar = testJar;
     }
 }

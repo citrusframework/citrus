@@ -46,7 +46,7 @@ public class TestJarMojo extends AbstractCitrusRemoteAssemblyMojo {
             return;
         }
 
-        if (hasTestJar()) {
+        if (hasTestJar() || getAssembly().isTestJarProvided()) {
             getLog().info(String.format("Skip test-jar creation as it is already attached to the project (classifier='%s')", getTestJar().getClassifier()));
         } else {
             createTestJarArchive();
@@ -61,7 +61,7 @@ public class TestJarMojo extends AbstractCitrusRemoteAssemblyMojo {
 
     @Override
     protected String getDefaultDescriptorRef() {
-        return "tests-app";
+        return "test-jar";
     }
 
     private boolean hasTestJar() {

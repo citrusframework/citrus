@@ -37,7 +37,7 @@ public class CitrusRemoteOptions extends CitrusAppOptions {
                 if (StringUtils.hasText(value)) {
                     configuration.setPort(Integer.valueOf(value));
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -port option");
+                    throw new CitrusRuntimeException("Missing parameter value for --port option");
                 }
             }
         });

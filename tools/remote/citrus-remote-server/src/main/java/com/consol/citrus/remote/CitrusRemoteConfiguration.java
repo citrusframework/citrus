@@ -25,7 +25,7 @@ import com.consol.citrus.main.CitrusAppConfiguration;
 public class CitrusRemoteConfiguration extends CitrusAppConfiguration {
 
     /** Server port */
-    private int port = 8686;
+    private int port = 4567;
 
     /**
      * Gets the port.

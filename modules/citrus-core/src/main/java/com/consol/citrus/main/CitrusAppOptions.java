@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -58,7 +59,7 @@ public class CitrusAppOptions {
                 if (value != null && value.length() > 0) {
                     configuration.setTimeToLive(Long.valueOf(value));
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -d/-duration option");
+                    throw new CitrusRuntimeException("Missing parameter value for -d/--duration option");
                 }
             }
         });
@@ -73,7 +74,7 @@ public class CitrusAppOptions {
                         throw new CitrusRuntimeException("Unable to access config class type: " + value, e);
                     }
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -c/-config option");
+                    throw new CitrusRuntimeException("Missing parameter value for -c/--config option");
                 }
             }
         });
@@ -84,7 +85,7 @@ public class CitrusAppOptions {
                 if (StringUtils.hasText(value)) {
                     configuration.setSkipTests(Boolean.valueOf(value));
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -s/-skipTests option");
+                    throw new CitrusRuntimeException("Missing parameter value for -s/--skipTests option");
                 }
             }
         });
@@ -95,7 +96,7 @@ public class CitrusAppOptions {
                 if (StringUtils.hasText(value)) {
                     configuration.getPackages().add(value);
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -p/-package option");
+                    throw new CitrusRuntimeException("Missing parameter value for -p/--package option");
                 }
             }
         });
@@ -106,7 +107,7 @@ public class CitrusAppOptions {
                 if (StringUtils.hasText(value)) {
                     configuration.setSystemExit(Boolean.valueOf(value));
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -e/-exit option");
+                    throw new CitrusRuntimeException("Missing parameter value for -e/--exit option");
                 }
             }
         });
@@ -130,7 +131,18 @@ public class CitrusAppOptions {
 
                     configuration.getTestClasses().add(testClass);
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for -t/-test option");
+                    throw new CitrusRuntimeException("Missing parameter value for -t/--test option");
+                }
+            }
+        });
+
+        options.add(new CliOption<CitrusAppConfiguration>("j", "jar", "External test jar to load tests from") {
+            @Override
+            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+                if (StringUtils.hasText(value)) {
+                    configuration.setTestJar(new File(value));
+                } else {
+                    throw new CitrusRuntimeException("Missing parameter value for -j/--jar option");
                 }
             }
         });
@@ -176,7 +188,7 @@ public class CitrusAppOptions {
 
         protected CliOption(String shortName, String fullName, String description) {
             this.shortName = "-" + shortName;
-            this.fullName = "-" + fullName;
+            this.fullName = "--" + fullName;
             this.description = description;
         }
 

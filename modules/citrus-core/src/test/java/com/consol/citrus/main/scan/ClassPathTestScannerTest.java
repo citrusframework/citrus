@@ -35,7 +35,7 @@ public class ClassPathTestScannerTest {
     @Test(dataProvider = "scannerDataProvider")
     public void testFindTestsInPackage(String pattern, Class<?> testClass, Class<? extends Annotation> annotationType, long expectedFindings) {
         List<TestClass> findings;
-        findings = new ClassPathTestScanner(pattern).findTestsInPackage(testClass.getPackage().getName(), annotationType);
+        findings = new ClassPathTestScanner(annotationType, pattern).findTestsInPackage(testClass.getPackage().getName());
         Assert.assertEquals(findings.size(), expectedFindings);
 
         if (expectedFindings > 0) {

@@ -20,6 +20,7 @@ import com.consol.citrus.TestClass;
 import com.consol.citrus.main.AbstractTestEngine;
 import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.main.scan.ClassPathTestScanner;
+import com.consol.citrus.main.scan.JarFileTestScanner;
 import org.junit.Test;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.notification.RunListener;
@@ -28,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.net.*;
 import java.util.*;
 
 /**
@@ -66,7 +68,11 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                     log.info(String.format("Running tests in package %s", packageName));
                 }
 
-                classesToRun.addAll(new ClassPathTestScanner(getConfiguration().getIncludes()).findTestsInPackage(packageName, Test.class));
+                if (getConfiguration().getTestJar() != null) {
+                    classesToRun.addAll(new JarFileTestScanner(getConfiguration().getTestJar(), getConfiguration().getIncludes()).findTestsInPackage(packageName));
+                } else {
+                    classesToRun.addAll(new ClassPathTestScanner(Test.class, getConfiguration().getIncludes()).findTestsInPackage(packageName));
+                }
             }
 
             log.info(String.format("Found %s test classes to execute", classesToRun.size()));
@@ -90,10 +96,15 @@ public class JUnit4TestEngine extends AbstractTestEngine {
                 .peek(testClass -> log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName()))))
                 .map(testClass -> {
                     try {
-                        Class<?> clazz = Class.forName(testClass.getName());
+                        Class<?> clazz;
+                        if (getConfiguration().getTestJar() != null) {
+                            clazz = Class.forName(testClass.getName(), false, new URLClassLoader(new URL[]{ getConfiguration().getTestJar().toURI().toURL() }, getClass().getClassLoader()));
+                        } else {
+                            clazz = Class.forName(testClass.getName());
+                        }
                         log.debug("Found test candidate: " + testClass.getName());
                         return clazz;
-                    } catch (ClassNotFoundException e) {
+                    } catch (ClassNotFoundException | MalformedURLException e) {
                         log.warn("Unable to read test class: " + testClass.getName());
                         return Void.class;
                     }

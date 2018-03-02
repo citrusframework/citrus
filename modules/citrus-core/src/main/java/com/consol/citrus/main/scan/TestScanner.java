@@ -14,27 +14,22 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.remote.plugin;
+package com.consol.citrus.main.scan;
 
-import org.apache.maven.plugins.annotations.*;
+import com.consol.citrus.TestClass;
+
+import java.util.List;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Mojo(name = "test-war", defaultPhase = LifecyclePhase.PACKAGE, requiresDependencyResolution = ResolutionScope.TEST)
-public class TestWarMojo extends TestJarMojo {
+public interface TestScanner {
 
-    @Parameter(property = "citrus.skip.test.war", defaultValue = "false")
-    protected boolean skipTestWar;
-    
-    @Override
-    protected String getDefaultDescriptorRef() {
-        return "test-war";
-    }
-
-    @Override
-    protected boolean shouldSkip() {
-        return skipTestWar;
-    }
+    /**
+     * Find classes in package suitable to running as test with given annotation.
+     * @param packageName
+     * @return
+     */
+    List<TestClass> findTestsInPackage(String packageName);
 }

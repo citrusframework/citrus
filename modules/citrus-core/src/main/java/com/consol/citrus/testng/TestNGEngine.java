@@ -20,14 +20,17 @@ import com.consol.citrus.TestClass;
 import com.consol.citrus.main.AbstractTestEngine;
 import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.main.scan.ClassPathTestScanner;
+import com.consol.citrus.main.scan.JarFileTestScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.testng.*;
+import org.testng.ITestNGListener;
+import org.testng.TestNG;
 import org.testng.annotations.Test;
 import org.testng.xml.*;
 
+import java.net.*;
 import java.util.*;
 
 /**
@@ -66,12 +69,23 @@ public class TestNGEngine extends AbstractTestEngine {
                 XmlTest test = new XmlTest(suite);
                 test.setClasses(new ArrayList<>());
 
-                XmlClass clazz = new XmlClass(testClass.getName());
-                if (StringUtils.hasText(testClass.getMethod())) {
-                    clazz.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
-                }
+                try {
+                    Class<?> clazz;
+                    if (getConfiguration().getTestJar() != null) {
+                        clazz = Class.forName(testClass.getName(), false, new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                    } else {
+                        clazz = Class.forName(testClass.getName());
+                    }
 
-                test.getClasses().add(clazz);
+                    XmlClass xmlClass = new XmlClass(clazz);
+                    if (StringUtils.hasText(testClass.getMethod())) {
+                        xmlClass.setIncludedMethods(Collections.singletonList(new XmlInclude(testClass.getMethod())));
+                    }
+
+                    test.getClasses().add(xmlClass);
+                } catch (ClassNotFoundException | MalformedURLException e) {
+                    log.warn("Unable to read test class: " + testClass.getName());
+                }
             }
         } else {
             List<String> packagesToRun = getConfiguration().getPackages();
@@ -88,10 +102,31 @@ public class TestNGEngine extends AbstractTestEngine {
                 XmlTest test = new XmlTest(suite);
                 test.setClasses(new ArrayList<>());
 
-                new ClassPathTestScanner(getConfiguration().getIncludes()).findTestsInPackage(packageName, Test.class)
-                        .stream()
+                List<TestClass> classesToRun;
+                if (getConfiguration().getTestJar() != null) {
+                    classesToRun = new JarFileTestScanner(getConfiguration().getTestJar(), getConfiguration().getIncludes()).findTestsInPackage(packageName);
+                } else {
+                    classesToRun = new ClassPathTestScanner(Test.class, getConfiguration().getIncludes()).findTestsInPackage(packageName);
+                }
+
+                classesToRun.stream()
                         .peek(testClass -> log.info(String.format("Running test %s", Optional.ofNullable(testClass.getMethod()).map(method -> testClass.getName() + "#" + method).orElse(testClass.getName()))))
-                        .map(clazz -> new XmlClass(clazz.getName()))
+                        .map(testClass -> {
+                            try {
+                                Class<?> clazz;
+                                if (getConfiguration().getTestJar() != null) {
+                                    clazz = Class.forName(testClass.getName(), false, new URLClassLoader(new URL[]{getConfiguration().getTestJar().toURI().toURL()}, getClass().getClassLoader()));
+                                } else {
+                                    clazz = Class.forName(testClass.getName());
+                                }
+                                return clazz;
+                            } catch (ClassNotFoundException | MalformedURLException e) {
+                                log.warn("Unable to read test class: " + testClass.getName());
+                                return Void.class;
+                            }
+                        })
+                        .filter(clazz -> !clazz.equals(Void.class))
+                        .map(XmlClass::new)
                         .forEach(test.getClasses()::add);
 
                 log.info(String.format("Found %s test classes to execute", test.getClasses().size()));

@@ -34,6 +34,9 @@ public class AssemblyConfiguration implements Serializable {
     @Parameter
     private MavenArchiveConfiguration archive;
 
+    @Parameter(property = "citrus.remote.test.jar.provided", defaultValue = "false")
+    private boolean testJarProvided = false;
+
     private File outputDirectory;
     private File workingDirectory;
     private File temporaryRootDirectory;
@@ -126,5 +129,23 @@ public class AssemblyConfiguration implements Serializable {
      */
     public void setTemporaryRootDirectory(File temporaryRootDirectory) {
         this.temporaryRootDirectory = temporaryRootDirectory;
+    }
+
+    /**
+     * Gets the testJarProvided.
+     *
+     * @return
+     */
+    public boolean isTestJarProvided() {
+        return testJarProvided;
+    }
+
+    /**
+     * Sets the testJarProvided.
+     *
+     * @param testJarProvided
+     */
+    public void setTestJarProvided(boolean testJarProvided) {
+        this.testJarProvided = testJarProvided;
     }
 }
