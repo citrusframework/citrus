@@ -183,7 +183,7 @@
     <jaxb.version>2.2.11</jaxb.version>
     <jackson.version>2.9.4</jackson.version>
     <arquillian.version>1.1.15.Final</arquillian.version>
-    <cucumber.version>1.2.5</cucumber.version>
+    <cucumber.version>2.3.1</cucumber.version>
     <zookeeper.version>3.4.10</zookeeper.version>
     <json.schema.validator.version>2.2.8</json.schema.validator.version>
     <citrus.db.version>0.1-SNAPSHOT</citrus.db.version>
@@ -607,17 +607,17 @@
 
       <!-- Cucumber -->
       <dependency>
-        <groupId>info.cukes</groupId>
+        <groupId>io.cucumber</groupId>
         <artifactId>cucumber-java</artifactId>
         <version>${cucumber.version}</version>
       </dependency>
       <dependency>
-        <groupId>info.cukes</groupId>
+        <groupId>io.cucumber</groupId>
         <artifactId>cucumber-spring</artifactId>
         <version>${cucumber.version}</version>
       </dependency>
       <dependency>
-        <groupId>info.cukes</groupId>
+        <groupId>io.cucumber</groupId>
         <artifactId>cucumber-junit</artifactId>
         <version>${cucumber.version}</version>
         <exclusions>
