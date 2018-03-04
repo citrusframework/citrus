@@ -41,7 +41,7 @@ Cucumber works with both JUnit and TestNG as unit testing framework. You can cho
 [source,xml]
 ----
 <dependency>
-  <groupId>info.cukes</groupId>
+  <groupId>io.cucumber</groupId>
   <artifactId>cucumber-junit</artifactId>
   <version>${cucumber.version}</version>
 </dependency>
@@ -253,7 +253,7 @@ Cucumber provides support for Spring dependency injection in step definition cla
 [source,xml]
 ----
 <dependency>
-  <groupId>info.cukes</groupId>
+  <groupId>io.cucumber</groupId>
   <artifactId>cucumber-spring</artifactId>
   <version>${cucumber.version}</version>
 </dependency>

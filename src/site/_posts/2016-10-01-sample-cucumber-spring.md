@@ -107,7 +107,7 @@ we have included the respective Maven dependency to the project:
 
 {% highlight xml %}
 <dependency>
-  <groupId>info.cukes</groupId>
+  <groupId>io.cucumber</groupId>
   <artifactId>cucumber-spring</artifactId>
 </dependency>
 {% endhighlight %}
