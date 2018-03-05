@@ -21,8 +21,6 @@ import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-
 
 /**
  * Enum with mode selection for test designer or runner.
@@ -31,6 +29,7 @@ import java.lang.reflect.Field;
  * @since 2.6
  */
 public enum InjectionMode {
+    UNDEFINED,
     DESIGNER,
     RUNNER;
 
@@ -45,22 +44,14 @@ public enum InjectionMode {
         final Boolean[] designerMode = { false };
         final Boolean[] runnerMode = { false };
 
-        ReflectionUtils.doWithFields(clazz, new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                Class<?> type = field.getType();
-                if (TestDesigner.class.isAssignableFrom(type)) {
-                    designerMode[0] = true;
-                } else if (TestRunner.class.isAssignableFrom(type)) {
-                    runnerMode[0] = true;
-                }
+        ReflectionUtils.doWithFields(clazz, field -> {
+            Class<?> type = field.getType();
+            if (TestDesigner.class.isAssignableFrom(type)) {
+                designerMode[0] = true;
+            } else if (TestRunner.class.isAssignableFrom(type)) {
+                runnerMode[0] = true;
             }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                return field.isAnnotationPresent(CitrusResource.class);
-            }
-        });
+        }, field -> field.isAnnotationPresent(CitrusResource.class));
 
         return designerMode[0].equals(runnerMode[0]) ? fallback : (designerMode[0] ? InjectionMode.DESIGNER : InjectionMode.RUNNER);
     }

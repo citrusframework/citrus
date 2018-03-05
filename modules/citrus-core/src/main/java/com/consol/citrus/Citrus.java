@@ -159,6 +159,11 @@ public final class Citrus {
             Properties versionProperties = new Properties();
             versionProperties.load(in);
             version = versionProperties.get("citrus.version").toString();
+
+            if (version.equals("${project.version}")) {
+                log.warn("Citrus version has not been filtered with Maven project properties yet");
+                version = "";
+            }
         } catch (IOException e) {
             log.warn("Unable to read Citrus version information", e);
             version = "";

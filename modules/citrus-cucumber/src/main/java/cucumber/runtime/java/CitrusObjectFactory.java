@@ -63,20 +63,22 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
 
     @Override
     public boolean addClass(Class<?> clazz) {
-        InjectionMode fallback;
+        InjectionMode guessMode;
         if (mode == null) {
-            log.info("Initializing injection mode for Citrus " + Citrus.getVersion());
-            fallback = InjectionMode.valueOf(System.getProperty(INJECTION_MODE_PROPERTY, System.getenv(INJECTION_MODE_ENV) != null ?
-                    System.getenv(INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
+            guessMode = InjectionMode.valueOf(System.getProperty(INJECTION_MODE_PROPERTY, System.getenv(INJECTION_MODE_ENV) != null ?
+                    System.getenv(INJECTION_MODE_ENV) : InjectionMode.UNDEFINED.name()));
         } else {
-            fallback = mode;
+            guessMode = mode;
         }
 
-        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, fallback);
+        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, guessMode);
         if (mode == null) {
-            mode = requiredMode;
+            if (requiredMode != InjectionMode.UNDEFINED) {
+                log.info(String.format("Initializing injection mode '%s' for Citrus %s", requiredMode, Citrus.getVersion()));
+                mode = requiredMode;
+            }
         } else if (!mode.equals(requiredMode)) {
-            log.warn(String.format("Ignoring class of injection type '%s' as current injection mode is '%s'", requiredMode, mode));
+            log.warn(String.format("Ignoring class (%s) of injection type '%s' as current injection mode is '%s'", clazz.getName(), requiredMode, mode));
             return false;
         }
 

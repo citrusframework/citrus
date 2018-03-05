@@ -37,7 +37,7 @@ public class CitrusObjectFactoryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testDesignerInject() throws Exception {
+    public void testDesignerInject() {
         CitrusObjectFactory factory = new CitrusObjectFactory();
         factory.addClass(TestDesignerSteps.class);
 
@@ -49,7 +49,7 @@ public class CitrusObjectFactoryTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testRunnerInject() throws Exception {
+    public void testRunnerInject() {
         CitrusObjectFactory factory = new CitrusObjectFactory();
         factory.addClass(TestRunnerSteps.class);
 
