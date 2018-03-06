@@ -95,6 +95,7 @@ public final class CitrusArchiveBuilder {
     public CitrusArchiveBuilder all() {
         core();
         jms();
+        jdbc();
         http();
         websocket();
         ws();
@@ -131,6 +132,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder jms() {
         artifactCoordinates.add(getCoordinates("citrus-jms"));
+        return this;
+    }
+
+    /**
+     * Gets the jdbc Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder jdbc() {
+        artifactCoordinates.add(getCoordinates("citrus-jdbc"));
         return this;
     }
 

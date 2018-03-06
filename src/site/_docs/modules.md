@@ -28,6 +28,10 @@ The citrus-core module builds the core functionality such as
 
 Module contains classes for JMS support for connection to JMS message brokers.
 
+### citrus-jdbc (JAR)
+
+Module contains classes for JDBC database server mocking support so users can verify SQL statement calls on the database with proper result set return values.
+
 ### citrus-http (JAR)
 
 This module contains special HTTP client/server implementation. With this adapter Citrus is able to send and receive 

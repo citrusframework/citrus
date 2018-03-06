@@ -127,6 +127,13 @@
       </includes>
     </fileSet>
     <fileSet>
+      <directory>modules/citrus-jdbc/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
       <directory>modules/citrus-http/target</directory>
       <outputDirectory></outputDirectory>
       <includes>
@@ -240,6 +247,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-jms/target</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-jdbc/target</directory>
       <outputDirectory></outputDirectory>
       <includes>
         <include>*sources.jar</include>
