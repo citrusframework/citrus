@@ -61,10 +61,16 @@ public class FunctionConfig {
     private final LoadMessageFunction loadMessageFunction = new LoadMessageFunction();
     private final XpathFunction xpathFunction = new XpathFunction();
     private final JsonPathFunction jsonPathFunction = new JsonPathFunction();
+    private final SystemPropertyFunction systemPropertyFunction = new SystemPropertyFunction();
 
     @Bean(name = "functionRegistry")
     public FunctionRegistry getFunctionRegistry() {
         return new FunctionRegistry();
+    }
+
+    @Bean(name = "environmentPropertyFunction")
+    public EnvironmentPropertyFunction environmentPropertyFunction() {
+        return new EnvironmentPropertyFunction();
     }
 
     @Bean(name="citrusFunctionLibrary")
@@ -108,6 +114,8 @@ public class FunctionConfig {
         citrusFunctionLibrary.getMembers().put("message", loadMessageFunction);
         citrusFunctionLibrary.getMembers().put("xpath", xpathFunction);
         citrusFunctionLibrary.getMembers().put("jsonPath", jsonPathFunction);
+        citrusFunctionLibrary.getMembers().put("systemProperty", systemPropertyFunction);
+        citrusFunctionLibrary.getMembers().put("env", environmentPropertyFunction());
 
         return citrusFunctionLibrary;
     }
