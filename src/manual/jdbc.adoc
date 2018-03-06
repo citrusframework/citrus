@@ -201,7 +201,7 @@ It is also possible to simulate an erroneous modification including the verifica
 .Verifiying transaction rollback
 [source,java]
 ----
-eceive(jdbcServer)
+receive(jdbcServer)
     .message(JdbcMessage.startTransaction());<1>
 
 receive(jdbcServer)
