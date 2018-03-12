@@ -1217,7 +1217,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.execute(context);
     }
 
-    @Test(expectedExceptions = ValidationException.class)
+    @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testReceiveMessageWithJsonPathValidationNoPathResult() {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);

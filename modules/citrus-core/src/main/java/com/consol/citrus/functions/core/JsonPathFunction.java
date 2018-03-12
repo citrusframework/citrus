@@ -17,20 +17,12 @@
 package com.consol.citrus.functions.core;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
-import com.consol.citrus.validation.json.JsonPathFunctions;
-import com.jayway.jsonpath.*;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
+import com.consol.citrus.json.JsonPathUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -64,54 +56,6 @@ public class JsonPathFunction implements Function {
             jsonPathExpression = parameterList.get(1);
         }
 
-        try {
-            JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
-            Object receivedJson = parser.parse(context.replaceDynamicContentInString(jsonSource));
-            ReadContext readerContext = JsonPath.parse(receivedJson);
-
-            String expression = jsonPathExpression;
-            String jsonPathFunction = null;
-            for (String name : JsonPathFunctions.getSupportedFunctions()) {
-                if (expression.endsWith(String.format(".%s()", name))) {
-                    jsonPathFunction = name;
-                    expression = expression.substring(0, expression.length() - String.format(".%s()", name).length());
-                }
-            }
-
-            Object jsonPathResult = null;
-            PathNotFoundException pathNotFoundException = null;
-            try {
-                if (JsonPath.isPathDefinite(expression)) {
-                    jsonPathResult = readerContext.read(expression);
-                } else {
-                    JSONArray values = readerContext.read(expression);
-                    if (values.size() == 1) {
-                        jsonPathResult = values.get(0);
-                    } else {
-                        jsonPathResult = values;
-                    }
-                }
-            } catch (PathNotFoundException e) {
-                pathNotFoundException = e;
-            }
-
-            if (StringUtils.hasText(jsonPathFunction)) {
-                jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
-            }
-
-            if (jsonPathResult == null && pathNotFoundException != null) {
-                throw new CitrusRuntimeException(String.format("Failed to find JSON element for path: %s", jsonPathExpression), pathNotFoundException);
-            }
-
-            if (jsonPathResult instanceof JSONArray) {
-                return ((JSONArray) jsonPathResult).toJSONString();
-            } else if (jsonPathResult instanceof JSONObject) {
-                return ((JSONObject) jsonPathResult).toJSONString();
-            } else {
-                return Optional.ofNullable(jsonPathResult).map(Object::toString).orElse("null");
-            }
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException("Failed to parse JSON text", e);
-        }
+        return JsonPathUtils.evaluateAsString(context.replaceDynamicContentInString(jsonSource), jsonPathExpression);
     }
 }

@@ -60,7 +60,7 @@ public class JsonPayloadMappingKeyExtractorTest {
                     "{ \"person\": {\"name\": \"Penny\"} }"));
             Assert.fail("Missing exception due to bad Json expression");
         } catch (CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Failed to extract JSON element for path: $.I_DO_NOT_EXIST No results for path: $['I_DO_NOT_EXIST']");
+            Assert.assertEquals(e.getMessage(), "Failed to evaluate JSON path expression: $.I_DO_NOT_EXIST");
         }
     }
 

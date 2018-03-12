@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.json;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -202,7 +203,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
-    @Test(expectedExceptions = {ValidationException.class})
+    @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testValidateMessageElementsPathNotFound() {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         validationContext.setJsonPathExpressions(Collections.singletonMap(

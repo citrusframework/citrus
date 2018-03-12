@@ -19,11 +19,12 @@ package com.consol.citrus.validation.json;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.json.JsonPathUtils;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
-import com.jayway.jsonpath.*;
-import net.minidev.json.JSONArray;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.ReadContext;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
@@ -59,47 +60,14 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
             ReadContext readerContext = JsonPath.parse(receivedJson);
 
             for (Map.Entry<String, Object> entry : validationContext.getJsonPathExpressions().entrySet()) {
-                jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
-
-                String jsonPathFunction = null;
-                for (String name : JsonPathFunctions.getSupportedFunctions()) {
-                    if (jsonPathExpression.endsWith(String.format(".%s()", name))) {
-                        jsonPathFunction = name;
-                        jsonPathExpression = jsonPathExpression.substring(0, jsonPathExpression.length() - String.format(".%s()", name).length());
-                    }
-                }
-
-                Object jsonPathResult = null;
-                PathNotFoundException pathNotFoundException = null;
-                try {
-                    if (JsonPath.isPathDefinite(jsonPathExpression)) {
-                        jsonPathResult = readerContext.read(jsonPathExpression);
-                    } else {
-                        JSONArray values = readerContext.read(jsonPathExpression);
-                        if (values.size() == 1) {
-                            jsonPathResult = values.get(0);
-                        } else {
-                            jsonPathResult = values;
-                        }
-                    }
-                } catch (PathNotFoundException e) {
-                    pathNotFoundException = e;
-                }
-
-                if (StringUtils.hasText(jsonPathFunction)) {
-                    jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
-                }
-
-                if (jsonPathResult == null && pathNotFoundException != null) {
-                    throw new ValidationException(String.format("Validation failed for path: %s", jsonPathExpression), pathNotFoundException);
-                }
-
                 Object expectedValue = entry.getValue();
                 if (expectedValue instanceof String) {
                     //check if expected value is variable or function (and resolve it, if yes)
                     expectedValue = context.replaceDynamicContentInString(String.valueOf(expectedValue));
                 }
 
+                jsonPathExpression = context.replaceDynamicContentInString(entry.getKey());
+                Object jsonPathResult = JsonPathUtils.evaluate(readerContext, jsonPathExpression);
                 //do the validation of actual and expected value for element
                 ValidationUtils.validateValues(jsonPathResult, expectedValue, jsonPathExpression, context);
 

@@ -16,18 +16,8 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.json.JsonPathUtils;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.json.JsonPathFunctions;
-import com.jayway.jsonpath.*;
-import net.minidev.json.JSONArray;
-import net.minidev.json.JSONObject;
-import net.minidev.json.parser.JSONParser;
-import net.minidev.json.parser.ParseException;
-import org.springframework.util.StringUtils;
-
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -40,55 +30,7 @@ public class JsonPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor 
 
     @Override
     public String getMappingKey(Message request) {
-        try {
-            JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
-            Object receivedJson = parser.parse(request.getPayload(String.class));
-            ReadContext readerContext = JsonPath.parse(receivedJson);
-
-            String expression = jsonPathExpression;
-            String jsonPathFunction = null;
-            for (String name : JsonPathFunctions.getSupportedFunctions()) {
-                if (expression.endsWith(String.format(".%s()", name))) {
-                    jsonPathFunction = name;
-                    expression = expression.substring(0, expression.length() - String.format(".%s()", name).length());
-                }
-            }
-
-            Object jsonPathResult = null;
-            PathNotFoundException pathNotFoundException = null;
-            try {
-                if (JsonPath.isPathDefinite(expression)) {
-                    jsonPathResult = readerContext.read(expression);
-                } else {
-                    JSONArray values = readerContext.read(expression);
-                    if (values.size() == 1) {
-                        jsonPathResult = values.get(0);
-                    } else {
-                        jsonPathResult = values;
-                    }
-                }
-            } catch (PathNotFoundException e) {
-                pathNotFoundException = e;
-            }
-
-            if (StringUtils.hasText(jsonPathFunction)) {
-                jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
-            }
-
-            if (jsonPathResult == null && pathNotFoundException != null) {
-                throw new ValidationException(String.format("Failed to extract JSON element for path: %s", jsonPathExpression), pathNotFoundException);
-            }
-
-            if (jsonPathResult instanceof JSONArray) {
-                return ((JSONArray) jsonPathResult).toJSONString();
-            } else if (jsonPathResult instanceof JSONObject) {
-                return ((JSONObject) jsonPathResult).toJSONString();
-            } else {
-                return Optional.ofNullable(jsonPathResult).map(Object::toString).orElse("null");
-            }
-        } catch (ParseException e) {
-            throw new CitrusRuntimeException("Failed to parse JSON text", e);
-        }
+        return JsonPathUtils.evaluateAsString(request.getPayload(String.class), jsonPathExpression);
     }
 
     /**
