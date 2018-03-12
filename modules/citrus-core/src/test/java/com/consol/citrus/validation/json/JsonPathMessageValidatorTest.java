@@ -45,6 +45,7 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
                     + "\"number\": 10,"
                     + "\"numbers\": [10, 20, 30, 40],"
                     + "\"person\": {\"name\": \"Penny\"},"
+                    + "\"nerds\": [ {\"name\": \"Leonard\"}, {\"name\": \"Sheldon\"} ]"
             + "}}";
 
     private Message message = new DefaultMessage(payload);
@@ -61,6 +62,12 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.setJsonPathExpressions(Collections.singletonMap("$..sub-element", "text-value"));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.singletonMap("$..sub-element", startsWith("text")));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$..name", hasItem("Penny")));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$..name", containsInAnyOrder("Penny", "Leonard", "Sheldon")));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.nerds", hasSize(2)));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.numbers", "[10, 20, 30, 40]"));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -89,7 +96,17 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.person.size()", 1));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.person.exists()", true));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.foo.exists()", false));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
         validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.nullValue", ""));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.nerds.size()", 2L));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$.root.nerds.toString()", "[{\"name\":\"Leonard\"},{\"name\":\"Sheldon\"}]"));
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+        validationContext.setJsonPathExpressions(Collections.singletonMap("$..sub-element.size()", 1L));
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
 
@@ -181,6 +198,15 @@ public class JsonPathMessageValidatorTest extends AbstractTestNGUnitTest {
         JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
         validationContext.setJsonPathExpressions(Collections.singletonMap(
                 "$.root.element.sub-element", "false-value"));
+
+        validator.validateMessage(message, new DefaultMessage(), context, validationContext);
+    }
+
+    @Test(expectedExceptions = {ValidationException.class})
+    public void testValidateMessageElementsPathNotFound() {
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
+        validationContext.setJsonPathExpressions(Collections.singletonMap(
+                "$.root.foo", "foo-value"));
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }

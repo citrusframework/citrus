@@ -47,7 +47,7 @@ public class JsonPathFunctions {
                 } else if (jsonPathResult instanceof JSONObject) {
                     return ((JSONObject) jsonPathResult).size();
                 } else {
-                    return 0;
+                    return jsonPathResult != null ? 1 : 0;
                 }
             case "keySet":
                 if (jsonPathResult instanceof JSONObject) {
@@ -73,9 +73,17 @@ public class JsonPathFunctions {
                 } else {
                     return new Object[]{};
                 }
+            case "toString":
+                if (jsonPathResult instanceof JSONArray) {
+                    return ((JSONArray) jsonPathResult).toJSONString();
+                } else if (jsonPathResult instanceof JSONObject) {
+                    return ((JSONObject) jsonPathResult).toJSONString();
+                } else {
+                    return jsonPathResult.toString();
+                }
         }
 
-        return jsonPathResult.toString();
+        return jsonPathResult;
     }
 
     /**

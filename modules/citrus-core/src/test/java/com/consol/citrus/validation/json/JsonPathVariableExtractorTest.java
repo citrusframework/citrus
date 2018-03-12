@@ -34,12 +34,14 @@ public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        jsonMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
+        jsonMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"numbers\": [10, 20, 30, 40], \"id\":\"x123456789x\"}");
     }
 
     @Test
     public void testExtractVariables() throws Exception {
         variableExtractor.getJsonPathExpressions().put("$['index']", "index");
+        variableExtractor.getJsonPathExpressions().put("$.numbers", "numbers");
+        variableExtractor.getJsonPathExpressions().put("$.numbers.size()", "numbersSize");
         variableExtractor.getJsonPathExpressions().put("$.person", "person");
         variableExtractor.getJsonPathExpressions().put("$.person.name", "personName");
         variableExtractor.getJsonPathExpressions().put("$.toString()", "toString");
@@ -51,13 +53,13 @@ public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
         variableExtractor.extractVariables(jsonMessage, context);
 
         Assert.assertNotNull(context.getVariable("toString"));
-        Assert.assertEquals(context.getVariable("toString"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
+        Assert.assertEquals(context.getVariable("toString"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"numbers\":[10,20,30,40],\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
         Assert.assertNotNull(context.getVariable("keySet"));
-        Assert.assertEquals(context.getVariable("keySet"), "[person, index, text, id]");
+        Assert.assertEquals(context.getVariable("keySet"), "[person, numbers, index, text, id]");
         Assert.assertNotNull(context.getVariable("values"));
-        Assert.assertEquals(context.getVariable("values"), "[{\"surname\":\"Doe\",\"name\":\"John\"}, 5, Hello World!, x123456789x]");
+        Assert.assertEquals(context.getVariable("values"), "[{\"surname\":\"Doe\",\"name\":\"John\"}, [10,20,30,40], 5, Hello World!, x123456789x]");
         Assert.assertNotNull(context.getVariable("size"));
-        Assert.assertEquals(context.getVariable("size"), "4");
+        Assert.assertEquals(context.getVariable("size"), "5");
         Assert.assertNotNull(context.getVariable("person"));
         Assert.assertEquals(context.getVariable("person"), "{\"surname\":\"Doe\",\"name\":\"John\"}");
         Assert.assertNotNull(context.getVariable("personName"));
@@ -65,9 +67,15 @@ public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("index"));
         Assert.assertEquals(context.getVariable("index"), "5");
 
+        Assert.assertNotNull(context.getVariable("numbers"));
+        Assert.assertEquals(context.getVariable("numbers"), "[10,20,30,40]");
+
+        Assert.assertNotNull(context.getVariable("numbersSize"));
+        Assert.assertEquals(context.getVariable("numbersSize"), "4");
+
         Assert.assertNotNull(context.getVariable("all"));
-        Assert.assertEquals(context.getVariable("all"), "[{\"surname\":\"Doe\",\"name\":\"John\"},5,\"Hello World!\",\"x123456789x\"]");
+        Assert.assertEquals(context.getVariable("all"), "[{\"surname\":\"Doe\",\"name\":\"John\"},[10,20,30,40],5,\"Hello World!\",\"x123456789x\"]");
         Assert.assertNotNull(context.getVariable("root"));
-        Assert.assertEquals(context.getVariable("root"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
+        Assert.assertEquals(context.getVariable("root"), "{\"person\":{\"surname\":\"Doe\",\"name\":\"John\"},\"numbers\":[10,20,30,40],\"index\":5,\"text\":\"Hello World!\",\"id\":\"x123456789x\"}");
     }
 }

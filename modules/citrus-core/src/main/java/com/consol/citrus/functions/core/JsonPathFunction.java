@@ -17,17 +17,20 @@
 package com.consol.citrus.functions.core;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import com.consol.citrus.validation.json.JsonPathFunctions;
 import com.jayway.jsonpath.*;
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -85,7 +88,7 @@ public class JsonPathFunction implements Function {
                     if (values.size() == 1) {
                         jsonPathResult = values.get(0);
                     } else {
-                        jsonPathResult = values.toJSONString();
+                        jsonPathResult = values;
                     }
                 }
             } catch (PathNotFoundException e) {
@@ -96,11 +99,17 @@ public class JsonPathFunction implements Function {
                 jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
             }
 
-            if (jsonPathResult == null) {
+            if (jsonPathResult == null && pathNotFoundException != null) {
                 throw new CitrusRuntimeException(String.format("Failed to find JSON element for path: %s", jsonPathExpression), pathNotFoundException);
             }
 
-            return jsonPathResult.toString();
+            if (jsonPathResult instanceof JSONArray) {
+                return ((JSONArray) jsonPathResult).toJSONString();
+            } else if (jsonPathResult instanceof JSONObject) {
+                return ((JSONObject) jsonPathResult).toJSONString();
+            } else {
+                return Optional.ofNullable(jsonPathResult).map(Object::toString).orElse("null");
+            }
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }

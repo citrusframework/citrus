@@ -17,12 +17,12 @@
 package com.consol.citrus.validation.json;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.exceptions.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.variable.VariableExtractor;
 import com.jayway.jsonpath.*;
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
@@ -30,8 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Extractor implementation reads message elements via JSONPath expressions and saves the
@@ -78,7 +77,8 @@ public class JsonPathVariableExtractor implements VariableExtractor {
                     }
                 }
 
-                Object jsonPathResult;
+                Object jsonPathResult = null;
+                PathNotFoundException pathNotFoundException = null;
                 try {
                     if (JsonPath.isPathDefinite(jsonPathExpression)) {
                         jsonPathResult = readerContext.read(jsonPathExpression);
@@ -87,18 +87,28 @@ public class JsonPathVariableExtractor implements VariableExtractor {
                         if (values.size() == 1) {
                             jsonPathResult = values.get(0);
                         } else {
-                            jsonPathResult = values.toJSONString();
+                            jsonPathResult = values;
                         }
                     }
                 } catch (PathNotFoundException e) {
-                    throw new UnknownElementException(String.format("Could not find element for expression: %s", jsonPathExpression), e);
+                    pathNotFoundException = e;
                 }
 
                 if (StringUtils.hasText(jsonPathFunction)) {
                     jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
                 }
 
-                context.setVariable(variableName, jsonPathResult);
+                if (jsonPathResult == null && pathNotFoundException != null) {
+                    throw new UnknownElementException(String.format("Could not find element for expression: %s", jsonPathExpression), pathNotFoundException);
+                }
+
+                if (jsonPathResult instanceof JSONArray) {
+                    context.setVariable(variableName, ((JSONArray) jsonPathResult).toJSONString());
+                } else if (jsonPathResult instanceof JSONObject) {
+                    context.setVariable(variableName, ((JSONObject) jsonPathResult).toJSONString());
+                } else {
+                    context.setVariable(variableName, Optional.ofNullable(jsonPathResult).orElse("null"));
+                }
             }
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);

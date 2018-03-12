@@ -22,9 +22,12 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.json.JsonPathFunctions;
 import com.jayway.jsonpath.*;
 import net.minidev.json.JSONArray;
+import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.springframework.util.StringUtils;
+
+import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -51,27 +54,40 @@ public class JsonPayloadMappingKeyExtractor extends AbstractMappingKeyExtractor 
                 }
             }
 
-            Object jsonPathResult;
-            if (JsonPath.isPathDefinite(expression)) {
-                jsonPathResult = readerContext.read(expression);
-            } else {
-                JSONArray values = readerContext.read(expression);
-                if (values.size() == 1) {
-                    jsonPathResult = values.get(0);
+            Object jsonPathResult = null;
+            PathNotFoundException pathNotFoundException = null;
+            try {
+                if (JsonPath.isPathDefinite(expression)) {
+                    jsonPathResult = readerContext.read(expression);
                 } else {
-                    jsonPathResult = values.toJSONString();
+                    JSONArray values = readerContext.read(expression);
+                    if (values.size() == 1) {
+                        jsonPathResult = values.get(0);
+                    } else {
+                        jsonPathResult = values;
+                    }
                 }
+            } catch (PathNotFoundException e) {
+                pathNotFoundException = e;
             }
 
             if (StringUtils.hasText(jsonPathFunction)) {
                 jsonPathResult = JsonPathFunctions.evaluate(jsonPathResult, jsonPathFunction);
             }
 
-            return jsonPathResult.toString();
+            if (jsonPathResult == null && pathNotFoundException != null) {
+                throw new ValidationException(String.format("Failed to extract JSON element for path: %s", jsonPathExpression), pathNotFoundException);
+            }
+
+            if (jsonPathResult instanceof JSONArray) {
+                return ((JSONArray) jsonPathResult).toJSONString();
+            } else if (jsonPathResult instanceof JSONObject) {
+                return ((JSONObject) jsonPathResult).toJSONString();
+            } else {
+                return Optional.ofNullable(jsonPathResult).map(Object::toString).orElse("null");
+            }
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
-        } catch (PathNotFoundException e) {
-            throw new ValidationException(String.format("Failed to extract JSON element for path: %s", jsonPathExpression), e);
         }
     }
 
