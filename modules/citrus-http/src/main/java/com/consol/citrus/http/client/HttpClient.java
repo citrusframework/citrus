@@ -31,6 +31,7 @@ import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.util.CollectionUtils;
 
+import java.net.URI;
 import java.util.Arrays;
 
 /**
@@ -109,7 +110,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(httpMessage, getEndpointConfiguration(), context);
 
         try {
-            ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(endpointUri, method, requestEntity, String.class);
+            ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, String.class);
             log.info("HTTP message was sent to endpoint: '" + endpointUri + "'");
             correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration(), context));
         } catch (HttpErrorPropagatingException e) {
