@@ -1,12 +1,48 @@
 - version: ${project.version}
-  date: 2018-04-03
+  date: 2018-03-12
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
   stories: https://github.com/christophd/citrus/issues/
   changes:
-  - title: ToDo
-    id: 999
+  - title: JsonPath array result type
+    id: 327
+    type: Fix
+    author: christophd
+  - title: Add JDBC db server support
+    id: 322
     type: Add
+    author: christophd
+  - title: Send Http request with encoded URI
+    id: 344
+    type: Update
+    author: christophd
+  - title: Update dependency versions
+    id: 332
+    type: Update
+    author: christophd
+  - title: Add function to resolve system properties
+    id: 343
+    type: Add
+    author: christophd
+  - title: AntPath matching Hamcrest matcher
+    id: 334
+    type: Update
+    author: christophd
+  - title: URL en/decode function READY
+    id: 330
+    type: Add
+    author: christophd
+  - title: Missing global namespace support in send message XPath evaluation
+    id: 331
+    type: Fix
+    author: christophd
+  - title: Async test action container READY
+    id: 329
+    type: Add
+    author: christophd
+  - title: SOAP server: Response with MTOM attachment does not work
+    id: 328
+    type: Fix
     author: christophd
 
 - version: 2.7.3
