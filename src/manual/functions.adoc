@@ -769,3 +769,58 @@ Also accessing the local message store is valid here:
 
 This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
 becomes very easy then.
+
+[[functions-url-encode]]
+== urlEncode()/urlDecode()
+
+The *urlEncode* function takes a String and performs proper URL encoding. The result is an URL encoded String that is using proper character escaping for Http.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:urlEncode('foo@citrusframework', 'UTF-8')]]></message>
+</echo>
+----
+
+The above function takes the String `foo@citrusframework.org` and performs proper URL encoding resulting in `foo%40citrusframework`.
+
+Same logic applies to the `urlDecode()` function that will read an encoded String replacing all escaped characters to the normal String representation.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:urlDecode('foo%40citrusframework', 'UTF-8')]]></message>
+</echo>
+----
+
+The `UTF-8` charset is used during URL encoding operation and is optional as the default is `UTF-8`.
+
+[[functions-system-properties]]
+== systemProperty()
+
+The *systemProperty* function resolves a System property expression at test runtime. The resulting value is returned as function result. In case the System property is not available in the JVM an optional default value is used.
+In case no default value is given the function will fail with errors.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:systemProperty('user.name', 'my-default')]]></message>
+</echo>
+----
+
+[[functions-env-settings]]
+== env()
+
+The *env* function can be used to access an environment specific property at test runtime. The environment property can be a variable set on the underlying operating system. Also the `env()` function is able to access
+the Spring environment settings (see `org.springframework.core.env.Environment`).
+
+As the Spring environment is also able to resolve System properties you can use this function in this manner, too.
+
+[source,xml]
+----
+<echo>
+    <message><![CDATA[citrus:env('USER_NAME', 'my-default')]]></message>
+</echo>
+----
+
+The default value is optional and provides an error fallback in case the environment setting is not available. In case no default value is provided the function will fail with errors.
