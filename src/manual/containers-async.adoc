@@ -1,0 +1,85 @@
+[[containers-async]]
+== Async
+
+Now we deal with parallel execution of test actions. Nested actions inside a async container are executed in a separate thread. This has the effect that the test execution is not blocked until the nested actions have performed.
+The test immediately continues with the next test actions in place the will be executed in parallel to those actions in the async container.
+
+This mechanism comes in handy when a test action should be forked to the rest of the test. In send operations we were able to do this before with the `fork="true"` option set. Now we
+can also use the async test action container with all kind of test actions nested.
+
+See some example to find out how it works.
+
+.XML DSL
+[source,xml]
+----
+<testcase name="asyncTest">
+    <actions>
+        <async>
+            <actions>
+                <send endpoint="fooEndpoint">
+                    <message>...</message>
+                </send>
+                <receive endpoint="fooEndpoint">
+                    <message>...</message>
+                </echo>
+            </actions>
+        </async>
+
+        <echo>
+          <message>Continue with test</message>
+        </echo>
+    </actions>
+</testcase>
+----
+
+.Java DSL
+[source,java]
+----
+@CitrusTest
+public void asyncTest() {
+    async().actions(
+            send(fooEndpoint)
+                .message(fooRequest()),
+            receive(fooEndpoint)
+                .message(fooResponse())
+        );
+
+    echo("Continue with test");
+}
+----
+
+The nested `send` and `receive` actions get executed in parallel to the other test actions in that test case. So the test will not wait for these actions to finish before executing next actions. Of course possible errors inside the async container will also cause the whole test case
+to fail. And the test will definitely wait for all async actions to be finished before finishing the whole test case. This safely lets us execute test actions in parallel to each other.
+
+The async container also supports success and error callback actions. This is an experimental feature that is only available for XML test cases up to now.
+
+.XML DSL
+[source,xml]
+----
+<testcase name="asyncTest">
+    <actions>
+        <async>
+            <actions>
+                <send endpoint="fooEndpoint">
+                    <message>...</message>
+                </send>
+                <receive endpoint="fooEndpoint">
+                    <message>...</message>
+                </echo>
+                <success>
+                    <echo><message>Success!</message></echo>
+                </success>
+                <error>
+                    <echo><message>Failed!</message></echo>
+                </error>
+            </actions>
+        </async>
+
+        <echo>
+          <message>Continue with test</message>
+        </echo>
+    </actions>
+</testcase>
+----
+
+So you can add test actions that get executed based on the async test action outcome `success` or `error`.

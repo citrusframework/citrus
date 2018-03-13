@@ -28,7 +28,7 @@
     id: 334
     type: Update
     author: christophd
-  - title: URL en/decode function READY
+  - title: URL en/decode function
     id: 330
     type: Add
     author: christophd
@@ -36,7 +36,7 @@
     id: 331
     type: Fix
     author: christophd
-  - title: Async test action container READY
+  - title: Async test action container
     id: 329
     type: Add
     author: christophd
