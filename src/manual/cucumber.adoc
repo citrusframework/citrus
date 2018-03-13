@@ -14,7 +14,7 @@ NOTE: The Cucumber components in Citrus are kept in a separate Maven module. If 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-cucumber</artifactId>
-  <version>2.7.4</version>
+  <version>2.7.5-SNAPSHOT</version>
 </dependency>
 ----
 
