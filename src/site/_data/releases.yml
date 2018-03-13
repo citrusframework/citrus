@@ -40,7 +40,7 @@
     id: 329
     type: Add
     author: christophd
-  - title: SOAP server: Response with MTOM attachment does not work
+  - title: SOAP server Response with MTOM attachment does not work
     id: 328
     type: Fix
     author: christophd

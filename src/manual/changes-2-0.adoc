@@ -3,7 +3,7 @@
 
 Citrus 2.0 is a major version upgrade and therefore big things should be happening. In the following sections we shortly describe the Citrus evolution. We want you to get a quick overview of what has happened and all the new things in Citrus. So hopefully you can spot your favorite new feature.
 
-[[changes-refactoring]]
+[[changes-2-0-refactoring]]
 === Refactoring
 
 In Citrus 1.4 we began to refactor the configuration components in Citrus. This refactoring was finalized in Citrus 2.0 which means that all deprecated classes and api are no longer supported. The classes were removed so you get compilation errors when using those old stuff. If you still use the old configuration see this link:migration-sheet[http://citrusframework.org/migration-sheet.html]in order to learn how to upgrade to the new configuration. It is worth to do so! In addition to that we did refactoring in following fields:

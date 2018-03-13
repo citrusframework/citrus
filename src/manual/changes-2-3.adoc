@@ -37,7 +37,7 @@ Along with new features and improvements we refactored and changed some parts of
 TestResult:: We changed the *TestResult* instantiation when generating the test reports. The *TestResult* class now works with static instantiation methods for success, skipped and failed tests. This only affects your code when you have created custom test reporters.
 CitrusTestBuilder deprecation:: A major refactoring was done in the *TestBuilder* Java DSL code. *com.consol.citrus.dsl.TestBuilder* and all its subclasses were marked as deprecated and will disappear in next versions. So instead we now support *com.consol.citrus.dsl.design.TestDesigner* which basically offers the same functionality as former TestBuilder. In addition that refactoring brought a new way of executing the Java DSL test cases. Instead of building the whole test case before execution is done as a whole you can now use the *com.consol.citrus.dsl.runner.TestRunner* implementation in order to execute each test action in the Java DSL immediately. This is a more Java like way of writing Citrus test cases as you can mix Citrus test action execution with normal Java statements as usual. Read more about the new approach in link:testcase[testcase]
 
-[[changes-bugfixes]]
+[[changes-2-3-bugfixes]]
 === Bugfixes
 
 Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete changes log of each release (http://www.citrusframework.org/changes-report.html[http://www.citrusframework.org/changes-report.html]).
