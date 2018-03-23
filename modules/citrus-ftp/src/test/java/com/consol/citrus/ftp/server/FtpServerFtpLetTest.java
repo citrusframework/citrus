@@ -58,7 +58,7 @@ public class FtpServerFtpLetTest {
             Assert.assertNull(ftpMessage.getReplyCode());
             Assert.assertNull(ftpMessage.getReplyString());
 
-            return FtpMessage.result(FTPReply.COMMAND_OK, "OK");
+            return FtpMessage.success(FTPReply.COMMAND_OK, "OK");
         }).when(endpointAdapter).handleMessage(any(FtpMessage.class));
 
         FtpletResult result = ftpLet.beforeCommand(ftpSession, ftpRequest);

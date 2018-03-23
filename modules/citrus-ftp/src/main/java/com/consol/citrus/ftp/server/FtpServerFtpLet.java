@@ -83,7 +83,7 @@ public class FtpServerFtpLet implements Ftplet {
                         return new FtpMessage(response);
                     }
                 })
-                .orElse(FtpMessage.result());
+                .orElse(FtpMessage.success());
     }
 
     @Override
@@ -110,15 +110,13 @@ public class FtpServerFtpLet implements Ftplet {
             return FtpletResult.DEFAULT;
         }
 
-        FtpReply reply = getFtpReply(handleMessage(FtpMessage.command(FTPCmd.valueOf(command)).arguments(request.getArgument())), session);
-
-        try {
-            session.write(reply);
-        } catch (FtpException e) {
-            throw new CitrusRuntimeException("Failed to write ftp reply", e);
+        FtpMessage response = handleMessage(FtpMessage.command(FTPCmd.valueOf(command)).arguments(request.getArgument()));
+        if (response.hasReplyCode()) {
+            writeFtpReply(session, response);
+            return FtpletResult.SKIP;
         }
 
-        return FtpletResult.SKIP;
+        return FtpletResult.DEFAULT;
     }
 
     @Override
@@ -153,15 +151,11 @@ public class FtpServerFtpLet implements Ftplet {
         }
 
         if (!endpointConfiguration.isAutoConnect()) {
-            FtpReply reply = getFtpReply(handleMessage(FtpMessage.command(FTPCmd.PASS).arguments(session.getUser().getName() + ":" + session.getUser().getPassword())), session);
-
-            try {
-                session.write(reply);
-            } catch (FtpException e) {
-                throw new CitrusRuntimeException("Failed to write ftp reply", e);
+            FtpMessage response = handleMessage(FtpMessage.command(FTPCmd.PASS).arguments(session.getUser().getName() + ":" + session.getUser().getPassword()));
+            if (response.hasReplyCode()) {
+                writeFtpReply(session, response);
+                return FtpletResult.SKIP;
             }
-
-            return FtpletResult.SKIP;
         }
 
         return FtpletResult.DEFAULT;
@@ -170,12 +164,9 @@ public class FtpServerFtpLet implements Ftplet {
     @Override
     public FtpletResult onDisconnect(FtpSession session) {
         if (!endpointConfiguration.isAutoConnect()) {
-            FtpReply reply = getFtpReply(handleMessage(FtpMessage.command(FTPCmd.QUIT).arguments(session.getUser().getName() + ":" + session.getUser().getPassword())), session);
-
-            try {
-                session.write(reply);
-            } catch (FtpException e) {
-                throw new CitrusRuntimeException("Failed to write ftp reply", e);
+            FtpMessage response = handleMessage(FtpMessage.command(FTPCmd.QUIT).arguments(session.getUser().getName() + ":" + session.getUser().getPassword()));
+            if (response.hasReplyCode()) {
+                writeFtpReply(session, response);
             }
         }
 
@@ -184,5 +175,20 @@ public class FtpServerFtpLet implements Ftplet {
         }
 
         return FtpletResult.DISCONNECT;
+    }
+
+    /**
+     * Construct ftp reply from response message and write reply to given session.
+     * @param session
+     * @param response
+     */
+    private void writeFtpReply(FtpSession session, FtpMessage response) {
+        FtpReply reply = getFtpReply(response, session);
+
+        try {
+            session.write(reply);
+        } catch (FtpException e) {
+            throw new CitrusRuntimeException("Failed to write ftp reply", e);
+        }
     }
 }

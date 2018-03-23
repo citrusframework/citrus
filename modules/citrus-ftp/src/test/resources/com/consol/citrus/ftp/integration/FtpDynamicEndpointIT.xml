@@ -42,6 +42,7 @@
         <message>
           <payload>
             <ftp:command-result>
+              <ftp:success>false</ftp:success>
               <ftp:reply-code>530</ftp:reply-code>
               <ftp:reply-string>@contains('Access denied')@</ftp:reply-string>
             </ftp:command-result>
@@ -83,8 +84,7 @@
         <message>
           <payload>
             <ftp:command-result>
-              <ftp:reply-code>231</ftp:reply-code>
-              <ftp:reply-string>User name okay, need password for admin.</ftp:reply-string>
+              <ftp:success>true</ftp:success>
             </ftp:command-result>
           </payload>
         </message>
@@ -109,8 +109,7 @@
         <message>
           <payload>
             <ftp:command-result>
-              <ftp:reply-code>230</ftp:reply-code>
-              <ftp:reply-string>User logged in, proceed.</ftp:reply-string>
+              <ftp:success>true</ftp:success>
             </ftp:command-result>
           </payload>
         </message>
@@ -142,6 +141,7 @@
         <message>
           <payload>
             <ftp:command-result>
+              <ftp:success>true</ftp:success>
               <ftp:reply-code>257</ftp:reply-code>
               <ftp:reply-string>@contains('is current directory')@</ftp:reply-string>
             </ftp:command-result>

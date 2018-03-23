@@ -40,7 +40,7 @@
 
       <!--echo>
         <message>Receive user login on FTP server</message>
-      </-echo>
+      </echo>
 
       <receive endpoint="ftpServer">
         <message>
@@ -116,6 +116,7 @@
         <message>
           <payload>
             <ftp:command-result>
+              <ftp:success>true</ftp:success>
               <ftp:reply-code>257</ftp:reply-code>
               <ftp:reply-string>@contains('is current directory')@</ftp:reply-string>
             </ftp:command-result>

@@ -21,6 +21,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
@@ -77,18 +78,39 @@ public class FtpMessage extends DefaultMessage {
         return new FtpMessage(cmd);
     }
 
-    public static FtpMessage result() {
-        return result(FTPReply.COMMAND_OK, "");
+    public static FtpMessage success() {
+        CommandResult commandResult = new CommandResult();
+        commandResult.setSuccess(true);
+        return result(commandResult);
     }
 
-    public static FtpMessage result(int replyCode) {
-        return result(replyCode, "");
+    public static FtpMessage success(int replyCode) {
+        return success(replyCode, "");
     }
 
-    public static FtpMessage result(int replyCode, String replyString) {
+    public static FtpMessage success(int replyCode, String replyString) {
+        return result(replyCode, replyString, true);
+    }
+
+    public static FtpMessage error() {
+        CommandResult commandResult = new CommandResult();
+        commandResult.setSuccess(false);
+        return result(commandResult);
+    }
+
+    public static FtpMessage error(int replyCode) {
+        return success(replyCode, "");
+    }
+
+    public static FtpMessage error(int replyCode, String replyString) {
+        return result(replyCode, replyString, false);
+    }
+
+    public static FtpMessage result(int replyCode, String replyString, boolean success) {
         CommandResult commandResult = new CommandResult();
         commandResult.setReplyCode(String.valueOf(replyCode));
         commandResult.setReplyString(replyString);
+        commandResult.setSuccess(success);
         return result(commandResult);
     }
 
@@ -103,6 +125,7 @@ public class FtpMessage extends DefaultMessage {
         ListCommandResult listCommandResult = new ListCommandResult();
         listCommandResult.setReplyCode(String.valueOf(replyCode));
         listCommandResult.setReplyString(replyString);
+        listCommandResult.setSuccess(true);
         ListCommandResult.Files files = new ListCommandResult.Files();
 
         for (String fileName : fileNames) {
@@ -160,6 +183,17 @@ public class FtpMessage extends DefaultMessage {
         }
 
         return null;
+    }
+
+    /**
+     * Check if reply code is set on this message.
+     * @return
+     */
+    public boolean hasReplyCode() {
+        return getHeader(FtpMessageHeaders.FTP_REPLY_CODE) != null ||
+                Optional.ofNullable(commandResult)
+                        .map(result -> StringUtils.hasText(result.getReplyCode()))
+                        .orElse(false);
     }
 
     /**

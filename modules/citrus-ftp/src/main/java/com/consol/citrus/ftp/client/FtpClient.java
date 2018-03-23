@@ -47,6 +47,7 @@ import java.util.*;
  * @since 2.7.5
  */
 public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsumer, InitializingBean, DisposableBean {
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FtpClient.class);
 
@@ -112,11 +113,11 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 response = deleteFile((DeleteCommand) ftpCommand, context);
             } else {
                 int reply = ftpClient.sendCommand(ftpCommand.getSignal(), ftpCommand.getArguments());
-                response = FtpMessage.result(reply, ftpClient.getReplyString());
+                response = FtpMessage.result(reply, ftpClient.getReplyString(), isPositive(reply));
             }
 
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
-                if (!FTPReply.isPositiveCompletion(response.getReplyCode()) && !FTPReply.isPositivePreliminary(response.getReplyCode())) {
+                if (!isPositive(response.getReplyCode())) {
                     throw new CitrusRuntimeException(String.format("Failed to send FTP command - reply is: %s:%s", response.getReplyCode(), response.getReplyString()));
                 }
             }
@@ -127,6 +128,10 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to execute ftp command", e);
         }
+    }
+
+    private boolean isPositive(int reply) {
+        return FTPReply.isPositiveCompletion(reply) || FTPReply.isPositivePreliminary(reply);
     }
 
     private FtpMessage listFiles(ListCommand list, TestContext context) {
@@ -200,7 +205,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to delete file from FTP server", e);
         }
 
-        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString());
+        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
     }
 
     /**
@@ -247,7 +252,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to put file to FTP server", e);
         }
 
-        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString());
+        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
     }
 
     /**
@@ -273,7 +278,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to get file from FTP server", e);
         }
 
-        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString());
+        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
     }
 
     /**

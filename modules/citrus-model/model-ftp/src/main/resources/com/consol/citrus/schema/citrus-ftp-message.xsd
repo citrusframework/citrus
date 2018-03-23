@@ -81,6 +81,8 @@
       <xs:documentation>Ftp command result from server.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
+      <xs:element name="success" type="xs:boolean"/>
+      <xs:element name="exception" type="xs:string" minOccurs="0"/>
       <xs:element name="reply-code" type="xs:string" minOccurs="0"/>
       <xs:element name="reply-string" type="xs:string" minOccurs="0"/>
     </xs:sequence>
