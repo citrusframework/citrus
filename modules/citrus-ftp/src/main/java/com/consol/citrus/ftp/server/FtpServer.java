@@ -17,6 +17,7 @@
 package com.consol.citrus.ftp.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.server.AbstractServer;
 import org.apache.ftpserver.FtpServerFactory;
 import org.apache.ftpserver.filesystem.nativefs.NativeFileSystemFactory;
@@ -42,8 +43,7 @@ public class FtpServer extends AbstractServer implements InitializingBean {
     private UserManager userManager;
     private org.apache.ftpserver.FtpServer ftpServer;
 
-    /** Server port */
-    private int port = 22222;
+    private final FtpEndpointConfiguration endpointConfiguration;
 
     /** Property file holding ftp user information */
     private Resource userManagerProperties;
@@ -51,11 +51,26 @@ public class FtpServer extends AbstractServer implements InitializingBean {
     /** Do only start one instance after another so we need a static lock object */
     private static Object serverLock = new Object();
 
+    /**
+     * Default constructor using default endpoint configuration.
+     */
+    public FtpServer() {
+        this(new FtpEndpointConfiguration());
+    }
+
+    /**
+     * Constructor using endpoint configuration.
+     * @param endpointConfiguration
+     */
+    public FtpServer(FtpEndpointConfiguration endpointConfiguration) {
+        this.endpointConfiguration = endpointConfiguration;
+    }
+
     @Override
     protected void startup() {
         synchronized (serverLock) {
             if (ftpServer == null) {
-                listenerFactory.setPort(port);
+                listenerFactory.setPort(endpointConfiguration.getPort());
                 serverFactory.addListener("default", listenerFactory.createListener());
 
                 if (userManager != null) {
@@ -75,10 +90,10 @@ public class FtpServer extends AbstractServer implements InitializingBean {
                 serverFactory.setFileSystem(fileSystemFactory);
 
                 Map<String, Ftplet> ftpLets = new HashMap<String, Ftplet>();
-                ftpLets.put("citrusFtpLet", new FtpServerFtpLet(getEndpointAdapter()));
+                ftpLets.put("citrusFtpLet", new FtpServerFtpLet(getEndpointConfiguration(), getEndpointAdapter()));
                 serverFactory.setFtplets(ftpLets);
 
-                ftpServer =serverFactory.createServer();
+                ftpServer = serverFactory.createServer();
             }
 
             try {
@@ -103,6 +118,11 @@ public class FtpServer extends AbstractServer implements InitializingBean {
     }
 
     @Override
+    public FtpEndpointConfiguration getEndpointConfiguration() {
+        return endpointConfiguration;
+    }
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (ftpServer == null) {
             if (serverFactory == null) {
@@ -115,22 +135,6 @@ public class FtpServer extends AbstractServer implements InitializingBean {
         }
 
         super.afterPropertiesSet();
-    }
-
-    /**
-     * Sets the server port.
-     * @param port
-     */
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    /**
-     * Gets the server port.
-     * @return
-     */
-    public int getPort() {
-        return port;
     }
 
     /**

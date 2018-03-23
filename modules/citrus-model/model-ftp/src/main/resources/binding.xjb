@@ -4,23 +4,30 @@
           version="2.1"
           extensionBindingPrefixes="xjc">
 
+  <globalBindings>
+    <xjc:javaType
+            name="java.util.Calendar"
+            xmlType="xs:dateTime"
+            adapter="org.w3._2001.xmlschema.Adapter1" />
+    <xjc:javaType
+            name="java.util.Calendar"
+            xmlType="xs:date"
+            adapter="org.w3._2001.xmlschema.Adapter2" />
+    <xjc:simple />
+  </globalBindings>
+
   <bindings schemaLocation="com/consol/citrus/schema/citrus-ftp-config.xsd">
-    <globalBindings>
-      <xjc:javaType
-              name="java.util.Calendar"
-              xmlType="xs:dateTime"
-              adapter="org.w3._2001.xmlschema.Adapter1" />
-      <xjc:javaType
-              name="java.util.Calendar"
-              xmlType="xs:date"
-              adapter="org.w3._2001.xmlschema.Adapter2" />
-      <xjc:simple />
-    </globalBindings>
     <schemaBindings>
       <package name="com.consol.citrus.model.config.ftp"/>
       <nameXmlTransform>
         <elementName prefix="Ftp" suffix="Model" />
       </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-ftp-message.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.ftp.model"/>
     </schemaBindings>
   </bindings>
 

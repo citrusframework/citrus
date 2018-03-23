@@ -29,6 +29,8 @@
       <xs:attribute name="server" type="xs:string"/>
       <xs:attribute name="port" type="xs:string"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
+      <xs:attribute name="auto-connect" type="xs:boolean"/>
+      <xs:attribute name="auto-login" type="xs:boolean"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="user-manager" type="xs:string"/>
       <xs:attribute name="user-manager-properties" type="xs:string"/>
@@ -51,6 +53,14 @@
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="polling-interval" type="xs:string"/>
+      <xs:attribute name="error-strategy">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="throwsException"/>
+            <xs:enumeration value="propagateError"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
     </xs:complexType>
   </xs:element>
 

@@ -17,8 +17,8 @@
 package com.consol.citrus.ftp.client;
 
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
-import com.consol.citrus.message.DefaultMessageCorrelator;
-import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.ftp.message.FtpMarshaller;
+import com.consol.citrus.message.*;
 
 /**
  * @author Christoph Deppisch
@@ -37,6 +37,18 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
 
     /** User password used for login */
     private String password;
+
+    /** Auto accept connection requests */
+    private boolean autoConnect = true;
+
+    /** Auto login user requests */
+    private boolean autoLogin = true;
+
+    /** Marshaller converts from XML to Jdbc model objects */
+    private FtpMarshaller marshaller = new FtpMarshaller();
+
+    /** Should http errors be handled within endpoint consumer or simply throw exception */
+    private ErrorHandlingStrategy errorHandlingStrategy = ErrorHandlingStrategy.PROPAGATE;
 
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
@@ -119,5 +131,77 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
      */
     public String getPassword() {
         return password;
+    }
+
+    /**
+     * Gets the autoConnect.
+     *
+     * @return
+     */
+    public boolean isAutoConnect() {
+        return autoConnect;
+    }
+
+    /**
+     * Sets the autoConnect.
+     *
+     * @param autoConnect
+     */
+    public void setAutoConnect(boolean autoConnect) {
+        this.autoConnect = autoConnect;
+    }
+
+    /**
+     * Gets the autoLogin.
+     *
+     * @return
+     */
+    public boolean isAutoLogin() {
+        return autoLogin;
+    }
+
+    /**
+     * Sets the autoLogin.
+     *
+     * @param autoLogin
+     */
+    public void setAutoLogin(boolean autoLogin) {
+        this.autoLogin = autoLogin;
+    }
+
+    /**
+     * Gets the marshaller.
+     *
+     * @return
+     */
+    public FtpMarshaller getMarshaller() {
+        return marshaller;
+    }
+
+    /**
+     * Sets the marshaller.
+     *
+     * @param marshaller
+     */
+    public void setMarshaller(FtpMarshaller marshaller) {
+        this.marshaller = marshaller;
+    }
+
+    /**
+     * Gets the errorHandlingStrategy.
+     *
+     * @return
+     */
+    public ErrorHandlingStrategy getErrorHandlingStrategy() {
+        return errorHandlingStrategy;
+    }
+
+    /**
+     * Sets the errorHandlingStrategy.
+     *
+     * @param errorHandlingStrategy
+     */
+    public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
+        this.errorHandlingStrategy = errorHandlingStrategy;
     }
 }

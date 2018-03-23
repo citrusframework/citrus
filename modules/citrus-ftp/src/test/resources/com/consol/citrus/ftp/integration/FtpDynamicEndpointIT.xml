@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/ftp/message http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="FtpDynamicEndpointIT">
@@ -25,20 +27,27 @@
         <message>Sending PWD command to FTP server</message>
       </echo>
 
-      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException"
-              message="@contains('530 Access denied')@">
-        <when>
-          <send endpoint="ftp://localhost:22222">
-            <message>
-              <data></data>
-            </message>
-            <header>
-              <element name="citrus_ftp_command" value="PWD"/>
-              <element name="citrus_ftp_arguments" value="test"/>
-            </header>
-          </send>
-        </when>
-      </assert>
+      <send endpoint="ftp://localhost:22222">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PWD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftp://localhost:22222">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>530</ftp:reply-code>
+              <ftp:reply-string>@contains('Access denied')@</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </receive>
 
       <echo>
         <message>Sending PWD command to FTP server</message>
@@ -46,31 +55,38 @@
 
       <send endpoint="ftp://localhost:22222?user=admin&amp;password=admin" fork="true">
         <message>
-          <data></data>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PWD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
         </message>
-        <header>
-          <element name="citrus_ftp_command" value="PWD"/>
-          <element name="citrus_ftp_arguments" value="test"/>
-        </header>
       </send>
 
-      <echo>
+      <!--echo>
         <message>Receive user login on FTP server</message>
       </echo>
 
       <receive endpoint="ftpServer">
-        <message type="plaintext">
-          <data>USER</data>
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>USER</ftp:signal>
+              <ftp:arguments>admin</ftp:arguments>
+            </ftp:command>
+          </payload>
         </message>
-        <header>
-          <element name="citrus_ftp_command" value="USER"/>
-          <element name="citrus_ftp_arguments" value="admin"/>
-        </header>
       </receive>
 
       <send endpoint="ftpServer">
-        <message type="plaintext">
-          <data>OK</data>
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>231</ftp:reply-code>
+              <ftp:reply-string>User name okay, need password for admin.</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
         </message>
       </send>
 
@@ -79,47 +95,58 @@
       </echo>
 
       <receive endpoint="ftpServer">
-        <message type="plaintext">
-          <data>PASS</data>
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASS</ftp:signal>
+              <ftp:arguments>admin</ftp:arguments>
+            </ftp:command>
+          </payload>
         </message>
-        <header>
-          <element name="citrus_ftp_command" value="PASS"/>
-          <element name="citrus_ftp_arguments" value="admin"/>
-        </header>
       </receive>
 
       <send endpoint="ftpServer">
-        <message type="plaintext">
-          <data>OK</data>
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>230</ftp:reply-code>
+              <ftp:reply-string>User logged in, proceed.</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
         </message>
-      </send>
+      </send-->
 
       <receive endpoint="ftpServer">
-        <message type="plaintext">
-          <data>PWD</data>
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PWD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
         </message>
-        <header>
-          <element name="citrus_ftp_command" value="PWD"/>
-          <element name="citrus_ftp_arguments" value="test"/>
-        </header>
       </receive>
 
       <send endpoint="ftpServer">
-        <message type="plaintext">
-          <data>OK</data>
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>257</ftp:reply-code>
+              <ftp:reply-string>"/" is current directory</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
         </message>
       </send>
 
       <receive endpoint="ftp://localhost:22222?user=admin&amp;password=admin">
-        <message type="plaintext">
-          <data>PWD</data>
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>257</ftp:reply-code>
+              <ftp:reply-string>@contains('is current directory')@</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
         </message>
-        <header>
-          <element name="citrus_ftp_command" value="PWD"/>
-          <element name="citrus_ftp_arguments" value="test"/>
-          <element name="citrus_ftp_reply_code" value="257"/>
-          <element name="citrus_ftp_reply_string" value="@contains('is current directory')@"/>
-        </header>
       </receive>
 
     </actions>

@@ -71,6 +71,18 @@ public @interface FtpServerConfig {
      */
     boolean autoStart() default false;
 
+        /**
+     * Auto connect.
+     * @return
+     */
+    boolean autoConnect() default true;
+
+        /**
+     * Auto login.
+     * @return
+     */
+    boolean autoLogin() default true;
+
     /**
      * Timeout.
      * @return

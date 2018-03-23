@@ -17,6 +17,7 @@
 package com.consol.citrus.ftp.client;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
 
 /**
@@ -80,6 +81,16 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
      */
     public FtpClientBuilder correlator(MessageCorrelator correlator) {
         endpoint.getEndpointConfiguration().setCorrelator(correlator);
+        return this;
+    }
+
+    /**
+     * Sets the error handling strategy.
+     * @param errorStrategy
+     * @return
+     */
+    public FtpClientBuilder errorHandlingStrategy(ErrorHandlingStrategy errorStrategy) {
+        endpoint.getEndpointConfiguration().setErrorHandlingStrategy(errorStrategy);
         return this;
     }
 

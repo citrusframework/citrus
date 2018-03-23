@@ -18,6 +18,7 @@ package com.consol.citrus.ftp.client;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.commons.net.ProtocolCommandListener;
@@ -73,9 +74,9 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
         when(apacheFtpClient.getReplyString()).thenReturn("OK");
         when(apacheFtpClient.getReplyCode()).thenReturn(200);
 
-        when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(200);
+        when(apacheFtpClient.sendCommand(FTPCmd.PWD.getCommand(), null)).thenReturn(200);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
+        ftpClient.send(FtpMessage.command(FTPCmd.PWD), context);
 
         Message reply = ftpClient.receive(context);
 
@@ -83,7 +84,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         FtpMessage ftpReply = (FtpMessage) reply;
 
-        Assert.assertEquals(ftpReply.getCommand(), FTPCmd.PWD);
+        Assert.assertNull(ftpReply.getSignal());
         Assert.assertNull(ftpReply.getArguments());
         Assert.assertEquals(ftpReply.getReplyCode(), new Integer(200));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
@@ -109,10 +110,10 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
         when(apacheFtpClient.login("admin", "consol")).thenReturn(true);
         when(apacheFtpClient.getReplyString()).thenReturn("OK");
         when(apacheFtpClient.getReplyCode()).thenReturn(200);
-        when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(200);
-        when(apacheFtpClient.sendCommand(FTPCmd.MKD, "testDir")).thenReturn(201);
+        when(apacheFtpClient.sendCommand(FTPCmd.PWD.getCommand(), null)).thenReturn(200);
+        when(apacheFtpClient.sendCommand(FTPCmd.MKD.getCommand(), "testDir")).thenReturn(201);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
+        ftpClient.send(FtpMessage.command(FTPCmd.PWD), context);
 
         Message reply = ftpClient.receive(context);
 
@@ -120,12 +121,12 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         FtpMessage ftpReply = (FtpMessage) reply;
 
-        Assert.assertEquals(ftpReply.getCommand(), FTPCmd.PWD);
+        Assert.assertNull(ftpReply.getSignal());
         Assert.assertNull(ftpReply.getArguments());
         Assert.assertEquals(ftpReply.getReplyCode(), new Integer(200));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
-        ftpClient.send(new FtpMessage(FTPCmd.MKD, "testDir"), context);
+        ftpClient.send(FtpMessage.command(FTPCmd.MKD).arguments("testDir"), context);
 
         reply = ftpClient.receive(context);
 
@@ -133,8 +134,8 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         ftpReply = (FtpMessage) reply;
 
-        Assert.assertEquals(ftpReply.getCommand(), FTPCmd.MKD);
-        Assert.assertEquals(ftpReply.getArguments(), "testDir");
+        Assert.assertNull(ftpReply.getSignal());
+        Assert.assertNull(ftpReply.getArguments());
         Assert.assertEquals(ftpReply.getReplyCode(), new Integer(201));
         Assert.assertEquals(ftpReply.getReplyString(), "OK");
 
@@ -158,14 +159,17 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         when(apacheFtpClient.login("admin", "consol")).thenReturn(false);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
+        ftpClient.send(FtpMessage.command(FTPCmd.PWD), context);
 
         verify(apacheFtpClient).connect("localhost", 22222);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testCommandNegativeReply() throws Exception {
-        FtpClient ftpClient = new FtpClient();
+        FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
+        endpointConfiguration.setErrorHandlingStrategy(ErrorHandlingStrategy.THROWS_EXCEPTION);
+
+        FtpClient ftpClient = new FtpClient(endpointConfiguration);
         ftpClient.setFtpClient(apacheFtpClient);
 
         reset(apacheFtpClient);
@@ -176,7 +180,7 @@ public class FtpClientTest extends AbstractTestNGUnitTest {
 
         when(apacheFtpClient.sendCommand(FTPCmd.PWD, null)).thenReturn(500);
 
-        ftpClient.send(new FtpMessage(FTPCmd.PWD, null), context);
+        ftpClient.send(FtpMessage.command(FTPCmd.PWD), context);
 
         verify(apacheFtpClient).connect("localhost", 22222);
     }

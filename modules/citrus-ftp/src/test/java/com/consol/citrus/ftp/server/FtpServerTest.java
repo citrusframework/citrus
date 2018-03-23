@@ -16,6 +16,7 @@
 
 package com.consol.citrus.ftp.server;
 
+import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
@@ -27,8 +28,8 @@ public class FtpServerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void startupAndShutdownTest() throws Exception {
-        FtpServer server = new FtpServer();
-        server.setPort(2222);
+        FtpEndpointConfiguration endpointConfiguration = new FtpEndpointConfiguration();
+        FtpServer server = new FtpServer(endpointConfiguration);
 
         server.afterPropertiesSet();
 

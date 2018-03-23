@@ -60,6 +60,8 @@ public class FtpClientConfigParser extends AbstractAnnotationConfigParser<FtpCli
             builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
+        builder.errorHandlingStrategy(annotation.errorStrategy());
+
         builder.pollingInterval(annotation.pollingInterval());
 
         builder.timeout(annotation.timeout());

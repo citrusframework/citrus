@@ -13,6 +13,8 @@
 
   <citrus-ftp:server id="ftpServer2"
                       auto-start="false"
+                      auto-connect="false"
+                      auto-login="false"
                       port="22222"
                       server="apacheFtpServer"/>
 

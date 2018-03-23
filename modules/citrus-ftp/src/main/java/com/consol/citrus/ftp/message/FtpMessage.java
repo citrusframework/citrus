@@ -16,15 +16,27 @@
 
 package com.consol.citrus.ftp.message;
 
+import com.consol.citrus.ftp.model.*;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.apache.commons.net.ftp.FTPCmd;
+import org.apache.commons.net.ftp.FTPReply;
+import org.springframework.xml.transform.StringResult;
+import org.springframework.xml.transform.StringSource;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
- * @since 2.0
+ * @since 2.7.5
  */
 public class FtpMessage extends DefaultMessage {
+
+    private CommandType command;
+    private CommandResultType commandResult;
+
+    private FtpMarshaller marshaller = new FtpMarshaller();
 
     /**
      * Constructs copy of given message.
@@ -38,11 +50,20 @@ public class FtpMessage extends DefaultMessage {
      * Default constructor using command as payload.
      * @param command
      */
-    public FtpMessage(FTPCmd command, String arguments) {
-        super(command.getCommand());
+    private FtpMessage(CommandType command) {
+        super(command);
+        this.command = command;
+        setCommandHeader(command);
+        setHeader(FtpMessageHeaders.FTP_ARGS, command.getArguments());
+    }
 
-        setHeader(FtpMessageHeaders.FTP_COMMAND, command.getCommand());
-        setHeader(FtpMessageHeaders.FTP_ARGS, arguments);
+    /**
+     * Default constructor using command result as payload.
+     * @param commandResult
+     */
+    private FtpMessage(CommandResultType commandResult) {
+        super(commandResult);
+        this.commandResult = commandResult;
     }
 
     /**
@@ -50,18 +71,49 @@ public class FtpMessage extends DefaultMessage {
      * @param command
      * @return
      */
-    public FtpMessage command(FTPCmd command) {
-        setHeader(FtpMessageHeaders.FTP_COMMAND, command);
-        return this;
+    public static FtpMessage command(FTPCmd command) {
+        Command cmd = new Command();
+        cmd.setSignal(command.getCommand());
+        return new FtpMessage(cmd);
     }
 
-    /**
-     * Sets the reply string.
-     * @param replyString
-     */
-    public FtpMessage replyString(String replyString) {
-        setHeader(FtpMessageHeaders.FTP_REPLY_STRING, replyString);
-        return this;
+    public static FtpMessage result() {
+        return result(FTPReply.COMMAND_OK, "");
+    }
+
+    public static FtpMessage result(int replyCode) {
+        return result(replyCode, "");
+    }
+
+    public static FtpMessage result(int replyCode, String replyString) {
+        CommandResult commandResult = new CommandResult();
+        commandResult.setReplyCode(String.valueOf(replyCode));
+        commandResult.setReplyString(replyString);
+        return result(commandResult);
+    }
+
+    public static FtpMessage result(CommandResultType commandResult) {
+        FtpMessage ftpMessage = new FtpMessage(commandResult);
+        ftpMessage.setHeader(FtpMessageHeaders.FTP_REPLY_CODE, commandResult.getReplyCode());
+        ftpMessage.setHeader(FtpMessageHeaders.FTP_REPLY_STRING, commandResult.getReplyString());
+        return ftpMessage;
+    }
+
+    public static FtpMessage listResult(int replyCode, String replyString, List<String> fileNames) {
+        ListCommandResult listCommandResult = new ListCommandResult();
+        listCommandResult.setReplyCode(String.valueOf(replyCode));
+        listCommandResult.setReplyString(replyString);
+        ListCommandResult.Files files = new ListCommandResult.Files();
+
+        for (String fileName : fileNames) {
+            ListCommandResult.Files.File file = new ListCommandResult.Files.File();
+            file.setPath(fileName);
+            files.getFiles().add(file);
+        }
+
+        listCommandResult.setFiles(files);
+
+        return result(listCommandResult);
     }
 
     /**
@@ -69,43 +121,26 @@ public class FtpMessage extends DefaultMessage {
      * @param arguments
      */
     public FtpMessage arguments(String arguments) {
+        if (command != null) {
+            command.setArguments(arguments);
+        }
+
         setHeader(FtpMessageHeaders.FTP_ARGS, arguments);
         return this;
     }
 
     /**
-     * Sets the reply code.
-     * @param replyCode
+     * Gets the ftp command signal.
      */
-    public FtpMessage replyCode(Integer replyCode) {
-        setHeader(FtpMessageHeaders.FTP_REPLY_CODE, replyCode);
-        return this;
-    }
-
-    /**
-     * Gets the ftp command
-     */
-    public FTPCmd getCommand() {
-        Object command = getHeader(FtpMessageHeaders.FTP_COMMAND);
-
-        if (command != null) {
-            return FTPCmd.valueOf(command.toString());
-        }
-
-        return null;
+    public String getSignal() {
+        return Optional.ofNullable(getHeader(FtpMessageHeaders.FTP_COMMAND)).map(Object::toString).orElse(null);
     }
 
     /**
      * Gets the command args.
      */
     public String getArguments() {
-        Object args = getHeader(FtpMessageHeaders.FTP_ARGS);
-
-        if (args != null) {
-            return args.toString();
-        }
-
-        return null;
+        return Optional.ofNullable(getHeader(FtpMessageHeaders.FTP_ARGS)).map(Object::toString).orElse(null);
     }
 
     /**
@@ -120,6 +155,8 @@ public class FtpMessage extends DefaultMessage {
             } else {
                 return Integer.valueOf(replyCode.toString());
             }
+        } else if (commandResult != null) {
+            return Optional.ofNullable(commandResult.getReplyCode()).map(Integer::valueOf).orElse(FTPReply.COMMAND_OK);
         }
 
         return null;
@@ -136,5 +173,77 @@ public class FtpMessage extends DefaultMessage {
         }
 
         return null;
+    }
+
+    @Override
+    public <T> T getPayload(Class<T> type) {
+        if (CommandType.class.isAssignableFrom(type)) {
+            return (T) getCommand();
+        } else if (CommandResultType.class.isAssignableFrom(type)) {
+            return (T) getCommandResult();
+        } else if (String.class.equals(type)) {
+            return (T) getPayload();
+        } else {
+            return super.getPayload(type);
+        }
+    }
+
+    @Override
+    public Object getPayload() {
+        StringResult payloadResult = new StringResult();
+        if (command != null) {
+            marshaller.marshal(command, payloadResult);
+            return payloadResult.toString();
+        } else if (commandResult != null) {
+            marshaller.marshal(commandResult, payloadResult);
+            return payloadResult.toString();
+        }
+
+        return super.getPayload();
+    }
+
+    /**
+     * Gets the command result if any or tries to unmarshal String payload representation to an command result model.
+     * @return
+     */
+    private <T extends CommandResultType> T getCommandResult() {
+        if (commandResult == null) {
+            this.commandResult = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+        }
+
+        return (T) commandResult;
+    }
+
+    /**
+     * Gets the command if any or tries to unmarshal String payload representation to an command model.
+     * @return
+     */
+    private <T extends CommandType> T getCommand() {
+        if (command == null) {
+            this.command = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+        }
+
+        return (T) command;
+    }
+
+    /**
+     * Gets command header as ftp signal from command object.
+     * @param command
+     */
+    private void setCommandHeader(CommandType command) {
+        String header;
+        if (command instanceof GetCommand) {
+            header = FTPCmd.RETR.getCommand();
+        } else if (command instanceof PutCommand) {
+            header = FTPCmd.STOR.getCommand();
+        } else if (command instanceof ListCommand) {
+            header = FTPCmd.LIST.getCommand();
+        } else if (command instanceof DeleteCommand) {
+            header = FTPCmd.DELE.getCommand();
+        } else {
+            header = command.getSignal();
+        }
+
+        setHeader(FtpMessageHeaders.FTP_COMMAND, header);
     }
 }

@@ -17,6 +17,7 @@
 package com.consol.citrus.ftp.config.annotation;
 
 import com.consol.citrus.annotations.CitrusEndpointConfig;
+import com.consol.citrus.message.ErrorHandlingStrategy;
 
 import java.lang.annotation.*;
 
@@ -58,6 +59,12 @@ public @interface FtpClientConfig {
      * @return
      */
     String correlator() default "";
+
+    /**
+     * Error handling strategy.
+     * @return
+     */
+    ErrorHandlingStrategy errorStrategy() default ErrorHandlingStrategy.PROPAGATE;
 
     /**
      * Polling interval.

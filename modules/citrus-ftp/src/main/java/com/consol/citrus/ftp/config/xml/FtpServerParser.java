@@ -18,6 +18,7 @@ package com.consol.citrus.ftp.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractServerParser;
+import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.ftp.server.FtpServer;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -32,7 +33,16 @@ public class FtpServerParser extends AbstractServerParser {
 
     @Override
     protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
-        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
+        BeanDefinitionBuilder configurationBuilder = BeanDefinitionBuilder.genericBeanDefinition(FtpEndpointConfiguration.class);
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("port"), "port");
+
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("auto-connect"), "autoConnect");
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("auto-login"), "autoLogin");
+
+        String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "Configuration";
+        BeanDefinitionParserUtils.registerBean(endpointConfigurationId, configurationBuilder.getBeanDefinition(), parserContext, shouldFireEvents());
+
+        builder.addConstructorArgReference(endpointConfigurationId);
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("server"), "ftpServer");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("user-manager"), "userManager");

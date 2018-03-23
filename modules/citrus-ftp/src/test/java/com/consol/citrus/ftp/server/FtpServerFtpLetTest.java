@@ -17,16 +17,15 @@
 package com.consol.citrus.ftp.server;
 
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.ftp.message.FtpMessage;
 import org.apache.commons.net.ftp.FTPCmd;
+import org.apache.commons.net.ftp.FTPReply;
 import org.apache.ftpserver.ftplet.*;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 import static org.mockito.Mockito.*;
 
@@ -34,42 +33,51 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class FtpServerLetTest {
+public class FtpServerFtpLetTest {
 
     private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
     private FtpSession ftpSession = Mockito.mock(FtpSession.class);
     private FtpRequest ftpRequest = Mockito.mock(FtpRequest.class);
 
-    private FtpServerFtpLet ftpLet = new FtpServerFtpLet(endpointAdapter);
+    private FtpServerFtpLet ftpLet = new FtpServerFtpLet(new FtpEndpointConfiguration(), endpointAdapter);
 
     @Test
-    public void testCommand() throws FtpException, IOException {
-
+    public void testCommand() {
         reset(endpointAdapter, ftpSession, ftpRequest);
 
         when(ftpRequest.getCommand()).thenReturn(FTPCmd.MKD.getCommand());
         when(ftpRequest.getArgument()).thenReturn("testDir");
 
-        doAnswer(new Answer<FtpMessage>() {
-            @Override
-            public FtpMessage answer(InvocationOnMock invocation) throws Throwable {
-                FtpMessage ftpMessage = (FtpMessage) invocation.getArguments()[0];
+        doAnswer((Answer<FtpMessage>) invocation -> {
+            FtpMessage ftpMessage = (FtpMessage) invocation.getArguments()[0];
 
-                Assert.assertEquals(ftpMessage.getPayload(String.class), FTPCmd.MKD.getCommand());
+            Assert.assertEquals(ftpMessage.getPayload(String.class), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><command xmlns=\"http://www.citrusframework.org/schema/ftp/message\"><signal>MKD</signal><arguments>testDir</arguments></command>");
 
-                Assert.assertEquals(ftpMessage.getCommand(), FTPCmd.MKD);
-                Assert.assertEquals(ftpMessage.getArguments(), "testDir");
-                Assert.assertNull(ftpMessage.getReplyCode());
-                Assert.assertNull(ftpMessage.getReplyString());
+            Assert.assertEquals(ftpMessage.getSignal(), FTPCmd.MKD.getCommand());
+            Assert.assertEquals(ftpMessage.getArguments(), "testDir");
+            Assert.assertNull(ftpMessage.getReplyCode());
+            Assert.assertNull(ftpMessage.getReplyString());
 
-                return new FtpMessage(FTPCmd.MKD, "testDir").replyCode(200).replyString("OK");
-            }
+            return FtpMessage.result(FTPReply.COMMAND_OK, "OK");
         }).when(endpointAdapter).handleMessage(any(FtpMessage.class));
 
         FtpletResult result = ftpLet.beforeCommand(ftpSession, ftpRequest);
 
-        Assert.assertEquals(result, FtpletResult.DEFAULT);
+        Assert.assertEquals(result, FtpletResult.SKIP);
+    }
 
+    @Test
+    public void testAutoLogin() {
+        reset(endpointAdapter, ftpSession, ftpRequest);
+
+        when(ftpRequest.getCommand()).thenReturn(FTPCmd.USER.getCommand()).thenReturn(FTPCmd.PASS.getCommand());
+        when(ftpRequest.getArgument()).thenReturn("foo").thenReturn("secret");
+
+        FtpletResult result = ftpLet.beforeCommand(ftpSession, ftpRequest);
+        Assert.assertEquals(result, FtpletResult.DEFAULT);
+        
+        result = ftpLet.beforeCommand(ftpSession, ftpRequest);
+        Assert.assertEquals(result, FtpletResult.DEFAULT);
     }
 
 }
