@@ -29,6 +29,7 @@
       <xs:element name="signal">
         <xs:simpleType>
           <xs:restriction base="xs:string">
+            <xs:enumeration value="OPEN"/>
             <xs:enumeration value="ABOR"/>
             <xs:enumeration value="ACCT"/>
             <xs:enumeration value="ALLO"/>
@@ -190,6 +191,21 @@
                 <xs:attribute name="path" type="xs:string" use="required"/>
               </xs:complexType>
             </xs:element>
+          </xs:sequence>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="connect-command">
+    <xs:annotation>
+      <xs:documentation>Ftp connect command.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="commandType">
+          <xs:sequence>
+            <xs:element name="sessionId" type="xs:string"/>
           </xs:sequence>
         </xs:extension>
       </xs:complexContent>

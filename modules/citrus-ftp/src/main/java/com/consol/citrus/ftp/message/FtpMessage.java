@@ -78,6 +78,18 @@ public class FtpMessage extends DefaultMessage {
         return new FtpMessage(cmd);
     }
 
+    /**
+     * Creates new connect command message.
+     * @param sessionId
+     * @return
+     */
+    public static FtpMessage connect(String sessionId) {
+        ConnectCommand cmd = new ConnectCommand();
+        cmd.setSignal("OPEN");
+        cmd.setSessionId(sessionId);
+        return new FtpMessage(cmd);
+    }
+
     public static FtpMessage success() {
         CommandResult commandResult = new CommandResult();
         commandResult.setSuccess(true);
@@ -266,7 +278,9 @@ public class FtpMessage extends DefaultMessage {
      */
     private void setCommandHeader(CommandType command) {
         String header;
-        if (command instanceof GetCommand) {
+        if (command instanceof ConnectCommand) {
+            header = "OPEN";
+        } else if (command instanceof GetCommand) {
             header = FTPCmd.RETR.getCommand();
         } else if (command instanceof PutCommand) {
             header = FTPCmd.STOR.getCommand();
@@ -280,4 +294,5 @@ public class FtpMessage extends DefaultMessage {
 
         setHeader(FtpMessageHeaders.FTP_COMMAND, header);
     }
+
 }

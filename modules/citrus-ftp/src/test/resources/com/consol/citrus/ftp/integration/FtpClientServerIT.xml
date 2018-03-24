@@ -38,58 +38,6 @@
         </message>
       </send>
 
-      <!--echo>
-        <message>Receive user login on FTP server</message>
-      </echo>
-
-      <receive endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command>
-              <ftp:signal>USER</ftp:signal>
-              <ftp:arguments>admin</ftp:arguments>
-            </ftp:command>
-          </payload>
-        </message>
-      </receive>
-
-      <send endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command-result>
-              <ftp:reply-code>331</ftp:reply-code>
-              <ftp:reply-string>User name okay, need password for admin.</ftp:reply-string>
-            </ftp:command-result>
-          </payload>
-        </message>
-      </send>
-
-      <echo>
-        <message>Receive user password on FTP server</message>
-      </echo>
-
-      <receive endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command>
-              <ftp:signal>PASS</ftp:signal>
-              <ftp:arguments>admin</ftp:arguments>
-            </ftp:command>
-          </payload>
-        </message>
-      </receive>
-
-      <send endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command-result>
-              <ftp:reply-code>230</ftp:reply-code>
-              <ftp:reply-string>User logged in, proceed.</ftp:reply-string>
-            </ftp:command-result>
-          </payload>
-        </message>
-      </send-->
-
       <receive endpoint="ftpServer">
         <message>
           <payload>

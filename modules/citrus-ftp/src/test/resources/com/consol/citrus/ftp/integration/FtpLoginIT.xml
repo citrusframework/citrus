@@ -7,16 +7,17 @@
                                   http://www.citrusframework.org/schema/ftp/message http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="FtpDynamicEndpointIT">
+  <testcase name="FtpLoginIT">
     <meta-info>
       <author>Christoph Deppisch</author>
-      <creationdate>2014-10-13</creationdate>
+      <creationdate>2018-03-21</creationdate>
       <status>FINAL</status>
       <last-updated-by>Christoph Deppisch</last-updated-by>
-      <last-updated-on>2014-10-13T00:00:00</last-updated-on>
+      <last-updated-on>2018-03-21T00:00:00</last-updated-on>
     </meta-info>
 
-    <description>Test sends and receives messages as Ftp client and server where client is a dynamic endpoint.</description>
+    <description>Test sends and receives messages as Ftp client and server where auto login feature is disabled and therefore test
+      receives login requests.</description>
 
     <actions>
       <echo>
@@ -27,7 +28,7 @@
         <message>Sending PWD command to FTP server</message>
       </echo>
 
-      <send endpoint="ftp://localhost:22222">
+      <send endpoint="ftpClient2" fork="true">
         <message>
           <payload>
             <ftp:command>
@@ -38,34 +39,85 @@
         </message>
       </send>
 
-      <receive endpoint="ftp://localhost:22222">
+      <echo>
+        <message>Receive connect request on FTP server</message>
+      </echo>
+
+      <receive endpoint="ftpServer2">
+        <message>
+          <payload>
+            <ftp:connect-command>
+              <ftp:signal>OPEN</ftp:signal>
+              <ftp:sessionId>@variable(sessionId)@</ftp:sessionId>
+            </ftp:connect-command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer2">
         <message>
           <payload>
             <ftp:command-result>
-              <ftp:success>false</ftp:success>
-              <ftp:reply-code>530</ftp:reply-code>
-              <ftp:reply-string>@contains('Access denied')@</ftp:reply-string>
+              <ftp:reply-code>220</ftp:reply-code>
+              <ftp:reply-string>Service ready for new user.</ftp:reply-string>
             </ftp:command-result>
-          </payload>
-        </message>
-      </receive>
-
-      <echo>
-        <message>Sending PWD command to FTP server</message>
-      </echo>
-
-      <send endpoint="ftp://localhost:22222?user=admin&amp;password=admin" fork="true">
-        <message>
-          <payload>
-            <ftp:command>
-              <ftp:signal>PWD</ftp:signal>
-              <ftp:arguments>test</ftp:arguments>
-            </ftp:command>
           </payload>
         </message>
       </send>
 
-      <receive endpoint="ftpServer">
+      <echo>
+        <message>Receive user login on FTP server</message>
+      </echo>
+
+      <receive endpoint="ftpServer2">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>USER</ftp:signal>
+              <ftp:arguments>admin</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer2">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>331</ftp:reply-code>
+              <ftp:reply-string>User name okay, need password for admin.</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <echo>
+        <message>Receive user password on FTP server</message>
+      </echo>
+
+      <receive endpoint="ftpServer2">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASS</ftp:signal>
+              <ftp:arguments>admin</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer2">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:reply-code>230</ftp:reply-code>
+              <ftp:reply-string>User logged in, proceed.</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer2">
         <message>
           <payload>
             <ftp:command>
@@ -76,7 +128,7 @@
         </message>
       </receive>
 
-      <send endpoint="ftpServer">
+      <send endpoint="ftpServer2">
         <message>
           <payload>
             <ftp:command-result>
@@ -87,7 +139,7 @@
         </message>
       </send>
 
-      <receive endpoint="ftp://localhost:22222?user=admin&amp;password=admin">
+      <receive endpoint="ftpClient2">
         <message>
           <payload>
             <ftp:command-result>

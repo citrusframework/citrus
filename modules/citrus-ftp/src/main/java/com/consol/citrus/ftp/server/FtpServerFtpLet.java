@@ -151,7 +151,7 @@ public class FtpServerFtpLet implements Ftplet {
         }
 
         if (!endpointConfiguration.isAutoConnect()) {
-            FtpMessage response = handleMessage(FtpMessage.command(FTPCmd.PASS).arguments(session.getUser().getName() + ":" + session.getUser().getPassword()));
+            FtpMessage response = handleMessage(FtpMessage.connect(session.getSessionId().toString()));
             if (response.hasReplyCode()) {
                 writeFtpReply(session, response);
                 return FtpletResult.SKIP;
@@ -164,7 +164,9 @@ public class FtpServerFtpLet implements Ftplet {
     @Override
     public FtpletResult onDisconnect(FtpSession session) {
         if (!endpointConfiguration.isAutoConnect()) {
-            FtpMessage response = handleMessage(FtpMessage.command(FTPCmd.QUIT).arguments(session.getUser().getName() + ":" + session.getUser().getPassword()));
+            FtpMessage response = handleMessage(FtpMessage.command(FTPCmd.QUIT)
+                                                        .arguments(Optional.ofNullable(session.getUser()).map(User::getName).orElse("unknown") + ":" +
+                                                                   Optional.ofNullable(session.getUser()).map(User::getPassword).orElse("n/a")));
             if (response.hasReplyCode()) {
                 writeFtpReply(session, response);
             }

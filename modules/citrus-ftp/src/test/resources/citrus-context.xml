@@ -37,4 +37,19 @@
                       auto-start="true"
                       user-manager-properties="classpath:ftp.server.properties"/>
 
+  <citrus-ftp:client id="ftpClient2"
+                     host="localhost"
+                     port="22223"
+                     error-strategy="throwsException"
+                     username="admin"
+                     password="admin"
+                     timeout="10000"/>
+
+  <citrus-ftp:server id="ftpServer2"
+                      port="22223"
+                      auto-start="true"
+                      auto-login="false"
+                      auto-connect="false"
+                      user-manager-properties="classpath:ftp.server.properties"/>
+
 </beans>
