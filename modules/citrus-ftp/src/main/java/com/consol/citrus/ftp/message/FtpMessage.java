@@ -34,6 +34,8 @@ import java.util.Optional;
  */
 public class FtpMessage extends DefaultMessage {
 
+    private static final String OPEN_COMMAND = "OPEN";
+
     private CommandType command;
     private CommandResultType commandResult;
 
@@ -279,7 +281,7 @@ public class FtpMessage extends DefaultMessage {
     private void setCommandHeader(CommandType command) {
         String header;
         if (command instanceof ConnectCommand) {
-            header = "OPEN";
+            header = FtpMessage.OPEN_COMMAND;
         } else if (command instanceof GetCommand) {
             header = FTPCmd.RETR.getCommand();
         } else if (command instanceof PutCommand) {

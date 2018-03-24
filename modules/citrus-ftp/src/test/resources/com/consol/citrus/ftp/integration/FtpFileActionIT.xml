@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:ftp="http://www.citrusframework.org/schema/ftp/message"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/ftp/message http://www.citrusframework.org/schema/ftp/citrus-ftp-message.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="FtpFileActionIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2018-03-21</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2018-03-21T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Test stores and retrieves files as Ftp client and server.</description>
+
+    <actions>
+      <echo>
+        <message>Test: Receive Ftp request via server instance and send back response.</message>
+      </echo>
+
+      <echo>
+        <message>Sending MKD command to FTP server</message>
+      </echo>
+
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>MKD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>MKD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>257</ftp:reply-code>
+              <ftp:reply-string>257 "/test" created.</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Sending store file command to FTP server</message>
+      </echo>
+
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:put-command>
+              <ftp:file path="ftp/hello.txt" type="ASCII"/>
+              <ftp:target path="/test/hello.txt"/>
+            </ftp:put-command>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>TYPE</ftp:signal>
+              <ftp:arguments>A</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PORT</ftp:signal>
+              <ftp:arguments>@ignore@</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>STOR</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </receive>
+
+    </actions>
+  </testcase>
+</spring:beans>

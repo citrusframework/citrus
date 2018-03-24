@@ -61,6 +61,7 @@ public class FtpMarshaller extends ObjectMapper implements Marshaller, Unmarshal
     public FtpMarshaller() {
         jaxbDelegate.setClassesToBeBound(Command.class,
                             CommandResult.class,
+                            ConnectCommand.class,
                             GetCommand.class,
                             PutCommand.class,
                             ListCommand.class,
@@ -96,6 +97,7 @@ public class FtpMarshaller extends ObjectMapper implements Marshaller, Unmarshal
                 if (source instanceof StreamSource) {
                     for (Class<?> type : Arrays.asList(Command.class,
                                                         CommandResult.class,
+                                                        ConnectCommand.class,
                                                         GetCommand.class,
                                                         PutCommand.class,
                                                         ListCommand.class,
@@ -120,6 +122,7 @@ public class FtpMarshaller extends ObjectMapper implements Marshaller, Unmarshal
         } else if (type.equalsIgnoreCase(MessageType.JSON.name())) {
             for (Class<?> type : Arrays.asList(Command.class,
                                                 CommandResult.class,
+                                                ConnectCommand.class,
                                                 GetCommand.class,
                                                 PutCommand.class,
                                                 ListCommand.class,

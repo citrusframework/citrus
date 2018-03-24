@@ -241,7 +241,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(put.getTarget().getPath()));
 
             try (InputStream localFileInputStream = FileUtils.getFileResource(localFilePath).getInputStream()) {
-                ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(put.getFile().getType())));
+                ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(Optional.ofNullable(put.getFile().getType()).orElse("BINARY"))));
 
                 if (!ftpClient.storeFile(remoteFilePath, localFileInputStream)) {
                     throw new IOException("Failed to put file to FTP server. Remote path: " + remoteFilePath

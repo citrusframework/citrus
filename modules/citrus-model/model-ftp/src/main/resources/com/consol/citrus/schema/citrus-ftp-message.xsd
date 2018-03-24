@@ -26,7 +26,7 @@
       <xs:documentation>Ftp command called on server.</xs:documentation>
     </xs:annotation>
     <xs:sequence>
-      <xs:element name="signal">
+      <xs:element name="signal" minOccurs="0">
         <xs:simpleType>
           <xs:restriction base="xs:string">
             <xs:enumeration value="OPEN"/>
@@ -100,7 +100,7 @@
             <xs:element name="file">
               <xs:complexType>
                 <xs:attribute name="path" type="xs:string" use="required"/>
-                <xs:attribute name="type">
+                <xs:attribute name="type" default="BINARY">
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
                       <xs:enumeration value="ASCII"/>
@@ -134,7 +134,7 @@
             <xs:element name="file">
               <xs:complexType>
                 <xs:attribute name="path" type="xs:string" use="required"/>
-                <xs:attribute name="type">
+                <xs:attribute name="type" default="BINARY">
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
                       <xs:enumeration value="ASCII"/>
