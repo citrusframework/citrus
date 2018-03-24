@@ -38,6 +38,7 @@ public class FtpServerParser extends AbstractServerParser {
 
         BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("auto-connect"), "autoConnect");
         BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("auto-login"), "autoLogin");
+        BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("auto-handle-commands"), "autoHandleCommands");
 
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "Configuration";
         BeanDefinitionParserUtils.registerBean(endpointConfigurationId, configurationBuilder.getBeanDefinition(), parserContext, shouldFireEvents());

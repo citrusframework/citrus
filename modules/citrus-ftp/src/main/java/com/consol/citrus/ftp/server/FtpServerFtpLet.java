@@ -27,10 +27,12 @@ import org.apache.ftpserver.ftplet.*;
 import org.apache.ftpserver.impl.LocalizedFileActionFtpReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Ftp servlet implementation that logs incoming connections and commands forwarding those to
@@ -107,6 +109,10 @@ public class FtpServerFtpLet implements Ftplet {
         }
 
         if (endpointConfiguration.isAutoLogin() && (command.equals(FTPCmd.USER.getCommand()) || command.equals(FTPCmd.PASS.getCommand()))) {
+            return FtpletResult.DEFAULT;
+        }
+
+        if (Stream.of(StringUtils.commaDelimitedListToStringArray(endpointConfiguration.getAutoHandleCommands())).anyMatch(cmd -> cmd.trim().equals(command))) {
             return FtpletResult.DEFAULT;
         }
 

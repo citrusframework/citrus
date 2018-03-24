@@ -90,48 +90,6 @@
         <message>
           <payload>
             <ftp:command>
-              <ftp:signal>TYPE</ftp:signal>
-              <ftp:arguments>A</ftp:arguments>
-            </ftp:command>
-          </payload>
-        </message>
-      </receive>
-
-      <send endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command-result>
-              <ftp:success>true</ftp:success>
-            </ftp:command-result>
-          </payload>
-        </message>
-      </send>
-
-      <receive endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command>
-              <ftp:signal>PORT</ftp:signal>
-              <ftp:arguments>@ignore@</ftp:arguments>
-            </ftp:command>
-          </payload>
-        </message>
-      </receive>
-
-      <send endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command-result>
-              <ftp:success>true</ftp:success>
-            </ftp:command-result>
-          </payload>
-        </message>
-      </send>
-
-      <receive endpoint="ftpServer">
-        <message>
-          <payload>
-            <ftp:command>
               <ftp:signal>STOR</ftp:signal>
               <ftp:arguments>/test/hello.txt</ftp:arguments>
             </ftp:command>

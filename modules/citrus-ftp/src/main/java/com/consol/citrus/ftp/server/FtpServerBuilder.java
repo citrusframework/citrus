@@ -76,6 +76,16 @@ public class FtpServerBuilder extends AbstractEndpointBuilder<FtpServer> {
     }
 
     /**
+     * Sets the autoHandleCommands property.
+     * @param autoHandleCommands
+     * @return
+     */
+    public FtpServerBuilder autoHandleCommands(String autoHandleCommands) {
+        endpoint.getEndpointConfiguration().setAutoHandleCommands(autoHandleCommands);
+        return this;
+    }
+
+    /**
      * Sets the ftp server.
      * @param server
      * @return

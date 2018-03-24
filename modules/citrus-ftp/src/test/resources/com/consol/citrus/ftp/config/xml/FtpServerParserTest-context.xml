@@ -15,6 +15,7 @@
                       auto-start="false"
                       auto-connect="false"
                       auto-login="false"
+                      auto-handle-commands="PORT,TYPE,PWD"
                       port="22222"
                       server="apacheFtpServer"/>
 

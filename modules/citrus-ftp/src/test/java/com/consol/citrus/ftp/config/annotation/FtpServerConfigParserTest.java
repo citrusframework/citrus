@@ -51,6 +51,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
             autoConnect = false,
             autoLogin = false,
             port=22222,
+            autoHandleCommands = "PORT,TYPE,PWD",
             server="apacheFtpServer")
     private FtpServer ftpServer2;
 
@@ -111,6 +112,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(ftpServer1.isAutoStart());
         Assert.assertTrue(ftpServer1.getEndpointConfiguration().isAutoConnect());
         Assert.assertTrue(ftpServer1.getEndpointConfiguration().isAutoLogin());
+        Assert.assertEquals(ftpServer1.getEndpointConfiguration().getAutoHandleCommands(), "PORT,TYPE");
 
         // 2nd message sender
         Assert.assertEquals(ftpServer2.getName(), "ftpServer2");
@@ -119,6 +121,7 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(ftpServer2.isAutoStart());
         Assert.assertFalse(ftpServer2.getEndpointConfiguration().isAutoConnect());
         Assert.assertFalse(ftpServer2.getEndpointConfiguration().isAutoLogin());
+        Assert.assertEquals(ftpServer2.getEndpointConfiguration().getAutoHandleCommands(), "PORT,TYPE,PWD");
 
         // 3rd message sender
         Assert.assertEquals(ftpServer3.getName(), "ftpServer3");

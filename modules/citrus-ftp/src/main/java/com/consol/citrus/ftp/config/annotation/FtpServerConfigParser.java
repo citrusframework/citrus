@@ -49,6 +49,8 @@ public class FtpServerConfigParser extends AbstractAnnotationConfigParser<FtpSer
         builder.autoLogin(annotation.autoLogin());
         builder.timeout(annotation.timeout());
 
+        builder.autoHandleCommands(annotation.autoHandleCommands());
+
         builder.port(annotation.port());
         builder.debugLogging(annotation.debugLogging());
 

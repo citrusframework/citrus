@@ -53,6 +53,9 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** Reply message correlator */
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
+    /** Comma delimited list of ftp commands to auto handle on server */
+    private String autoHandleCommands;
+
     /**
      * Gets the ftp host.
      * @return
@@ -203,5 +206,23 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
      */
     public void setErrorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
         this.errorHandlingStrategy = errorHandlingStrategy;
+    }
+
+    /**
+     * Gets the autoHandleCommands.
+     *
+     * @return
+     */
+    public String getAutoHandleCommands() {
+        return autoHandleCommands;
+    }
+
+    /**
+     * Sets the autoHandleCommands.
+     *
+     * @param autoHandleCommands
+     */
+    public void setAutoHandleCommands(String autoHandleCommands) {
+        this.autoHandleCommands = autoHandleCommands;
     }
 }

@@ -71,17 +71,23 @@ public @interface FtpServerConfig {
      */
     boolean autoStart() default false;
 
-        /**
+    /**
      * Auto connect.
      * @return
      */
     boolean autoConnect() default true;
 
-        /**
+    /**
      * Auto login.
      * @return
      */
     boolean autoLogin() default true;
+
+    /**
+     * Auto handle commands.
+     * @return
+     */
+    String autoHandleCommands() default "PORT,TYPE";
 
     /**
      * Timeout.

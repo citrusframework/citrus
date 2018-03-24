@@ -31,6 +31,7 @@
       <xs:attribute name="auto-start" type="xs:boolean"/>
       <xs:attribute name="auto-connect" type="xs:boolean"/>
       <xs:attribute name="auto-login" type="xs:boolean"/>
+      <xs:attribute name="auto-handle-commands" type="xs:string" default="PORT,TYPE"/>
       <xs:attribute name="timeout" type="xs:string"/>
       <xs:attribute name="user-manager" type="xs:string"/>
       <xs:attribute name="user-manager-properties" type="xs:string"/>

@@ -52,6 +52,7 @@ public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertTrue(server.getEndpointConfiguration().isAutoConnect());
         Assert.assertTrue(server.getEndpointConfiguration().isAutoLogin());
+        Assert.assertEquals(server.getEndpointConfiguration().getAutoHandleCommands(), "PORT,TYPE");
 
         // 2nd message sender
         server = servers.get("ftpServer2");
@@ -61,6 +62,7 @@ public class FtpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.getEndpointConfiguration().isAutoConnect());
         Assert.assertFalse(server.getEndpointConfiguration().isAutoLogin());
+        Assert.assertEquals(server.getEndpointConfiguration().getAutoHandleCommands(), "PORT,TYPE,PWD");
 
         // 3rd message sender
         server = servers.get("ftpServer3");
