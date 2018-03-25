@@ -119,6 +119,104 @@
         </message>
       </receive>
 
+      <echo>
+        <message>Sending LIST command to FTP server</message>
+      </echo>
+
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:list-command>
+              <ftp:target path="/test" />
+            </ftp:list-command>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>LIST</ftp:signal>
+              <ftp:arguments>/test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:list-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Closing data connection')@</ftp:reply-string>
+              <ftp:files>
+                <ftp:file path="hello.txt"/>
+              </ftp:files>
+            </ftp:list-command-result>
+          </payload>
+        </message>
+      </receive>
+
+      <echo>
+        <message>Sending retrieve file command to FTP server</message>
+      </echo>
+
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:get-command>
+              <ftp:file path="/test/hello.txt" type="ASCII"/>
+              <ftp:target path="target/ftp/hello.txt"/>
+            </ftp:get-command>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>RETR</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </receive>
+
     </actions>
   </testcase>
 </spring:beans>
