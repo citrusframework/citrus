@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.*;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.nio.charset.Charset;
@@ -257,11 +258,26 @@ public abstract class FileUtils {
      * @return
      */
     public static Resource getFileResource(String filePath) {
+        String path;
+
         if (filePath.contains(FILE_PATH_CHARSET_PARAMETER)) {
-            return new PathMatchingResourcePatternResolver().getResource(filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER)));
+            path = filePath.substring(0, filePath.indexOf(FileUtils.FILE_PATH_CHARSET_PARAMETER));
         } else {
-            return new PathMatchingResourcePatternResolver().getResource(filePath);
+            path = filePath;
         }
+
+        if (path.startsWith(ResourceUtils.FILE_URL_PREFIX)) {
+            return new FileSystemResource(path.substring(ResourceUtils.FILE_URL_PREFIX.length() - 1));
+        } else if (path.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
+            return new PathMatchingResourcePatternResolver().getResource(path);
+        }
+
+        Resource file = new FileSystemResource(path);
+        if (!file.exists()) {
+            return  new PathMatchingResourcePatternResolver().getResource(path);
+        }
+
+        return file;
     }
 
     /**

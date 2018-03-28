@@ -134,6 +134,12 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         return FTPReply.isPositiveCompletion(reply) || FTPReply.isPositivePreliminary(reply);
     }
 
+    /**
+     * Perform list files operation and provide file information as response.
+     * @param list
+     * @param context
+     * @return
+     */
     private FtpMessage listFiles(ListCommand list, TestContext context) {
         String remoteFilePath = Optional.ofNullable(list.getTarget())
                                         .map(ListCommand.Target::getPath)
@@ -153,7 +159,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 fileNames.add(ftpFile.getName());
             }
 
-            return FtpMessage.listResult(ftpClient.getReplyCode(), ftpClient.getReplyString(), fileNames);
+            return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), fileNames);
         } catch (IOException e) {
             throw new CitrusRuntimeException(String.format("Failed to list files in path '%s'", remoteFilePath), e);
         }
@@ -274,11 +280,16 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                             + ". Local file path: " + localFilePath + ". FTP reply: " + ftpClient.getReplyString());
                 }
             }
+
+            if (getEndpointConfiguration().isAutoReadFiles()) {
+                String fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));
+                return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), localFilePath, fileContent);
+            } else {
+                return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), localFilePath, null);
+            }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to get file from FTP server", e);
         }
-
-        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
     }
 
     /**

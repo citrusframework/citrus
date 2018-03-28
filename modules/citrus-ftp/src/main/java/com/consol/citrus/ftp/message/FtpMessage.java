@@ -135,7 +135,7 @@ public class FtpMessage extends DefaultMessage {
         return ftpMessage;
     }
 
-    public static FtpMessage listResult(int replyCode, String replyString, List<String> fileNames) {
+    public static FtpMessage result(int replyCode, String replyString, List<String> fileNames) {
         ListCommandResult listCommandResult = new ListCommandResult();
         listCommandResult.setReplyCode(String.valueOf(replyCode));
         listCommandResult.setReplyString(replyString);
@@ -151,6 +151,21 @@ public class FtpMessage extends DefaultMessage {
         listCommandResult.setFiles(files);
 
         return result(listCommandResult);
+    }
+
+    public static FtpMessage result(int replyCode, String replyString, String path, String content) {
+        GetCommandResult getCommandResult = new GetCommandResult();
+        getCommandResult.setReplyCode(String.valueOf(replyCode));
+        getCommandResult.setReplyString(replyString);
+        getCommandResult.setSuccess(true);
+
+        GetCommandResult.File file = new GetCommandResult.File();
+        file.setPath(path);
+        file.setData(content);
+
+        getCommandResult.setFile(file);
+
+        return result(getCommandResult);
     }
 
     /**

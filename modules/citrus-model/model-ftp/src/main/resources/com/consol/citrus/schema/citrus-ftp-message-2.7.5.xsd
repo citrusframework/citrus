@@ -100,7 +100,7 @@
             <xs:element name="file">
               <xs:complexType>
                 <xs:attribute name="path" type="xs:string" use="required"/>
-                <xs:attribute name="type">
+                <xs:attribute name="type" default="BINARY">
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
                       <xs:enumeration value="ASCII"/>
@@ -134,7 +134,7 @@
             <xs:element name="file">
               <xs:complexType>
                 <xs:attribute name="path" type="xs:string" use="required"/>
-                <xs:attribute name="type">
+                <xs:attribute name="type" default="BINARY">
                   <xs:simpleType>
                     <xs:restriction base="xs:string">
                       <xs:enumeration value="ASCII"/>
@@ -266,6 +266,9 @@
           <xs:sequence>
             <xs:element name="file">
               <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="data" type="xs:string" minOccurs="0"/>
+                </xs:sequence>
                 <xs:attribute name="path" type="xs:string" use="required"/>
               </xs:complexType>
             </xs:element>

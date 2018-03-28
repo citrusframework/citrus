@@ -43,6 +43,12 @@ public @interface FtpClientConfig {
     int port() default 22222;
 
     /**
+     * Auto read files
+     * @return
+     */
+    boolean autoReadFiles() default true;
+
+    /**
      * Username
      * @return
      */

@@ -44,6 +44,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
     @CitrusEndpoint
     @FtpClientConfig(host = "localhost",
             port=22222,
+            autoReadFiles = false,
             username="user",
             password="consol",
             timeout=10000L)
@@ -93,6 +94,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertTrue(ftpClient1.getEndpointConfiguration().isAutoReadFiles());
 
         // 2nd ftp client
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getHost(), "localhost");
@@ -101,6 +103,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPassword(), "consol");
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertFalse(ftpClient2.getEndpointConfiguration().isAutoReadFiles());
 
         // 3rd ftp client
         Assert.assertEquals(ftpClient3.getEndpointConfiguration().getHost(), "localhost");

@@ -208,11 +208,14 @@
       <receive endpoint="ftpClient">
         <message>
           <payload>
-            <ftp:command-result>
+            <ftp:get-command-result>
               <ftp:success>true</ftp:success>
               <ftp:reply-code>226</ftp:reply-code>
               <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-            </ftp:command-result>
+              <ftp:file path="target/ftp/hello.txt">
+                <ftp:data>Hello FTP server!</ftp:data>
+              </ftp:file>
+            </ftp:get-command-result>
           </payload>
         </message>
       </receive>

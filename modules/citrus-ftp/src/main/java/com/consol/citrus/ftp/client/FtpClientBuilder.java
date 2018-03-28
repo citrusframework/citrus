@@ -55,6 +55,16 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     /**
+     * Sets the auto read files property.
+     * @param autoReadFiles
+     * @return
+     */
+    public FtpClientBuilder autoReadFiles(boolean autoReadFiles) {
+        endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
+        return this;
+    }
+
+    /**
      * Sets the client username.
      * @param username
      * @return

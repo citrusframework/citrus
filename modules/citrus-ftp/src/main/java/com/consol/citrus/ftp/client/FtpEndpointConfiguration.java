@@ -56,6 +56,9 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** Comma delimited list of ftp commands to auto handle on server */
     private String autoHandleCommands;
 
+    /** Auto read file content retrieved from server */
+    private boolean autoReadFiles = true;
+
     /**
      * Gets the ftp host.
      * @return
@@ -224,5 +227,23 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
      */
     public void setAutoHandleCommands(String autoHandleCommands) {
         this.autoHandleCommands = autoHandleCommands;
+    }
+
+    /**
+     * Gets the autoReadFiles.
+     *
+     * @return
+     */
+    public boolean isAutoReadFiles() {
+        return autoReadFiles;
+    }
+
+    /**
+     * Sets the autoReadFiles.
+     *
+     * @param autoReadFiles
+     */
+    public void setAutoReadFiles(boolean autoReadFiles) {
+        this.autoReadFiles = autoReadFiles;
     }
 }

@@ -47,6 +47,7 @@ public class FtpClientConfigParser extends AbstractAnnotationConfigParser<FtpCli
         }
 
         builder.port(annotation.port());
+        builder.autoReadFiles(annotation.autoReadFiles());
 
         if (StringUtils.hasText(annotation.username())) {
             builder.username(annotation.username());

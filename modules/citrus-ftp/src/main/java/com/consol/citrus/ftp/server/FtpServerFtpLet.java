@@ -20,18 +20,16 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.ftp.message.FtpMessage;
-import com.consol.citrus.ftp.model.*;
+import com.consol.citrus.ftp.model.Command;
+import com.consol.citrus.ftp.model.CommandResultType;
 import org.apache.commons.net.ftp.FTPCmd;
-import org.apache.ftpserver.filesystem.nativefs.NativeFileSystemFactory;
 import org.apache.ftpserver.ftplet.*;
-import org.apache.ftpserver.impl.LocalizedFileActionFtpReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -130,26 +128,6 @@ public class FtpServerFtpLet implements Ftplet {
         return FtpletResult.DEFAULT;
     }
 
-    private FtpReply getFtpReply(FtpMessage ftpMessage, FtpSession session) {
-        CommandResultType commandResult = ftpMessage.getPayload(CommandResultType.class);
-
-        try {
-            if (commandResult instanceof GetCommandResult) {
-                return new LocalizedFileActionFtpReply(Integer.valueOf(commandResult.getReplyCode()), commandResult.getReplyString(),
-                        new NativeFileSystemFactory().createFileSystemView(session.getUser()).getFile(((GetCommandResult) commandResult).getFile().getPath()));
-            } else if (commandResult instanceof ListCommandResult) {
-                return new DefaultFtpReply(Integer.valueOf(commandResult.getReplyCode()),
-                        ((ListCommandResult) commandResult).getFiles().getFiles().stream()
-                                                                                    .map(ListCommandResult.Files.File::getPath)
-                                                                                    .collect(Collectors.joining(" ")));
-            }
-        } catch (FtpException e) {
-            throw new CitrusRuntimeException("Failed to get file from local file system view", e);
-        }
-
-        return new DefaultFtpReply(Integer.valueOf(commandResult.getReplyCode()), commandResult.getReplyString());
-    }
-
     @Override
     public FtpletResult onConnect(FtpSession session) {
         if (log.isDebugEnabled()) {
@@ -191,9 +169,10 @@ public class FtpServerFtpLet implements Ftplet {
      * @param response
      */
     private void writeFtpReply(FtpSession session, FtpMessage response) {
-        FtpReply reply = getFtpReply(response, session);
-
         try {
+            CommandResultType commandResult = response.getPayload(CommandResultType.class);
+            FtpReply reply = new DefaultFtpReply(Integer.valueOf(commandResult.getReplyCode()), commandResult.getReplyString());
+
             session.write(reply);
         } catch (FtpException e) {
             throw new CitrusRuntimeException("Failed to write ftp reply", e);
