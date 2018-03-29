@@ -28,13 +28,16 @@ import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
 import com.consol.citrus.util.FileUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.*;
+import org.apache.ftpserver.ftplet.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.*;
@@ -282,7 +285,13 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             }
 
             if (getEndpointConfiguration().isAutoReadFiles()) {
-                String fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));
+                String fileContent;
+                if (command.getFile().getType().equals(DataType.BINARY.name())) {
+                    fileContent = Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(localFilePath).getInputStream()));
+                } else {
+                    fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));
+                }
+
                 return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), localFilePath, fileContent);
             } else {
                 return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), localFilePath, null);

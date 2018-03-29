@@ -21,6 +21,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.ftpserver.ftplet.DataType;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
@@ -89,6 +90,96 @@ public class FtpMessage extends DefaultMessage {
         ConnectCommand cmd = new ConnectCommand();
         cmd.setSignal("OPEN");
         cmd.setSessionId(sessionId);
+        return new FtpMessage(cmd);
+    }
+
+    /**
+     * Creates new put command message.
+     * @param targetPath
+     * @return
+     */
+    public static FtpMessage put(String targetPath) {
+        return put(targetPath, DataType.ASCII);
+    }
+
+    /**
+     * Creates new put command message.
+     * @param targetPath
+     * @param type
+     * @return
+     */
+    public static FtpMessage put(String targetPath, DataType type) {
+        PutCommand cmd = new PutCommand();
+        cmd.setSignal(FTPCmd.STOR.getCommand());
+
+        PutCommand.File file = new PutCommand.File();
+        file.setPath(targetPath);
+        file.setType(type.name());
+        cmd.setFile(file);
+
+        PutCommand.Target target = new PutCommand.Target();
+        target.setPath(targetPath);
+        cmd.setTarget(target);
+        return new FtpMessage(cmd);
+    }
+
+    /**
+     * Creates new get command message.
+     * @param targetPath
+     * @return
+     */
+    public static FtpMessage get(String targetPath) {
+        return get(targetPath, DataType.ASCII);
+    }
+
+    /**
+     * Creates new get command message.
+     * @param targetPath
+     * @param type
+     * @return
+     */
+    public static FtpMessage get(String targetPath, DataType type) {
+        GetCommand cmd = new GetCommand();
+        cmd.setSignal(FTPCmd.RETR.getCommand());
+
+        GetCommand.File file = new GetCommand.File();
+        file.setPath(targetPath);
+        file.setType(type.name());
+        cmd.setFile(file);
+
+        GetCommand.Target target = new GetCommand.Target();
+        target.setPath(targetPath);
+        cmd.setTarget(target);
+        return new FtpMessage(cmd);
+    }
+
+    /**
+     * Creates new delete command message.
+     * @param targetPath
+     * @return
+     */
+    public static FtpMessage delete(String targetPath) {
+        DeleteCommand cmd = new DeleteCommand();
+        cmd.setSignal(FTPCmd.DELE.getCommand());
+
+        DeleteCommand.Target target = new DeleteCommand.Target();
+        target.setPath(targetPath);
+        cmd.setTarget(target);
+        return new FtpMessage(cmd);
+    }
+
+    /**
+     * Creates new delete command message.
+     * @param targetPath
+     * @return
+     */
+    public static FtpMessage list(String targetPath) {
+        ListCommand cmd = new ListCommand();
+        cmd.setSignal(FTPCmd.LIST.getCommand());
+
+        ListCommand.Target target = new ListCommand.Target();
+        target.setPath(targetPath);
+        cmd.setTarget(target);
         return new FtpMessage(cmd);
     }
 
