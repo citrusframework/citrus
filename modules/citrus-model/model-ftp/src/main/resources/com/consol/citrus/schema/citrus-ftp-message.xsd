@@ -171,8 +171,8 @@
               </xs:complexType>
             </xs:element>
           </xs:sequence>
-          <xs:attribute name="recursive" type="xs:boolean"/>
-          <xs:attribute name="include-current" type="xs:boolean"/>
+          <xs:attribute name="recursive" type="xs:boolean" default="true"/>
+          <xs:attribute name="include-current" type="xs:boolean" default="false"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

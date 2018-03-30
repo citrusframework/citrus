@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/sftp/config http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+
+  <citrus-sftp:client id="ftpClient1"
+                     host="localhost"
+                     port="22222"/>
+
+  <citrus-sftp:client id="ftpClient2"
+                     host="localhost"
+                     port="22222"
+                     error-strategy="throwsException"
+                     auto-read-files="false"
+                     username="user"
+                     password="consol"
+                     timeout="10000"/>
+
+  <citrus-sftp:client id="ftpClient3"
+                     host="localhost"
+                     port="22222"
+                     message-correlator="replyMessageCorrelator"/>
+
+  <citrus-sftp:client id="ftpClient4"
+                     host="localhost"
+                     port="22222"
+                     polling-interval="250"
+                     actor="testActor"/>
+
+  <citrus:actor id="testActor" name="TESTACTOR" disabled="false"/>
+
+  <bean id="replyMessageCorrelator" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.message.MessageCorrelator"/>
+  </bean>
+
+</beans>

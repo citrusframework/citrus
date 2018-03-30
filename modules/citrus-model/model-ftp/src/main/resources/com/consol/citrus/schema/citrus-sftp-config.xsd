@@ -15,34 +15,14 @@
   ~ limitations under the License.
   -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="http://www.citrusframework.org/schema/ftp/config"
-           targetNamespace="http://www.citrusframework.org/schema/ftp/config"
+           xmlns="http://www.citrusframework.org/schema/sftp/config"
+           targetNamespace="http://www.citrusframework.org/schema/sftp/config"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
-  <xs:element name="server">
-    <xs:annotation>
-      <xs:documentation>Ftp server implementation accepts client connections and receives messages via Ftp transport protocol.</xs:documentation>
-    </xs:annotation>
-    <xs:complexType>
-      <xs:attribute name="id" type="xs:ID" use="required"/>
-      <xs:attribute name="server" type="xs:string"/>
-      <xs:attribute name="port" type="xs:string"/>
-      <xs:attribute name="auto-start" type="xs:boolean"/>
-      <xs:attribute name="auto-connect" type="xs:boolean"/>
-      <xs:attribute name="auto-login" type="xs:boolean"/>
-      <xs:attribute name="auto-handle-commands" type="xs:string" default="PORT,TYPE"/>
-      <xs:attribute name="timeout" type="xs:string"/>
-      <xs:attribute name="user-manager" type="xs:string"/>
-      <xs:attribute name="user-manager-properties" type="xs:string"/>
-      <xs:attribute name="endpoint-adapter" type="xs:string"/>
-      <xs:attribute name="debug-logging" type="xs:boolean"/>
-    </xs:complexType>
-  </xs:element>
-
   <xs:element name="client">
     <xs:annotation>
-      <xs:documentation>Ftp client component sends commands to server instance and receives reply messages.</xs:documentation>
+      <xs:documentation>Sftp client component sends commands to server instance and receives reply messages.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>

@@ -25,6 +25,15 @@
     </schemaBindings>
   </bindings>
 
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-sftp-config.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.config.sftp"/>
+      <nameXmlTransform>
+        <elementName prefix="Sftp" suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
   <bindings schemaLocation="com/consol/citrus/schema/citrus-ftp-message.xsd">
     <schemaBindings>
       <package name="com.consol.citrus.ftp.model"/>

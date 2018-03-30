@@ -115,8 +115,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             } else if (ftpCommand instanceof DeleteCommand) {
                 response = deleteFile((DeleteCommand) ftpCommand, context);
             } else {
-                int reply = ftpClient.sendCommand(ftpCommand.getSignal(), ftpCommand.getArguments());
-                response = FtpMessage.result(reply, ftpClient.getReplyString(), isPositive(reply));
+                response = executeCommand(ftpCommand);
             }
 
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
@@ -133,6 +132,15 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
     }
 
+    protected FtpMessage executeCommand(CommandType ftpCommand) {
+        try {
+            int reply = ftpClient.sendCommand(ftpCommand.getSignal(), ftpCommand.getArguments());
+            return FtpMessage.result(reply, ftpClient.getReplyString(), isPositive(reply));
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to execute ftp command", e);
+        }
+    }
+
     private boolean isPositive(int reply) {
         return FTPReply.isPositiveCompletion(reply) || FTPReply.isPositivePreliminary(reply);
     }
@@ -143,7 +151,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param context
      * @return
      */
-    private FtpMessage listFiles(ListCommand list, TestContext context) {
+    protected FtpMessage listFiles(ListCommand list, TestContext context) {
         String remoteFilePath = Optional.ofNullable(list.getTarget())
                                         .map(ListCommand.Target::getPath)
                                         .map(context::replaceDynamicContentInString)
@@ -173,7 +181,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param delete
      * @param context
      */
-    private FtpMessage deleteFile(DeleteCommand delete, TestContext context) {
+    protected FtpMessage deleteFile(DeleteCommand delete, TestContext context) {
         String remoteFilePath = context.replaceDynamicContentInString(delete.getTarget().getPath());
 
         try {
@@ -194,6 +202,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                         DeleteCommand.Target target = new DeleteCommand.Target();
                         target.setPath(remoteFilePath + "/" + ftpFile.getName());
                         recursiveDelete.setTarget(target);
+                        recursiveDelete.setIncludeCurrent(true);
                         deleteFile(recursiveDelete, context);
                     }
                 }
@@ -223,7 +232,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @return
      * @throws IOException
      */
-    private boolean isDirectory(String remoteFilePath) throws IOException {
+    protected boolean isDirectory(String remoteFilePath) throws IOException {
         if (!ftpClient.changeWorkingDirectory(remoteFilePath)) { // not a directory or not accessible
 
             switch (ftpClient.listFiles(remoteFilePath).length) {
@@ -244,7 +253,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * @param put
      * @param context
      */
-    private FtpMessage storeFile(PutCommand put, TestContext context) {
+    protected FtpMessage storeFile(PutCommand put, TestContext context) {
         try {
             String localFilePath = context.replaceDynamicContentInString(put.getFile().getPath());
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(put.getTarget().getPath()));
@@ -268,7 +277,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
      * Performs retrieve file operation.
      * @param command
      */
-    private FtpMessage retrieveFile(GetCommand command, TestContext context) {
+    protected FtpMessage retrieveFile(GetCommand command, TestContext context) {
         try {
             String remoteFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
             String localFilePath = addFileNameToTargetPath(remoteFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));

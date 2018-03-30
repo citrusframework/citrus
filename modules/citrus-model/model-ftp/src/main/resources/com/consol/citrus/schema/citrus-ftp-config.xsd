@@ -42,7 +42,7 @@
 
   <xs:element name="client">
     <xs:annotation>
-      <xs:documentation>Http client component sends messages to some Http server instance and receives synchronous response message.</xs:documentation>
+      <xs:documentation>Ftp client component sends commands to server instance and receives reply messages.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
