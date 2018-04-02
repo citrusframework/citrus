@@ -556,6 +556,13 @@
         <version>3.6</version>
       </dependency>
 
+      <dependency>
+        <groupId>org.mockftpserver</groupId>
+        <artifactId>MockFtpServer</artifactId>
+        <version>2.7.1</version>
+        <scope>test</scope>
+      </dependency>
+
       <!-- Citrus arquillian dependencies -->
       <dependency>
         <groupId>org.jboss.arquillian.junit</groupId>

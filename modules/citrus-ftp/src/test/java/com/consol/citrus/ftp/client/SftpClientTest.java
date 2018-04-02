@@ -31,7 +31,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.*;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
@@ -47,17 +48,16 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     private SftpClient sftpClient;
     private SshServer sshServer;
 
-    private String targetFolder;
+    private String targetPath;
     private String remoteFilePath;
     private String localFilePath;
     private String inputFileAsString;
 
     @BeforeClass
     public void setUp() throws Exception {
-        String targetPath = System.getProperty("project.build.directory", "target");
-        targetFolder = Files.createDirectories(Paths.get(targetPath, "SftpClientTest")).toString();
+        targetPath = System.getProperty("project.build.directory");
         localFilePath = "classpath:ftp/input/hello.xml";
-        remoteFilePath = targetFolder + "/hello.xml";
+        remoteFilePath = targetPath + "/hello.xml";
         inputFileAsString = FileUtils.readToString(new ClassPathResource("ftp/input/hello.xml"), StandardCharsets.UTF_8);
         sshServer = startSftpMockServer();
         sftpClient = createSftpClient();
@@ -80,7 +80,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRetrieveFileToLocalPath() throws Exception {
-        Path localDownloadFilePath = Paths.get(targetFolder, "local_download.xml");
+        Path localDownloadFilePath = Paths.get(targetPath, "local_download.xml");
 
         sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
         Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
@@ -92,9 +92,9 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRetrieveFileToLocalPathWithoutFilename() throws Exception {
-        Path localDownloadFilePath = Paths.get(targetFolder, "local_download.xml");
+        Path localDownloadFilePath = Paths.get(targetPath, "local_download.xml");
 
-        sftpClient.storeFile(putCommand(localFilePath, targetFolder + "/"), context);
+        sftpClient.storeFile(putCommand(localFilePath, targetPath + "/"), context);
         Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
 
         sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
@@ -117,7 +117,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         sftpClient.storeFile(putCommand(localFilePath, remoteFilePathCopy), context);
         Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
         Assert.assertTrue(Paths.get(remoteFilePathCopy).toFile().exists());
-        sftpClient.deleteFile(deleteCommand(targetFolder + "/hello*.xml"), context);
+        sftpClient.deleteFile(deleteCommand(targetPath + "/hello*.xml"), context);
         Assert.assertFalse(Paths.get(remoteFilePath).toFile().exists());
         Assert.assertFalse(Paths.get(remoteFilePathCopy).toFile().exists());
     }
@@ -128,7 +128,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         // tmpDir/
         // └── subDir
         //     └── testfile
-        Path tmpDir = Paths.get(targetFolder, "tmpDir");
+        Path tmpDir = Paths.get(targetPath, "tmpDir");
         Path subDir = Files.createDirectories(tmpDir.resolve("subDir"));
 
         writeToFile("test file\n", subDir.resolve("testfile"));
@@ -146,7 +146,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         // tmpDir/
         // └── subDir
         //     └── testfile
-        Path tmpDir = Paths.get(targetFolder, "tmpDir");
+        Path tmpDir = Paths.get(targetPath, "tmpDir");
         Path subDir = Files.createDirectories(tmpDir.resolve("subDir"));
 
         writeToFile("test file\n", subDir.resolve("testfile"));
@@ -160,7 +160,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     @Test
     public void testDeleteNoMatches() {
         // this should not throw an exception, even though no files match
-        sftpClient.deleteFile(deleteCommand(targetFolder + "/1234*1234"), context);
+        sftpClient.deleteFile(deleteCommand(targetPath + "/1234*1234"), context);
     }
 
     private SshServer startSftpMockServer() throws IOException {
@@ -169,7 +169,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         sshd.setPort(2222);
 
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(
-                Paths.get(targetFolder, "sshd_hostkey.ser")));
+                Paths.get(targetPath, "sshd_hostkey.ser")));
 
         List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
         userAuthFactories.add(UserAuthNoneFactory.INSTANCE);
