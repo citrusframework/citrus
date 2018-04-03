@@ -35,4 +35,13 @@
       </excludes>
     </dependencySet>
   </dependencySets>
+  <fileSets>
+    <fileSet>
+      <directory>${project.basedir}/src/test/resources/WEB-INF</directory>
+      <outputDirectory>WEB-INF</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
+  </fileSets>
 </assembly>
