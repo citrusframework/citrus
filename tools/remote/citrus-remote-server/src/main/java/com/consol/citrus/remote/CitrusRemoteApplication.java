@@ -58,6 +58,9 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     /** Global url encoding */
     private static final String ENCODING = "UTF-8";
+    /** Content types */
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String APPLICATION_XML = "application/xml";
 
     /** Application configuration */
     private final CitrusRemoteConfiguration configuration;
@@ -95,103 +98,109 @@ public class CitrusRemoteApplication implements SparkApplication {
         before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
 
         get("/health", (req, res) -> {
-            res.type("application/json");
+            res.type(APPLICATION_JSON);
             return "{ \"status\": \"UP\" }";
         });
 
-        get("/results", "application/json", (req, res) -> {
-            res.type("application/json");
+        path("/results", () -> {
+            get("", APPLICATION_JSON, (req, res) -> {
+                res.type(APPLICATION_JSON);
 
-            if (remoteResultFuture != null) {
-                return remoteResultFuture.get();
-            }
+                if (remoteResultFuture != null) {
+                    return remoteResultFuture.get();
+                }
 
-            List<RemoteResult> results = new ArrayList<>();
-            remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-            return results;
-        }, new JsonResponseTransformer());
+                List<RemoteResult> results = new ArrayList<>();
+                remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+                return results;
+            }, new JsonResponseTransformer());
 
-        get("/results", (req, res) -> remoteTestResultReporter.getTestReport());
+            get("", (req, res) -> remoteTestResultReporter.getTestReport());
 
-        get("/results/files", (req, res) -> {
-            res.type("application/json");
-            File junitReportsFolder = new File("test-output/junitreports");
+            get("/files", (req, res) -> {
+                res.type(APPLICATION_JSON);
+                File junitReportsFolder = new File("test-output/junitreports");
 
-            if (junitReportsFolder.exists()) {
-                return Stream.of(Optional.ofNullable(junitReportsFolder.list()).orElse(new String[] {})).collect(Collectors.toList());
-            }
+                if (junitReportsFolder.exists()) {
+                    return Stream.of(Optional.ofNullable(junitReportsFolder.list()).orElse(new String[] {})).collect(Collectors.toList());
+                }
 
-            return Collections.emptyList();
-        }, new JsonResponseTransformer());
+                return Collections.emptyList();
+            }, new JsonResponseTransformer());
 
-        get("/results/file/:name", (req, res) -> {
-            res.type("application/xml");
-            File junitReportsFolder = new File("test-output/junitreports");
-            File testResultFile = new File(junitReportsFolder, req.params(":name"));
+            get("/file/:name", (req, res) -> {
+                res.type(APPLICATION_XML);
+                File junitReportsFolder = new File("test-output/junitreports");
+                File testResultFile = new File(junitReportsFolder, req.params(":name"));
 
-            if (junitReportsFolder.exists() && testResultFile.exists()) {
-                return FileUtils.readToString(testResultFile);
-            }
+                if (junitReportsFolder.exists() && testResultFile.exists()) {
+                    return FileUtils.readToString(testResultFile);
+                }
 
-            throw halt(404, "Failed to find test result file: " + req.params(":name"));
+                throw halt(404, "Failed to find test result file: " + req.params(":name"));
+            });
         });
 
-        get("/run", (req, res) -> {
-            TestRunConfiguration runConfiguration = new TestRunConfiguration();
+        path("/run", () -> {
+            get("", (req, res) -> {
+                TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
-            if (req.queryParams().contains("includes")) {
-                runConfiguration.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
-            }
+                if (req.queryParams().contains("includes")) {
+                    runConfiguration.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
+                }
 
-            if (req.queryParams().contains("package")) {
-                runConfiguration.setPackages(Collections.singletonList(URLDecoder.decode(req.queryParams("package"), ENCODING)));
-            }
+                if (req.queryParams().contains("package")) {
+                    runConfiguration.setPackages(Collections.singletonList(URLDecoder.decode(req.queryParams("package"), ENCODING)));
+                }
 
-            if (req.queryParams().contains("class")) {
-                runConfiguration.setTestClasses(Collections.singletonList(TestClass.fromString(URLDecoder.decode(req.queryParams("class"), ENCODING))));
-            }
+                if (req.queryParams().contains("class")) {
+                    runConfiguration.setTestClasses(Collections.singletonList(TestClass.fromString(URLDecoder.decode(req.queryParams("class"), ENCODING))));
+                }
 
-            runTests(runConfiguration);
+                runTests(runConfiguration);
 
-            res.type("application/json");
+                res.type(APPLICATION_JSON);
 
-            List<RemoteResult> results = new ArrayList<>();
-            remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-            return results;
-        }, new JsonResponseTransformer());
+                List<RemoteResult> results = new ArrayList<>();
+                remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+                return results;
+            }, new JsonResponseTransformer());
 
-        put("/run", (req, res) -> {
-            remoteResultFuture = jobs.submit((RunJob) () -> {
+            put("", (req, res) -> {
+                remoteResultFuture = jobs.submit((RunJob) () -> {
+                    TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
+                    runTests(runConfiguration);
+
+                    List<RemoteResult> results = new ArrayList<>();
+                    remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+                    return results;
+                });
+
+                return "";
+            });
+
+            post("", (req, res) -> {
                 TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
                 runTests(runConfiguration);
 
                 List<RemoteResult> results = new ArrayList<>();
                 remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
                 return results;
+            }, new JsonResponseTransformer());
+        });
+
+        path("/configuration", () -> {
+            get("", (req, res) -> {
+                res.type(APPLICATION_JSON);
+                return configuration;
+            }, new JsonResponseTransformer());
+
+            put("", (req, res) -> {
+                configuration.apply(new JsonRequestTransformer().read(req.body(), CitrusAppConfiguration.class));
+                return "";
             });
-
-            return "";
         });
 
-        post("/run", (req, res) -> {
-            TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
-            runTests(runConfiguration);
-
-            List<RemoteResult> results = new ArrayList<>();
-            remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-            return results;
-        }, new JsonResponseTransformer());
-
-        get("/configuration", (req, res) -> {
-            res.type("application/json");
-            return configuration;
-        }, new JsonResponseTransformer());
-
-        put("/configuration", (req, res) -> {
-            configuration.apply(new JsonRequestTransformer().read(req.body(), CitrusAppConfiguration.class));
-            return "";
-        });
-        
         exception(CitrusRuntimeException.class, (exception, request, response) -> {
             response.status(500);
             response.body(exception.getMessage());
