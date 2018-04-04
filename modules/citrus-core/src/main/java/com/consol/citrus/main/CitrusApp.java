@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ClassUtils;
 
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.*;
 
 /**
@@ -91,6 +93,8 @@ public class CitrusApp {
             } else {
                 Citrus.newInstance();
             }
+
+            setDefaultProperties(citrusApp.configuration);
         } else {
             try {
                 citrusApp.run();
@@ -120,6 +124,9 @@ public class CitrusApp {
             log.info("Not executing tests as application state is completed!");
             return;
         }
+
+        log.info(String.format("Running Citrus %s", Citrus.getVersion()));
+        setDefaultProperties(configuration);
 
         if (ClassUtils.isPresent("org.testng.annotations.Test", getClass().getClassLoader())) {
             new TestNGEngine(configuration).run();
@@ -160,6 +167,17 @@ public class CitrusApp {
         if (citrus != null) {
             log.info("Closing Citrus and its application context");
             citrus.close();
+        }
+    }
+
+    /**
+     * Reads default properties in configuration and sets them as system properties.
+     * @param configuration
+     */
+    private static void setDefaultProperties(CitrusAppConfiguration configuration) {
+        for (Map.Entry<String, String> entry : configuration.getDefaultProperties().entrySet()) {
+            log.debug(String.format("Setting application property %s=%s", entry.getKey(), entry.getValue()));
+            System.setProperty(entry.getKey(), Optional.ofNullable(entry.getValue()).orElse(""));
         }
     }
 

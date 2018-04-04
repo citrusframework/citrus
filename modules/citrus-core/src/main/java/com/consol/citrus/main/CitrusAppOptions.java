@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -97,6 +98,20 @@ public class CitrusAppOptions {
                     configuration.getPackages().add(value);
                 } else {
                     throw new CitrusRuntimeException("Missing parameter value for -p/--package option");
+                }
+            }
+        });
+
+        options.add(new CliOption<CitrusAppConfiguration>("D", "properties", "Default system properties to set") {
+            @Override
+            protected void doProcess(CitrusAppConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
+                if (StringUtils.hasText(value)) {
+                    configuration.getDefaultProperties().putAll(StringUtils.commaDelimitedListToSet(value)
+                                                                            .stream()
+                                                                            .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                                                                            .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])));
+                } else {
+                    throw new CitrusRuntimeException("Missing parameter value for -D/--properties option");
                 }
             }
         });
@@ -193,7 +208,7 @@ public class CitrusAppOptions {
         }
 
         public boolean processOption(T configuration, String arg, LinkedList<String> remainingArgs) {
-            if (arg.equalsIgnoreCase(shortName) || fullName.startsWith(arg)) {
+            if (arg.equals(shortName) || fullName.startsWith(arg)) {
                 if (remainingArgs.isEmpty()) {
                     doProcess(configuration, arg, null, remainingArgs);
                 } else {

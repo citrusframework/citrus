@@ -16,7 +16,9 @@
 
 package com.consol.citrus.remote.plugin;
 
+import com.consol.citrus.TestClass;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.plugin.config.RunConfiguration;
 import com.consol.citrus.report.*;
@@ -25,6 +27,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.*;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.HttpClientUtils;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -85,63 +89,90 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     }
 
     private void runPackages(List<String> packages) throws MojoExecutionException {
-        for (String testPackage : packages) {
-            HttpResponse response = null;
-            try {
-                RequestBuilder requestBuilder = RequestBuilder.get(getServer().getUrl() + "/run")
-                                                            .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
-                                                            .addParameter("package", URLEncoder.encode(testPackage, ENCODING));
+        HttpResponse response = null;
+        try {
+            RequestBuilder requestBuilder = RequestBuilder.post(getServer().getUrl() + "/run")
+                                                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"));
 
-                if (run.getIncludes() != null) {
-                    requestBuilder.addParameter("includes", URLEncoder.encode(run.getIncludes().stream().collect(Collectors.joining(",")), ENCODING));
-                }
+            TestRunConfiguration runConfiguration = new TestRunConfiguration();
+            runConfiguration.setPackages(packages);
 
-                response = getHttpClient().execute(requestBuilder.build());
-
-                if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
-                    throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
-                }
-
-                handleTestResults(response);
-            } catch (IOException e) {
-                throw new MojoExecutionException("Failed to run tests on remote server", e);
-            } finally {
-                HttpClientUtils.closeQuietly(response);
+            if (run.getIncludes() != null) {
+                runConfiguration.setIncludes(run.getIncludes().toArray(new String[run.getIncludes().size()]));
             }
+
+            if (run.getSystemProperties() != null) {
+                runConfiguration.addDefaultProperties(run.getSystemProperties());
+            }
+
+            StringEntity body = new StringEntity(new ObjectMapper().writeValueAsString(runConfiguration), ContentType.APPLICATION_JSON);
+            requestBuilder.setEntity(body);
+
+            response = getHttpClient().execute(requestBuilder.build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
+            }
+
+            handleTestResults(response);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Failed to run tests on remote server", e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
     private void runClasses(List<String> classes) throws MojoExecutionException {
-        for (String testClass : classes) {
-            HttpResponse response = null;
-            try {
-                response = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/run")
-                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"))
-                        .addParameter("class", URLEncoder.encode(testClass, ENCODING))
-                        .build());
+        HttpResponse response = null;
+        try {
+            RequestBuilder requestBuilder = RequestBuilder.post(getServer().getUrl() + "/run")
+                                                        .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"));
 
-                if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
-                    throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
-                }
+            TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
-                handleTestResults(response);
-            } catch (IOException e) {
-                throw new MojoExecutionException("Failed to run tests on remote server", e);
-            } finally {
-                HttpClientUtils.closeQuietly(response);
+            runConfiguration.setTestClasses(classes.stream()
+                                                    .map(TestClass::fromString)
+                                                    .collect(Collectors.toList()));
+
+            if (run.getSystemProperties() != null) {
+                runConfiguration.addDefaultProperties(run.getSystemProperties());
             }
+
+            StringEntity body = new StringEntity(new ObjectMapper().writeValueAsString(runConfiguration), ContentType.APPLICATION_JSON);
+            requestBuilder.setEntity(body);
+
+            response = getHttpClient().execute(requestBuilder.build());
+
+            if (HttpStatus.SC_OK != response.getStatusLine().getStatusCode()) {
+                throw new MojoExecutionException("Failed to run tests on remote server" + EntityUtils.toString(response.getEntity()));
+            }
+
+            handleTestResults(response);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Failed to run tests on remote server", e);
+        } finally {
+            HttpClientUtils.closeQuietly(response);
         }
     }
 
     private void runAllTests() throws MojoExecutionException {
         HttpResponse response = null;
         try {
-            RequestBuilder requestBuilder = RequestBuilder.get(getServer().getUrl() + "/run")
+            RequestBuilder requestBuilder = RequestBuilder.post(getServer().getUrl() + "/run")
                                                         .addHeader(new BasicHeader(HttpHeaders.ACCEPT, "application/json"));
 
+            TestRunConfiguration runConfiguration = new TestRunConfiguration();
+
             if (run.getIncludes() != null) {
-                requestBuilder.addParameter("includes", URLEncoder.encode(run.getIncludes().stream().collect(Collectors.joining(",")), ENCODING));
+                runConfiguration.setIncludes(run.getIncludes().toArray(new String[run.getIncludes().size()]));
             }
+
+            if (run.getSystemProperties() != null) {
+                runConfiguration.addDefaultProperties(run.getSystemProperties());
+            }
+
+            StringEntity body = new StringEntity(new ObjectMapper().writeValueAsString(runConfiguration), ContentType.APPLICATION_JSON);
+            requestBuilder.setEntity(body);
 
             response = getHttpClient().execute(requestBuilder.build());
 

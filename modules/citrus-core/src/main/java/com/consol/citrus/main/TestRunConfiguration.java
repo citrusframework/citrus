@@ -19,8 +19,7 @@ package com.consol.citrus.main;
 import com.consol.citrus.TestClass;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -36,6 +35,9 @@ public class TestRunConfiguration {
 
     /** Include tests based on these test name pattern */
     private String[] includes = new String[] { "^.*IT$", "^.*ITCase$", "^IT.*$" };
+
+    /** Default properties set as system properties */
+    private Map<String, String> defaultProperties = new LinkedHashMap<>();
 
     /** Optional test jar artifact holding tests */
     private File testJar;
@@ -110,5 +112,23 @@ public class TestRunConfiguration {
      */
     public void setTestJar(File testJar) {
         this.testJar = testJar;
+    }
+
+    /**
+     * Gets the defaultProperties.
+     *
+     * @return
+     */
+    public Map<String, String> getDefaultProperties() {
+        return defaultProperties;
+    }
+
+    /**
+     * Adds default properties.
+     *
+     * @param defaultProperties
+     */
+    public void addDefaultProperties(Map<String, String> defaultProperties) {
+        this.defaultProperties = defaultProperties;
     }
 }

@@ -17,8 +17,10 @@
 package com.consol.citrus.remote;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestClass;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.CitrusAppConfiguration;
+import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.remote.controller.RunController;
 import com.consol.citrus.remote.job.RunJob;
 import com.consol.citrus.remote.model.RemoteResult;
@@ -26,8 +28,10 @@ import com.consol.citrus.remote.reporter.RemoteTestResultReporter;
 import com.consol.citrus.remote.transformer.JsonRequestTransformer;
 import com.consol.citrus.remote.transformer.JsonResponseTransformer;
 import com.consol.citrus.util.FileUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import spark.Filter;
 import spark.servlet.SparkApplication;
@@ -35,8 +39,7 @@ import spark.servlet.SparkApplication;
 import java.io.File;
 import java.net.URLDecoder;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -61,6 +64,7 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     /** Single thread job scheduler */
     private final ExecutorService jobs = Executors.newSingleThreadExecutor();
+    private Future<List<RemoteResult>> remoteResultFuture;
 
     /** Latest test reports */
     private RemoteTestResultReporter remoteTestResultReporter = new RemoteTestResultReporter();
@@ -97,6 +101,11 @@ public class CitrusRemoteApplication implements SparkApplication {
 
         get("/results", "application/json", (req, res) -> {
             res.type("application/json");
+
+            if (remoteResultFuture != null) {
+                return remoteResultFuture.get();
+            }
+
             List<RemoteResult> results = new ArrayList<>();
             remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
             return results;
@@ -128,23 +137,21 @@ public class CitrusRemoteApplication implements SparkApplication {
         });
 
         get("/run", (req, res) -> {
-            RunController runController = new RunController(configuration);
+            TestRunConfiguration runConfiguration = new TestRunConfiguration();
 
             if (req.queryParams().contains("includes")) {
-                runController.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
-            }
-
-            if (!req.queryParams().contains("package") && !req.queryParams().contains("class")) {
-                runController.runAll();
+                runConfiguration.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
             }
 
             if (req.queryParams().contains("package")) {
-                runController.runPackage(URLDecoder.decode(req.queryParams("package"), ENCODING));
+                runConfiguration.setPackages(Collections.singletonList(URLDecoder.decode(req.queryParams("package"), ENCODING)));
             }
 
             if (req.queryParams().contains("class")) {
-                runController.runClass(URLDecoder.decode(req.queryParams("class"), ENCODING));
+                runConfiguration.setTestClasses(Collections.singletonList(TestClass.fromString(URLDecoder.decode(req.queryParams("class"), ENCODING))));
             }
+
+            runTests(runConfiguration);
 
             res.type("application/json");
 
@@ -154,30 +161,26 @@ public class CitrusRemoteApplication implements SparkApplication {
         }, new JsonResponseTransformer());
 
         put("/run", (req, res) -> {
-            jobs.submit((RunJob) () -> {
-                RunController runController = new RunController(configuration);
+            remoteResultFuture = jobs.submit((RunJob) () -> {
+                TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
+                runTests(runConfiguration);
 
-                if (req.queryParams().contains("includes")) {
-                    runController.setIncludes(StringUtils.commaDelimitedListToStringArray(URLDecoder.decode(req.queryParams("includes"), ENCODING)));
-                }
-
-                if (!req.queryParams().contains("package") && !req.queryParams().contains("class")) {
-                    runController.runAll();
-                }
-
-                if (req.queryParams().contains("package")) {
-                    runController.runPackage(URLDecoder.decode(req.queryParams("package"), ENCODING));
-                }
-
-                if (req.queryParams().contains("class")) {
-                    runController.runClass(URLDecoder.decode(req.queryParams("class"), ENCODING));
-                }
-
-                return "";
+                List<RemoteResult> results = new ArrayList<>();
+                remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+                return results;
             });
 
             return "";
         });
+
+        post("/run", (req, res) -> {
+            TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
+            runTests(runConfiguration);
+
+            List<RemoteResult> results = new ArrayList<>();
+            remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+            return results;
+        }, new JsonResponseTransformer());
 
         get("/configuration", (req, res) -> {
             res.type("application/json");
@@ -193,6 +196,32 @@ public class CitrusRemoteApplication implements SparkApplication {
             response.status(500);
             response.body(exception.getMessage());
         });
+    }
+
+    /**
+     * Construct run controller and execute with given configuration.
+     * @param runConfiguration
+     */
+    private void runTests(TestRunConfiguration runConfiguration) {
+        RunController runController = new RunController(configuration);
+
+        runController.setIncludes(runConfiguration.getIncludes());
+
+        if (!CollectionUtils.isEmpty(runConfiguration.getDefaultProperties())) {
+            runController.addDefaultProperties(runConfiguration.getDefaultProperties());
+        }
+
+        if (CollectionUtils.isEmpty(runConfiguration.getPackages()) && CollectionUtils.isEmpty(runConfiguration.getTestClasses())) {
+            runController.runAll();
+        }
+
+        if (!CollectionUtils.isEmpty(runConfiguration.getPackages())) {
+            runController.runPackages(runConfiguration.getPackages());
+        }
+
+        if (!CollectionUtils.isEmpty(runConfiguration.getTestClasses())) {
+            runController.runClasses(runConfiguration.getTestClasses());
+        }
     }
 
     @Override

@@ -53,5 +53,6 @@ public class CitrusRemoteConfiguration extends CitrusAppConfiguration {
         setPackages(configuration.getPackages());
         setTestClasses(configuration.getTestClasses());
         setIncludes(configuration.getIncludes());
+        addDefaultProperties(configuration.getDefaultProperties());
     }
 }

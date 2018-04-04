@@ -16,6 +16,8 @@
 
 package com.consol.citrus;
 
+import org.springframework.util.StringUtils;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7
@@ -73,5 +75,30 @@ public class TestClass {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Read String representation and construct proper test class instance. Read optional method name information and class name using format
+     * "fully.qualified.class.Name#optionalMethodName()"
+     *
+     * @param testClass
+     * @return
+     */
+    public static TestClass fromString(String testClass) {
+        String className;
+        String methodName = null;
+        if (testClass.contains("#")) {
+            className = testClass.substring(0, testClass.indexOf("#"));
+            methodName = testClass.substring(testClass.indexOf("#") + 1);
+        } else {
+            className = testClass;
+        }
+
+        TestClass test = new TestClass(className);
+        if (StringUtils.hasText(methodName)) {
+            test.setMethod(methodName);
+        }
+
+        return test;
     }
 }

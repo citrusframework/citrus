@@ -31,13 +31,13 @@ public class CitrusRemoteOptions extends CitrusAppOptions {
     protected CitrusRemoteOptions() {
         super();
 
-        options.add(new CliOption<CitrusRemoteConfiguration>("port", "port", "Server port") {
+        options.add(new CliOption<CitrusRemoteConfiguration>("P", "port", "Server port") {
             @Override
             protected void doProcess(CitrusRemoteConfiguration configuration, String arg, String value, LinkedList<String> remainingArgs) {
                 if (StringUtils.hasText(value)) {
                     configuration.setPort(Integer.valueOf(value));
                 } else {
-                    throw new CitrusRuntimeException("Missing parameter value for --port option");
+                    throw new CitrusRuntimeException("Missing parameter value for -P/--port option");
                 }
             }
         });

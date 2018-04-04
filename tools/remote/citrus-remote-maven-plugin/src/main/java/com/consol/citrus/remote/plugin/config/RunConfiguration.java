@@ -19,6 +19,7 @@ package com.consol.citrus.remote.plugin.config;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -34,6 +35,9 @@ public class RunConfiguration {
 
     @Parameter
     private List<String> includes;
+
+    @Parameter
+    private Map<String, String> systemProperties;
 
     /**
      * Gets the classes.
@@ -103,5 +107,23 @@ public class RunConfiguration {
      */
     public void setIncludes(List<String> includes) {
         this.includes = includes;
+    }
+
+    /**
+     * Gets the system properties.
+     *
+     * @return
+     */
+    public Map<String, String> getSystemProperties() {
+        return systemProperties;
+    }
+
+    /**
+     * Sets the system properties.
+     *
+     * @param properties
+     */
+    public void setSystemProperties(Map<String, String> properties) {
+        this.systemProperties = properties;
     }
 }

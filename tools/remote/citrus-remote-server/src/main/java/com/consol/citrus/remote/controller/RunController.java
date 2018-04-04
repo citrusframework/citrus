@@ -20,11 +20,8 @@ import com.consol.citrus.TestClass;
 import com.consol.citrus.main.CitrusApp;
 import com.consol.citrus.main.CitrusAppConfiguration;
 import com.consol.citrus.remote.CitrusRemoteConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
 
-import java.util.Optional;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -32,11 +29,11 @@ import java.util.Optional;
  */
 public class RunController {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(RunController.class);
-
     /** Include tests based on these test names patterns */
     private String[] includes;
+
+    /** Default properties set as system properties */
+    private Map<String, String> defaultProperties = new LinkedHashMap<>();
 
     private final CitrusRemoteConfiguration configuration;
 
@@ -52,44 +49,34 @@ public class RunController {
      * Run all tests found in classpath.
      */
     public void runAll() {
-        runPackage("");
+        runPackages(Collections.singletonList(""));
     }
 
     /**
-     * Run Citrus application with given base test package name.
-     * @param basePackage
+     * Run Citrus application with given test package names.
+     * @param packages
      */
-    public void runPackage(String basePackage) {
+    public void runPackages(List<String> packages) {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
         citrusAppConfiguration.setIncludes(Optional.ofNullable(includes).orElse(configuration.getIncludes()));
-        citrusAppConfiguration.getPackages().add(basePackage);
+        citrusAppConfiguration.setPackages(packages);
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
+        citrusAppConfiguration.addDefaultProperties(configuration.getDefaultProperties());
+        citrusAppConfiguration.addDefaultProperties(defaultProperties);
         run(citrusAppConfiguration);
     }
 
     /**
-     * Run Citrus application with given test class name.
-     * @param testClass
+     * Run Citrus application with given test class names.
+     * @param testClasses
      */
-    public void runClass(String testClass) {
+    public void runClasses(List<TestClass> testClasses) {
         CitrusAppConfiguration citrusAppConfiguration = new CitrusAppConfiguration();
 
-        String className;
-        String methodName = null;
-        if (testClass.contains("#")) {
-            className = testClass.substring(0, testClass.indexOf("#"));
-            methodName = testClass.substring(testClass.indexOf("#") + 1);
-        } else {
-            className = testClass;
-        }
-
-        TestClass test = new TestClass(className);
-        if (StringUtils.hasText(methodName)) {
-            test.setMethod(methodName);
-        }
-
-        citrusAppConfiguration.getTestClasses().add(test);
+        citrusAppConfiguration.setTestClasses(testClasses);
         citrusAppConfiguration.setConfigClass(configuration.getConfigClass());
+        citrusAppConfiguration.addDefaultProperties(configuration.getDefaultProperties());
+        citrusAppConfiguration.addDefaultProperties(defaultProperties);
 
         run(citrusAppConfiguration);
     }
@@ -111,20 +98,20 @@ public class RunController {
     }
 
     /**
-     * Gets the includes.
-     *
-     * @return
-     */
-    public String[] getIncludes() {
-        return includes;
-    }
-
-    /**
      * Sets the includes.
      *
      * @param includes
      */
     public void setIncludes(String[] includes) {
         this.includes = includes;
+    }
+
+    /**
+     * Sets the defaultProperties.
+     *
+     * @param defaultProperties
+     */
+    public void addDefaultProperties(Map<String, String> defaultProperties) {
+        this.defaultProperties.putAll(defaultProperties);
     }
 }

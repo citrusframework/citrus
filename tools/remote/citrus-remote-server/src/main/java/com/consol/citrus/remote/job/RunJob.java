@@ -16,11 +16,14 @@
 
 package com.consol.citrus.remote.job;
 
+import com.consol.citrus.remote.model.RemoteResult;
+
+import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public interface RunJob extends Callable<String> {
+public interface RunJob extends Callable<List<RemoteResult>> {
 }
