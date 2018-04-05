@@ -24,11 +24,15 @@ import org.springframework.beans.factory.annotation.Value;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public abstract class AbstractTestReporter extends AbstractTestListener implements TestReporter, TestListener {
+public abstract class AbstractTestReporter extends AbstractTestListener implements TestReporter, TestListener, TestSuiteListener {
 
     /** Report output directory */
     @Value("${citrus.report.directory:target/citrus-reports}")
     private String reportDirectory = "target/citrus-reports";
+
+    /** Should clear test results for each test suite */
+    @Value("${citrus.report.auto.clear:true}")
+    private boolean autoClear = true;
 
     /** Collect test results for overall result overview at the very end of test execution */
     private TestResults testResults = new TestResults();
@@ -40,11 +44,39 @@ public abstract class AbstractTestReporter extends AbstractTestListener implemen
 
     /**
      * Gets the testResults.
-     *
      * @return
      */
     public TestResults getTestResults() {
         return testResults;
+    }
+
+    @Override
+    public void onStart() {
+        if (autoClear) {
+            clearTestResults();
+        }
+    }
+
+    @Override
+    public void onFinish() {
+    }
+
+    @Override
+    public void onFinishFailure(Throwable cause) {
+        generateTestResults();
+    }
+
+    @Override
+    public void onFinishSuccess() {
+        generateTestResults();
+    }
+
+    @Override
+    public void onStartFailure(Throwable cause) {
+    }
+
+    @Override
+    public void onStartSuccess() {
     }
 
     @Override
@@ -78,5 +110,23 @@ public abstract class AbstractTestReporter extends AbstractTestListener implemen
      */
     public void setReportDirectory(String reportDirectory) {
         this.reportDirectory = reportDirectory;
+    }
+
+    /**
+     * Gets the autoClear.
+     *
+     * @return
+     */
+    public boolean isAutoClear() {
+        return autoClear;
+    }
+
+    /**
+     * Sets the autoClear.
+     *
+     * @param autoClear
+     */
+    public void setAutoClear(boolean autoClear) {
+        this.autoClear = autoClear;
     }
 }

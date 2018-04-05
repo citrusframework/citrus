@@ -91,7 +91,7 @@ public class CitrusRemoteApplication implements SparkApplication {
     public void init() {
         Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
         Citrus.CitrusInstanceManager.addInstanceProcessor(citrus -> {
-            citrus.addTestReporter(remoteTestResultReporter);
+            citrus.addTestSuiteListener(remoteTestResultReporter);
             citrus.addTestListener(remoteTestResultReporter);
         });
 

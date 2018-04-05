@@ -31,20 +31,8 @@ public class TestSuiteListeners {
     
     /** List of testsuite listeners **/
     @Autowired
-    private List<TestSuiteListener> testSuiteListeners = new ArrayList<TestSuiteListener>();
+    private List<TestSuiteListener> testSuiteListeners = new ArrayList<>();
     
-    /** List of testsuite reporter **/
-    @Autowired
-    private List<TestReporter> testReporters = new ArrayList<TestReporter>();
-
-    /**
-     * Adds new test reporter.
-     * @param reporter
-     */
-    public void addTestReporter(TestReporter reporter) {
-        this.testReporters.add(reporter);
-    }
-
     /**
      * Adds a new test suite listener. 
      * @param testSuiteListener the listener.
@@ -63,19 +51,11 @@ public class TestSuiteListeners {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishFailure(cause);
         }
-        
-        for (TestReporter reporter : testReporters) {
-            reporter.generateTestResults();
-        }
     }
 
     public void onFinishSuccess() {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onFinishSuccess();
-        }
-        
-        for (TestReporter reporter : testReporters) {
-            reporter.generateTestResults();
         }
     }
 

@@ -428,14 +428,6 @@ public final class Citrus {
     }
 
     /**
-     * Adds new test reporter.
-     * @param reporter
-     */
-    public void addTestReporter(TestReporter reporter) {
-        this.testSuiteListener.addTestReporter(reporter);
-    }
-
-    /**
      * Adds new test suite listener.
      * @param suiteListener
      */
