@@ -47,7 +47,7 @@ public abstract class AbstractCitrusRemoteMojo extends AbstractMojo {
      * Http connect timeout.
      */
     @Parameter(property = "citrus.remote.plugin.timeout", defaultValue = "60000")
-    private int timeout;
+    private int timeout = 60000;
 
     /**
      * The output directory of the assembled distribution file.

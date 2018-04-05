@@ -39,6 +39,12 @@ public class RunConfiguration {
     @Parameter
     private Map<String, String> systemProperties;
 
+    @Parameter(property = "citrus.remote.run.async", defaultValue = "false")
+    private boolean async;
+
+    @Parameter(property = "citrus.remote.run.polling.interval", defaultValue = "10000")
+    private long pollingInterval = 10000L;
+
     /**
      * Gets the classes.
      *
@@ -125,5 +131,41 @@ public class RunConfiguration {
      */
     public void setSystemProperties(Map<String, String> properties) {
         this.systemProperties = properties;
+    }
+
+    /**
+     * Gets the async.
+     *
+     * @return
+     */
+    public boolean isAsync() {
+        return async;
+    }
+
+    /**
+     * Sets the async.
+     *
+     * @param async
+     */
+    public void setAsync(boolean async) {
+        this.async = async;
+    }
+
+    /**
+     * Gets the pollingInterval.
+     *
+     * @return
+     */
+    public long getPollingInterval() {
+        return pollingInterval;
+    }
+
+    /**
+     * Sets the pollingInterval.
+     *
+     * @param pollingInterval
+     */
+    public void setPollingInterval(long pollingInterval) {
+        this.pollingInterval = pollingInterval;
     }
 }

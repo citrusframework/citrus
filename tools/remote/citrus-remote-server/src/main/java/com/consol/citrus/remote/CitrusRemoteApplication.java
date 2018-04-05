@@ -106,8 +106,16 @@ public class CitrusRemoteApplication implements SparkApplication {
             get("", APPLICATION_JSON, (req, res) -> {
                 res.type(APPLICATION_JSON);
 
+                long timeout = Optional.ofNullable(req.queryParams("timeout"))
+                                        .map(Long::valueOf)
+                                        .orElse(10000L);
+
                 if (remoteResultFuture != null) {
-                    return remoteResultFuture.get();
+                    try {
+                        return remoteResultFuture.get(timeout, TimeUnit.MILLISECONDS);
+                    } catch (TimeoutException e) {
+                        res.status(206); // partial content
+                    }
                 }
 
                 List<RemoteResult> results = new ArrayList<>();
@@ -167,13 +175,15 @@ public class CitrusRemoteApplication implements SparkApplication {
             }, new JsonResponseTransformer());
 
             put("", (req, res) -> {
-                remoteResultFuture = jobs.submit((RunJob) () -> {
-                    TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
-                    runTests(runConfiguration);
+                remoteResultFuture = jobs.submit(new RunJob(new ObjectMapper().readValue(req.body(), TestRunConfiguration.class)) {
+                    @Override
+                    public List<RemoteResult> call() {
+                        runTests(runConfiguration);
 
-                    List<RemoteResult> results = new ArrayList<>();
-                    remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-                    return results;
+                        List<RemoteResult> results = new ArrayList<>();
+                        remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+                        return results;
+                    }
                 });
 
                 return "";

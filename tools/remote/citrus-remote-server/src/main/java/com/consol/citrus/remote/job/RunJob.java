@@ -16,6 +16,7 @@
 
 package com.consol.citrus.remote.job;
 
+import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.remote.model.RemoteResult;
 
 import java.util.List;
@@ -25,5 +26,15 @@ import java.util.concurrent.Callable;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public interface RunJob extends Callable<List<RemoteResult>> {
+public abstract class RunJob implements Callable<List<RemoteResult>> {
+
+    protected final TestRunConfiguration runConfiguration;
+
+    /**
+     * Default constructor using run configuration.
+     * @param runConfiguration
+     */
+    public RunJob(TestRunConfiguration runConfiguration) {
+        this.runConfiguration = runConfiguration;
+    }
 }
