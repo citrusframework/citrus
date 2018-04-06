@@ -35,13 +35,13 @@ public class SummaryReporter extends AbstractOutputFileReporter {
 
     /** Enables/disables report generation */
     @Value("${citrus.summary.report.enabled:true}")
-    private String enabled = "true";
+    private String enabled = Boolean.TRUE.toString();
 
     /** Resulting summary test report file name */
     @Value("${citrus.summary.report.file:citrus-summary.xml}")
     private String reportFileName = "citrus-summary.xml";
 
-    /** Static resource for the HTML test report template */
+    /** Static resource for the summary test report template */
     @Value("${citrus.summary.report.template:classpath:com/consol/citrus/report/summary-report.xml}")
     private String reportTemplate = "classpath:com/consol/citrus/report/summary-report.xml";
 
@@ -67,13 +67,13 @@ public class SummaryReporter extends AbstractOutputFileReporter {
      *
      * @param enabled
      */
-    public void setEnabled(String enabled) {
-        this.enabled = enabled;
+    public void setEnabled(boolean enabled) {
+        this.enabled = String.valueOf(enabled);
     }
 
     @Override
     protected boolean isEnabled() {
-        return StringUtils.hasText(enabled) && !enabled.equalsIgnoreCase(Boolean.TRUE.toString());
+        return StringUtils.hasText(enabled) && enabled.equalsIgnoreCase(Boolean.TRUE.toString());
     }
 
     /**

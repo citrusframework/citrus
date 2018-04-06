@@ -32,6 +32,12 @@ public class RemoteResult {
     /** Name of the test */
     private String testName;
 
+    /** Fully qualified test class name */
+    private String testClass;
+
+    /** Failure cause */
+    private String cause;
+
     /** Failure message */
     private String errorMessage;
 
@@ -50,12 +56,14 @@ public class RemoteResult {
     public static RemoteResult fromTestResult(TestResult testResult) {
         RemoteResult remoteResult = new RemoteResult();
         remoteResult.setTestName(testResult.getTestName());
+        remoteResult.setTestClass(testResult.getClassName());
         remoteResult.setSuccess(testResult.isSuccess());
         remoteResult.setFailed(testResult.isFailed());
         remoteResult.setSkipped(testResult.isSkipped());
 
         if (testResult.isFailed()) {
             Optional.ofNullable(testResult.getCause()).ifPresent(cause -> {
+                remoteResult.setCause(cause.getClass().getName());
                 remoteResult.setErrorMessage(cause.getMessage());
 
                 StringWriter stackWriter = new StringWriter();
@@ -73,11 +81,13 @@ public class RemoteResult {
      */
     public static TestResult toTestResult(RemoteResult remoteResult) {
         if (remoteResult.isSuccess()) {
-            return TestResult.success(remoteResult.getTestName());
+            return TestResult.success(remoteResult.getTestName(), remoteResult.getTestClass());
         } else if (remoteResult.isSkipped()) {
-            return TestResult.skipped(remoteResult.getTestName());
+            return TestResult.skipped(remoteResult.getTestName(), remoteResult.getTestClass());
         } else if (remoteResult.isFailed()) {
-            return TestResult.failed(remoteResult.getTestName(), remoteResult.getErrorMessage());
+            return TestResult.failed(remoteResult.getTestName(), remoteResult.getTestClass(), remoteResult.getErrorMessage())
+                             .withFailureType(remoteResult.getCause())
+                             .withFailureStack(remoteResult.getFailureStack());
         } else {
             throw new CitrusRuntimeException("Unexpected test result state " + remoteResult.getTestName());
         }
@@ -99,6 +109,42 @@ public class RemoteResult {
      */
     public void setTestName(String testName) {
         this.testName = testName;
+    }
+
+    /**
+     * Gets the testClass.
+     *
+     * @return
+     */
+    public String getTestClass() {
+        return testClass;
+    }
+
+    /**
+     * Sets the testClass.
+     *
+     * @param testClass
+     */
+    public void setTestClass(String testClass) {
+        this.testClass = testClass;
+    }
+
+    /**
+     * Gets the cause.
+     *
+     * @return
+     */
+    public String getCause() {
+        return cause;
+    }
+
+    /**
+     * Sets the cause.
+     *
+     * @param cause
+     */
+    public void setCause(String cause) {
+        this.cause = cause;
     }
 
     /**

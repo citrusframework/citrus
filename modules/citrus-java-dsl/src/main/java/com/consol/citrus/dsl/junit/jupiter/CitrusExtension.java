@@ -55,7 +55,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
         if (!isXmlTestMethod(extensionContext.getRequiredTestMethod()) &&
                 (isRunnerMethod(extensionContext.getRequiredTestMethod()) || isRunnerClass(extensionContext.getRequiredTestClass()))) {
             TestCase testCase = getTestCase(extensionContext);
-            testCase.setTestResult(TestResult.failed(testCase.getName(), throwable));
+            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), throwable));
         }
 
         throw throwable;
@@ -67,7 +67,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
             TestCase testCase = getTestCase(extensionContext);
 
             extensionContext.getExecutionException()
-                    .ifPresent(e -> testCase.setTestResult(TestResult.failed(testCase.getName(), e)));
+                    .ifPresent(e -> testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e)));
 
             if (isDesignerMethod(extensionContext.getRequiredTestMethod()) ||
                     isDesignerClass(extensionContext.getRequiredTestClass())) {
@@ -78,7 +78,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
                 } catch (TestCaseFailedException e) {
                     throw e;
                 } catch (Exception | AssertionError e) {
-                    testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                    testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
                     testCase.finish(context);
                     throw new TestCaseFailedException(e);
                 }
@@ -118,7 +118,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
                 try {
                     testRunner.start();
                 } catch (Exception | AssertionError e) {
-                    getTestCase(extensionContext).setTestResult(TestResult.failed(testCase.getName(), e));
+                    getTestCase(extensionContext).setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
                     throw new TestCaseFailedException(e);
                 }
             }

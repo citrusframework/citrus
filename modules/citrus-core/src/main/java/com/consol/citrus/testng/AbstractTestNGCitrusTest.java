@@ -125,7 +125,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         } catch (TestCaseFailedException e) {
             throw e;
         } catch (Exception | AssertionError e) {
-            testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+            testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
             testCase.finish(context);
             throw new TestCaseFailedException(e);
         }

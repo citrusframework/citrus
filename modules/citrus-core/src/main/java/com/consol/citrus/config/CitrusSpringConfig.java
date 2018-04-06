@@ -71,6 +71,11 @@ public class CitrusSpringConfig {
     }
 
     @Bean
+    public JUnitReporter junit4Reporter() {
+        return new JUnitReporter();
+    }
+
+    @Bean
     public TestListeners testListeners() {
         return new TestListeners();
     }

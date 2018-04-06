@@ -30,8 +30,8 @@ public class TestResultsTest {
     public void testSuccessResults() throws Exception {
         TestResults results = new TestResults();
 
-        results.addResult(TestResult.success("OkTest"));
-        results.addResult(TestResult.success("OkTest2"));
+        results.addResult(TestResult.success("OkTest", TestResultsTest.class.getName()));
+        results.addResult(TestResult.success("OkTest2", TestResultsTest.class.getName()));
 
         Assert.assertEquals(results.getSuccess(), 2);
         Assert.assertEquals(results.getSuccessPercentage(), "100.0");
@@ -45,9 +45,9 @@ public class TestResultsTest {
     public void testFailedResults() throws Exception {
         TestResults results = new TestResults();
 
-        results.addResult(TestResult.success("OkTest"));
-        results.addResult(TestResult.failed("FailedTest", new CitrusRuntimeException("This went wrong")));
-        results.addResult(TestResult.success("OkTest2"));
+        results.addResult(TestResult.success("OkTest", TestResultsTest.class.getName()));
+        results.addResult(TestResult.failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
+        results.addResult(TestResult.success("OkTest2", TestResultsTest.class.getName()));
 
         Assert.assertEquals(results.getSuccess(), 2);
         Assert.assertEquals(results.getSuccessPercentage(), "66.7");
@@ -61,10 +61,9 @@ public class TestResultsTest {
     public void testSkippedResults() throws Exception {
         TestResults results = new TestResults();
 
-        results.addResult(TestResult.success("OkTest"));
-        results.addResult(TestResult.failed("FailedTest", new CitrusRuntimeException("This went wrong")));
-        results.addResult(TestResult.skipped("SkippedTest"));
-
+        results.addResult(TestResult.success("OkTest", TestResultsTest.class.getName()));
+        results.addResult(TestResult.failed("FailedTest", TestResultsTest.class.getName(), new CitrusRuntimeException("This went wrong")));
+        results.addResult(TestResult.skipped("SkippedTest", TestResultsTest.class.getName()));
 
         Assert.assertEquals(results.getSuccess(), 1);
         Assert.assertEquals(results.getSuccessPercentage(), "50.0");

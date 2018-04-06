@@ -126,7 +126,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
-                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
                 testCase.finish(context);
                 throw new TestCaseFailedException(e);
             }
@@ -138,7 +138,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
                 testRunner.start();
                 ReflectionUtils.invokeMethod(method, this, params);
             } catch (Exception | AssertionError e) {
-                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
                 throw new TestCaseFailedException(e);
             } finally {
                 testRunner.stop();

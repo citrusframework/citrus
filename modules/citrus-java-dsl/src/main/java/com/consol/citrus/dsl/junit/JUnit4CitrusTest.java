@@ -86,7 +86,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
-                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
                 testCase.finish(context);
                 throw new TestCaseFailedException(e);
             }
@@ -98,7 +98,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
                 testRunner.start();
                 ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this, params);
             } catch (Exception | AssertionError e) {
-                testCase.setTestResult(TestResult.failed(testCase.getName(), e));
+                testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
                 throw new TestCaseFailedException(e);
             } finally {
                 testRunner.stop();

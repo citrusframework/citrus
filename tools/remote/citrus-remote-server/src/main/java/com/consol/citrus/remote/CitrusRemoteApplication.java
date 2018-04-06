@@ -165,24 +165,16 @@ public class CitrusRemoteApplication implements SparkApplication {
                     runConfiguration.setTestClasses(Collections.singletonList(TestClass.fromString(URLDecoder.decode(req.queryParams("class"), ENCODING))));
                 }
 
-                runTests(runConfiguration);
-
                 res.type(APPLICATION_JSON);
 
-                List<RemoteResult> results = new ArrayList<>();
-                remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-                return results;
+                return runTests(runConfiguration);
             }, new JsonResponseTransformer());
 
             put("", (req, res) -> {
                 remoteResultFuture = jobs.submit(new RunJob(new ObjectMapper().readValue(req.body(), TestRunConfiguration.class)) {
                     @Override
-                    public List<RemoteResult> call() {
-                        runTests(runConfiguration);
-
-                        List<RemoteResult> results = new ArrayList<>();
-                        remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-                        return results;
+                    public List<RemoteResult> run(TestRunConfiguration runConfiguration) {
+                        return runTests(runConfiguration);
                     }
                 });
 
@@ -191,11 +183,7 @@ public class CitrusRemoteApplication implements SparkApplication {
 
             post("", (req, res) -> {
                 TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
-                runTests(runConfiguration);
-
-                List<RemoteResult> results = new ArrayList<>();
-                remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
-                return results;
+                return runTests(runConfiguration);
             }, new JsonResponseTransformer());
         });
 
@@ -220,8 +208,9 @@ public class CitrusRemoteApplication implements SparkApplication {
     /**
      * Construct run controller and execute with given configuration.
      * @param runConfiguration
+     * @return remote results
      */
-    private void runTests(TestRunConfiguration runConfiguration) {
+    private List<RemoteResult> runTests(TestRunConfiguration runConfiguration) {
         RunController runController = new RunController(configuration);
 
         runController.setIncludes(runConfiguration.getIncludes());
@@ -241,6 +230,10 @@ public class CitrusRemoteApplication implements SparkApplication {
         if (!CollectionUtils.isEmpty(runConfiguration.getTestClasses())) {
             runController.runClasses(runConfiguration.getTestClasses());
         }
+
+        List<RemoteResult> results = new ArrayList<>();
+        remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+        return results;
     }
 
     @Override

@@ -28,7 +28,7 @@ import java.util.concurrent.Callable;
  */
 public abstract class RunJob implements Callable<List<RemoteResult>> {
 
-    protected final TestRunConfiguration runConfiguration;
+    private final TestRunConfiguration runConfiguration;
 
     /**
      * Default constructor using run configuration.
@@ -37,4 +37,16 @@ public abstract class RunJob implements Callable<List<RemoteResult>> {
     public RunJob(TestRunConfiguration runConfiguration) {
         this.runConfiguration = runConfiguration;
     }
+
+    @Override
+    public List<RemoteResult> call() {
+        return run(runConfiguration);
+    }
+
+    /**
+     * Subclasses must implement this method for executing the tests based on given configuration.
+     * @param runConfiguration
+     * @return
+     */
+    protected abstract List<RemoteResult> run(TestRunConfiguration runConfiguration);
 }

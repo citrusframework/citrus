@@ -70,7 +70,7 @@ public class HtmlReporter extends AbstractOutputFileReporter {
 
     /** Enables/disables report generation */
     @Value("${citrus.html.report.enabled:true}")
-    private String enabled = "true";
+    private String enabled = Boolean.TRUE.toString();
     
     @Override
     public String getReportContent() {
@@ -338,16 +338,15 @@ public class HtmlReporter extends AbstractOutputFileReporter {
 
     /**
      * Sets the enabled property.
-     *
      * @param enabled
      */
-    public void setEnabled(String enabled) {
-        this.enabled = enabled;
+    public void setEnabled(boolean enabled) {
+        this.enabled = String.valueOf(enabled);
     }
 
     @Override
     protected boolean isEnabled() {
-        return StringUtils.hasText(enabled) && !enabled.equalsIgnoreCase(Boolean.TRUE.toString());
+        return StringUtils.hasText(enabled) && enabled.equalsIgnoreCase(Boolean.TRUE.toString());
     }
 
     /**

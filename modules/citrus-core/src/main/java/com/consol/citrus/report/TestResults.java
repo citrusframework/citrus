@@ -38,6 +38,16 @@ public class TestResults {
     /** Collected test results */
     private List<TestResult> results = Collections.synchronizedList(new ArrayList<TestResult>());
 
+    /**
+     * Provides access to results as list generated from synchronized result list.
+     * @return
+     */
+    public List<TestResult> asList() {
+        List<TestResult> results = new ArrayList<>();
+        doWithResults(results::add);
+        return results;
+    }
+
     static {
         DecimalFormatSymbols symbol = new DecimalFormatSymbols();
         symbol.setDecimalSeparator('.');

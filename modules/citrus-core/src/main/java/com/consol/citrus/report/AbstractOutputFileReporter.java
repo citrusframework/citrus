@@ -33,7 +33,7 @@ public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
 
     @Override
     public final void generateTestResults() {
-        if (isEnabled()) {
+        if (!isEnabled()) {
             return;
         }
 

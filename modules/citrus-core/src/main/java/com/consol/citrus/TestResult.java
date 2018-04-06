@@ -32,146 +32,170 @@ public final class TestResult {
     private enum RESULT {SUCCESS, FAILURE, SKIP}
 
     /** Actual result */
-    private RESULT result;
+    private final RESULT result;
     
     /** Name of the test */
-    private String testName;
-    
+    private final String testName;
+
+    /** Fully qualified class name of the test */
+    private final String className;
+
     /** Optional test parameters */
-    private Map<String, Object> parameters;
+    private final Map<String, Object> parameters;
     
     /** Failure cause */
-    private Throwable cause;
+    private final Throwable cause;
 
     /** Error message */
-    private String errorMessage;
+    private final String errorMessage;
+
+    /** Failure stack trace */
+    private String failureStack;
+
+    /** Failure type information */
+    private String failureType;
 
     /**
      * Create new test result for successful execution.
      * @param name
+     * @param className
      * @return
      */
-    public static TestResult success(String name) {
-        return new TestResult(name, RESULT.SUCCESS);
+    public static TestResult success(String name, String className) {
+        return new TestResult(name, className, RESULT.SUCCESS);
     }
 
     /**
      * Create new test result with parameters for successful execution.
      * @param name
+     * @param className
      * @param parameters
      * @return
      */
-    public static TestResult success(String name, Map<String, Object> parameters) {
-        return new TestResult(name, RESULT.SUCCESS, parameters);
+    public static TestResult success(String name, String className, Map<String, Object> parameters) {
+        return new TestResult(name, className, RESULT.SUCCESS, parameters);
     }
 
     /**
      * Create new test result for skipped test.
      * @param name
+     * @param className
      * @return
      */
-    public static TestResult skipped(String name) {
-        return new TestResult(name, RESULT.SKIP);
+    public static TestResult skipped(String name, String className) {
+        return new TestResult(name, className, RESULT.SKIP);
     }
 
     /**
      * Create new test result with parameters for skipped test.
      * @param name
+     * @param className
      * @param parameters
      * @return
      */
-    public static TestResult skipped(String name, Map<String, Object> parameters) {
-        return new TestResult(name, RESULT.SKIP, parameters);
+    public static TestResult skipped(String name, String className, Map<String, Object> parameters) {
+        return new TestResult(name, className, RESULT.SKIP, parameters);
     }
 
     /**
      * Create new test result for failed execution.
      * @param name
+     * @param className
      * @param cause
      * @return
      */
-    public static TestResult failed(String name, Throwable cause) {
-        return new TestResult(name, RESULT.FAILURE, cause);
+    public static TestResult failed(String name, String className, Throwable cause) {
+        return new TestResult(name, className, RESULT.FAILURE, cause);
     }
 
     /**
      * Create new test result for failed execution.
      * @param name
+     * @param className
      * @param errorMessage
      * @return
      */
-    public static TestResult failed(String name, String errorMessage) {
-        return new TestResult(name, RESULT.FAILURE, null, errorMessage);
+    public static TestResult failed(String name, String className, String errorMessage) {
+        return new TestResult(name, className, RESULT.FAILURE, null, errorMessage);
     }
 
     /**
      * Create new test result with parameters for failed execution.
      * @param name
+     * @param className
      * @param cause
      * @param parameters
      * @return
      */
-    public static TestResult failed(String name, Throwable cause, Map<String, Object> parameters) {
-        return new TestResult(name, RESULT.FAILURE, cause, parameters);
+    public static TestResult failed(String name, String className, Throwable cause, Map<String, Object> parameters) {
+        return new TestResult(name, className, RESULT.FAILURE, cause, parameters);
     }
 
     /**
      * Constructor using fields.
      * @param name
+     * @param className
      * @param result
      */
-    private TestResult(String name, RESULT result) {
-        this(name, result, new HashMap<>());
+    private TestResult(String name, String className, RESULT result) {
+        this(name, className, result, new HashMap<>());
     }
     
     /**
      * Constructor using fields.
      * @param name
+     * @param className
      * @param result
      * @param parameters
      */
-    private TestResult(String name, RESULT result, Map<String, Object> parameters) {
-        this(name, result, null, parameters);
+    private TestResult(String name, String className, RESULT result, Map<String, Object> parameters) {
+        this(name, className, result, null, parameters);
     }
 
     /**
      * Constructor using fields.
      * @param name
+     * @param className
      * @param result
      * @param cause
      */
-    private TestResult(String name, RESULT result, Throwable cause) {
-        this(name, result, cause, new HashMap<>());
+    private TestResult(String name, String className, RESULT result, Throwable cause) {
+        this(name, className, result, cause, new HashMap<>());
     }
 
     /**
      * Constructor using fields.
      * @param name
+     * @param className
      * @param result
      * @param errorMessage
      */
-    private TestResult(String name, RESULT result, Throwable cause, String errorMessage) {
-        this(name, result, cause, errorMessage, new HashMap<>());
+    private TestResult(String name, String className, RESULT result, Throwable cause, String errorMessage) {
+        this(name, className, result, cause, errorMessage, new HashMap<>());
     }
 
     /**
      * Constructor using fields.
      * @param name
+     * @param className
      * @param result
      * @param parameters
      */
-    private TestResult(String name, RESULT result, Throwable cause, Map<String, Object> parameters) {
-        this(name, result, cause, Optional.ofNullable(cause).map(Throwable::getMessage).orElse(""), parameters);
+    private TestResult(String name, String className, RESULT result, Throwable cause, Map<String, Object> parameters) {
+        this(name, className, result, cause, Optional.ofNullable(cause).map(Throwable::getMessage).orElse(""), parameters);
     }
 
     /**
      * Constructor using fields.
      * @param name
+     * @param className
      * @param result
      * @param cause
+     * @param parameters
      */
-    private TestResult(String name, RESULT result, Throwable cause, String errorMessage, Map<String, Object> parameters) {
+    private TestResult(String name, String className, RESULT result, Throwable cause, String errorMessage, Map<String, Object> parameters) {
         this.testName = name;
+        this.className = className;
         this.result = result;
         this.cause = cause;
         this.parameters = parameters;
@@ -235,14 +259,6 @@ public final class TestResult {
     }
 
     /**
-     * Setter for the failure cause.
-     * @param cause the cause to set
-     */
-    public void setCause(Throwable cause) {
-        this.cause = cause;
-    }
-
-    /**
      * Getter for the failure cause.
      * @return the cause
      */
@@ -259,11 +275,12 @@ public final class TestResult {
     }
 
     /**
-     * Setter for the test name.
-     * @param testName the testName to set
+     * Gets the className.
+     *
+     * @return
      */
-    public void setTestName(String testName) {
-        this.testName = testName;
+    public String getClassName() {
+        return className;
     }
 
     /**
@@ -272,22 +289,6 @@ public final class TestResult {
      */
     public String getResult() {
         return result.name();
-    }
-
-    /**
-     * Setter for the test result.
-     * @param result the result to set
-     */
-    public void setResult(RESULT result) {
-        this.result = result;
-    }
-
-    /**
-     * Sets the parameters.
-     * @param parameters the parameters to set
-     */
-    public void setParameters(Map<String, Object> parameters) {
-        this.parameters = parameters;
     }
 
     /**
@@ -308,11 +309,56 @@ public final class TestResult {
     }
 
     /**
-     * Sets the errorMessage.
+     * Gets the failureType.
      *
-     * @param errorMessage
+     * @return
      */
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public String getFailureType() {
+        return failureType;
+    }
+
+    /**
+     * Sets the failureType.
+     *
+     * @param failureType
+     */
+    public void setFailureType(String failureType) {
+        this.failureType = failureType;
+    }
+
+    /**
+     * Sets failure type information in fluent API.
+     * @return
+     */
+    public TestResult withFailureType(String failureType) {
+        setFailureType(failureType);
+        return this;
+    }
+
+    /**
+     * Gets the failureStack.
+     *
+     * @return
+     */
+    public String getFailureStack() {
+        return failureStack;
+    }
+
+    /**
+     * Sets the failureStack.
+     *
+     * @param failureStack
+     */
+    public void setFailureStack(String failureStack) {
+        this.failureStack = failureStack;
+    }
+
+    /**
+     * Sets failure stack trace information in fluent API.
+     * @return
+     */
+    public TestResult withFailureStack(String failureStack) {
+        setFailureStack(failureStack);
+        return this;
     }
 }

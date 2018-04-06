@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="@test.suite@" time="@test.duration@" tests="@test.cnt@" errors="@test.error.cnt@" skipped="@test.skipped.cnt@" failures="@test.failed.cnt@">@tests@
+</testsuite>

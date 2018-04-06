@@ -104,7 +104,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
             // add default variables for test
             context.setVariable(Citrus.TEST_NAME_VARIABLE, getName());
-            context.setVariable(Citrus.TEST_PACKAGE_VARIABLE, getPackageName());
+            context.setVariable(Citrus.TEST_PACKAGE_VARIABLE, packageName);
 
             for (Entry<String, Object> paramEntry : parameters.entrySet()) {
                 if (log.isDebugEnabled()) {
@@ -137,7 +137,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
             beforeTest(context);
         } catch (Exception | AssertionError e) {
-            testResult = TestResult.failed(getName(), e);
+            testResult = TestResult.failed(getName(), testClass.getName(), e);
             throw new TestCaseFailedException(e);
         }
     }
@@ -153,17 +153,17 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                     executeAction(action, context);
                 }
 
-                testResult = TestResult.success(getName());
+                testResult = TestResult.success(getName(), testClass.getName());
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
-                testResult = TestResult.failed(getName(), e);
+                testResult = TestResult.failed(getName(), testClass.getName(), e);
                 throw new TestCaseFailedException(e);
             } finally {
                 try {
                     if (!CollectionUtils.isEmpty(context.getExceptions())) {
                         CitrusRuntimeException ex = context.getExceptions().remove(0);
-                        testResult = TestResult.failed(getName(), ex);
+                        testResult = TestResult.failed(getName(), testClass.getName(), ex);
                         throw new TestCaseFailedException(ex);
                     }
                 } finally {
@@ -171,7 +171,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 }
             }
         } else {
-            testResult = TestResult.skipped(getName());
+            testResult = TestResult.skipped(getName(), testClass.getName());
             context.getTestListeners().onTestSkipped(this);
         }
     }
@@ -184,7 +184,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         if (beforeTest != null) {
             for (SequenceBeforeTest sequenceBeforeTest : beforeTest) {
                 try {
-                    if (sequenceBeforeTest.shouldExecute(getName(), getPackageName(), groups))
+                    if (sequenceBeforeTest.shouldExecute(getName(), packageName, groups))
                         sequenceBeforeTest.execute(context);
                 } catch (Exception e) {
                     throw new CitrusRuntimeException("Before test failed with errors", e);
@@ -204,7 +204,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         if (afterTest != null) {
             for (SequenceAfterTest sequenceAfterTest : afterTest) {
                 try {
-                    if (sequenceAfterTest.shouldExecute(getName(), getPackageName(), groups)) {
+                    if (sequenceAfterTest.shouldExecute(getName(), packageName, groups)) {
                         sequenceAfterTest.execute(context);
                     }
                 } catch (Exception e) {
@@ -237,7 +237,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 testActionListeners.onTestActionSkipped(this, action);
             }
         } catch (Exception | AssertionError e) {
-            testResult = TestResult.failed(getName(), e);
+            testResult = TestResult.failed(getName(), testClass.getName(), e);
             throw new TestCaseFailedException(e);
         }
     }
@@ -267,7 +267,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             } finally {
                 if (!CollectionUtils.isEmpty(context.getExceptions())) {
                     CitrusRuntimeException ex = context.getExceptions().remove(0);
-                    testResult = TestResult.failed(getName(), ex);
+                    testResult = TestResult.failed(getName(), testClass.getName(), ex);
                     runtimeException = ex;
                 }
             }
@@ -292,14 +292,14 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             }
 
             if (testResult == null) {
-                testResult = TestResult.success(getName());
+                testResult = TestResult.success(getName(), testClass.getName());
             }
 
             if (runtimeException != null) {
                 throw runtimeException;
             }
         } catch (Exception | AssertionError e) {
-            testResult = TestResult.failed(getName(), e);
+            testResult = TestResult.failed(getName(), testClass.getName(), e);
             throw new TestCaseFailedException(e);
         } finally {
             if (testResult.isSuccess()) {

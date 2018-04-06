@@ -1,0 +1,2 @@
+
+    <testcase name="@test.name@" classname="@test.class@" time="@test.duration@"/>

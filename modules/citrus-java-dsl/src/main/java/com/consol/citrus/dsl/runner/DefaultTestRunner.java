@@ -153,7 +153,7 @@ public class DefaultTestRunner implements TestRunner {
         try {
             if (!CollectionUtils.isEmpty(context.getExceptions())) {
                 CitrusRuntimeException ex = context.getExceptions().remove(0);
-                testCase.setTestResult(TestResult.failed(testCase.getName(), ex));
+                testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), ex));
                 throw new TestCaseFailedException(ex);
             }
         } finally {
