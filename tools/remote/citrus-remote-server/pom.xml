@@ -25,12 +25,6 @@
       <artifactId>citrus-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>org.testng</groupId>
-      <artifactId>testng</artifactId>
-      <scope>provided</scope>
-    </dependency>
   </dependencies>
   
 </project>

@@ -27,12 +27,12 @@ import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.reporter.RemoteTestResultReporter;
 import com.consol.citrus.remote.transformer.JsonRequestTransformer;
 import com.consol.citrus.remote.transformer.JsonResponseTransformer;
+import com.consol.citrus.report.JUnitReporter;
+import com.consol.citrus.report.LoggingReporter;
 import com.consol.citrus.util.FileUtils;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import spark.Filter;
 import spark.servlet.SparkApplication;
 
@@ -71,6 +71,9 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     /** Latest test reports */
     private RemoteTestResultReporter remoteTestResultReporter = new RemoteTestResultReporter();
+
+    private final JsonRequestTransformer requestTransformer = new JsonRequestTransformer();
+    private final JsonResponseTransformer responseTransformer = new JsonResponseTransformer();
 
     /**
      * Default constructor using default configuration.
@@ -121,24 +124,24 @@ public class CitrusRemoteApplication implements SparkApplication {
                 List<RemoteResult> results = new ArrayList<>();
                 remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
                 return results;
-            }, new JsonResponseTransformer());
+            }, responseTransformer);
 
             get("", (req, res) -> remoteTestResultReporter.getTestReport());
 
             get("/files", (req, res) -> {
                 res.type(APPLICATION_JSON);
-                File junitReportsFolder = new File("test-output/junitreports");
+                File junitReportsFolder = new File(getJUnitReportsFolder());
 
                 if (junitReportsFolder.exists()) {
                     return Stream.of(Optional.ofNullable(junitReportsFolder.list()).orElse(new String[] {})).collect(Collectors.toList());
                 }
 
                 return Collections.emptyList();
-            }, new JsonResponseTransformer());
+            }, responseTransformer);
 
             get("/file/:name", (req, res) -> {
                 res.type(APPLICATION_XML);
-                File junitReportsFolder = new File("test-output/junitreports");
+                File junitReportsFolder = new File(getJUnitReportsFolder());
                 File testResultFile = new File(junitReportsFolder, req.params(":name"));
 
                 if (junitReportsFolder.exists() && testResultFile.exists()) {
@@ -146,6 +149,19 @@ public class CitrusRemoteApplication implements SparkApplication {
                 }
 
                 throw halt(404, "Failed to find test result file: " + req.params(":name"));
+            });
+
+            get("/suite", (req, res) -> {
+                res.type(APPLICATION_XML);
+                JUnitReporter jUnitReporter = new JUnitReporter();
+                File citrusReportsFolder = new File(jUnitReporter.getReportDirectory());
+                File suiteResultFile = new File(citrusReportsFolder, String.format(jUnitReporter.getReportFileNamePattern(), jUnitReporter.getSuiteName()));
+
+                if (citrusReportsFolder.exists() && suiteResultFile.exists()) {
+                    return FileUtils.readToString(suiteResultFile);
+                }
+
+                throw halt(404, "Failed to find suite result file: " + suiteResultFile.getPath());
             });
         });
 
@@ -168,10 +184,10 @@ public class CitrusRemoteApplication implements SparkApplication {
                 res.type(APPLICATION_JSON);
 
                 return runTests(runConfiguration);
-            }, new JsonResponseTransformer());
+            }, responseTransformer);
 
             put("", (req, res) -> {
-                remoteResultFuture = jobs.submit(new RunJob(new ObjectMapper().readValue(req.body(), TestRunConfiguration.class)) {
+                remoteResultFuture = jobs.submit(new RunJob(requestTransformer.read(req.body(), TestRunConfiguration.class)) {
                     @Override
                     public List<RemoteResult> run(TestRunConfiguration runConfiguration) {
                         return runTests(runConfiguration);
@@ -182,19 +198,19 @@ public class CitrusRemoteApplication implements SparkApplication {
             });
 
             post("", (req, res) -> {
-                TestRunConfiguration runConfiguration = new ObjectMapper().readValue(req.body(), TestRunConfiguration.class);
+                TestRunConfiguration runConfiguration = requestTransformer.read(req.body(), TestRunConfiguration.class);
                 return runTests(runConfiguration);
-            }, new JsonResponseTransformer());
+            }, responseTransformer);
         });
 
         path("/configuration", () -> {
             get("", (req, res) -> {
                 res.type(APPLICATION_JSON);
                 return configuration;
-            }, new JsonResponseTransformer());
+            }, responseTransformer);
 
             put("", (req, res) -> {
-                configuration.apply(new JsonRequestTransformer().read(req.body(), CitrusAppConfiguration.class));
+                configuration.apply(requestTransformer.read(req.body(), CitrusAppConfiguration.class));
                 return "";
             });
         });
@@ -234,6 +250,21 @@ public class CitrusRemoteApplication implements SparkApplication {
         List<RemoteResult> results = new ArrayList<>();
         remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
         return results;
+    }
+
+    /**
+     * Find reports folder based in unit testing framework present on classpath.
+     * @return
+     */
+    private String getJUnitReportsFolder() {
+        if (ClassUtils.isPresent("org.testng.annotations.Test", getClass().getClassLoader())) {
+            return "test-output" + File.separator + "junitreports";
+        } else if (ClassUtils.isPresent("org.junit.Test", getClass().getClassLoader())) {
+            JUnitReporter jUnitReporter = new JUnitReporter();
+            return jUnitReporter.getReportDirectory() + File.separator + jUnitReporter.getOutputDirectory();
+        } else {
+            return new LoggingReporter().getReportDirectory();
+        }
     }
 
     @Override

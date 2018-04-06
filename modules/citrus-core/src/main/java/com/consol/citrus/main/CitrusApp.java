@@ -133,7 +133,6 @@ public class CitrusApp {
         } else if (ClassUtils.isPresent("org.junit.Test", getClass().getClassLoader())) {
             new JUnit4TestEngine(configuration).run();
         }
-
     }
 
     /**

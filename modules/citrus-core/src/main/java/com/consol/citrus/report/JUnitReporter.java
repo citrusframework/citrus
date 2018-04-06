@@ -70,6 +70,8 @@ public class JUnitReporter extends AbstractTestReporter {
         if (isEnabled()) {
             ReportTemplates reportTemplates = new ReportTemplates();
 
+            log.debug("Generating JUnit test report");
+
             try {
                 List<TestResult> results = getTestResults().asList();
                 createReportFile(String.format(reportFileNamePattern, suiteName), createReportContent(suiteName, results, reportTemplates), new File(getReportDirectory()));
@@ -102,8 +104,6 @@ public class JUnitReporter extends AbstractTestReporter {
      */
     private String createReportContent(String suiteName, List<TestResult> results, ReportTemplates templates) throws IOException {
         final StringBuilder reportDetails = new StringBuilder();
-
-        log.debug("Generating JUnit test report");
 
         for (TestResult result: results) {
             Properties detailProps = new Properties();

@@ -264,35 +264,59 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
             HttpClientUtils.closeQuietly(response);
         }
 
-        File junitReportsDirectory = new File(getOutputDirectory() + File.separator + getReport().getDirectory(), "junitreports");
-
-        if (!junitReportsDirectory.exists()) {
-            if (!junitReportsDirectory.mkdirs()) {
-                throw new CitrusRuntimeException("Unable to create message JUnit reports output directory: " + junitReportsDirectory.getPath());
+        File citrusReportsDirectory = new File(getOutputDirectory() + File.separator + getReport().getDirectory());
+        if (!citrusReportsDirectory.exists()) {
+            if (!citrusReportsDirectory.mkdirs()) {
+                throw new CitrusRuntimeException("Unable to create reports output directory: " + citrusReportsDirectory.getPath());
             }
         }
+
+        File junitReportsDirectory = new File(citrusReportsDirectory, "junitreports");
+        if (!junitReportsDirectory.exists()) {
+            if (!junitReportsDirectory.mkdirs()) {
+                throw new CitrusRuntimeException("Unable to create JUnit reports directory: " + junitReportsDirectory.getPath());
+            }
+        }
+
+        JUnitReporter jUnitReporter = new JUnitReporter();
+        loadAndSaveReportFile(new File(citrusReportsDirectory, String.format(jUnitReporter.getReportFileNamePattern(), jUnitReporter.getSuiteName())), getServer().getUrl() + "/results/suite", ContentType.APPLICATION_XML.getMimeType());
 
         Stream.of(reportFiles)
             .map(reportFile -> new File(junitReportsDirectory, reportFile))
             .forEach(reportFile -> {
-                HttpResponse fileResponse = null;
                 try {
-                    fileResponse = getHttpClient().execute(RequestBuilder.get(getServer().getUrl() + "/results/file/" + URLEncoder.encode(reportFile.getName(), ENCODING))
-                            .addHeader(new BasicHeader(HttpHeaders.ACCEPT, ContentType.APPLICATION_XML.getMimeType()))
-                            .build());
-
-                    if (HttpStatus.SC_OK != fileResponse.getStatusLine().getStatusCode()) {
-                        getLog().warn("Failed to get report file for test: " + reportFile.getName());
-                    }
-
-                    getLog().info("Writing report file: " + reportFile);
-                    FileUtils.writeToFile(fileResponse.getEntity().getContent(), reportFile);
+                    loadAndSaveReportFile(reportFile, getServer().getUrl() + "/results/file/" + URLEncoder.encode(reportFile.getName(), ENCODING), ContentType.APPLICATION_XML.getMimeType());
                 } catch (IOException e) {
-                    getLog().warn("Failed to get report file for test: " + reportFile.getName(), e);
-                } finally {
-                    HttpClientUtils.closeQuietly(fileResponse);
+                    getLog().warn("Failed to get report file: " + reportFile.getName(), e);
                 }
             });
+    }
+
+    /**
+     * Get report file content from server and save content to given file on local file system.
+     * @param reportFile
+     * @param serverUrl
+     * @param contentType
+     */
+    private void loadAndSaveReportFile(File reportFile, String serverUrl, String contentType) {
+        HttpResponse fileResponse = null;
+        try {
+            fileResponse = getHttpClient().execute(RequestBuilder.get(serverUrl)
+                    .addHeader(new BasicHeader(HttpHeaders.ACCEPT, contentType))
+                    .build());
+
+            if (HttpStatus.SC_OK != fileResponse.getStatusLine().getStatusCode()) {
+                getLog().warn("Failed to get report file: " + reportFile.getName());
+                return;
+            }
+
+            getLog().info("Writing report file: " + reportFile);
+            FileUtils.writeToFile(fileResponse.getEntity().getContent(), reportFile);
+        } catch (IOException e) {
+            getLog().warn("Failed to get report file: " + reportFile.getName(), e);
+        } finally {
+            HttpClientUtils.closeQuietly(fileResponse);
+        }
     }
 
     /**

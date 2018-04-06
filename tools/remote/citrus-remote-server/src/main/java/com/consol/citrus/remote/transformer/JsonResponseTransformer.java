@@ -28,11 +28,19 @@ import spark.ResponseTransformer;
  */
 public class JsonResponseTransformer implements ResponseTransformer {
 
+    private final ObjectMapper mapper;
+
+    /**
+     * Default constructor initializing object mapper.
+     */
+    public JsonResponseTransformer() {
+        mapper = new ObjectMapper();
+        mapper.enable(SerializationFeature.INDENT_OUTPUT);
+    }
+
     @Override
     public String render(Object model) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.enable(SerializationFeature.INDENT_OUTPUT);
             return mapper.writeValueAsString(model);
         } catch (JsonProcessingException e) {
             throw new CitrusRuntimeException("Failed to write json test results", e);

@@ -27,9 +27,10 @@ import java.io.IOException;
  */
 public class JsonRequestTransformer {
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     public <T> T read(String body, Class<T> bodyType) {
         try {
-            ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(body, bodyType);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read json body", e);
