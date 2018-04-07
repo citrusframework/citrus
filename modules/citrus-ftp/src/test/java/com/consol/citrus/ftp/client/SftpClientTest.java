@@ -166,7 +166,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     private SshServer startSftpMockServer() throws IOException {
         // SFTP mock server without authentication
         SshServer sshd = SshServer.setUpDefaultServer();
-        sshd.setPort(2222);
+        sshd.setPort(2223);
 
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(
                 Paths.get(targetPath, "sshd_hostkey.ser")));
@@ -174,6 +174,8 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
         userAuthFactories.add(UserAuthNoneFactory.INSTANCE);
         sshd.setUserAuthFactories(userAuthFactories);
+
+        sshd.setPasswordAuthenticator((username, password, session) -> true);
 
         List<NamedFactory<Command>> namedFactoryList = new ArrayList<>();
         namedFactoryList.add(new SftpSubsystemFactory());
@@ -187,7 +189,7 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     private SftpClient createSftpClient() {
         SftpEndpointConfiguration endpointConfiguration = new SftpEndpointConfiguration();
         endpointConfiguration.setHost("localhost");
-        endpointConfiguration.setPort(2222);
+        endpointConfiguration.setPort(2223);
         endpointConfiguration.setUser("remote-username");
         endpointConfiguration.setPassword("remote-password");
 
