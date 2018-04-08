@@ -215,9 +215,9 @@ public class SftpClient extends FtpClient {
                 session.setConfig("StrictHostKeyChecking", "no");
                 session.setConfig("kex", "diffie-hellman-group1-sha1");
                 session.setPassword(getEndpointConfiguration().getPassword());
-                session.connect();
+                session.connect(5000);
                 Channel channel = session.openChannel("sftp");
-                channel.connect();
+                channel.connect(5000);
                 sftp = (ChannelSftp) channel;
 
                 log.info("Opened secure connection to FTP server");
