@@ -211,9 +211,10 @@ public class SftpClient extends FtpClient {
     protected void connectAndLogin() {
         if (session == null || !session.isConnected()) {
             try {
+                JSch.setConfig("StrictHostKeyChecking", "no");
+                JSch.setConfig("kex", "diffie-hellman-group1-sha1");
+
                 session = ssh.getSession(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
-                session.setConfig("StrictHostKeyChecking", "no");
-                session.setConfig("kex", "diffie-hellman-group1-sha1");
                 session.setPassword(getEndpointConfiguration().getPassword());
                 session.connect(5000);
                 Channel channel = session.openChannel("sftp");
