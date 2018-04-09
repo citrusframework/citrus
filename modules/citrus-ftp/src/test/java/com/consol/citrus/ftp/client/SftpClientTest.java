@@ -23,8 +23,6 @@ import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.auth.UserAuth;
-import org.apache.sshd.server.auth.UserAuthNoneFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -170,10 +168,6 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
 
         sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(
                 Paths.get(targetPath, "sshd_hostkey.ser")));
-
-        List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<>();
-        userAuthFactories.add(UserAuthNoneFactory.INSTANCE);
-        sshd.setUserAuthFactories(userAuthFactories);
 
         sshd.setPasswordAuthenticator((username, password, session) -> true);
 

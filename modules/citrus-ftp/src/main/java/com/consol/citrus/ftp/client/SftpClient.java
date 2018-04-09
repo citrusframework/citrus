@@ -212,7 +212,6 @@ public class SftpClient extends FtpClient {
         if (session == null || !session.isConnected()) {
             try {
                 JSch.setConfig("StrictHostKeyChecking", "no");
-                JSch.setConfig("kex", "diffie-hellman-group1-sha1");
 
                 session = ssh.getSession(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
                 session.setPassword(getEndpointConfiguration().getPassword());
