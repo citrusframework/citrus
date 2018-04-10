@@ -120,7 +120,7 @@ public class SshServer extends AbstractServer {
         try {
             sshd.start();
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to start SSH server", e);
+            throw new CitrusRuntimeException("Failed to start SSH server - " + e.getMessage(), e);
         }
     }
 
@@ -129,7 +129,7 @@ public class SshServer extends AbstractServer {
         try {
             sshd.stop();
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to stop SSH server", e);
+            throw new CitrusRuntimeException("Failed to stop SSH server - " + e.getMessage(), e);
         }
     }
 

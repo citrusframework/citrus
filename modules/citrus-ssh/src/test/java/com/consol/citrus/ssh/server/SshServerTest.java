@@ -127,7 +127,7 @@ public class SshServerTest {
         }
     }
 
-    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*BindException.*")
+    @Test(expectedExceptions = CitrusRuntimeException.class,expectedExceptionsMessageRegExp = ".*Address already in use.*")
     public void doubleStart() throws IOException {
         prepareServer(true);
         ServerSocket s = null;
