@@ -61,6 +61,12 @@ public @interface SftpClientConfig {
     String password() default "";
 
     /**
+     * StrictHostChecking.
+     * @return
+     */
+    boolean strictHostChecking() default false;
+
+    /**
      * Message correlator.
      * @return
      */

@@ -24,13 +24,11 @@ import com.consol.citrus.ssh.message.SshMessageConverter;
 import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
 import org.apache.sshd.common.util.SecurityUtils;
-import org.apache.sshd.server.Command;
-import org.apache.sshd.server.CommandFactory;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -92,11 +90,11 @@ public class SshServer extends AbstractServer {
 
         if (hostKeyPath != null) {
             AbstractFileKeyPairProvider fileKeyPairProvider = SecurityUtils.createFileKeyPairProvider();
-            fileKeyPairProvider.setPaths(Arrays.asList(new File(hostKeyPath).toPath()));
+            fileKeyPairProvider.setPaths(Collections.singletonList(new File(hostKeyPath).toPath()));
             sshd.setKeyPairProvider(fileKeyPairProvider);
         } else {
             AbstractClassLoadableResourceKeyPairProvider resourceKeyPairProvider = SecurityUtils.createClassLoadableResourceKeyPairProvider();
-            resourceKeyPairProvider.setResources(Arrays.asList("com/consol/citrus/ssh/citrus.pem"));
+            resourceKeyPairProvider.setResources(Collections.singletonList("com/consol/citrus/ssh/citrus.pem"));
             sshd.setKeyPairProvider(resourceKeyPairProvider);
         }
 
@@ -117,16 +115,12 @@ public class SshServer extends AbstractServer {
         }
 
         // Setup endpoint adapter
-        sshd.setCommandFactory(new CommandFactory() {
-            public Command createCommand(String command) {
-                return new SshCommand(command, getEndpointAdapter(), getEndpointConfiguration());
-            }
-        });
+        sshd.setCommandFactory(command -> new SshCommand(command, getEndpointAdapter(), getEndpointConfiguration()));
 
         try {
             sshd.start();
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Cannot start SSHD: " + e,e);
+            throw new CitrusRuntimeException("Failed to start SSH server", e);
         }
     }
 
@@ -135,7 +129,7 @@ public class SshServer extends AbstractServer {
         try {
             sshd.stop();
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Cannot stop SSHD: " + e,e);
+            throw new CitrusRuntimeException("Failed to stop SSH server", e);
         }
     }
 

@@ -21,9 +21,10 @@ import com.consol.citrus.ftp.model.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
+import org.apache.sshd.common.util.SecurityUtils;
 import org.apache.sshd.server.Command;
 import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -34,8 +35,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -166,8 +166,9 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(2223);
 
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(
-                Paths.get(targetPath, "sshd_hostkey.ser")));
+        AbstractClassLoadableResourceKeyPairProvider resourceKeyPairProvider = SecurityUtils.createClassLoadableResourceKeyPairProvider();
+        resourceKeyPairProvider.setResources(Collections.singletonList("com/consol/citrus/ssh/citrus.pem"));
+        sshd.setKeyPairProvider(resourceKeyPairProvider);
 
         sshd.setPasswordAuthenticator((username, password, session) -> true);
 

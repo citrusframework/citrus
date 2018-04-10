@@ -85,6 +85,16 @@ public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
     }
 
     /**
+     * Sets the strictHostChecking property.
+     * @param strictHostChecking
+     * @return
+     */
+    public SftpClientBuilder strictHostChecking(boolean strictHostChecking) {
+        endpoint.getEndpointConfiguration().setStrictHostChecking(strictHostChecking);
+        return this;
+    }
+
+    /**
      * Sets the message correlator.
      * @param correlator
      * @return

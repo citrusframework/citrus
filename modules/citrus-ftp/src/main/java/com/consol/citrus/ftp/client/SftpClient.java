@@ -211,10 +211,13 @@ public class SftpClient extends FtpClient {
     protected void connectAndLogin() {
         if (session == null || !session.isConnected()) {
             try {
-                JSch.setConfig("StrictHostKeyChecking", "no");
-
                 session = ssh.getSession(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
+
+                session.setUserInfo(new UserInfoWithPlainPassword(getEndpointConfiguration().getPassword()));
                 session.setPassword(getEndpointConfiguration().getPassword());
+
+                session.setConfig("StrictHostKeyChecking", getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
+
                 session.connect(5000);
                 Channel channel = session.openChannel("sftp");
                 channel.connect(5000);
@@ -224,6 +227,37 @@ public class SftpClient extends FtpClient {
             } catch (JSchException e) {
                 throw new CitrusRuntimeException(String.format("Failed to login to FTP server using credentials: %s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword()), e);
             }
+        }
+    }
+
+    private static class UserInfoWithPlainPassword implements UserInfo {
+        private String password;
+
+        public UserInfoWithPlainPassword(String pPassword) {
+            password = pPassword;
+        }
+
+        public String getPassphrase() {
+            return null;
+        }
+
+        public String getPassword() {
+            return password;
+        }
+
+        public boolean promptPassword(String message) {
+            return false;
+        }
+
+        public boolean promptPassphrase(String message) {
+            return false;
+        }
+
+        public boolean promptYesNo(String message) {
+            return false;
+        }
+
+        public void showMessage(String message) {
         }
     }
 

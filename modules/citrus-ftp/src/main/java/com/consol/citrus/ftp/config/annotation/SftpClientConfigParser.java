@@ -56,6 +56,8 @@ public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpC
             builder.password(annotation.password());
         }
 
+        builder.strictHostChecking(annotation.strictHostChecking());
+
         if (StringUtils.hasText(annotation.correlator())) {
             builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
         }

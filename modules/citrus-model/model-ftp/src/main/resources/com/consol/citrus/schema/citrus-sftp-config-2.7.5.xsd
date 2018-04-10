@@ -30,6 +30,7 @@
       <xs:attribute name="port" type="xs:string"/>
       <xs:attribute name="username" type="xs:string"/>
       <xs:attribute name="password" type="xs:string"/>
+      <xs:attribute name="strict-host-checking" type="xs:boolean"/>
       <xs:attribute name="message-correlator" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>

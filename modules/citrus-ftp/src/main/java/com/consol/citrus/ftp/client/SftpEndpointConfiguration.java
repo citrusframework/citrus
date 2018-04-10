@@ -21,4 +21,25 @@ package com.consol.citrus.ftp.client;
  * @since 2.7.5
  */
 public class SftpEndpointConfiguration extends FtpEndpointConfiguration {
+
+    /** Whether strict host checking should be performed */
+    private boolean strictHostChecking = false;
+
+    /**
+     * Gets the strictHostChecking.
+     *
+     * @return
+     */
+    public boolean isStrictHostChecking() {
+        return strictHostChecking;
+    }
+
+    /**
+     * Sets the strictHostChecking.
+     *
+     * @param strictHostChecking
+     */
+    public void setStrictHostChecking(boolean strictHostChecking) {
+        this.strictHostChecking = strictHostChecking;
+    }
 }

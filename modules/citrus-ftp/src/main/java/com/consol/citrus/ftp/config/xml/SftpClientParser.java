@@ -16,16 +16,27 @@
 
 package com.consol.citrus.ftp.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.ftp.client.SftpClient;
 import com.consol.citrus.ftp.client.SftpEndpointConfiguration;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.w3c.dom.Element;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpClientParser extends FtpClientParser {
+
+    @Override
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("strict-host-checking"), "strictHostChecking");
+    }
 
     @Override
     protected Class<? extends Endpoint> getEndpointClass() {
