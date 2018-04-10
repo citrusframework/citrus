@@ -20,8 +20,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
@@ -47,7 +46,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         super(delegate);
         delegate.setDelegate(new ReceiveMessageAction());
         getAction().setEndpoint(httpClient);
-        message(httpMessage);
+        initMessage(httpMessage);
         messageType(MessageType.XML);
         headerNameIgnoreCase(true);
     }
@@ -61,9 +60,19 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
         super(delegate);
         delegate.setDelegate(new ReceiveMessageAction());
         getAction().setEndpointUri(httpClientUri);
-        message(httpMessage);
+        initMessage(httpMessage);
         messageType(MessageType.XML);
         headerNameIgnoreCase(true);
+    }
+
+    /**
+     * Initialize message builder.
+     * @param message
+     */
+    private void initMessage(HttpMessage message) {
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
+        staticMessageContentBuilder.setMessageHeaders(message.getHeaders());
+        getAction().setMessageBuilder(new HttpMessageContentBuilder(message, staticMessageContentBuilder));
     }
 
     @Override
@@ -139,19 +148,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageBuilder<Recei
 
     @Override
     public HttpClientResponseActionBuilder message(Message message) {
-        if (message instanceof HttpMessage) {
-            if (this.httpMessage.getStatusCode() != null) {
-                ((HttpMessage) message).status(this.httpMessage.getStatusCode());
-            }
-
-            this.httpMessage = (HttpMessage) message;
-        } else {
-            this.httpMessage = new HttpMessage(message);
-        }
-
-        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
-        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        getAction().setMessageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        HttpMessageUtils.copy(message, httpMessage);
         return this;
     }
 }

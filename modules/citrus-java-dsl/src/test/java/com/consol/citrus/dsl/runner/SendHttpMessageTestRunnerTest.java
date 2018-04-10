@@ -22,16 +22,17 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
-import com.consol.citrus.http.message.HttpMessageHeaders;
+import com.consol.citrus.http.message.*;
 import com.consol.citrus.message.*;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.apache.http.entity.ContentType;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import javax.servlet.http.Cookie;
 
 import static org.mockito.Mockito.*;
 
@@ -42,7 +43,6 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     private HttpClient httpClient = Mockito.mock(HttpClient.class);
     private Producer messageProducer = Mockito.mock(Producer.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
     public void testFork() {
@@ -66,7 +66,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
                 http(builder -> builder.client(httpClient)
                         .send()
-                        .get()
+                        .post()
                         .message(new DefaultMessage("Bar").setHeader("operation", "bar"))
                         .messageType(MessageType.PLAINTEXT)
                         .fork(true));
@@ -86,9 +86,10 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 4L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 5L);
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessage().getHeader("additional"), "additionalValue");
 
@@ -101,12 +102,65 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Bar");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 3L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 4L);
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "bar");
 
         Assert.assertTrue(action.isForkMode());
+    }
+
+    @Test
+    public void testMessageObjectOverride() {
+        reset(httpClient, messageProducer);
+        when(httpClient.createProducer()).thenReturn(messageProducer);
+        when(httpClient.getActor()).thenReturn(null);
+        doAnswer(invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
+            Assert.assertEquals(message.getPayload(String.class), "Foo");
+            return null;
+        }).when(messageProducer).send(any(Message.class), any(TestContext.class));
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                http(builder -> builder.client(httpClient)
+                        .send()
+                        .get()
+                        .messageType(MessageType.PLAINTEXT)
+                        .contentType(ContentType.APPLICATION_JSON.getMimeType())
+                        .cookie(new Cookie("Foo", "123456"))
+                        .message(new HttpMessage("Foo")
+                                .cookie(new Cookie("Bar", "987654"))
+                                .setHeader("operation", "foo"))
+                        .header("additional", "additionalValue"));
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+
+        SendMessageAction action = ((SendMessageAction)(((DelegatingTestAction)test.getActions().get(0)).getDelegate()));
+        Assert.assertEquals(action.getName(), "send");
+
+        Assert.assertEquals(action.getEndpoint(), httpClient);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
+
+        HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 8L);
+        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.getMessage().getHeader("Content-Type"), ContentType.APPLICATION_JSON.getMimeType());
+        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
+        Assert.assertEquals(messageBuilder.getMessage().getHeader("additional"), "additionalValue");
+        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Foo"), "Foo=123456");
+        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Bar"), "Bar=987654");
+        Assert.assertEquals(((HttpMessage) messageBuilder.getMessage()).getCookies().size(), 2L);
+        Assert.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Foo")));
+        Assert.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Bar")));
     }
 
     @Test

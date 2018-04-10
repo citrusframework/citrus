@@ -230,6 +230,11 @@ public class HttpMessage extends DefaultMessage {
         return (HttpMessage) super.setHeader(headerName, headerValue);
     }
 
+    @Override
+    public HttpMessage addHeaderData(String headerData) {
+        return (HttpMessage) super.addHeaderData(headerData);
+    }
+
     /**
      * Gets the Http request method.
      * @return

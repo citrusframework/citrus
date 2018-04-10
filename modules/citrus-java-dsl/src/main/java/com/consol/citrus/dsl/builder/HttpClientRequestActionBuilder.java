@@ -20,13 +20,11 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
 
@@ -48,7 +46,7 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
         super(delegate);
         delegate.setDelegate(new SendMessageAction());
         getAction().setEndpoint(httpClient);
-        message(httpMessage);
+        initMessage(httpMessage);
     }
 
     /**
@@ -60,7 +58,17 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
         super(delegate);
         delegate.setDelegate(new SendMessageAction());
         getAction().setEndpointUri(httpClientUri);
-        message(httpMessage);
+        initMessage(httpMessage);
+    }
+
+    /**
+     * Initialize message builder.
+     * @param message
+     */
+    private void initMessage(HttpMessage message) {
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
+        staticMessageContentBuilder.setMessageHeaders(message.getHeaders());
+        getAction().setMessageBuilder(new HttpMessageContentBuilder(message, staticMessageContentBuilder));
     }
 
     @Override
@@ -180,31 +188,7 @@ public class HttpClientRequestActionBuilder extends SendMessageBuilder<SendMessa
 
     @Override
     public HttpClientRequestActionBuilder message(Message message) {
-        if (message instanceof HttpMessage) {
-            if (this.httpMessage.getRequestMethod() != null) {
-                ((HttpMessage) message).method(this.httpMessage.getRequestMethod());
-            }
-            
-            if (StringUtils.hasText(this.httpMessage.getPath())) {
-                ((HttpMessage) message).path(this.httpMessage.getPath());
-            }
-
-            if (StringUtils.hasText(this.httpMessage.getUri())) {
-                ((HttpMessage) message).uri(this.httpMessage.getUri());
-            }
-
-            if (StringUtils.hasText(this.httpMessage.getQueryParams())) {
-                ((HttpMessage) message).queryParams(this.httpMessage.getQueryParams());
-            }
-
-            this.httpMessage = (HttpMessage) message;
-        } else {
-            this.httpMessage = new HttpMessage(message);
-        }
-
-        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
-        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        getAction().setMessageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        HttpMessageUtils.copy(message, httpMessage);
         return this;
     }
 }

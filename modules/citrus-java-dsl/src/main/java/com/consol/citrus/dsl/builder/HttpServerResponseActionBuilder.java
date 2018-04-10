@@ -20,8 +20,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.*;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpStatus;
@@ -46,7 +45,17 @@ public class HttpServerResponseActionBuilder extends SendMessageBuilder<SendMess
         super(delegate);
         delegate.setDelegate(new SendMessageAction());
         getAction().setEndpoint(httpServer);
-        message(httpMessage);
+        initMessage(httpMessage);
+    }
+
+    /**
+     * Initialize message builder.
+     * @param message
+     */
+    private void initMessage(HttpMessage message) {
+        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
+        staticMessageContentBuilder.setMessageHeaders(message.getHeaders());
+        getAction().setMessageBuilder(new HttpMessageContentBuilder(message, staticMessageContentBuilder));
     }
 
     @Override
@@ -122,19 +131,7 @@ public class HttpServerResponseActionBuilder extends SendMessageBuilder<SendMess
 
     @Override
     public HttpServerResponseActionBuilder message(Message message) {
-        if (message instanceof HttpMessage) {
-            if (this.httpMessage.getStatusCode() != null) {
-                ((HttpMessage) message).status(this.httpMessage.getStatusCode());
-            }
-
-            this.httpMessage = (HttpMessage) message;
-        } else {
-            this.httpMessage = new HttpMessage(message);
-        }
-
-        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
-        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        getAction().setMessageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        HttpMessageUtils.copy(message, httpMessage);
         return this;
     }
 }
