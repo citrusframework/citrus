@@ -52,7 +52,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply channel not set up yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply channel not set up yet");
     }
 
     @Override

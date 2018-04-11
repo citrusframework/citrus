@@ -64,7 +64,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
      */
     public RmiClient(RmiEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

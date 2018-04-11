@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  */
 public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
 
-    private String retryLogMessage = "Correlated object not found yet";
+    private final String retryLogMessage;
 
     private final PollableEndpointConfiguration endpointConfiguration;
 
@@ -131,13 +131,5 @@ public class PollingCorrelationManager<T> extends DefaultCorrelationManager<T> {
      */
     public String getRetryLogMessage() {
         return retryLogMessage;
-    }
-
-    /**
-     * Sets the retry log message.
-     * @param retryLogMessage
-     */
-    public void setRetryLogMessage(String retryLogMessage) {
-        this.retryLogMessage = retryLogMessage;
     }
 }

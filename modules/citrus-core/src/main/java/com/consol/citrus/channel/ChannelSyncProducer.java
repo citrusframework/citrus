@@ -53,7 +53,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

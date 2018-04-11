@@ -68,7 +68,7 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     public WebServiceClient(WebServiceEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

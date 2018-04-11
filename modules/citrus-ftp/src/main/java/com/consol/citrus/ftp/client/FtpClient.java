@@ -74,7 +74,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
     protected FtpClient(FtpEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

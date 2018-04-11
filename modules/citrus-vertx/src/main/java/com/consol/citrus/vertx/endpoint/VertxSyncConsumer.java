@@ -56,7 +56,7 @@ public class VertxSyncConsumer extends VertxConsumer implements ReplyProducer {
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply Vert.x address not set up yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply Vert.x address not set up yet");
     }
 
     @Override

@@ -55,7 +55,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         super(name, endpointConfiguration);
         this.endpointConfiguration = endpointConfiguration;
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

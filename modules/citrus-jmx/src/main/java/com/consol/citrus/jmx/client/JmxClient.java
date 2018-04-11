@@ -78,7 +78,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
     public JmxClient(JmxEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

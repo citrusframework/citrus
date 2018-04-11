@@ -56,7 +56,7 @@ public class VertxSyncProducer extends VertxProducer implements ReplyConsumer {
         this.vertx = vertx;
         this.endpointConfiguration = endpointConfiguration;
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

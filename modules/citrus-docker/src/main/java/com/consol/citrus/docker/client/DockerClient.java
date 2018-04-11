@@ -56,7 +56,7 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
     public DockerClient(DockerEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override

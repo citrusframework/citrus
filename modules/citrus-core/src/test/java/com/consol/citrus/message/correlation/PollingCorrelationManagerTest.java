@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
 
 public class PollingCorrelationManagerTest {
 
-    private ObjectStore<String> objectStore = Mockito.mock(ObjectStore.class);
+    private ObjectStore objectStore = Mockito.mock(ObjectStore.class);
 
     @Test
     public void testFind() throws Exception {
@@ -34,7 +34,7 @@ public class PollingCorrelationManagerTest {
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(500L);
 
-        PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager(pollableEndpointConfiguration, "Try again");
+        PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager<>(pollableEndpointConfiguration, "Try again");
         Assert.assertNull(correlationManager.find(""));
 
         correlationManager.store("foo", "bar");
@@ -60,7 +60,7 @@ public class PollingCorrelationManagerTest {
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(500L);
 
-        PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager(pollableEndpointConfiguration, "Try again");
+        PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager<>(pollableEndpointConfiguration, "Try again");
         correlationManager.setObjectStore(objectStore);
 
         reset(objectStore);
@@ -75,7 +75,7 @@ public class PollingCorrelationManagerTest {
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(300L);
 
-        PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager(pollableEndpointConfiguration, "Try again");
+        PollingCorrelationManager<String> correlationManager = new PollingCorrelationManager<>(pollableEndpointConfiguration, "Try again");
         correlationManager.setObjectStore(objectStore);
 
         reset(objectStore);
