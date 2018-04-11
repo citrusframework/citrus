@@ -148,8 +148,10 @@ public class HttpMessageController {
                 .method(method);
 
         Message response = endpointAdapter.handleMessage(request);
+        
+        ResponseEntity<String> responseEntity;
         if (response == null) {
-            responseCache = new ResponseEntity<>(HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(HttpStatus.OK);
         } else {
             HttpMessage httpResponse;
             if (response instanceof HttpMessage) {
@@ -162,7 +164,7 @@ public class HttpMessageController {
                 httpResponse.status(HttpStatus.OK);
             }
 
-            responseCache = (ResponseEntity<String>) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
+            responseEntity = (ResponseEntity<String>) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
 
             if (endpointConfiguration.isHandleCookies() && httpResponse.getCookies() != null) {
                 HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
@@ -171,8 +173,9 @@ public class HttpMessageController {
                 }
             }
         }
-
-        return responseCache;
+        responseCache = responseEntity;
+        
+        return responseEntity;
     }
     
     /**
