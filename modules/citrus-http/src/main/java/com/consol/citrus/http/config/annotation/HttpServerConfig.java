@@ -17,6 +17,7 @@
 package com.consol.citrus.http.config.annotation;
 
 import com.consol.citrus.annotations.CitrusEndpointConfig;
+import org.springframework.http.HttpStatus;
 
 import java.lang.annotation.*;
 
@@ -124,6 +125,12 @@ public @interface HttpServerConfig {
      * @return
      */
     boolean handleCookies() default false;
+
+    /**
+     * Server default response status.
+     * @return
+     */
+    HttpStatus defaultStatus() default HttpStatus.OK;
 
     /**
      * Auto start.

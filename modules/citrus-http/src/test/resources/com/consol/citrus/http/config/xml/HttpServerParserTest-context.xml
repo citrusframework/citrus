@@ -21,6 +21,7 @@
                         connector="connector"
                         resource-base="src/it/resources"
                         root-parent-context="true"
+                        default-status-code="404"
                         debug-logging="true"
                         context-path="/citrus"
                         servlet-name="citrus-http"

@@ -25,6 +25,7 @@ import com.consol.citrus.jms.endpoint.JmsEndpointAdapter;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -59,6 +60,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isDebugLogging());
         Assert.assertFalse(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getDefaultStatusCode(), HttpStatus.OK.value());
         Assert.assertEquals(server.getContextPath(), "/");
         Assert.assertEquals(server.getServletName(), "httpServer1-servlet");
         Assert.assertEquals(server.getServletMappingPath(), "/*");
@@ -78,6 +80,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertTrue(server.isDebugLogging());
         Assert.assertTrue(server.isUseRootContextAsParent());
+        Assert.assertEquals(server.getDefaultStatusCode(), HttpStatus.NOT_FOUND.value());
         Assert.assertEquals(server.getContextPath(), "/citrus");
         Assert.assertEquals(server.getServletName(), "citrus-http");
         Assert.assertEquals(server.getServletMappingPath(), "/foo");

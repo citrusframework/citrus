@@ -21,8 +21,7 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import org.springframework.http.*;
 import org.springframework.http.client.*;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
@@ -85,6 +84,9 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     /** Should handle http cookies */
     private boolean handleCookies = false;
+
+    /** Default status code returned by http server */
+    private int defaultStatusCode = HttpStatus.OK.value();
 
     /**
      * Get the complete request URL.
@@ -372,5 +374,23 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setErrorHandler(ResponseErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+    }
+
+    /**
+     * Gets the defaultStatusCode.
+     *
+     * @return
+     */
+    public int getDefaultStatusCode() {
+        return defaultStatusCode;
+    }
+
+    /**
+     * Sets the defaultStatusCode.
+     *
+     * @param defaultStatusCode
+     */
+    public void setDefaultStatusCode(int defaultStatusCode) {
+        this.defaultStatusCode = defaultStatusCode;
     }
 }

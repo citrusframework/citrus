@@ -52,6 +52,7 @@ public class HttpServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-header-attributes"), "handleAttributeHeaders");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("handle-cookies"), "handleCookies");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("default-status-code"), "defaultStatusCode");
     }
 
     @Override

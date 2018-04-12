@@ -30,6 +30,7 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -60,6 +61,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
             resourceBase="src/it/resources",
             rootParentContext=true,
             debugLogging=true,
+            defaultStatus = HttpStatus.NOT_FOUND,
             contextPath="/citrus",
             servletName="citrus-http",
             servletMappingPath="/foo")
@@ -161,6 +163,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(httpServer1.isAutoStart());
         Assert.assertFalse(httpServer1.isDebugLogging());
         Assert.assertFalse(httpServer1.isUseRootContextAsParent());
+        Assert.assertEquals(httpServer1.getDefaultStatusCode(), HttpStatus.OK.value());
         Assert.assertEquals(httpServer1.getContextPath(), "/");
         Assert.assertEquals(httpServer1.getServletName(), "httpServer1-servlet");
         Assert.assertEquals(httpServer1.getServletMappingPath(), "/*");
@@ -178,6 +181,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer2.getResourceBase(), "src/it/resources");
         Assert.assertTrue(httpServer2.isHandleAttributeHeaders());
         Assert.assertTrue(httpServer2.isHandleCookies());
+        Assert.assertEquals(httpServer2.getDefaultStatusCode(), HttpStatus.NOT_FOUND.value());
         Assert.assertFalse(httpServer2.isAutoStart());
         Assert.assertTrue(httpServer2.isDebugLogging());
         Assert.assertTrue(httpServer2.isUseRootContextAsParent());

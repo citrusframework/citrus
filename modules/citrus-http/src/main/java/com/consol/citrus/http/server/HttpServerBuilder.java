@@ -22,6 +22,7 @@ import com.consol.citrus.http.message.HttpMessageConverter;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.Filter;
@@ -209,6 +210,16 @@ public class HttpServerBuilder extends AbstractEndpointBuilder<HttpServer> {
      */
     public HttpServerBuilder handleCookies(boolean flag) {
         endpoint.setHandleCookies(flag);
+        return this;
+    }
+
+    /**
+     * Sets the default status code property.
+     * @param status
+     * @return
+     */
+    public HttpServerBuilder defaultStatus(HttpStatus status) {
+        endpoint.setDefaultStatusCode(status.value());
         return this;
     }
 

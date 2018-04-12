@@ -278,6 +278,34 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
+     * Gets the Http content type header.
+     * @return
+     */
+    public String getContentType() {
+        Object contentType = getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE);
+
+        if (contentType != null) {
+            return contentType.toString();
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets the Http content type header.
+     * @return
+     */
+    public String getAccept() {
+        Object accept = getHeader("Accept");
+
+        if (accept != null) {
+            return accept.toString();
+        }
+
+        return null;
+    }
+
+    /**
      * Gets the Http request query params.
      * @return
      */

@@ -33,6 +33,7 @@ import org.springframework.context.*;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -105,6 +106,9 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Should handle http cookies */
     private boolean handleCookies = false;
+
+    /** Default status code returned by http server */
+    private int defaultStatusCode = HttpStatus.OK.value();
 
     /** Message converter */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
@@ -669,5 +673,23 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setHandleCookies(boolean handleCookies) {
         this.handleCookies = handleCookies;
+    }
+
+    /**
+     * Gets the defaultStatusCode.
+     *
+     * @return
+     */
+    public int getDefaultStatusCode() {
+        return defaultStatusCode;
+    }
+
+    /**
+     * Sets the defaultStatusCode.
+     *
+     * @param defaultStatusCode
+     */
+    public void setDefaultStatusCode(int defaultStatusCode) {
+        this.defaultStatusCode = defaultStatusCode;
     }
 }

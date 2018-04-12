@@ -127,6 +127,8 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
             builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), HttpMessageConverter.class));
         }
 
+        builder.defaultStatus(annotation.defaultStatus());
+
         return builder.initialize().build();
     }
 }
