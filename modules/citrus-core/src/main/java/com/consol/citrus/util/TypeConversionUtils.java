@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.core.io.InputStreamSource;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Node;
 
@@ -76,6 +76,24 @@ public abstract class TypeConversionUtils {
                     log.warn("Failed to create stream source from object", e);
                 }
             }
+        }
+
+        if (MultiValueMap.class.isAssignableFrom(type)) {
+            String mapString = String.valueOf(target);
+
+            Properties props = new Properties();
+            try {
+                props.load(new StringReader(mapString.substring(1, mapString.length() - 1).replaceAll("\\]\\s*", "]\n")));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to reconstruct object of type map", e);
+            }
+            MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+            for (Map.Entry<Object, Object> entry : props.entrySet()) {
+                String arrayString = String.valueOf(entry.getValue()).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
+                map.add(entry.getKey().toString(), StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString)));
+            }
+
+            return (T) map;
         }
 
         if (Map.class.isAssignableFrom(type)) {
@@ -136,7 +154,7 @@ public abstract class TypeConversionUtils {
         }
 
         if (byte[].class.isAssignableFrom(target.getClass()) && type.equals(String.class)) {
-            return (T) new String((byte[]) target);
+            return (T) Arrays.toString((byte[]) target);
         }
 
         try {

@@ -28,13 +28,14 @@ import com.consol.citrus.validation.DefaultMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.StringTokenizer;
+import java.util.*;
 
 /**
  * Validates x-www-form-urlencoded HTML form data content by marshalling form fields to Xml representation.
@@ -88,25 +89,36 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
         formData.setContentType(getFormContentType(message));
         formData.setAction(getFormAction(message));
 
-        String rawFormData = message.getPayload(String.class);
-        if (StringUtils.hasText(rawFormData)) {
-            StringTokenizer tokenizer = new StringTokenizer(rawFormData, "&");
-            while (tokenizer.hasMoreTokens()) {
-                Control control = new ObjectFactory().createControl();
-                String[] nameValuePair = tokenizer.nextToken().split("=");
+        if (message.getPayload() instanceof MultiValueMap) {
+            MultiValueMap<String, Object> formValueMap = message.getPayload(MultiValueMap.class);
 
-                if (autoDecode) {
-                    try {
-                        control.setName(URLDecoder.decode(nameValuePair[0], getEncoding()));
-                        control.setValue(URLDecoder.decode(nameValuePair[1], getEncoding()));
-                    } catch (UnsupportedEncodingException e) {
-                        throw new CitrusRuntimeException(String.format("Failed to decode form control value '%s=%s'", nameValuePair[0], nameValuePair[1]), e);
-                    }
-                } else {
-                    control.setName(nameValuePair[0]);
-                    control.setValue(nameValuePair[1]);
-                }
+            for (Map.Entry<String, List<Object>> entry : formValueMap.entrySet()) {
+                Control control = new ObjectFactory().createControl();
+                control.setName(entry.getKey());
+                control.setValue(StringUtils.arrayToCommaDelimitedString(entry.getValue().toArray()));
                 formData.addControl(control);
+            }
+        } else {
+            String rawFormData = message.getPayload(String.class);
+            if (StringUtils.hasText(rawFormData)) {
+                StringTokenizer tokenizer = new StringTokenizer(rawFormData, "&");
+                while (tokenizer.hasMoreTokens()) {
+                    Control control = new ObjectFactory().createControl();
+                    String[] nameValuePair = tokenizer.nextToken().split("=");
+
+                    if (autoDecode) {
+                        try {
+                            control.setName(URLDecoder.decode(nameValuePair[0], getEncoding()));
+                            control.setValue(URLDecoder.decode(nameValuePair[1], getEncoding()));
+                        } catch (UnsupportedEncodingException e) {
+                            throw new CitrusRuntimeException(String.format("Failed to decode form control value '%s=%s'", nameValuePair[0], nameValuePair[1]), e);
+                        }
+                    } else {
+                        control.setName(nameValuePair[0]);
+                        control.setValue(nameValuePair[1]);
+                    }
+                    formData.addControl(control);
+                }
             }
         }
 

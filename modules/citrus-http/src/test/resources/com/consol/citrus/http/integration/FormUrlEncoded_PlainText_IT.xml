@@ -42,7 +42,7 @@
         <message type="plaintext">
           <data>
             <![CDATA[
-              password=s%21cr%21t&username=${username}
+              {password=[${password}], username=[${username}]}
             ]]>
           </data>
         </message>

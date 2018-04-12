@@ -31,6 +31,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.*;
 import java.util.Enumeration;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * Message controller implementation handling all incoming requests by forwarding to a message 
@@ -49,53 +50,53 @@ public class HttpMessageController {
     private HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
 
     /** Hold the latest response message for message tracing reasons */
-    private ResponseEntity<String> responseCache;
+    private ConcurrentLinkedQueue<ResponseEntity<?>> responseCache = new ConcurrentLinkedQueue<>();
     
     @RequestMapping(value = "**", method = { RequestMethod.GET })
     @ResponseBody
-    public ResponseEntity<String> handleGetRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handleGetRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.GET, requestEntity);
     }
     
     @RequestMapping(value= "**", method = { RequestMethod.POST })
     @ResponseBody
-    public ResponseEntity<String> handlePostRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handlePostRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.POST, requestEntity);
     }
     
     @RequestMapping(value= "**", method = { RequestMethod.PUT })
     @ResponseBody
-    public ResponseEntity<String> handlePutRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handlePutRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.PUT, requestEntity);
     }
     
     @RequestMapping(value= "**", method = { RequestMethod.DELETE })
     @ResponseBody
-    public ResponseEntity<String> handleDeleteRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handleDeleteRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.DELETE, requestEntity);
     }
     
     @RequestMapping(value= "**", method = { RequestMethod.OPTIONS })
     @ResponseBody
-    public ResponseEntity<String> handleOptionsRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handleOptionsRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.OPTIONS, requestEntity);
     }
     
     @RequestMapping(value= "**", method = { RequestMethod.HEAD })
     @ResponseBody
-    public ResponseEntity<String> handleHeadRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handleHeadRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.HEAD, requestEntity);
     }
     
     @RequestMapping(value= "**", method = { RequestMethod.TRACE })
     @ResponseBody
-    public ResponseEntity<String> handleTraceRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handleTraceRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.TRACE, requestEntity);
     }
 
     @RequestMapping(value= "**", method = { RequestMethod.PATCH })
     @ResponseBody
-    public ResponseEntity<String> handlePatchRequest(HttpEntity<String> requestEntity) {
+    public ResponseEntity<?> handlePatchRequest(HttpEntity<Object> requestEntity) {
         return handleRequestInternal(HttpMethod.PATCH, requestEntity);
     }
     
@@ -105,7 +106,7 @@ public class HttpMessageController {
      * @param requestEntity
      * @return
      */
-    private ResponseEntity<String> handleRequestInternal(HttpMethod method, HttpEntity<String> requestEntity) {
+    private ResponseEntity<?> handleRequestInternal(HttpMethod method, HttpEntity<?> requestEntity) {
         HttpMessage request = endpointConfiguration.getMessageConverter().convertInbound(requestEntity, endpointConfiguration, null);
 
         HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -148,10 +149,10 @@ public class HttpMessageController {
                 .method(method);
 
         Message response = endpointAdapter.handleMessage(request);
-        
-        ResponseEntity<String> responseEntity;
+
+        ResponseEntity<?> responseEntity;
         if (response == null) {
-            responseEntity = new ResponseEntity<>(HttpStatus.OK);
+            responseEntity = new ResponseEntity<>(HttpStatus.valueOf(endpointConfiguration.getDefaultStatusCode()));
         } else {
             HttpMessage httpResponse;
             if (response instanceof HttpMessage) {
@@ -161,10 +162,10 @@ public class HttpMessageController {
             }
 
             if (httpResponse.getStatusCode() == null) {
-                httpResponse.status(HttpStatus.OK);
+                httpResponse.status(HttpStatus.valueOf(endpointConfiguration.getDefaultStatusCode()));
             }
 
-            responseEntity = (ResponseEntity<String>) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
+            responseEntity = (ResponseEntity<?>) endpointConfiguration.getMessageConverter().convertOutbound(httpResponse, endpointConfiguration, null);
 
             if (endpointConfiguration.isHandleCookies() && httpResponse.getCookies() != null) {
                 HttpServletResponse servletResponse = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
@@ -173,7 +174,7 @@ public class HttpMessageController {
                 }
             }
         }
-        responseCache = responseEntity;
+        responseCache.add(responseEntity);
         
         return responseEntity;
     }
@@ -214,7 +215,7 @@ public class HttpMessageController {
      * Gets the responseCache.
      * @return the responseCache the responseCache to get.
      */
-    public ResponseEntity<String> getResponseCache() {
-        return responseCache;
+    public ResponseEntity<?> getResponseCache() {
+        return responseCache.poll();
     }
 }

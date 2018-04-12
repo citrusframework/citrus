@@ -26,13 +26,7 @@
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     <property name="messageConverters">
       <util:list id="converters">
-        <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-          <property name="supportedMediaTypes">
-            <util:list>
-              <value>*/*</value>
-            </util:list>
-          </property>
-        </bean>
+        <bean class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
       </util:list>
     </property>
   </bean>

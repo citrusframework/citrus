@@ -25,14 +25,15 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
+import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URI;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -62,7 +63,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     public HttpClient(HttpEndpointConfiguration endpointConfiguration) {
         super(endpointConfiguration);
 
-        this.correlationManager = new PollingCorrelationManager(endpointConfiguration, "Reply message did not arrive yet");
+        this.correlationManager = new PollingCorrelationManager<>(endpointConfiguration, "Reply message did not arrive yet");
     }
 
     @Override
@@ -76,7 +77,7 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
             LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
             loggingClientInterceptor.setMessageListener(context.getMessageListeners());
 
-            getEndpointConfiguration().setClientInterceptors(Arrays.<ClientHttpRequestInterceptor>asList(loggingClientInterceptor));
+            getEndpointConfiguration().setClientInterceptors(Collections.singletonList(loggingClientInterceptor));
         }
 
         HttpMessage httpMessage;
@@ -110,7 +111,19 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         HttpEntity<?> requestEntity = getEndpointConfiguration().getMessageConverter().convertOutbound(httpMessage, getEndpointConfiguration(), context);
 
         try {
-            ResponseEntity<?> response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, String.class);
+            ResponseEntity<?> response;
+            String accept = Optional.ofNullable(httpMessage.getAccept()).orElse(MediaType.ALL_VALUE);
+
+            if (accept.contains(";")) {
+                accept = accept.substring(0, accept.indexOf(";") - 1);
+            }
+
+            if (accept.equals(ContentType.APPLICATION_OCTET_STREAM.getMimeType()) || accept.startsWith("image/")) {
+                response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, byte[].class);
+            } else {
+                response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, String.class);
+            }
+
             log.info("HTTP message was sent to endpoint: '" + endpointUri + "'");
             correlationManager.store(correlationKey, getEndpointConfiguration().getMessageConverter().convertInbound(response, getEndpointConfiguration(), context));
         } catch (HttpErrorPropagatingException e) {

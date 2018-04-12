@@ -18,20 +18,27 @@ package com.consol.citrus.http.server;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageHeaders;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.SocketUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
-import java.io.IOException;
+import java.util.Random;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Simple unit test for HttpServer
@@ -39,10 +46,14 @@ import java.io.IOException;
  */
 public class HttpServerTest extends AbstractTestNGUnitTest {
 
-    private int port = 8095;
+    private int port = SocketUtils.findAvailableTcpPort(8080);
     private String uri = "http://localhost:" + port + "/test";
 
     private HttpClient client;
+    private HttpServer server = new HttpServer();
+
+    @Autowired
+    private EndpointAdapter mockResponseEndpointAdapter;
 
     @Autowired
     private TestContextFactory testContextFactory;
@@ -52,33 +63,129 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
         endpointConfiguration.setRequestUrl(uri);
         client = new HttpClient(endpointConfiguration);
-    }
 
-    @Test
-    public void startupAndShutdownTest() throws IOException {
-        HttpServer server = new HttpServer();
         server.setPort(port);
         server.setApplicationContext(applicationContext);
+        server.setUseRootContextAsParent(true);
         server.setContextConfigLocation("classpath:com/consol/citrus/http/HttpServerTest-http-servlet.xml");
 
         server.startup();
+    }
 
-        TestContext context = testContextFactory.getObject();
-        client.send(new HttpMessage("Hello")
-                .method(HttpMethod.GET), context);
-
-        //assert get was successful
-        Assert.assertEquals(client.receive(context).getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
-
+    @AfterClass(alwaysRun = true)
+    public void shutdown() {
         server.shutdown();
 
         try {
-            client.send(new HttpMessage("Should fail")
+            client.send(new HttpMessage()
                     .method(HttpMethod.GET), context);
 
-            Assert.fail("Server supposed to be in shut down state, but was accessible via client request");
+            Assert.fail("Server supposed to be in shutdown state, but was accessible via client request");
         } catch (ResourceAccessException e) {
             Assert.assertTrue(e.getMessage().contains("Connection refused"));
         }
+    }
+
+    @Test
+    public void testGetRequest() {
+        TestContext context = testContextFactory.getObject();
+
+        reset(mockResponseEndpointAdapter);
+        when(mockResponseEndpointAdapter.handleMessage(any(Message.class))).thenAnswer(invocation -> {
+            Message request = invocation.getArgument(0);
+
+            Assert.assertTrue(request instanceof HttpMessage);
+            Assert.assertEquals(request.getPayload(String.class), "");
+            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=UTF-8");
+            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI), "/test/hello");
+
+            return new HttpMessage("Hello user")
+                            .status(HttpStatus.OK);
+        });
+
+        client.send(new HttpMessage()
+                            .path("/hello")
+                            .method(HttpMethod.GET), context);
+
+        Message response = client.receive(context);
+
+        Assert.assertEquals(response.getPayload(String.class), "Hello user");
+        Assert.assertEquals(response.getHeaders().size(), 9L);
+        Assert.assertNotNull(response.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.OK.getReasonPhrase().toUpperCase());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8");
+
+        verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
+    }
+
+    @Test
+    public void testPostRequest() {
+        TestContext context = testContextFactory.getObject();
+
+        reset(mockResponseEndpointAdapter);
+        when(mockResponseEndpointAdapter.handleMessage(any(Message.class))).thenAnswer(invocation -> {
+            Message request = invocation.getArgument(0);
+
+            Assert.assertTrue(request instanceof HttpMessage);
+            Assert.assertEquals(request.getPayload(String.class), "Hello");
+
+            return new HttpMessage().status(HttpStatus.FOUND);
+        });
+
+        client.send(new HttpMessage("Hello")
+                            .method(HttpMethod.POST), context);
+
+        Message response = client.receive(context);
+
+        Assert.assertEquals(response.getHeaders().size(), 9L);
+        Assert.assertNotNull(response.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.FOUND.value());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.FOUND.getReasonPhrase().toUpperCase());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), ContentType.TEXT_PLAIN.getMimeType() + ";charset=utf-8");
+
+        verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
+    }
+
+    @Test
+    public void testBinaryRequestResponse() {
+        TestContext context = testContextFactory.getObject();
+
+        final byte[] requestBody = new byte[20];
+        new Random().nextBytes(requestBody);
+
+        final byte[] responseBody = new byte[20];
+        new Random().nextBytes(responseBody);
+
+        reset(mockResponseEndpointAdapter);
+        when(mockResponseEndpointAdapter.handleMessage(any(Message.class))).thenAnswer(invocation -> {
+            Message request = invocation.getArgument(0);
+
+            Assert.assertTrue(request instanceof HttpMessage);
+            Assert.assertEquals(request.getPayload(byte[].class), requestBody);
+
+            return new HttpMessage(responseBody)
+                            .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
+                            .status(HttpStatus.OK);
+        });
+
+        client.send(new HttpMessage(requestBody)
+                            .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
+                            .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
+                            .method(HttpMethod.POST), context);
+
+        Message response = client.receive(context);
+
+        Assert.assertEquals(response.getPayload(byte[].class), responseBody);
+        Assert.assertEquals(response.getHeaders().size(), 9L);
+        Assert.assertNotNull(response.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.OK.getReasonPhrase().toUpperCase());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+
+        verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
 }

@@ -20,6 +20,7 @@ import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.apache.http.entity.ContentType;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.springframework.http.*;
@@ -33,6 +34,7 @@ import org.testng.annotations.Test;
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
+import java.util.Random;
 
 import static org.mockito.Mockito.*;
 
@@ -486,6 +488,51 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.PATCH), any(HttpEntity.class), eq(String.class));
+
+        httpClient.send(requestMessage, context);
+
+        HttpMessage responseMessage = (HttpMessage) httpClient.receive(context, endpointConfiguration.getTimeout());
+        Assert.assertEquals(responseMessage.getPayload(), responseBody);
+        Assert.assertEquals(responseMessage.getStatusCode(), HttpStatus.OK);
+        Assert.assertEquals(responseMessage.getReasonPhrase(), "OK");
+
+        verify(restTemplate).setInterceptors(anyList());
+    }
+
+    @Test
+    public void testBinaryBody() {
+        HttpEndpointConfiguration endpointConfiguration = new HttpEndpointConfiguration();
+        HttpClient httpClient = new HttpClient(endpointConfiguration);
+        String requestUrl = "http://localhost:8088/test";
+
+        final byte[] responseBody = new byte[20];
+        new Random().nextBytes(responseBody);
+
+        final byte[] requestBody = new byte[20];
+        new Random().nextBytes(requestBody);
+
+        endpointConfiguration.setRequestMethod(HttpMethod.POST);
+        endpointConfiguration.setRequestUrl(requestUrl);
+
+        Message requestMessage = new HttpMessage(requestBody)
+                                        .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
+                                        .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+
+        endpointConfiguration.setRestTemplate(restTemplate);
+
+        reset(restTemplate);
+
+        doAnswer((Answer<ResponseEntity<?>>) invocation -> {
+            HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
+
+            Assert.assertEquals(httpRequest.getBody(), requestBody);
+            Assert.assertEquals(httpRequest.getHeaders().size(), 2);
+
+            Assert.assertEquals(httpRequest.getHeaders().getAccept().get(0), MediaType.APPLICATION_OCTET_STREAM);
+            Assert.assertEquals(httpRequest.getHeaders().getContentType(), MediaType.APPLICATION_OCTET_STREAM);
+
+            return new ResponseEntity<>(responseBody, HttpStatus.OK);
+        }).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(byte[].class));
 
         httpClient.send(requestMessage, context);
 

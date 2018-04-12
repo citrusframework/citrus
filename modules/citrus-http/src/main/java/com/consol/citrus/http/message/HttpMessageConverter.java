@@ -33,10 +33,10 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEndpointConfiguration> {
+public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEndpointConfiguration> {
 
     @Override
-    public HttpEntity convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
+    public HttpEntity<?> convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
         HttpMessage httpMessage;
         if (message instanceof HttpMessage) {
             httpMessage = (HttpMessage) message;
@@ -63,7 +63,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
 
         Object payload = httpMessage.getPayload();
         if (httpMessage.getStatusCode() != null) {
-            return new ResponseEntity(payload, httpHeaders, httpMessage.getStatusCode());
+            return new ResponseEntity<>(payload, httpHeaders, httpMessage.getStatusCode());
         } else {
             for (Cookie cookie : httpMessage.getCookies()) {
                 httpHeaders.set("Cookie", cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
@@ -76,10 +76,10 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
         }
 
         if (httpMethodSupportsBody(method)) {
-            return new HttpEntity(payload, httpHeaders);
+            return new HttpEntity<>(payload, httpHeaders);
+        } else {
+            return new HttpEntity<>(httpHeaders);
         }
-
-        return new HttpEntity<>(httpHeaders);
     }
 
     private boolean httpMethodSupportsBody(HttpMethod method) {
@@ -88,7 +88,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
     }
 
     @Override
-    public HttpMessage convertInbound(HttpEntity message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
+    public HttpMessage convertInbound(HttpEntity<?> message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
         Map<String, Object> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
         HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders));
 
@@ -96,8 +96,8 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
             httpMessage.setHeader(customHeader.getKey(), customHeader.getValue());
         }
 
-        if (message instanceof ResponseEntity) {
-            httpMessage.status(((ResponseEntity) message).getStatusCode());
+        if (message instanceof ResponseEntity<?>) {
+            httpMessage.status(((ResponseEntity<?>) message).getStatusCode());
             httpMessage.version("HTTP/1.1"); //TODO check if we have access to version information
 
             if (endpointConfiguration.isHandleCookies()) {
@@ -216,6 +216,6 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity, HttpEn
 
     @Override
     public void convertOutbound(HttpEntity externalMessage, Message internalMessage, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
-        throw new UnsupportedOperationException("HttpMessageConverter doe not support predefined HttpEntity objects");
+        throw new UnsupportedOperationException("HttpMessageConverter does not support predefined HttpEntity objects");
     }
 }

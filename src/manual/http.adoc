@@ -1135,13 +1135,7 @@ The Citrus HTTP server uses Spring application context loading on startup. For h
 <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
   <property name="messageConverters">
     <util:list id="converters">
-      <bean class="org.springframework.http.converter.StringHttpMessageConverter">
-        <property name="supportedMediaTypes">
-          <util:list>
-            <value>text/xml</value>
-          </util:list>
-        </property>
-      </bean>
+      <bean class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
     </util:list>
   </property>
 </bean>

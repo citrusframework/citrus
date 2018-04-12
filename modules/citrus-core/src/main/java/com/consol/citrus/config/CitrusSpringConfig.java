@@ -71,7 +71,7 @@ public class CitrusSpringConfig {
     }
 
     @Bean
-    public JUnitReporter junit4Reporter() {
+    public JUnitReporter junitReporter() {
         return new JUnitReporter();
     }
 

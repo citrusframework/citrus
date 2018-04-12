@@ -48,7 +48,7 @@
           <http:body type="plaintext">
             <http:data>
               <![CDATA[
-                password=s%21cr%21t&username=${username}
+                {password=[${password}], username=[${username}]}
               ]]>
             </http:data>
           </http:body>

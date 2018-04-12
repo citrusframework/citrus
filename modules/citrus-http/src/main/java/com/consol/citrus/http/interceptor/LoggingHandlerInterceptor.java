@@ -162,8 +162,7 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
         if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             if (handlerMethod.getBean() instanceof HttpMessageController) {
-                ResponseEntity<String> responseEntity =
-                        ((HttpMessageController) handlerMethod.getBean()).getResponseCache();
+                ResponseEntity<?> responseEntity = ((HttpMessageController) handlerMethod.getBean()).getResponseCache();
                 if (responseEntity != null) {
                     builder.append(NEWLINE);
                     builder.append(responseEntity.getBody());
