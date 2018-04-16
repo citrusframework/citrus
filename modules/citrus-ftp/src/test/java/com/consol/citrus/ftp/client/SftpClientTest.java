@@ -18,7 +18,6 @@ package com.consol.citrus.ftp.client;
 
 import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.ftp.model.*;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
@@ -37,11 +36,16 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
+import static org.apache.commons.net.ftp.FTPReply.CLOSING_DATA_CONNECTION;
+import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
+import static org.apache.commons.net.ftp.FTPReply.FILE_STATUS_OK;
+import static org.testng.Assert.assertTrue;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
  */
-public class SftpClientTest extends AbstractTestNGUnitTest {
+public class SftpClientTest extends AbstractFtpClientTest {
 
     private SftpClient sftpClient;
     private SshServer sshServer;
@@ -68,11 +72,31 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     }
 
     @Test
+    public void testListFiles() {
+        String remoteFilePath = targetPath + "/file1";
+        FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
+        remoteFilePath = targetPath + "/file2";
+        ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
+
+        ftpMessage = sftpClient.listFiles(listCommand(targetPath + "/file*"), context);
+        verifyMessage(ftpMessage, ListCommandResult.class, FILE_STATUS_OK,
+                "List files complete", Arrays.asList("file1", "file2"));
+        assertTrue(Paths.get(targetPath + "/file1").toFile().exists());
+        assertTrue(Paths.get(targetPath + "/file2").toFile().exists());
+    }
+
+    @Test
     public void testRetrieveFile() {
-        sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
-        Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
+        FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
 
         FtpMessage response = sftpClient.retrieveFile(getCommand(remoteFilePath), context);
+        verifyMessage(response, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
         Assert.assertEquals(response.getPayload(GetCommandResult.class).getFile().getData(), inputFileAsString);
     }
 
@@ -80,10 +104,12 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     public void testRetrieveFileToLocalPath() throws Exception {
         Path localDownloadFilePath = Paths.get(targetPath, "local_download.xml");
 
-        sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
-        Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
+        FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
 
-        sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
+        ftpMessage = sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
+        verifyMessage(ftpMessage, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
         Assert.assertEquals(inputFileAsString,
                 new String(Files.readAllBytes(localDownloadFilePath), "UTF-8"));
     }
@@ -92,30 +118,37 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
     public void testRetrieveFileToLocalPathWithoutFilename() throws Exception {
         Path localDownloadFilePath = Paths.get(targetPath, "local_download.xml");
 
-        sftpClient.storeFile(putCommand(localFilePath, targetPath + "/"), context);
-        Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
+        FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, targetPath + "/"), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
 
-        sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
+        ftpMessage = sftpClient.retrieveFile(getCommand(remoteFilePath, localDownloadFilePath.toString()), context);
+        verifyMessage(ftpMessage, GetCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
         Assert.assertEquals(inputFileAsString,
                 new String(Files.readAllBytes(localDownloadFilePath), "UTF-8"));
     }
 
     @Test
     public void testDeleteFile() {
-        sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
-        Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
-        sftpClient.deleteFile(deleteCommand(remoteFilePath), context);
+        FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
+        ftpMessage = sftpClient.deleteFile(deleteCommand(remoteFilePath), context);
+        verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
         Assert.assertFalse(Paths.get(remoteFilePath).toFile().exists());
     }
 
     @Test
     public void testDeleteGlob() {
         String remoteFilePathCopy = remoteFilePath.replace(".xml", "_copy.xml");
-        sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
-        sftpClient.storeFile(putCommand(localFilePath, remoteFilePathCopy), context);
-        Assert.assertTrue(Paths.get(remoteFilePath).toFile().exists());
-        Assert.assertTrue(Paths.get(remoteFilePathCopy).toFile().exists());
-        sftpClient.deleteFile(deleteCommand(targetPath + "/hello*.xml"), context);
+        FtpMessage ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePath), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        ftpMessage = sftpClient.storeFile(putCommand(localFilePath, remoteFilePathCopy), context);
+        verifyMessage(ftpMessage, PutCommandResult.class, CLOSING_DATA_CONNECTION, "Transfer complete");
+        assertTrue(Paths.get(remoteFilePath).toFile().exists());
+        assertTrue(Paths.get(remoteFilePathCopy).toFile().exists());
+        ftpMessage = sftpClient.deleteFile(deleteCommand(targetPath + "/hello*.xml"), context);
+        verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
         Assert.assertFalse(Paths.get(remoteFilePath).toFile().exists());
         Assert.assertFalse(Paths.get(remoteFilePathCopy).toFile().exists());
     }
@@ -131,10 +164,11 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
 
         writeToFile("test file\n", subDir.resolve("testfile"));
 
-        Assert.assertTrue(Files.exists(tmpDir));
+        assertTrue(Files.exists(tmpDir));
         DeleteCommand deleteCommand = deleteCommand(tmpDir.toAbsolutePath().toString());
         deleteCommand.setIncludeCurrent(true);
-        sftpClient.deleteFile(deleteCommand, context);
+        FtpMessage ftpMessage = sftpClient.deleteFile(deleteCommand, context);
+        verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
         Assert.assertFalse(Files.exists(tmpDir));
     }
 
@@ -149,16 +183,18 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
 
         writeToFile("test file\n", subDir.resolve("testfile"));
 
-        Assert.assertTrue(Files.exists(tmpDir));
-        sftpClient.deleteFile(deleteCommand(tmpDir.toAbsolutePath().toString()), context);
-        Assert.assertTrue(tmpDir.toFile().list().length == 0);
-        Assert.assertTrue(Files.exists(tmpDir));
+        assertTrue(Files.exists(tmpDir));
+        FtpMessage ftpMessage = sftpClient.deleteFile(deleteCommand(tmpDir.toAbsolutePath().toString()), context);
+        verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
+        assertTrue(tmpDir.toFile().list().length == 0);
+        assertTrue(Files.exists(tmpDir));
     }
 
     @Test
     public void testDeleteNoMatches() {
         // this should not throw an exception, even though no files match
-        sftpClient.deleteFile(deleteCommand(targetPath + "/1234*1234"), context);
+        FtpMessage ftpMessage = sftpClient.deleteFile(deleteCommand(targetPath + "/1234*1234"), context);
+        verifyMessage(ftpMessage, DeleteCommandResult.class, FILE_ACTION_OK, "Delete file complete");
     }
 
     private SshServer startSftpMockServer() throws IOException {
@@ -200,44 +236,4 @@ public class SftpClientTest extends AbstractTestNGUnitTest {
         }
     }
 
-    private GetCommand getCommand(String remoteFilePath) {
-        return getCommand(remoteFilePath, remoteFilePath);
-    }
-
-    private GetCommand getCommand(String remoteFilePath, String localFilePath) {
-        GetCommand command = new GetCommand();
-        GetCommand.File file = new GetCommand.File();
-        file.setPath(remoteFilePath);
-        file.setType("ASCII");
-        command.setFile(file);
-        GetCommand.Target target = new GetCommand.Target();
-        target.setPath(localFilePath);
-        command.setTarget(target);
-
-        return command;
-    }
-
-    private PutCommand putCommand(String localFilePath, String remoteFilePath) {
-        PutCommand command = new PutCommand();
-        PutCommand.File file = new PutCommand.File();
-        file.setPath(localFilePath);
-        file.setType("ASCII");
-        command.setFile(file);
-        PutCommand.Target target = new PutCommand.Target();
-        target.setPath(remoteFilePath);
-        command.setTarget(target);
-
-        return command;
-    }
-
-    private DeleteCommand deleteCommand(String targetPath) {
-        DeleteCommand command = new DeleteCommand();
-        DeleteCommand.Target target = new DeleteCommand.Target();
-        target.setPath(targetPath);
-        command.setTarget(target);
-
-        command.setRecursive(true);
-
-        return command;
-    }
 }

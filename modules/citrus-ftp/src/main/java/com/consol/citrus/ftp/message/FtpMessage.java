@@ -219,6 +219,22 @@ public class FtpMessage extends DefaultMessage {
         return result(commandResult);
     }
 
+    public static FtpMessage deleteResult(int replyCode, String replyString, boolean success) {
+        DeleteCommandResult result = new DeleteCommandResult();
+        result.setReplyCode(String.valueOf(replyCode));
+        result.setReplyString(replyString);
+        result.setSuccess(success);
+        return result(result);
+    }
+
+    public static FtpMessage putResult(int replyCode, String replyString, boolean success) {
+        PutCommandResult result = new PutCommandResult();
+        result.setReplyCode(String.valueOf(replyCode));
+        result.setReplyString(replyString);
+        result.setSuccess(success);
+        return result(result);
+    }
+
     public static FtpMessage result(CommandResultType commandResult) {
         FtpMessage ftpMessage = new FtpMessage(commandResult);
         ftpMessage.setHeader(FtpMessageHeaders.FTP_REPLY_CODE, commandResult.getReplyCode());

@@ -24,8 +24,7 @@ import com.consol.citrus.util.FileUtils;
 import com.jcraft.jsch.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ftp.FTPCmd;
-import org.apache.ftpserver.ftplet.DataType;
-import org.apache.ftpserver.ftplet.FtpReply;
+import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.FileCopyUtils;
@@ -75,7 +74,7 @@ public class SftpClient extends FtpClient {
         try {
             if (ftpCommand.getSignal().equals(FTPCmd.MKD.getCommand())) {
                 sftp.mkdir(ftpCommand.getArguments());
-                return FtpMessage.result(FtpReply.REPLY_257_PATHNAME_CREATED, "Pathname created", true);
+                return FtpMessage.result(FTPReply.PATHNAME_CREATED, "Pathname created", true);
             } else {
                 throw new CitrusRuntimeException(String.format("Unsupported ftp command '%s'", ftpCommand.getSignal()));
             }
@@ -98,7 +97,7 @@ public class SftpClient extends FtpClient {
                 fileNames.add(entry.getFilename());
             }
 
-            return FtpMessage.result(FtpReply.REPLY_150_FILE_STATUS_OKAY, "List files complete", fileNames);
+            return FtpMessage.result(FTPReply.FILE_STATUS_OK, "List files complete", fileNames);
         } catch (SftpException e) {
             throw new CitrusRuntimeException(String.format("Failed to list files in path '%s'", remoteFilePath), e);
         }
@@ -144,7 +143,7 @@ public class SftpClient extends FtpClient {
             throw new CitrusRuntimeException("Failed to delete file from FTP server", e);
         }
 
-        return FtpMessage.result(FtpReply.REPLY_150_FILE_STATUS_OKAY, "Delete file complete", true);
+        return FtpMessage.deleteResult(FTPReply.FILE_ACTION_OK, "Delete file complete", true);
     }
 
     @Override
@@ -169,7 +168,7 @@ public class SftpClient extends FtpClient {
             throw new CitrusRuntimeException("Failed to put file to FTP server", e);
         }
 
-        return FtpMessage.result(FtpReply.REPLY_226_CLOSING_DATA_CONNECTION, "Transfer complete", true);
+        return FtpMessage.putResult(FTPReply.CLOSING_DATA_CONNECTION, "Transfer complete", true);
     }
 
     @Override
@@ -192,15 +191,15 @@ public class SftpClient extends FtpClient {
 
             if (getEndpointConfiguration().isAutoReadFiles()) {
                 String fileContent;
-                if (command.getFile().getType().equals(DataType.BINARY.name())) {
+                if (command.getFile().getType().equals(DATA_TYPE_BINARY)) {
                     fileContent = Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(localFilePath).getInputStream()));
                 } else {
                     fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));
                 }
 
-                return FtpMessage.result(FtpReply.REPLY_226_CLOSING_DATA_CONNECTION, "Transfer complete", localFilePath, fileContent);
+                return FtpMessage.result(FTPReply.CLOSING_DATA_CONNECTION, "Transfer complete", localFilePath, fileContent);
             } else {
-                return FtpMessage.result(FtpReply.REPLY_226_CLOSING_DATA_CONNECTION, "Transfer complete", localFilePath, null);
+                return FtpMessage.result(FTPReply.CLOSING_DATA_CONNECTION, "Transfer complete", localFilePath, null);
             }
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to get file from FTP server", e);
