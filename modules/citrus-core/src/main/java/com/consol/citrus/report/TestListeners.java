@@ -69,6 +69,8 @@ public class TestListeners {
      * @param listener
      */
     public void addTestListener(TestListener listener) {
-        this.testListeners.add(listener);
+        if (!testListeners.contains(listener)) {
+            this.testListeners.add(listener);
+        }
     }
 }

@@ -32,7 +32,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.*;
-import org.apache.ftpserver.ftplet.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -45,6 +44,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
@@ -53,6 +54,8 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FtpClient.class);
+
+    protected final static String DATA_TYPE_BINARY = "BINARY";
 
     /** Apache ftp client */
     private FTPClient ftpClient;
@@ -223,7 +226,13 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to delete file from FTP server", e);
         }
 
-        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
+        // If there was no file to delete, the ftpClient has the reply code from the previously executed
+        // operation. Since we want to have a deterministic behaviour, we need to set the reply code and
+        // reply string on our own!
+        if (ftpClient.getReplyCode() != FILE_ACTION_OK) {
+            return FtpMessage.deleteResult(FILE_ACTION_OK, String.format("%s No files to delete.", FILE_ACTION_OK), true);
+        }
+        return FtpMessage.deleteResult(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
     }
 
     /**
@@ -259,7 +268,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(put.getTarget().getPath()));
 
             try (InputStream localFileInputStream = FileUtils.getFileResource(localFilePath).getInputStream()) {
-                ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(Optional.ofNullable(put.getFile().getType()).orElse("BINARY"))));
+                ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(Optional.ofNullable(put.getFile().getType()).orElse(DATA_TYPE_BINARY))));
 
                 if (!ftpClient.storeFile(remoteFilePath, localFileInputStream)) {
                     throw new IOException("Failed to put file to FTP server. Remote path: " + remoteFilePath
@@ -270,7 +279,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             throw new CitrusRuntimeException("Failed to put file to FTP server", e);
         }
 
-        return FtpMessage.result(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
+        return FtpMessage.putResult(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
     }
 
     /**
@@ -295,7 +304,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             if (getEndpointConfiguration().isAutoReadFiles()) {
                 String fileContent;
-                if (command.getFile().getType().equals(DataType.BINARY.name())) {
+                if (command.getFile().getType().equals(DATA_TYPE_BINARY)) {
                     fileContent = Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(localFilePath).getInputStream()));
                 } else {
                     fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));

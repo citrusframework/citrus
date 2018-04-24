@@ -38,7 +38,9 @@ public class TestSuiteListeners {
      * @param testSuiteListener the listener.
      */
     public void addTestSuiteListener(TestSuiteListener testSuiteListener) {
-        testSuiteListeners.add(testSuiteListener);
+        if (!testSuiteListeners.contains(testSuiteListener)) {
+            testSuiteListeners.add(testSuiteListener);
+        }
     }
 
     public void onFinish() {

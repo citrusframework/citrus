@@ -57,10 +57,9 @@ citrus-sample
   |   |   + main
   |   |    |   + java
   |   |    |   + resources
-  |   |   + citrus
+  |   |   + test
   |   |    |   + java
   |   |    |   + resources
-  |   |    |   + tests
   pom.xml
 ----
 
