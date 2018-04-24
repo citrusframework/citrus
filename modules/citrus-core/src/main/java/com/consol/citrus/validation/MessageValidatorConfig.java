@@ -40,6 +40,7 @@ public class MessageValidatorConfig {
     private final JsonTextMessageValidator defaultJsonMessageValidator = new JsonTextMessageValidator();
     private final JsonPathMessageValidator defaultJsonPathMessageValidator = new JsonPathMessageValidator();
     private final PlainTextMessageValidator defaultPlaintextMessageValidator = new PlainTextMessageValidator();
+    private final BinaryMessageValidator defaultBinaryMessageValidator = new BinaryMessageValidator();
     private final BinaryBase64MessageValidator defaultBinaryBase64MessageValidator = new BinaryBase64MessageValidator();
     private final GzipBinaryBase64MessageValidator defaultGzipBinaryBase64MessageValidator = new GzipBinaryBase64MessageValidator();
 
@@ -78,6 +79,11 @@ public class MessageValidatorConfig {
     @Bean(name = "defaultPlaintextMessageValidator")
     public PlainTextMessageValidator getDefaultPlainTextMessageValidator() {
         return defaultPlaintextMessageValidator;
+    }
+
+    @Bean(name = "defaultBinaryMessageValidator")
+    public BinaryMessageValidator getDefaultBinaryMessageValidator() {
+        return defaultBinaryMessageValidator;
     }
 
     @Bean(name = "defaultBinaryBase64MessageValidator")
@@ -126,6 +132,7 @@ public class MessageValidatorConfig {
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultJsonPathMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultPlaintextMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultMessageHeaderValidator);
+        citrusMessageValidatorRegistry.getMessageValidators().add(defaultBinaryMessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultBinaryBase64MessageValidator);
         citrusMessageValidatorRegistry.getMessageValidators().add(defaultGzipBinaryBase64MessageValidator);
 

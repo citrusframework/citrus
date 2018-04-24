@@ -123,16 +123,28 @@ public abstract class TypeConversionUtils {
             return (T) Arrays.asList(StringUtils.commaDelimitedListToStringArray(String.valueOf(listString)));
         }
 
-        if (byte[].class.isAssignableFrom(type) && target instanceof String) {
-            try {
-                return (T) String.valueOf(target).getBytes(Citrus.CITRUS_FILE_ENCODING);
-            } catch (UnsupportedEncodingException e) {
-                return (T) String.valueOf(target).getBytes();
+        if (byte[].class.isAssignableFrom(type)) {
+            if (target instanceof String) {
+                try {
+                    return (T) String.valueOf(target).getBytes(Citrus.CITRUS_FILE_ENCODING);
+                } catch (UnsupportedEncodingException e) {
+                    return (T) String.valueOf(target).getBytes();
+                }
+            } else if (target instanceof ByteBuffer) {
+                return (T) ((ByteBuffer) target).array();
+            } else if (target instanceof ByteArrayInputStream) {
+                try {
+                    return (T) StreamUtils.copyToByteArray((ByteArrayInputStream) target);
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to convert input stream to byte[]");
+                }
             }
         }
 
         if (InputStream.class.isAssignableFrom(type)) {
-            if (target instanceof byte[]) {
+            if (target instanceof InputStream) {
+                return (T) target;
+            } else if (target instanceof byte[]) {
                 return (T) new ByteArrayInputStream((byte[]) target);
             } else if (target instanceof String) {
                 try {
@@ -149,12 +161,12 @@ public abstract class TypeConversionUtils {
             }
         }
 
-        if (ByteBuffer.class.isAssignableFrom(target.getClass()) && type.equals(String.class)) {
-            return (T) new String(((ByteBuffer)target).array());
-        }
-
-        if (byte[].class.isAssignableFrom(target.getClass()) && type.equals(String.class)) {
-            return (T) Arrays.toString((byte[]) target);
+        if (type.equals(String.class)) {
+            if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
+                return (T) new String(((ByteBuffer) target).array());
+            } else if (byte[].class.isAssignableFrom(target.getClass())) {
+                return (T) Arrays.toString((byte[]) target);
+            }
         }
 
         try {
