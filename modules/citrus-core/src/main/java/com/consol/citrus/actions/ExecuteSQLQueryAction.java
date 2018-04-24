@@ -288,19 +288,13 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Does some simple validation on the SQL statement.
      * @param stmt The statement which is to be validated.
      */
-    private void validateSqlStatement(String stmt) {
+    protected void validateSqlStatement(String stmt) {
         if (!stmt.toLowerCase().startsWith("select")) {
             throw new CitrusRuntimeException("Missing keyword SELECT in statement: " + stmt);
         }
-
-        int fromIndex = stmt.toLowerCase().indexOf("from");
-
-        if (fromIndex <= "select".length()+1) {
-            throw new CitrusRuntimeException("Missing keyword FROM in statement: " + stmt);
-        }
     }
 
-    private void validateSingleValue(String columnName, String controlValue, String resultValue, TestContext context) {
+    protected void validateSingleValue(String columnName, String controlValue, String resultValue, TestContext context) {
         // check if value is ignored
         if (controlValue.equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {

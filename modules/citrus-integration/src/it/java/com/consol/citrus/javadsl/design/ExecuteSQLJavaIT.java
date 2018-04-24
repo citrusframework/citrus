@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.script.ScriptTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
@@ -78,6 +79,6 @@ public class ExecuteSQLJavaIT extends TestNGCitrusTestDesigner {
             .statement("select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS")
             .validateScript("assert rows.size == 2\n" +
                     "assert rows[0].RTAG == 'requestTag'\n" +
-                    "assert rows[0].DESC == 'Migrate'\n", "groovy");
+                    "assert rows[0].DESC == 'Migrate'\n", ScriptTypes.GROOVY);
     }
 }
