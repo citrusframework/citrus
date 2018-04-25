@@ -11,7 +11,7 @@ Hamcrest is a very powerful matcher library that provides a fantastic set of mat
 [[changes-binary-base64-message-validator]]
 === Binary base64 message validator
 
-There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message payload. See link:validation-binary[validation-binary]how this is working for you.
+There is a new message validator implementation that automatically converts binary message content to a base64 encoded String representation for comparison. This is the easiest way to compare binary message content with an expected message payload. See link:#binary-message-validation[binary-message-validation] how this is working for you.
 
 [[changes-rmi]]
 === RMI support
