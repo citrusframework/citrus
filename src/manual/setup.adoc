@@ -68,8 +68,8 @@ away without any adjustments. Try to execute the following commands:
 
 [source,xml]
 ----
-mvn integration-test 
-mvn integration-test -Dtest=MyFirstCitrusTest 
+mvn clean verify
+mvn clean verify -Dtest=MyFirstCitrusTest
 ----
 
 NOTE: If you need additional assistance in setting up a Citrus Maven project please visit our Maven setup tutorial on
@@ -147,13 +147,13 @@ The tests will be included into your projects integration-test phase using the M
 
 The Citrus test sources go to the default Maven test sources directory `src/test/java` and `src/test/resources`:
 
-Now everything is set up and you can call the usual Maven *install* goal (mvn clean install) in order to build your project.
-The Citrus integration tests are executed automatically during the build process. Besides that you can call the Maven integration-test phase explicitly to execute all Citrus tests or a specific test by its name:
+Now everything is set up and you can call the usual Maven *install* goal (`mvn clean install`) in order to build your project.
+The Citrus integration tests are executed automatically during the build process. Besides that you can call the Maven *verify* phase explicitly to execute all Citrus tests or a specific test by its name including a validation of the test results.
 
 [source,xml]
 ----
-mvn integration-test 
-mvn integration-test -Dtest=MyFirstCitrusIT
+mvn clean verify
+mvn clean verify -Dtest=MyFirstCitrusIT
 ----
 
 IMPORTANT: The Maven failsafe plugin by default executed tests with specific name pattern. This is because integration tests should not execute in Maven unit test phase, too. Therefore integration tests should follow
