@@ -23,13 +23,15 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
+import com.consol.citrus.jdbc.model.Execute;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
+import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.jdbc.model.Operation;
 import org.springframework.xml.transform.StringResult;
-import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.HashMap;
@@ -38,13 +40,9 @@ import java.util.Random;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class JdbcEndpointAdapterControllerTest {
 
@@ -54,12 +52,13 @@ public class JdbcEndpointAdapterControllerTest {
     private final JdbcEndpointAdapterController jdbcEndpointAdapterController =
             new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter);
 
-    @BeforeSuite
+    @BeforeMethod
     public void setup(){
         final JdbcServerConfiguration serverConfiguration = mock(JdbcServerConfiguration.class);
         when(serverConfiguration.getMaxConnections()).thenReturn(1);
 
         when(jdbcEndpointConfiguration.getServerConfiguration()).thenReturn(serverConfiguration);
+        when(jdbcEndpointConfiguration.isAutoReplyConnectionValidationQueries()).thenReturn(false);
     }
 
     @Test
@@ -652,8 +651,6 @@ public class JdbcEndpointAdapterControllerTest {
         //Exception is thrown
     }
 
-
-
     @Test
     public void testCreateCallableStatementWithAutoCreateStatement(){
 
@@ -699,4 +696,50 @@ public class JdbcEndpointAdapterControllerTest {
         //THEN
         //Exception is thrown
     }
+
+    @Test
+    public void testHandleMessageWithAutoReplyConnectionValidationQueriesEmptyOperation(){
+
+        //GIVEN
+        final Message request = mock(Message.class);
+        when(request.getPayload(Operation.class)).thenReturn(null);
+        final Message expectedResponse = mock(Message.class);;
+
+        when(endpointAdapter.handleMessage(request)).thenReturn(expectedResponse);
+        when(jdbcEndpointConfiguration.isAutoReplyConnectionValidationQueries()).thenReturn(true);
+
+        //WHEN
+        final Message response = jdbcEndpointAdapterController.handleMessage(request);
+
+        //THEN
+        assertEquals(response.getPayload(), expectedResponse.getPayload());
+        verify(endpointAdapter, times(1)).handleMessage(request);
+    }
+
+    @Test
+    public void testHandleMessageWithAutoReplyConnectionValidationQueries(){
+
+        //GIVEN
+        final Message request = mock(Message.class);
+        Operation operation = new Operation();
+        operation.setExecute(new Execute());
+        operation.getExecute().setStatement(new Execute.Statement());
+        operation.getExecute().getStatement().setSql("SELECT 1");
+        when(request.getPayload(Operation.class)).thenReturn(operation);
+
+        when(jdbcEndpointConfiguration.isAutoReplyConnectionValidationQueries()).thenReturn(true);
+
+        //WHEN
+        final Message response = jdbcEndpointAdapterController.handleMessage(request);
+
+        //THEN
+        assertTrue(JdbcMessage.class.isAssignableFrom(response.getClass()));
+        JdbcMessage jdbcMessageResponse = (JdbcMessage) response;
+        OperationResult operationResult = jdbcMessageResponse.getPayload(OperationResult.class);
+        assertTrue(operationResult.isSuccess());
+        assertEquals(operationResult.getDataSet(), null);
+        assertEquals(operationResult.getAffectedRows(), new Integer(0));
+        verify(endpointAdapter, times(0)).handleMessage(request);
+    }
+
 }

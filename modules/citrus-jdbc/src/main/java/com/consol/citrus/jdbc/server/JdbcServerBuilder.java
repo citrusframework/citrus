@@ -95,6 +95,16 @@ public class JdbcServerBuilder extends AbstractEndpointBuilder<JdbcServer> {
     }
 
     /**
+     * Sets the autoReplyConnectionValidationQueries property.
+     * @param autoReplyConnectionValidationQueries
+     * @return
+     */
+    public JdbcServerBuilder autoReplyConnectionValidationQueries(boolean autoReplyConnectionValidationQueries) {
+        endpoint.getEndpointConfiguration().setAutoReplyConnectionValidationQueries(autoReplyConnectionValidationQueries);
+        return this;
+    }
+
+    /**
      * Sets the message correlator.
      * @param correlator
      * @return

@@ -313,6 +313,11 @@ This includes `createStatement`, `createPreparedStatement`, `createCallableState
 | Determines whether the server should automatically accept transaction related messages or validate them.
 This includes `startTransaction`, `commitTransaction` and `rollbackTransaction`.
 
+| auto reply connection validation queries
+| No
+| false
+| Determines whether the server should automatically send a positive answer for connection validation queries sent by the jdbc client, e.g. 'SELECT USER FROM DUAL'. To override the currently defined validation queries just set `citrus.jdbc.connection.validaiton.queries property within the citrus-application.properties. The property is`expected to be a ';'-separated list of queries. Every query can be specified as a regular expression, e.g. 'SELECT.*FROM DUAL;SELECT \\w*;'.
+
 | host
 | Yes
 |
