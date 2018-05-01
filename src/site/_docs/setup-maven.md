@@ -199,14 +199,14 @@ project.
 If you just want to execute the Citrus tests with a Maven build execute
  
 {% highlight shell %}
-mvn integration-test
+mvn clean verify
 {% endhighlight %} 
 
 This executes all Citrus test cases during the build and you will see Citrus performing some integration test logging output. You can also execute
 single test cases by defining the test name as Maven system property.
 
 {% highlight shell %}
-mvn integration-test -Dit.test=SampleIT
+mvn clean verify -Dit.test=SampleIT
 {% endhighlight %}
 
 Finally we are ready to proceed with creating new test cases. So let's add a new Citrus test case to our project. We use 
@@ -223,7 +223,7 @@ Choose unit test framework testng: :
 
 You have to specify the test name, author, description, package and the test framework. The plugin successfully generates 
 the new test files for you. On the one hand a new Java class in src/it/java and a new XML test file in src/it/tests. The 
-test is runnable right now. Try it and execute &quot;mvn integration-test&quot; once more. In the Citrus test results you 
+test is runnable right now. Try it and execute &quot;mvn clean verify&quot; once more. In the Citrus test results you 
 will see that the new test was executed during integration-test phase along with the other existing test case. You can 
 also run the test manually in your IDE with a TestNG plugin.
 
