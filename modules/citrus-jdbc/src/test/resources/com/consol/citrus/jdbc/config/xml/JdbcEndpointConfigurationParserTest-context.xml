@@ -31,6 +31,7 @@
                       timeout="10"
                       auto-connect="false"
                       auto-create-statement="false"
+                      auto-reply-connection-validation-queries="true"
                       polling-interval="0"
                       auto-start="true"
                       actor="testActor"

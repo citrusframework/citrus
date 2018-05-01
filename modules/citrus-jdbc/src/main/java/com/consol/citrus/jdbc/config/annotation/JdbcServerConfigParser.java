@@ -64,6 +64,7 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
         builder.autoConnect(annotation.autoConnect());
         builder.autoCreateStatement(annotation.autoCreateStatement());
         builder.autoTransactionHandling(annotation.autoTransactionHandling());
+        builder.autoReplyConnectionValidationQueries(annotation.autoReplyConnectionValidationQueries());
 
         if (StringUtils.hasText(annotation.correlator())) {
             builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));

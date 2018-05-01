@@ -47,9 +47,6 @@ public class JdbcEndpointConfigurationParserTest extends AbstractBeanDefinitionP
 
     @Test
     public void testAnnotations(){
-
-
-
         assertEquals(
                 testServer.getEndpointConfiguration().getServerConfiguration().getHost(),
                 "foo.bar.test.io");
@@ -92,5 +89,8 @@ public class JdbcEndpointConfigurationParserTest extends AbstractBeanDefinitionP
         assertEquals(
                 testServer.getEndpointConfiguration().isAutoTransactionHandling(),
                 false);
+        assertEquals(
+                testServer.getEndpointConfiguration().isAutoReplyConnectionValidationQueries(),
+                true);
     }
 }

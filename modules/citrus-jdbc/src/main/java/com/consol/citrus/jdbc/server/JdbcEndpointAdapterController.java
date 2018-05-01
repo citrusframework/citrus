@@ -48,6 +48,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     private final EndpointAdapter delegate;
 
     private final DataSetCreator dataSetCreator;
+    private final ConnectionValidationQueryPatternMatcher connectionValidationQueryPatternMatcher;
 
     private AtomicInteger connections = new AtomicInteger(0);
     private boolean transactionState;
@@ -63,6 +64,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
         this.dataSetCreator = new DataSetCreator();
+        this.connectionValidationQueryPatternMatcher = new ConnectionValidationQueryPatternMatcher();
     }
 
     /**
@@ -78,6 +80,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
         this.dataSetCreator = dataSetCreator;
+        this.connectionValidationQueryPatternMatcher = new ConnectionValidationQueryPatternMatcher();
     }
 
     @Override
@@ -94,6 +97,20 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
                     request.getPayload(String.class)));
         }
 
+        if (endpointConfiguration.isAutoReplyConnectionValidationQueries()) {
+            return Optional.ofNullable(request.getPayload(Operation.class))
+                    .map(operation -> operation.getExecute())
+                    .map(execute -> execute.getStatement())
+                    .map(statement -> statement.getSql())
+                    .map(sqlQuery -> {
+                        if (connectionValidationQueryPatternMatcher.match(sqlQuery)) {
+                            log.debug(String.format("Sending a positive default answer for the following query: '%s'", sqlQuery));
+                            return createDefaultResponse();
+                        }
+                        return null;
+                    })
+                    .orElseGet(() -> delegate.handleMessage(request));
+        }
         return Optional.ofNullable(delegate.handleMessage(request))
                        .orElse(JdbcMessage.success());
     }
@@ -368,4 +385,17 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     AtomicInteger getConnections() {
         return connections;
     }
+
+    private Message createDefaultResponse() {
+        OperationResult operationResult = new OperationResult();
+        operationResult.setSuccess(true);
+        operationResult.setAffectedRows(0);
+        JdbcMessage jdbcMessage = JdbcMessage.result(operationResult);
+        jdbcMessage.setHeader(MessageHeaders.MESSAGE_TYPE, "xml");
+        jdbcMessage.setHeader(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
+        jdbcMessage.setHeader("id", UUID.randomUUID());
+        jdbcMessage.setHeader("timestamp", System.currentTimeMillis());
+        return jdbcMessage;
+    }
+
 }

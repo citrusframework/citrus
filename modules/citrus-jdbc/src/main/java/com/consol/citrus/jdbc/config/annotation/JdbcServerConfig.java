@@ -70,6 +70,12 @@ public @interface JdbcServerConfig {
     boolean autoCreateStatement() default true;
 
     /**
+     * Auto reply check connetion queries.
+     * @return
+     */
+    boolean autoReplyConnectionValidationQueries() default false;
+
+    /**
      * Message correlator.
      * @return
      */
