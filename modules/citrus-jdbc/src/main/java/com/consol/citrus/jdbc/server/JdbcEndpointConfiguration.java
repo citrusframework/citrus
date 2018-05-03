@@ -43,6 +43,9 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Auto accept transaction operations  */
     private boolean autoTransactionHandling = true;
 
+    /** Auto reply connection validation queries sent by the jdbc clients at the beginning of the communication*/
+    private boolean autoReplyConnectionValidationQueries = false;
+
     /** Marshaller converts from XML to Jdbc model objects */
     private JdbcMarshaller marshaller = new JdbcMarshaller();
 
@@ -94,6 +97,24 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setAutoCreateStatement(boolean autoCreateStatement) {
         this.autoCreateStatement = autoCreateStatement;
+    }
+
+    /**
+     * Gets the autoReplyConnectionValidationQueries.
+     *
+     * @return
+     */
+    public boolean isAutoReplyConnectionValidationQueries() {
+        return autoReplyConnectionValidationQueries;
+    }
+
+    /**
+     * Sets the autoReplyConnectionValidationQueries
+     *
+     * @param autoReplyConnectionValidationQueries
+     */
+    public void setAutoReplyConnectionValidationQueries(boolean autoReplyConnectionValidationQueries) {
+        this.autoReplyConnectionValidationQueries = autoReplyConnectionValidationQueries;
     }
 
     @Override

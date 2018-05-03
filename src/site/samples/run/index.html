@@ -70,13 +70,13 @@ sample: sample-run
     <p>Execute all Citrus tests by calling</p>
 
     <figure class="highlight">
-      <pre>mvn integration-test</pre>
+      <pre>mvn clean verify</pre>
     </figure>
 
     <p>You can also pick a single test by calling</p>
 
     <figure class="highlight">
-      <pre>mvn integration-test -Ptest=TodoListIT</pre>
+      <pre>mvn clean verify -Ptest=TodoListIT</pre>
     </figure>
 
     <p>You should see Citrus performing several tests with lots of debugging output in both terminals (sample application server
