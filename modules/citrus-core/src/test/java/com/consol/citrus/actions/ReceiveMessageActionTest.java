@@ -17,6 +17,8 @@
 package com.consol.citrus.actions;
 
 import com.consol.citrus.*;
+import com.consol.citrus.channel.ChannelEndpointConfiguration;
+import com.consol.citrus.channel.ChannelMessageConverter;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
@@ -36,6 +38,8 @@ import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.integration.channel.QueueChannel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -51,7 +55,63 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
+
+    @Autowired
+    private QueueChannel mockChannel;
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testReceiveMessageWithEndpointUri() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpointUri("channel:mockChannel?timeout=15000");
+
+        TestActor testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+
+        receiveAction.setActor(testActor);
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        receiveAction.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        when(mockChannel.receive(15000)).thenReturn(new ChannelMessageConverter().convertOutbound(controlMessage, new ChannelEndpointConfiguration(), context));
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+    }
+
+    @Test
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public void testReceiveMessageWithVariableEndpointName() {
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction();
+        receiveAction.setEndpointUri("${varEndpoint}");
+
+        context.setVariable("varEndpoint", "channel:mockChannel");
+        TestActor testActor = new TestActor();
+        testActor.setName("TESTACTOR");
+
+        receiveAction.setActor(testActor);
+
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        receiveAction.setMessageBuilder(controlMessageBuilder);
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        when(mockChannel.receive(5000)).thenReturn(new ChannelMessageConverter().convertOutbound(controlMessage, new ChannelEndpointConfiguration(), context));
+
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(validationContext);
+        receiveAction.setValidationContexts(validationContexts);
+        receiveAction.execute(context);
+    }
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
 	public void testReceiveMessageWithMessagePayloadData() {

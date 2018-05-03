@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
@@ -50,7 +51,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", element.getLocalName());
 
-        if (endpointUri.contains(":")) {
+        if (endpointUri.contains(":") || (endpointUri.contains(Citrus.VARIABLE_PREFIX) && endpointUri.contains(Citrus.VARIABLE_SUFFIX))) {
             builder.addPropertyValue("endpointUri", endpointUri);
         } else {
             builder.addPropertyReference("endpoint", endpointUri);

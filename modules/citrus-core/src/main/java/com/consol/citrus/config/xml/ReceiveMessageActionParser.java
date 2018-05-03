@@ -67,7 +67,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", element.getLocalName());
 
-        if (endpointUri.contains(":")) {
+        if (endpointUri.contains(":") || (endpointUri.contains(Citrus.VARIABLE_PREFIX) && endpointUri.contains(Citrus.VARIABLE_SUFFIX))) {
             builder.addPropertyValue("endpointUri", endpointUri);
         } else {
             builder.addPropertyReference("endpoint", endpointUri);
