@@ -22,6 +22,7 @@ import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
@@ -192,6 +193,16 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      */
     public HttpClientBuilder interceptors(List<ClientHttpRequestInterceptor> interceptors) {
         endpoint.getEndpointConfiguration().setClientInterceptors(interceptors);
+        return this;
+    }
+
+    /**
+     * Sets the binaryMediaTypes.
+     * @param binaryMediaTypes
+     * @return
+     */
+    public HttpClientBuilder binaryMediaTypes(List<MediaType> binaryMediaTypes) {
+        endpoint.getEndpointConfiguration().setBinaryMediaTypes(binaryMediaTypes);
         return this;
     }
 

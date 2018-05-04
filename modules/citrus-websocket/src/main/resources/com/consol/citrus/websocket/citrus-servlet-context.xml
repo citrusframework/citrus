@@ -50,10 +50,13 @@
   <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     <property name="messageConverters">
       <util:list id="converters">
-        <bean class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
+        <ref bean="citrusHttpMessageConverter"/>
       </util:list>
     </property>
   </bean>
+
+  <!-- Message converter for multiple media types -->
+  <bean id="citrusHttpMessageConverter" class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
 
   <!-- Default controller for handling incoming requests messages -->
   <bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController"/>

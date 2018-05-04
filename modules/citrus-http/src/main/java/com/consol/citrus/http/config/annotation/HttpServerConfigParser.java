@@ -27,6 +27,7 @@ import com.consol.citrus.http.server.HttpServerBuilder;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -98,6 +99,15 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
             filterMappings.put(pair[0], pair[1]);
         }
         builder.filterMappings(filterMappings);
+
+        List<MediaType> binaryMediaTypes = new ArrayList<>();
+        for (String mediaType : annotation.binaryMediaTypes()) {
+            binaryMediaTypes.add(MediaType.valueOf(mediaType));
+        }
+
+        if (!binaryMediaTypes.isEmpty()) {
+            builder.binaryMediaTypes(binaryMediaTypes);
+        }
 
         if (StringUtils.hasText(annotation.connector())) {
             builder.connector(getReferenceResolver().resolve(annotation.connector(), Connector.class));

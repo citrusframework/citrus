@@ -33,7 +33,7 @@
 
           <http:send-request uri="http://localhost:8074/test?endpointName=echoHttpClient${i}" fork="true">
             <http:POST>
-              <http:headers content-type="text/xml" accept="text/xml,*/*">
+              <http:headers content-type="application/xml" accept="application/xml">
                 <http:header name="CustomHeaderId" value="${custom_header_id}"/>
               </http:headers>
               <http:body>
@@ -53,7 +53,7 @@
           <sequential>
             <http:receive-request server="echoHttpServer">
               <http:POST path="/test">
-                <http:headers content-type="text/xml" accept="text/xml,*/*">
+                <http:headers content-type="application/xml" accept="application/xml">
                   <http:header name="CustomHeaderId" value="${custom_header_id}"/>
                 </http:headers>
                 <http:body>
@@ -71,7 +71,7 @@
             <http:send-response server="echoHttpServer">
               <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
                 <http:header name="CustomHeaderId" value="${custom_header_id}"/>
-                <http:header name="Content-Type" value="text/xml"/>
+                <http:header name="Content-Type" value="application/xml"/>
               </http:headers>
               <http:body>
                 <http:data>

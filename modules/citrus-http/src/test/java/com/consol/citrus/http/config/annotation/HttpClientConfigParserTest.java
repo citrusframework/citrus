@@ -30,6 +30,7 @@ import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.*;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -59,6 +60,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
             errorStrategy = ErrorHandlingStrategy.THROWS_EXCEPTION,
             errorHandler = "errorHandler",
             messageConverter="messageConverter",
+            binaryMediaTypes = {MediaType.APPLICATION_OCTET_STREAM_VALUE, "application/custom"},
             requestFactory="soapRequestFactory",
             endpointResolver="endpointResolver")
     private HttpClient httpClient2;
@@ -131,6 +133,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient1.getEndpointConfiguration().isHandleCookies(), false);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().getBinaryMediaTypes().size(), 6L);
 
         // 2nd message sender
         Assert.assertNotNull(httpClient2.getEndpointConfiguration().getRestTemplate());
@@ -147,6 +150,8 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().isHandleCookies(), true);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandler(), errorHandler);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().getBinaryMediaTypes().size(), 2L);
+        Assert.assertTrue(httpClient2.getEndpointConfiguration().getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
 
         // 3rd message sender
         Assert.assertNotNull(httpClient3.getEndpointConfiguration().getRestTemplate());

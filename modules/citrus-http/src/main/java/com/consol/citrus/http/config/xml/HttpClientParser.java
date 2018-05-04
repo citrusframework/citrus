@@ -85,6 +85,7 @@ public class HttpClientParser extends AbstractEndpointParser {
         }
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("interceptors"), "clientInterceptors");
+        BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("binary-media-types"), "binaryMediaTypes");
 
         // Set outbound header mapper
         endpointConfiguration.addPropertyValue("headerMapper", DefaultHttpHeaderMapper.outboundMapper());

@@ -23,7 +23,7 @@
             <parallel>
                 <http:send-request client="httpClient">
                     <http:POST>
-                        <http:headers content-type="text/xml" accept="text/xml, */*"/>
+                        <http:headers content-type="application/xml" accept="application/xml"/>
                         <http:body>
                           <http:data>
                             <![CDATA[
@@ -42,7 +42,7 @@
                 <sequential>
                     <http:receive-request server="httpServerRequestEndpoint">
                       <http:POST path="/test">
-                        <http:headers content-type="text/xml" accept="text/xml, */*">
+                        <http:headers content-type="application/xml" accept="application/xml">
                             <http:header name="Authorization" value="Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA=="/>
                         </http:headers>
                         <http:body>
@@ -65,7 +65,7 @@
                     
                     <http:send-response server="httpServerResponseEndpoint">
                         <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
-                            <http:header name="Content-Type" value="text/xml"/>
+                            <http:header name="Content-Type" value="application/xml"/>
                             <http:header name="citrus_jms_correlationId" value="${correlation_id}"/>
                         </http:headers>
                         <http:body>

@@ -24,6 +24,7 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.testng.Assert;
@@ -48,6 +49,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
         Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
         Assert.assertNull(httpClient.getEndpointConfiguration().getClientInterceptors());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getBinaryMediaTypes().size(), 6L);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
@@ -72,6 +74,8 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().isHandleCookies(), true);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler(), beanDefinitionContext.getBean("errorHandler"));
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getBinaryMediaTypes().size(), 2L);
+        Assert.assertTrue(httpClient.getEndpointConfiguration().getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
 
         // 3rd message sender
         httpClient = clients.get("httpClient3");

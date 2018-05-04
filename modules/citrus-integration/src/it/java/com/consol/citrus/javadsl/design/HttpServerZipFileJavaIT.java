@@ -18,8 +18,8 @@ package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.message.*;
-import org.apache.http.entity.ContentType;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.ZipMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
@@ -40,29 +40,29 @@ public class HttpServerZipFileJavaIT extends TestNGCitrusTestDesigner {
                 .fork(true)
                 .messageType(MessageType.BINARY)
                 .message(zipMessage)
-                .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
-                .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+                .contentType("application/zip")
+                .accept("application/zip");
 
         http().server("echoHttpServer")
                     .receive()
                     .post("/test")
                     .messageType(MessageType.BINARY)
                     .message(zipMessage)
-                    .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType())
-                    .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+                    .contentType("application/zip")
+                    .accept("application/zip");
 
         http().server("echoHttpServer")
                 .send()
                 .response(HttpStatus.OK)
                 .messageType(MessageType.BINARY)
                 .message(zipMessage)
-                .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+                .contentType("application/zip");
 
         http().client("echoHttpClient")
                 .receive()
                 .response(HttpStatus.OK)
                 .messageType(MessageType.BINARY)
                 .message(zipMessage)
-                .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+                .contentType("application/zip");
     }
 }

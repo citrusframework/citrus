@@ -133,6 +133,12 @@ public @interface HttpServerConfig {
     HttpStatus defaultStatus() default HttpStatus.OK;
 
     /**
+     * Binary media types.
+     * @return
+     */
+    String[] binaryMediaTypes() default {};
+
+    /**
      * Auto start.
      * @return
      */

@@ -34,6 +34,7 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
@@ -109,6 +110,14 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
 
     /** Default status code returned by http server */
     private int defaultStatusCode = HttpStatus.OK.value();
+
+    /** List of media types that should be handled with binary content processing */
+    private List<MediaType> binaryMediaTypes = Arrays.asList(MediaType.APPLICATION_OCTET_STREAM,
+                                                                MediaType.APPLICATION_PDF,
+                                                                MediaType.IMAGE_GIF,
+                                                                MediaType.IMAGE_JPEG,
+                                                                MediaType.IMAGE_PNG,
+                                                                MediaType.valueOf("application/zip"));
 
     /** Message converter */
     private HttpMessageConverter messageConverter = new HttpMessageConverter();
@@ -691,5 +700,23 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
      */
     public void setDefaultStatusCode(int defaultStatusCode) {
         this.defaultStatusCode = defaultStatusCode;
+    }
+
+    /**
+     * Gets the binaryMediaTypes.
+     *
+     * @return
+     */
+    public List<MediaType> getBinaryMediaTypes() {
+        return binaryMediaTypes;
+    }
+
+    /**
+     * Sets the binaryMediaTypes.
+     *
+     * @param binaryMediaTypes
+     */
+    public void setBinaryMediaTypes(List<MediaType> binaryMediaTypes) {
+        this.binaryMediaTypes = binaryMediaTypes;
     }
 }

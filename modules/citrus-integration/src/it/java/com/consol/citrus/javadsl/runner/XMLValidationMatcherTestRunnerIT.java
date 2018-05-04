@@ -41,8 +41,8 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                             "<timestamp>2012-07-01T00:00:00</timestamp>" +
                             "</data>')</text>" +
                             "</testRequestMessage>")
-                    .contentType("text/xml")
-                    .accept("text/xml, */*")),
+                    .contentType("application/xml")
+                    .accept("application/xml")),
             sequential().actions(
                 http(builder -> builder.server("httpServerRequestEndpoint")
                         .receive()
@@ -53,8 +53,8 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                                 "<timestamp>@ignore@</timestamp>" +
                                 "</data>')@')</text>" +
                                 "</testRequestMessage>")
-                        .contentType("text/xml")
-                        .accept("text/xml, */*")
+                        .contentType("application/xml")
+                        .accept("application/xml")
                         .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                         .extractFromHeader("citrus_jms_messageId", "correlation_id")),
                 http(builder -> builder.server("httpServerResponseEndpoint")
@@ -64,7 +64,7 @@ public class XMLValidationMatcherTestRunnerIT extends TestNGCitrusTestRunner {
                                 "<text>Hello Citrus</text>" +
                                 "</testResponseMessage>")
                         .version("HTTP/1.1")
-                        .contentType("text/xml")
+                        .contentType("application/xml")
                         .header("citrus_jms_correlationId", "${correlation_id}"))
             )
         );

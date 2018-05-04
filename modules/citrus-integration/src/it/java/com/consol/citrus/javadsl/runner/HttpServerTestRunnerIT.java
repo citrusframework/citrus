@@ -41,8 +41,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                             "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .contentType("text/xml")
-                    .accept("text/xml, */*")),
+                    .contentType("application/xml")
+                    .accept("application/xml")),
             
             sequential().actions(
                 http(builder -> builder.server("httpServerRequestEndpoint")
@@ -52,8 +52,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                                 "<text>Hello HttpServer</text>" +
                                 "</testRequestMessage>")
                         .header("CustomHeaderId", "${custom_header_id}")
-                        .contentType("text/xml")
-                        .accept("text/xml, */*")
+                        .contentType("application/xml")
+                        .accept("application/xml")
                         .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                         .extractFromHeader("citrus_jms_messageId", "correlation_id")),
                     
@@ -65,7 +65,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                                "</testResponseMessage>")
                        .header("CustomHeaderId", "${custom_header_id}")
                        .version("HTTP/1.1")
-                       .contentType("text/xml")
+                       .contentType("application/xml")
                        .header("citrus_jms_correlationId", "${correlation_id}"))
             )
         );
@@ -89,8 +89,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                             "<text>Hello HttpServer</text>" +
                             "</testRequestMessage>")
                     .header("CustomHeaderId", "${custom_header_id}")
-                    .contentType("text/xml")
-                    .accept("text/xml, */*")),
+                    .contentType("application/xml")
+                    .accept("application/xml")),
             
             sequential().actions(
                 http(builder -> builder.server("httpServerRequestEndpoint")
@@ -101,8 +101,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                                 "<text>Hello HttpServer</text>" +
                                 "</testRequestMessage>")
                         .header("CustomHeaderId", "${custom_header_id}")
-                        .contentType("text/xml")
-                        .accept("text/xml, */*")
+                        .contentType("application/xml")
+                        .accept("application/xml")
                         .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
                         .extractFromHeader("citrus_jms_messageId", "correlation_id")),
                     
@@ -114,7 +114,7 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                                "</testResponseMessage>")
                        .header("CustomHeaderId", "${custom_header_id}")
                        .version("HTTP/1.1")
-                       .contentType("text/xml")
+                       .contentType("application/xml")
                        .header("citrus_jms_correlationId", "${correlation_id}"))
             )
         );
@@ -137,8 +137,8 @@ public class HttpServerTestRunnerIT extends TestNGCitrusTestRunner {
                         "<text>Hello HttpServer</text>" +
                         "</testRequestMessage>")
                 .header("CustomHeaderId", "${custom_header_id}")
-                .contentType("text/xml")
-                .accept("text/xml, */*"));
+                .contentType("application/xml")
+                .accept("application/xml"));
 
         http(builder -> builder.client("httpClient")
                 .receive()

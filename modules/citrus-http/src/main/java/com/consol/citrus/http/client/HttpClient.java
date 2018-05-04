@@ -25,7 +25,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.*;
-import org.apache.http.entity.ContentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -112,13 +111,18 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
         try {
             ResponseEntity<?> response;
-            String accept = Optional.ofNullable(httpMessage.getAccept()).orElse(MediaType.ALL_VALUE);
+            MediaType accept = Optional.ofNullable(httpMessage.getAccept())
+                                .map(mediaType -> mediaType.split(","))
+                                .map(mediaType -> {
+                                    try {
+                                        return MediaType.valueOf(mediaType[0]);
+                                    } catch (InvalidMediaTypeException e) {
+                                        return MediaType.ALL;
+                                    }
+                                })
+                                .orElse(MediaType.ALL);
 
-            if (accept.contains(";")) {
-                accept = accept.substring(0, accept.indexOf(";") - 1);
-            }
-
-            if (accept.equals(ContentType.APPLICATION_OCTET_STREAM.getMimeType()) || accept.startsWith("image/")) {
+            if (getEndpointConfiguration().getBinaryMediaTypes().stream().anyMatch(mediaType -> mediaType.includes(accept))) {
                 response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, byte[].class);
             } else {
                 response = getEndpointConfiguration().getRestTemplate().exchange(URI.create(endpointUri), method, requestEntity, String.class);

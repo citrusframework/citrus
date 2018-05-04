@@ -42,6 +42,7 @@ public class HttpServerParser extends AbstractServerParser {
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("filters"), "filters");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("filter-mappings"), "filterMappings");
+        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("binary-media-types"), "binaryMediaTypes");
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-name"), "servletName");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("servlet-mapping-path"), "servletMappingPath");

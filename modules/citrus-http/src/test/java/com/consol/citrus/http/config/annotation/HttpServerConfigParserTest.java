@@ -31,6 +31,7 @@ import org.mockito.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -61,6 +62,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
             resourceBase="src/it/resources",
             rootParentContext=true,
             debugLogging=true,
+            binaryMediaTypes = {MediaType.APPLICATION_OCTET_STREAM_VALUE, "application/custom"},
             defaultStatus = HttpStatus.NOT_FOUND,
             contextPath="/citrus",
             servletName="citrus-http",
@@ -167,6 +169,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer1.getContextPath(), "/");
         Assert.assertEquals(httpServer1.getServletName(), "httpServer1-servlet");
         Assert.assertEquals(httpServer1.getServletMappingPath(), "/*");
+        Assert.assertEquals(httpServer1.getBinaryMediaTypes().size(), 6L);
 
         // 2nd message sender
         Assert.assertNotNull(httpServer2.getConnector());
@@ -188,6 +191,8 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer2.getContextPath(), "/citrus");
         Assert.assertEquals(httpServer2.getServletName(), "citrus-http");
         Assert.assertEquals(httpServer2.getServletMappingPath(), "/foo");
+        Assert.assertEquals(httpServer2.getBinaryMediaTypes().size(), 2L);
+        Assert.assertTrue(httpServer2.getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
         
         // 3rd message sender
         Assert.assertNull(httpServer3.getConnector());

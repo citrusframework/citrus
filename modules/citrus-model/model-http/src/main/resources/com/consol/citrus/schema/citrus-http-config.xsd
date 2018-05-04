@@ -36,6 +36,7 @@
         <xs:attribute name="connectors" type="xs:string"/>
         <xs:attribute name="filters" type="xs:string"/>
         <xs:attribute name="filter-mappings" type="xs:string"/>
+        <xs:attribute name="binary-media-types" type="xs:string"/>
         <xs:attribute name="servlet-name" type="xs:string"/>
         <xs:attribute name="servlet-mapping-path" type="xs:string"/>
         <xs:attribute name="context-path" type="xs:string"/>
@@ -70,6 +71,7 @@
         <xs:attribute name="default-accept-header" type="xs:boolean"/>
         <xs:attribute name="handle-cookies" type="xs:boolean"/>
         <xs:attribute name="interceptors" type="xs:string"/>
+        <xs:attribute name="binary-media-types" type="xs:string"/>
         <xs:attribute name="error-handler" type="xs:string"/>
         <xs:attribute name="error-strategy">
           <xs:simpleType>

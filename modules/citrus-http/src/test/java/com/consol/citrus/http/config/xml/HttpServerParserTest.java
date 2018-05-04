@@ -26,6 +26,7 @@ import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -66,6 +67,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getServletMappingPath(), "/*");
         Assert.assertFalse(server.isHandleAttributeHeaders());
         Assert.assertFalse(server.isHandleCookies());
+        Assert.assertEquals(server.getBinaryMediaTypes().size(), 6L);
 
         // 2nd message sender
         server = servers.get("httpServer2");
@@ -86,6 +88,8 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getServletMappingPath(), "/foo");
         Assert.assertTrue(server.isHandleAttributeHeaders());
         Assert.assertTrue(server.isHandleCookies());
+        Assert.assertEquals(server.getBinaryMediaTypes().size(), 2L);
+        Assert.assertTrue(server.getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
 
         // 3rd message sender
         server = servers.get("httpServer3");

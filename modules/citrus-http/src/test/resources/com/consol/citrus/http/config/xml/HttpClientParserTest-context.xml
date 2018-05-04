@@ -23,6 +23,7 @@
                           error-strategy="throwsException"
                           error-handler="errorHandler"
                           message-converter="messageConverter"
+                          binary-media-types="binaryMediaTypes"
                           request-factory="soapRequestFactory"
                           endpoint-resolver="endpointResolver"/>
 
@@ -45,6 +46,11 @@
 
   <util:list id="clientInterceptors">
     <ref bean="clientInterceptor"/>
+  </util:list>
+
+  <util:list id="binaryMediaTypes" value-type="org.springframework.http.MediaType">
+    <util:constant static-field="org.springframework.http.MediaType.APPLICATION_OCTET_STREAM"/>
+    <value>application/custom</value>
   </util:list>
 
   <bean id="errorHandler" class="org.mockito.Mockito" factory-method="mock">

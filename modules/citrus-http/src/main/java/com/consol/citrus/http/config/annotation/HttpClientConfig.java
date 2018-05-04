@@ -122,6 +122,12 @@ public @interface HttpClientConfig {
     String[] interceptors() default {};
 
     /**
+     * Binary media types.
+     * @return
+     */
+    String[] binaryMediaTypes() default {};
+
+    /**
      * Timeout.
      * @return
      */

@@ -29,6 +29,7 @@ import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -87,6 +88,14 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
 
     /** Default status code returned by http server */
     private int defaultStatusCode = HttpStatus.OK.value();
+
+    /** List of media types that should be handled with binary content processing */
+    private List<MediaType> binaryMediaTypes = Arrays.asList(MediaType.APPLICATION_OCTET_STREAM,
+                                                                MediaType.APPLICATION_PDF,
+                                                                MediaType.IMAGE_GIF,
+                                                                MediaType.IMAGE_JPEG,
+                                                                MediaType.IMAGE_PNG,
+                                                                MediaType.valueOf("application/zip"));
 
     /**
      * Get the complete request URL.
@@ -392,5 +401,23 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      */
     public void setDefaultStatusCode(int defaultStatusCode) {
         this.defaultStatusCode = defaultStatusCode;
+    }
+
+    /**
+     * Gets the binaryMediaTypes.
+     *
+     * @return
+     */
+    public List<MediaType> getBinaryMediaTypes() {
+        return binaryMediaTypes;
+    }
+
+    /**
+     * Sets the binaryMediaTypes.
+     *
+     * @param binaryMediaTypes
+     */
+    public void setBinaryMediaTypes(List<MediaType> binaryMediaTypes) {
+        this.binaryMediaTypes = binaryMediaTypes;
     }
 }

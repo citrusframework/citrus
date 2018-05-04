@@ -54,7 +54,12 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
         super(MediaType.ALL);
 
         ByteArrayHttpMessageConverter byteArrayHttpMessageConverter = new ByteArrayHttpMessageConverter();
-        byteArrayHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM, MediaType.APPLICATION_PDF, MediaType.IMAGE_GIF, MediaType.IMAGE_JPEG, MediaType.IMAGE_PNG));
+        byteArrayHttpMessageConverter.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM,
+                                                                            MediaType.APPLICATION_PDF,
+                                                                            MediaType.IMAGE_GIF,
+                                                                            MediaType.IMAGE_JPEG,
+                                                                            MediaType.IMAGE_PNG,
+                                                                            MediaType.valueOf("application/zip")));
 
         if (requestMessageConverters.isEmpty()) {
             requestMessageConverters.add(byteArrayHttpMessageConverter);
@@ -121,5 +126,22 @@ public class DelegatingHttpEntityMessageConverter extends AbstractHttpMessageCon
         } else {
             throw new HttpMessageNotWritableException(String.format("Failed to find proper message converter for contentType '%s'", outputMessage.getHeaders().getContentType()));
         }
+    }
+
+    /**
+     * Sets the binaryMediaTypes.
+     *
+     * @param binaryMediaTypes
+     */
+    public void setBinaryMediaTypes(List<MediaType> binaryMediaTypes) {
+        requestMessageConverters.stream()
+                                .filter(converter -> converter instanceof ByteArrayHttpMessageConverter)
+                                .map(ByteArrayHttpMessageConverter.class::cast)
+                                .forEach(converter -> converter.setSupportedMediaTypes(binaryMediaTypes));
+
+        responseMessageConverters.stream()
+                                .filter(converter -> converter instanceof ByteArrayHttpMessageConverter)
+                                .map(ByteArrayHttpMessageConverter.class::cast)
+                                .forEach(converter -> converter.setSupportedMediaTypes(binaryMediaTypes));
     }
 }

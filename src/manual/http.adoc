@@ -207,8 +207,8 @@ public void httpActionTest() {
                     "<name>testuser</name>" +
                   "</customer>")
           .header("X-CustomHeaderId", "${custom_header_id}")
-          .contentType("text/xml")
-          .accept("text/xml, */*");
+          .contentType("application/xml")
+          .accept("application/xml");
 
     http().client("httpClient")
           .receive()
@@ -412,8 +412,8 @@ When dealing with HTTP request/response communication we always deal with HTTP s
   <http:POST>
     <http:headers>
         <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
-        <http:header name="Content-Type" value="text/xml"/>
-        <http:header name="Accept" value="text/xml,*/*"/>
+        <http:header name="Content-Type" value="application/xml"/>
+        <http:header name="Accept" value="application/xml"/>
     </http:headers>
     <http:body>
         <http:payload>
@@ -431,8 +431,8 @@ We are able to set custom headers (*X-CustomHeaderId*) that go directly into the
 [source,xml]
 ----
 POST /test HTTP/1.1
-Accept: text/xml, */*
-Content-Type: text/xml
+Accept: application/xml
+Content-Type: application/xml
 X-CustomHeaderId: 123456789
 Accept-Charset: macroman
 User-Agent: Jakarta Commons-HttpClient/3.1
@@ -451,8 +451,8 @@ On server side testers are interested in validating the HTTP headers. Within Cit
   <http:POST>
     <http:headers>
         <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
-        <http:header name="Content-Type" value="text/xml"/>
-        <http:header name="Accept" value="text/xml,*/*"/>
+        <http:header name="Content-Type" value="application/xml"/>
+        <http:header name="Accept" value="application/xml"/>
     </http:headers>
     <http:body>
         <http:payload>
@@ -474,7 +474,7 @@ Now that we have accepted the client request and validated the contents we are a
 <http:send-response server="httpServer">
     <http:headers status="200" reason-phrase="OK">
         <http:header name="X-CustomHeaderId" value="${custom_header_id}"/>
-        <http:header name="Content-Type" value="text/xml"/>
+        <http:header name="Content-Type" value="application/xml"/>
     </http:headers>
     <http:body>
         <http:payload>
@@ -491,7 +491,7 @@ Once more we set the custom header entry (*X-CustomHeaderId*) and a HTTP reserve
 [source,xml]
 ----
 HTTP/1.1 200 OK
-Content-Type: text/xml;charset=UTF-8
+Content-Type: application/xml;charset=UTF-8
 Accept-Charset: macroman
 Content-Length: 205
 Server: Jetty(7.0.0.pre5)
@@ -533,8 +533,8 @@ The next example receives a HTTP GET method request on server side. Here the GET
     </http:params>
     <http:headers>
         <http:header name="Host" value="localhost:8080"/>
-        <http:header name="Content-Type" value="text/html"/>
-        <http:header name="Accept" value="text/xml,*/*"/>
+        <http:header name="Content-Type" value="application/xml"/>
+        <http:header name="Accept" value="application/xml"/>
     </http:headers>
     <http:body>
         <http:data></http:data>
@@ -754,8 +754,8 @@ As a result of the basic auth client request factory the following example reque
 [source,xml]
 ----
 POST /test HTTP/1.1
-Accept: text/xml, */*
-Content-Type: text/xml
+Accept: application/xml
+Content-Type: application/xml
 Accept-Charset: iso-8859-1, us-ascii, utf-8
 Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
 User-Agent: Jakarta Commons-HttpClient/3.1
@@ -1135,10 +1135,12 @@ The Citrus HTTP server uses Spring application context loading on startup. For h
 <bean id="citrusMethodHandlerAdapter" class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
   <property name="messageConverters">
     <util:list id="converters">
-      <bean class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
+      <ref bean="citrusHttpMessageConverter"/>
     </util:list>
   </property>
 </bean>
+
+<bean id="citrusHttpMessageConverter" class="com.consol.citrus.http.message.DelegatingHttpEntityMessageConverter"/>
 
 <bean id="citrusHttpMessageController" class="com.consol.citrus.http.controller.HttpMessageController">
   <property name="endpointAdapter">
