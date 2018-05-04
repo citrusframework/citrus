@@ -133,10 +133,6 @@ The surefire and failsafe plugin configuration is responsible for executing all 
   <configuration>
     <forkMode>once</forkMode>
     <failIfNoTests>false</failIfNoTests>
-    <excludes>
-      <exclude>**/IT*.java</exclude>
-      <exclude>**/*IT.java</exclude>
-    </excludes>
     <workingDirectory>${project.build.directory}</workingDirectory>
   </configuration>
 </plugin>

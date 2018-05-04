@@ -962,10 +962,6 @@
             <forkMode>once</forkMode>
             <failIfNoTests>false</failIfNoTests>
             <skipTests>${skip.unit.tests}</skipTests>
-            <excludes>
-              <exclude>**/IT*.java</exclude>
-              <exclude>**/*IT.java</exclude>
-            </excludes>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
         </plugin>
