@@ -15,13 +15,11 @@
  */
 package com.consol.citrus.channel.selector;
 
+import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
-import org.springframework.integration.core.MessageSelector;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.*;
 
 /**
  * Message selector matches one or more header elements with the message header. Only in case all 
@@ -33,39 +31,52 @@ import java.util.Map.Entry;
 public class HeaderMatchingMessageSelector implements MessageSelector {
 
     /** List of header elements to match */
-    private Map<String, String> matchingHeaders;
-    
+    private final String name;
+    private final String value;
+
     /**
      * Default constructor using fields.
      */
-    public HeaderMatchingMessageSelector(Map<String, String> matchingHeaders) {
-        this.matchingHeaders = matchingHeaders;
+    public HeaderMatchingMessageSelector(String name, String value) {
+        this.name = name;
+        this.value = value;
     }
     
     @Override
     public boolean accept(Message<?> message) {
         MessageHeaders messageHeaders = message.getHeaders();
 
-        Map<String, Object> citrusMessageHeaders = new HashMap<String, Object>();
+        Map<String, Object> nestedMessageHeaders = new HashMap<>();
         if (message.getPayload() instanceof com.consol.citrus.message.Message) {
-            citrusMessageHeaders = ((com.consol.citrus.message.Message) message.getPayload()).getHeaders();
+            nestedMessageHeaders = ((com.consol.citrus.message.Message) message.getPayload()).getHeaders();
         }
 
-        for (Entry<String, String> matchEntry : matchingHeaders.entrySet()) {
-            String namePart = matchEntry.getKey();
-            
-            if (!messageHeaders.containsKey(namePart) && !citrusMessageHeaders.containsKey(namePart)) {
-                return false;
-            }
-
-            if (citrusMessageHeaders.containsKey(namePart) && !citrusMessageHeaders.get(namePart).equals(matchEntry.getValue())) {
-                return false;
-            } else if (messageHeaders.containsKey(namePart) && !messageHeaders.get(namePart).toString().equals(matchEntry.getValue())) {
-                return false;
-            }
+        if (nestedMessageHeaders.containsKey(name)) {
+            return Optional.ofNullable(nestedMessageHeaders.get(name))
+                    .map(header -> header.equals(value))
+                    .orElse(false);
+        } else if (messageHeaders.containsKey(name)) {
+            return Optional.ofNullable(messageHeaders.get(name))
+                    .map(Object::toString)
+                    .map(header -> header.equals(value))
+                    .orElse(false);
+        } else {
+            return false;
         }
-        
-        return true;
     }
 
+    /**
+     * Message selector factory for this implementation.
+     */
+    public static class Factory implements MessageSelectorFactory<HeaderMatchingMessageSelector> {
+        @Override
+        public boolean supports(String key) {
+            return true;
+        }
+
+        @Override
+        public HeaderMatchingMessageSelector create(String key, String value) {
+            return new HeaderMatchingMessageSelector(key, value);
+        }
+    }
 }

@@ -20,8 +20,10 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.*;
 import org.springframework.integration.core.MessageSelector;
+import org.springframework.messaging.Message;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xpath.XPathParseException;
 import org.w3c.dom.Document;
@@ -39,7 +41,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.2
  */
-public class XPathEvaluatingMessageSelector implements MessageSelector {
+public class XpathPayloadMessageSelector implements MessageSelector {
 
     /** Expression to evaluate for acceptance */
     private final String expression;
@@ -48,21 +50,21 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
     private final String control;
     
     /** Namespace context builder */
-    private NamespaceContextBuilder nsContextBuilder;
+    private NamespaceContextBuilder namespaceContextBuilder;
     
     /** Special selector element name identifying this message selector implementation */
     public static final String XPATH_SELECTOR_ELEMENT = "xpath:";
     
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XPathEvaluatingMessageSelector.class);
+    private static Logger log = LoggerFactory.getLogger(XpathPayloadMessageSelector.class);
     
     /**
      * Default constructor using fields.
      */
-    public XPathEvaluatingMessageSelector(String expression, String control, NamespaceContextBuilder nsContextBuider) {
-        this.control = control;
+    public XpathPayloadMessageSelector(String expression, String control, NamespaceContextBuilder namespaceContextBuilder) {
         this.expression = expression.substring(XPATH_SELECTOR_ELEMENT.length());
-        this.nsContextBuilder = nsContextBuider;
+        this.control = control;
+        this.namespaceContextBuilder = namespaceContextBuilder;
     }
     
     @Override
@@ -87,7 +89,7 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
             Map<String, String> namespaces = XMLUtils.lookupNamespaces(doc);
             
             // add default namespace mappings
-            namespaces.putAll(nsContextBuilder.getNamespaceMappings());
+            namespaces.putAll(namespaceContextBuilder.getNamespaceMappings());
             
             if (XPathUtils.hasDynamicNamespaces(expression)) {
                 namespaces.putAll(XPathUtils.getDynamicNamespaces(expression));
@@ -97,11 +99,50 @@ public class XPathEvaluatingMessageSelector implements MessageSelector {
                 return XPathExpressionFactory.createXPathExpression(expression, namespaces)
                         .evaluateAsString(doc).equals(control);
             }
-            
-            
         } catch (XPathParseException e) {
             log.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
             return false; // wrong XML message - not accepted
+        }
+    }
+
+    /**
+     * Message selector factory for this implementation.
+     */
+    public static class Factory implements MessageSelectorFactory<XpathPayloadMessageSelector>, BeanFactoryAware {
+
+        private BeanFactory beanFactory;
+
+        @Override
+        public boolean supports(String key) {
+            return key.startsWith(XPATH_SELECTOR_ELEMENT);
+        }
+
+        @Override
+        public XpathPayloadMessageSelector create(String key, String value) {
+            return new XpathPayloadMessageSelector(key, value, getNamespaceContextBuilder());
+        }
+
+        @Override
+        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+            this.beanFactory = beanFactory;
+        }
+
+        /**
+         * Find namespace context builder in Spring bean factory. If not present there
+         * create new one.
+         *
+         * @return
+         */
+        private NamespaceContextBuilder getNamespaceContextBuilder() {
+            NamespaceContextBuilder nsContextBuilder;
+
+            try {
+                nsContextBuilder = beanFactory.getBean(NamespaceContextBuilder.class);
+            } catch (NoSuchBeanDefinitionException e) {
+                nsContextBuilder = new NamespaceContextBuilder();
+            }
+
+            return nsContextBuilder;
         }
     }
 

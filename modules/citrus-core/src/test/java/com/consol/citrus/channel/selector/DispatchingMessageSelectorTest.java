@@ -19,11 +19,16 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.mockito.Mockito.*;
 
@@ -175,5 +180,63 @@ public class DispatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
 
+    }
+
+    @Test
+    public void testJsonPathEvaluationDelegation() {
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND jsonPath:$.foo.text = 'foobar'", beanFactory);
+
+        Message<String> acceptMessage = MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\"} }")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+
+        Message<String> declineMessage = MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\"} }")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+
+        messageSelector = new DispatchingMessageSelector("jsonPath:$.foo.text = 'foobar'", beanFactory);
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+
+    @Test
+    public void testCustomMessageSelectorDelegation() {
+        ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+
+        Map<String, MessageSelectorFactory> factories = new HashMap<>();
+        factories.put("customSelectorFactory", new MessageSelectorFactory() {
+            @Override
+            public boolean supports(String key) {
+                return key.startsWith("x:");
+            }
+
+            @Override
+            public MessageSelector create(String key, String value) {
+                return message -> message.getHeaders().get("foo").equals(value);
+            }
+        });
+        
+        when(applicationContext.getBeansOfType(MessageSelectorFactory.class)).thenReturn(factories);
+
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("x:foo = 'bar'", applicationContext);
+
+        Message<String> acceptMessage = MessageBuilder.withPayload("FooBar")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+
+        Message<String> declineMessage = MessageBuilder.withPayload("FooBar")
+                .setHeader("foo", "bars")
+                .setHeader("operation", "foo")
+                .build();
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
     }
 }

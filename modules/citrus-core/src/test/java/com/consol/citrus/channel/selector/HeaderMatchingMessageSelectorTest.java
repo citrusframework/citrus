@@ -16,14 +16,11 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.message.DefaultMessage;
-import org.springframework.messaging.Message;
 import org.springframework.integration.support.MessageBuilder;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -32,9 +29,7 @@ public class HeaderMatchingMessageSelectorTest {
 
     @Test
     public void testHeaderMatchingSelector() {
-        Map<String, String> headerMatchers = new HashMap<String, String>();
-        headerMatchers.put("operation", "foo");
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("operation", "foo");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foo")
@@ -50,10 +45,7 @@ public class HeaderMatchingMessageSelectorTest {
     
     @Test
     public void testHeaderMatchingSelectorMultipleValues() {
-        Map<String, String> headerMatchers = new HashMap<String, String>();
-        headerMatchers.put("foo", "bar");
-        headerMatchers.put("operation", "foo");
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("foo", "bar");
         
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("foo", "bar")
@@ -70,9 +62,7 @@ public class HeaderMatchingMessageSelectorTest {
 
     @Test
     public void testHeaderMatchingSelectorMissingHeader() {
-        Map<String, String> headerMatchers = new HashMap<String, String>();
-        headerMatchers.put("operation", "foo");
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("operation", "foo");
 
         Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("operation", "foo")
@@ -87,9 +77,7 @@ public class HeaderMatchingMessageSelectorTest {
 
     @Test
     public void testHeaderMatchingSelectorWithMessageObjectPayload() {
-        Map<String, String> headerMatchers = new HashMap<String, String>();
-        headerMatchers.put("operation", "foo");
-        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector(headerMatchers);
+        HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("operation", "foo");
 
         Message<DefaultMessage> acceptMessage = MessageBuilder.withPayload(new DefaultMessage("FooTest")
                 .setHeader("operation", "foo"))
@@ -102,7 +90,7 @@ public class HeaderMatchingMessageSelectorTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
 
-        headerMatchers.put(MessageHeaders.ID, acceptMessage.getHeaders().getId().toString());
+        messageSelector = new HeaderMatchingMessageSelector(MessageHeaders.ID, acceptMessage.getHeaders().getId().toString());
 
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));

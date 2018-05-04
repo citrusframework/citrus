@@ -17,22 +17,21 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.message.MessageSelectorBuilder;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.messaging.Message;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.context.ApplicationContext;
 import org.springframework.integration.core.MessageSelector;
+import org.springframework.messaging.Message;
 import org.springframework.util.Assert;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Message selector dispatches incoming messages to several other selector implementations
  * according to selector names.
  * 
  * By default uses {@link HeaderMatchingMessageSelector} and supports {@link RootQNameMessageSelector} and
- * {@link XPathEvaluatingMessageSelector}.
+ * {@link XpathPayloadMessageSelector}.
  * 
  * @author Christoph Deppisch
  * @since 1.2
@@ -44,7 +43,10 @@ public class DispatchingMessageSelector implements MessageSelector {
     
     /** Spring bean factory */
     private BeanFactory beanFactory;
-    
+
+    /** List of available message selector factories */
+    private List<MessageSelectorFactory> factories = new ArrayList<>();
+
     /**
      * Default constructor using a selector string.
      */
@@ -53,62 +55,44 @@ public class DispatchingMessageSelector implements MessageSelector {
         this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
         
         Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
+
+        factories.add(new RootQNameMessageSelector.Factory());
+        factories.add(new XpathPayloadMessageSelector.Factory());
+        factories.add(new JsonPathPayloadMessageSelector.Factory());
+
+        if (beanFactory instanceof ApplicationContext) {
+            Map<String, MessageSelectorFactory> factoryBeans = ((ApplicationContext) beanFactory).getBeansOfType(MessageSelectorFactory.class);
+            factories.addAll(factoryBeans.values());
+        }
+
+        factories.parallelStream()
+                .filter(factory -> factory instanceof BeanFactoryAware)
+                .map(factory -> (BeanFactoryAware) factory)
+                .forEach(factory -> factory.setBeanFactory(beanFactory));
     }
     
     @Override
     public boolean accept(Message<?> message) {
-        boolean success = true;
-        
-        Map<String, String> matchingHeadersCopy = new HashMap<String, String>();
-        matchingHeadersCopy.putAll(matchingHeaders);
-                
-        // delegate to root QName message selector if necessary
-        if (matchingHeadersCopy.containsKey(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT)
-                && !(new RootQNameMessageSelector(matchingHeadersCopy.remove(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT))).accept(message)) {
-            success = false;
-        }
-        
-        //search for xpath selector name
-        Set<String> foundXPathSelectors = new HashSet<String>();
-        for (Entry<String, String> headerEntry : matchingHeadersCopy.entrySet()) {
-            if (headerEntry.getKey().startsWith(XPathEvaluatingMessageSelector.XPATH_SELECTOR_ELEMENT)) {
-                foundXPathSelectors.add(headerEntry.getKey());
-                
-                // delegate to xpath evaluating message selector
-                if (!(new XPathEvaluatingMessageSelector(headerEntry.getKey(), headerEntry.getValue(), getNamespContextBuilder())).accept(message)) {
-                    success = false;
-                }
-            }
-        }
-        
-        //remove xpath selector elements after work is done
-        for (String selectorName : foundXPathSelectors) {
-            matchingHeadersCopy.remove(selectorName);
-        }
-        
-        if (!new HeaderMatchingMessageSelector(matchingHeadersCopy).accept(message)) {
-            success = false;
-        }
-        
-        return success;
+        return matchingHeaders.entrySet()
+                              .stream()
+                              .allMatch(entry -> factories.stream()
+                                                     .filter(factory -> factory.supports(entry.getKey()))
+                                                     .findAny()
+                                                     .orElse(new HeaderMatchingMessageSelector.Factory())
+                                                     .create(entry.getKey(), entry.getValue())
+                                                     .accept(message));
     }
 
     /**
-     * Find namespace context builder in Spring bean factory. If not present there
-     * create new one.
-     * 
-     * @return
+     * Add message selector factory to list of delegates.
+     * @param factory
      */
-    private NamespaceContextBuilder getNamespContextBuilder() {
-        NamespaceContextBuilder nsContextBuilder;
-        
-        try {
-            nsContextBuilder = beanFactory.getBean(NamespaceContextBuilder.class);
-        } catch (NoSuchBeanDefinitionException e) {
-            nsContextBuilder = new NamespaceContextBuilder();
+    public void addMessageSelectorFactory(MessageSelectorFactory<?> factory) {
+        if (factory instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) factory).setBeanFactory(beanFactory);
         }
-        
-        return nsContextBuilder;
+
+        this.factories.add(factory);
     }
 
 }

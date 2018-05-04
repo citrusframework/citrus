@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.Message;
 import org.springframework.integration.core.MessageSelector;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.namespace.QNameUtils;
 import org.w3c.dom.Document;
@@ -47,11 +48,13 @@ public class RootQNameMessageSelector implements MessageSelector {
     /**
      * Default constructor using fields.
      */
-    public RootQNameMessageSelector(String qNameString) {
-        if (QNameUtils.validateQName(qNameString)) {
-            this.rootQName = QNameUtils.parseQNameString(qNameString);
+    public RootQNameMessageSelector(String name, String value) {
+        Assert.isTrue(name.equals(ROOT_QNAME_SELECTOR_ELEMENT), "Invalid usage of root QName message selector - usage restricted to header keys of name " + ROOT_QNAME_SELECTOR_ELEMENT);
+
+        if (QNameUtils.validateQName(value)) {
+            this.rootQName = QNameUtils.parseQNameString(value);
         } else {
-            throw new CitrusRuntimeException("Invalid root QName string '" + qNameString + "'");
+            throw new CitrusRuntimeException("Invalid root QName string '" + value + "'");
         }
     }
     
@@ -77,6 +80,21 @@ public class RootQNameMessageSelector implements MessageSelector {
             return rootQName.equals(QNameUtils.getQNameForNode(doc.getFirstChild())); 
         } else {
             return rootQName.getLocalPart().equals(doc.getFirstChild().getLocalName());
+        }
+    }
+
+    /**
+     * Message selector factory for this implementation.
+     */
+    public static class Factory implements MessageSelectorFactory<RootQNameMessageSelector> {
+        @Override
+        public boolean supports(String key) {
+            return key.equals(ROOT_QNAME_SELECTOR_ELEMENT);
+        }
+
+        @Override
+        public RootQNameMessageSelector create(String key, String value) {
+            return new RootQNameMessageSelector(key, value);
         }
     }
 
