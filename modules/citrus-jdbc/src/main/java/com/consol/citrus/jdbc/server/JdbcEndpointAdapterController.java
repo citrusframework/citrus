@@ -33,6 +33,7 @@ import org.springframework.xml.transform.StringSource;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -48,10 +49,14 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     private final EndpointAdapter delegate;
 
     private final DataSetCreator dataSetCreator;
-    private final ConnectionValidationQueryPatternMatcher connectionValidationQueryPatternMatcher;
 
     private AtomicInteger connections = new AtomicInteger(0);
     private boolean transactionState;
+
+    protected static final String AUTO_HANDLE_QUERY_PROPERTY = "citrus.jdbc.auto.handle.query";
+    protected static final String AUTO_HANDLE_QUERY_ENV = "CITRUS_JDBC_AUTO_HANDLE_QUERY";
+
+    private Pattern autoHandleQueryPattern;
 
     /**
      * Default constructor using fields.
@@ -61,10 +66,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     JdbcEndpointAdapterController(
             JdbcEndpointConfiguration endpointConfiguration,
             EndpointAdapter delegate) {
-        this.endpointConfiguration = endpointConfiguration;
-        this.delegate = delegate;
-        this.dataSetCreator = new DataSetCreator();
-        this.connectionValidationQueryPatternMatcher = new ConnectionValidationQueryPatternMatcher();
+        this(endpointConfiguration, delegate, new DataSetCreator());
     }
 
     /**
@@ -80,7 +82,16 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
         this.endpointConfiguration = endpointConfiguration;
         this.delegate = delegate;
         this.dataSetCreator = dataSetCreator;
-        this.connectionValidationQueryPatternMatcher = new ConnectionValidationQueryPatternMatcher();
+
+        String autoHandleQueries = System.getProperty(AUTO_HANDLE_QUERY_PROPERTY, System.getenv(AUTO_HANDLE_QUERY_ENV) != null ?
+                System.getenv(AUTO_HANDLE_QUERY_ENV) : StringUtils.arrayToDelimitedString(endpointConfiguration.getAutoHandleQueries(), ";"));
+
+        List<String> autoQueryPatterns = Arrays.stream(autoHandleQueries.split(";"))
+                .map(String::trim)
+                .filter(validationQuery -> !StringUtils.isEmpty(validationQuery))
+                .map(validationQueryPattern -> "(?i)\\A" + validationQueryPattern + "\\Z")
+                .collect(Collectors.toList());
+        autoHandleQueryPattern = Pattern.compile(String.join("|", autoQueryPatterns));
     }
 
     @Override
@@ -97,20 +108,20 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
                     request.getPayload(String.class)));
         }
 
-        if (endpointConfiguration.isAutoReplyConnectionValidationQueries()) {
-            return Optional.ofNullable(request.getPayload(Operation.class))
-                    .map(operation -> operation.getExecute())
-                    .map(execute -> execute.getStatement())
-                    .map(statement -> statement.getSql())
-                    .map(sqlQuery -> {
-                        if (connectionValidationQueryPatternMatcher.match(sqlQuery)) {
-                            log.debug(String.format("Sending a positive default answer for the following query: '%s'", sqlQuery));
-                            return createDefaultResponse();
-                        }
-                        return null;
-                    })
-                    .orElseGet(() -> delegate.handleMessage(request));
+        if (request.getPayload(Operation.class) != null) {
+            String sqlQuery = Optional.ofNullable(request.getPayload(Operation.class).getExecute())
+                                        .map(Execute::getStatement)
+                                        .map(Execute.Statement::getSql)
+                                        .orElse("");
+
+            if (autoHandleQueryPattern.matcher(sqlQuery).find()) {
+                log.debug(String.format("Auto handle query '%s' with positive response", sqlQuery));
+                JdbcMessage defaultResponse = JdbcMessage.success().rowsUpdated(0);
+                defaultResponse.setHeader(MessageHeaders.MESSAGE_TYPE, MessageType.XML.name());
+                return defaultResponse;
+            }
         }
+
         return Optional.ofNullable(delegate.handleMessage(request))
                        .orElse(JdbcMessage.success());
     }
@@ -385,17 +396,4 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
     AtomicInteger getConnections() {
         return connections;
     }
-
-    private Message createDefaultResponse() {
-        OperationResult operationResult = new OperationResult();
-        operationResult.setSuccess(true);
-        operationResult.setAffectedRows(0);
-        JdbcMessage jdbcMessage = JdbcMessage.result(operationResult);
-        jdbcMessage.setHeader(MessageHeaders.MESSAGE_TYPE, "xml");
-        jdbcMessage.setHeader(MessageHeaders.TIMESTAMP, System.currentTimeMillis());
-        jdbcMessage.setHeader("id", UUID.randomUUID());
-        jdbcMessage.setHeader("timestamp", System.currentTimeMillis());
-        return jdbcMessage;
-    }
-
 }

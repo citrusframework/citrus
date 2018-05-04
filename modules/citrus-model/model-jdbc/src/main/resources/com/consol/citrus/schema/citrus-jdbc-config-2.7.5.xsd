@@ -32,7 +32,7 @@
       <xs:attribute name="database-name" type="xs:string" use="required"/>
       <xs:attribute name="auto-connect" type="xs:boolean"/>
       <xs:attribute name="auto-create-statement" type="xs:boolean"/>
-      <xs:attribute name="auto-reply-connection-validation-queries" type="xs:boolean"/>
+      <xs:attribute name="auto-handle-queries" type="xs:string"/>
       <xs:attribute name="auto-start" type="xs:boolean"/>
       <xs:attribute name="max-connections" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>

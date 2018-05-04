@@ -23,16 +23,10 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.Execute;
-import com.consol.citrus.jdbc.model.JdbcMarshaller;
-import com.consol.citrus.jdbc.model.OperationResult;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.message.MessageType;
-import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.*;
+import com.consol.citrus.message.*;
 import org.springframework.xml.transform.StringResult;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.util.HashMap;
 import java.util.Random;
@@ -49,8 +43,7 @@ public class JdbcEndpointAdapterControllerTest {
     private final JdbcEndpointConfiguration jdbcEndpointConfiguration = mock(JdbcEndpointConfiguration.class);
     private final EndpointAdapter endpointAdapter = mock(EndpointAdapter.class);
 
-    private final JdbcEndpointAdapterController jdbcEndpointAdapterController =
-            new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter);
+    private JdbcEndpointAdapterController jdbcEndpointAdapterController;
 
     @BeforeMethod
     public void setup(){
@@ -58,7 +51,9 @@ public class JdbcEndpointAdapterControllerTest {
         when(serverConfiguration.getMaxConnections()).thenReturn(1);
 
         when(jdbcEndpointConfiguration.getServerConfiguration()).thenReturn(serverConfiguration);
-        when(jdbcEndpointConfiguration.isAutoReplyConnectionValidationQueries()).thenReturn(false);
+        when(jdbcEndpointConfiguration.getAutoHandleQueries()).thenReturn(new JdbcEndpointConfiguration().getAutoHandleQueries());
+
+        jdbcEndpointAdapterController = new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter);
     }
 
     @Test
@@ -698,7 +693,7 @@ public class JdbcEndpointAdapterControllerTest {
     }
 
     @Test
-    public void testHandleMessageWithAutoReplyConnectionValidationQueriesEmptyOperation(){
+    public void testHandleMessageWithAutoHandleQueriesEmptyOperation(){
 
         //GIVEN
         final Message request = mock(Message.class);
@@ -706,7 +701,6 @@ public class JdbcEndpointAdapterControllerTest {
         final Message expectedResponse = mock(Message.class);;
 
         when(endpointAdapter.handleMessage(request)).thenReturn(expectedResponse);
-        when(jdbcEndpointConfiguration.isAutoReplyConnectionValidationQueries()).thenReturn(true);
 
         //WHEN
         final Message response = jdbcEndpointAdapterController.handleMessage(request);
@@ -717,7 +711,7 @@ public class JdbcEndpointAdapterControllerTest {
     }
 
     @Test
-    public void testHandleMessageWithAutoReplyConnectionValidationQueries(){
+    public void testHandleMessageWithAutoHandleQueriesQueries(){
 
         //GIVEN
         final Message request = mock(Message.class);
@@ -726,8 +720,6 @@ public class JdbcEndpointAdapterControllerTest {
         operation.getExecute().setStatement(new Execute.Statement());
         operation.getExecute().getStatement().setSql("SELECT 1");
         when(request.getPayload(Operation.class)).thenReturn(operation);
-
-        when(jdbcEndpointConfiguration.isAutoReplyConnectionValidationQueries()).thenReturn(true);
 
         //WHEN
         final Message response = jdbcEndpointAdapterController.handleMessage(request);
@@ -740,6 +732,87 @@ public class JdbcEndpointAdapterControllerTest {
         assertEquals(operationResult.getDataSet(), null);
         assertEquals(operationResult.getAffectedRows(), new Integer(0));
         verify(endpointAdapter, times(0)).handleMessage(request);
+    }
+
+    @DataProvider
+    public Object[][] systemQueries() {
+        return new Object[][] {
+                {"Select 1", true},
+                {"Select 1 from", false},
+                {"SELECT USER", true},
+                {"SELECT USER from DUAL", true},
+                {"SELECT 1 from DUAL", true},
+                {"SELECT USER FROM SYSIBM.SYSDUMMY1", true},
+                {"SELECT 1 FROM SYSIBM.SYSDUMMY1", true},
+                {"SELECT 1 FROM SYSIBM.SYSDUMMY1 where", false},
+        };
+    }
+
+    @Test(dataProvider = "systemQueries")
+    public void match(String query, boolean isMatching) {
+        reset(endpointAdapter);
+
+        //GIVEN
+        final Message request = mock(Message.class);
+        Operation operation = new Operation();
+        operation.setExecute(new Execute());
+        operation.getExecute().setStatement(new Execute.Statement());
+        operation.getExecute().getStatement().setSql(query);
+        when(request.getPayload(Operation.class)).thenReturn(operation);
+
+        //WHEN
+        final Message response = jdbcEndpointAdapterController.handleMessage(request);
+
+        //THEN
+        assertTrue(JdbcMessage.class.isAssignableFrom(response.getClass()));
+        JdbcMessage jdbcMessageResponse = (JdbcMessage) response;
+        OperationResult operationResult = jdbcMessageResponse.getPayload(OperationResult.class);
+        assertTrue(operationResult.isSuccess());
+        assertEquals(operationResult.getDataSet(), null);
+        assertEquals(operationResult.getAffectedRows(), isMatching ? 0 : null);
+        
+        verify(endpointAdapter, times(isMatching ? 0 : 1)).handleMessage(any());
+    }
+
+    @DataProvider
+    public Object[][] systemQueriesOverwrite() {
+        return new Object[][] {
+                {"Select 1", true},
+                {"Select 1 from", false},
+                {"SELECT USER", false},
+                {"SELECT 1", true},
+        };
+    }
+
+    @Test(dataProvider = "systemQueriesOverwrite")
+    public void matchUsingSystemProperty(String query, boolean isMatching) {
+        reset(endpointAdapter);
+
+        System.setProperty(JdbcEndpointAdapterController.AUTO_HANDLE_QUERY_PROPERTY, "select 1;;");
+
+        JdbcEndpointAdapterController jdbcEndpointAdapterController =
+                new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter);
+
+        //GIVEN
+        final Message request = mock(Message.class);
+        Operation operation = new Operation();
+        operation.setExecute(new Execute());
+        operation.getExecute().setStatement(new Execute.Statement());
+        operation.getExecute().getStatement().setSql(query);
+        when(request.getPayload(Operation.class)).thenReturn(operation);
+
+        //WHEN
+        final Message response = jdbcEndpointAdapterController.handleMessage(request);
+
+        //THEN
+        assertTrue(JdbcMessage.class.isAssignableFrom(response.getClass()));
+        JdbcMessage jdbcMessageResponse = (JdbcMessage) response;
+        OperationResult operationResult = jdbcMessageResponse.getPayload(OperationResult.class);
+        assertTrue(operationResult.isSuccess());
+        assertEquals(operationResult.getDataSet(), null);
+        assertEquals(operationResult.getAffectedRows(), isMatching ? 0 : null);
+
+        verify(endpointAdapter, times(isMatching ? 0 : 1)).handleMessage(any());
     }
 
 }

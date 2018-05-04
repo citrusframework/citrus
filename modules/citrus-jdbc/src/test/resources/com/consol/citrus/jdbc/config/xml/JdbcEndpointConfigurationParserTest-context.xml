@@ -18,10 +18,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-jdbc="http://www.citrusframework.org/schema/jdbc/config"
+       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                             http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.citrusframework.org/schema/jdbc/config
-                            http://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config.xsd">
+                            http://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config.xsd
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
   <citrus-jdbc:server id="testServer"
                       host="foo.bar.test.io"
@@ -31,7 +33,7 @@
                       timeout="10"
                       auto-connect="false"
                       auto-create-statement="false"
-                      auto-reply-connection-validation-queries="true"
+                      auto-handle-queries="autoHanldeQueries"
                       polling-interval="0"
                       auto-start="true"
                       actor="testActor"
@@ -51,5 +53,10 @@
     <bean id="endpointAdapter" class="org.mockito.Mockito" factory-method="mock">
         <constructor-arg value="com.consol.citrus.endpoint.EndpointAdapter"/>
     </bean>
+
+    <util:list id="autoHanldeQueries">
+      <value>SELECT 1 FROM DUAL</value>
+      <value>SELECT USERS FROM DUAL</value>
+    </util:list>
 
 </beans>

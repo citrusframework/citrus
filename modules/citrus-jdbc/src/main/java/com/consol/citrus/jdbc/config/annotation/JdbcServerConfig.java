@@ -73,7 +73,11 @@ public @interface JdbcServerConfig {
      * Auto reply check connetion queries.
      * @return
      */
-    boolean autoReplyConnectionValidationQueries() default false;
+    String[] autoHandleQueries() default {
+            "SELECT \\w*", //H2, MySQL, PostgreSQL, SQLite, Microsoft SQL Server
+            "SELECT.*FROM DUAL", // Oracle
+            "SELECT.*FROM SYSIBM.SYSDUMMY1" // DB2
+    };
 
     /**
      * Message correlator.

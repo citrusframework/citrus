@@ -43,8 +43,12 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     /** Auto accept transaction operations  */
     private boolean autoTransactionHandling = true;
 
-    /** Auto reply connection validation queries sent by the jdbc clients at the beginning of the communication*/
-    private boolean autoReplyConnectionValidationQueries = false;
+    /** Semicolon separated list of queries that get auto handled for different databases */
+    private String[] autoHandleQueries = new String[] {
+            "SELECT \\w*", //H2, MySQL, PostgreSQL, SQLite, Microsoft SQL Server
+            "SELECT.*FROM DUAL", // Oracle
+            "SELECT.*FROM SYSIBM.SYSDUMMY1" // DB2
+    };
 
     /** Marshaller converts from XML to Jdbc model objects */
     private JdbcMarshaller marshaller = new JdbcMarshaller();
@@ -100,21 +104,21 @@ public class JdbcEndpointConfiguration extends AbstractPollableEndpointConfigura
     }
 
     /**
-     * Gets the autoReplyConnectionValidationQueries.
+     * Gets the autoHandleQueries.
      *
      * @return
      */
-    public boolean isAutoReplyConnectionValidationQueries() {
-        return autoReplyConnectionValidationQueries;
+    public String[] getAutoHandleQueries() {
+        return autoHandleQueries;
     }
 
     /**
-     * Sets the autoReplyConnectionValidationQueries
+     * Sets the autoHandleQueries.
      *
-     * @param autoReplyConnectionValidationQueries
+     * @param autoHandleQueries
      */
-    public void setAutoReplyConnectionValidationQueries(boolean autoReplyConnectionValidationQueries) {
-        this.autoReplyConnectionValidationQueries = autoReplyConnectionValidationQueries;
+    public void setAutoHandleQueries(String[] autoHandleQueries) {
+        this.autoHandleQueries = autoHandleQueries;
     }
 
     @Override
