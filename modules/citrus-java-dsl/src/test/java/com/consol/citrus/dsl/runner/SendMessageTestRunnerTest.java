@@ -456,6 +456,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .headers(Collections.singletonMap("some", "value"))
                         .header("operation", "foo")
                         .header("language", "eng"));
             }
@@ -473,7 +474,8 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 2L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 3L);
+        Assert.assertEquals(messageBuilder.getMessageHeaders().get("some"), "value");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("language"), "eng");
 

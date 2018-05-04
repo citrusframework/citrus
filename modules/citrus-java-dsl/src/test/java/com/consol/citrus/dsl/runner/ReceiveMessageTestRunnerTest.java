@@ -450,6 +450,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .setHeader("some", "value")
                         .setHeader("operation", "sayHello")
                         .setHeader("foo", "bar"));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
@@ -457,12 +458,14 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                        .headers(Collections.singletonMap("some", "value"))
                         .header("operation", "sayHello")
                         .header("foo", "bar"));
 
                 receive(action -> action.endpoint(messageEndpoint)
                         .header("operation", "sayHello")
                         .header("foo", "bar")
+                        .headers(Collections.singletonMap("some", "value"))
                         .payload("<TestRequest><Message>Hello World!</Message></TestRequest>"));
             }
         };
@@ -480,6 +483,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("some"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
 
@@ -491,6 +495,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("some"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
 

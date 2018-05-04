@@ -368,12 +368,14 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
             public void configure() {
                 receive(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
+                    .headers(Collections.singletonMap("some", "value"))
                     .header("operation", "sayHello")
                     .header("foo", "bar");
                 
                 receive(messageEndpoint)
                     .header("operation", "sayHello")
                     .header("foo", "bar")
+                    .headers(Collections.singletonMap("some", "value"))
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>");
             }
         };
@@ -395,6 +397,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("some"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
         
@@ -406,6 +409,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("some"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("foo"));
     }

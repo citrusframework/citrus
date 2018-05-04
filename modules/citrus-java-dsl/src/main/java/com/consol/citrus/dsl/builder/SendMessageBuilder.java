@@ -25,13 +25,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
+import com.consol.citrus.validation.builder.*;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -48,6 +43,7 @@ import org.springframework.xml.transform.StringResult;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
  * Action builder creates a send message action with several message payload and header
@@ -293,6 +289,15 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      */
     public T header(String name, Object value) {
         getMessageContentBuilder().getMessageHeaders().put(name, value);
+        return self;
+    }
+
+    /**
+     * Adds message headers to this builder's message sending action.
+     * @param headers
+     */
+    public T headers(Map<String, Object> headers) {
+        getMessageContentBuilder().getMessageHeaders().putAll(headers);
         return self;
     }
 

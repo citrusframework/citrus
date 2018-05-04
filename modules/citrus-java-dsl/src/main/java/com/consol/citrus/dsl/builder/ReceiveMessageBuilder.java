@@ -313,6 +313,16 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         getMessageContentBuilder().getMessageHeaders().put(name, value);
         return self;
     }
+
+    /**
+     * Expect this message header entries in received message.
+     * @param headers
+     * @return
+     */
+    public T headers(Map<String, Object> headers) {
+        getMessageContentBuilder().getMessageHeaders().putAll(headers);
+        return self;
+    }
     
     /**
      * Expect this message header data in received message. Message header data is used in 
