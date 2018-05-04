@@ -85,7 +85,7 @@ The example above maps the *CorrelationId* of the *HelloRequest* message to the 
 *request* stored so we can access the payload with this message name.
 
 NOTE: XML is namespace specific so we need to use the namespace prefix *hello* in the Xpath expression. The namespace prefix should evaluate to a global namespace entry in the global
-Citrus link:xpath-namespace[xpath-namespace].
+Citrus link:#xpath-namespace[xpath-namespace].
 
 [[request-dispatching-endpoint-adapter]]
 == Request dispatching endpoint adapter
