@@ -18,6 +18,7 @@ package com.consol.citrus.channel;
 
 import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.BeanFactory;
@@ -36,7 +37,7 @@ import static org.mockito.Mockito.doThrow;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class MultiThreadingMessageSelectionTest {
+public class MultiThreadingMessageSelectionTest extends AbstractTestNGUnitTest {
 
     private BeanFactory beanFactory = Mockito.mock(BeanFactory.class);
 
@@ -69,7 +70,7 @@ public class MultiThreadingMessageSelectionTest {
                     .setHeader("index", i)
                 .build());
 
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("xpath:/FooTest/operation = 'foo" + (i-1) +"'", beanFactory);
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("xpath:/FooTest/operation = 'foo" + (i-1) +"'", beanFactory, context);
 
         Message<DefaultMessage> received = (Message<DefaultMessage>) channel.receive(messageSelector, 5000L);
         received.getPayload().setHeader("received", true);

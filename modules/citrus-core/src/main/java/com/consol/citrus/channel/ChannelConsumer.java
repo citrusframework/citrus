@@ -74,7 +74,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
                         "' does not support selective receive operations.");
             }
 
-            MessageSelector messageSelector = new DispatchingMessageSelector(selector, endpointConfiguration.getBeanFactory());
+            MessageSelector messageSelector = new DispatchingMessageSelector(selector, endpointConfiguration.getBeanFactory(), context);
             MessageSelectingQueueChannel queueChannel = ((MessageSelectingQueueChannel) destinationChannel);
 
             if (timeout <= 0) {

@@ -15,13 +15,14 @@
  */
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanFactory;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.xml.xpath.XPathExpressionFactory;
@@ -49,9 +50,9 @@ public class XpathPayloadMessageSelector implements MessageSelector {
     /** Control value to check for */
     private final String control;
     
-    /** Namespace context builder */
-    private NamespaceContextBuilder namespaceContextBuilder;
-    
+    /** Test context */
+    private TestContext context;
+
     /** Special selector element name identifying this message selector implementation */
     public static final String XPATH_SELECTOR_ELEMENT = "xpath:";
     
@@ -61,10 +62,10 @@ public class XpathPayloadMessageSelector implements MessageSelector {
     /**
      * Default constructor using fields.
      */
-    public XpathPayloadMessageSelector(String expression, String control, NamespaceContextBuilder namespaceContextBuilder) {
+    public XpathPayloadMessageSelector(String expression, String control, TestContext context) {
         this.expression = expression.substring(XPATH_SELECTOR_ELEMENT.length());
         this.control = control;
-        this.namespaceContextBuilder = namespaceContextBuilder;
+        this.context = context;
     }
     
     @Override
@@ -89,15 +90,27 @@ public class XpathPayloadMessageSelector implements MessageSelector {
             Map<String, String> namespaces = XMLUtils.lookupNamespaces(doc);
             
             // add default namespace mappings
-            namespaces.putAll(namespaceContextBuilder.getNamespaceMappings());
-            
+            namespaces.putAll(context.getNamespaceContextBuilder().getNamespaceMappings());
+
+            String value;
             if (XPathUtils.hasDynamicNamespaces(expression)) {
                 namespaces.putAll(XPathUtils.getDynamicNamespaces(expression));
-                return XPathExpressionFactory.createXPathExpression(XPathUtils.replaceDynamicNamespaces(expression, namespaces), namespaces)
-                        .evaluateAsString(doc).equals(control);
+                value = XPathExpressionFactory.createXPathExpression(XPathUtils.replaceDynamicNamespaces(expression, namespaces), namespaces)
+                        .evaluateAsString(doc);
             } else {
-                return XPathExpressionFactory.createXPathExpression(expression, namespaces)
-                        .evaluateAsString(doc).equals(control);
+                value = XPathExpressionFactory.createXPathExpression(expression, namespaces)
+                        .evaluateAsString(doc);
+            }
+
+            if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
+                try {
+                    ValidationMatcherUtils.resolveValidationMatcher(expression, value, control, context);
+                    return true;
+                } catch (ValidationException e) {
+                    return false;
+                }
+            } else {
+                return value.equals(control);
             }
         } catch (XPathParseException e) {
             log.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
@@ -108,7 +121,7 @@ public class XpathPayloadMessageSelector implements MessageSelector {
     /**
      * Message selector factory for this implementation.
      */
-    public static class Factory implements MessageSelectorFactory<XpathPayloadMessageSelector>, BeanFactoryAware {
+    public static class Factory implements MessageSelectorFactory<XpathPayloadMessageSelector> {
 
         private BeanFactory beanFactory;
 
@@ -118,31 +131,8 @@ public class XpathPayloadMessageSelector implements MessageSelector {
         }
 
         @Override
-        public XpathPayloadMessageSelector create(String key, String value) {
-            return new XpathPayloadMessageSelector(key, value, getNamespaceContextBuilder());
-        }
-
-        @Override
-        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-            this.beanFactory = beanFactory;
-        }
-
-        /**
-         * Find namespace context builder in Spring bean factory. If not present there
-         * create new one.
-         *
-         * @return
-         */
-        private NamespaceContextBuilder getNamespaceContextBuilder() {
-            NamespaceContextBuilder nsContextBuilder;
-
-            try {
-                nsContextBuilder = beanFactory.getBean(NamespaceContextBuilder.class);
-            } catch (NoSuchBeanDefinitionException e) {
-                nsContextBuilder = new NamespaceContextBuilder();
-            }
-
-            return nsContextBuilder;
+        public XpathPayloadMessageSelector create(String key, String value, TestContext context) {
+            return new XpathPayloadMessageSelector(key, value, context);
         }
     }
 

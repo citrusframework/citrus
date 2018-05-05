@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.context.TestContext;
 import org.springframework.integration.core.MessageSelector;
 
 /**
@@ -35,7 +36,8 @@ public interface MessageSelectorFactory<T extends MessageSelector> {
      * Create new message selector for given predicates.
      * @param key
      * @param value
+     * @param context
      * @return
      */
-    T create(String key, String value);
+    T create(String key, String value, TestContext context);
 }

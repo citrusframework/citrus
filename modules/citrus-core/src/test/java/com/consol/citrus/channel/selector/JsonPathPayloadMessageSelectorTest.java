@@ -17,6 +17,7 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,11 +25,11 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class JsonPathPayloadMessageSelectorTest {
+public class JsonPathPayloadMessageSelectorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testJsonPathEvaluation() {
-        JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar");
+        JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar", context);
         
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\" } }").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\" } }").build()));
@@ -37,8 +38,18 @@ public class JsonPathPayloadMessageSelectorTest {
     }
 
     @Test
+    public void testJsonPathEvaluationValidationMatcher() {
+        JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "@startsWith(foo)@", context);
+
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"foobar\" } }").build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"foo\": { \"text\": \"barfoo\" } }").build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("{ \"bar\": { \"text\": \"foobar\" } }").build()));
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("This is plain text!").build()));
+    }
+
+    @Test
     public void testJsonPathEvaluationWithMessageObjectPayload() {
-        JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar");
+        JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "foobar", context);
 
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")).build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")).build()));

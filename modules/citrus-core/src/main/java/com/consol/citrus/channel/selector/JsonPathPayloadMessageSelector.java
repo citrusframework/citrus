@@ -16,8 +16,11 @@
 
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonPathUtils;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
@@ -40,15 +43,19 @@ public class JsonPathPayloadMessageSelector implements MessageSelector {
     /** Control value to check for */
     private final String control;
 
+    /** Test context */
+    private final TestContext context;
+
     /** Special selector element name identifying this message selector implementation */
     public static final String JSON_PATH_SELECTOR_ELEMENT = "jsonPath:";
 
     /**
      * Default constructor using fields.
      */
-    public JsonPathPayloadMessageSelector(String expression, String control) {
+    public JsonPathPayloadMessageSelector(String expression, String control, TestContext context) {
         this.expression = expression.substring(JSON_PATH_SELECTOR_ELEMENT.length());
         this.control = control;
+        this.context = context;
     }
 
     @Override
@@ -67,7 +74,17 @@ public class JsonPathPayloadMessageSelector implements MessageSelector {
         }
 
         try {
-            return JsonPathUtils.evaluateAsString(payload, expression).equals(control);
+            String value = JsonPathUtils.evaluateAsString(payload, expression);
+            if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
+                try {
+                    ValidationMatcherUtils.resolveValidationMatcher(expression, value, control, context);
+                    return true;
+                } catch (ValidationException e) {
+                    return false;
+                }
+            } else {
+                return value.equals(control);
+            }
         } catch (CitrusRuntimeException e) {
             return false;
         }
@@ -83,8 +100,8 @@ public class JsonPathPayloadMessageSelector implements MessageSelector {
         }
 
         @Override
-        public JsonPathPayloadMessageSelector create(String key, String value) {
-            return new JsonPathPayloadMessageSelector(key, value);
+        public JsonPathPayloadMessageSelector create(String key, String value, TestContext context) {
+            return new JsonPathPayloadMessageSelector(key, value, context);
         }
     }
 }

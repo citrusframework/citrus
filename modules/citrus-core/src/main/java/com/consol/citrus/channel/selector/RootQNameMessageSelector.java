@@ -15,6 +15,7 @@
  */
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
@@ -38,10 +39,10 @@ public class RootQNameMessageSelector implements MessageSelector {
 
     /** Target message XML root QName to look for */
     private QName rootQName;
-    
+
     /** Special selector element name identifying this message selector implementation */
     public static final String ROOT_QNAME_SELECTOR_ELEMENT = "root-qname";
-    
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RootQNameMessageSelector.class);
     
@@ -93,7 +94,7 @@ public class RootQNameMessageSelector implements MessageSelector {
         }
 
         @Override
-        public RootQNameMessageSelector create(String key, String value) {
+        public RootQNameMessageSelector create(String key, String value, TestContext context) {
             return new RootQNameMessageSelector(key, value);
         }
     }

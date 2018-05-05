@@ -17,6 +17,7 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
@@ -28,7 +29,7 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author Christoph Deppisch
  */
-public class MessageSelectingQueueChannelTest {
+public class MessageSelectingQueueChannelTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveSelected() {
@@ -37,7 +38,7 @@ public class MessageSelectingQueueChannelTest {
         
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foo", "bar").build());
         
-        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar");
+        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context);
         
         Message<?> receivedMessage = channel.receive(selector, 1000L);
         
@@ -53,7 +54,7 @@ public class MessageSelectingQueueChannelTest {
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foo", "bar").build());
         
         final AtomicLong retries = new AtomicLong();
-        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar") {
+        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context) {
             @Override
             public boolean accept(Message<?> message) {
                 return retries.incrementAndGet() > 7;
@@ -75,7 +76,7 @@ public class MessageSelectingQueueChannelTest {
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foos", "bars").build());
         
         final AtomicLong retries = new AtomicLong();
-        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar") {
+        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context) {
             @Override
             public boolean accept(Message<?> message) {
                 retries.incrementAndGet();
@@ -97,7 +98,7 @@ public class MessageSelectingQueueChannelTest {
         channel.send(MessageBuilder.withPayload("FooMessage").setHeader("foos", "bars").build());
         
         final AtomicLong retries = new AtomicLong();
-        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar") {
+        MessageSelector selector = new HeaderMatchingMessageSelector("foo", "bar", context) {
             @Override
             public boolean accept(Message<?> message) {
                 retries.incrementAndGet();

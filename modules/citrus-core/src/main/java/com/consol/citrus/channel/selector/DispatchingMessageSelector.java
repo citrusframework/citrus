@@ -16,6 +16,7 @@
 
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
@@ -39,19 +40,23 @@ import java.util.*;
 public class DispatchingMessageSelector implements MessageSelector {
 
     /** List of header elements to match */
-    private Map<String, String> matchingHeaders;
+    private final Map<String, String> matchingHeaders;
     
     /** Spring bean factory */
-    private BeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
     /** List of available message selector factories */
-    private List<MessageSelectorFactory> factories = new ArrayList<>();
+    private final List<MessageSelectorFactory> factories = new ArrayList<>();
+
+    /** Test context */
+    private final TestContext context;
 
     /**
      * Default constructor using a selector string.
      */
-    public DispatchingMessageSelector(String selector, BeanFactory beanFactory) {
+    public DispatchingMessageSelector(String selector, BeanFactory beanFactory, TestContext context) {
         this.beanFactory = beanFactory;
+        this.context = context;
         this.matchingHeaders = MessageSelectorBuilder.withString(selector).toKeyValueMap();
         
         Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
@@ -79,7 +84,7 @@ public class DispatchingMessageSelector implements MessageSelector {
                                                      .filter(factory -> factory.supports(entry.getKey()))
                                                      .findAny()
                                                      .orElse(new HeaderMatchingMessageSelector.Factory())
-                                                     .create(entry.getKey(), entry.getValue())
+                                                     .create(entry.getKey(), entry.getValue(), context)
                                                      .accept(message));
     }
 

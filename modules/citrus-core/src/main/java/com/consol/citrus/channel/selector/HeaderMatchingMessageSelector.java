@@ -15,6 +15,9 @@
  */
 package com.consol.citrus.channel.selector;
 
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
@@ -34,12 +37,16 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
     private final String name;
     private final String value;
 
+    /** Test context */
+    private final TestContext context;
+
     /**
      * Default constructor using fields.
      */
-    public HeaderMatchingMessageSelector(String name, String value) {
+    public HeaderMatchingMessageSelector(String name, String value, TestContext context) {
         this.name = name;
         this.value = value;
+        this.context = context;
     }
     
     @Override
@@ -52,17 +59,30 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
         }
 
         if (nestedMessageHeaders.containsKey(name)) {
-            return Optional.ofNullable(nestedMessageHeaders.get(name))
-                    .map(header -> header.equals(value))
-                    .orElse(false);
+            return matchHeader(nestedMessageHeaders);
         } else if (messageHeaders.containsKey(name)) {
-            return Optional.ofNullable(messageHeaders.get(name))
-                    .map(Object::toString)
-                    .map(header -> header.equals(value))
-                    .orElse(false);
+            return matchHeader(messageHeaders);
         } else {
             return false;
         }
+    }
+
+    private boolean matchHeader(Map<String, Object> messageHeaders) {
+        return Optional.ofNullable(messageHeaders.get(name))
+                .map(Object::toString)
+                .map(header -> {
+                    if (ValidationMatcherUtils.isValidationMatcherExpression(value)) {
+                        try {
+                            ValidationMatcherUtils.resolveValidationMatcher(name, header, value, context);
+                            return true;
+                        } catch (ValidationException e) {
+                            return false;
+                        }
+                    } else {
+                        return header.equals(value);
+                    }
+                })
+                .orElse(false);
     }
 
     /**
@@ -75,8 +95,8 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
         }
 
         @Override
-        public HeaderMatchingMessageSelector create(String key, String value) {
-            return new HeaderMatchingMessageSelector(key, value);
+        public HeaderMatchingMessageSelector create(String key, String value, TestContext context) {
+            return new HeaderMatchingMessageSelector(key, value, context);
         }
     }
 }
