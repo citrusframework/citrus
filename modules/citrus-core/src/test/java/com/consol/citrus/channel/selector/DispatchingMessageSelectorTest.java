@@ -82,15 +82,15 @@ public class DispatchingMessageSelectorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
-    public void testRootQNameDelegation() {
-        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'", beanFactory, context);
+    public void testPayloadMatchingDelegation() {
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND payload = 'FooTest'", beanFactory, context);
         
-        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+        Message<String> acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo")
                 .build();
         
-        Message<String> declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+        Message<String> declineMessage = MessageBuilder.withPayload("BarTest")
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo")
                 .build();
@@ -98,14 +98,14 @@ public class DispatchingMessageSelectorTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(messageSelector.accept(acceptMessage));
         Assert.assertFalse(messageSelector.accept(declineMessage));
         
-        messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'", beanFactory, context);
+        messageSelector = new DispatchingMessageSelector("payload = 'FooTest'", beanFactory, context);
         
-        acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+        acceptMessage = MessageBuilder.withPayload("FooTest")
                 .setHeader("foo", "bar")
                 .setHeader("operation", "foo")
                 .build();
         
-        declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+        declineMessage = MessageBuilder.withPayload("BarTest")
                 .setHeader("operation", "foo")
                 .build();
         
@@ -113,6 +113,38 @@ public class DispatchingMessageSelectorTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(messageSelector.accept(declineMessage));
     }
     
+    @Test
+    public void testRootQNameDelegation() {
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'", beanFactory, context);
+
+        Message<String> acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+
+        Message<String> declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+
+        messageSelector = new DispatchingMessageSelector("root-qname = 'FooTest'", beanFactory, context);
+
+        acceptMessage = MessageBuilder.withPayload("<FooTest><text>foobar</text></FooTest>")
+                .setHeader("foo", "bar")
+                .setHeader("operation", "foo")
+                .build();
+
+        declineMessage = MessageBuilder.withPayload("<BarTest><text>foobar</text></BarTest>")
+                .setHeader("operation", "foo")
+                .build();
+
+        Assert.assertTrue(messageSelector.accept(acceptMessage));
+        Assert.assertFalse(messageSelector.accept(declineMessage));
+    }
+
     @Test
     public void testRootQNameDelegationWithNamespace() {
         DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'", beanFactory, context);

@@ -64,6 +64,7 @@ public class DispatchingMessageSelector implements MessageSelector {
         factories.add(new RootQNameMessageSelector.Factory());
         factories.add(new XpathPayloadMessageSelector.Factory());
         factories.add(new JsonPathPayloadMessageSelector.Factory());
+        factories.add(new PayloadMatchingMessageSelector.Factory());
 
         if (beanFactory instanceof ApplicationContext) {
             Map<String, MessageSelectorFactory> factoryBeans = ((ApplicationContext) beanFactory).getBeansOfType(MessageSelectorFactory.class);
