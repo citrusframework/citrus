@@ -30,7 +30,10 @@ import cucumber.runtime.io.ResourceLoaderClassFinder;
 import cucumber.runtime.java.spring.CitrusSpringObjectFactory;
 import cucumber.runtime.snippets.FunctionNameGenerator;
 import gherkin.pickles.PickleStep;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Method;
@@ -45,6 +48,9 @@ public class CitrusBackend implements Backend {
     /** Citrus instance used by all scenarios */
     private static Citrus citrus;
     private static InitializationHook initializationHook;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusBackend.class);
 
     /** Basic resource loader */
     private ResourceLoader resourceLoader;
@@ -135,7 +141,15 @@ public class CitrusBackend implements Backend {
      */
     public static void initializeCitrus(ApplicationContext applicationContext) {
         if (citrus != null) {
-            throw new IllegalStateException("Unable to initialize Citrus instance - instance has already been initialized");
+            if (!citrus.getApplicationContext().equals(applicationContext)) {
+                log.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
+
+                if (citrus.getApplicationContext() instanceof ConfigurableApplicationContext) {
+                    ((ConfigurableApplicationContext) citrus.getApplicationContext()).stop();
+                }
+            } else {
+                return;
+            }
         }
 
         citrus = Citrus.newInstance(applicationContext);

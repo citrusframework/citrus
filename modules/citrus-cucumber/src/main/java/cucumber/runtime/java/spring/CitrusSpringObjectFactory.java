@@ -111,10 +111,10 @@ public class CitrusSpringObjectFactory extends SpringFactory {
                 log.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
                 context = CitrusBackend.getCitrus().createTestContext();
             }
+        }
 
-            if (TestContext.class.isAssignableFrom(type)) {
-                return (T) context;
-            }
+        if (TestContext.class.isAssignableFrom(type)) {
+            return (T) context;
         }
 
         if (CitrusSpringObjectFactory.class.isAssignableFrom(type)) {
