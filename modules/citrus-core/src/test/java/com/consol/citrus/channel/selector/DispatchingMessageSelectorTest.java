@@ -114,6 +114,23 @@ public class DispatchingMessageSelectorTest extends AbstractTestNGUnitTest {
     }
     
     @Test
+    public void testPayloadAndHeaderMatchingDelegation() {
+        DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("header:payload = 'foo' AND payload = 'foo'", beanFactory, context);
+
+        Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("foo")
+                .setHeader("payload", "foo")
+                .build()));
+
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("foo")
+                .setHeader("payload", "bar")
+                .build()));
+
+        Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("bar")
+                .setHeader("payload", "foo")
+                .build()));
+    }
+
+    @Test
     public void testRootQNameDelegation() {
         DispatchingMessageSelector messageSelector = new DispatchingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'", beanFactory, context);
 

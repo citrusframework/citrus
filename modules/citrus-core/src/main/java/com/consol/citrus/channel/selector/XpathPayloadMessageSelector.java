@@ -16,14 +16,10 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.xml.xpath.XPathExpressionFactory;
 import org.springframework.xml.xpath.XPathParseException;
@@ -42,19 +38,10 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.2
  */
-public class XpathPayloadMessageSelector implements MessageSelector {
-
-    /** Expression to evaluate for acceptance */
-    private final String expression;
-    
-    /** Control value to check for */
-    private final String control;
-    
-    /** Test context */
-    private TestContext context;
+public class XpathPayloadMessageSelector extends AbstractMessageSelector {
 
     /** Special selector element name identifying this message selector implementation */
-    public static final String XPATH_SELECTOR_ELEMENT = "xpath:";
+    public static final String SELECTOR_PREFIX = "xpath:";
     
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathPayloadMessageSelector.class);
@@ -62,10 +49,8 @@ public class XpathPayloadMessageSelector implements MessageSelector {
     /**
      * Default constructor using fields.
      */
-    public XpathPayloadMessageSelector(String expression, String control, TestContext context) {
-        this.expression = expression.substring(XPATH_SELECTOR_ELEMENT.length());
-        this.control = control;
-        this.context = context;
+    public XpathPayloadMessageSelector(String selectKey, String matchingValue, TestContext context) {
+        super(selectKey.substring(SELECTOR_PREFIX.length()), matchingValue, context);
     }
     
     @Override
@@ -73,14 +58,7 @@ public class XpathPayloadMessageSelector implements MessageSelector {
         Document doc;
 
         try {
-            String payload;
-            if (message.getPayload() instanceof com.consol.citrus.message.Message) {
-                payload = ((com.consol.citrus.message.Message) message.getPayload()).getPayload(String.class);
-            } else {
-                payload = message.getPayload().toString();
-            }
-
-            doc = XMLUtils.parseMessagePayload(payload);
+            doc = XMLUtils.parseMessagePayload(getPayloadAsString(message));
         } catch (LSException e) {
             log.warn("Ignoring non XML message for XPath message selector (" + e.getClass().getName() + ")");
             return false; // non XML message - not accepted
@@ -93,25 +71,16 @@ public class XpathPayloadMessageSelector implements MessageSelector {
             namespaces.putAll(context.getNamespaceContextBuilder().getNamespaceMappings());
 
             String value;
-            if (XPathUtils.hasDynamicNamespaces(expression)) {
-                namespaces.putAll(XPathUtils.getDynamicNamespaces(expression));
-                value = XPathExpressionFactory.createXPathExpression(XPathUtils.replaceDynamicNamespaces(expression, namespaces), namespaces)
+            if (XPathUtils.hasDynamicNamespaces(selectKey)) {
+                namespaces.putAll(XPathUtils.getDynamicNamespaces(selectKey));
+                value = XPathExpressionFactory.createXPathExpression(XPathUtils.replaceDynamicNamespaces(selectKey, namespaces), namespaces)
                         .evaluateAsString(doc);
             } else {
-                value = XPathExpressionFactory.createXPathExpression(expression, namespaces)
+                value = XPathExpressionFactory.createXPathExpression(selectKey, namespaces)
                         .evaluateAsString(doc);
             }
 
-            if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
-                try {
-                    ValidationMatcherUtils.resolveValidationMatcher(expression, value, control, context);
-                    return true;
-                } catch (ValidationException e) {
-                    return false;
-                }
-            } else {
-                return value.equals(control);
-            }
+            return evaluate(value);
         } catch (XPathParseException e) {
             log.warn("Could not evaluate XPath expression for message selector - ignoring message (" + e.getClass().getName() + ")");
             return false; // wrong XML message - not accepted
@@ -123,11 +92,9 @@ public class XpathPayloadMessageSelector implements MessageSelector {
      */
     public static class Factory implements MessageSelectorFactory<XpathPayloadMessageSelector> {
 
-        private BeanFactory beanFactory;
-
         @Override
         public boolean supports(String key) {
-            return key.startsWith(XPATH_SELECTOR_ELEMENT);
+            return key.startsWith(SELECTOR_PREFIX);
         }
 
         @Override

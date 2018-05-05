@@ -16,10 +16,8 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
+import org.springframework.util.Assert;
 
 /**
  * Message selector matches one or more header elements with the message header. Only in case all 
@@ -28,46 +26,25 @@ import org.springframework.messaging.Message;
  * 
  * @author Christoph Deppisch
  */
-public class PayloadMatchingMessageSelector implements MessageSelector {
+public class PayloadMatchingMessageSelector extends AbstractMessageSelector {
 
-    /** List of header elements to match */
-    private final String name;
-    private final String value;
-
-    /** Special selector element name identifying this message selector implementation */
-    public static final String PAYLOAD_SELECTOR_ELEMENT = "payload";
-
-    /** Test context */
-    private final TestContext context;
+    /** Special selector identifying key for this message selector implementation */
+    public static final String SELECTOR_ID = "payload";
 
     /**
      * Default constructor using fields.
      */
-    public PayloadMatchingMessageSelector(String name, String value, TestContext context) {
-        this.name = name;
-        this.value = value;
-        this.context = context;
+    public PayloadMatchingMessageSelector(String selectKey, String matchingValue, TestContext context) {
+        super(selectKey, matchingValue, context);
+
+        Assert.isTrue(selectKey.equals(SELECTOR_ID),
+                String.format("Invalid usage of payload matching message selector - " +
+                        "usage restricted to key '%s' but was '%s'",  SELECTOR_ID, selectKey));
     }
     
     @Override
     public boolean accept(Message<?> message) {
-        String payload;
-        if (message.getPayload() instanceof com.consol.citrus.message.Message) {
-            payload = ((com.consol.citrus.message.Message) message.getPayload()).getPayload(String.class);
-        } else {
-            payload = message.getPayload().toString();
-        }
-
-        if (ValidationMatcherUtils.isValidationMatcherExpression(value)) {
-            try {
-                ValidationMatcherUtils.resolveValidationMatcher(name, payload, value, context);
-                return true;
-            } catch (ValidationException e) {
-                return false;
-            }
-        } else {
-            return payload.equals(value);
-        }
+        return evaluate(getPayloadAsString(message));
     }
 
     /**
@@ -76,7 +53,7 @@ public class PayloadMatchingMessageSelector implements MessageSelector {
     public static class Factory implements MessageSelectorFactory<PayloadMatchingMessageSelector> {
         @Override
         public boolean supports(String key) {
-            return key.equals(PAYLOAD_SELECTOR_ELEMENT);
+            return key.equals(SELECTOR_ID);
         }
 
         @Override

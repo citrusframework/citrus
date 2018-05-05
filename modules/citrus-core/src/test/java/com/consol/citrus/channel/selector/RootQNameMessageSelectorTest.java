@@ -17,6 +17,7 @@ package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.integration.support.MessageBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,17 +25,17 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class RootQNameMessageSelectorTest {
+public class RootQNameMessageSelectorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testQNameSelector() {
-        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT, "Foo");
+        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID, "Foo", context);
         
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo><text>foobar</text></Foo>").build()));
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Bar><text>foobar</text></Bar>").build()));
         
-        messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT,"{}Foo");
+        messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"{}Foo", context);
         
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo><text>foobar</text></Foo>").build()));
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>").build()));
@@ -43,7 +44,7 @@ public class RootQNameMessageSelectorTest {
 
     @Test
     public void testQNameSelectorWithMessageObjectPayload() {
-        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT,"Foo");
+        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"Foo", context);
 
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Foo><text>foobar</text></Foo>")).build()));
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload(new DefaultMessage("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>")).build()));
@@ -52,7 +53,7 @@ public class RootQNameMessageSelectorTest {
     
     @Test
     public void testQNameWithNamespaceSelector() {
-        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT,"{http://citrusframework.org/schema}Foo");
+        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"{http://citrusframework.org/schema}Foo", context);
         
         Assert.assertTrue(messageSelector.accept(MessageBuilder.withPayload("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>").build()));
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("<Foo><text>foobar</text></Foo>").build()));
@@ -62,7 +63,7 @@ public class RootQNameMessageSelectorTest {
     
     @Test
     public void testNonXmlPayload() {
-        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT,"{http://citrusframework.org/schema}Foo");
+        RootQNameMessageSelector messageSelector = new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"{http://citrusframework.org/schema}Foo", context);
         
         Assert.assertFalse(messageSelector.accept(MessageBuilder.withPayload("PLAINTEXT").build()));
     }
@@ -70,7 +71,7 @@ public class RootQNameMessageSelectorTest {
     @Test
     public void testInvalidQName() {
         try {
-            new RootQNameMessageSelector(RootQNameMessageSelector.ROOT_QNAME_SELECTOR_ELEMENT,"{http://citrusframework.org/schemaFoo");
+            new RootQNameMessageSelector(RootQNameMessageSelector.SELECTOR_ID,"{http://citrusframework.org/schemaFoo", context);
             Assert.fail("Missing exception due to invalid QName");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Invalid root QName"));

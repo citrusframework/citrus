@@ -18,10 +18,7 @@ package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonPathUtils;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.util.StringUtils;
 
@@ -35,38 +32,21 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7.5
  */
-public class JsonPathPayloadMessageSelector implements MessageSelector {
+public class JsonPathPayloadMessageSelector extends AbstractMessageSelector {
 
-    /** Expression to evaluate for acceptance */
-    private final String expression;
-
-    /** Control value to check for */
-    private final String control;
-
-    /** Test context */
-    private final TestContext context;
-
-    /** Special selector element name identifying this message selector implementation */
-    public static final String JSON_PATH_SELECTOR_ELEMENT = "jsonPath:";
+    /** Special selector key prefix identifying this message selector implementation */
+    public static final String SELECTOR_PREFIX = "jsonPath:";
 
     /**
      * Default constructor using fields.
      */
     public JsonPathPayloadMessageSelector(String expression, String control, TestContext context) {
-        this.expression = expression.substring(JSON_PATH_SELECTOR_ELEMENT.length());
-        this.control = control;
-        this.context = context;
+        super(expression.substring(SELECTOR_PREFIX.length()), control, context);
     }
 
     @Override
     public boolean accept(Message<?> message) {
-        String payload;
-        if (message.getPayload() instanceof com.consol.citrus.message.Message) {
-            payload = ((com.consol.citrus.message.Message) message.getPayload()).getPayload(String.class);
-        } else {
-            payload = message.getPayload().toString();
-        }
-
+        String payload = getPayloadAsString(message);
         if (StringUtils.hasText(payload) &&
                 !payload.trim().startsWith("{") &&
                 !payload.trim().startsWith("[")) {
@@ -74,17 +54,7 @@ public class JsonPathPayloadMessageSelector implements MessageSelector {
         }
 
         try {
-            String value = JsonPathUtils.evaluateAsString(payload, expression);
-            if (ValidationMatcherUtils.isValidationMatcherExpression(control)) {
-                try {
-                    ValidationMatcherUtils.resolveValidationMatcher(expression, value, control, context);
-                    return true;
-                } catch (ValidationException e) {
-                    return false;
-                }
-            } else {
-                return value.equals(control);
-            }
+            return evaluate(JsonPathUtils.evaluateAsString(payload, selectKey));
         } catch (CitrusRuntimeException e) {
             return false;
         }
@@ -96,7 +66,7 @@ public class JsonPathPayloadMessageSelector implements MessageSelector {
     public static class Factory implements MessageSelectorFactory<JsonPathPayloadMessageSelector> {
         @Override
         public boolean supports(String key) {
-            return key.startsWith(JSON_PATH_SELECTOR_ELEMENT);
+            return key.startsWith(SELECTOR_PREFIX);
         }
 
         @Override

@@ -16,9 +16,6 @@
 package com.consol.citrus.channel.selector;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageHeaders;
 
@@ -31,22 +28,16 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class HeaderMatchingMessageSelector implements MessageSelector {
+public class HeaderMatchingMessageSelector extends AbstractMessageSelector {
 
-    /** List of header elements to match */
-    private final String name;
-    private final String value;
-
-    /** Test context */
-    private final TestContext context;
+    /** Special selector key prefix identifying this message selector implementation */
+    public static final String SELECTOR_PREFIX = "header:";
 
     /**
      * Default constructor using fields.
      */
-    public HeaderMatchingMessageSelector(String name, String value, TestContext context) {
-        this.name = name;
-        this.value = value;
-        this.context = context;
+    public HeaderMatchingMessageSelector(String selectKey, String matchingValue, TestContext context) {
+        super(selectKey, matchingValue, context);
     }
     
     @Override
@@ -58,9 +49,9 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
             nestedMessageHeaders = ((com.consol.citrus.message.Message) message.getPayload()).getHeaders();
         }
 
-        if (nestedMessageHeaders.containsKey(name)) {
+        if (nestedMessageHeaders.containsKey(selectKey)) {
             return matchHeader(nestedMessageHeaders);
-        } else if (messageHeaders.containsKey(name)) {
+        } else if (messageHeaders.containsKey(selectKey)) {
             return matchHeader(messageHeaders);
         } else {
             return false;
@@ -68,20 +59,9 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
     }
 
     private boolean matchHeader(Map<String, Object> messageHeaders) {
-        return Optional.ofNullable(messageHeaders.get(name))
+        return Optional.ofNullable(messageHeaders.get(selectKey))
                 .map(Object::toString)
-                .map(header -> {
-                    if (ValidationMatcherUtils.isValidationMatcherExpression(value)) {
-                        try {
-                            ValidationMatcherUtils.resolveValidationMatcher(name, header, value, context);
-                            return true;
-                        } catch (ValidationException e) {
-                            return false;
-                        }
-                    } else {
-                        return header.equals(value);
-                    }
-                })
+                .map(this::evaluate)
                 .orElse(false);
     }
 
@@ -91,12 +71,16 @@ public class HeaderMatchingMessageSelector implements MessageSelector {
     public static class Factory implements MessageSelectorFactory<HeaderMatchingMessageSelector> {
         @Override
         public boolean supports(String key) {
-            return true;
+            return key.startsWith(SELECTOR_PREFIX);
         }
 
         @Override
         public HeaderMatchingMessageSelector create(String key, String value, TestContext context) {
-            return new HeaderMatchingMessageSelector(key, value, context);
+            if (key.startsWith(SELECTOR_PREFIX)) {
+                return new HeaderMatchingMessageSelector(key.substring(SELECTOR_PREFIX.length()), value, context);
+            } else {
+                return new HeaderMatchingMessageSelector(key, value, context);
+            }
         }
     }
 }
