@@ -1,4 +1,75 @@
-- version: ${project.version}
+- version: 2.7.5
+  date: 2018-05-06
+  tag: latest
+  issues: https://github.com/christophd/citrus/issues/
+  stories: https://github.com/christophd/citrus/issues/
+  changes:
+  - title: Unable to initialize Citrus instance - instance has already been initialized
+    id: 357
+    type: Fix
+    author: christophd
+  - title: Message selector on non-XML payloads
+    id: 374
+    type: Update
+    author: christophd
+  - title: Send and receive zip archives
+    id: 375
+    type: Update
+    author: christophd
+  - title: Add ".headers" declaration that takes a Map for validation
+    id: 345
+    type: Update
+    author: christophd
+  - title: Remove unnecessary surefire excludes
+    id: 363
+    type: Update
+    author: christophd
+  - title: Default responses for JDBC requests
+    id: 369
+    type: Update
+    author: christophd
+  - title: Support test variables in endpoint names
+    id: 376
+    type: Update
+    author: christophd
+  - title: Support FTP store and retrieve file operations
+    id: 356
+    type: Update
+    author: christophd
+  - title: Remote Citrus test report contains double entries
+    id: 355
+    type: Fix
+    author: christophd
+  - title: Correct documentation concerning maven commands
+    id: 362
+    type: Update
+    author: FMAOuroboros
+  - title: Replace parameter instead of adding them in JdbcPreparedStatement
+    id: 371
+    type: Fix
+    author: FMAOuroboros
+  - title: Add binary stream validator
+    id: 367
+    type: Add
+    author: christophd
+  - title: SQL query action requires FROM keyword
+    id: 366
+    type: Fix
+    author: christophd
+  - title: HTTP client always converts responses to String
+    id: 359
+    type: Fix
+    author: christophd
+  - title: HttpMessageController is not thread-safe
+    id: 353
+    type: Fix
+    author: imezhenkov
+  - title: Transfer previously set header/contentType to Message
+    id: 358
+    type: Fix
+    author: FMAOuroboros
+
+- version: 2.7.4
   date: 2018-03-12
   tag: latest
   issues: https://github.com/christophd/citrus/issues/
@@ -194,7 +265,7 @@
     id: 265
     type: Fix
     author: christophd
-  - title: Switch to asciidoctor refactoring
+  - title: Switch to asciidoctor
     id: 262
     type: Update
     author: christophd
