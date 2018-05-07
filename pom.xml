@@ -959,7 +959,7 @@
                 <value>en</value>
               </property>
             </systemProperties>
-            <forkMode>once</forkMode>
+            <forkMode>always</forkMode>
             <failIfNoTests>false</failIfNoTests>
             <skipTests>${skip.unit.tests}</skipTests>
             <workingDirectory>${project.build.directory}</workingDirectory>
