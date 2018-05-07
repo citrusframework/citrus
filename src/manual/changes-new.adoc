@@ -24,7 +24,7 @@ Read more about message selectors in link:#message-selectors[message-selector] a
 Citrus provides a special message implementation that automatically adds the payload in form of one to many files and directories to a zip archive. The final zipped content is then
 provided as binary message payload. This makes it very easy to send and receive zipped files and directories within Citrus.
 
-[[changes-ftp]]
+[[changes-ftp-rewrite]]
 === Support FTP store and retrieve file operations
 
 The FTP support has been rewritten to a certain extend in this release. This is because the former implementation has been too close to the FTP protocol. The new implementation is much

@@ -3,7 +3,7 @@
 
 Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. There are basically two ways in Citrus how to compare binary message content.
 
-[[binary-message-validation]]
+[[binary-stream-message-validation]]
 === Stream message validation
 
 A first approach to validate incoming binary message content is to compare the binary stream data with an expected stream. This comparison is straight forward as each byte in the
@@ -38,7 +38,7 @@ public void httpServerBinary() {
 
 It is very important to set the message type to `MessageType.BINARY` as this is the message type that is automatically handled by the binary stream message validator.
 
-[[binary-message-validation]]
+[[binary-base64-message-validation]]
 === Base64 message validation
 
 Another way to validate binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.
