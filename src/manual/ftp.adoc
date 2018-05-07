@@ -60,28 +60,29 @@ In a test case you are now able to use the client to push commands to the server
 ----
 <send endpoint="ftpClient" fork="true">
   <message>
-    <data></data>
+    <payload>
+      <ftp:command>
+        <ftp:signal>MKD</ftp:signal>
+        <ftp:arguments>test</ftp:arguments>
+      </ftp:command>
+    </payload>
   </message>
-  <header>
-    <element name="citrus_ftp_command" value="PWD"/>
-    <element name="citrus_ftp_arguments" value="test"/>
-  </header>
 </send>
 
 <receive endpoint="ftpClient">
-  <message type="plaintext">
-    <data>PWD</data>
+  <message>
+    <payload>
+      <ftp:command-result>
+        <ftp:success>true</ftp:success>
+        <ftp:reply-code>257</ftp:reply-code>
+        <ftp:reply-string>257 "/test" created.</ftp:reply-string>
+      </ftp:command-result>
+    </payload>
   </message>
-  <header>
-    <element name="citrus_ftp_command" value="PWD"/>
-    <element name="citrus_ftp_arguments" value="test"/>
-    <element name="citrus_ftp_reply_code" value="257"/>
-    <element name="citrus_ftp_reply_string" value="@contains('is current directory')@"/>
-  </header>
 </receive>
 ----
 
-As you can see most of the ftp communication parameters are specified as special header elements in the message. Citrus automatically converts those information to proper FTP commands and response messages.
+As you can see most of the ftp communication parameters are specified in a ftp command message. Citrus automatically converts those information to proper FTP commands and response messages.
 
 [[ftp-server]]
 == FTP server
@@ -122,51 +123,64 @@ ftpserver.user.anonymous.uploadrate=4800
 ftpserver.user.anonymous.downloadrate=4800
 ----
 
-As you can see you are able to define as many user for the ftp server as you like. Username and password define the authentication on the server. In addition to that you have plenty of configuration possibilities per user. Citrus uses the Apache ftp server implementation. So for more details on configuration capabilities please consult the official Apache ftp server documentation.
+As you can see you are able to define as many user for the ftp server as you like. Username and password define the authentication on the server. In addition to that you have plenty of configuration possibilities per user. Citrus uses the Apache ftp server implementation.
+So for more details on configuration capabilities please consult the official Apache ftp server documentation.
 
 Now we would like to use the server in a test case. Very easy you just have to define a receive message action within your test case that uses the server id as endpoint reference:
 
 [source,xml]
 ----
 <echo>
-  <message>Receive user login on FTP server</message>
+  <message>Store file on server</message>
 </echo>
 
 <receive endpoint="ftpServer">
-  <message type="plaintext">
-    <data>USER</data>
+  <message>
+    <payload>
+      <ftp:command>
+        <ftp:signal>STOR</ftp:signal>
+        <ftp:arguments>/test/hello.txt</ftp:arguments>
+      </ftp:command>
+    </payload>
   </message>
-  <header>
-    <element name="citrus_ftp_command" value="USER"/>
-    <element name="citrus_ftp_arguments" value="admin"/>
-  </header>
 </receive>
 
 <send endpoint="ftpServer">
-  <message type="plaintext">
-    <data>OK</data>
+  <message>
+    <payload>
+      <ftp:command-result>
+        <ftp:success>true</ftp:success>
+      </ftp:command-result>
+    </payload>
   </message>
 </send>
 
 <echo>
-  <message>Receive user password on FTP server</message>
+  <message>Retrieve file from server</message>
 </echo>
 
 <receive endpoint="ftpServer">
-  <message type="plaintext">
-    <data>PASS</data>
+  <message>
+    <payload>
+      <ftp:command>
+        <ftp:signal>RETR</ftp:signal>
+        <ftp:arguments>/test/hello.txt</ftp:arguments>
+      </ftp:command>
+    </payload>
   </message>
-  <header>
-    <element name="citrus_ftp_command" value="PASS"/>
-    <element name="citrus_ftp_arguments" value="admin"/>
-  </header>
 </receive>
 
 <send endpoint="ftpServer">
-  <message type="plaintext"">
-    <data>OK</data>
+  <message>
+    <payload>
+      <ftp:command-result>
+        <ftp:success>true</ftp:success>
+      </ftp:command-result>
+    </payload>
   </message>
 </send>
 ----
 
-The listing above shows two incoming commands representing a user login. We indicate with re send actions that we would link the server to respond with positive feedback and to accept the login. As we have a fully qualified ftp server running the client can also push files read directories and more. All incoming commands can be validated inside a test case.
+The listing above shows two incoming commands representing a file store and retrieve operation. We indicate with re send actions that we would link the server to respond with positive feedback and to accept the commands. As we have a fully qualified ftp server running the client can store, retrieve files and create and change directories.
+All incoming commands result in a file system change in the server working directory. So stored files are stored in that working directory and retrieved files are read form that directory. In the test case we only receive the commands for validation purpose and to indicate server
+success or failure response.

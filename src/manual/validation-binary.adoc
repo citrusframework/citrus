@@ -1,7 +1,47 @@
 [[binary-message-validation]]
 == Binary message validation
 
-Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. In Citrus the way to compare binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.
+Binary message validation is not very easy to do especially when it comes to compare data with a given control message. As a tester you want to validate the binary content. There are basically two ways in Citrus how to compare binary message content.
+
+[[binary-message-validation]]
+=== Stream message validation
+
+A first approach to validate incoming binary message content is to compare the binary stream data with an expected stream. This comparison is straight forward as each byte in the
+binary stream is compared to an expected stream.
+
+The default message validator for binary messages is active by default. Citrus will pick this message validator for all messages of *type="binary_base64"* . The default message validator implementation can be overwritten by placing a Spring bean with id *defaultBinaryBase64MessageValidator* to the Spring application context.
+
+[source,xml]
+----
+<bean id="defaultBinaryMessageValidator" class="com.consol.citrus.validation.text.BinaryMessageValidator"/>
+----
+
+You can use the binary message type in your receive action in order to enable this stream comparison during validation.
+
+[source,java]
+----
+@CitrusTest
+public void httpServerBinary() {
+    http().client("httpClient")
+            .send()
+            .get("/imagestream/foo.png")
+            .accept(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+
+    http().client("httpClient")
+            .receive()
+            .response(HttpStatus.OK)
+            .messageType(MessageType.BINARY)
+            .message(new DefaultMessage(FileCopyUtils.copyToByteArray(new ClassPathResource("templates/foo.png").getFile())))
+            .contentType(ContentType.APPLICATION_OCTET_STREAM.getMimeType());
+}
+----
+
+It is very important to set the message type to `MessageType.BINARY` as this is the message type that is automatically handled by the binary stream message validator.
+
+[[binary-message-validation]]
+=== Base64 message validation
+
+Another way to validate binary message content is to use base64 String encoding. The binary data is encoded as base64 character sequence and there fore is comparable with an expected content.
 
 The received message content does not have to be base64 encoded. Citrus is doing this conversion automatically before validation takes place. The binary data can be anything e.g. images, pdf or gzip content.
 

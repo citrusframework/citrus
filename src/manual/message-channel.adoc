@@ -182,10 +182,51 @@ The Citrus message channel implementation extends the queue channel implementati
 
 In addition to that we have implemented other message filter possibilities on message channels that we discuss in the next sections.
 
+[[payload-matching-message-selector]]
+== Payload matching Message Selector
+
+You can select messages based on the payload content. Either you define the expected payload as an exact match in the selector or you make use of Citrus validation matchers which is more adequate in most scenarios:
+
+Let's have a look at a simple example in order to demonstrate the payload selection. We have two different plain text messages on a message channel waiting to be picked up by a consumer.
+
+[source,xml]
+----
+Hello, welcome!
+----
+
+[source,xml]
+----
+GoodBye, see you next time!
+----
+
+We would like to pick up the message starting with *GoodBye* in our test case. The other should be left on the message channel as we are not interested in it right now. We can define a payload matching selector in the receive action like this:
+
+[source,xml]
+----
+<receive endpoint="orderChannelEndpoint">
+    <selector>
+        <element name="payload" value="@startsWith(GoodBye)@"/>
+    </selector>
+    <message>
+        <payload>GoodBye, see you next time!</payload>
+    </message>
+</receive>
+----
+
+The Citrus receiver picks up the *GoodBye* from the channel selected via the payload matching expression defined in the selector element. Of course you can also combine message header selectors and payload matching selectors as shown in this example below where a message header *sequenceId* is added to the selection logic.
+
+[source,xml]
+----
+<selector>
+    <element name="payload" value="@startsWith(GoodBye)@"/>
+    <element name="sequenceId" value="1234"/>
+</selector>
+----
+
 [[root-qname-message-selector]]
 == Root QName Message Selector
 
-You can use the XML root QName of your message as selection criteria. Let's see how this works in a small example:
+As a special payload matching selector you can use the XML root QName of your message as selection criteria when dealing with XML message content. Let's see how this works in a small example:
 
 We have two different XML messages on a message channel waiting to be picked up by a consumer.
 
@@ -230,8 +271,8 @@ As we deal with XML qname values, we can also use namespaces in our selector roo
 </selector>
 ----
 
-[[xpath-evaluating-message-selector]]
-== XPath Evaluating Message Selector
+[[xpath-message-selector]]
+== Xpath Message Selector
 
 It is also possible to evaluate some XPath expression on the message payload in order to select a message from a message channel. The XPath expression outcome must match an expected value and only then the message is consumed form the channel.
 
@@ -279,3 +320,25 @@ Knowing the correct XML namespace prefix is not always easy. If you are not sure
 ----
 
 This will match all incoming messages regardless the XML namespace prefix that is used.
+
+[[json-path-message-selector]]
+== JsonPath Message Selector
+
+It is also possible to evaluate some JsonPath expression on the message payload in order to select a message from a message channel. The JsonPath expression outcome must match an expected value and only then the message is consumed form the channel.
+
+The syntax for the JsonPath expression is to be defined as the element name like this:
+
+[source,xml]
+----
+<selector>
+    <element name="jsonPath:$.order.status" value="pending"/>
+</selector>
+----
+
+The message selector looks for order messages with *status="pending"* in the message payload. This means that following messages would get accepted/declined by the message selector.
+
+[source,xml]
+----
+{ "order": "status": "pending" } = ACCEPTED
+{ "order": "status": "finished" } = NOT ACCEPTED
+----
