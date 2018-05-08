@@ -45,7 +45,7 @@ The Gradle build configuration is done in the **build.gradle** and **settings.gr
 {% highlight shell %}
 rootProject.name = 'citrus-sample-gradle'
 group 'com.consol.citrus.samples'
-version '2.7.5'
+version '2.7.6-SNAPSHOT'
 {% endhighlight %}
     
 Now as Citrus libraries are available on Maven central repository we add these repositories so Gradle knows how to download the required
@@ -67,8 +67,8 @@ Now lets move on with adding the Citrus libraries to the project.
 
 {% highlight shell %}
 dependencies {
-    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7.5'
-    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7.5'
+    testCompile group: 'com.consol.citrus', name: 'citrus-core', version: '2.7.6-SNAPSHOT'
+    testCompile group: 'com.consol.citrus', name: 'citrus-java-dsl', version: '2.7.6-SNAPSHOT'
     testCompile group: 'org.testng', name: 'testng', version: '6.11'
     [...]
 }
