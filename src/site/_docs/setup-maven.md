@@ -131,7 +131,6 @@ The surefire and failsafe plugin configuration is responsible for executing all 
   <artifactId>maven-surefire-plugin</artifactId>
   <version>2.19.1</version>
   <configuration>
-    <forkMode>once</forkMode>
     <failIfNoTests>false</failIfNoTests>
     <workingDirectory>${project.build.directory}</workingDirectory>
   </configuration>
