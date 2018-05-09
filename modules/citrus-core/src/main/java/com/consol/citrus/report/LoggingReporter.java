@@ -118,6 +118,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onFinish() {
+        super.onFinish();
+
         newLine();
         separator();
         debug("AFTER TEST SUITE");
@@ -126,6 +128,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onStart() {
+        super.onStart();
+
         newLine();
         separator();
         info("       .__  __                       ");
@@ -150,6 +154,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         info("AFTER TEST SUITE: FAILED");
         separator();
         newLine();
+
+        super.onFinishFailure(cause);
     }
 
     @Override
@@ -158,10 +164,14 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         info("AFTER TEST SUITE: SUCCESS");
         separator();
         newLine();
+
+        super.onFinishSuccess();
     }
 
     @Override
     public void onStartFailure(Throwable cause) {
+        super.onStartFailure(cause);
+
         newLine();
         info("BEFORE TEST SUITE: FAILED");
         separator();
@@ -170,6 +180,8 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onStartSuccess() {
+        super.onStartSuccess();
+
         newLine();
         info("BEFORE TEST SUITE: SUCCESS");
         separator();
