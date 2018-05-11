@@ -76,7 +76,7 @@ public class JsonPathMessageValidator extends AbstractMessageValidator<JsonPathM
                 }
             }
 
-            log.info("JSONPath element validation successful: All values OK");
+            log.debug("JSONPath element validation successful: All values OK");
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }

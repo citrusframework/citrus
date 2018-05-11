@@ -94,7 +94,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
                 GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
                 ((GroovyScriptExecutor) groovyObject).validate(receivedMessage, context);
                 
-                log.info("Groovy message validation successful: All values OK");
+                log.debug("Groovy message validation successful: All values OK");
             }
         } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
             throw new CitrusRuntimeException(e);

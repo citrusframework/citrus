@@ -82,7 +82,7 @@ public class Assert extends AbstractActionContainer {
             if (log.isDebugEnabled()) {
                 log.debug("Asserted exception is as expected: " + e.getClass() + ": " + e.getLocalizedMessage());
             }
-            log.info("Assert exception validation successful: All values OK");
+            log.debug("Assert exception validation successful: All values OK");
             return;
         }
 

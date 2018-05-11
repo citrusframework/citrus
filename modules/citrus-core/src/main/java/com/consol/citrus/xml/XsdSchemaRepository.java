@@ -106,7 +106,7 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         } else if (resource.getFilename().endsWith(".wsdl")) {
             addWsdlSchema(resource);
         } else {
-            log.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
+            log.debug("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
         }
     }
 
