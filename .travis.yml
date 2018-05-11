@@ -6,4 +6,4 @@ jdk:
 install: true
 
 script:
-  - mvn --batch-mode clean install -DreuseForks=false
+  - mvn --batch-mode clean install
