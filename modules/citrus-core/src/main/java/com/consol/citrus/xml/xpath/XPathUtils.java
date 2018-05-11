@@ -323,14 +323,14 @@ public abstract class XPathUtils {
                         log.warn("Failed to instantiate xpath factory", e);
                         factory = XPathFactory.newInstance();
                     }
-                    log.info("Created xpath factory {} using system property {} with value {}", factory, key, uri);
+                    log.debug("Created xpath factory {} using system property {} with value {}", factory, key, uri);
                 }
             }
         }
 
         if (factory == null) {
             factory = XPathFactory.newInstance();
-            log.info("Created default xpath factory {}", factory);
+            log.debug("Created default xpath factory.");
         }
 
         return factory;

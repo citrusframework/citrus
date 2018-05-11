@@ -56,7 +56,7 @@ public class CitrusTestEnricher implements TestEnricher {
 
             CitrusAnnotations.injectAll(testCase, citrusInstance.get());
 
-            log.info("Enriched test class with Citrus field resource injection");
+            log.debug("Enriched test class with Citrus field resource injection");
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;
@@ -95,7 +95,7 @@ public class CitrusTestEnricher implements TestEnricher {
                 }
             }
 
-            log.info("Enriched method parameters with Citrus method resource injection");
+            log.debug("Enriched method parameters with Citrus method resource injection");
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);
             throw e;

@@ -113,7 +113,7 @@ public class JavaAction extends AbstractTestAction {
                     StringUtils.arrayToCommaDelimitedString(methodTypes) + ")' for class '" + instance.getClass() + "'");
         }
         
-        log.info("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
+        log.debug("Invoking method '" + methodToRun.toString() + "' on instance '" + instance.getClass() + "'");
 
         methodToRun.invoke(instance, methodObjects);
     }
@@ -140,7 +140,7 @@ public class JavaAction extends AbstractTestAction {
                 "is set for Java reflection call");
         }
         
-        log.info("Instantiating class for name '" + className + "'");
+        log.debug("Instantiating class for name '" + className + "'");
         
         Class<?> classToRun = Class.forName(className);
         

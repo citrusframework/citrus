@@ -52,7 +52,7 @@ public class CitrusInstanceProducer {
     public void beforeDeploy(@Observes(precedence = CitrusExtensionConstants.INSTANCE_PRECEDENCE) BeforeDeploy event) {
         try {
             if (!event.getDeployment().testable()) {
-                log.info("Producing Citrus framework instance");
+                log.debug("Producing Citrus framework instance");
                 citrusInstance.set(Citrus.newInstance(configurationInstance.get().getConfigurationClass()));
             }
         } catch (Exception e) {

@@ -129,7 +129,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
         
-        log.info("JSON message validation successful: All values OK");
+        log.debug("JSON message validation successful: All values OK");
     }
 
     /**
@@ -150,7 +150,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             throw new ValidationException(constructErrorMessage(report));
         }
 
-        log.info("Json schema validation successful: All values OK");
+        log.debug("Json schema validation successful: All values OK");
     }
 
     /**

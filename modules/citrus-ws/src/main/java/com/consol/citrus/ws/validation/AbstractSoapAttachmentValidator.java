@@ -57,7 +57,7 @@ public abstract class AbstractSoapAttachmentValidator implements SoapAttachmentV
             validateAttachmentContentType(attachment, controlAttachment);
             validateAttachmentContent(attachment, controlAttachment);
 
-            log.info("SOAP attachment validation successful: All values OK");
+            log.debug("SOAP attachment validation successful: All values OK");
         }
     }
 

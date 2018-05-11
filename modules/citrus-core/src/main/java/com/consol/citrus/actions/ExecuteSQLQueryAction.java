@@ -132,7 +132,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
             List<Map<String, Object>> results = getJdbcTemplate().queryForList(toExecute);
 
-            log.info("SQL query execution successful");
+            log.debug("SQL query execution successful");
 
             allResultRows.addAll(results);
             fillColumnValuesMap(results, columnValuesMap);
@@ -248,7 +248,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             return;
         }
         performControlResultSetValidation(columnValuesMap, context);
-        log.info("SQL query validation successful: All values OK");
+        log.debug("SQL query validation successful: All values OK");
     }
 
     private void performControlResultSetValidation(final Map<String, List<String>> columnValuesMap, TestContext context)

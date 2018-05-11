@@ -47,7 +47,7 @@ public class CitrusRemoteInstanceProducer {
 
     public void beforeSuite(@Observes(precedence = CitrusExtensionConstants.INSTANCE_REMOTE_PRECEDENCE) BeforeSuite event) {
         try {
-            log.info("Producing Citrus framework instance");
+            log.debug("Producing Citrus framework instance");
             citrusInstance.set(Citrus.newInstance(configurationInstance.get().getConfigurationClass()));
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);

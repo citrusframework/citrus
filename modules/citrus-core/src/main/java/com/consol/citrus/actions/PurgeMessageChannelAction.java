@@ -80,7 +80,7 @@ public class PurgeMessageChannelAction extends AbstractTestAction implements Ini
             purgeChannel(resolveChannelName(channelName));
         }
 
-        log.info("Purged message channels");
+        log.debug("Purged message channels");
     }
 
     /**
