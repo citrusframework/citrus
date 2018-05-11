@@ -69,7 +69,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
                         .findFirst()
                         .orElseThrow(() -> new ValidationException("Validation failed: No matching header for key '" + key + "'"));
 
-                log.info(String.format("Found matching case insensitive header name: %s", headerName));
+                log.debug(String.format("Found matching case insensitive header name: %s", headerName));
             }
 
             if (!receivedHeaders.containsKey(headerName)) {
@@ -125,7 +125,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
             }
         }
 
-        log.info("Message header validation successful: All values OK");
+        log.debug("Message header validation successful: All values OK");
     }
 
     @Override

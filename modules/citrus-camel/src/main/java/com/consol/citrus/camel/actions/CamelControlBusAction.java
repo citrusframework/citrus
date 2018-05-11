@@ -87,7 +87,7 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
             }
 
             ValidationUtils.validateValues(response.getPayload(String.class), expectedResult, "camelControlBusResult", context);
-            log.info("Validation of Camel controlbus response successful - All values OK");
+            log.debug("Validation of Camel controlbus response successful - All values OK");
         }
     }
 

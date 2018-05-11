@@ -54,6 +54,6 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
                     controlDetail + "' \n received \n'" + receivedDetail + "'");
         }
 
-        log.info("SOAP fault detail validation successful: All values OK");
+        log.debug("SOAP fault detail validation successful: All values OK");
     }
 }
