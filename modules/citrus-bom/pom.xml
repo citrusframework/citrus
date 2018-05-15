@@ -53,11 +53,6 @@
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-integration</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-java-dsl</artifactId>
         <version>${project.version}</version>
       </dependency>
