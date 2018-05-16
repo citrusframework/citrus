@@ -277,7 +277,7 @@ Citrus comes to you as a zipped archive in one of the following packages:
 The release package includes the Citrus binaries as well as the reference documentation and some sample applications.
 
 In case you want to get in touch with developing and debugging Citrus you can also go with the source archive which gives
-you the complete Citrus Java code sources. The whole Citrus project is also accessible for you on http://github.com/christophd/citrus[http://github.com/christophd/citrus].
+you the complete Citrus Java code sources. The whole Citrus project is also accessible for you on http://github.com/citrusframework/citrus[http://github.com/citrusframework/citrus].
 This open git repository on GitHub enables you to build Citrus from scratch with Maven and contribute code changes.
 
 [[installation]]

@@ -57,7 +57,7 @@ Resources
 ---------
 
 * Citrus's source repository is hosted on github.com. You can clone the
-repository with git://github.com/christophd/citrus.git as URL
+repository with git://github.com/citrusframework/citrus.git as URL
 
 * Find our blog and more interesting articles around Citrus on
 http://labs.consol.de and checkout the various post categories for
@@ -103,7 +103,7 @@ Bugs
 ---------
 
 Please report any bugs and/or feature requests to dev@citrusframework.org
-or directly to http://github.com/christophd/citrus/issues
+or directly to http://github.com/citrusframework/citrus/issues
   
 Team
 ---------

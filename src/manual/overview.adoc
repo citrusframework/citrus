@@ -32,7 +32,7 @@ hesitate to contact us. Find below the reference documentation for the latest Ci
 
 * link:https://citrusframework.org/[Citrus Homepage]
 * link:https://citrusframework.org/news[News]
-* link:http://www.github.com/christophd/citrus[Java Sources]
+* link:http://www.github.com/citrusframework/citrus[Java Sources]
 * link:https://citrusframework.org/docs/setup-maven[Quickstart Maven]
 * link:https://citrusframework.org/docs/setup-gradle[Quickstart Gradle]
 * link:https://citrusframework.org/docs/setup-ant[Quickstart Ant]

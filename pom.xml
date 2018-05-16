@@ -165,9 +165,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:christophd/citrus.git</connection>
-    <developerConnection>scm:git:git@github.com/christophd/citrus.git</developerConnection>
-    <url>http://github.com/christophd/citrus.git</url>
+    <connection>scm:git:git@github.com:citrusframework/citrus.git</connection>
+    <developerConnection>scm:git:git@github.com/citrusframework/citrus.git</developerConnection>
+    <url>http://github.com/citrusframework/citrus.git</url>
   </scm>
 
   <organization>
@@ -1366,8 +1366,8 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-scm-plugin</artifactId>
             <configuration>
-              <connectionUrl>scm:git:git@github.com:christophd/citrus.git</connectionUrl>
-              <developerConnectionUrl>scm:git:git@github.com:christophd/citrus.git</developerConnectionUrl>
+              <connectionUrl>scm:git:git@github.com:citrusframework/citrus.git</connectionUrl>
+              <developerConnectionUrl>scm:git:git@github.com:citrusframework/citrus.git</developerConnectionUrl>
               <scmVersion>gh-pages</scmVersion>
               <scmVersionType>branch</scmVersionType>
             </configuration>
