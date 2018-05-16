@@ -1,0 +1,113 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;7.&nbsp;Containers</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="templates.html" title="Chapter&nbsp;6.&nbsp;Templates"><link rel="next" href="finally.html" title="Chapter&nbsp;8.&nbsp;Finally section"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;7.&nbsp;Containers</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="templates.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="finally.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="containers"></a>Chapter&nbsp;7.&nbsp;Containers</h2></div></div><div></div></div><p>Similar to templates a container element holds one to many test actions. In contrast to the
+  template the container appears directly inside the test case action chain, meaning that the container 
+  is not referenced by more than one test case.</p><p>Containers execute the embedded test actions in specific logic. This can be an execution in iteration
+  for instance. Combine different containers with each other and you will be able to generate very powerful hierarchical
+  structures in order to create a complex execution logic. In the following sections some predefined
+  containers are described.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="containers-sequential"></a>7.1.&nbsp;Sequential</h2></div></div><div></div></div><p>The sequential container executes the embedded test actions in strict sequence. Readers now might search for 
+    the difference to the normal action chain that is specified inside the test case. The actual power of sequential containers 
+    does show only in combination with other containers like iterations and parallels. We will see this later when handling 
+    these containers.</p><p>For now the sequential container seems very unspectacular - one might say boring - because it simply groups a pair of test
+    actions to sequential execution.</p><pre class="programlisting">
+  &lt;testcase name="sequentialTest"&gt;
+      &lt;actions&gt;
+          &lt;sequential&gt;
+              &lt;trace-time/&gt;
+              &lt;sleep/&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;Hallo TestFramework&lt;/message&gt;
+              &lt;/echo&gt;
+              &lt;trace-time/&gt;
+          &lt;/sequential&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="containers-parallel"></a>7.2.&nbsp;Parallel</h2></div></div><div></div></div><p>Parallel containers execute the embedded test actions concurrent to each other. Every
+    action in this container will be executed in a separate Java Thread. Following example should
+    clarify the usage:</p><pre class="programlisting">
+  &lt;testcase name="parallelTest"&gt;
+      &lt;actions&gt;
+          &lt;parallel&gt;
+              &lt;sleep/&gt;
+              
+              &lt;sequential&gt;
+                  &lt;sleep/&gt;
+                  &lt;echo&gt;
+                      &lt;message&gt;1&lt;/message&gt;
+                  &lt;/echo&gt;
+              &lt;/sequential&gt;
+              
+              &lt;echo&gt;
+                  &lt;message&gt;2&lt;/message&gt;
+              &lt;/echo&gt;
+              
+              &lt;echo&gt;
+                  &lt;message&gt;3&lt;/message&gt;
+              &lt;/echo&gt;
+              
+              &lt;iterate condition="i lt= 5" 
+                          index="i"&gt;
+                  &lt;echo&gt;
+                      &lt;message&gt;10&lt;/message&gt;
+                  &lt;/echo&gt;
+              &lt;/iterate&gt;
+          &lt;/parallel&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>So the normal test action processing would be to execute one action after another. As the first 
+    action is a sleep of five seconds, the whole test processing would stop and wait for 5 seconds. Things 
+    are different inside the parallel container. Here the descending test actions will not wait but execute
+    at the same time.
+    </p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>Note that containers can easily wrap other containers. The example shows a simple combination of
+      sequential and parallel containers that will archive a complex execution logic. Actions inside the sequential
+      container will execute one after another. But actions in parallel will be executed at the same time.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="containers-iterate"></a>7.3.&nbsp;Iterate</h2></div></div><div></div></div><p>Iterations are very powerful elements when describing complex logic. The container executes the embedded actions 
+    several times. The container will continue with looping as long as the defined breaking condition string evaluates to 
+    <tt class="literal">true</tt>. In case the condition evaluates to <tt class="literal">false</tt> the iteration will break an finish execution.</p><pre class="programlisting">
+  &lt;testcase name="iterateTest"&gt;
+      &lt;actions&gt;
+          &lt;iterate index="i" 
+                      condition="i lt 5"&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;index is: ${i}&lt;/message&gt;
+              &lt;/echo&gt;
+          &lt;/iterate&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>The attribute "index" automatically defines a new variable that holds the actual loop index 
+    starting at "1". This index variable is available as a normal variable inside the iterate container. Therefore it is possible
+    to print out the actual loop index in the echo action as shown in the above example.</p><p>The condition string is mandatory and describes the actual end of the loop. In iterate containers the loop
+    will break in case the condition evaluates to <tt class="literal">false</tt>.</p><p>The condition string can be any Boolean expression and supports several operators:</p><div class="itemizedlist"><ul type="opencircle"><li style="list-style-type: circle"><p>lt (lower than)</p></li><li style="list-style-type: circle"><p>lt= (lower than equals)</p></li><li style="list-style-type: circle"><p>gt (greater than)</p></li><li style="list-style-type: circle"><p>gt= (greater than equals)</p></li><li style="list-style-type: circle"><p>= (equals)</p></li><li style="list-style-type: circle"><p>and (logical combining of two Boolean values)</p></li><li style="list-style-type: circle"><p>or (logical combining of two Boolean values)</p></li><li style="list-style-type: circle"><p>() (brackets)</p></li></ul></div><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/admons/important.png"></td><th align="left">Important</th></tr><tr><td colspan="2" align="left" valign="top"><p>It is very important to notice that the condition is evaluated before the very first iteration takes place. 
+      The loop therefore can be executed 0-n times according to the condition value.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="containers-repeat"></a>7.4.&nbsp;Repeat until true</h2></div></div><div></div></div><p>Quite similar to the previously described iterate container this repeating container will execute its actions in
+    a loop according to an ending condition. The condition describes a Boolean expression using
+    the operators as described in the previous chapter.</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/admons/important.png"></td><th align="left">Important</th></tr><tr><td colspan="2" align="left" valign="top"><p>The loop continues its work until the provided condition evaluates to true. It is very important to notice that the
+      repeat loop will execute the actions before evaluating the condition. This means the actions get executed
+      1-n times.</p></td></tr></table></div><pre class="programlisting">
+  &lt;testcase name="iterateTest"&gt;
+      &lt;actions&gt;
+          &lt;repeat-until-true index="i" 
+                                condition="(i = 3) or (i = 5)"&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;index is: ${i}&lt;/message&gt;
+              &lt;/echo&gt;
+          &lt;/repeat-until-true&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="containers-repeat-onerror"></a>7.5.&nbsp;Repeat on error until true</h2></div></div><div></div></div><p>The next looping container is called repeat-on-error-until-true. This container simply repeats group of actions 
+    only in case one embedded action has failed with error. In case of such an error inside the container the loop will try 
+    again to execute <tt class="literal">all</tt> embedded actions. The on-error execution takes place until one of the following conditions 
+    evaluates to true:</p><p>1. All embedded actions were processed successfully</p><p>2. The ending condition evaluates to true</p><pre class="programlisting">
+  &lt;testcase name="iterateTest"&gt;
+      &lt;actions&gt;
+          &lt;repeat-onerror-until-true index="i" 
+                                        condition="i = 5"&gt;
+              &lt;echo&gt;
+                  &lt;message&gt;index is: ${i}&lt;/message&gt;
+              &lt;/echo&gt;
+              &lt;fail/&gt;
+          &lt;/repeat-onerror-until-true&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>In the code example the error loop continues four times as the &lt;fail&gt; action definitely fails the test.
+    During the fifth iteration The condition "i=5" evaluates to true and the loop breaks its processing.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>The overall success of the test case depends on the error situation inside the repeat-onerror-until-true container. In case 
+        the loop breaks because of failing actions and the loop will discontinue its work the whole test case is failing too. The error loop
+        processing is successful only in case all embedded actions were not raising any errors before in one iteration.</p></td></tr></table></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="templates.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="finally.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;6.&nbsp;Templates&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;8.&nbsp;Finally section</td></tr></table></div></body></html>

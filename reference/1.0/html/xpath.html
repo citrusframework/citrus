@@ -1,0 +1,100 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;9.&nbsp;Using XPath</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="finally.html" title="Chapter&nbsp;8.&nbsp;Finally section"><link rel="next" href="jms.html" title="Chapter&nbsp;10.&nbsp;Connecting with JMS"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;9.&nbsp;Using XPath</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="finally.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="jms.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="xpath"></a>Chapter&nbsp;9.&nbsp;Using XPath</h2></div></div><div></div></div><p>Some time ago in this document we have seen how XML elements are manipulated using XPath expressions 
+    when sending and receiving messages. Now using XPath might raise some problems regarding namespaces that we
+    want to deal with now.</p><p>XPath is a very powerful technology for walking XML trees. This W3C standard stands for advanced
+    XML tree handling using a special syntax as query language. The test framework supports this XPath
+    syntax in the following fields:</p><div class="itemizedlist"><ul type="opencircle"><li style="list-style-type: circle"><p>&lt;message&gt;&lt;element path="[XPath-Expression]"&gt;&lt;/message&gt;</p></li><li style="list-style-type: circle"><p>&lt;extract&gt;&lt;message path="[XPath-Expression]"&gt;&lt;/extract&gt;</p></li><li style="list-style-type: circle"><p>&lt;ignore path="[XPath-Expression]"/&gt;</p></li><li style="list-style-type: circle"><p>&lt;validate path="[XPath-Expression]"/&gt;</p></li></ul></div><p>The next program listing indicates the power in using XPath with Citrus:</p><pre class="programlisting">
+  &lt;message&gt;
+      &lt;validate path="//element/elementA" 
+                   value="text"&gt;&lt;/validate&gt;
+      &lt;validate path="//element/elementA[@attr='A']" 
+                   value="text"&gt;&lt;/validate&gt;
+      &lt;validate path ="//element/elementB" 
+                   value="%elementValue"&gt;&lt;/validate&gt;
+      &lt;validate path ="//element/elementB/@attribute" 
+                   value="%attributeValue"&gt;&lt;/validate&gt;
+      &lt;validate path ="/root/element" 
+                   value="namespace"&gt;&lt;/validate&gt;
+      &lt;validate path ="/root/element" 
+                   value="namespace"&gt;&lt;/validate&gt;
+      &lt;validate path ="//*[.='search-for']" 
+                   value="search-for"&gt;&lt;/validate&gt;
+  &lt;/message&gt;
+    </pre><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="xpath-namespace"></a>9.1.&nbsp;Handling XML namespaces</h2></div></div><div></div></div><p>When it comes to XML namespaces you have to be careful with your XPath expressions. Lets have a look at an example
+        message that uses XML namespaces:</p><pre class="programlisting">
+  &lt;ns1:RequestMessage xmlns:ns1="http://testsuite/default"&gt;
+      &lt;ns1:MessageHeader&gt;
+          &lt;ns1:CorrelationId&gt;_&lt;/ns1:CorrelationId&gt;
+          &lt;ns1:Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/ns1:Timestamp&gt;
+          &lt;ns1:RequestTag&gt;_&lt;/ns1:RequestTag&gt;
+          &lt;ns1:VersionId&gt;2&lt;/ns1:VersionId&gt;
+      &lt;/ns1:MessageHeader&gt;
+      &lt;ns1:MessageBody&gt;
+          &lt;ns1:Customer&gt;
+              &lt;ns1:Id&gt;1&lt;/ns1:Id&gt;
+          &lt;/ns1:Customer&gt;
+      &lt;/ns1:MessageBody&gt;
+  &lt;/ns1:RequestMessage&gt;
+        </pre><p>Now we would like to validate some elements in this message using XPath</p><pre class="programlisting">
+  &lt;message&gt;
+      &lt;validate path="//RequestMessage/MessageHeader/RequestTag" 
+                   value="${requestTag}"/&gt;
+      &lt;validate path="//RequestMessage/MessageHeader/CorrelationId" 
+                   value="${correlationId}"/&gt;
+  &lt;/message&gt;
+        </pre><p>The validation will fail although the XPath expression looks correct regarding the XML tree. Because the message 
+        uses the namespace <tt class="literal">xmlns:ns1="http://testsuite/default"</tt> with its prefix <tt class="literal">ns1</tt>
+        our XPath expression is not able to find the elements. The correct XPath expression uses the namespace prefix as defined 
+        in the message.</p><pre class="programlisting">
+  &lt;message&gt;
+      &lt;validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:RequestTag" 
+                   value="${requestTag}"/&gt;
+      &lt;validate path="//ns1:RequestMessage/ns1:MessageHeader/ns1:CorrelationId" 
+                   value="${correlationId}"/&gt;
+  &lt;/message&gt;
+        </pre><p>Now the expressions work fine and the validation is successful. But this is quite error prone. This is because the test is now 
+        depending on the namespace prefix that is used by some application. As soon as the message is sent with a different namespace prefix (e.g.
+        ns2) the validation will fail again.</p><p>You can avoid this effect when specifying your own namespace context and your own namespace prefix during validation.</p><pre class="programlisting">
+  &lt;message&gt;
+      &lt;validate path="//pfx:RequestMessage/pfx:MessageHeader/pfx:RequestTag" 
+                   value="${requestTag}"/&gt;
+      &lt;validate path="//pfx:RequestMessage/pfx:MessageHeader/pfx:CorrelationId" 
+                   value="${correlationId}"/&gt;
+      &lt;namespace prefix="pfx" 
+                    value="http://testsuite/default"/&gt;
+  &lt;/message&gt;
+        </pre><p>Now the test in independent from any namespace prefix in the received message. The namespace context will resolve the namespaces and
+        find the elements although the message might use different prefixes. The only thing that matters is that the namespace value 
+        (http://testsuite/default) matches.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="xpath-default-namespaces"></a>9.2.&nbsp;Handling default namespaces</h2></div></div><div></div></div><p>In the previous section we have seen that XML namespaces can get tricky with XPath validation. Default namespaces can do 
+        even more! So lets look at the example with default namespaces:</p><pre class="programlisting">
+&lt;RequestMessage xmlns="http://testsuite/default"&gt;
+    &lt;MessageHeader&gt;
+        &lt;CorrelationId&gt;_&lt;/CorrelationId&gt;
+        &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+        &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+        &lt;VersionId&gt;2&lt;/VersionId&gt;
+    &lt;/MessageHeader&gt;
+    &lt;MessageBody&gt;
+        &lt;Customer&gt;
+            &lt;Id&gt;1&lt;/Id&gt;
+        &lt;/Customer&gt;
+    &lt;/MessageBody&gt;
+&lt;/RequestMessage&gt;
+        </pre><p>The message uses default namespaces. The following approach in XPath will fail due to namespace problems.</p><pre class="programlisting">
+&lt;message&gt;
+    &lt;validate path="//RequestMessage/MessageHeader/RequestTag" 
+                 value="${requestTag}"/&gt;
+    &lt;validate path="//RequestMessage/MessageHeader/CorrelationId" 
+                 value="${correlationId}"/&gt;
+&lt;/message&gt;
+        </pre><p>Even default namespaces need to be specified in the XPath expressions. Look at the following code listing that
+        works fine with default namespaces:</p><pre class="programlisting">
+&lt;message&gt;
+    &lt;validate path="//:RequestMessage/:MessageHeader/:RequestTag" 
+                 value="${requestTag}"/&gt;
+    &lt;validate path="//:RequestMessage/:MessageHeader/:CorrelationId" 
+                 value="${correlationId}"/&gt;
+&lt;/message&gt;
+        </pre><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td colspan="2" align="left" valign="top"><p>It is recommended to use the namespace context as described in the previous chapter when validating. Only this approach
+            ensures flexibility and stable test cases regarding namespace changes.</p></td></tr></table></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="finally.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="jms.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;8.&nbsp;Finally section&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;10.&nbsp;Connecting with JMS</td></tr></table></div></body></html>

@@ -1,0 +1,1923 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Arquillian | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./docker.html" />
+    
+    
+    <link rel="prev" href="./mail.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="27"
+        data-chapter-title="Arquillian"
+        data-filepath="arquillian.md"
+        data-basepath="."
+        data-revision="Fri Oct 07 2016 09:23:51 GMT+0200 (CEST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes-new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test-case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        Json-path
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop-time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge-jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge-channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge-endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage-server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Generic-action
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Stop-timer
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="15.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.6.</b>
+                        
+                        Repeat-onerror
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Finally-section
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http-websocket
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Message-channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="27" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Endpoint-component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Endpoint-adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Data-dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Test-actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Test-suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Meta-info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Message-tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="45.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.1.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.2.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.3" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.3.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.4" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.4.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.5" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.5.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.6" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.6.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.7" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.7.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.8" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.8.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.9" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.9.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="arquillian-support">Arquillian support</h2>
+<p>Arquillian is a well known integration test framework that comes with a great feature set when it comes to Java EE testing inside of a full qualified application server. With Arquiliian you can deploy your Java EE services in a real application server of your choice and execute the tests inside the application server boundaries. This makes it very easy to test your Java EE services in scope with proper JNDI resource allocation and other resources provided by the application server. Citrus is able to connect with the Arquillian test case. Speaking in more detail your Arquillian test is able to use a Citrus extension in order to use the Citrus feature set inside the Arquillian boundaries.</p>
+<p>Read the next section in order to find out more about the Citrus Arquillian extension.</p>
+<h3 id="citrus-arquillian-extension">Citrus Arquillian extension</h3>
+<p>Arquillian offers a fine mechanism for extensions adding features to the Arquillian test setup and test execution. The Citrus extension respectively adds Citrus framework instance creation and Citrus test execution to the Arquillian world. First of all lets have a look at the extension descriptor properties settable via <strong>arquillian.xml</strong> :</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">extension</span> <span class="hljs-attribute">qualifier</span>=<span class="hljs-value">&quot;citrus&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrusVersion&quot;</span>&gt;</span>2.6.1<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;autoPackage&quot;</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;suiteName&quot;</span>&gt;</span>citrus-arquillian-suite<span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">extension</span>&gt;</span>
+</code></pre>
+<p>The Citrus extension uses a specific qualifier <strong>citrus</strong> for defining properties inside the Arquillian descriptor. Following properties are settable in current version:</p>
+<ul>
+<li>citrusVersion: The explicit version of Citrus that should be used. Be sure to have the same library version available in your project (e.g. as Maven dependency). This property is optional.<pre><code>  By default the extension just uses the latest stable version.
+</code></pre></li>
+<li>autoPackage: When true (default setting) the extension will automatically add Citrus libraries and all transitive dependencies to the test deployment. This automatically enables you to use the Citrus API inside the Arquillian test<pre><code>  even when the test is executed inside the application container.
+</code></pre></li>
+<li>suiteName: This optional setting defines the name of the test suite that is used for the Citrus test run. When using before/after suite functionality in Citrus this setting might be of interest.</li>
+<li>configurationClass: Full qualified Java class name of customized Citrus Spring bean configuration to use when loading the Citrus Spring application context. As a user you can define a custom configuration class that must<pre><code>be a subclass of com.consol.citrus.config.CitrusSpringConfig. When specified the custom class is loaded otherwise the default com.consol.citrus.config.CitrusSpringConfig is loaded to set up the
+Spring application context.
+</code></pre></li>
+</ul>
+<p>Now that we have added the extension descriptor with all properties we need to add the respective Citrus Arquillian extension as library to our project. This is done via Maven in your project&apos;s POM file as normal dependency:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-arquillian<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.1<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">scope</span>&gt;</span>test<span class="hljs-tag">&lt;/<span class="hljs-title">scope</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>Now everything is set up to use Citrus within Arquillian. Lets use Citrus functionality in a Arquillian test case.</p>
+<h3 id="client-side-testing">Client side testing</h3>
+<p>Arquillian separates client and container side testing. When using client side testing the test case is executed outside of the application container deployment. This means that your test case has no direct access to container managed resources such as JNDI resources. On the plus side it is not necessary to include your test in the container deployment. The test case interacts with the container deployment as a normal client would do. Lets have a look at a first example:</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Arquillian.class)
+<span class="hljs-annotation">@RunAsClient</span>
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EmployeeResourceTest</span> </span>{
+
+    <span class="hljs-annotation">@CitrusFramework</span>
+    <span class="hljs-keyword">private</span> Citrus citrusFramework;
+
+    <span class="hljs-annotation">@ArquillianResource</span>
+    <span class="hljs-keyword">private</span> URL baseUri;
+
+    <span class="hljs-keyword">private</span> String serviceUri;
+
+    <span class="hljs-annotation">@Deployment</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> WebArchive <span class="hljs-title">createDeployment</span><span class="hljs-params">()</span> </span>{
+        <span class="hljs-keyword">return</span> ShrinkWrap.create(WebArchive.class)
+            .addClasses(RegistryApplication.class, EmployeeResource.class,
+                Employees.class, Employee.class, EmployeeRepository.class);
+    }
+
+    <span class="hljs-annotation">@Before</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setUp</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> MalformedURLException </span>{
+        serviceUri = <span class="hljs-keyword">new</span> URL(baseUri, <span class="hljs-string">&quot;registry/employee&quot;</span>).toExternalForm();
+    }
+
+    <span class="hljs-annotation">@Test</span>
+    <span class="hljs-annotation">@CitrusTest</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">testCreateEmployeeAndGet</span><span class="hljs-params">(@CitrusResource TestDesigner designer)</span> </span>{
+        designer.send(serviceUri)
+            .message(<span class="hljs-keyword">new</span> HttpMessage(<span class="hljs-string">&quot;name=Penny&amp;age=20&quot;</span>)
+                  .method(HttpMethod.POST)
+                  .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+
+        designer.receive(serviceUri)
+            .message(<span class="hljs-keyword">new</span> HttpMessage()
+                  .statusCode(HttpStatus.NO_CONTENT));
+
+        designer.send(serviceUri)
+            .message(<span class="hljs-keyword">new</span> HttpMessage()
+                  .method(HttpMethod.GET)
+                  .accept(MediaType.APPLICATION_XML));
+
+        designer.receive(serviceUri)
+            .message(<span class="hljs-keyword">new</span> HttpMessage(<span class="hljs-string">&quot;&quot;</span> +
+                <span class="hljs-string">&quot;&quot;</span> +
+                  <span class="hljs-string">&quot;20&quot;</span> +
+                  <span class="hljs-string">&quot;Penny&quot;</span> +
+                  <span class="hljs-string">&quot;&quot;</span> +
+                <span class="hljs-string">&quot;&quot;</span>)
+                  .statusCode(HttpStatus.OK));
+
+        citrusFramework.run(designer.build());
+    }
+}
+</code></pre>
+<p>First of all we use the basic Arquillian JUnit test runner <strong>@RunWith(Arquillian.class)</strong> in combination with the <strong>@RunAsClient</strong> annotation telling Arquillian that this is a client side test case. As this is a usual Arquillian test case we have access to Arquillian resources that automatically get injected such as the base uri of the test deployment. The test deployment is a web deployment created via ShrinkWrap. We add the application specific classes that build our remote RESTful service that we would like to test.</p>
+<p>The Citrus Arquillian extension is able to setup a proper Citrus test environment in the background. As a result the test case can reference a Citrus framework instance with the <strong>@CitrusFramework</strong> annotation. We will use this instance of Citrus later on when it comes to execute the Citrus testing logic.</p>
+<p>No we can focus on writing a test method which is again nothing but a normal JUnit test method. The Citrus extension takes care on injecting the <strong>@CitrusResource</strong> annotated method parameter. With this Citrus test designer instance we can build a Citrus test logic for sending and receiving messages via Http in order to call the remote RESTful employee service of our test deployment. The Http endpoint uri is injected via Arquillian and we are able to call the remote service as a client.</p>
+<p>The Citrus test designer provides Java DSL methods for building the test logic. Please note that the designer will aggregate all actions such as send or receive until the designer is called to build the test case with <strong>build()</strong> method invocation. The resulting test case object can be executed by the Citrus framework instance with <strong>run()</strong> method.</p>
+<p>When the Citrus test case is executed the messages are sent over the wire. The respective response message is received with well known Citrus receive message logic. We can validate the response messages accordingly and make sure the client call was done right. In case something goes wrong within Citrus test execution the framework will raise exceptions accordingly. As a result the JUnit test method is successful or failed with errors coming from Citrus test execution.</p>
+<p>This is how Citrus and Arquillian can interact in a test scenario where the test deployment is managed by Arquillian and the client side actions take place within Citrus. This is a great way to combine both frameworks with Citrus being able to call different service API endpoints in addition with validating the outcome. This was a client side test case where the test logic was executed outside of the application container. Arquillian also supports container remote test cases where we have direct access to container managed resources. The following section describes how this works with Citrus.</p>
+<h3 id="container-side-testing">Container side testing</h3>
+<p>In previous sections we have seen how to combine Citrus with Arquillian in a client side test case. This is the way to go for all test cases that do not need to have access on container managed resources. Lets have a look at a sample where we want to gain access to a JMS queue and connection managed by the application container.</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Arquillian.class)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EchoServiceTest</span> </span>{
+
+      <span class="hljs-annotation">@CitrusFramework</span>
+      <span class="hljs-keyword">private</span> Citrus citrusFramework;
+
+      <span class="hljs-annotation">@Resource</span>(mappedName = <span class="hljs-string">&quot;jms/queue/test&quot;</span>)
+      <span class="hljs-keyword">private</span> Queue echoQueue;
+
+      <span class="hljs-annotation">@Resource</span>(mappedName = <span class="hljs-string">&quot;/ConnectionFactory&quot;</span>)
+      <span class="hljs-keyword">private</span> ConnectionFactory connectionFactory;
+
+      <span class="hljs-keyword">private</span> JmsSyncEndpoint jmsSyncEndpoint;
+
+      <span class="hljs-annotation">@Deployment</span>
+      <span class="hljs-annotation">@OverProtocol</span>(<span class="hljs-string">&quot;Servlet 3.0&quot;</span>)
+      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> WebArchive <span class="hljs-title">createDeployment</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> MalformedURLException </span>{
+          <span class="hljs-keyword">return</span> ShrinkWrap.create(WebArchive.class)
+                  .addClasses(EchoService.class);
+      }
+
+      <span class="hljs-annotation">@Before</span>
+      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setUp</span><span class="hljs-params">()</span> </span>{
+          JmsSyncEndpointConfiguration endpointConfiguration = <span class="hljs-keyword">new</span> JmsSyncEndpointConfiguration();
+          endpointConfiguration.setConnectionFactory(<span class="hljs-keyword">new</span> SingleConnectionFactory(connectionFactory));
+          endpointConfiguration.setDestination(echoQueue);
+          jmsSyncEndpoint = <span class="hljs-keyword">new</span> JmsSyncEndpoint(endpointConfiguration);
+      }
+
+      <span class="hljs-annotation">@After</span>
+      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">cleanUp</span><span class="hljs-params">()</span> </span>{
+          closeConnections();
+      }
+
+      <span class="hljs-annotation">@Test</span>
+      <span class="hljs-annotation">@CitrusTest</span>
+      <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">shouldBeAbleToSendMessage</span><span class="hljs-params">(@CitrusResource TestDesigner designer)</span> <span class="hljs-keyword">throws</span> Exception </span>{
+          String messageBody = <span class="hljs-string">&quot;ping&quot;</span>;
+
+          designer.send(jmsSyncEndpoint)
+                .messageType(MessageType.PLAINTEXT)
+                .message(<span class="hljs-keyword">new</span> JmsMessage(messageBody));
+
+          designer.receive(jmsSyncEndpoint)
+                .messageType(MessageType.PLAINTEXT)
+                .message(<span class="hljs-keyword">new</span> JmsMessage(messageBody));
+
+          citrusFramework.run(designer.build());
+      }
+
+      <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">closeConnections</span><span class="hljs-params">()</span> </span>{
+          ((SingleConnectionFactory)jmsSyncEndpoint.getEndpointConfiguration().getConnectionFactory()).destroy();
+      }
+}
+</code></pre>
+<p>As you can see the test case accesses two container managed resources via JNDI. This is a JMS queue and a JMS connection that get automatically injected as resources. In a before test annotated method we can use these resources to build up a proper Citrus JMS endpoint. Inside the test method we can use the JMS endpoint for sending and receiving JMS messages via Citrus. As usual response messages received are validated and compared to an expected message. As usual we use the Citrus <strong>TestDesigner</strong> method parameter that is injected by the framework. The designer is able to build Citrus test logic with Java DSL methods. Once the complete test is designed we can build the test case and run the test case with the framework instance. After the test we should close the JMS connection in order to avoid exceptions when the application container is shutting down after the test.</p>
+<p>The test is now part of the test deployment and is executed within the application container boundaries. As usual we can use the Citrus extension to automatically inject the Citrus framework instance as well as the Citrus test builder instance for building the Citrus test logic.</p>
+<p>This is how to combine Citrus and Arquillian in order to build integration tests on Java EE services in a real application container environment. With Citrus you are able to set up more complex test scenarios with simulated services such as mail or ftp servers. We can build Citrus endpoints with container managed resources.</p>
+<h3 id="test-runners">Test runners</h3>
+<p>In the previous sections we have used the Citrus <strong>TestDesigner</strong> in order to construct a Citrus test case to execute within the Arquillian boundaries. The nature of the test designer is to aggregate all Java DSL method calls in order to build a complete Citrus test case before execution is done via the Citrus framework. This approach can cause some unexpected behavior when mixing the Citrus Java DSL method calls with Arquillian test logic. Lets describe this by having a look at an example where th mixture of test designer and pure Java test logic causes unseen problems.</p>
+<pre><code class="lang-xml">@Test
+@CitrusTest
+public void testDesignRuntimeMixture(@CitrusResource TestDesigner designer) throws Exception {
+    designer.send(serviceUri)
+        .message(new HttpMessage(&quot;name=Penny&amp;age=20&quot;)
+            .method(HttpMethod.POST)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+
+    designer.receive(serviceUri)
+        .message(new HttpMessage())
+            .statusCode(HttpStatus.NO_CONTENT));
+
+    Employee testEmployee = employeeService.findEmployee(&quot;Penny&quot;);
+    employeeService.addJob(testEmployee, &quot;waitress&quot;);
+
+    designer.send(serviceUri)
+        .message(new HttpMessage()
+            .method(HttpMethod.GET)
+            .accept(MediaType.APPLICATION_XML));
+
+    designer.receive(serviceUri)
+        .message(new HttpMessage(&quot;&quot; +
+          &quot;&quot; +
+            &quot;20&quot; +
+            &quot;Penny&quot; +
+            &quot;&quot; +
+              &quot;waitress&quot; +
+            &quot;&quot; +
+            &quot;&quot; +
+          &quot;&quot;))
+            .statusCode(HttpStatus.OK));
+
+    citrusFramework.run(designer.build());
+}
+</code></pre>
+<p>As you can see in this example we create a new Employee named <strong>Penny</strong> via the Http REST API on our service. We do this with Citrus Http send and receive message logic. Once this is done we would like to add a job description to the employee. We use a service instance of <strong>EmployeeService</strong> which is a service of our test domain that is injected to the Arquillian test as container JEE resource. First of all we find the employee object and then we add some job description using the service. Now as a result we would like to receive the employee as XML representation via a REST service call with Citrus and we expect the job description to be present.</p>
+<p>This combination of Citrus Java DSL methods and service call logic will not work with <strong>TestDesigner</strong> . This is because the Citrus test logic is not executed immediately but aggregated to the very end where the designer is called to build the test case. The combination of Citrus design time and Java test runtime is tricky.</p>
+<p>Fortunately we have solved this issue with providing a separate <strong>TestRunner</strong> component. The test runner provides nearly the same Java DSL methods for constructing Citrus test logic as the test designer. The difference though is that the test logic is executed immediately when calling the Java DSL methods. So following from that we can mix Citrus Java DSL code with test runtime logic as expected. See how this looks like with our example:</p>
+<pre><code class="lang-xml">@Test
+@CitrusTest
+public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws Exception {
+    runner.send(new BuilderSupport<span class="hljs-tag">&lt;<span class="hljs-title">SendMessageBuilder</span>&gt;</span>() {
+        @Override
+        public void configure(SendMessageBuilder builder) {
+            builder.endpoint(serviceUri)
+                  .message(new HttpMessage(&quot;name=Penny&amp;age=20&quot;)
+                      .method(HttpMethod.POST)
+                      .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+        }
+    });
+
+    runner.receive(new BuilderSupport<span class="hljs-tag">&lt;<span class="hljs-title">ReceiveMessageBuilder</span>&gt;</span>() {
+        @Override
+        public void configure(ReceiveMessageBuilder builder) {
+          builder.endpoint(serviceUri)
+              .message(new HttpMessage()
+                  .statusCode(HttpStatus.NO_CONTENT));
+        }
+    });
+
+    Employee testEmployee = employeeService.findEmployee(&quot;Penny&quot;);
+    employeeService.addJob(testEmployee, &quot;waitress&quot;);
+
+    runner.send(new BuilderSupport<span class="hljs-tag">&lt;<span class="hljs-title">SendMessageBuilder</span>&gt;</span>() {
+        @Override
+        public void configure(SendMessageBuilder builder) {
+            builder.endpoint(serviceUri)
+                  .message(new HttpMessage()
+                      .method(HttpMethod.GET)
+                      .accept(MediaType.APPLICATION_XML));
+        }
+    });
+
+    runner.receive(new BuilderSupport<span class="hljs-tag">&lt;<span class="hljs-title">ReceiveMessageBuilder</span>&gt;</span>() {
+        @Override
+        public void configure(ReceiveMessageBuilder builder) {
+        builder.endpoint(serviceUri)
+              .message(new HttpMessage(&quot;&quot; +
+                &quot;&quot; +
+                  &quot;20&quot; +
+                  &quot;Penny&quot; +
+                  &quot;&quot; +
+                    &quot;waitress&quot; +
+                  &quot;&quot; +
+                  &quot;&quot; +
+                &quot;&quot;)
+                      .statusCode(HttpStatus.OK));
+        }
+    });
+}
+</code></pre>
+<p>The test logic has not changed significantly. We use the Citrus <strong>TestRunner</strong> as method injected parameter instead of the <strong>TestDesigner</strong> . And this is pretty much the trick. Now the Java DSL methods do execute the Citrus test logic immediately. This is why the syntax of the Citrus Java DSL methods have changed a little bit. We now use a anonymous interface implementation for constructing the send/receive test action logic. As a result we can use the Citrus Java DSL as normal code and we can mix the runtime Java logic as each statement is executed immediately.</p>
+<p>With Java 8 lambda expressions our code looks even more straight forward and less verbose as we can skip the anonymous interface implementations. With Java 8 you can write the same test like this:</p>
+<pre><code class="lang-xml">@Test
+@CitrusTest
+public void testDesignRuntimeMixture(@CitrusResource TestRunner runner) throws Exception {
+    runner.send(builder -&gt; builder.endpoint(serviceUri)
+                  .message(new HttpMessage(&quot;name=Penny&amp;age=20&quot;)
+                      .method(HttpMethod.POST)
+                      .contentType(MediaType.APPLICATION_FORM_URLENCODED));
+
+    runner.receive(builder -&gt; builder.endpoint(serviceUri)
+              .message(new HttpMessage()
+                  .statusCode(HttpStatus.NO_CONTENT));
+
+    Employee testEmployee = employeeService.findEmployee(&quot;Penny&quot;);
+    employeeService.addJob(testEmployee, &quot;waitress&quot;);
+
+    runner.send(builder -&gt; builder.endpoint(serviceUri)
+                  .message(new HttpMessage()
+                      .method(HttpMethod.GET)
+                      .accept(MediaType.APPLICATION_XML));
+
+    runner.receive(builder -&gt; builder.endpoint(serviceUri)
+              .message(new HttpMessage(&quot;&quot; +
+                &quot;&quot; +
+                  &quot;20&quot; +
+                  &quot;Penny&quot; +
+                  &quot;&quot; +
+                    &quot;waitress&quot; +
+                  &quot;&quot; +
+                  &quot;&quot; +
+                &quot;&quot;)
+                      .statusCode(HttpStatus.OK));
+}
+</code></pre>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./mail.html" class="navigation navigation-prev " aria-label="Previous page: Mail"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./docker.html" class="navigation navigation-next " aria-label="Next page: Docker"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

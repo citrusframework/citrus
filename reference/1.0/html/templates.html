@@ -1,0 +1,52 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;6.&nbsp;Templates</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="actions.html" title="Chapter&nbsp;5.&nbsp;Test actions"><link rel="next" href="containers.html" title="Chapter&nbsp;7.&nbsp;Containers"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;6.&nbsp;Templates</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="actions.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="containers.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="templates"></a>Chapter&nbsp;6.&nbsp;Templates</h2></div></div><div></div></div><p>Templates group action sequences to a logical unit. You can think of templates as reusable components
+    that are used in several tests. The maintenance is much more effective because the templates are referenced
+    several times.</p><p>The template always has a unique name. Inside a test case we call the template by this unique name. 
+    Have a look at a first example:</p><pre class="programlisting">
+  &lt;template name="doCreateVariables"&gt;
+      &lt;create-variables&gt;
+          &lt;variable name="var" value="123456789"/&gt;
+      &lt;/create-variables&gt;
+      
+      &lt;call-template name="doTraceVariables"/&gt;
+  &lt;/template&gt;
+  
+  &lt;template name="doTraceVariables"&gt;
+      &lt;echo&gt;
+          &lt;message&gt;Current time is: ${time}&lt;/message&gt;
+      &lt;/echo&gt;
+      
+      &lt;trace-variables/&gt;
+  &lt;/template&gt;
+    </pre><p>The code example above describes two template definitions. Templates hold a sequence of test 
+    actions or call other templates themselves as seen in the example above.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>The &lt;call-template&gt; action calls other templates by their name. The called
+      template not necessarily has to be located in the same test case XML file. The template might be defined in
+      a separate XML file other than the test case itself:</p></td></tr></table></div><pre class="programlisting">
+  &lt;testcase name="templateTest"&gt;
+      &lt;variables&gt;
+          &lt;variable name="myTime" value="citrus:currentDate()"/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;call-template name="doCreateVariables"/&gt;
+          
+          &lt;call-template name="doTraceVariables"&gt;
+              &lt;parameter name="time" value="${myTime}"&gt;
+          &lt;/call-template&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>There is an open question when dealing with templates that are defined somewhere else outside the test case.
+    How to handle variables? A templates may use different variable names then the test and vice versa. But all
+    variables must be present with respective values as soon as the template gets called. Otherwise the variables 
+    are unknown to the template and the test will raise errors.</p><p>So a first approach would be to harmonize variable usage accross templates and test cases, so that templates
+    and test cases do use the same variable naming. But this approach might lead to high calibration effort. On the 
+    other hand a template can handle parameters to solve this problem. When a template is called the calling actor has
+    to set some parameters. Lets discuss an example for this issue.</p><p>The "doTraceVariables" template uses the variable ${time}. The test case must therefore have a variable
+    called time too or declare the variable ${time} as a parameter when calling the template:</p><pre class="programlisting">
+  &lt;call-template name="doTraceVariables"&gt;
+      &lt;parameter name="time" value="${myTime}"&gt;
+  &lt;/call-template&gt;
+    </pre><p>The variable <span class="emphasis"><em>myTime</em></span> is translated - if you would call it like this - into the 
+    desired <span class="emphasis"><em>time</em></span> parameter. So the template works fine referencing the time variable. This means
+    that you always have to check the used variables inside a template when calling it. There might be a variable that
+    is not declared yet inside your test. So you need to define this value as a parameter.</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="actions.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="containers.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;5.&nbsp;Test actions&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;7.&nbsp;Containers</td></tr></table></div></body></html>

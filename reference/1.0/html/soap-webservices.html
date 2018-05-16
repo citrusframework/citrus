@@ -1,0 +1,114 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;12.&nbsp;SOAP WebServices</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="http.html" title="Chapter&nbsp;11.&nbsp;Http Support"><link rel="next" href="functions.html" title="Chapter&nbsp;13.&nbsp;Functions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;12.&nbsp;SOAP WebServices</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="http.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="functions.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="soap-webservices"></a>Chapter&nbsp;12.&nbsp;SOAP WebServices</h2></div></div><div></div></div><p>In case you need to connect to a SOAP WebService you can use the built-in WebServices support in Citrus. Similar
+    to the Http support Citrus is able to send and receive SOAP messages during a test.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus.
+        See following XML definition to find out how to include the citrus-ws namespace.</p><pre class="programlisting">
+  &lt;beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:citrus="http://www.citrusframework.org/schema/config"
+         xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+         xsi:schemaLocation="
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+         http://www.citrusframework.org/schema/config 
+         http://www.citrusframework.org/schema/config/citrus-config.xsd
+         http://www.citrusframework.org/schema/ws/config 
+         http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd"&gt;
+         
+      [...]
+      
+  &lt;/beans&gt;
+        </pre><p>Now you are ready to use the customized WebService configuration elements - all using the citrus-ws prefix - 
+        in your Spring configuration.</p></td></tr></table></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="soap-sender"></a>12.1.&nbsp;SOAP message sender</h2></div></div><div></div></div><p>Citrus can call any SOAP WebService and validate its response message. Let us see how a message sender for SOAP 
+        WebServices looks like in the Spring configuration:</p><pre class="programlisting">
+  &lt;citrus-ws:message-sender id="soapMessageSender" 
+                                 request-url="http://localhost:8090/test" 
+                                 reply-handler="soapResponseHandler"/&gt;
+  
+  &lt;citrus-ws:reply-message-handler id="soapResponseHandler"/&gt;
+        </pre><p>SOAP WebServices always use synchronous communication, so we need a reply message handler. The message sender 
+        uses the <span class="emphasis"><em>request-url</em></span> and and calls the WebService. The sender
+        will automatically build a SOAP request message including a SOAP header and the message payload as SOAP body. 
+        As the WebService response arrives it is passed to the given reply handler.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="soap-server"></a>12.2.&nbsp;Receiving SOAP messages</h2></div></div><div></div></div><p>Receiving SOAP messages requires a web server instance listening on a port. Citrus is using an embedded Jetty 
+        server instance in combination with the Spring WebService project in order to accept SOAP request calls. See how the 
+        Jetty server is configured in the Spring configuration.</p><pre class="programlisting">
+  &lt;citrus-ws:jetty-server id="simpleJettyServer" 
+                         port="8091" 
+                         auto-start="true"
+                         context-config-location="classpath:citrus-ws-servlet.xml"
+                         resource-base="src/it/resources"/&gt;
+        </pre><p>The Jetty server is able to startup automatically during application startup. In the example above the Server is
+        listening on the port <tt class="literal">8091</tt> for SOAP requests. The context-config-location attribute defines a further Spring
+        application context. In this application context the request mapping is configured. See the example below.</p><pre class="programlisting">
+  &lt;beans xmlns="http://www.springframework.org/schema/beans" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"&gt;
+      
+      &lt;bean id="loggingInterceptor" 
+               class="org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor"&gt;
+          &lt;description&gt;
+              This interceptor logs the message payload.
+          &lt;/description&gt;
+      &lt;/bean&gt;
+      
+      &lt;bean id="helloServicePayloadMapping" 
+               class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping"&gt;
+          &lt;property name="mappings"&gt;
+              &lt;props&gt;
+                  &lt;prop key="{http://www.consol.de/schemas/samples/sayHello.xsd}HelloStandaloneRequest"&gt;
+                      helloServiceEndpoint
+                  &lt;/prop&gt;
+              &lt;/props&gt;
+          &lt;/property&gt;
+          &lt;property name="interceptors"&gt;
+              &lt;list&gt;
+                  &lt;ref bean="loggingInterceptor"/&gt;
+              &lt;/list&gt;
+          &lt;/property&gt;
+      &lt;/bean&gt;
+      
+      &lt;bean id="helloServiceEndpoint" 
+               class="com.consol.citrus.ws.WebServiceEndpoint"&gt;
+          &lt;property name="messageHandler"&gt;
+            &lt;bean class="com.consol.citrus.adapter.handler.StaticResponseProducingMessageHandler"&gt;
+                &lt;property name="messagePayload"&gt;
+                    &lt;value&gt;
+                    &lt;![CDATA[
+                        &lt;ns0:HelloStandaloneResponse 
+                            xmlns:ns0="http://www.consol.de/schemas/samples/sayHello.xsd"&gt;
+                            &lt;ns0:MessageId&gt;123456789&lt;/ns0:MessageId&gt;
+                            &lt;ns0:CorrelationId&gt;CORR123456789&lt;/ns0:CorrelationId&gt;
+                            &lt;ns0:User&gt;WebServer&lt;/ns0:User&gt;
+                            &lt;ns0:Text&gt;Hello User&lt;/ns0:Text&gt;
+                        &lt;/ns0:HelloStandaloneResponse&gt;
+                    ]]&gt;
+                    &lt;/value&gt;
+                &lt;/property&gt;
+                &lt;property name="messageHeader"&gt;
+                    &lt;map&gt;
+                        &lt;entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" 
+                                  value="sayHelloResponse"/&gt;
+                        &lt;entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" 
+                                  value="HelloRequest"/&gt;
+                        &lt;entry key="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:SOAPAction" 
+                                  value="sayHello"/&gt;
+                    &lt;/map&gt;
+                &lt;/property&gt;
+            &lt;/bean&gt;
+          &lt;/property&gt;
+      &lt;/bean&gt;
+  &lt;/beans&gt;
+        </pre><p>The programlisting above describes a normal request mapping. The mapping is responsible to forward incoming requests to
+        an endpoint which will handle the request and provide a response. First of all Spring's logging interceptor is added to the 
+        context. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming 
+        <tt class="literal">'HelloStandaloneRequest'</tt> SOAP messages to the <tt class="literal">'helloServiceEndpoint'</tt>. The enpoint definition
+        follows at the very end of the programlisting. Inside the endpoint configuration we can see the well known message handler that 
+        is responsible for providing a proper response message for the client. The various message handlers in Citrus were already 
+        described in <a href="http.html" title="Chapter&nbsp;11.&nbsp;Http Support">Chapter&nbsp;11, <i>Http Support</i></a>.</p><p>In this example the <tt class="literal">'helloServiceEndpoint'</tt> uses the <tt class="literal">'StaticResponseProducingMessageHandler'</tt>
+        which is always returning a static response message. The endpoint transforms the static response into a 
+        proper SOAP message that is sent back to the calling client as SOAP response. You can add as many request mappings and endpoints
+        as you want to the server context configuration. So you are able to handle different request types with one single Jetty server
+        instance.</p><p>Have a look at the <a href="http.html" title="Chapter&nbsp;11.&nbsp;Http Support">Chapter&nbsp;11, <i>Http Support</i></a> in order to find out how the other available message handler work.</p><p>That's it for connecting with SOAP WebServices! We saw how to send and receive SOAP messages with Jetty and 
+        Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handlers.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="http.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="functions.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;11.&nbsp;Http Support&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;13.&nbsp;Functions</td></tr></table></div></body></html>

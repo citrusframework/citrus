@@ -1,0 +1,1763 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Reporting | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./samples.html" />
+    
+    
+    <link rel="prev" href="./message-tracing.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="47"
+        data-chapter-title="Reporting"
+        data-filepath="reporting.md"
+        data-basepath="."
+        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        JsonPath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge JMS queues
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Stop timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Generic action
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="behaviors.html">
+            
+                
+                    <a href="./behaviors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Test behaviors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="16.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.6.</b>
+                        
+                        Repeat On Error
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Finally
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Http Websockets
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        Message channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="kubernetes.html">
+            
+                
+                    <a href="./kubernetes.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Kubernetes
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="selenium.html">
+            
+                
+                    <a href="./selenium.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Selenium
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Endpoint component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Endpoint adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Data dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Test actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Test suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Meta info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Message tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="47" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>47.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="48" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="48.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="49" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="49.1" data-path="changes-2-6.html">
+            
+                
+                    <a href="./changes-2-6.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.1.</b>
+                        
+                        Changes 2.6
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.2" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.2.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.3" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.3.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.4" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.4.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.5" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.5.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.6" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.6.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.7" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.7.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.8" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.8.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.9" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.9.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.10" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.10.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="reporting-and-test-results"><a name="reporting-and-test-results" class="plugin-anchor" href="#reporting-and-test-results"><span class="fa fa-link"></span></a>Reporting and test results</h2>
+<p>The framework generates different reports and results after a test run for you. These report and result pages will help you to get an overview of the test cases that were executed and which one were failing.</p>
+<h3 id="console-logging"><a name="console-logging" class="plugin-anchor" href="#console-logging"><span class="fa fa-link"></span></a>Console logging</h3>
+<p>During the test run the framework will provide a huge amount of information that is printed out to the console. This includes current test progress, validation results and error information. This enables the user to quickly supervise the test run progress. Failures in tests will be printed to the console just the time the error occurred. The detailed stack trace information and the detailed error messages are helpful to get the idea what went wrong.</p>
+<p>As the console output might be limited to a defined buffer limit, the user may not be able to follow the output to the very beginning of the test run. Therefore the framework additionally prints all information to a log file according to the logging configuration.</p>
+<p>The logging mechanism uses the SLF4J logging framework. SLF4J is independent of logging framework implementations on the market. So in case you use Log4J logging framework the specified log file path as well as logging levels can be freely configured in the respective log4j.xml file in your project. At the end of a test run the combined test results get printed to both console and log file. The overall test results look like following example:</p>
+<pre><code class="lang-xml">
+CITRUS TEST RESULTS
+
+  [...]
+  HelloService_Ok_1             : SUCCESS
+  HelloService_Ok_2             : SUCCESS
+  EchoService_Ok_1              : SUCCESS
+  EchoService_Ok_2              : SUCCESS
+  EchoService_TempError_1       : SUCCESS
+  EchoService_AutomacticRetry_1 : SUCCESS
+  [...]
+
+  Found 175 test cases to execute
+  Skipped 0 test cases (0.0%)
+  Executed 175 test cases
+  Tests failed:         0 (0.0%)
+  Tests successfully: 175 (100.0%)
+</code></pre>
+<p>Failed tests will be marked as failed in the result list. The framework will give a short description of the error cause while the detailed stack trace information can be found in the log messages that were made during the test run.</p>
+<pre><code class="lang-xml">HelloService_Ok_3 : failed - Exception is Action timed out
+</code></pre>
+<h3 id="junit-reports"><a name="junit-reports" class="plugin-anchor" href="#junit-reports"><span class="fa fa-link"></span></a>JUnit reports</h3>
+<p>As tests are executed as TestNG test cases, the framework will also generate JUnit compliant XML and HTML reports. JUnit test reports are very popular and find support in many build management and development tools. In general the Citrus test reports give you an overall picture of all tests and tell you which of them were failing.</p>
+<p>Build management tools like Jenkins can easily import and display the generated JUnit XML results. Please have a look at the TestNG and JUnit documentation for more information about this topic as well as the build management tools (e.g. Jenkins) to find out how to integrate the tests results.</p>
+<h3 id="html-reports"><a name="html-reports" class="plugin-anchor" href="#html-reports"><span class="fa fa-link"></span></a>HTML reports</h3>
+<p>Citrus creates HTML reports after each test run. The report provides detailed information on the test run with a summary of all test results. You can find the report after a test run in the directory <strong><em>${project.build.directory}/test-output/citrus-reports</em></strong> .</p>
+<p>The report consists of two parts. The test summary on top shows the total number executed tests. The main part lists all test cases with detailed information. With this report you immediately identify all tests that were failing. Each test case is marked in color according to its result outcome.</p>
+<p>The failed tests give detailed error information with error messages and Java StackTrace information. In addition to that the report tries to find the test action inside the XML test part that failed in execution. With the failing code snippet you can see where the test stopped.</p>
+<p><strong>Note</strong>
+JavaScript should be active in your web browser. This is to enable the detailed information which comes to you in form of tooltips like test author or description. If you want to access the tooltips JavaScript should be enabled in your browser.</p>
+<p>The HTML reports are customizable by system properties. Use following properties e.g. in your <strong>citrus.properties</strong> file:</p>
+<ul>
+<li><strong>citrus.html.report.enabled</strong> : Enables/disables HTML report generation (default= <strong><em>true</em></strong>).</li>
+<li><strong>citrus.html.report.directory</strong> : Output directory path (default= <strong><em>${project.build.directory}/test-output/citrus-reports</em></strong>).</li>
+<li><strong>citrus.html.report.file</strong> : File name for the report file (default= <strong><em>citrus-test-results.html</em></strong>).</li>
+<li><strong>citrus.html.report.template</strong> : Template HTML file with placeholders for report results.</li>
+<li><strong>citrus.html.report.detail.template</strong> : Template file for detailed test results.</li>
+<li><strong>citrus.html.report.logo</strong> : File resource path pointing to a image that is added to top of HTML report.</li>
+</ul>
+<p>The HTML report is based on a template file that is customizable to your special needs. The default templates can be found in <a href="report-templates sources">https://github.com/christophd/citrus/tree/master/modules/citrus-core/src/main/resources/com/consol/citrus/report</a>.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./message-tracing.html" class="navigation navigation-prev " aria-label="Previous page: Message tracing"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./samples.html" class="navigation navigation-next " aria-label="Next page: Samples"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

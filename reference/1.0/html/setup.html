@@ -1,0 +1,76 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;2.&nbsp;Setup</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="introduction.html" title="Chapter&nbsp;1.&nbsp;Introduction"><link rel="next" href="testcase.html" title="Chapter&nbsp;3.&nbsp;Test case"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;2.&nbsp;Setup</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="introduction.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="testcase.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="setup"></a>Chapter&nbsp;2.&nbsp;Setup</h2></div></div><div></div></div><p>This chapter will tell you how to get started with Citrus. It deals with the installation and set up of the framework, 
+  so you are ready to use the framework and start writing test cases after reading this chapter.</p><p>After downloading the latest release there are several ways to use Citrus in your project. The next sections will 
+  describe to you the Citrus project setup possibilities. Choose on of them and include Citrus into your project.</p><p>In case you use Maven in your project you may choose the Maven way described in <a href="setup.html#setup-using-maven" title="2.4.&nbsp;Using Maven">Section&nbsp;2.4, &#8220;Using Maven&#8221;</a>. 
+  Others may feel right downloading and unzipping the Citrus archive release manually.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="setup-download"></a>2.1.&nbsp;Download</h2></div></div><div></div></div><p>You can download the latest Citrus release from our homepage 
+    <a href="http://www.citrusframework.org" target="_top">http://www.citrusframework.org</a></p><p>Citrus comes to you as a zipped archive in one of the following packages:</p><div class="itemizedlist"><ul type="disc"><li><p><span class="emphasis"><em>citrus-x.x-with-dependencies</em></span></p></li><li><p><span class="emphasis"><em>citrus-x.x-src</em></span></p></li></ul></div><p>Usually one would choose the with-dependencies archive in order to use Citrus, because this archive includes the Citrus binaries
+    plus all needed depedency libraries. In case you want to get in touch with developing Citrus you should go with the project archive.
+    This archive will give you the complete Citrus project sources. Using Maven you will easily be able to build Citrus on your own and
+    extend Citrus with your own code.</p><p>The src archive is helpful during extension of the framework as it provides the Java sources for you. You may then be able to 
+    debug into Citrus classes and have a look at the sources during development of your own features.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="setup-prerequisits"></a>2.2.&nbsp;Prerequisits</h2></div></div><div></div></div><p>You need following software on your computer, in order to use the Citrus framework:</p><div class="itemizedlist"><ul type="disc"><li><p>Java 5.0 or higher</p><p>Installed JDK 5.0 or higher plus JAVA_HOME environment variable set up and pointing to your Java installation 
+            directory</p></li><li><p>Java IDE (optional)</p><p>A Java IDE will help you manage your Citrus project and create and execute test cases. 
+            Use the Java IDE you like best (e.g. Eclipse or IntelliJ IDEA).</p></li><li><p>Maven 2.0.9 or higher (optional)</p><p>Maven will ease up your life when it comes to managing project dependencies and project builds. Maven
+            can support you while using Citrus. In case you have a Maven built project it is very easy to include Citrus tests into
+            your existing build lifecycle.</p></li></ul></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="setup-installation"></a>2.3.&nbsp;Installation</h2></div></div><div></div></div><p>Once you have downloaded the latest Citrus archive you need to unzip the archive into a suitable 
+    location on your local storage.</p><p>You are now able to run the built-in testing samples, which also should give you an idea how to use Citrus with
+    ANT.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="setup-using-maven"></a>2.4.&nbsp;Using Maven</h2></div></div><div></div></div><p>Citrus uses <a href="http://maven.apache.org/" target="_top">Maven</a> as build tool. Therefore it is also very easy for you to include Citrus into your Maven project.</p><p>In case you already use Maven build tool in your project it is most suitable for you to include Citrus as a test-scoped dependency 
+    into your Maven project</p><div class="itemizedlist"><ul type="disc"><li><p>Add Citrus as test-scoped project dependency to your projects POM (pom.xml)</p><pre class="programlisting">
+  &lt;dependency&gt;
+    &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
+    &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
+    &lt;version&gt;0.9&lt;/version&gt;
+    &lt;scope&gt;test&lt;/scope&gt;
+  &lt;/dependency&gt;
+            </pre></li><li><p>Add the citrus Maven plugin to your project</p><pre class="programlisting">
+  &lt;plugin&gt;
+    &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
+    &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
+    &lt;version&gt;0.9&lt;/version&gt;
+    &lt;configuration&gt;
+      &lt;author&gt;Mickey Mouse&lt;/author&gt;
+      &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
+    &lt;/configuration&gt;
+  &lt;/plugin&gt;            
+            </pre></li><li><p>Create tests using the citrus-maven-plugin (goal: citrus:create-new-test)</p></li><li><p>Tests will be included into your projects integration-test phase using the surefire plugin</p><pre class="programlisting">
+  &lt;plugin&gt;
+    &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+    &lt;version&gt;2.4.3&lt;/version&gt;
+    &lt;configuration&gt;
+      &lt;skip&gt;true&lt;/skip&gt;
+    &lt;/configuration&gt;
+    &lt;executions&gt;
+      &lt;execution&gt;
+        &lt;id&gt;citrus-tests&lt;/id&gt;
+        &lt;phase&gt;integration-test&lt;/phase&gt;
+        &lt;goals&gt;
+          &lt;goal&gt;test&lt;/goal&gt;
+        &lt;/goals&gt;
+        &lt;configuration&gt;
+          &lt;skip&gt;false&lt;/skip&gt;
+        &lt;/configuration&gt;
+      &lt;/execution&gt;
+    &lt;/executions&gt;
+  &lt;/plugin&gt;
+            </pre></li><li><p>Citrus source directories have to be defined as test sources</p><pre class="programlisting">
+  &lt;testSourceDirectory&gt;src/citrus/java&lt;/testSourceDirectory&gt;
+  &lt;testResources&gt;
+    &lt;testResource&gt;
+      &lt;directory&gt;src/citrus/java&lt;/directory&gt;
+      &lt;includes&gt;
+        &lt;include&gt;**&lt;/include&gt;
+      &lt;/includes&gt;
+      &lt;excludes&gt;
+        &lt;exclude&gt;*.java&lt;/exclude&gt;
+      &lt;/excludes&gt;
+    &lt;/testResource&gt;
+    &lt;testResource&gt;
+      &lt;directory&gt;src/citrus/tests&lt;/directory&gt;
+      &lt;includes&gt;
+        &lt;include&gt;**/*&lt;/include&gt;
+      &lt;/includes&gt;
+      &lt;excludes&gt;
+      &lt;/excludes&gt;
+    &lt;/testResource&gt;
+  &lt;/testResources&gt;            
+            </pre></li><li><p>Run Maven integration-test phase to execute all tests (goal: integration-test)</p></li></ul></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="introduction.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="testcase.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;1.&nbsp;Introduction&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;3.&nbsp;Test case</td></tr></table></div></body></html>

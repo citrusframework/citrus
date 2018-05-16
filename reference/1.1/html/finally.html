@@ -1,0 +1,39 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;9.&nbsp;Finally section</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="prev" href="containers.html" title="Chapter&nbsp;8.&nbsp;Containers"><link rel="next" href="xpath.html" title="Chapter&nbsp;10.&nbsp;Using XPath"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;9.&nbsp;Finally section</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="containers.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="xpath.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;9.&nbsp;Finally section"><div class="titlepage"><div><div><h2 class="title"><a name="finally"></a>Chapter&nbsp;9.&nbsp;Finally section</h2></div></div></div><p>This chapter deals with a special section inside the test case that is executed even in case errors
+    did occur during the test. Lets say you have started a Jetty web server instance at the beginning of the 
+    test case and you need to shutdown the server when the test has finished its work. Or as a second example
+    imagine that you have prepared some data inside the database at the beginning of your test and 
+    you want to make sure that the data is cleaned up at the end of the test case.</p><p>In both situations we might run into some problems when the test failed. 
+    We face the problem that the whole test case will terminate immediately in case of errors. Cleanup tasks 
+    at the end of the test action chain may not be executed correctly.</p><p>Dirty states inside the database or still running server instances then might cause problems for 
+    following test cases. To avoid this problems you should use the finally block of the test case. The &lt;finally&gt; 
+    section contains actions that are executed even in case the test fails. Using this strategy the database 
+    cleaning tasks mentioned before will find execution in every case (success or failure).</p><p>The following example shows how to use the finally section at the end of a test:</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;testcase</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"finallyTest"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;variables&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;variable</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"orderId"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"1"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;variable</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"date"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"citrus:currentDate('dd.MM.yyyy')"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/variables&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;actions&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;sql</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">datasource</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"testDataSource"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;statement&gt;</span>
+                INSERT INTO ORDERS VALUES (${orderId}, 1, 1, '${date}')
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/statement&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/sql&gt;</span>
+        
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;echo&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+                ORDER creation time: ${date}
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/echo&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/actions&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;finally&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;sql</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">datasource</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"testDataSource"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;statement&gt;</span>
+              DELETE FROM ORDERS WHERE ORDER_ID='${orderId}'
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/statement&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/sql&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/finally&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/testcase&gt;</span></pre><p>In the example the first action creates an entry in the database using an <code class="literal">INSERT</code> statement. 
+    To be sure that the entry in the database is deleted after the test, the finally section contains the respective 
+    <code class="literal">DELETE</code> statement that is always executed regardless the test case state (successful or failed).</p></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="containers.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="xpath.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;8.&nbsp;Containers&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;10.&nbsp;Using XPath</td></tr></table></div></body></html>

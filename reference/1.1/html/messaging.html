@@ -1,0 +1,259 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;5.&nbsp;Messaging</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="prev" href="run-config.html" title="Chapter&nbsp;4.&nbsp;Running tests"><link rel="next" href="actions.html" title="Chapter&nbsp;6.&nbsp;Test actions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;5.&nbsp;Messaging</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="run-config.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="actions.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;5.&nbsp;Messaging"><div class="titlepage"><div><div><h2 class="title"><a name="messaging"></a>Chapter&nbsp;5.&nbsp;Messaging</h2></div></div></div><p>In the previous chapter the basic test case structure was introduced with <span class="emphasis"><em>variables</em></span> and
+  <span class="emphasis"><em>test actions</em></span>. The &lt;actions&gt; element contains a list of actions that take place during the test case. 
+  Each test action is executed in sequential order. Citrus offers several built-in test actions that the user can choose from to construct a complex
+  test workflow. The available test actions are discussed in the next sections.</p><p>As sending and receiving messages is essential in integration testing of message-based architectures we will handle these actions in first place.
+  But first of all lets have a look at the common message interface in Citrus:</p><div class="mediaobject" align="center"><img src="images/figure_001.png" align="middle"></div><p>A message consists of a message header (name-value pairs) and a message payload. Later in this document we will see how 
+  a test constructs several messages with payload and header values. But first of all let's concentrate on sending and receiving 
+  messages to/from various transports. MesageSender and MessageReceiver components play a significant role in this respect. The next figure shows a 
+  typical MessageSender component in Citrus:</p><div class="mediaobject" align="center"><img src="images/figure_002.png" align="middle"></div><p>The MessageSender publishes messages to a destination. This destination can be a JMS queue/topic, a SOAP WebService endpoint, a Http URL 
+  and many more. The MessageSender just takes a previously defined message and sends it to the message destination.</p><p>Similar to that Citrus defines the MessageReceiver component to consume messages from destinations. This can be a simple subscription
+  on message channels and queues/topics. In case of SOAP WebServices and Http GET/POST things are more complicated as we have to provide a 
+  server component in combination with a MessageReceiver. We will handle this server related communication later in this document. For now
+  a MessageReceiver component is defined like this:</p><div class="mediaobject" align="center"><img src="images/figure_003.png" align="middle"></div><p>In the next sections you learn how a test case uses those MessageSenders and MessageReceivers for publishing and consuming 
+  messages.</p><div class="section" title="5.1.&nbsp;Sending messages"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="message-sending"></a>5.1.&nbsp;Sending messages</h2></div></div></div><p>The &lt;send&gt; action publishes messages to a destination. The transport that is used does - for now - not
+    matter to the test case. The test case simply defines the message contents and uses a predefined message sender to actually 
+    publish the constructed message. There are several message sender implementations in Citrus available representing different transport protocols like JMS, SOAP, 
+    HTTP, TCP/IP and many more.</p><p>Again the type of transport is not specified in the test case directly, but in the message sender definitions. The separation of concerns (test case/message sender transport) 
+    gives us a good flexibility of our test cases. The test case does not know anything about connection factories, queue names or endpoint urls. The transport underneath a 
+    sending action can change easily without affecting the test case definition. We will see later in this document how to create different message senders for various transports 
+    in Citrus. For now we concentrate on constructing the message content to be sent.</p><p>We assume that the message's payload will be plain XML format. Citrus supports XML payloads as default payload format. Citrus is not limited to XML message format 
+    though; you can always add message converters and marshallers. But to be honest XML is a very popular message format in Enterprise Applications and messaging solutions. I do not 
+    see the point why you should not use XML unless you deal with legacy interfaces or strongly need to avoid the XML message overhead. Anyway Citrus works best on XML payloads 
+    and you will see a lot of example code in this document using XML. Finally let us have a look at a first example how a sending action is defined in the test.</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;testcase</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"sendMessageTest"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;description&gt;</span>
+        Send message example
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/description&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;variables&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;variable</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"requestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Rx123456789"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;variable</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"correlationId"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Cx1x123456789"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/variables&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;actions&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;send</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">with</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"getCustomerRequestMessageSender"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+                <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;data&gt;</span>
+                    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;![CDATA[</span>
+                    &lt;RequestMessage&gt;
+                        &lt;MessageHeader&gt;
+                            &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                            &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                            &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                            &lt;VersionId&gt;2&lt;/VersionId&gt;
+                        &lt;/MessageHeader&gt;
+                        &lt;MessageBody&gt;
+                            &lt;Customer&gt;
+                                &lt;Id&gt;1&lt;/Id&gt;
+                            &lt;/Customer&gt;
+                        &lt;/MessageBody&gt;
+                    &lt;/RequestMessage&gt;
+                    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">]]&gt;</span>
+                <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/data&gt;</span>
+                <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"/MessageHeader/RequestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;header&gt;</span>
+                <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Operation"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"GetCustomer"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+                <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"RequestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/header&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/send&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/actions&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/testcase&gt;</span></pre><p>The test uses two variable definitions (<span class="emphasis"><em>requestTag</em></span> and <span class="emphasis"><em>correlationId</em></span>), 
+    so first of all let us refresh in mind what variables do. Test variables are defined at the very beginning of the test case and 
+    are valid throughout all actions that take place in the test. This means that actions can simply reference a variable by the 
+    expression <code class="literal">${variable-name}</code>.</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top"><p>Use variables wherever you can! At least the important entities of a test should be defined as variables at the 
+        beginning. The test case improves maintainability and flexibility when using variables.</p></td></tr></table></div><p>Now lets have a closer look at the sending action. The 'with' attribute might catch someone's attention in first place. 
+    So what does the 'with' attribute do? This attribute references a message sender definition by name. As previously mentioned the 
+    message sender definition lies in a separate configuration file and contains the actual message transport configurations. In this example the 
+    <span class="emphasis"><em>"getCustomerRequestMessageSender"</em></span> is used to send the message over JMS to a destination queue. 
+    The test case is not aware of these transport details, because it does not have to. The advantages are obvious: On the one hand many test 
+    cases may reuse a single message sender definition in order to send messages of type 'getCustomerRequest'. Secondly test cases are independent of
+    message transport details. Connection factories, user credentials, endpoint urls are not present in the test cases but are configured in a central
+    place - the actual message sender configuration.</p><p>In other words the attribute "with" in the &lt;send&gt; element specifies which message sender definition 
+    to use for sending the message. Once again all available message senders are configured in a separate Spring configuration file. 
+    We will come to this later. Be sure to always pick the right message sender type in order to publish your message to the right 
+    destination endpoint.</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top"><p>It is good practice to follow a naming convention when choosing names for message senders and receivers. The intended
+        purpose of the message sender as well as the sending/receiving actor should be clear when choosing the name. For instance messageSender1,
+        messageSender2 will not give you much hints to the purpose of the message sender.</p></td></tr></table></div><p>Now that the used message sender is clear, we finally can specify the message content to be sent. 
+    The message content is declared with these elements:</p><div class="itemizedlist"><ul class="itemizedlist" type="opencircle"><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>message</em></span>: This element constructs the message to be sent. There are several child elements available:</p><div class="itemizedlist"><ul class="itemizedlist" type="opencircle"><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>data</em></span>: Inline CDATA definition of the message payload (instead of &lt;resource&gt; element)</p></li><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>resource</em></span>: External file resource holding the message payload (instead of &lt;data&gt; element)</p><p>The syntax would be: &lt;resource file="file:xmlData/NumberDeallocationRequest.xml" /&gt;</p><p>The file path prefix indicates the resource type, so the file location is resolved either as file system resource (file:) 
+                    or classpath resource (classpath:).</p></li><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>element</em></span>: Explicitly overwrite values in the XML message payload using XPath. You can replace message content 
+                    with dynamic values before sending. Each &lt;element&gt; entry provides a "path" and "value" attribute. The "path" 
+                    gives a XPath expression evaluating to a XML node element or attribute in the message. The "value" can be a variable expression or any other 
+                    static value. Citrus will replace the value before sending the message.</p></li></ul></div></li><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>header</em></span>: Defines a header for the message (e.g. JMS header information or SOAP header):</p><div class="itemizedlist"><ul class="itemizedlist" type="opencircle"><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>element</em></span>: Each header receives a "name" and "value". The "name" will be the 
+                    name of the header entry and "value" its respective value. Again the usage of variable expressions as value is supported here, too.</p></li></ul></div></li></ul></div><p>The most important thing when dealing with sending actions is to prepare the message payload and header. You are able to construct the message payload either by 
+    inline CDATA (&lt;data&gt;) or external file (&lt;resource&gt;). Before sending takes place you can explicitly replace some message values. You can think of overwriting
+    specific message elements with variable values for instance. The example above uses the variable ${correlationId} directly in the XML payload definition. In addition to 
+    that you can use XPath expressions for overwriting message contents before sending. The "/MessageHeader/RequestTag" XPath expression for instance overwrites 
+    the respective request tag value in the message. The two approaches of overwriting message elements before sending can coexist simultaneously.</p><p>The message header is manipulated too. So Citrus uses name-value pairs like "Operation" and "RequestTag" in the example above to
+    set the message's header entries.</p><p>This is how you send messages in Citrus. The test case is responsible for constructing the message content while predefined message senders are reused to publish 
+    the messages. The variable support in message payload and message header enables you to add dynamic values.</p></div><div class="section" title="5.2.&nbsp;Receiving messages"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="message-receiving"></a>5.2.&nbsp;Receiving messages</h2></div></div></div><p>Now after sending a message with Citrus we would like to receive a message inside the test. 
+    Let us again have a look at a simple example showing how it works.</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;receive</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">with</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"getCustomerResponseReceiver"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;selector&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;value&gt;</span>operation = 'GetCustomer'<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/value&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/selector&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;data&gt;</span>
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;![CDATA[</span>
+            &lt;RequestMessage&gt;
+                &lt;MessageHeader&gt;
+                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                    &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                    &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                    &lt;VersionId&gt;2&lt;/VersionId&gt;
+                &lt;/MessageHeader&gt;
+                &lt;MessageBody&gt;
+                    &lt;Customer&gt;
+                        &lt;Id&gt;1&lt;/Id&gt;
+                    &lt;/Customer&gt;
+                &lt;/MessageBody&gt;
+            &lt;/RequestMessage&gt;
+            <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">]]&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/data&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//MessageHeader/RequestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;header&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Operation"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"GetCustomer"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"RequestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/header&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;extract&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;header</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Operation"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">variable</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${operation}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//MessageBody/Customer/Id"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">variable</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${customerId}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/extract&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/receive&gt;</span></pre><p>Knowing the send action of the previous chapter we can identify some common mechanisms that apply for both 
+    sending and receiving actions. This time the test uses a predefined message receiver in order to receive the message 
+    over a certain transport. Again the test is not aware of the transport details (e.g. JMS connection factory, 
+    queue names, etc.) but the message receiver does know this information.</p><p>While the action tries to receive a message the whole test execution will be delayed. This is
+    important to ensure the step by step test workflow processing. The receiver will only wait a given amount of time for
+    the message to arrive. A timeout exception fails the test in case the message does not arrive in time.</p><p>Once the message has arrived, the content can be validated in various ways. On the one hand you
+    can specify a whole XML message template that you expect. In this case the received XML structure will
+    be compared to the expected XML message element by element. On the other hand you can use explicit element validation where only a 
+    small subset of message elements is included into validation.</p><p>Besides this message payload validation the framework can also validate the message header values where variable usage is 
+    supported as usual during the whole validation process.</p><p>In general the validation component (validator) in Citrus works hand in hand with a message reveiving component as the following
+    figure shows:</p><div class="mediaobject" align="center"><img src="images/figure_005.png" align="middle"></div><p>The message receiving component passes the message to the validator where the validation steps take place. Let us have a closer 
+    look at the validation options and features step by step.</p><div class="section" title="5.2.1.&nbsp;Validate message content"><div class="titlepage"><div><div><h3 class="title"><a name="message-payload-validation"></a>5.2.1.&nbsp;Validate message content</h3></div></div></div><p>Once Citrus has received a message the tester can validate the message contents in various ways. First of all the tester can compare 
+        the whole message payload to a predefined control message template.</p><p>The receiving action offers following elements for control message templates:</p><div class="itemizedlist"><ul class="itemizedlist" type="opencircle"><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>&lt;data&gt;</em></span>: Defines an inline XML message template as nested CDATA</p></li><li class="listitem" style="list-style-type: circle"><p><span class="emphasis"><em>&lt;resource&gt;</em></span>: Defines an expected XML message template via external file resources</p></li></ul></div><p>Both ways inline CDATA XML or external file resource give us a control message template. Citrus uses this
+        control template for extended XML tree comparison. All elements, namespaces, attributes and node values are validated in XML DOM tree comparison.
+        Only in case received message and control message are equal to each other the message validation will succeed. In case differences occur Citrus gives
+        detailed error messages and the test fails.</p><p>Now up to now the control message template is very static. Message comparison in this high extend has to be much more robust. This is why Citrus supports
+        various ways to add dynamic message content and ignored elements to the XML tree validation. The tester can enrich the expected message template with test variables 
+        or some elements can be completely ignored in validation.</p></div><div class="section" title="5.2.2.&nbsp;Dynamic message values"><div class="titlepage"><div><div><h3 class="title"><a name="message-dynamic-validation"></a>5.2.2.&nbsp;Dynamic message values</h3></div></div></div><p>Some elements in our message payload might be of variable nature. Just think of identifiers that should not be static in our expected message template.
+        Instead of repeating the ids several times hardcoded in our test we overwrite those elements with variable values. This can be done with XPath or inline variable
+        declarations. Lets have a look at a example listing showing both ways to overwrite message tempalte content before validation:</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;data&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;![CDATA[</span>
+        &lt;RequestMessage&gt;
+            &lt;MessageHeader&gt;
+                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                &lt;Timestamp&gt;2001-12-17T09:30:47.0Z&lt;/Timestamp&gt;
+                &lt;RequestTag&gt;_&lt;/RequestTag&gt;
+                &lt;VersionId&gt;2&lt;/VersionId&gt;
+            &lt;/MessageHeader&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;1&lt;/Id&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">]]&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/data&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//MessageHeader/RequestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span></pre><p>The program linsting shows both ways of setting variable values inside a message template. First of all you can
+        simply place variable expressions inside the message (see how ${correlationId} is used). Secondly you can also use 
+        XPath expressions to explicitly overwrite message elements before validation.</p><p><code class="literal">&lt;element path="//MessageHeader/RequestTag" value="${requestTag}"/&gt;</code></p><p>The XPath expression evaluates to the message template, searches for the right element and replaces the element value. Of course 
+        this works with attributes too.</p><p>Both ways via XPath or inline variable expressions are equally to each other. Choose one way that fits best for you. This is how we can add dynamic variable
+        values to the control template in order to increase maintainability and robustness of message validation.</p></div><div class="section" title="5.2.3.&nbsp;Ignore message elements"><div class="titlepage"><div><div><h3 class="title"><a name="message-validation-ignore"></a>5.2.3.&nbsp;Ignore message elements</h3></div></div></div><p>Some elements in the message payload might not apply for validation at all. Just think of communication timestamps an dynamic values inside a 
+        message:</p><pre class="programlisting">[...]
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;Timestamp&gt;</span>2001-12-17T09:30:47.0Z<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/Timestamp&gt;</span>
+[...]</pre><p>The timestamp value will dynamically change from test run to test run and is hardly predictable for the tester, so lets ignore it in validation.</p><pre class="programlisting"> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;data&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;![CDATA[</span>
+        &lt;RequestMessage&gt;
+            &lt;MessageHeader&gt;
+                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
+                &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
+                &lt;VersionId&gt;2&lt;/VersionId&gt;
+            &lt;/MessageHeader&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;1&lt;/Id&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">]]&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/data&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;ignore</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//ResponseMessage/MessageHeader/Timestamp"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span></pre><p>If you do not like XPath you couls also use another possibility to ignore message contents. The next example uses the special <span class="emphasis"><em>@ignore@</em></span> placeholder
+        directly in the message content:</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;data&gt;</span>
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;![CDATA[</span>
+        &lt;RequestMessage&gt;
+            &lt;MessageHeader&gt;
+                &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                &lt;Timestamp&gt;@ignore@&lt;/Timestamp&gt;
+                &lt;RequestTag&gt;${requestTag}&lt;/RequestTag&gt;
+                &lt;VersionId&gt;2&lt;/VersionId&gt;
+            &lt;/MessageHeader&gt;
+            &lt;MessageBody&gt;
+                &lt;Customer&gt;
+                    &lt;Id&gt;1&lt;/Id&gt;
+                &lt;/Customer&gt;
+            &lt;/MessageBody&gt;
+        &lt;/RequestMessage&gt;
+        <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">]]&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/data&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span></pre><p>The ignored message elements are automatically skipped when Citrus compares and validates message contents.</p></div><div class="section" title="5.2.4.&nbsp;Explicit message element validation"><div class="titlepage"><div><div><h3 class="title"><a name="message-validation-elements"></a>5.2.4.&nbsp;Explicit message element validation</h3></div></div></div><p>In the previous sections we have seen how to validate whole XML fragments with control message templates. In some cases 
+        this approach might be too extensive. Imagine the tester only needs to validate a small subset of message elements. The definition 
+        of control templates in combination with several ignore statements is not appropiate in this case. You would rather want
+        to use explicit element validation.</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;validate</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//MessageHeader/RequestTag"</span> 
+                 <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;validate</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//CorrelationId"</span> 
+                 <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${correlationId}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;validate</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">path</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//MessageBody/Number"</span> 
+                 <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"123456789"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/message&gt;</span></pre><p>Instead of comparing the whole message some message elements are validated explicitly over XPath. Citrus evaluates the XPAth expression and 
+        and compares its value to the control value. The basic message structure as well as other message elements are not included into validation.</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top"><p>If this type of element validation is choosen neither &lt;data&gt; nor &lt;resource&gt; template definitions are allowed.</p></td></tr></table></div><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top"><p>Citrus offers an alternative dot-notated syntax in order to walk through XML trees. In case you are not 
+            familiar with XPath or simply need a very easy way to find your element inside the XML tree you might use this way. Every 
+            element hierarchy in the XML tree is represented with a simple dot - for example:</p><p><code class="literal">message.body.text</code></p><p>The expression will search the XML tree for the respective &lt;message&gt;&lt;body&gt;&lt;text&gt; element. Attributes 
+            are supported too. In case the last element in the dot-notated expression is a XML attribute the framework will automatically 
+            find it.</p><p>Of course this dot-notated syntax is very simple and might not be applicable for more complex tree walkings. 
+            XPath is much more powerful - no doubt. However the dot-notated syntax might help those of you that are not familiar with XPath.
+            So the dot-notation is supported wherever XPath expressions might apply.</p></td></tr></table></div></div><div class="section" title="5.2.5.&nbsp;Validate the message header"><div class="titlepage"><div><div><h3 class="title"><a name="message-header-validation"></a>5.2.5.&nbsp;Validate the message header</h3></div></div></div><p>Now that we have validated the message payload in various ways in the previous sections we are also interested in validating the message header. Just
+        add the following header validation to your receiving action.</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;header&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Operation"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"GetCustomer"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"RequestTag"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">value</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"${requestTag}"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/header&gt;</span></pre><p>Message headers often occur as name-value pairs. So each header element that we specify in validation has to be present in the received message. In addition to that 
+        the header value has to fit the control value. If one header is not found or the value does not fit Citrus will raise errors and the test case will fail.</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td align="left" valign="top">Sometimes message headers may not apply to the name-value pair pattern. For example SOAP headers can also contain XML fragments. Citrus supports these kind of
+        headers too. Please see the SOAP chapter for more details on this.</td></tr></table></div></div><div class="section" title="5.2.6.&nbsp;Saving message content to variables"><div class="titlepage"><div><div><h3 class="title"><a name="message-content-extract"></a>5.2.6.&nbsp;Saving message content to variables</h3></div></div></div><p>Imagine you receive a message in your test that contains a generated message id. You have no chance to predict the id
+        because it was generated at runtime. In many cases you need to return this id in the respective response message to meet
+        the requirements. So Citrus needs to offer a way to save dynamic message content for reuse in later test steps. The solution is simple: 
+        we can extract those dynamic values to test variables.</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;extract&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;header</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"Operation"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">variable</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"operation"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;message</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">name</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"//MessageBody/Customer/Id"</span> <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-attribute">variable</span>=<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-value">"customerId"</span><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">/&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/extract&gt;</span></pre><p>As you can see Citrus is able to store both header and message payload content into test variables. It does not matter if you use new test variables 
+        or existing ones as target. The extraction will automatically create a new variable in case it does not exist. Once the variable is announced to the test all following test 
+        actions can access the variables as usual. So you could reuse the variable value in response messages or other test steps ahead.</p></div><div class="section" title="5.2.7.&nbsp;Message selectors"><div class="titlepage"><div><div><h3 class="title"><a name="message-selector"></a>5.2.7.&nbsp;Message selectors</h3></div></div></div><p>The <span class="emphasis"><em>&lt;selector&gt;</em></span> element inside the receiving action defines key-value pairs in order to 
+        filter the messages being received. The key value pairs apply to the message headers. This means that a receiver will 
+        only accept messages that meet the key-value pairs in its header. Using this mechanism you can explicitly listen for 
+        messages that belong to your test. This is very helpful to avoid receiving messages from other tests that are still available 
+        on the message destination.</p><p>Lets say the tested software application keeps sending messages that belong to previous test cases. This could happen in retry 
+        situations where the application's error handling automatically tries to solve a communication problem that occurred 
+        during previous test cases. As a result the EAI application keeps sending messages that are not valid any more for the currently 
+        running test case. The test case might fail because the received message does not apply to the currently tested use case. The messages
+        received are simply failing because the message content does not fit the expected one (e.g. correlation-ids, customer informations 
+        etc.).</p><p>Now we have to find a way to avoid these problems. The test could filter the messages on a destination to only receive messages 
+        that apply for the use case that is being tested. The Java Messaging System (JMS) came up with a message header selector that will 
+        only accept messages that fit the expected header values.</p><p>Let us have a closer look at a message selector inside a receiving action:</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;selector&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element&gt;</span> name="correlationId" value="Lx1x123456789"<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/element&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;element&gt;</span> name="operation" value="getOrders"<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/element&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/selector&gt;</span></pre><p>This example shows how selectors work. The selector will only accept messages that meet the correlation id and the operation 
+        in the header values. All other messages are ignored. The selector elements are associated to each other using logical AND
+        (e.g. where correlationId = 'Lx1x123456789' AND operation = 'getOrders').</p><p>You can also define a selector string yourself that gives you more power in constructing the selection logic.</p><pre class="programlisting"><span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;selector&gt;</span>
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;value&gt;</span>
+        correlationId = 'Cx1x123456789' OR correlationId = 'Cx1x987654321'
+    <span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/value&gt;</span>
+<span xmlns="http://www.w3.org/TR/xhtml1/transitional" class="hl-tag">&lt;/selector&gt;</span></pre><div class="important" title="Important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/admons/important.png"></td><th align="left">Important</th></tr><tr><td align="left" valign="top"><p>In case you want to run tests in parallel you will need to specify message selectors, otherwise the different tests running 
+            at the same time will steal messages from each other. In parallel test execution several test cases will listen for messages at 
+            the same time.</p></td></tr></table></div></div><p>At this point you know the two most important test actions in Citrus. Sending and receiving actions will become the main components of your integration tests when dealing 
+    with loosely coupled message based components in a SOA. It is very easy to create message flows, meaning a sequence of sending and receiving messages in your test case. 
+    You can replicate use cases and test your message exchange with extended message validation possibilities.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="run-config.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="actions.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;Running tests&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;6.&nbsp;Test actions</td></tr></table></div></body></html>

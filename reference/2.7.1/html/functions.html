@@ -1,0 +1,2141 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Functions | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./validation-matchers.html" />
+    
+    
+    <link rel="prev" href="./endpoint-adapter.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="40"
+        data-chapter-title="Functions"
+        data-filepath="functions.md"
+        data-basepath="."
+        data-revision="Wed Mar 15 2017 10:41:42 GMT+0100 (CET)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        JsonPath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge JMS queues
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Stop timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Generic action
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="behaviors.html">
+            
+                
+                    <a href="./behaviors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Test behaviors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="16.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.6.</b>
+                        
+                        Repeat On Error
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Finally
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Http Websockets
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        Message channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="kubernetes.html">
+            
+                
+                    <a href="./kubernetes.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Kubernetes
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="selenium.html">
+            
+                
+                    <a href="./selenium.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Selenium
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Endpoint component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Endpoint adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="40" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Data dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Test actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Test suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Meta info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Message tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="47" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>47.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="48" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="48.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="49" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="49.1" data-path="changes-2-6.html">
+            
+                
+                    <a href="./changes-2-6.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.1.</b>
+                        
+                        Changes 2.6
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.2" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.2.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.3" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.3.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.4" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.4.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.5" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.5.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.6" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.6.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.7" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.7.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.8" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.8.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.9" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.9.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.10" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.10.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="functions"><a name="functions" class="plugin-anchor" href="#functions"><span class="fa fa-link"></span></a>Functions</h2>
+<p>The test framework will offer several functions that are useful throughout the test execution. The functions will always return a string value that is ready for use as variable value or directly inside a text message.</p>
+<p>A set of functions is usually combined to a function library. The library has a prefix that will identify the functions inside the test case. The default test framework function library uses a default prefix (citrus). You can write your own function library using your own prefix in order to extend the test framework functionality whenever you want.</p>
+<p>The library is built in the Spring configuration and contains a set of functions that are of public use.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:function-library</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;testLibrary&quot;</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">&quot;foo:&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus:function</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;randomNumber&quot;</span>&gt;</span> class=&quot;com.consol.citrus.functions.RandomNumberFunction&quot;/&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus:function</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;randomString&quot;</span>&gt;</span> class=&quot;com.consol.citrus.functions.RandomStringFunction&quot;/&gt;
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus:function</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;customFunction&quot;</span>&gt;</span> ref=&quot;customFunctionBean&quot;/&gt;
+          ...
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:function-library</span>&gt;</span>
+</code></pre>
+<p>As you can see the library defines one to many functions either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library and you are able to use the functions in your test case with the leading library prefix just like this:</p>
+<pre><code class="lang-xml">foo:randomNumber()
+      foo:randomString()
+      foo:customFunction()
+</code></pre>
+<p><strong>Tip</strong>
+You can add custom function implementations and custom function libraries. Just use a custom prefix for your library. The default Citrus function library uses the <strong>citrus:</strong> prefix.In the next chapters the default functions offered by the framework will be described in detail.</p>
+<h3 id="concat"><a name="concat" class="plugin-anchor" href="#concat"><span class="fa fa-link"></span></a>concat()</h3>
+<p>The function will combine several string tokens to a single string value. This means that you can combine a static text value with a variable value for instance. A first example should clarify the usage:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;concatFunctionTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;date&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:currentDate(yyyy-MM-dd)&quot;</span> /&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;text&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Hello Test Framework!&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                citrus:concat(&apos;Today is: &apos;, ${date}, &apos; right!?&apos;)
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                citrus:concat(&apos;Text is: &apos;, ${text})
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to be combined.</p>
+<pre><code>citrus:concat(&apos;Text1&apos;, &apos;Text2&apos;, &apos;Text3&apos;, ${text}, &apos;Text5&apos;, &#x2026;, &apos;TextN&apos;)
+</code></pre><p>The function can be used wherever variables can be used. For instance when validating XML elements in the receive action.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">validate</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;//element/element&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:concat(&apos;Cx1x&apos;, ${generatedId})&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<h3 id="substring"><a name="substring" class="plugin-anchor" href="#substring"><span class="fa fa-link"></span></a>substring()</h3>
+<p>The function will have three parameters.</p>
+<ol>
+<li>String to work on</li>
+<li>Starting index</li>
+<li>End index (optional)</li>
+</ol>
+<p>Let us have a look at a simple example for this function:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        citrus:substring(&apos;Hello Test Framework&apos;, 6)
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        citrus:substring(&apos;Hello Test Framework&apos;, 0, 5)
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<pre><code>Test Framework 
+Hello
+</code></pre><h3 id="stringlength"><a name="stringlength" class="plugin-anchor" href="#stringlength"><span class="fa fa-link"></span></a>stringLength()</h3>
+<p>The function will calculate the number of characters in a string representation and return the number.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:stringLength(&apos;Hello Test Framework&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<p><strong>20</strong> </p>
+<h3 id="translate"><a name="translate" class="plugin-anchor" href="#translate"><span class="fa fa-link"></span></a>translate()</h3>
+<p>This function will replace regular expression matching values inside a string representation with a specified replacement string.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        citrus:translate(&apos;H.llo Test Fr.mework&apos;, &apos;\.&apos;, &apos;a&apos;)
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Note that the second parameter will be a regular expression. The third parameter will be a simple replacement string value.</p>
+<p>Function output:</p>
+<p><strong>Hello Test Framework</strong> </p>
+<h3 id="substringbefore"><a name="substringbefore" class="plugin-anchor" href="#substringbefore"><span class="fa fa-link"></span></a>substringBefore()</h3>
+<p>The function will search for the first occurrence of a specified string and will return the substring before that occurrence. Let us have a closer look in a simple example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        citrus:substringBefore(&apos;Test/Framework&apos;, &apos;/&apos;)
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>In the specific example the function will search for the &#x2018;/&#x2019; character and return the string before that index.</p>
+<p>Function output:</p>
+<p><strong>Test</strong> </p>
+<h3 id="substringafter"><a name="substringafter" class="plugin-anchor" href="#substringafter"><span class="fa fa-link"></span></a>substringAfter()</h3>
+<p>The function will search for the first occurrence of a specified string and will return the substring after that occurrence. Let us clarify this with a simple example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        citrus:substringAfter(&apos;Test/Framework&apos;, &apos;/&apos;)
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Similar to the substringBefore function the &#x2018;/&#x2019; character is found in the string. But now the remaining string is returned by the function meaning the substring after this character index.</p>
+<p>Function output:</p>
+<p><strong>Framework</strong> </p>
+<h3 id="round"><a name="round" class="plugin-anchor" href="#round"><span class="fa fa-link"></span></a>round()</h3>
+<p>This is a simple mathematic function that will round decimal numbers representations to their nearest non decimal number.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:round(&apos;3.14&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<p><strong>3</strong> </p>
+<h3 id="floor"><a name="floor" class="plugin-anchor" href="#floor"><span class="fa fa-link"></span></a>floor()</h3>
+<p>This function will round down decimal number values.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:floor(&apos;3.14&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<p><strong>3.0</strong> </p>
+<h3 id="ceiling"><a name="ceiling" class="plugin-anchor" href="#ceiling"><span class="fa fa-link"></span></a>ceiling()</h3>
+<p>Similar to floor function, but now the function will round up the decimal number values.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:ceiling(&apos;3.14&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<p><strong>4.0</strong> </p>
+<h3 id="randomnumber"><a name="randomnumber" class="plugin-anchor" href="#randomnumber"><span class="fa fa-link"></span></a>randomNumber()</h3>
+<p>The random number function will provide you the opportunity to generate random number strings containing positive number letters. There is a singular Boolean parameter for that function describing whether the generated number should have exactly the amount of digits. Default value for this padding flag will be true.</p>
+<p>Next example will show the function usage:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndNumber1&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomNumber(10)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndNumber2&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomNumber(10, true)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndNumber2&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomNumber(10, false)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndNumber3&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomNumber(3, false)&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<pre><code>8954638765 
+5003485980 
+6387650 
+65
+</code></pre><h3 id="randomstring"><a name="randomstring" class="plugin-anchor" href="#randomstring"><span class="fa fa-link"></span></a>randomString()</h3>
+<p>This function will generate a random string representation with a defined length. A second parameter for this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED). The last parameter allows also digit characters in the generated string. By default digit charaters are not allowed.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString0&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${citrus:randomString(10)}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString1&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomString(10)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString2&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomString(10, UPPERCASE)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString3&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomString(10, LOWERCASE)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString4&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomString(10, MIXED)&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;rndString4&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomString(10, MIXED, true)&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<pre><code>HrGHOdfAer 
+AgSSwedetG 
+JSDFUTTRKU 
+dtkhirtsuz 
+Vt567JkA32
+</code></pre><h3 id="randomenumvalue"><a name="randomenumvalue" class="plugin-anchor" href="#randomenumvalue"><span class="fa fa-link"></span></a>randomEnumValue()</h3>
+<p>This function returns one of its supplied arguments. Furthermore you can specify a custom function with a configured list of values (the enumeration). The function will randomly return an entry when called without arguments. This promotes code reuse and facilitates refactoring.</p>
+<p>In the next sample the function is used to set a httpStatusCode variable to one of the given HTTP status codes (200, 401, 500)</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpStatusCode&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomEnumValue(&apos;200&apos;, &apos;401&apos;, &apos;500&apos;)&quot;</span> /&gt;</span>
+</code></pre>
+<p>As mentioned before you can define a custom function for your very specific needs in order to easily manage a list of predefined values like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:function-library</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myCustomFunctionLibrary&quot;</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">&quot;custom:&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus-function</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;randomHttpStatusCode&quot;</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;randomHttpStatusCodeFunction&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:function-library</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;randomHttpStatusCodeFunction&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.functions.core.RandomEnumValueFunction&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;values&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>200<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>500<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>401<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>We have added a custom function library with a custom function definition. The custom function &quot;randomHttpStatusCode&quot; randomly chooses an HTTP status code each time it is called. Inside the test you can use the function like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpStatusCode&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;custom:randomHttpStatusCode()&quot;</span> /&gt;</span>
+</code></pre>
+<h3 id="currentdate"><a name="currentdate" class="plugin-anchor" href="#currentdate"><span class="fa fa-link"></span></a>currentDate()</h3>
+<p>This function will definitely help you when accessing the current date. Some examples will show the usage in detail:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate()<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd&apos;T&apos;hh:mm:ss&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;+1y&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;+1M&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;+1d&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;+1h&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;+1m&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;+1s&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:currentDate(&apos;yyyy-MM-dd HH:mm:ss&apos;, &apos;-1y&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Note that the currentDate function provides two parameters. First parameter describes the date format string. The second will define a date offset string containing year, month, days, hours, minutes or seconds that will be added or subtracted to or from the actual date value.</p>
+<p>Function output:</p>
+<pre><code>01.09.2009 
+2009-09-01 
+2009-09-01 12:00:00 
+2009-09-01T12:00:00
+</code></pre><h3 id="uppercase"><a name="uppercase" class="plugin-anchor" href="#uppercase"><span class="fa fa-link"></span></a>upperCase()</h3>
+<p>This function converts any string to upper case letters.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:upperCase(&apos;Hello Test Framework&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<p><strong>HELLO TEST FRAMEWORK</strong> </p>
+<h3 id="lowercase"><a name="lowercase" class="plugin-anchor" href="#lowercase"><span class="fa fa-link"></span></a>lowerCase()</h3>
+<p>This function converts any string to lower case letters.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:lowerCase(&apos;Hello Test Framework&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<p><strong>hello test framework</strong> </p>
+<h3 id="average"><a name="average" class="plugin-anchor" href="#average"><span class="fa fa-link"></span></a>average()</h3>
+<p>The function will sum up all specified number values and divide the result through the number of values.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;avg&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:average(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>avg = <strong>4.0</strong> </p>
+<h3 id="minimum"><a name="minimum" class="plugin-anchor" href="#minimum"><span class="fa fa-link"></span></a>minimum()</h3>
+<p>This function returns the minimum value in a set of number values.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;min&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:minimum(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>min = <strong>3.0</strong> </p>
+<h3 id="maximum"><a name="maximum" class="plugin-anchor" href="#maximum"><span class="fa fa-link"></span></a>maximum()</h3>
+<p>This function returns the maximum value in a set of number values.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;max&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:maximum(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>max = <strong>5.0</strong> </p>
+<h3 id="sum"><a name="sum" class="plugin-anchor" href="#sum"><span class="fa fa-link"></span></a>sum()</h3>
+<p>The function will sum up all number values. The number values can also be negative.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;sum&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:sum(&apos;3&apos;, &apos;4&apos;, &apos;5&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>sum = <strong>12.0</strong> </p>
+<h3 id="absolute"><a name="absolute" class="plugin-anchor" href="#absolute"><span class="fa fa-link"></span></a>absolute()</h3>
+<p>The function will return the absolute number value.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;abs&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:absolute(&apos;-3&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>abs = <strong>3.0</strong> </p>
+<h3 id="mapvalue"><a name="mapvalue" class="plugin-anchor" href="#mapvalue"><span class="fa fa-link"></span></a>mapValue()</h3>
+<p>This function implementation maps string keys to string values. This is very helpful when the used key is randomly chosen at runtime and the corresponding value is not defined during the design time.</p>
+<p>The following function library defines a custom function for mapping HTTP status codes to the corresponding messages:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:function-library</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myCustomFunctionLibrary&quot;</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">&quot;custom:&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus-function</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;getHttpStatusMessage&quot;</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;getHttpStatusMessageFunction&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:function-library</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;getHttpStatusMessageFunction&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.functions.core.MapValueFunction&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;values&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">map</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;OK&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;401&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Unauthorized&quot;</span> /&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;500&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Internal Server Error&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">map</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>In this example the function sets the variable httpStatusMessage to the &apos;Internal Server Error&apos; string dynamically at runtime. The test only knows the HTTP status code and does not care about spelling and message locales.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpStatusCodeMessage&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;custom:getHttpStatusMessage(&apos;500&apos;)&quot;</span> /&gt;</span>
+</code></pre>
+<h3 id="randomuuid"><a name="randomuuid" class="plugin-anchor" href="#randomuuid"><span class="fa fa-link"></span></a>randomUUID()</h3>
+<p>The function will generate a random Java UUID.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;uuid&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:randomUUID()&quot;</span>/&gt;</span>
+</code></pre>
+<p>uuid = <strong>98fbd7b0-832e-4b85-b9d2-e0113ee88356</strong> </p>
+<h3 id="encodebase64"><a name="encodebase64" class="plugin-anchor" href="#encodebase64"><span class="fa fa-link"></span></a>encodeBase64()</h3>
+<p>The function will encode a string to binary data using base64 hexadecimal encoding.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;encoded&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:encodeBase64(&apos;Hallo Testframework&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>encoded = <strong>VGVzdCBGcmFtZXdvcms=</strong> </p>
+<h3 id="decodebase64"><a name="decodebase64" class="plugin-anchor" href="#decodebase64"><span class="fa fa-link"></span></a>decodeBase64()</h3>
+<p>The function will decode binary data to a character sequence using base64 hexadecimal decoding.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;decoded&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:decodeBase64(&apos;VGVzdCBGcmFtZXdvcms=&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>decoded = <strong>Hallo Testframework</strong> </p>
+<h3 id="escapexml"><a name="escapexml" class="plugin-anchor" href="#escapexml"><span class="fa fa-link"></span></a>escapeXml()</h3>
+<p>If you want to deal with escaped XML in your test case you may want to use this function. It automatically escapes all XML special characters.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-cdata">&lt;![CDATA[
+            citrus:escapeXml(&apos;&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;&apos;)                        
+        ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p><strong>&lt;Message&gt;Hallo Test Framework&lt;/Message&gt;</strong> </p>
+<h3 id="cdatasection"><a name="cdatasection" class="plugin-anchor" href="#cdatasection"><span class="fa fa-link"></span></a>cdataSection()</h3>
+<p>Usually we use CDATA sections to define message payload data inside a testcase. We might run into problems when the payload itself contains CDATA sections as nested CDATA sections are prohibited by XML nature. In this case the next function ships very usefull.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;cdata&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:cdataSection(&apos;payload&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>cdata = <strong><code>&lt;![CDATA[payload]]&gt;</code></strong> </p>
+<h3 id="digestauthheader"><a name="digestauthheader" class="plugin-anchor" href="#digestauthheader"><span class="fa fa-link"></span></a>digestAuthHeader()</h3>
+<p>Digest authentication is a commonly used security algorithm, especially in Http communication and SOAP WebServices. Citrus offers a function to generate a digest authentication principle used in the Http header section of a message.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;digest&quot;</span> 
+  <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:digestAuthHeader(&apos;username&apos;, &apos;password&apos;, &apos;authRealm&apos;, &apos;acegi&apos;, 
+                            &apos;POST&apos;, &apos;http://127.0.0.1:8080&apos;, &apos;citrus&apos;, &apos;md5&apos;)&quot;</span>/&gt;</span>
+</code></pre>
+<p>A possible digest authentication header value looks like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">Digest</span> <span class="hljs-attribute">username</span>=<span class="hljs-value">foo,realm=arealm,nonce=MTMzNT,</span>
+<span class="hljs-attribute">uri</span>=<span class="hljs-value">http:</span>//<span class="hljs-attribute">127.0.0.1:8080</span>,<span class="hljs-attribute">response</span>=<span class="hljs-value">51f98c,opaque=b29a30,algorithm=md5</span>&gt;</span>
+</code></pre>
+<p>You can use these digest headers in messages sent by Citrus like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_Authorization&quot;</span> 
+    <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;vflig:digestAuthHeader(&apos;${username}&apos;,&apos;${password}&apos;,&apos;${authRealm}&apos;,
+                            &apos;${nonceKey}&apos;,&apos;POST&apos;,&apos;${uri}&apos;,&apos;${opaque}&apos;,&apos;${algorithm}&apos;)&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>This will set a Http Authorization header with the respective digest in the request message. So your test is ready for client digest authentication.</p>
+<h3 id="localhostaddress"><a name="localhostaddress" class="plugin-anchor" href="#localhostaddress"><span class="fa fa-link"></span></a>localHostAddress()</h3>
+<p>Test cases may use the local host address for some reason (e.g. used as authentication principle). As the tests may run on different machines at the same time we can not use static host addresses. The provided function localHostAddress() reads the local host name dynamically at runtime.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;address&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:localHostAddress()&quot;</span>/&gt;</span>
+</code></pre>
+<p>A possible value is either the host name as used in DNS entry or an IP address value:</p>
+<p>address = <strong><code>&lt;192.168.2.100&gt;</code></strong> </p>
+<h3 id="changedate"><a name="changedate" class="plugin-anchor" href="#changedate"><span class="fa fa-link"></span></a>changeDate()</h3>
+<p>This function works with date values and manipulates those at runtime by adding or removing a date value offset. You can manipulate several date fields such as: year, month, day, hour, minute or second.</p>
+<p>Let us clarify this with a simple example for this function:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:changeDate(&apos;01.01.2000&apos;, &apos;+1y+1M+1d&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:changeDate(citrus:currentDate(), &apos;-1M&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<pre><code>02.02.2001 
+13.04.2013
+</code></pre><p>As you can see the change date function works on static date values or dynamic variable values or functions like <strong>citrus:currentDate()</strong> . By default the change date function requires a date format such as the current date function (&apos;dd.MM.yyyy&apos;). You can also define a custom date format:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:changeDate(&apos;2000-01-10&apos;, &apos;-1M-1d&apos;, &apos;yyyy-MM-dd&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Function output:</p>
+<pre><code>1999-12-09
+</code></pre><p>With this you are able to manipulate all date values of static or dynamic nature at test runtime.</p>
+<h3 id="readfile"><a name="readfile" class="plugin-anchor" href="#readfile"><span class="fa fa-link"></span></a>readFile()</h3>
+<p>The <strong>readFile</strong> function reads a file resource from given file path and loads the complete file content as function result. The file path can be a system file path as well as a classpath file resource. The file path can have test variables as part of the path or file name. In addition to that the file content can also have test variable values and other functions.</p>
+<p>Let&apos;s see this function in action:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:readFile(&apos;classpath:some/path/to/file.txt&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:readFile(${filePath})<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The function reads the file content and places the content at the position where the function has been called. This means that you can also use this function as part of Strings and message payloads for instance. This is a very powerful way to extract large message parts to separate file resources. Just add the <strong>readFile</strong> function somewhere to the message content and Citrus will load the extra file content and place it right into the message payload for you.</p>
+<h3 id="message"><a name="message" class="plugin-anchor" href="#message"><span class="fa fa-link"></span></a>message()</h3>
+<p>When messages are exchanged in Citrus the content is automatically saved to an in memory storage for further access in the test case. That means that functions and test actions can access the messages
+that have been sent or received within the test case. The <strong>message</strong> function loads a message content from that message store. The message is identified by its name. Receive and send actions usually define
+the message name. Now we can load the message payload with that name.</p>
+<p>Let&apos;s see this function in action:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:message(myRequest.payload())<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The function above loads the message named <strong>myRequest</strong> from the local memory store. This requires a send or receive action to have handled the message before in the same test case.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;someEndpoint&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;myRequest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>Some payload<span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-java">send(<span class="hljs-string">&quot;someEndpoint&quot;</span>)
+    .name(<span class="hljs-string">&quot;myRequest&quot;</span>)
+    .payload(<span class="hljs-string">&quot;Some payload&quot;</span>);
+</code></pre>
+<p>The name of the message is important. Otherwise the message can not be found in the local message store. Note: a message can either be received or sent with a name in order to be stored
+in the local message store. The <strong>message</strong> function is then able to access the message by its name. In the first example the <strong>payload()</strong> has been loaded. Of course we can also access header information.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>citrus:message(myRequest.header(&apos;Operation&apos;))<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The sample above loads the header <strong>Operation</strong> of the message.</p>
+<p>In Java DSL the message store is also accessible over the TestContext.</p>
+<h3 id="xpath"><a name="xpath" class="plugin-anchor" href="#xpath"><span class="fa fa-link"></span></a>xpath()</h3>
+<p>The <strong>xpath</strong> function evaluates a Xpath expressions on some XML source and returns the expression result as String.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:xpath(&apos;&lt;message&gt;&lt;id&gt;1000&lt;/id&gt;&lt;/text&gt;Some text content&lt;/text&gt;&lt;/message&gt;&apos;, &apos;/message/id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The XML source is given as first function parameter and can be loaded in different ways. In the example above a static XML source has been used. We could load the XML content from
+external file or just use a test variable.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:xpath(citrus:readFile(&apos;some/path/to/file.xml&apos;), &apos;/message/id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Also accessing the local message store is valid here:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:xpath(citrus:message(myRequest.payload()), &apos;/message/id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
+becomes very easy then.</p>
+<h3 id="jsonpath"><a name="jsonpath" class="plugin-anchor" href="#jsonpath"><span class="fa fa-link"></span></a>jsonPath()</h3>
+<p>The <strong>jsonPath</strong> function evaluates a JsonPath expressions on some JSON source and returns the expression result as String.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:jsonPath(&apos;{ &quot;message&quot;: { &quot;id&quot;: 1000, &quot;text&quot;: &quot;Some text content&quot; } }&apos;, &apos;$.message.id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>The JSON source is given as first function parameter and can be loaded in different ways. In the example above a static JSON source has been used. We could load the JSON content from
+external file or just use a test variable.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:jsonPath(${jsonSource}, &apos;$.message.id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>Also accessing the local message store is valid here:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[citrus:jsonPath(citrus:message(myRequest.payload()), &apos;$.message.id&apos;)]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">echo</span>&gt;</span>
+</code></pre>
+<p>This combination is quite powerful as all previously exchanged messages in the test are automatically stored to the local message store. Reusing dynamic message values from other messages
+becomes very easy then.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./endpoint-adapter.html" class="navigation navigation-prev " aria-label="Previous page: Endpoint adapter"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./validation-matchers.html" class="navigation navigation-next " aria-label="Next page: Validation Matchers"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

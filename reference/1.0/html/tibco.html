@@ -1,0 +1,40 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;15.&nbsp;TIBCO support</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="testsuite.html" title="Chapter&nbsp;14.&nbsp;Testsuite"><link rel="next" href="schema-validation.html" title="Chapter&nbsp;16.&nbsp;XML schema validation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;15.&nbsp;TIBCO support</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="testsuite.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="schema-validation.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="tibco"></a>Chapter&nbsp;15.&nbsp;TIBCO support</h2></div></div><div></div></div><p>The Citrus framework was designed to also connect to several TIBCO software components. The outcome is a group of
+    special test actions that enable the tester to connect to the TIBCO components and execute operations towards TIBCO.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tibco-hawk"></a>15.1.&nbsp;Connecting with TIBCO Hawk</h2></div></div><div></div></div><p>TIBCO uses the enterprise monitoring tool Hawk to manage and supervise all TIBCO applications. Citrus can access Hawk
+        to affect the TIBCO service instances. You can start or stop BusinessWorks process archives and process starters for instance.</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td colspan="2" align="left" valign="top"><p>Use TIBCO Hawk in order to prepare the TIBCO environment according
+            to the test that will be executed (unit or integration tests).</p></td></tr></table></div><p>The next example shows how the Hawk agent can be used in the test suite setup.</p><pre class="programlisting">
+  &lt;bean parent="tibcoHawkAgent"&gt;
+      &lt;property name="methodName" 
+                   value="ResumeProcessStarter"/&gt;
+      &lt;property name="methodParameters"&gt;
+          &lt;list&gt;
+              &lt;bean class="COM.TIBCO.hawk.talon.DataElement"&gt;
+                  &lt;constructor-arg value="ProcessDefinition"/&gt;
+                  &lt;constructor-arg    
+                      value="Test/UnitTest/BusinessServiceTester.process"/&gt;
+              &lt;/bean&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+        </pre><p>The example shows a method call to a Hawk agent. The method is declared through the methodName
+        property. In the above example the Hawk agent will resume a particular process starter. The
+        methodParameters property will cause the process starter to resume.</p><p>In general the HawkAgent has the following properties:</p><div class="itemizedlist"><ul type="disc"><li><p>microAgent -&gt; <tt class="literal">COM.TIBCO.ADAPTER.bwengine.&lt;hawk.domain&gt;.&lt;hawk.service.instance&gt;.&lt;hawk.process.archive&gt;</tt></p></li><li><p>hawkDomain</p></li><li><p>rvService (e.g. 57500)</p></li><li><p>rvNetwork</p></li><li><p>rvDaemon (e.g. tcp:57500)</p></li></ul></div><p>The microAgentID consists of the Hawk domain, the service instance and the process archive. With the
+        right setting of the domain the service and the daemon you can now use all methods offered by the
+        specific MicroAgent.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tibco-collaborator"></a>15.2.&nbsp;Connecting with TIBCO Collaborator Workflow Server</h2></div></div><div></div></div><p>Similar to the Hawk agent it is useful to start and stop certain workflow jobs in the TIBCO Collaborator
+        Workflow Server, especially for clean up reasons. Left over workflows from previous test runs will then get
+        terminated correctly.</p><p>The test framework offers a special action implementation, in order to clean up all available workflow jobs on
+        the Workflow Collaborator Server.</p><p>The bean looks like follows:</p><pre class="programlisting">
+  &lt;bean id="cleanIcJobs"
+      class="com.consol.citrus.actions.CleanIcJobsBean"&gt;
+      &lt;property name="userName" value="${ic.username}"/&gt;
+      &lt;property name="password" value="${ic.password}"/&gt;
+      &lt;property name="serverName" value="${ic.servername}"/&gt;
+      &lt;property name="service" value="${ic.tibrv.service}"/&gt;
+      &lt;property name="network" value="${ic.tibrv.network}"/&gt;
+      &lt;property name="daemon" value="${ic.tibrv.daemon}"/&gt;
+      &lt;property name="queueCount" value="${ic.tibrv.queue.count}"/&gt;
+      &lt;property name="serverDiscoveryTimeout" 
+                   value="${ic.tibrv.server.discovery.timeout}"/&gt;
+  &lt;/bean&gt;
+        </pre><p>The properties of that bean do all refer to the connection credentials of the Workflow InConcert Server instance.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="testsuite.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="schema-validation.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;14.&nbsp;Testsuite&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;16.&nbsp;XML schema validation</td></tr></table></div></body></html>

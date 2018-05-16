@@ -1,0 +1,68 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;14.&nbsp;Testsuite</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="functions.html" title="Chapter&nbsp;13.&nbsp;Functions"><link rel="next" href="tibco.html" title="Chapter&nbsp;15.&nbsp;TIBCO support"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;14.&nbsp;Testsuite</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="functions.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="tibco.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="testsuite"></a>Chapter&nbsp;14.&nbsp;Testsuite</h2></div></div><div></div></div><p>Tests often need to be grouped to test suites. Test suites also provide the functionality to do some work before and after the
+    tests are run. Database preparing and cleaning tasks or server starting and stopping fit well into these initialization and cleanup phases 
+    of a test suite. In Citrus a test suite is typically defined as Spring bean inside a XML configuration file.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="testsuite-tasks"></a>14.1.&nbsp;Tasks before, between and after the test run</h2></div></div><div></div></div><p>A tester can influence the behaviour of a test suite before, after and during the test run. See the next code example to find
+        out how it works:</p><pre class="programlisting">
+  &lt;bean name="integrationTests" 
+           class="com.consol.citrus.TestSuite"&gt;
+      &lt;property name="tasksBefore"&gt;
+          &lt;list&gt;
+              
+          &lt;/list&gt;
+      &lt;/property&gt;
+  
+      &lt;property name="tasksBetween"&gt;
+          &lt;list&gt;
+              
+          &lt;/list&gt;
+      &lt;/property&gt;
+  
+      &lt;property name="tasksAfter"&gt;
+          &lt;list&gt;
+              
+          &lt;/list&gt;
+      &lt;/property&gt;
+  
+  &lt;/bean&gt;
+        </pre><p>The test suite bean is of the type com.consol.citrus.TestSuite and offers the following properties to affect
+        the basic behaviour:</p><div class="itemizedlist"><ul type="opencircle"><li style="list-style-type: circle"><p>tasksBefore: List of actions that will be executed before the first test is run</p></li><li style="list-style-type: circle"><p>tasksBetween: List of actions that will be executed in between every test</p></li><li style="list-style-type: circle"><p>tasksAfter: List of actions that will be executed after the last test has ended</p></li></ul></div><p>The three task-sections before, in between and after the execution of tests are supposed to be used for
+        initializing and finishing tasks. All these tasks can easily be adjusted by adding or removing beans inside the &lt;list&gt; 
+        element.</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td colspan="2" align="left" valign="top"><p>The framework offers special startup and shutdon actions that may start and stop server implmentations. This might 
+            be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a 
+            JMS broker.</p><p>A test suite run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations
+            or clean up the database to avoid errors caused by obsolete data from previous test runs.</p><p>Between the tests it also might sound reasonable to purge all JMS queues. In case a test fails the use case processing stops
+            and some messages might be left in some JMS queues. The next test then will be confronted with these invalid messages. Purging all JMS
+            destinations between the tests is therefore a good idea.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="testsuite-include-exclude"></a>14.2.&nbsp;Include and exclude tests</h2></div></div><div></div></div><p>While using the test framework you will find out that the duration of tests differ according to the purpose of
+        the test. Especially timeout tests take a long time. In some cases the tester might not want to execute
+        those tests, because it would take too long. Another situation would be that the tester intends to test a
+        certain group of tests explicitly and all other tests should not be executed.</p><p>In these situations the test suite is very helpful because here you can easily declare include or exclude test cases from a test 
+        run.</p><p>The following example tries to explain this functionality in detail:</p><pre class="programlisting">
+  &lt;bean name="testSuite" 
+           class="com.consol.citrus.TestSuite"&gt;
+      &lt;property name="excludeTests"&gt;
+          &lt;list&gt;
+              &lt;value&gt;*timeout*&lt;/value&gt;
+              &lt;value&gt;someTestName&lt;/value&gt;
+              &lt;value&gt;startsWith*&lt;/value&gt;
+              &lt;value&gt;*endsWith&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+      
+      &lt;property name="includeTests"&gt;
+          &lt;list&gt;
+              &lt;value&gt;*timeout*&lt;/value&gt;
+              &lt;value&gt;someTestName&lt;/value&gt;
+              &lt;value&gt;startsWith*&lt;/value&gt;
+              &lt;value&gt;*endsWith&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+        </pre><p>Both properties support name patterns. This means that you can use the wildcard "*" to define name
+        patterns as shown in the examples. Be careful to use both including and excluding patterns at the same
+        time, because they might overrule each other.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="testsuite-multiple"></a>14.3.&nbsp;Multiple testsuites</h2></div></div><div></div></div><p>Sometimes it is useful to configure more than one of these test suite instances. You can think of test suites for 
+        unit testing, integration testing, performance testing and so on. Unit testing might require different actions before
+        the test run than integration testing and vice versa.</p><p>You can simply define several beans of test suites in the Spring configuration. There could be one test suite
+        instance for unit testing and one for integration testing, with their individual configuration like separate
+        'tasksBefore' and different including patterns for tests.</p><p>By default Citrus will start all available test suite instances in sequence. If you want to
+        start a certain instance explicitly you have to declare the name of the instance when starting Citrus.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="functions.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="tibco.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;13.&nbsp;Functions&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;15.&nbsp;TIBCO support</td></tr></table></div></body></html>

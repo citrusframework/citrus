@@ -1,0 +1,1964 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Flight Booking Sample | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./appendix.html" />
+    
+    
+    <link rel="prev" href="./samples.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="45.1"
+        data-chapter-title="Flight Booking Sample"
+        data-filepath="samples-flightbooking.md"
+        data-basepath="."
+        data-revision="Fri Oct 07 2016 09:23:51 GMT+0200 (CEST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes-new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test-case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        Json-path
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop-time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge-jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge-channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge-endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage-server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Generic-action
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Stop-timer
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="15.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.6.</b>
+                        
+                        Repeat-onerror
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Finally-section
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http-websocket
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Message-channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Endpoint-component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Endpoint-adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Data-dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Test-actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Test-suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Meta-info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Message-tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter active" data-level="45.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.1.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.2.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.3" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.3.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.4" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.4.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.5" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.5.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.6" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.6.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.7" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.7.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.8" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.8.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.9" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.9.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h3 id="the-flightbooking-sample">The FlightBooking sample</h3>
+<p>A simple project example should give you the idea how Citrus works. The system under test is a flight booking service that handles travel requests from a travel agency. A travel request consists of a complete travel route including several flights. The FlightBookingService application will split the complete travel booking into separate flight bookings that are sent to the respective airlines in charge. The booking and customer data is persisted in a database.</p>
+<p>The airlines will confirm or deny the flight bookings. The FlightBookingService application consolidates all incoming flight confirmations and combines them to a complete travel confirmation or denial that is sent back to the travel agency. Next picture tries to put the architecture into graphics:</p>
+<p><img src="images/samples/flightbooking/architecture_overview.jpg" alt="samples/flightbooking/architecture_overview.jpg"></p>
+<p>In our example two different airlines are connected to the FlightBookingService application: the SmartAriline over JMS and the RoyalAirline over Http.</p>
+<h3 id="the-use-case">The use case</h3>
+<p>The use case that we would like to test is quite simple. The test should handle a simple travel booking and expect a positive processing to the end. The test case neither simulates business errors nor technical problems. Next picture shows the use case as a sequence diagram.</p>
+<p><img src="images/samples/flightbooking/sequence_diagram.jpg" alt="samples/flightbooking/sequence_diagram.jpg"></p>
+<p>The travel agency puts a travel booking request towards the system. The travel booking contains two separate flights. The flight requests are published to the airlines (SmartAirline and RoyalAirline). Both airlines confirm the flight bookings with a positive answer. The consolidated travel booking response is then sent back to the travel agency.</p>
+<h3 id="configure-the-simulated-systems">Configure the simulated systems</h3>
+<p>Citrus simulates all surrounding applications in their behavior during the test. The simulated applications are: TravelAgency, SmartAirline and RoyalAirline. The simulated systems have to be configured in the Citrus configuration first. The configuration is done in Spring XML configuration files, as Citrus uses Spring to glue all its services together.</p>
+<p>First of all we have a look at the TravelAgency configuration. The TravelAgency is using JMS to connect to our tested system, so we need to configure this JMS connection in Citrus.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;connectionFactory&quot;</span> 
+         <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.apache.activemq.ActiveMQConnectionFactory&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;brokerURL&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;tcp://localhost:61616&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;travelAgencyBookingRequestEndpoint&quot;</span>
+                      <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${travel.agency.request.queue}&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;travelAgencyBookingResponseEndpoint&quot;</span>
+                      <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${travel.agency.response.queue}&quot;</span>/&gt;</span>
+</code></pre>
+<p>This is all Citrus needs to send and receive messages over JMS in order to simulate the TravelAgency. By default all JMS message senders and receivers need a connection factory. Therefore Citrus is searching for a bean named &quot;connectionFactory&quot;. In the example we connect to a ActiveMQ message broker. A connection to other JMS brokers like TIBCO EMS or Apache ActiveMQ is possible too by simply changing the connection factory implementation.</p>
+<p>The identifiers of the message senders and receivers are very important. We should think of suitable ids that give the reader a first hint what the sender/receiver is used for. As we want to simulate the TravelAgency in combination with sending booking requests our id is &quot;travelAgencyBookingRequestEndpoint&quot; for example.</p>
+<p>The sender and receivers do also need a JMS destination. Here the destination names are provided by property expressions. The Spring IoC container resolves the properties for us. All we need to do is publish the property file to the Spring container like this.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;propertyLoader&quot;</span> 
+   <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.beans.factory.config.PropertyPlaceholderConfigurer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;locations&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>citrus.properties<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;ignoreUnresolvablePlaceholders&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;true&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The citrus.properties file is located in our project&apos;s resources folder and defines the actual queue names besides other properties of course:</p>
+<pre><code class="lang-xml">#JMS queues
+travel.agency.request.queue=Travel.Agency.Request.Queue
+travel.agency.response.queue=Travel.Agency.Response.Queue
+smart.airline.request.queue=Smart.Airline.Request.Queue
+smart.airline.response.queue=Smart.Airline.Response.Queue
+royal.airline.request.queue=Royal.Airline.Request.Queue
+</code></pre>
+<p>What else do we need in our Spring configuration? There are some basic beans that are commonly defined in a Citrus application but I do not want to bore you with these details. So if you want to have a look at the Spring application context file in the resources folder and see how things are defined there.</p>
+<p>We continue with the first airline to be configured the SmartAirline. The SmartAirline is also using JMS to communicate with the FlightBookingService. So there is nothing new for us, we simply define additional JMS message senders and receivers.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;smartAirlineBookingRequestEndpoint&quot;</span>
+                      <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${smart.airline.request.queue}&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;smartAirlineBookingResponseEndpoint&quot;</span>
+                      <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${smart.airline.response.queue}&quot;</span>/&gt;</span>
+</code></pre>
+<p>We do not define a new JMS connection factory because TravelAgency and SmartAirline are using the same message broker instance. In case you need to handle multiple connection factories simply define the connection factory with the attribute &quot;connection-factory&quot;.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;smartAirlineBookingRequestEndpoint&quot;</span>
+                            <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${smart.airline.request.queue}&quot;</span>
+                            <span class="hljs-attribute">connection-factory</span>=<span class="hljs-value">&quot;smartAirlineConnectionFactory&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;smartAirlineBookingResponseEndpoint&quot;</span>
+                          <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${smart.airline.response.queue}&quot;</span>
+                          <span class="hljs-attribute">connection-factory</span>=<span class="hljs-value">&quot;smartAirlineConnectionFactory&quot;</span>/&gt;</span>
+</code></pre>
+<h3 id="configure-the-http-adapter">Configure the Http adapter</h3>
+<p>The RoyalAirline is connected to our system using Http request/response communication. This means we have to simulate a Http server in the test that accepts client requests and provides proper responses. Citrus offers a Http server implementation that will listen on a port for client requests. The adapter forwards incoming request to the test engine over JMS and receives a proper response that is forwarded as a Http response to the client. The next picture shows this mechanism in detail.</p>
+<p><img src="images/samples/flightbooking/http_adapter.jpg" alt="samples/flightbooking/http_adapter.jpg"></p>
+<p>The RoyalAirline adapter receives client requests over Http and sends them over JMS to a message receiver as we already know it. The test engine validates the received request and provides a proper response back to the adapter. The adapter will transform the response to Http again and publishes it to the calling client. Citrus offers these kind of adapters for Http and SOAP communication. By writing your own adapters like this you will be able to extend Citrus so it works with protocols that are not supported yet.</p>
+<p>Let us define the Http adapter in the Spring configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;royalAirlineHttpServer&quot;</span> 
+                       <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8091&quot;</span> 
+                       <span class="hljs-attribute">uri</span>=<span class="hljs-value">&quot;/flightbooking&quot;</span> 
+                       <span class="hljs-attribute">endpoint-adapter</span>=<span class="hljs-value">&quot;jmsEndpointAdapter&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:endpoint-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;jmsEndpointAdapter
+      destination-name=&quot;</span><span class="hljs-value">${royal.airline.request.queue}&quot;</span>/&gt;</span>
+      connection-factory=&quot;connectionFactory&quot; /&gt;
+      timeout=&quot;2000&quot;/&gt;
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-jms:sync-endpoint</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;royalAirlineBookingEndpoint&quot;</span>
+                            <span class="hljs-attribute">destination-name</span>=<span class="hljs-value">&quot;${royal.airline.request.queue}&quot;</span>/&gt;</span>
+</code></pre>
+<p>We need to configure a Http server instance with a port, a request URI and the endpoint adapter. We define the JMS endpoint adapter to handle request as described. In Addition to the endpoint adapter we also need synchronous JMS message sender and receiver instances. That&apos;s it! We are able to receive Http request in order to simulate the RoyalAirline application. What is missing now? The test case definition itself.</p>
+<h3 id="the-test-case">The test case</h3>
+<p>The test case definition is also a Spring configuration file. Citrus offers a customized XML syntax to define a test case. This XML test defining language is supposed to be easy to understand and more specific to the domain we are dealing with. Next listing shows the whole test case definition. Keep in mind that a test case defines every step in the use case. So we define sending and receiving actions of the use case as described in the sequence diagram we saw earlier.</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span> 
+             <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span> 
+             <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span> 
+             <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans 
+             http://www.springframework.org/schema/beans/spring-beans.xsd 
+             http://www.citrusframework.org/schema/testcase 
+             http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;FlightBookingTest&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">meta-info</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">author</span>&gt;</span>Christoph Deppisch<span class="hljs-tag">&lt;/<span class="hljs-title">author</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">creationdate</span>&gt;</span>2009-04-15<span class="hljs-tag">&lt;/<span class="hljs-title">creationdate</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">status</span>&gt;</span>FINAL<span class="hljs-tag">&lt;/<span class="hljs-title">status</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">last-updated-by</span>&gt;</span>Christoph Deppisch<span class="hljs-tag">&lt;/<span class="hljs-title">last-updated-by</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">last-updated-on</span>&gt;</span>2009-04-15T00:00:00<span class="hljs-tag">&lt;/<span class="hljs-title">last-updated-on</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">meta-info</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">description</span>&gt;</span>
+            Test flight booking service.
+        <span class="hljs-tag">&lt;/<span class="hljs-title">description</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">variables</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationId&quot;</span> 
+                <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:concat(&apos;Lx1x&apos;, &apos;citrus:randomNumber(10)&apos;)&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;customerId&quot;</span> 
+                <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus:concat(&apos;Mx1x&apos;, citrus:randomNumber(10))&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">variables</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;travelAgencyBookingRequestEndpoint&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                      <span class="hljs-cdata">&lt;![CDATA[
+                        &lt;TravelBookingRequestMessage 
+                          xmlns=&quot;http://www.consol.com/schemas/TravelAgency&quot;&gt;
+                          &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                          &lt;customer&gt;
+                            &lt;id&gt;${customerId}&lt;/id&gt;
+                            &lt;firstname&gt;John&lt;/firstname&gt;
+                            &lt;lastname&gt;Doe&lt;/lastname&gt;
+                          &lt;/customer&gt;
+                          &lt;flights&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                              &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                              &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                          &lt;/flights&gt;                                
+                        &lt;/TravelBookingRequestMessage&gt;
+                      ]]&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${correlationId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;smartAirlineBookingRequestEndpoint&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                      <span class="hljs-cdata">&lt;![CDATA[
+                        &lt;FlightBookingRequestMessage 
+                          xmlns=&quot;http://www.consol.com/schemas/AirlineSchema&quot;&gt;
+                          &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                          &lt;bookingId&gt;???&lt;/bookingId&gt;
+                          &lt;customer&gt;
+                            &lt;id&gt;${customerId}&lt;/id&gt;
+                            &lt;firstname&gt;John&lt;/firstname&gt;
+                            &lt;lastname&gt;Doe&lt;/lastname&gt;
+                          &lt;/customer&gt;
+                          &lt;flight&gt;
+                            &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                            &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                            &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                            &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                            &lt;date&gt;2009-04-15&lt;/date&gt;
+                            &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                            &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                          &lt;/flight&gt;
+                        &lt;/FlightBookingRequestMessage&gt;
+                      ]]&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">ignore</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;//:FlightBookingRequestMessage/:bookingId&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${correlationId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">extract</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;//:FlightBookingRequestMessage/:bookingId&quot;</span> 
+                                <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;${smartAirlineBookingId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">extract</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;smartAirlineBookingResponseEndpoint&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                      <span class="hljs-cdata">&lt;![CDATA[
+                        &lt;FlightBookingConfirmationMessage 
+                          xmlns=&quot;http://www.consol.com/schemas/AirlineSchema&quot;&gt;
+                          &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                          &lt;bookingId&gt;${smartAirlineBookingId}&lt;/bookingId&gt;
+                          &lt;success&gt;true&lt;/success&gt;
+                          &lt;flight&gt;
+                            &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                            &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                            &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                            &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                            &lt;date&gt;2009-04-15&lt;/date&gt;
+                            &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                            &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                          &lt;/flight&gt;
+                        &lt;/FlightBookingConfirmationMessage&gt;
+                      ]]&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${correlationId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;royalAirlineBookingEndpoint&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                      <span class="hljs-cdata">&lt;![CDATA[
+                        &lt;FlightBookingRequestMessage 
+                          xmlns=&quot;http://www.consol.com/schemas/FlightBooking/AirlineSchema&quot;&gt;
+                          &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                          &lt;bookingId&gt;???&lt;/bookingId&gt;
+                          &lt;customer&gt;
+                              &lt;id&gt;${customerId}&lt;/id&gt;
+                              &lt;firstname&gt;John&lt;/firstname&gt;
+                              &lt;lastname&gt;Doe&lt;/lastname&gt;
+                          &lt;/customer&gt;
+                          &lt;flight&gt;
+                            &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                            &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                            &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                            &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                            &lt;date&gt;2009-04-15&lt;/date&gt;
+                            &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                            &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                          &lt;/flight&gt;
+                        &lt;/FlightBookingRequestMessage&gt;
+                      ]]&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">ignore</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;//:FlightBookingRequestMessage/:bookingId&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${correlationId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">extract</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;//:FlightBookingRequestMessage/:bookingId&quot;</span> 
+                                <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;${royalAirlineBookingId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">extract</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;royalAirlineBookingEndpoint&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                      <span class="hljs-cdata">&lt;![CDATA[
+                        &lt;FlightBookingConfirmationMessage 
+                          xmlns=&quot;http://www.consol.com/schemas/AirlineSchema&quot;&gt;
+                          &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                          &lt;bookingId&gt;${royalAirlineBookingId}&lt;/bookingId&gt;
+                          &lt;success&gt;true&lt;/success&gt;
+                          &lt;flight&gt;
+                            &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                            &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                            &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                            &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                            &lt;date&gt;2009-04-15&lt;/date&gt;
+                            &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                            &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                          &lt;/flight&gt;
+                        &lt;/FlightBookingConfirmationMessage&gt;
+                      ]]&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationid&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${correlationId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+            <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;travelAgencyBookingResponseEndpoint&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                      <span class="hljs-cdata">&lt;![CDATA[
+                        &lt;TravelBookingResponseMessage 
+                          xmlns=&quot;http://www.consol.com/schemas/TravelAgency&quot;&gt;
+                          &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                          &lt;success&gt;true&lt;/success&gt;
+                          &lt;flights&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                              &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                              &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                          &lt;/flights&gt;                                
+                        &lt;/TravelBookingResponseMessage&gt;
+                      ]]&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;correlationId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${correlationId}&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">spring:beans</span>&gt;</span>
+</code></pre>
+<p>Similar to a sequence diagram the test case describes every step of the use case. At the very beginning the test case gets name and its meta information. Following with the variable values that are used all over the test. Here it is the correlationId and the customerId that are used as test variables. Inside message templates header values the variables are referenced several times in the test</p>
+<pre><code>&lt;correlationId&gt;${correlationId}&lt;/correlationId&gt; 
+&lt;id&gt;${customerId}&lt;/id&gt;
+</code></pre><p>The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic Spring configuration we have done before.</p>
+<p><strong><em><send endpoint="travelAgencyBookingRequestEndpoint"></send></em></strong> </p>
+<p>The sending action chooses a message sender to actually send the message using a message transport (JMS, Http, SOAP, etc.). After sending this first &quot;TravelBookingRequestMessage&quot; request the test case expects the first &quot;FlightBookingRequestMessage&quot; message on the SmartAirline JMS destination. In case this message is not arriving in time the test will fail with errors. In positive case our FlightBookingService works well and the message arrives in time. The received message is validated against a defined expected message template. Only in case all content validation steps are successful the test continues with the action chain. And so the test case proceeds and works through the use case until every message is sent respectively received and validated. The use case is done automatically without human interaction. Citrus simulates all surrounding applications and provides detailed validation possibilities of messages.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./samples.html" class="navigation navigation-prev " aria-label="Previous page: Samples"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./appendix.html" class="navigation navigation-next " aria-label="Next page: Appendix"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

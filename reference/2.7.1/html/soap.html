@@ -1,0 +1,2827 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Soap | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./ftp.html" />
+    
+    
+    <link rel="prev" href="./http-websocket.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="21"
+        data-chapter-title="Soap"
+        data-filepath="soap.md"
+        data-basepath="."
+        data-revision="Wed Mar 15 2017 10:41:42 GMT+0100 (CET)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        JsonPath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge JMS queues
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Stop timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Generic action
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="behaviors.html">
+            
+                
+                    <a href="./behaviors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Test behaviors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="16.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.6.</b>
+                        
+                        Repeat On Error
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Finally
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Http Websockets
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="21" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        Message channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="kubernetes.html">
+            
+                
+                    <a href="./kubernetes.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Kubernetes
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="selenium.html">
+            
+                
+                    <a href="./selenium.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Selenium
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Endpoint component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Endpoint adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Data dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Test actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Test suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Meta info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Message tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="47" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>47.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="48" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="48.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="49" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="49.1" data-path="changes-2-6.html">
+            
+                
+                    <a href="./changes-2-6.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.1.</b>
+                        
+                        Changes 2.6
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.2" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.2.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.3" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.3.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.4" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.4.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.5" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.5.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.6" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.6.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.7" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.7.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.8" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.8.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.9" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.9.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.10" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.10.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="soap-webservices"><a name="soap-webservices" class="plugin-anchor" href="#soap-webservices"><span class="fa fa-link"></span></a>SOAP WebServices</h2>
+<p>SOAP Web Services over HTTP is a widely used communication scenario in modern enterprise applications. A SOAP Web Service client is posting a SOAP request via HTTP to a server. SOAP via HTTP is a synchronous message protocol by default so the client is waiting synchronously for the response message. Citrus provides both SOAP client and server components in order to meet both directions of this scenario. The components used are very similar to the HTTP components that were have discussed in the sections before.</p>
+<p><strong>Note</strong>
+The SOAP WebService components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-ws<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.7.1<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>In order to use the SOAP WebService support you need to include the specific XML configuration schema provided by Citrus. See following XML definition to find out how to include the citrus-ws namespace.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+       <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+       <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/config&quot;</span>
+       <span class="hljs-attribute">xmlns:citrus-ws</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/ws/config&quot;</span>
+       <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/config 
+       http://www.citrusframework.org/schema/config/citrus-config.xsd
+       http://www.citrusframework.org/schema/ws/config 
+       http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd&quot;</span>&gt;</span>
+
+    [...]
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>Now you are ready to use the customized soap configuration elements - all using the citrus-ws prefix - in your Spring configuration.</p>
+<h3 id="soap-client"><a name="soap-client" class="plugin-anchor" href="#soap-client"><span class="fa fa-link"></span></a>SOAP client</h3>
+<p>Citrus is able to form a proper SOAP request in order to pass it to the server via HTTP and validate the respective SOAP response message. Let us see how a message client for SOAP looks like in the Spring configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+                       <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8090/test&quot;</span>
+                       <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;60000&quot;</span>/&gt;</span>
+</code></pre>
+<p>The client component uses the <strong>request-url</strong> in order to access the server resource. The client will automatically build a proper SOAP request message including the SOAP envelope, SOAP header and the message payload as SOAP body. This means that you as a tester do not care about SOAP envelope specific logic in the test case. The client endpoint component saves the synchronous SOAP response so the test case can receive this message with a normal receive test action.</p>
+<p>In detail you as a tester just send and receive using the same client endpoint reference just as you would do with a synchronous JMS or channel communication. In case no response message is available in time according to the timeout settings Citrus raises a timeout error and the test will fail.</p>
+<p><strong>Important</strong>
+The SOAP client component uses a SoapMessageFactory implementation in order to create the SOAP messages. This is a Spring bean added to the Citrus Spring application context. Spring offers several reference implementations as message factories so you can choose one of them (e.g. for SOAP 1.1 or 1.2 implementations).</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- Default SOAP Message Factory (SOAP 1.1) --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;messageFactory&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;</span>/&gt;</span>
+
+<span class="hljs-comment">&lt;!-- SOAP 1.2 Message Factory --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soap12MessageFactory&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;soapVersion&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">util:constant</span> <span class="hljs-attribute">static-field</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.SoapVersion.SOAP_12&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>By default Citrus will search for a bean with id <strong>&apos;messageFactory&apos;</strong> . In case you intend to use different identifiers you need to tell the SOAP client component which message factory to use:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+         <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8090/test&quot;</span>
+         <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;soap12MessageFactory&quot;</span>/&gt;</span>
+</code></pre>
+<p><strong>Tip</strong>
+Up to now we have used a static endpoint request url for the SOAP message sender. Besides that we can use dynamic endpoint uri in configuration. We just use an endpoint uri resolver instead of the static request url like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+             <span class="hljs-attribute">endpoint-resolver</span>=<span class="hljs-value">&quot;dynamicEndpointResolver&quot;</span> 
+             <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;soap12MessageFactory&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;dynamicEndpointResolver&quot;</span> 
+       <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver&quot;</span>/&gt;</span>
+</code></pre>
+<p>The <strong>dynamicEndpointResolver</strong> bean must implement the EndpointUriResolver interface in order to resolve dynamic endpoint uri values. Citrus offers a default implementation, the <strong>DynamicEndpointUriResolver</strong>, which uses a specific message header for setting the dynamic endpoint uri for each message. The message header needs to specify the header <strong>citrus_endpoint_uri</strong> with a valid request uri. Just like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_endpoint_uri&quot;</span> 
+           <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;http://localhost:${port}/${context}&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>As you can see you can use dynamic test variables then in order to build the request uri to use. The SOAP client evaluates the endpoint uri header and sends the message to this server resource. You can use a different uri value then in different test cases and send actions.</p>
+<h3 id="soap-client-interceptors"><a name="soap-client-interceptors" class="plugin-anchor" href="#soap-client-interceptors"><span class="fa fa-link"></span></a>SOAP client interceptors</h3>
+<p>The client component is able to add custom interceptors that participate in the request/response processing. The interceptors need to implement the common interface <strong>org.springframework.ws.client.support.interceptor.ClientInterceptor</strong>.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;secureSoapClient&quot;</span>
+                  <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/services/ws/todolist&quot;</span>
+                  <span class="hljs-attribute">interceptors</span>=<span class="hljs-value">&quot;clientInterceptors&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;clientInterceptors&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;securementActions&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Timestamp UsernameToken&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;securementUsername&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;admin&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;securementPassword&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;secret&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.interceptor.LoggingClientInterceptor&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+</code></pre>
+<p>The sample above adds Wss4J WsSecurity interceptors in order to add security constraints to the request messages.</p>
+<p><strong>Note</strong>
+When customizing the interceptor chain all default interceptors (like logging interceptor) are lost. You need to add these interceptors exlicitly as shown with the <em>com.consol.citrus.ws.interceptor.LoggingClientInterceptor</em> which
+is able to log request/response messages during communication.</p>
+<h3 id="soap-server"><a name="soap-server" class="plugin-anchor" href="#soap-server"><span class="fa fa-link"></span></a>SOAP server</h3>
+<p>Every client need a server to talk to. When receiving SOAP messages we require a web server instance listening on a port. Citrus is using an embedded Jetty server instance in combination with the Spring Web Service API in order to accept SOAP request calls asa server. See how the Citrus SOAP server is configured in the Spring configuration.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>
+             <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+             <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+             <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>/&gt;</span>
+</code></pre>
+<p>The server component is able to start automatically when application starts up. In the example above the server is listening for requests on port <strong><em>8080</em></strong> . This setup uses the standard connector configuration for the Jetty server. For detailed customization the Citrus Jetty server configuration also supports explicit connector configurations (@connector and @connectors attributes). For more information please see the Jetty connector documentation.</p>
+<p>Test cases interact with this server instance via message channels by default. The server component provides an inbound channel that holds incoming request messages. The test case can receive those requests from the channel with a normal receive test action. In a second step the test case can provide a synchronous response message as reply which will be automatically sent back to the calling SOAP client as response.</p>
+<p><img src="images/figure_010.jpg" alt="figure_010.jpg"></p>
+<p>The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this to much. By default you as a tester just use the server as synchronous endpoint in your test case. This means that you simply receive a message from the server and send a response back.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;soapServerTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                  [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                  [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling client. In most cases this is what you need to simulate a SOAP server instance in Citrus. Of course we have some more customization possibilities that we will go over later on. This customizations are optional so you can also skip the next description on endpoint adapters if you are happy with just what you have learned about the SOAP server component in Citrus.</p>
+<p>Just like the HTTP server component the SOAP server component by default uses the channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Citrus configuration has become a lot easier here so you do not have to configure this by default. When nothing else is set the test case does not worry about that settings on the server and just uses the server id reference as synchronous endpoint.</p>
+<p><strong>Tip</strong>
+The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention <strong>{serverName}.inbound</strong> where <strong>{serverName}</strong> is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.</p>
+<p>However we do not want to loose the great extendability and customizing capabilities of the Citrus server component. This is why you can optionally define the endpoint adapter implementation used by the Citrus SOAP server. We provide several message endpoint adapter implementations for different simulation strategies. With these endpoint adapters you should be able to generate proper SOAP response messages for the client in various ways. Before we have a closer look at the different adapter implementations we want to show how you can set a custom endpoint adapter on the server component.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>
+        <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+        <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+        <span class="hljs-attribute">endpoint-adapter</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>
+        <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>/&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus:empty-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;emptyResponseEndpointAdapter&quot;</span>/&gt;</span>
+</code></pre>
+<p>With this endpoint adapter configuration above we change the Citrus server behavior from scratch. Now the server automatically sends back an empty SOAP response message every time. Setting a custom endpoint adapter implementation with custom logic is easy as defining a custom endpoint adapter Spring bean and reference it in the server attribute. You can read more about endpoint adapters in <a href="endpoint-adapter.html">endpoint-adapter</a>.</p>
+<h3 id="soap-send-and-receive"><a name="soap-send-and-receive" class="plugin-anchor" href="#soap-send-and-receive"><span class="fa fa-link"></span></a>SOAP send and receive</h3>
+<p>Citrus provides test actions for sending and receiving messages of all kind. Different message content and different message transports are available to these send and receive actions. When using SOAP message transport we might need to set special information on that messages. These are special SOAP headers, SOAP faults and so on. So we have created a special SOAP namespace for all your SOAP related send and receive operations in a XML DSL test:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
+          <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+          <span class="hljs-attribute">xmlns:ws</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/ws/testcase&quot;</span>
+          <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.citrusframework.org/schema/testcase
+          http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+          http://www.citrusframework.org/schema/ws/testcase
+          http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd&quot;</span>&gt;</span>
+</code></pre>
+<p>Once you have added the <strong>ws</strong> namespace from above to your test case you are ready to use special send and receive operations in the test.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span> <span class="hljs-attribute">soap-action</span>=<span class="hljs-value">&quot;MySoapService/sayHello&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+
+          <span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapServer&quot;</span> <span class="hljs-attribute">soap-action</span>=<span class="hljs-value">&quot;MySoapService/sayHello&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<p>The special namespace contains following elements:</p>
+<ul>
+<li>send: Special send operation for sending out SOAP message content.</li>
+<li>receive: Special receive operation for validating SOAP message content.</li>
+<li>send-fault: Special send operation for sending out SOAP fault message content.</li>
+<li>assert-fault: Special assertion operation for expecting a SOAP fault message as response.</li>
+</ul>
+<p>The special SOAP related send and receive actions can coexist with normal Citrus actions. In fact you can mix those action types as you want inside of a test case. All test actions that work with SOAP message content on client and server side should use this special namespace.</p>
+<p>In Java DSL we have something similar to that. The Java DSL provides special SOAP related features when calling the <strong>soap()</strong> method. With a fluent API you are able to then send and receive SOAP message content as client and server.</p>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-xml">@CitrusTest
+public void soapTest() {
+
+    soap().client(&quot;soapClient&quot;)
+        .send()
+        .soapAction(&quot;MySoapService/sayHello&quot;)
+        .payload(&quot;...&quot;);
+
+    soap().client(&quot;soapClient&quot;)
+        .receive()
+        .payload(&quot;...&quot;);
+}
+</code></pre>
+<p>In the following sections the SOAP related capabilities are discussed in more detail.</p>
+<h3 id="soap-headers"><a name="soap-headers" class="plugin-anchor" href="#soap-headers"><span class="fa fa-link"></span></a>SOAP headers</h3>
+<p>SOAP defines several header variations that we discuss in the following sections. First of all we deal with the special <strong>SOAP action</strong> header. In case we need to set this SOAP action header we simply need to use the special <strong><em>soap-action</em></strong> attribute in our test. The special header key in combination with a underlying SOAP client endpoint component constructs the SOAP action in the SOAP message.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span> <span class="hljs-attribute">soap-action</span>=<span class="hljs-value">&quot;MySoapService/sayHello&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+
+          <span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapServer&quot;</span> <span class="hljs-attribute">soap-action</span>=<span class="hljs-value">&quot;MySoapService/sayHello&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        [...]
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-xml">@CitrusTest
+public void soapActionTest() {
+
+    soap().client(&quot;soapClient&quot;)
+        .send()
+        .soapAction(&quot;MySoapService/sayHello&quot;)
+        .payload(&quot;...&quot;);
+
+    soap().server(&quot;soapClient&quot;)
+        .receive()
+        .soapAction(&quot;MySoapService/sayHello&quot;)
+        .payload(&quot;...&quot;);
+}
+</code></pre>
+<p>The SOAP action header is added to the message before sending and validated when used in a receive operation.</p>
+<p><strong>Note</strong>
+The <strong>soap-action</strong> attribute is defined in the special SOAP namespace in Citrus. We recommend to use this namespace for all your send and receive operations that deal with SOAP message content. However you can also set the special SOAP action header when not using the special SOAP namespace: Just set this header in your test action:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_soap_action&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>Secondly a SOAP message is able to contain customized SOAP headers. These are key-value pairs where the key is a qualified name (QName) and the value a normal String value.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;{http://www.consol.de/sayHello}h1:Operation&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;{http://www.consol.de/sayHello}h1:Request&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;HelloRequest&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>The key is defined as qualified QName character sequence which has a mandatory XML namespace and a prefix along with a header name. Last not least a SOAP header can contain whole XML fragment values. The next example shows how to set these XML fragments as SOAP header in Citrus:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+          &lt;User xmlns=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
+              &lt;UserId&gt;123456789&lt;/UserId&gt;
+              &lt;Handshake&gt;S123456789&lt;/Handshake&gt;
+          &lt;/User&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>You can also use external file resources to set this SOAP header XML fragment as shown in this last example code:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:request-soap-header.xml&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>This completes the SOAP header possibilities for sending SOAP messages with Citrus. Of course you can also use these variants in SOAP message header validation. You define expected SOAP headers, SOAP action and XML fragments and Citrus will match incoming request to that. Just use <strong>citrus_soap_action</strong> header key in your receiving message action and you validate this SOAP header accordingly.</p>
+<p>When validating SOAP header XML fragments you need to define the whole XML header fragment as expected header data like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapMessageEndpoint&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+          <span class="hljs-cdata">&lt;![CDATA[
+            &lt;ResponseMessage xmlns=&quot;http://citrusframework.org/schema&quot;&gt;
+              &lt;resultCode&gt;OK&lt;/resultCode&gt;
+            &lt;/ResponseMessage&gt;
+          ]]&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+            <span class="hljs-cdata">&lt;![CDATA[
+                &lt;SOAP-ENV:Header
+                    xmlns:SOAP-ENV=&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;&gt;
+                    &lt;customHeader xmlns=&quot;http://citrusframework.org/headerschema&quot;&gt;
+                        &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                        &lt;applicationId&gt;${applicationId}&lt;/applicationId&gt;
+                        &lt;trackingId&gt;${trackingId}&lt;/trackingId&gt;
+                        &lt;serviceId&gt;${serviceId}&lt;/serviceId&gt;
+                        &lt;interfaceVersion&gt;1.0&lt;/interfaceVersion&gt;
+                        &lt;timestamp&gt;@ignore@&lt;/timestamp&gt;
+                    &lt;/customHeader&gt;
+                &lt;/SOAP-ENV:Header&gt;
+            ]]&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_soap_action&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;doResponse&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>As you can see the SOAP XML header validation can combine header element and XML fragment validation. This is also likely to be used when dealing with WS-Security message headers.</p>
+<h3 id="soap-http-mime-headers"><a name="soap-http-mime-headers" class="plugin-anchor" href="#soap-http-mime-headers"><span class="fa fa-link"></span></a>SOAP HTTP mime headers</h3>
+<p>Besides the SOAP specific header elements the HTTP mime headers (e.g. Content-Type, Content-Length, Authorization) might be candidates for validation, too. When using HTTP as transport layer the SOAP message may define those mime headers. The tester is able to send and validate these headers inside the test case, although these HTTP headers are located outside of the SOAP envelope. Let us first of all speak about validating the HTTP mime headers. This feature is not enabled by default. We have enable this in our SOAP server configuration.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>
+        <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+        <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+        <span class="hljs-attribute">handle-mime-headers</span>=<span class="hljs-value">&quot;true&quot;</span>
+        <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>/&gt;</span>
+</code></pre>
+<p>With this configuration Citrus will handle all available mime headers and pass those to the test case for normal header validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">SoapMessageRequest</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Operation</span>&gt;</span>Validate mime headers<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">SoapMessageRequest</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml; charset=utf-8&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<p>The validation of these HTTP mime headers is as usual now that we have enabled the mime header handling in the SOAP server. The transport HTTP headers are available in the header just like the normal SOAP header elements do. So you can validate the headers as usual.</p>
+<p>So much for receiving and validating HTTP mime message headers with SOAP communication. Now we want to send special mime headers on client side. We overwrite or add mime headers to our sending action. We mark some headers with following prefix <strong><em>&quot;citrus<em>http</em>&quot;</em></strong> . This tells the SOAP client to add these headers to the HTTP header section outside the SOAP envelope. Keep in mind that header elements without this prefix go right into the SOAP header section by default.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+  [...]
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_operation&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;foo&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+  [...]
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+</code></pre>
+<p>The listing above defines a HTTP mime header <strong>operation</strong> . The header prefix <strong><em>citrus<em>http</em></em></strong> is cut off before the header goes into the HTTP header section. With this feature we can decide where exactly our header information is located in our resulting client message.</p>
+<h3 id="soap-envelope-handling"><a name="soap-envelope-handling" class="plugin-anchor" href="#soap-envelope-handling"><span class="fa fa-link"></span></a>SOAP Envelope handling</h3>
+<p>By default Citrus will remove the SOAP envelope in message converter. Following from that the Citrus test case is independent from SOAP message formats and is not bothered with handling of SOAP envelope at all. This is great in most cases but sometimes it might be mandatory to also see the whole SOAP envelope inside the test case receive action. Therefore you can keep the SOAP envelope for incoming messages by configuration on the SOAP server side.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>
+        <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+        <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+        <span class="hljs-attribute">keep-soap-envelope</span>=<span class="hljs-value">&quot;true&quot;</span>/&gt;</span>
+</code></pre>
+<p>With this configuration Citrus will handle all available mime headers and pass those to the test case for normal header validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">SoapMessageRequest</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">Operation</span>&gt;</span>Validate mime headers<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">SoapMessageRequest</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<p>So now you are able to validate the whole SOAP envelope as is. This might be of interest in very special cases. As mentioned by default the Citrus server will automatically remove the SOAP envelope and translate the SOAP body to the message payload for straight forward validation inside the test cases.</p>
+<h3 id="soap-server-interceptors"><a name="soap-server-interceptors" class="plugin-anchor" href="#soap-server-interceptors"><span class="fa fa-link"></span></a>SOAP server interceptors</h3>
+<p>The Citrus SOAP server supports the concept of interceptors in order to add custom logic to the request/response processing steps. The interceptors need to implement a common interface: <strong>org.springframework.ws.server.EndpointInterceptor</strong>. We are able to customize the interceptor
+chain on the server component as follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;secureSoapServer&quot;</span>
+                  <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+                  <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+                  <span class="hljs-attribute">interceptors</span>=<span class="hljs-value">&quot;serverInterceptors&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;serverInterceptors&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.interceptor.SoapMustUnderstandEndpointInterceptor&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;acceptedHeaders&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd}Security<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.security.wss4j.Wss4jSecurityInterceptor&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;validationActions&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Timestamp UsernameToken&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;validationCallbackHandler&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;passwordCallbackHandler&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.security.wss4j.callback.SimplePasswordValidationCallbackHandler&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;usersMap&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;admin&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;secret&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">map</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+</code></pre>
+<p>The custom interceptors are used to enable WsSecurity features on the soap server component via Wss4J.</p>
+<p><strong>Note</strong>
+When customizing the interceptor chain of the soap server component all default interceptors (like logging interceptors) are lost. You can see that we had to add
+the <em>com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor</em> explicitly in order to log request/response messages for the server communication.</p>
+<h3 id="soap-12"><a name="soap-12" class="plugin-anchor" href="#soap-12"><span class="fa fa-link"></span></a>SOAP 1.2</h3>
+<p>By default Citrus components use SOAP 1.1 version. Fortunately SOAP 1.2 is supported same way. As we already mentioned before the Citrus SOAP components do use a SOAP message factory for creating messages in SOAP format.</p>
+<pre><code class="lang-xml"><span class="hljs-comment">&lt;!-- SOAP 1.1 Message Factory --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapMessageFactory&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;soapVersion&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">util:constant</span> <span class="hljs-attribute">static-field</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.SoapVersion.SOAP_11&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+
+<span class="hljs-comment">&lt;!-- SOAP 1.2 Message Factory --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soap12MessageFactory&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;soapVersion&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">util:constant</span> <span class="hljs-attribute">static-field</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.SoapVersion.SOAP_12&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>As you can see the SOAP message factory can either create SOAP 1.1 or SOAP 1.2 messages. This is how Citrus can create both SOAP 1.1 and SOAP 1.2 messages. Of course you can have multiple message factories configured in your project. Just set the message factory on a WebService client or server component in order to define which version should be used.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soap12Client&quot;</span>
+            <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/echo&quot;</span>
+            <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;soap12MessageFactory&quot;</span>
+            <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;1000&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soap12Server&quot;</span>
+          <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+          <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+          <span class="hljs-attribute">root-parent-context</span>=<span class="hljs-value">&quot;true&quot;</span>
+          <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;soap12MessageFactory&quot;</span>/&gt;</span>
+</code></pre>
+<p>By default Citrus components do connect with a message factory called <strong>messageFactory</strong> no matter what SOAP version this factory is using.</p>
+<h3 id="soap-faults"><a name="soap-faults" class="plugin-anchor" href="#soap-faults"><span class="fa fa-link"></span></a>SOAP faults</h3>
+<p>SOAP faults describe a failed communication in SOAP WebServices world. Citrus is able to send and receive SOAP fault messages. On server side Citrus can simulate SOAP faults with fault-code, fault-reason, fault-actor and fault-detail. On client side Citrus is able to handle and validate SOAP faults in response messages. The next section describes how to deal with SOAP faults in Citrus.</p>
+<h3 id="send-soap-faults"><a name="send-soap-faults" class="plugin-anchor" href="#send-soap-faults"><span class="fa fa-link"></span></a>Send SOAP faults</h3>
+<p>As Citrus simulates SOAP server endpoints you also need to think about sending a SOAP fault to the calling client. In case Citrus receives a SOAP request as a server you can respond with a proper SOAP fault if necessary.</p>
+<p>Please keep in mind that we use the citrus-ws extension for sending SOAP faults in our test case, as shown in this very simple example:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send-fault</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-code</span>&gt;</span>{http://www.citrusframework.org/faults}citrus:TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-code</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-string</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-string</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-actor</span>&gt;</span>SERVER<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-actor</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+            <span class="hljs-cdata">&lt;![CDATA[
+                &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;MessageId&gt;${messageId}&lt;/MessageId&gt;
+                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                    &lt;Text&gt;Invalid request&lt;/Text&gt;
+                &lt;/FaultDetail&gt;
+            ]]&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_soap_action&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send-fault</span>&gt;</span>
+</code></pre>
+<p>The example generates a simple SOAP fault that is sent back to the calling client. The fault-actor and the fault-detail elements are optional. Same with the soap action declared in the special Citrus header <strong><em>citrus_soap_action</em></strong> . In the sample above the fault-detail data is placed inline as XML data. As an alternative to that you can also set the fault-detail via external file resource. Just use the <strong><em>file</em></strong> attribute as fault detail instead of the inline CDATA definition.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send-fault</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-code</span>&gt;</span>{http://www.citrusframework.org/faults}citrus:TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-code</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-string</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-string</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-actor</span>&gt;</span>SERVER<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-actor</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:myFaultDetail.xml&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_soap_action&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send-fault</span>&gt;</span>
+</code></pre>
+<p>The generated SOAP fault looks like follows:</p>
+<pre><code class="lang-xml">HTTP/1.1 500 Internal Server Error
+Accept: text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+SOAPAction: &quot;sayHello&quot;
+Content-Type: text/xml; charset=utf-8
+Content-Length: 680
+Server: Jetty(7.0.0.pre5)
+
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Fault</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">faultcode</span> <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/faults&quot;</span>&gt;</span>citrus:TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">faultcode</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">faultstring</span> <span class="hljs-attribute">xml:lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">faultstring</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">detail</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">FaultDetail</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sayHello.xsd&quot;</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">MessageId</span>&gt;</span>9277832563<span class="hljs-tag">&lt;/<span class="hljs-title">MessageId</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">CorrelationId</span>&gt;</span>4346806225<span class="hljs-tag">&lt;/<span class="hljs-title">CorrelationId</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">ErrorCode</span>&gt;</span>TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">ErrorCode</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">FaultDetail</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">detail</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Fault</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+Notice that the send action uses a special XML namespace (ws:send). This ws namespace belongs to the Citrus WebService extension and adds SOAP specific features to the normal send action. When you use such ws extensions you need to define the additional namespace in your test case. This is usually done in the root <strong><code>&lt;spring:beans&gt;</code></strong> element where we simply declare the citrus-ws specific namespace like follows.```xml</p>
+<p><spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:ws="http://www.citrusframework.org/schema/ws/testcase" xsi:schemalocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/ws/testcase
+    http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd"></spring:beans></p>
+<pre><code>
+### Receive SOAP faults
+
+In case you receive SOAP response messages as a client endpoint you may need to handle and validate SOAP faults in error situations. Citrus can validate SOAP faults with fault-code, fault-actor, fault-string and fault-detail values.
+
+As a client we send out a request and receive a SOAP fault as response. By default the client sending action in Citrus throws a specific exception when the SOAP response is a SOAP fault element. This exception is called ***SoapFaultClientException*** coming from the Spring API. You as a tester can assert this kind of exception in a test case in order to expect the SOAP error.
+
+**XML DSL** 
+
+```xml
+&lt;assert class=&quot;org.springframework.ws.soap.client.SoapFaultClientException&quot;&gt;
+    &lt;send endpoint=&quot;soapClient&quot;&gt;
+        &lt;message&gt;
+            &lt;payload&gt;
+                &lt;SoapFaultForcingRequest
+                  xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                    &lt;Message&gt;This is invalid&lt;/Message&gt;
+                &lt;/SoapFaultForcingRequest&gt;
+            &lt;/payload&gt;
+        &lt;/message&gt;
+    &lt;/send&gt;
+&lt;/assert&gt;
+</code></pre><p>The SOAP message sending action is surrounded by a simple assert action. The asserted exception class is the <strong><em>SoapFaultClientException</em></strong> that we have mentioned before. This means that the test expects the exception to be thrown during the communication. In case the exception is missing the test is fails.</p>
+<p>So far we have used the Citrus core capabilities of asserting an exception. This basic assertion test action is not able to offer direct access to the SOAP fault-code and fault-string values for validation. The basic assert action simply has no access to the actual SOAP fault elements. Fortunately we can use the <strong>citrus-ws</strong> namespace again which offers a special assert action implementation especially designed for SOAP faults in this case.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:assert-fault</span> <span class="hljs-attribute">fault-code</span>=<span class="hljs-value">&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;</span>
+           <span class="hljs-attribute">fault-string</span>=<span class="hljs-value">&quot;Invalid request&quot;</span>&gt;</span>
+           fault-actor=&quot;SERVER&quot;&gt;
+  <span class="hljs-tag">&lt;<span class="hljs-title">ws:when</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">SoapFaultForcingRequest</span>
+                  <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/soap&quot;</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Message</span>&gt;</span>This is invalid<span class="hljs-tag">&lt;/<span class="hljs-title">Message</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">SoapFaultForcingRequest</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">ws:when</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:assert-fault</span>&gt;</span>
+</code></pre>
+<p>The special assert action offers several attributes to validate the expected SOAP fault. Namely these are <strong>&quot;fault-code&quot;</strong>, <strong>&quot;fault-string&quot;</strong> and <strong>&quot;fault-actor&quot;</strong> . The <strong>fault-code</strong> is defined as a QName string and is mandatory for the validation. The fault assertion also supports test variable replacement as usual (e.g. fault-code=&quot;{<a href="http://www.citrusframework.org/faults}${myFaultCode}" target="_blank">http://www.citrusframework.org/faults}${myFaultCode}</a>&quot;).</p>
+<p>The time you use SOAP fault validation you need to tell Citrus how to validate the SOAP faults. Citrus needs an instance of a <strong><em>SoapFaultValitator</em></strong> that we need to add to the Spring application context. By default Citrus is searching for a bean with the id <strong>&apos;soapFaultValidator&apos;</strong> .</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapFaultValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;</span>/&gt;</span>
+</code></pre>
+<p>Citrus offers several reference implementations for these SOAP fault validators. These are:</p>
+<ul>
+<li>com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator</li>
+<li>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</li>
+<li>com.consol.citrus.ws.validation.XmlSoapFaultValidator</li>
+</ul>
+<p>Please see the API documentation for details on the available reference implementations. Of course you can also define your own SOAP validator logic (would be great if you could share your ideas!). In the test case you can explicitly choose the validator to use:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:assert-fault</span> <span class="hljs-attribute">fault-code</span>=<span class="hljs-value">&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;</span>
+              <span class="hljs-attribute">fault-string</span>=<span class="hljs-value">&quot;Invalid request&quot;</span>
+              <span class="hljs-attribute">fault-validator</span>=<span class="hljs-value">&quot;mySpecialSoapFaultValidator&quot;</span>&gt;</span>
+   [...]
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:assert-fault</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+Another important thing to notice when asserting SOAP faults is the fact, that Citrus needs to have a <strong><em>SoapMessageFactory</em></strong> available in the Spring application context. If you deal with SOAP messaging in general you will already have such a bean in the context.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;messageFactory&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.saaj.SaajSoapMessageFactory&quot;</span>/&gt;</span>
+</code></pre>
+<p>Choose one of Spring&apos;s reference implementations or some other implementation as SOAP message factory. Citrus will search for a bean with id <strong>&apos;messageFactory&apos;</strong> by default. In case you have other beans with different identifiers please choose the messageFactory in the test case assert action:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:assert-fault</span> <span class="hljs-attribute">fault-code</span>=<span class="hljs-value">&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;</span>
+              <span class="hljs-attribute">fault-string</span>=<span class="hljs-value">&quot;Invalid request&quot;</span>
+              <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;mySpecialMessageFactory&quot;</span>&gt;</span>
+   [...]
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:assert-fault</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+Notice the ws specific namespace that belongs to the Citrus WebService extensions. As the <strong>ws:assert</strong> action uses SOAP specific features we need to refer to the citrus-ws namespace. You can find the namespace declaration in the root element in your test case.```xml</p>
+<p><spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:ws="http://www.citrusframework.org/schema/ws/testcase" xsi:schemalocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.citrusframework.org/schema/testcase
+    http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+    http://www.citrusframework.org/schema/ws/testcase
+    http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd"></spring:beans></p>
+<pre><code>
+Citrus is also able to validate SOAP fault details. See the following example for understanding how to do it:
+
+**XML DSL** 
+
+```xml
+&lt;ws:assert-fault fault-code=&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;
+           fault-string=&quot;Invalid request&quot;&gt;
+    &lt;ws:fault-detail&gt;
+      &lt;![CDATA[
+          &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+              &lt;Text&gt;Invalid request&lt;/Text&gt;
+          &lt;/FaultDetail&gt;
+      ]]&gt;
+    &lt;/ws:fault-detail&gt;
+    &lt;ws:when&gt;
+        &lt;send endpoint=&quot;soapClient&quot;&gt;
+            &lt;message&gt;
+                &lt;payload&gt;
+                    &lt;SoapFaultForcingRequest
+                      xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+                        &lt;Message&gt;This is invalid&lt;/Message&gt;
+                    &lt;/SoapFaultForcingRequest&gt;
+                &lt;/payload&gt;
+            &lt;/message&gt;
+        &lt;/send&gt;
+    &lt;/ws:when&gt;
+&lt;/ws:assert-fault&gt;
+</code></pre><p>The expected SOAP fault detail content is simply added to the <strong>ws:assert</strong> action. The <strong><em>SoapFaultValidator</em></strong> implementation defined in the Spring application context is responsible for checking the SOAP fault detail with validation algorithm. The validator implementation checks the detail content to meet the expected template. Citrus provides some default <strong><em>SoapFaultValidator</em></strong> implementations. Supported algorithms are pure String comparison (<strong>com.consol.citrus.ws.validation.SimpleSoapFaultValidator</strong>) as well as XML tree walk-through (<strong>com.consol.citrus.ws.validation.XmlSoapFaultValidator</strong>).</p>
+<p>When using the XML validation algorithm you have the complete power as known from normal message validation in receive actions. This includes schema validation or ignoring elements for instance. On the fault-detail element you are able to add some validation settings such as <strong>schema-validation=enabled/disabled</strong>, custom <strong>schema-repository</strong> and so on.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:assert-fault</span> <span class="hljs-attribute">fault-code</span>=<span class="hljs-value">&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;</span>
+           <span class="hljs-attribute">fault-string</span>=<span class="hljs-value">&quot;Invalid request&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span> <span class="hljs-attribute">schema-validation</span>=<span class="hljs-value">&quot;false&quot;</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+          &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+              &lt;Text&gt;Invalid request&lt;/Text&gt;
+          &lt;/FaultDetail&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:when</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+            [...]
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:when</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:assert-fault</span>&gt;</span>
+</code></pre>
+<p>Please see also the Citrus API documentation for available validator implementations and validation algorithms.</p>
+<p>So far we have used assert action wrapper in order to catch SOAP fault exceptions and validate the SOAP fault content. Now we have an alternative way of handling SOAP faults in Citrus. With exceptions the send action aborts and we do not have a receive action for the SOAP fault. This might be inadequate if we need to validate the SOAP message content (SOAPHeader and SOAPBody) coming with the SOAP fault. Therefore the web service message sender component offers several fault strategy options. In the following we discuss the propagation of SOAP fault as messages to the receive action as we would do with normal SOAP messages.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+                               <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8090/test&quot;</span>
+                               <span class="hljs-attribute">fault-strategy</span>=<span class="hljs-value">&quot;propagateError&quot;</span>/&gt;</span>
+</code></pre>
+<p>We have configured a fault strategy <strong>propagateError</strong> so the message sender will not raise client exceptions but inform the receive action with SOAP fault message contents. By default the fault strategy raises client exceptions (fault-strategy= <strong>throwsException</strong>).</p>
+<p>So now that we do not raise exceptions we can leave out the assert action wrapper in our test. Instead we simply use a receive action and validate the SOAP fault like this.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">SoapFaultForcingRequest</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Message</span>&gt;</span>This is invalid<span class="hljs-tag">&lt;/<span class="hljs-title">Message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">SoapFaultForcingRequest</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span> <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;5000&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Fault</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">faultcode</span> <span class="hljs-attribute">xmlns:CITRUS</span>=<span class="hljs-value">&quot;http://citrus.org/soap&quot;</span>&gt;</span>CITRUS:${soapFaultCode}<span class="hljs-tag">&lt;/<span class="hljs-title">faultcode</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">faultstring</span> <span class="hljs-attribute">xml:lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>${soapFaultString}<span class="hljs-tag">&lt;/<span class="hljs-title">faultstring</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Fault</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>So choose the preferred way of handling SOAP faults either by asserting client exceptions or propagating fault messages to the receive action on a SOAP client.</p>
+<h3 id="multiple-soap-fault-details"><a name="multiple-soap-fault-details" class="plugin-anchor" href="#multiple-soap-fault-details"><span class="fa fa-link"></span></a>Multiple SOAP fault details</h3>
+<p>SOAP fault messages can hold multiple SOAP fault detail elements. In the previous sections we have used SOAP fault details in sending and receiving actions as single element. In order to meet the SOAP specification Citrus is also able to handle multiple SOAP fault detail elements in a message. You just use multiple fault-detail elements in your test action like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send-fault</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-code</span>&gt;</span>{http://www.citrusframework.org/faults}citrus:TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-code</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-string</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-string</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-actor</span>&gt;</span>SERVER<span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-actor</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+            <span class="hljs-cdata">&lt;![CDATA[
+                &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;MessageId&gt;${messageId}&lt;/MessageId&gt;
+                    &lt;CorrelationId&gt;${correlationId}&lt;/CorrelationId&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                    &lt;Text&gt;Invalid request&lt;/Text&gt;
+                &lt;/FaultDetail&gt;
+            ]]&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+            <span class="hljs-cdata">&lt;![CDATA[
+                &lt;ErrorDetail xmlns=&quot;http://www.consol.de/schemas/sayHello.xsd&quot;&gt;
+                    &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+                &lt;/ErrorDetail&gt;
+            ]]&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_soap_action&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send-fault</span>&gt;</span>
+</code></pre>
+<p>This will result in following SOAP envelope message:</p>
+<pre><code class="lang-xml">HTTP/1.1 500 Internal Server Error
+Accept: text/xml, text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+SOAPAction: &quot;sayHello&quot;
+Content-Type: text/xml; charset=utf-8
+Content-Length: 680
+Server: Jetty(7.0.0.pre5)
+
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Fault</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">faultcode</span> <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/faults&quot;</span>&gt;</span>citrus:TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">faultcode</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">faultstring</span> <span class="hljs-attribute">xml:lang</span>=<span class="hljs-value">&quot;en&quot;</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">faultstring</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">detail</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">FaultDetail</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sayHello.xsd&quot;</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">MessageId</span>&gt;</span>9277832563<span class="hljs-tag">&lt;/<span class="hljs-title">MessageId</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">CorrelationId</span>&gt;</span>4346806225<span class="hljs-tag">&lt;/<span class="hljs-title">CorrelationId</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">ErrorCode</span>&gt;</span>TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">ErrorCode</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>Invalid request<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">FaultDetail</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">ErrorDetail</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sayHello.xsd&quot;</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">ErrorCode</span>&gt;</span>TEC-1000<span class="hljs-tag">&lt;/<span class="hljs-title">ErrorCode</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">ErrorDetail</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">detail</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Fault</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+</code></pre>
+<p>Of course we can also expect several fault detail elements when receiving a SOAP fault.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:assert-fault</span> <span class="hljs-attribute">fault-code</span>=<span class="hljs-value">&quot;{http://www.citrusframework.org/faults}TEC-1001&quot;</span>
+           <span class="hljs-attribute">fault-string</span>=<span class="hljs-value">&quot;Invalid request&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span> <span class="hljs-attribute">schema-validation</span>=<span class="hljs-value">&quot;false&quot;</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+          &lt;FaultDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+              &lt;Text&gt;Invalid request&lt;/Text&gt;
+          &lt;/FaultDetail&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+          &lt;ErrorDetail xmlns=&quot;http://www.consol.de/schemas/soap&quot;&gt;
+              &lt;ErrorCode&gt;TEC-1000&lt;/ErrorCode&gt;
+          &lt;/ErrorDetail&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:fault-detail</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:when</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+            [...]
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:when</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:assert-fault</span>&gt;</span>
+</code></pre>
+<p>As you can see we can individually use validation settings for each fault detail. In the example above we disabled schema validation for the first fault detail element.</p>
+<h3 id="send-http-error-codes-with-soap"><a name="send-http-error-codes-with-soap" class="plugin-anchor" href="#send-http-error-codes-with-soap"><span class="fa fa-link"></span></a>Send HTTP error codes with SOAP</h3>
+<p>The SOAP server logic in Citrus is able to simulate pure HTTP error codes such as 404 &quot;Not found&quot; or 500 &quot;Internal server error&quot;. The good thing is that the Citrus server is able to receive a request for proper validation in a receive action and then simulate HTTP errors on demand.</p>
+<p>The mechanism on HTTP error code simulation is not different to the usual SOAP request/response handling in Citrus. We receive the request as usual and we provide a response. The HTTP error situation is simulated according to the special HTTP header <strong>citrus_http_status</strong> in the Citrus SOAP response definition. In case this header is set to a value other than 200 OK the Citrus SOAP server sends an empty SOAP response with HTTP error status code set accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Message</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>Hello SOAP server<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">Message</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloSoapServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_status_code&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;500&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p>The SOAP response must be empty and the HTTP status code is set to a value other than 200, like 500. This results in a HTTP error sent to the calling client with error 500 &quot;Internal server error&quot;.</p>
+<h3 id="soap-attachment-support"><a name="soap-attachment-support" class="plugin-anchor" href="#soap-attachment-support"><span class="fa fa-link"></span></a>SOAP attachment support</h3>
+<p>Citrus is able to add attachments to a SOAP request on client and server side. As usual you can validate the SOAP attachment content on a received SOAP message. The next chapters describe how to handle SOAP attachments in Citrus.</p>
+<h3 id="send-soap-attachments"><a name="send-soap-attachments" class="plugin-anchor" href="#send-soap-attachments"><span class="fa fa-link"></span></a>Send SOAP attachments</h3>
+<p>As client Citrus is able to add attachments to the SOAP message. I think it is best to go straight into an example in order to understand how it works.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">SoapMessageWithAttachment</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Operation</span>&gt;</span>Read the attachment<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">SoapMessageWithAttachment</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:attachment</span> <span class="hljs-attribute">content-id</span>=<span class="hljs-value">&quot;MySoapAttachment&quot;</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/plain&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/ws/soapAttachment.txt&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:attachment</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+</code></pre>
+<p><strong>Note</strong>
+In the previous chapters you may have already noticed the <strong>citrus-ws</strong> namespace that stands for the SOAP extensions in Citrus. Please include the <strong>citrus-ws</strong> namespace in your test case as described earlier in this chapter so you can use the attachment support.</p>
+<p>The special send action of the SOAP extension namespace is aware of SOAP attachments. The attachment content usually consists of a <strong>content-id</strong> a <strong>content-type</strong> and the actual content as plain text or binary content. Inside the test case you can use external file resources or inline CDATA sections for the attachment content. As you are familiar with Citrus you may know this already from other actions.</p>
+<p>Citrus will construct a SOAP message with the SOAP attachment. Currently only one attachment per message is supported.</p>
+<h3 id="receive-soap-attachments"><a name="receive-soap-attachments" class="plugin-anchor" href="#receive-soap-attachments"><span class="fa fa-link"></span></a>Receive SOAP attachments</h3>
+<p>When Citrus calls SOAP WebServices as a client we may receive SOAP responses with attachments. The tester can validate those received SOAP messages with attachment content quite easy. As usual let us have a look at an example first.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">SoapMessageWithAttachmentRequest</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Operation</span>&gt;</span>Read the attachment<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">SoapMessageWithAttachmentRequest</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:attachment</span> <span class="hljs-attribute">content-id</span>=<span class="hljs-value">&quot;MySoapAttachment&quot;</span>
+                      <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/plain&quot;</span>
+                      <span class="hljs-attribute">validator</span>=<span class="hljs-value">&quot;mySoapAttachmentValidator&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">ws:resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/ws/soapAttachment.txt&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">ws:attachment</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<p>Again we use the Citrus SOAP extension namespace with the specific receive action that is aware of SOAP attachment validation. The tester can validate the <strong>content-id</strong>, the <strong>content-type</strong> and the attachment content. Instead of using the external file resource you could also define an expected attachment template directly in the test case as inline CDATA section.</p>
+<p><strong>Note</strong>
+The <strong>ws:attachment</strong> element specifies a validator instance. This validator determines how to validate the attachment content. SOAP attachments are not limited to XML content. Plain text content and binary content is possible, too. So each SOAP attachment validating action can use a different <strong><em>SoapAttachmentValidator</em></strong> instance which is responsible for validating and comparing received attachments to expected template attachments. In the Citrus configuration the validator is set as normal Spring bean with the respective identifier.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapAttachmentValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.validation.SimpleSoapAttachmentValidator&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;mySoapAttachmentValidator&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.company.ws.validation.MySoapAttachmentValidator&quot;</span>/&gt;</span>
+</code></pre>
+<p>You can define several validator instances in the Citrus configuration. The validator with the general id <strong>&quot;soapAttachmentValidator&quot;</strong> is the default validator for all actions that do not explicitly set a validator instance. Citrus offers a set of reference validator implementations. The <strong><em>SimpleSoapAttachmentValidator</em></strong> will use a simple plain text comparison. Of course you are able to add individual validator implementations, too.</p>
+<h3 id="soap-mtom-support"><a name="soap-mtom-support" class="plugin-anchor" href="#soap-mtom-support"><span class="fa fa-link"></span></a>SOAP MTOM support</h3>
+<p>MTOM (Message Transmission Optimization Mechanism) enables you to send and receive large SOAP message content using streamed data handlers. This optimizes the resource allocation on server and client side where not all data is loaded into memory when marshalling/unmarshalling the message payload data. In detail MTOM enabled messages do have a XOP package inside the message payload replacing the actual large content data. The content is then streamed aas separate attachment. Server and client can operate with a data handler providing access to the streamed content. This is very helpful when using large binary content inside a SOAP message for instance.</p>
+<p>Citrus is able to both send and receive MTOM enabled SOAP messages on client and server. Just use the <strong>mtom-enabled</strong> flag when sending a SOAP message:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapMtomClient&quot;</span> <span class="hljs-attribute">mtom-enabled</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+          &lt;image&gt;cid:IMAGE&lt;/image&gt;
+        &lt;/image:addImage&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ws:attachment</span> <span class="hljs-attribute">content-id</span>=<span class="hljs-value">&quot;IMAGE&quot;</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/octet-stream&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/hugeImageData.png&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">ws:attachment</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+</code></pre>
+<p>As you can see the example above sends a SOAP message that contains a large binary image content. The actual binary image data is referenced with a content id marker <strong>cid:IMAGE</strong> inside the message payload. The actual image content is added as attachment with a separate file resource. Important is here the <strong>content-id</strong> which matches the id marker in the SOAP message payload (<strong>IMAGE</strong>).</p>
+<p>Citrus builds a proper SOAP MTOM enabled message automatically adding the XOP package inside the message. The binary data is sent as separate SOAP attachment accordingly. The resulting SOAP message looks like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">image:addImage</span> <span class="hljs-attribute">xmlns:image</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/imageService/&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">image</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-title">xop:Include</span> <span class="hljs-attribute">xmlns:xop</span>=<span class="hljs-value">&quot;http://www.w3.org/2004/08/xop/include&quot;</span> <span class="hljs-attribute">href</span>=<span class="hljs-value">&quot;cid:IMAGE&quot;</span>/&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">image</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">image:addImage</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+</code></pre>
+<p>On the server side Citrus is also able to handle MTOM enabled SOAP messages. In a server receive action you can specify the MTOM SOAP attachment content as follows.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapMtomServer&quot;</span> <span class="hljs-attribute">mtom-enabled</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">schema-validation</span>=<span class="hljs-value">&quot;false&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+          &lt;image&gt;&lt;xop:Include xmlns:xop=&quot;http://www.w3.org/2004/08/xop/include&quot; href=&quot;cid:IMAGE&quot;/&gt;&lt;/image&gt;
+        &lt;/image:addImage&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ws:attachment</span> <span class="hljs-attribute">content-id</span>=<span class="hljs-value">&quot;IMAGE&quot;</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/octet-stream&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/hugeImageData.png&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">ws:attachment</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<p>We define the MTOM attachment content as separate SOAP attachment. The <strong>content-id</strong> is referenced somewhere in the SOAP message payload data. At runtime Citrus will add the XOP package definition automatically and perform validation on the message and its streamed MTOM attachment data.</p>
+<p>Next thing that we have to talk about is inline MTOM data. This means that the content should be added as either <strong>base64Binary</strong> or <strong>hexBinary</strong> encoded String data directly to the message content. See the following example that uses the <strong>mtom-inline</strong> setting:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapMtomClient&quot;</span> <span class="hljs-attribute">mtom-enabled</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        &lt;image:addImage xmlns:image=&quot;http://www.citrusframework.org/imageService/&quot;&gt;
+          &lt;image&gt;cid:IMAGE&lt;/image&gt;
+          &lt;icon&gt;cid:ICON&lt;/icon&gt;
+        &lt;/image:addImage&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ws:attachment</span> <span class="hljs-attribute">content-id</span>=<span class="hljs-value">&quot;IMAGE&quot;</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/octet-stream&quot;</span>
+            <span class="hljs-attribute">mtom-inline</span>=<span class="hljs-value">&quot;true&quot;</span> <span class="hljs-attribute">encoding-type</span>=<span class="hljs-value">&quot;base64Binary&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/image.png&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">ws:attachment</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ws:attachment</span> <span class="hljs-attribute">content-id</span>=<span class="hljs-value">&quot;ICON&quot;</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/octet-stream&quot;</span>
+            <span class="hljs-attribute">mtom-inline</span>=<span class="hljs-value">&quot;true&quot;</span> <span class="hljs-attribute">encoding-type</span>=<span class="hljs-value">&quot;hexBinary&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">ws:resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/icon.ico&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">ws:attachment</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+</code></pre>
+<p>The listing above defines two inline MTOM attachments. The first attachment <strong>cid:IMAGE</strong> uses the encoding type <strong>base64Binary</strong> which is the default. The second attachment <strong>cid:ICON</strong> uses <strong>hexBinary</strong> encoding. Both attachments are added as inline data before the message is sent. The final SOAP message looks like follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">image:addImage</span> <span class="hljs-attribute">xmlns:image</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/imageService/&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">image</span>&gt;</span>VGhpcyBpcyBhIGJpbmFyeSBpbWFnZSBhdHRhY2htZW50IQpWYXJpYWJsZXMgJXt0ZXN0fSBzaG91bGQgbm90IGJlIHJlcGxhY2VkIQ==<span class="hljs-tag">&lt;/<span class="hljs-title">image</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">icon</span>&gt;</span>5468697320697320612062696E6172792069636F6E206174746163686D656E74210A5661726961626C657320257B746573747D2073686F756C64206E6F74206265207265706C6163656421<span class="hljs-tag">&lt;/<span class="hljs-title">icon</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">image:addImage</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+</code></pre>
+<p>The image content is a base64Binary String and the icon a heyBinary String. Of course this mechanism also is supported in receive actions on the server side where the expected message content is added als inline MTOM data before validation takes place.</p>
+<h3 id="soap-client-basic-authentication"><a name="soap-client-basic-authentication" class="plugin-anchor" href="#soap-client-basic-authentication"><span class="fa fa-link"></span></a>SOAP client basic authentication</h3>
+<p>As a SOAP client you may have to use basic authentication in order to access a server resource. Basic authentication via HTTP stands for username/password authentication where the credentials are transmitted in the HTTP request header section as base64 encoded entry. As Citrus uses the Spring WebService stack we can use the basic authentication support there. We set the user credentials on the HttpClient message sender which is used inside the Spring <strong><em>WebServiceTemplate</em></strong> .</p>
+<p>Citrus provides a comfortable way to set the HTTP message sender with basic authentication credentials on the <strong><em>WebServiceTemplate</em></strong> . Just see the following example and learn how to do that.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+                              <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8090/test&quot;</span>
+                              <span class="hljs-attribute">message-sender</span>=<span class="hljs-value">&quot;basicAuthClient&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;basicAuthClient&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.transport.http.HttpComponentsMessageSender&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;authScope&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.apache.http.auth.AuthScope&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;localhost&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;8090&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;basic&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;credentials&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.apache.http.auth.UsernamePasswordCredentials&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;someUsername&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;somePassword&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The above configuration results in SOAP requests with authentication headers properly set for basic authentication. The special message sender takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. By default preemtive authentication is used. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope so Citrus can setup an authentication cache within the HTTP context in order to have preemtive authentication.</p>
+<p><strong>Tip</strong>
+You can also skip the message sender configuration and set the <strong>Authorization</strong> header on each request in your send action definition on your own. Be aware of setting the header as HTTP mime header using the correct prefix and take care on using the correct basic authentication with base64 encoding for the <strong>username:password</strong> phrase.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_Authorization&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+</code></pre>
+<p>For base64 encoding you can also use a Citrus function, see<a href="functions-encode-base64">functions-encode-base64</a></p>
+<h3 id="soap-server-basic-authentication"><a name="soap-server-basic-authentication" class="plugin-anchor" href="#soap-server-basic-authentication"><span class="fa fa-link"></span></a>SOAP server basic authentication</h3>
+<p>When providing SOAP WebService server functionality Citrus can also set basic authentication so all clients need to authenticate properly when accessing the server resource.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;simpleSoapServer&quot;</span>
+             <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+             <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+             <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>
+             <span class="hljs-attribute">security-handler</span>=<span class="hljs-value">&quot;basicSecurityHandler&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;securityHandler&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.security.SecurityHandlerFactory&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;users&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.security.User&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;name&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;password&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;secret&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;roles&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;CitrusRole&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;constraints&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;/foo/*&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.security.BasicAuthConstraint&quot;</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;CitrusRole&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">entry</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">map</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>We have set a security handler on the server web container with a constraint on all resources with <strong>/foo/*</strong> . Following from that the server requires basic authentication for these resources. The granted users and roles are specified within the security handler bean definition. Connecting clients have to set the basic auth HTTP header properly using the correct user and role for accessing the Citrus server now.</p>
+<p>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and inspect the settings and properties offered by the security handler interface.</p>
+<p><strong>Tip</strong>
+This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</p>
+<h3 id="wsaddressing-support"><a name="wsaddressing-support" class="plugin-anchor" href="#wsaddressing-support"><span class="fa fa-link"></span></a>WS-Addressing support</h3>
+<p>The web service stack offers a lot of different technologies and standards within the context of SOAP WebServices. We speak of WS-* specifications in particular. One of these specifications deals with addressing. On client side you may add wsa header information to the request in order to give the server instructions how to deal with SOAP faults for instance.</p>
+<p>In Citrus WebService client you can add those header information using the common configuration like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+                         <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8090/test&quot;</span>
+                         <span class="hljs-attribute">message-converter</span>=<span class="hljs-value">&quot;wsAddressingMessageConverter&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;wsAddressingMessageConverter&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.message.converter.WsAddressingMessageConverter&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;wsAddressing200408&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.addressing.WsAddressingHeaders&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;version&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;VERSION200408&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;action&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;http://citrus.sample/sayHello&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;to&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;http://citrus.sample/server&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;from&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;http://citrus.sample/client&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;replyTo&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;http://citrus.sample/client&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;faultTo&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.addressing.core.EndpointReference&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;http://citrus.sample/fault/resolver&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">constructor-arg</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The WsAddressing header values will be used for all request messages that are sent with the soap client component <em>soapClient</em>. You can overwrite the WsAddressing
+header in each send test action in your test though. Just set the special WsAddressing message header on your request. You can use the following message header names in 
+order to overwrite the default addressing headers specified in the message converter configuration (also see the class <em>com.consol.citrus.ws.addressing.WsAddressingMessageHeaders</em>).</p>
+<ul>
+<li><strong>citrus_soap_ws_addressing_messageId</strong> addressing message id as URI</li>
+<li><strong>citrus_soap_ws_addressing_from</strong> addressing from endpoint reference as URI</li>
+<li><strong>citrus_soap_ws_addressing_to</strong> addressing to URI</li>
+<li><strong>citrus_soap_ws_addressing_action</strong> addressing action URI</li>
+<li><strong>citrus_soap_ws_addressing_replyTo</strong> addressing reply to endpoint reference as URI</li>
+<li><strong>citrus_soap_ws_addressing_faultTo</strong> addressing fault to endpoint reference as URI</li>
+</ul>
+<p>When using this message headers you are able to explicitly overwrite the WsAddressing headers. Test variables are supported of course when specifying the values. Most of the values
+are parsed to a URI value at the end so please make sure to use correct URI String representations.</p>
+<p><strong>Note</strong> 
+The WS-Addressing specification knows several versions. Supported version are: </p>
+<ul>
+<li><strong>VERSION10 (WS-Addressing 1.0 May 2006)</strong> </li>
+<li><strong>VERSION200408 (August 2004 edition of the WS-Addressing specification)</strong></li>
+</ul>
+<p>The addressing headers find a place in the SOAP message header with respective namespaces and values. A possible SOAP request with WS addressing headers looks like follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Envelope</span> <span class="hljs-attribute">xmlns:SOAP-ENV</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/soap/envelope/&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Header</span> <span class="hljs-attribute">xmlns:wsa</span>=<span class="hljs-value">&quot;http://schemas.xmlsoap.org/ws/2004/08/addressing&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wsa:To</span> <span class="hljs-attribute">SOAP-ENV:mustUnderstand</span>=<span class="hljs-value">&quot;1&quot;</span>&gt;</span>http://citrus.sample/server<span class="hljs-tag">&lt;/<span class="hljs-title">wsa:To</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wsa:From</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">wsa:Address</span>&gt;</span>http://citrus.sample/client<span class="hljs-tag">&lt;/<span class="hljs-title">wsa:Address</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">wsa:From</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wsa:ReplyTo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">wsa:Address</span>&gt;</span>http://citrus.sample/client<span class="hljs-tag">&lt;/<span class="hljs-title">wsa:Address</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">wsa:ReplyTo</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wsa:FaultTo</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">wsa:Address</span>&gt;</span>http://citrus.sample/fault/resolver<span class="hljs-tag">&lt;/<span class="hljs-title">wsa:Address</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">wsa:FaultTo</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wsa:Action</span>&gt;</span>http://citrus.sample/sayHello<span class="hljs-tag">&lt;/<span class="hljs-title">wsa:Action</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">wsa:MessageID</span>&gt;</span>urn:uuid:4c4d8af2-b402-4bc0-a2e3-ad33b910e394<span class="hljs-tag">&lt;/<span class="hljs-title">wsa:MessageID</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">cit:HelloRequest</span> <span class="hljs-attribute">xmlns:cit</span>=<span class="hljs-value">&quot;http://citrus/sample/sayHello&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">cit:Text</span>&gt;</span>Hello Citrus!<span class="hljs-tag">&lt;/<span class="hljs-title">cit:Text</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">cit:HelloRequest</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">SOAP-ENV:Envelope</span>&gt;</span>
+</code></pre>
+<p><strong>Important</strong>
+By default when not set explicitly on the message headers the WsAddressing message id property is automatically generated for each request. You can set the message id generation strategy in the Spring application context message converter configuration:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;wsAddressingMessageConverter&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.message.converter.WsAddressingMessageConverter&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;messageIdStrategy&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.soap.addressing.messageid.UuidMessageIdStrategy&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>By default the strategy will create a new Java UUID for each request. The strategy also uses a common resource name prefix <em>urn:uuid:</em>. You can overwrite the message id
+any time for each request explicitly by setting the message header <em>citrus_soap_ws_addressing_messageId</em> with a respective value on the message in your test.</p>
+<h3 id="soap-client-fork-mode"><a name="soap-client-fork-mode" class="plugin-anchor" href="#soap-client-fork-mode"><span class="fa fa-link"></span></a>SOAP client fork mode</h3>
+<p>SOAP over HTTP uses synchronous communication by nature. This means that sending a SOAP message in Citrus over HTTP will automatically block further test actions until the synchronous HTTP response has been received. In test cases this synchronous blocking might cause problems for several reasons. A simple reason would be that you need to do further test actions in parallel to the synchronous HTTP SOAP communication (e.g. simulate another backend system in the test case).</p>
+<p>You can separate the SOAP send action from the rest of the test case by using the <strong>&quot;fork&quot;</strong> mode. The SOAP client will automatically open a new Java Thread for the synchronous communication and the test is able to continue with execution although the synchronous HTTP SOAP response has not arrived yet.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span> <span class="hljs-attribute">fork</span>=<span class="hljs-value">&quot;true&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">SoapRequest</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Operation</span>&gt;</span>Read the attachment<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">SoapRequest</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:send</span>&gt;</span>
+</code></pre>
+<p>With the <strong>&quot;fork&quot;</strong> mode enabled the test continues with execution while the sending action waits for the synchronous response in a separate Java Thread. You could reach the same behaviour with a complex <parallel>/<sequential> container construct, but forking the send action is much more straight forward.</sequential></parallel></p>
+<p><strong>Important</strong>
+It is highly recommended to use a proper <strong>&quot;timeout&quot;</strong> setting on the SOAP receive action when using fork mode. The forked send operation might take some time and the corresponding receive action might run into failure as the response was has not been received yet. The result would be a broken test because of the missing response message. A proper <strong>&quot;timeout&quot;</strong> setting for the receive action solves this problem as the action waits for this time period and occasionally repeatedly asks for the SOAP response message. The following listing sets the receive timeout to 10 seconds, so the action waits for the forked send action to deliver the SOAP response in time.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">ws:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;soapClient&quot;</span> <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;10000&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">SoapResponse</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.consol.de/schemas/sample.xsd&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Operation</span>&gt;</span>Did something<span class="hljs-tag">&lt;/<span class="hljs-title">Operation</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Success</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">Success</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">SoapResponse</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">ws:receive</span>&gt;</span>
+</code></pre>
+<h3 id="soap-servlet-context-customization"><a name="soap-servlet-context-customization" class="plugin-anchor" href="#soap-servlet-context-customization"><span class="fa fa-link"></span></a>SOAP servlet context customization</h3>
+<p>For highly customized SOAP server components in Citrus you can define a full servlet context configuration file. Here you have the full power to add Spring endpoint mappings and custom endpoint implementations. You can set the custom servlet context as external file resource on the server component:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-ws:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;soapClient&quot;</span>
+          <span class="hljs-attribute">context-config-location</span>=<span class="hljs-value">&quot;classpath:citrus-ws-servlet.xml&quot;</span>
+          <span class="hljs-attribute">message-factory</span>=<span class="hljs-value">&quot;soap11MessageFactory&quot;</span>/&gt;</span>
+</code></pre>
+<p>Now let us have a closer look at the context-config-location attribute. This configuration defines the Spring application context file for endpoints, request mappings and other SpringWS specific information. Please see the official SpringWS documentation for details on this Spring based configuration. You can also just copy the following example application context which should work for you in general.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+       <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+       <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+       http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;loggingInterceptor&quot;</span>
+    <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.server.endpoint.interceptor.PayloadLoggingInterceptor&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">description</span>&gt;</span>
+          This interceptor logs the message payload.
+      <span class="hljs-tag">&lt;/<span class="hljs-title">description</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloServicePayloadMapping&quot;</span>
+    <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;mappings&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">props</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">prop</span>
+                  <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;{http://www.consol.de/schemas/sayHello}HelloRequest&quot;</span>&gt;</span>
+                  helloServiceEndpoint
+              <span class="hljs-tag">&lt;/<span class="hljs-title">prop</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">props</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;interceptors&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">ref</span> <span class="hljs-attribute">bean</span>=<span class="hljs-value">&quot;loggingInterceptor&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloServiceEndpoint&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.ws.server.WebServiceEndpoint&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;endpointAdapter&quot;</span> <span class="hljs-attribute">ref</span>=<span class="hljs-value">&quot;staticResponseEndpointAdapter&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">citrus:static-response-adapter</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;staticResponseEndpointAdapter&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:payload</span>&gt;</span>
+          <span class="hljs-cdata">&lt;![CDATA[
+              &lt;HelloResponse xmlns=&quot;http://www.consol.de/schemas/sayHello&quot;&gt;
+                  &lt;MessageId&gt;123456789&lt;/MessageId&gt;
+                  &lt;CorrelationId&gt;CORR123456789&lt;/CorrelationId&gt;
+                  &lt;User&gt;WebServer&lt;/User&gt;
+                  &lt;Text&gt;Hello User&lt;/Text&gt;
+              &lt;/HelloResponse&gt;
+          ]]&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:payload</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:header</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation&quot;</span>
+                  <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHelloResponse&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request&quot;</span>
+                  <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;HelloRequest&quot;</span>/&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus:element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_soap_action&quot;</span>
+                  <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;sayHello&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:header</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:static-response-adapter</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>The program listing above describes a normal SpringWS request mapping with endpoint configurations. The mapping is responsible to forward incoming requests to the endpoint which will handle the request and provide a proper response message. First of all we add a logging interceptor to the context so all incoming requests get logged to the console first. Then we use a payload mapping (PayloadRootQNameEndpointMapping) in order to map all incoming <strong><em>&apos;HelloRequest&apos;</em></strong> SOAP messages to the <strong><em>&apos;helloServiceEndpoint&apos;</em></strong> . Endpoints are of essential nature in Citrus SOAP WebServices implementation. They are responsible for processing a request in order to provide a proper response message that is sent back to the calling client. Citrus uses the endpoint in combination with a message endpoint adapter implementation.</p>
+<p><img src="images/figure_009.jpg" alt="figure_009.jpg"></p>
+<p>The endpoint works together with the message endpoint adapter that is responsible for providing a response message for the client. The various message endpoint adapter implementations in Citrus were already discussed in <a href="endpoint-adapter.html">endpoint-adapter</a>.</p>
+<p>In this example the <strong><em>&apos;helloServiceEndpoint&apos;</em></strong> uses the <strong><em>&apos;static-response-adapter&apos;</em></strong> which is always returning a static response message. In most cases static responses will not fit the test scenario and you will have to respond more dynamically.</p>
+<p>Regardless of which message endpoint adapter setup you are using in your test case the endpoint transforms the response into a proper SOAP message. You can add as many request mappings and endpoints as you want to the server context configuration. So you are able to handle different request types with one single Jetty server instance.</p>
+<p>That&apos;s it for connecting with SOAP WebServices! We saw how to send and receive SOAP messages with Jetty and Spring WebServices. Have a look at the samples coming with your Citrus archive in order to learn more about the SOAP message handling.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./http-websocket.html" class="navigation navigation-prev " aria-label="Previous page: Http Websockets"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./ftp.html" class="navigation navigation-next " aria-label="Next page: Ftp"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

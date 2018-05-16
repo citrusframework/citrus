@@ -1,0 +1,2082 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Cucumber | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./zookeeper.html" />
+    
+    
+    <link rel="prev" href="./jmx.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="32"
+        data-chapter-title="Cucumber"
+        data-filepath="cucumber.md"
+        data-basepath="."
+        data-revision="Fri Oct 07 2016 09:23:51 GMT+0200 (CEST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes-new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test-case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        Json-path
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop-time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge-jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge-channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge-endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage-server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Generic-action
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Stop-timer
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="15.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.6.</b>
+                        
+                        Repeat-onerror
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Finally-section
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http-websocket
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Message-channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="32" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Endpoint-component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Endpoint-adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Data-dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Test-actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Test-suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Meta-info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Message-tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="45.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.1.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.2.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.3" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.3.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.4" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.4.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.5" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.5.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.6" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.6.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.7" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.7.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.8" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.8.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.9" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.9.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="cucumber-bdd-support">Cucumber BDD support</h2>
+<p>Behavior driven development (BDD) is becoming more and more popular these days. The idea of defining and describing the software behavior as basis for all tests in prior to translating those feature descriptions into executable tests is a very interesting approach because it includes the technical experts as well as the domain experts. With BDD the domain experts can easily read and verify the tests and the technical experts get a detailed description of what should happen in the test.</p>
+<p>The test scenario descriptions follow the Gherkin syntax with a <strong>&quot;Given-When-Then&quot;</strong> structure most of the time. The Gherkin language is business readable and well known in BDD.</p>
+<p>There are lots of frameworks in the Java community that support BDD concepts. Citrus has dedicated support for the Cucumber framework because Cucumber is well suited for extensions and plugins. So with the Citrus and Cucumber integration you can write Gherkin syntax scenario and feature stories in order to execute the Citrus integration test capabilities. As usual we have a look at a first example. First lets see the Citrus cucumber dependency and XML schema definitions.</p>
+<p><strong>Note</strong>
+The Cucumber components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-cucumber<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.1<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>Citrus provides a separate configuration namespace and schema definition for Cucumber related step definitions. Include this namespace into your Spring configuration in order to use the Citrus Cucumber configuration elements. The namespace URI and schema location are added to the Spring configuration XML file as follows.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+     <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+     <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/cucumber/testcase&quot;</span>
+     <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+     http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans.xsd
+     http://www.citrusframework.org/schema/cucumber/testcase
+     http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd&quot;</span>&gt;</span>
+
+    [...]
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">spring:beans</span>&gt;</span>
+</code></pre>
+<p>Cucumber works with both JUnit and TestNG as unit testing framework. You can choose which framework to use with Cucumber. So following from that we need a Maven dependency for the unit testing framework support:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>info.cukes<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>cucumber-junit<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>${cucumber.version}<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>In order to enable Citrus Cucumber support we need to specify a special object factory in the environment. The most comfortable way to specify a custom object factory is to add this property to the <strong>cucumber.properties</strong> in classpath.</p>
+<pre><code class="lang-xml">cucumber.api.java.ObjectFactory=cucumber.runtime.java.CitrusObjectFactory
+</code></pre>
+<p>This special object factory takes care on creating all step definition instances. The object factory is able to inject <strong>@CitrusResource</strong> annotated fields in step classes. We will see this later on in the examples. The usage of this special object factory is mandatory in order to combine Citrus and Cucumber capabilities.</p>
+<p>The <strong>CitrusObjectFactory</strong> will automatically initialize the Citrus world for us. This includes the default <strong>citrus-context.xml</strong> Citrus Spring configuration that is automatically loaded within the object factory. So you can define and use Citrus components as usual within your test.</p>
+<p>After these preparation steps you are able to combine Citrus and Cucumber in your project.</p>
+<h3 id="cucumber-integration">Cucumber integration</h3>
+<p>Cucumber is able to run tests with JUnit. The basic test case is an empty test which uses the respective JUnit runner implementation from cucumber.</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Cucumber.class)
+<span class="hljs-annotation">@CucumberOptions</span>(
+  plugin = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.CitrusReporter&quot;</span> } )
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeatureIT</span> </span>{
+
+}
+</code></pre>
+<p>The test case above uses the <strong>Cucumber</strong> JUnit test runner. In addition to that we give some options to the Cucumber execution. We define a special Citrus reporter implementation. This class is responsible for printing the Citrus test summary. This reporter extends the default Cucumber reporter implementation so the default Cucumber report summaries are also printed to the console.</p>
+<p>That completes the JUnit class configuration. Now we are able to add feature stories and step definitions to the package of our test <strong>MyFeatureIT</strong> . Cucumber and Citrus will automatically pick up step definitions and glue code in that test package. So lets write a feature story <strong>echo.feature</strong> right next to the <strong>MyFeatureIT</strong> test class.</p>
+<pre><code class="lang-xml">Feature: Echo service
+
+  Scenario: Say hello
+    Given My name is Citrus
+    When I say hello to the service
+    Then the service should return: &quot;Hello, my name is Citrus!&quot;
+
+  Scenario: Say goodbye
+    Given My name is Citrus
+    When I say goodbye to the service
+    Then the service should return: &quot;Goodbye from Citrus!&quot;
+</code></pre>
+<p>As you can see this story defines two scenarios with the Gherkin <strong>Given-When-Then</strong> syntax. Now we need to add step definitions that glue the story description to Citrus test actions. Lets do this in a new class <strong>EchoSteps</strong> .</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EchoSteps</span> </span>{
+
+    <span class="hljs-annotation">@CitrusResource</span>
+    <span class="hljs-keyword">protected</span> TestDesigner designer;
+
+    <span class="hljs-annotation">@Given</span>(<span class="hljs-string">&quot;^My name is (.*)$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">my_name_is</span><span class="hljs-params">(String name)</span> </span>{
+        designer.variable(<span class="hljs-string">&quot;username&quot;</span>, name);
+    }
+
+    <span class="hljs-annotation">@When</span>(<span class="hljs-string">&quot;^I say hello.*$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say_hello</span><span class="hljs-params">()</span> </span>{
+        designer.send(<span class="hljs-string">&quot;echoEndpoint&quot;</span>)
+          .messageType(MessageType.PLAINTEXT)
+          .payload(<span class="hljs-string">&quot;Hello, my name is ${username}!&quot;</span>);
+    }
+
+    <span class="hljs-annotation">@When</span>(<span class="hljs-string">&quot;^I say goodbye.*$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say_goodbye</span><span class="hljs-params">()</span> </span>{
+        designer.send(<span class="hljs-string">&quot;echoEndpoint&quot;</span>)
+          .messageType(MessageType.PLAINTEXT)
+          .payload(<span class="hljs-string">&quot;Goodbye from ${username}!&quot;</span>);
+    }
+
+    <span class="hljs-annotation">@Then</span>(<span class="hljs-string">&quot;^the service should return: \&quot;([^\&quot;]*)\&quot;$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">verify_return</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String body)</span> </span>{
+        designer.receive(<span class="hljs-string">&quot;echoEndpoint&quot;</span>)
+          .messageType(MessageType.PLAINTEXT)
+          .payload(<span class="hljs-string">&quot;You just said: &quot;</span> + body);
+    }
+
+}
+</code></pre>
+<p>If we have a closer look at the step definition class we see that it is a normal POJO that uses a <strong>@CitrusResource</strong> annotated <strong>TestDesigner</strong> . The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. Now we can write @Given, @When or @Then annotated methods that match the scenario descriptions in our story. Cucumber will automatically find matching methods and execute them. The methods add test actions to the test designer as we are used to it in normal Java DSL tests. At the end the test designer is automatically executed with the test logic.</p>
+<p><strong>Important</strong>
+Of course you can do the dependency injection with <strong>@CitrusResource</strong> annotations on <strong>TestRunner</strong> instances, too. Which variation should someone use <strong>TestDesigner</strong> or <strong>TestRunner</strong> ? In fact there is a significant difference when looking at the two approaches. The designer will use the Gherkin methods to build the whole Citrus test case first before any action is executed. The runner will execute each test action that has been built with a Gherkin step immediately. This means that a designer approach will always complete all BDD step definitions before taking action. This directly affects the Cucumber step reports. All steps are usually marked as successful when using a designer approach as the Citrus test is executed after the Cucumber steps have been executed. The runner approach in contrast will fail the step when the corresponding test action fails. The Cucumber test reports will definitely look different depending on what approach you are choosing. All other functions stay the same in both approaches. If you need to learn more about designer and runner approaches please see</p>
+<p>If we run the Cucumber test the Citrus test case automatically performs its actions. That is a first combination of Citrus and Cucumber BDD. The story descriptions are translated to test actions and we are able to run integration tests with behavior driven development. Great! In a next step we will use XML step definitions rather than coding the steps in Java DSL.</p>
+<h3 id="cucumber-xml-steps">Cucumber XML steps</h3>
+<p>So far we have written glue code in Java in order to translate Gherkin syntax descriptions to test actions. Now we want to do the same with just XML configuration. The JUnit Cucumber class should not change. We still use the Cucumber runner implementation with some options specific to Citrus:</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Cucumber.class)
+<span class="hljs-annotation">@CucumberOptions</span>(
+    plugin = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.CitrusReporter&quot;</span> } )
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeatureIT</span> </span>{
+
+}
+</code></pre>
+<p>The scenario description is also not changed:</p>
+<pre><code class="lang-xml">Feature: Echo service
+
+  Scenario: Say hello
+    Given My name is Citrus
+    When I say hello to the service
+    Then the service should return: &quot;Hello, my name is Citrus!&quot;
+
+  Scenario: Say goodbye
+    Given My name is Citrus
+    When I say goodbye to the service
+    Then the service should return: &quot;Goodbye from Citrus!&quot;
+</code></pre>
+<p>In the feature package <strong>my.company.features</strong> we add a new XML file <strong>EchoSteps.xml</strong> that holds the new XML step definitions:</p>
+<pre><code class="lang-xml"><span class="hljs-pi">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
+      <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+      <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+      <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/cucumber/testcase&quot;</span>
+      <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans
+                          http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.citrusframework.org/schema/cucumber/testcase
+                          http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd&quot;</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">step</span> <span class="hljs-attribute">given</span>=<span class="hljs-value">&quot;^My name is (.*)$&quot;</span> <span class="hljs-attribute">parameter-names</span>=<span class="hljs-value">&quot;username&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:create-variables</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:variable</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;username&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${username}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:create-variables</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">step</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">step</span> <span class="hljs-attribute">when</span>=<span class="hljs-value">&quot;^I say hello.*$&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;echoEndpoint&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus:data</span>&gt;</span>Hello, my name is ${username}!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:data</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:send</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">step</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">step</span> <span class="hljs-attribute">when</span>=<span class="hljs-value">&quot;^I say goodbye.*$&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;echoEndpoint&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus:data</span>&gt;</span>Goodbye from ${username}!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:data</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:send</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">step</span>&gt;</span>
+
+  <span class="hljs-tag">&lt;<span class="hljs-title">step</span> <span class="hljs-attribute">then</span>=<span class="hljs-value">&quot;^the service should return: &amp;quot;([^&amp;quot;]*)&amp;quot;$&quot;</span> <span class="hljs-attribute">parameter-names</span>=<span class="hljs-value">&quot;body&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;echoEndpoint&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus:data</span>&gt;</span>You just said: ${body}<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:data</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:receive</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">step</span>&gt;</span>
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">spring:beans</span>&gt;</span>
+</code></pre>
+<p>The above steps definition is written in pure XML. Citrus will automatically read the step definition and add those to the Cucumber runtime. Following from that the step definitions are executed when matching to the feature story. The XML step files follow a naming convention. Citrus will look for all files located in the feature package with name pattern <strong>**/</strong>.Steps.xml** and load those definitions when Cucumber starts up.</p>
+<p>The XML steps are able to receive parameters from the Gherkin regexp matcher. The parameters are passed to the step as test variable. The parameter names get declared in the optional attribute <strong>parameter-names</strong> . In the step definition actions you can use the parameter names as test variables.</p>
+<p><strong>Note</strong>
+The test variables are visible in all upcoming steps, too. This is because the test variables are global by default. If you need to set local state for a step definition you can use another attribute <strong>global-context</strong> and set it to <strong>false</strong> in the step definition. This way all test variables and parameters are only visible in the step definition. Other steps will not see the test variables.</p>
+<p><strong>Note</strong>
+Another notable thing is the XML escaping of reserved characters in the pattern definition. You can see that in the last step where the <strong>then</strong> attribute is escaping quotation characters.</p>
+<pre><code class="lang-xml">then=&quot;^the service should return: &amp;quot;([^&amp;quot;]*)&amp;quot;$&quot;
+</code></pre>
+<p>We have to do this because otherwise the quotation characters will interfere with the XML syntax in the attribute.</p>
+<p>This completes the description of how to add XML step definitions to the cucumber BDD tests. In a next section we will use predefined steps for sending and receiving messages.</p>
+<h3 id="cucumber-spring-support">Cucumber Spring support</h3>
+<p>Cucumber provides support for Spring dependency injection in step definition classes. The Cucumber Spring capabilities are included in a separate module. So we first of all we have to add this dependency to our project:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>info.cukes<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>cucumber-spring<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>${cucumber.version}<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>The Citrus Cucumber extension has to handle things different when Cucumber Spring support is enabled. Therefore we use another object factory implementation that also support Cucumber Spring features. Change the object factory property in <strong>cucumber.properties</strong> to the following:</p>
+<pre><code class="lang-xml">cucumber.api.java.ObjectFactory=cucumber.runtime.java.spring.CitrusSpringObjectFactory
+</code></pre>
+<p>Now we are ready to add <strong>@Autowired</strong> Spring bean dependeny injection to step definition classes:</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@ContextConfiguration</span>(classes = CitrusSpringConfig.class)
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EchoSteps</span> </span>{
+    <span class="hljs-annotation">@Autowired</span>
+    <span class="hljs-keyword">private</span> Endpoint echoEndpoint;
+
+    <span class="hljs-annotation">@CitrusResource</span>
+    <span class="hljs-keyword">protected</span> TestDesigner designer;
+
+    <span class="hljs-annotation">@Given</span>(<span class="hljs-string">&quot;^My name is (.*)$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">my_name_is</span><span class="hljs-params">(String name)</span> </span>{
+        designer.variable(<span class="hljs-string">&quot;username&quot;</span>, name);
+    }
+
+    <span class="hljs-annotation">@When</span>(<span class="hljs-string">&quot;^I say hello.*$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say_hello</span><span class="hljs-params">()</span> </span>{
+        designer.send(echoEndpoint)
+            .messageType(MessageType.PLAINTEXT)
+            .payload(<span class="hljs-string">&quot;Hello, my name is ${username}!&quot;</span>);
+    }
+
+    <span class="hljs-annotation">@When</span>(<span class="hljs-string">&quot;^I say goodbye.*$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">say_goodbye</span><span class="hljs-params">()</span> </span>{
+        designer.send(echoEndpoint)
+            .messageType(MessageType.PLAINTEXT)
+            .payload(<span class="hljs-string">&quot;Goodbye from ${username}!&quot;</span>);
+    }
+
+    <span class="hljs-annotation">@Then</span>(<span class="hljs-string">&quot;^the service should return: \&quot;([^\&quot;]*)\&quot;$&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">verify_return</span><span class="hljs-params">(<span class="hljs-keyword">final</span> String body)</span> </span>{
+        designer.receive(echoEndpoint)
+            .messageType(MessageType.PLAINTEXT)
+            .payload(<span class="hljs-string">&quot;You just said: &quot;</span> + body);
+    }
+}
+</code></pre>
+<p>As you can see we used Spring autowiring mechanism for the <strong>echoEndpoint</strong> field in the step definition. Also be sure to define the <strong>@ContextConfiguration</strong> annotation on the step definition. The Cucumber Spring support loads the Spring application context and takes care on dependency injection. We use the Citrus <strong>CitrusSpringConfig</strong> Java configuration because this is the main entrance for Citrus test cases. You can add custom beans and further Spring related configuration to this Spring application context. If you want to add more beans for autowiring do so in the Citrus Spring configuration. Usually this is the default <strong>citrus-context.xml</strong> which is automatically loaded.</p>
+<p>Of course you can also use a custom Java Spring configuration class here. But be sure to always import the Citrus Spring Java configuration classes, too. Otherwise you will not be able to execute the Citrus integration test capabilities.</p>
+<p>As usual we are able to use <strong>@CitrusResource</strong> annotated <strong>TestDesigner</strong> fields for building the Citrus integration test logic. With this extension you can use the full Spring testing power in your tests in particular dependency injection and also transaction management for data persistance tests.</p>
+<h3 id="citrus-step-definitions">Citrus step definitions</h3>
+<p>Citrus provides some out of the box predefined steps for typical integration test scenarios. These steps are ready to use in scenario or feature stories. You can basically define send and receive operations. As these steps are predefined in Citrus you just need to write feature stories. The step definitions with glue to test actions are handled automatically.</p>
+<p>If you want to enable predefined steps support in your test you need to include the glue code package in your test class like this:</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Cucumber.class)
+<span class="hljs-annotation">@CucumberOptions</span>(
+    glue = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.step.designer&quot;</span> }
+    plugin = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.CitrusReporter&quot;</span> } )
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeatureIT</span> </span>{
+
+}
+</code></pre>
+<p>Instead of writing the glue code on our own in step definition classes we include the glue package <strong>com.consol.citrus.cucumber.step.designer</strong> . This automatically loads all Citrus glue step definitions in this package. Once you have done this you can use predefined steps that add Citrus test logic without having to write any glue code in Java step definitions.</p>
+<p>Of course you can also choose to include the <strong>TestRunner</strong> step definitions by choosing the glue package <strong>com.consol.citrus.cucumber.step.runner</strong> .</p>
+<pre><code class="lang-java"><span class="hljs-annotation">@RunWith</span>(Cucumber.class)
+<span class="hljs-annotation">@CucumberOptions</span>(
+    glue = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.step.runner&quot;</span> }
+    plugin = { <span class="hljs-string">&quot;com.consol.citrus.cucumber.CitrusReporter&quot;</span> } )
+<span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyFeatureIT</span> </span>{
+
+}
+</code></pre>
+<p>Following basic step definitions are included in this package:</p>
+<pre><code class="lang-xml">Given variable [name] is &quot;[value]&quot;
+Given variables
+| [name1]   | [value1]   |
+| [name2]   | [value2]   |
+
+When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> sends &quot;[message-payload]&quot;
+Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should receive (message-type) &quot;[message-payload]&quot;
+
+When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> sends
+  &quot;&quot;&quot;
+  [message-payload]
+  &quot;&quot;&quot;
+Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should receive (message-type)
+  &quot;&quot;&quot;
+  [message-payload]
+  &quot;&quot;&quot;
+
+When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> receives (message-type) &quot;[message-payload]&quot;
+Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should send &quot;[message-payload]&quot;
+
+When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> receives (message-type)
+  &quot;&quot;&quot;
+  [message-payload]
+  &quot;&quot;&quot;
+Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should send
+  &quot;&quot;&quot;
+  [message-payload]
+  &quot;&quot;&quot;
+</code></pre>
+<p>Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps. In the following sections we have a closer look at all predefined Citrus steps and how they work.</p>
+<h3 id="variable-steps">Variable steps</h3>
+<p>As you already know Citrus is able to work with test variables that hold important information during a test such as identifiers and dynamic values. The predefined step definitions in Citrus are able to create new test variables.</p>
+<pre><code class="lang-xml">Given variable messageText is &quot;Hello&quot;
+</code></pre>
+<p>The syntax of this predefined step is pretty self describing. The step instruction follows the pattern:</p>
+<pre><code class="lang-xml">Given variable [name] is &quot;[value]&quot;
+</code></pre>
+<p>If you keep this syntax in your feature story the predefined step is activated for creating a new variable. We always use the <strong>Given</strong> step to create new variables.</p>
+<pre><code class="lang-xml">Scenario: Create Variables
+    Given variable messageText is &quot;Hello&quot;
+      And variable operationHeader is &quot;sayHello&quot;
+</code></pre>
+<p>So we can use the <strong>And</strong> keyword to create more than one variable. Even more comfortable is the usage of data tables:</p>
+<pre><code class="lang-xml">Given variables
+    | hello   | I say hello   |
+    | goodbye | I say goodbye |
+</code></pre>
+<p>This data table will create the test variable for each row. This is how you can easily create new variables in your Citrus test. As usual the variables are referenced in message payloads and headers as placeholders for dynamically adding content.</p>
+<p>Adding variables is usually done within a <strong>Scenario</strong> block in your feature story. This means that the test variable is used in this scenario which is exactly one Citrus test case. Cucumber BDD also defines a <strong>Background</strong> block at the very beginning of your <strong>Feature</strong> . We can also place variables in here. This means that Cucumber will execute these steps for all upcoming scenarios. The test variable is so to speak global for this feature story.</p>
+<pre><code class="lang-xml">Feature: Variables
+
+    Background:
+      Given variable messageText is &quot;Hello&quot;
+
+    Scenario: Do something
+    Scenario: Do something else
+</code></pre>
+<p>That completes the variable step definitions in Citrus.</p>
+<h3 id="messaging-steps">Messaging steps</h3>
+<p>In the previous section we have learned how to use a first predefined Citrus step. Now we want to cover messaging steps for sending and receiving messages in Citrus. As usual with predefined steps you do not need to write any glue code for the steps to take action. The steps are already included in Citrus just use them in your feature stories.</p>
+<pre><code class="lang-xml">Feature: Messaging features
+
+    Background:
+      Given variable messageText is &quot;Hello&quot;
+
+    Scenario: Send and receive plaintext
+      When <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> sends &quot;${messageText}&quot;
+      Then <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> should receive plaintext &quot;You just said: ${messageText}&quot;
+</code></pre>
+<p>Of course we need to follow the predefined syntax when writing feature stories in order to trigger a predefined step. Let&apos;s have a closer look at this predefined syntax by further describing the above example.</p>
+<p>First of all we define a new test variable with <strong>Given variable messageText is &quot;Hello&quot;</strong> . This tells Citrus to create a new test variable named <strong>messageText</strong> with respective value. We can do the same for sending and receiving messages like done in our test scenario:</p>
+<pre><code class="lang-xml">When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> sends &quot;[message-payload]&quot;
+</code></pre>
+<p>The step definition requires the endpoint component name and a message payload. The predefined step will automatically configure a send test action in the Citrus test as result.</p>
+<pre><code class="lang-xml">Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should receive (message-type) &quot;[message-payload]&quot;
+</code></pre>
+<p>The predefined receive step also requires the <strong>endpoint-name</strong> and <strong>message-payload</strong> . As optional parameter you can define the <strong>message-type</strong> . This is required when sending message payloads other than XML.</p>
+<p>This way you can write Citrus tests with just writing feature stories in Gherkin syntax. Up to now we have used pretty simple message payloads in on single line. Of course we can also use multiline payloads in the stories:</p>
+<pre><code class="lang-xml">Feature: Messaging features
+
+    Background:
+      Given variable messageText is &quot;Hello&quot;
+
+    Scenario: Send and receive
+      When <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> sends
+        &quot;&quot;&quot;
+        <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>${messageText}<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        &quot;&quot;&quot;
+      Then <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> should receive
+        &quot;&quot;&quot;
+        <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>${messageText}<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        &quot;&quot;&quot;
+</code></pre>
+<p>As you can see we are able to use the send and receive steps with multiline XML message payload data.</p>
+<h3 id="named-messages">Named messages</h3>
+<p>In the previous section we have learned how to use Citrus predefined step definitions for send and receive operations. The message payload has been added directly to the stories so far. But what is with message header information? We want to specify a complete message with payload and header. You can do this by defining a named message.</p>
+<p>As usual we demonstrate this in a first example:</p>
+<pre><code class="lang-xml">Feature: Named message feature
+
+    Background:
+      Given message echoRequest
+        And <span class="hljs-tag">&lt;<span class="hljs-title">echoRequest</span>&gt;</span> payload is &quot;Hi my name is Citrus!&quot;
+        And <span class="hljs-tag">&lt;<span class="hljs-title">echoRequest</span>&gt;</span> header operation is &quot;sayHello&quot;
+
+      Given message echoResponse
+        And <span class="hljs-tag">&lt;<span class="hljs-title">echoResponse</span>&gt;</span> payload is &quot;Hi, Citrus how are you doing today?&quot;
+        And <span class="hljs-tag">&lt;<span class="hljs-title">echoResponse</span>&gt;</span> header operation is &quot;sayHello&quot;
+
+    Scenario: Send and receive
+      When <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> sends message <span class="hljs-tag">&lt;<span class="hljs-title">echoRequest</span>&gt;</span>
+      Then <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> should receive message <span class="hljs-tag">&lt;<span class="hljs-title">echoResponse</span>&gt;</span>
+</code></pre>
+<p>In the <strong>Background</strong> section we introduce named messages <strong>echoRequest</strong> and <strong>echoResponse</strong> . This makes use of the new predefined step for adding named message:</p>
+<pre><code class="lang-xml">Given message [message-name]
+</code></pre>
+<p>Once the message is introduced with its name we can use the message in further configuration steps. You can add payload information and you can add multiple headers to the message. The named message then is referenced in send and receive steps as follows:</p>
+<pre><code class="lang-xml">When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> sends message <span class="hljs-tag">&lt;<span class="hljs-title">[message-name]</span>&gt;</span>
+Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should receive message <span class="hljs-tag">&lt;<span class="hljs-title">[message-name]</span>&gt;</span>
+</code></pre>
+<p>The steps reference a message by its name <strong>echoRequest</strong> and <strong>echoResponse</strong> .</p>
+<p>As you can see the named messages are used to define complete messages with payload and header information. Of course the named messages can be referenced in many scenarios and steps. Also with usage of test variables in payload and header you can dynmaically adjust those messages in each step.</p>
+<h3 id="message-creator-steps">Message creator steps</h3>
+<p>In the previous section we have learned how to use named messages as predefined step. The named message has been defined directly in the stories so far. The message creator concept moves this task to some Java POJO. This way you are able to construct more complicated messages for reuse in several scenarios and feature stories.</p>
+<p>As usual we demonstrate this in a first example:</p>
+<pre><code class="lang-xml">Feature: Message creator features
+
+    Background:
+      Given message creator com.consol.citrus.EchoMessageCreator
+      And variable messageText is &quot;Hello&quot;
+      And variable operation is &quot;sayHello&quot;
+
+    Scenario: Send and receive
+      When <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> sends message <span class="hljs-tag">&lt;<span class="hljs-title">echoRequest</span>&gt;</span>
+      Then <span class="hljs-tag">&lt;<span class="hljs-title">echoEndpoint</span>&gt;</span> should receive message <span class="hljs-tag">&lt;<span class="hljs-title">echoResponse</span>&gt;</span>
+</code></pre>
+<p>In the <strong>Background</strong> section we introduce a message creator <strong>EchoMessageCreator</strong> in package <strong>com.consol.citrus</strong> . This makes use of the new predefined step for adding message creators to the test:</p>
+<pre><code class="lang-xml">Given message creator [message-creator-name]
+</code></pre>
+<p>The message creator name must be the fully qualified Java class name with package information. Once this is done we can use named messages in the send and receive operations:</p>
+<pre><code class="lang-xml">When <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> sends message <span class="hljs-tag">&lt;<span class="hljs-title">[message-name]</span>&gt;</span>
+Then <span class="hljs-tag">&lt;<span class="hljs-title">[endpoint-name]</span>&gt;</span> should receive message <span class="hljs-tag">&lt;<span class="hljs-title">[message-name]</span>&gt;</span>
+</code></pre>
+<p>The steps reference a message by its name <strong>echoRequest</strong> and <strong>echoResponse</strong> . Now lets have a look at the message creator <strong>EchoMessageCreator</strong> implementation in order to see how this correlates to a real message.</p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">EchoMessageCreator</span> </span>{
+    <span class="hljs-annotation">@MessageCreator</span>(<span class="hljs-string">&quot;echoRequest&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Message <span class="hljs-title">createEchoRequest</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefaultMessage(<span class="hljs-string">&quot;&quot;</span> +
+            <span class="hljs-string">&quot;${messageText}&quot;</span> +
+          <span class="hljs-string">&quot;&quot;</span>)
+            .setHeader(<span class="hljs-string">&quot;operation&quot;</span>, <span class="hljs-string">&quot;${operation}&quot;</span>);
+    }
+
+    <span class="hljs-annotation">@MessageCreator</span>(<span class="hljs-string">&quot;echoResponse&quot;</span>)
+    <span class="hljs-function"><span class="hljs-keyword">public</span> Message <span class="hljs-title">createEchoResponse</span><span class="hljs-params">()</span> </span>{
+      <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefaultMessage(<span class="hljs-string">&quot;&quot;</span> +
+            <span class="hljs-string">&quot;${messageText}&quot;</span> +
+          <span class="hljs-string">&quot;&quot;</span>)
+            .setHeader(<span class="hljs-string">&quot;operation&quot;</span>, <span class="hljs-string">&quot;${operation}&quot;</span>);
+    }
+}
+</code></pre>
+<p>As you can see the message creator is a POJO Java class that defines one or more methods that are annotated with <strong>@MessageCreator</strong> annotation. The annotation requires a message name. This is how Citrus will correlate message names in feature stories to message creator methods. The message returned is the used for the send and receive operations in the test. The message creator is reusable accross multiple feature stories and scenarios. In addition to that the creator is able to construct messages in a more powerful way. For instance the message payload could be loaded from file system resources.</p>
+<h3 id="echo-steps">Echo steps</h3>
+<p>Another predefined step definition in Citrus is used to add a <strong>echo</strong> test action. You can use the following step in your feature scenarios:</p>
+<pre><code class="lang-xml">Feature: Echo features
+
+    Scenario: Echo messages
+      Given variable foo is &quot;bar&quot;
+      Then echo &quot;Variable foo=${foo}&quot;
+      Then echo &quot;Today is citrus:currentDate()&quot;
+</code></pre>
+<p>The step definition requires following pattern:</p>
+<pre><code class="lang-xml">Then echo &quot;[message]&quot;
+</code></pre>
+<h3 id="sleep-steps">Sleep steps</h3>
+<p>You can add <strong>sleep</strong> test actions to the feature scenarios:</p>
+<pre><code class="lang-xml">Feature: Sleep features
+
+      Scenario: Sleep default time
+        Then sleep
+
+      Scenario: Sleep milliseconds time
+        Then sleep 200 ms
+</code></pre>
+<p>The step definition requires one of the following patterns:</p>
+<pre><code class="lang-xml">Then sleep
+Then sleep [time] ms
+</code></pre>
+<p>This adds a new sleep test action to the Citrus test.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./jmx.html" class="navigation navigation-prev " aria-label="Previous page: Jmx"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./zookeeper.html" class="navigation navigation-next " aria-label="Next page: Zookeeper"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

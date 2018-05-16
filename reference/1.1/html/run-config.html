@@ -1,0 +1,83 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;4.&nbsp;Running tests</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.75.2"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="prev" href="testcase.html" title="Chapter&nbsp;3.&nbsp;Test case"><link rel="next" href="messaging.html" title="Chapter&nbsp;5.&nbsp;Messaging"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;4.&nbsp;Running tests</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="testcase.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="messaging.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;4.&nbsp;Running tests"><div class="titlepage"><div><div><h2 class="title"><a name="run-config"></a>Chapter&nbsp;4.&nbsp;Running tests</h2></div></div></div><p>Citrus test cases consist of two parts. On the one hand the XML part where you define what should happen
+    in the test case. On the other hand the Java part which is responsible for test execution. In the following sections 
+    we concentrate on the Java part and the test execution mechanism.</p><p>So if you create new test cases in Citrus - for instance via Maven plugin or ANT build script - Citrus 
+    generates both parts in your test directory. Let's have an example: If you create a new test named 
+    <span class="emphasis"><em>MyFirstCitrusTest</em></span> you will find those two files as a result:</p><p><code class="literal">src/citrus/tests/com/consol/citrus/MyFirstCitrusTest.xml</code></p><p><code class="literal">src/citrus/java/com/consol/citrus/MyFirstCitrusTest.java</code></p><p>With this test creation we already have made a very important decision. During creation wizard Citrus asks 
+    you which execution framework should be used for this test. There are basically three options available: 
+    <code class="literal">testng</code>, <code class="literal">junit3</code> and <code class="literal">junit4</code>.</p><p>So why is Citrus related to Unit tests although it is intended to be a framework for integration testing? 
+    The answer to this question is quite simple: This is because Citrus wants to benefit from both JUnit and TestNG for 
+    Java test execution. Both JUnit and TestNG Java APIs offer various ways of execution and both are widely supported 
+    by other tools and frameworks.</p><p>Plus users might already know one of these frameworks and the chances are good that you are familiar with them. 
+    Everything you can do with JUnit and TestNG test cases you can do with Citrus tests. Include them into your Maven build 
+    lifecycle. Execute tests from your IDE (Eclipse, IDEA or NetBeans). Include them into a continuous build tool (e.g. 
+    Bamboo or Hudson). Generate test execution reports and test coverage reports. The possibilities with JUnit and TestNG are 
+    amazing.</p><p>So let us have a closer look at the Citrus TestNG and JUnit integration.</p><div class="section" title="4.1.&nbsp;Run with TestNG"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="run-config-testng"></a>4.1.&nbsp;Run with TestNG</h2></div></div></div><p>TestNG stands for next generation testing and has had a great influence in adding Java annotations to the unit
+        test community. Citrus is able to generate TestNG Java classes that are executable as test cases. See the following standard
+        template that Citrus will generate when having new test cases:</p><pre class="programlisting">
+  <b class="hl-keyword">package</b> com.consol.citrus.samples;
+
+  <b class="hl-keyword">import</b> org.testng.ITestContext;
+  <b class="hl-keyword">import</b> org.testng.annotations.Test;
+  
+  <b class="hl-keyword">import</b> com.consol.citrus.testng.AbstractTestNGCitrusTest;
+    
+  <b class="hl-tag" style="color: blue">/**
+   * TODO: Description
+   *
+   * @author Unknown
+   * @since 2010-06-05
+   */</b>
+  <b class="hl-keyword">public</b> <b class="hl-keyword">class</b> TestNGSampleTest <b class="hl-keyword">extends</b> AbstractTestNGCitrusTest {
+      <i><span class="hl-annotation" style="color: gray">@Test</span></i>
+      <b class="hl-keyword">public</b> <b class="hl-keyword">void</b> sampleTest(ITestContext testContext) {
+          executeTest(testContext);
+      }
+  }
+        </pre><p>If you are familiar with TestNG you will see that the Citrus generated Java class is nothing but a normal TestNG test class.
+        The good news is that we can still use the fantastic TestNG features in our test. You can think of parallel test execution, test groups, 
+        setup and tear down operations and many more. Just to give an example we can simply add a test group to our test like this:</p><p><code class="literal">@Test(groups = {"long-running"})</code></p><p>For more information on TestNG please visit the official homepage where you also find a reference documentation on all features.</p></div><div class="section" title="4.2.&nbsp;Run with JUnit"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="run-config-junit"></a>4.2.&nbsp;Run with JUnit</h2></div></div></div><p>JUnit is a very popular unit test framework for Java applications widely accepted and widely supported by many tools and frameworks. 
+        Citrus offers complete JUnit support for both major versions 3.x and 4.x. If you choose <span class="emphasis"><em>junit3</em></span> as execution framework 
+        Citrus generates a Java file that looks like this:</p><pre class="programlisting">
+  <b class="hl-keyword">package</b> com.vodafone.uc.il.itest.service;
+
+  <b class="hl-keyword">import</b> com.consol.citrus.junit.AbstractJUnit38CitrusTest;
+  
+  <b class="hl-tag" style="color: blue">/**
+   * TODO: Description
+   *
+   * @author Unknown
+   * @since 2010-06-05
+   */</b>
+  <b class="hl-keyword">public</b> <b class="hl-keyword">class</b> JUnit3SampleTest <b class="hl-keyword">extends</b> AbstractJUnit38CitrusTest {
+      <b class="hl-keyword">public</b> <b class="hl-keyword">void</b> testSampleTest() {
+          executeTest();
+      }
+  }      
+        </pre><p>For <span class="emphasis"><em>junit4</em></span> the respective file looks like this:</p><pre class="programlisting">
+  <b class="hl-keyword">package</b> com.vodafone.uc.il.itest.service;
+
+  <b class="hl-keyword">import</b> org.junit.Test;
+  <b class="hl-keyword">import</b> com.consol.citrus.junit.AbstractJUnit4CitrusTest;
+  
+  <b class="hl-tag" style="color: blue">/**
+   * TODO: Description
+   *
+   * @author Unknown
+   * @since 2010-06-10
+   */</b>
+  <b class="hl-keyword">public</b> <b class="hl-keyword">class</b> SampleTest <b class="hl-keyword">extends</b> AbstractJUnit4CitrusTest {
+      <i><span class="hl-annotation" style="color: gray">@Test</span></i>
+      <b class="hl-keyword">public</b> <b class="hl-keyword">void</b> sampleTest() {
+          executeTest();
+      }
+  }
+        </pre><p>The different JUnit versions reveal slight differences, but the idea is the same. We are still
+        able to extend the generated Java files with JUnit features. These Java files are responsible for 
+        executing the Citrus test cases. For detailed information about JUnit and the fantastic ways to include
+        those tests into your project please visit the official JUnit homepage.</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td align="left" valign="top"><p>So now we know both TestNG and JUnit support in Citrus. Which framework should someone choose?
+            To be honest, there is no easy answer to this question. The basic features are equal to each other, 
+            where TestNG offers better possibilities for designing more complex test setup with test groups and 
+            tasks before and after a group of tests. This is why TestNG is the default option in Citrus. But at 
+            the end you have to decide on your own which framework fits best for your project.</p></td></tr></table></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="testcase.html">Prev</a>&nbsp;</td><td width="20%" align="center">&nbsp;</td><td width="40%" align="right">&nbsp;<a accesskey="n" href="messaging.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;3.&nbsp;Test case&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;5.&nbsp;Messaging</td></tr></table></div></body></html>

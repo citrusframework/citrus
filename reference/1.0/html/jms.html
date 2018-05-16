@@ -1,0 +1,87 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;10.&nbsp;Connecting with JMS</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="xpath.html" title="Chapter&nbsp;9.&nbsp;Using XPath"><link rel="next" href="http.html" title="Chapter&nbsp;11.&nbsp;Http Support"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;10.&nbsp;Connecting with JMS</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="xpath.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="http.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="jms"></a>Chapter&nbsp;10.&nbsp;Connecting with JMS</h2></div></div><div></div></div><p>Citrus provides support for sending and receiving JMS messages. We have to seperate between synchronous and asynchronous
+    communication. So in this chapter we explain how to setup JMS message senders and receivers for synchronous and asynchronous
+    outbound and inbound communication</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>Citrus provides a "citrus" configuration namespace and schema definition. Include this namespace into your Spring 
+        configuration in order to use the Citrus configuration elements. The namespace URI and schema location are added to the 
+        Spring configuration XML file as follows.</p><pre class="programlisting">
+  &lt;beans xmlns="http://www.springframework.org/schema/beans"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:citrus="http://www.citrusframework.org/schema/config"
+         xsi:schemaLocation="
+         http://www.springframework.org/schema/beans 
+         http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+         http://www.citrusframework.org/schema/config 
+         http://www.citrusframework.org/schema/config/citrus-config.xsd"&gt;
+         
+      [...]
+      
+  &lt;/beans&gt;
+        </pre><p>After that you are able to use customized Citrus XML elements in order to define the Spring beans.</p></td></tr></table></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="jms-sender"></a>10.1.&nbsp;JMS message sender</h2></div></div><div></div></div><p>First of all we deal with asynchronous message senders, which means that Citrus is publishing messages to a JMS destination
+        (queue or topic). The test case itself does not know about JMS tranport details like queue names or connection 
+        credentials. This information is stored in the basic Spring configuration. So let us have a look at a simple JMS message sender 
+        configuration in Citrus.</p><pre class="programlisting">
+  &lt;bean id="connectionFactory" 
+           class="org.apache.activemq.ActiveMQConnectionFactory"&gt;
+      &lt;property name="brokerURL" 
+                   value="tcp://localhost:61616" /&gt;
+  &lt;/bean&gt;
+  
+  &lt;citrus:jms-message-sender id="getOrdersRequestSender" 
+                                destination-name="Citrus.JMS.Order.Queue.Out"/&gt;
+        </pre><p>The JMS connection factory is responsible for connecting to a JMS message broker. In this example we use the Apache ActiveMQ 
+        connection factory implementation as we use a ActiveMQ message broker.</p><div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Tip"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Tip]" src="images/admons/tip.png"></td><th align="left">Tip</th></tr><tr><td colspan="2" align="left" valign="top"><p>Spring makes it very easy to connect to other JMS broker implementations too (e.g. TIBCO Enterprise Messaging Service, 
+            IBM Websphere MQ). Just substitute the implementing class in the connectionFactory bean.</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>All of the JMS senders and receivers that require a reference to a JMS connection factory will automatically look for a bean 
+            named "connectionFactory" by default. That is why you don't see a "connection-factory" attribute in many of the examples. 
+            However, you can use the "connection-factory" attribute in order to use other connection factory instances with different bean 
+            names.</p><pre class="programlisting">
+  &lt;citrus:jms-message-sender id="getOrdersRequestSender" 
+                                destination-name="Citrus.JMS.Order.Queue.Out"
+                                connection-factory="myConnectionFacotry"/&gt;
+              </pre><p>Alternatively you may want to directly specify a Spring jmsTemplate.</p><pre class="programlisting">
+  &lt;citrus:jms-message-sender id="getOrdersRequestSender" 
+                                destination-name="Citrus.JMS.Order.Queue.Out"
+                                jms-template="myJmsTemplate"/&gt;
+            </pre></td></tr></table></div></div><p>The message sender is now ready for usage inside a test. Many sending actions and test cases reference the message sender. The 
+    message sender will simply publish the message to the defined JMS destination. The communication is supposed to be asynchronous, which
+    means that the sender will not wait for a synchronous response. The sender fires and forgets the message immediately.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="jms-receiver"></a>10.2.&nbsp;JMS message receiver</h2></div></div><div></div></div><p>Now lets deal with receiving an async message over JMS. The message receiver definition is located again in the Spring 
+        configuration files. We assume that a connection factory has been configured as shown in the previous section.</p><pre class="programlisting">
+  &lt;citrus:jms-message-receiver id="getOrdersResponseReceiver" 
+                                  destination-name="Citrus.JMS.Order.Queue.In"/&gt;
+        </pre><p> The receiver acts as a message driven listener. This means that the message receiver connects to the given destination 
+        and waits for messages to arrive.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>Besides the destination-name attribute you can also provide a reference to a Destination implementation.</p><pre class="programlisting">
+  &lt;citrus:jms-message-receiver id="getOrdersResponseReceiver" 
+                                  destination="orderInboundQueue"/&gt;
+            </pre><p>This destination reference applies to all JMS aware message sender and receiver implementations.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="jms-sync-sender"></a>10.3.&nbsp;JMS synchronous message sender</h2></div></div><div></div></div><p>When using synchronous message senders Citrus will define a reply-to-queue destination in the message header and wait 
+        synchronously for the response on this destination.</p><pre class="programlisting">
+  &lt;citrus:jms-sync-message-sender id="getCustomerRequestSender" 
+                              destination-name="Citrus.JMS.Customer.Queue.Out"
+                              reply-handler="getCustomerReplyHandler"
+                              reply-timeout="1000"/&gt;
+                              
+  &lt;citrus:jms-reply-message-handler id="getCustomerReplyHandler"/&gt;      
+        </pre><p>To build synchronous outbound communication we need both a synchronous message sender and a reply handler. Both are defined
+        in the Spring configuration. The sender sends the message and waits for the response synchronously. Once the reply has arrived the 
+        reply handler is invoked with the respective reply message. The second possibility would be a timeout while receiving the reply.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>The message sender creates a temporary JMS reply destination by default in order to receive the reply. The temporary 
+            destination name is stored to the JMS replyTo message header. You can also define a static reply destination like follows.</p><pre class="programlisting">
+  &lt;citrus:jms-sync-message-sender id="getCustomerRequestSender" 
+                              destination-name="Citrus.JMS.Customer.Queue.Out"
+                              reply-destination-name="Citrus.JMS.Customer.Queue.Reply"
+                              reply-handler="getCustomerReplyHandler"
+                              reply-timeout="1000"/&gt;
+            </pre><p>Instead of using the <span class="emphasis"><em>reply-destination-name</em></span> feel free to use the destination reference
+            <span class="emphasis"><em>reply-destination</em></span></p></td></tr></table></div><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/admons/important.png"></td><th align="left">Important</th></tr><tr><td colspan="2" align="left" valign="top"><p>Be aware of permissions that are mandatory for creating temporary destinations. Citrus tries to create temporary queues
+          on the JMS message broker. Following from that the Citrus JMS user has to have the permission to do so. 
+          Be sure that the user has the sufficient rights when using temporary reply destinations.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="jms-sync-receiver"></a>10.4.&nbsp;JMS synchronous message receiver</h2></div></div><div></div></div><p>What is missing is the situation that Citrus receives a JMS message where a temporary reply destination is set.
+        When dealing with synchronous JMS communication the requestor will store a dynamic JMS queue destination into the JMS 
+        header in order to receive the synchronous answer on this dynamic destination. So Citrus has to send the reply to the 
+        temporary destination, which is dynamic of course. You can handle this with the synchronous message receiver in combination 
+        with a reply sender.</p><pre class="programlisting">
+  &lt;citrus:jms-sync-message-receiver id="getOrderRequestReceiver" 
+                                       destination-name="Citrus.JMS.Order.Queue.In"/&gt;
+                                       
+  &lt;citrus:jms-reply-message-sender id="getOrderReplySender"
+                                      reply-destination-holder="getOrderRequestReceiver"/&gt;
+        </pre><p>In first sight the synchronous message receiver has no difference to a normal receiver, but the difference comes in
+        combination with a synchronous reply sender. The reply sender need to know the dynamic reply destination, so it desires a
+        reference to a reply-destination-holder, which is our jms-sync-message-receiver.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="xpath.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="http.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;9.&nbsp;Using XPath&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;11.&nbsp;Http Support</td></tr></table></div></body></html>

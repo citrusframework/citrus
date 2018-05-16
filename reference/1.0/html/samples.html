@@ -1,0 +1,361 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Appendix&nbsp;A.&nbsp;Citrus samples</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="reporting.html" title="Chapter&nbsp;18.&nbsp;Reporting and test results"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Appendix&nbsp;A.&nbsp;Citrus samples</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="reporting.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;</td></tr></table><hr></div><div class="appendix" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="samples"></a>Appendix&nbsp;A.&nbsp;Citrus samples</h2></div></div><div></div></div><p>This part will show you some sample applications that are tested using Citrus integration tests. 
+        See below a list of all samples.</p><div class="itemizedlist"><ul type="disc"><li><p><a href="samples.html#samples-flightbooking" title="A.1.&nbsp;The FlightBooking sample">Section&nbsp;A.1, &#8220;The FlightBooking sample&#8221;</a></p></li></ul></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="samples-flightbooking"></a>A.1.&nbsp;The FlightBooking sample</h2></div></div><div></div></div><p>A simple project example should give you the idea how Citrus works. The system under test is a flight booking service that 
+    handles travel requests from a travel agency. A travel request consits of a complete travel route including several flights. The 
+    FlightBookingService application will split the complete travel booking into seperate flight bookings that are sent to the respective
+    airlines in charge. The booking and customer data is persisted in a database.</p><p>The arilines will confirm or deny the flight bookings. The FlightBookingService application consolidates all incoming flight 
+    confirmations and combines them to a complete travel confirmation or denial that is sent back to the travel agency. Next picture
+    tries to put the architecture into graphics:</p><p>
+      </p><div class="mediaobject" align="center"><img src="images/samples/flightbooking/architecture_overview.jpg" align="middle"></div><p>
+    </p><p>In our example two different arilines are connected to the FlightBookingService application: the SmartAriline over JMS and
+    the RoyalAirline over Http.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="samples-flightbooking-usecase"></a>A.1.1.&nbsp;The use case</h3></div></div><div></div></div><p>The use case that we would like to test is quite simple. The test should handle a simple travel booking and expect a positive
+        processing to the end. The test case neither simulates business errors nor technical problems. Next picture shows the use case
+        as a sequence diagram.</p><p>
+          </p><div class="mediaobject" align="center"><img src="images/samples/flightbooking/sequence_diagram.jpg" align="middle"></div><p>
+        </p><p>The travel agency puts a travel booking request towards the system. The travel booking contains two seperate flights. The
+        flight requests are published to the airlines (SmartAirline and RoyalAirline). Both airlines confirm the flight bookings with a positive
+        answer. The consolidated travel booking response is then sent back to the travel agency.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="samples-flightbooking-configuration"></a>A.1.2.&nbsp;Configure the simulated systems</h3></div></div><div></div></div><p>Citrus simulates all surrounding applications in their behaviour during the test. The simulated applications are:
+        TravelAgency, SmartAirline and RoyalAirline. The simulated systems have to be configured in the Citrus configuration first.
+        The configuration is done in Spring XML configuration files, as Citrus uses Spring to glue all its services together.</p><p>First of all we have a look at the TravelAgency configuration. The TravelAgency is using JMS to connect to our tested system, so
+        we need to configure this JMS connection in Citrus.</p><pre class="programlisting">
+  &lt;bean name="connectionFactory" 
+           class="org.apache.activemq.ActiveMQConnectionFactory"&gt;
+      &lt;property name="brokerURL" 
+                   value="tcp://localhost:61616" /&gt;
+  &lt;/bean&gt;
+  
+  &lt;citrus:jms-message-sender id="travelAgencyBookingRequestSender" 
+                                destination-name="${travel.agency.request.queue}"/&gt;
+  
+  &lt;citrus:jms-message-receiver id="travelAgencyBookingResponseReceiver" 
+                                  destination-name="${travel.agency.response.queue}"/&gt;
+        </pre><p>This is all Citrus needs to send and receive messages over JMS in order to simulate the TravelAgency. By default all JMS message
+        senders and receivers need a connection factory. Therefore Citrus is searching for a bean named "connectionFactory". In the example
+        we connect to a ActiveMQ message broker. A connection to other JMS brokers like TIBCO EMS or IBM Websphere MQ is possible too by
+        simply changing the connection factory implementation.</p><p>The identifyers of the message senders and receivers are very important. We should think of suitable ids that give the
+        reader a first hint what the sender/receiver is used for. As we want to simulate the TravelAgency in combination with sending
+        booking requests our id is "travelAgencyBookingRequestSender" for example.</p><p>The sender and receivers do also need a JMS destination. Here the destination names are provided by property expressions.
+        The Spring IoC container resolves the properties for us. All we need to do is publish the property file to the Spring container
+        like this.</p><pre class="programlisting">
+  &lt;bean name="propertyLoader" 
+           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"&gt;
+      &lt;property name="locations"&gt;
+          &lt;list&gt;
+              &lt;value&gt;citrus.properties&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+      &lt;property name="ignoreUnresolvablePlaceholders" 
+                   value="true"/&gt;
+  &lt;/bean&gt;
+        </pre><p>The citrus.properties file is located in our project's resources folder and defines the actual queue names besides
+        other properties of course:</p><pre class="programlisting">
+  #JMS queues
+  travel.agency.request.queue=Travel.Agency.Request.Queue
+  travel.agency.response.queue=Travel.Agency.Response.Queue
+  smart.airline.request.queue=Smart.Airline.Request.Queue
+  smart.airline.response.queue=Smart.Airline.Response.Queue
+  royal.airline.request.queue=Royal.Airline.Request.Queue    
+        </pre><p>What else do we need in our Spring configuration? There are some basic beans that are commonly defined in a Citrus
+        application but I do not want to bore you with these details. So if you want to have a look at the "citrus-context.xml" 
+        file in the resources folder and see how things are defined there.</p><p>We continue with the first airline to be configured the SmartAirline. The SmartAirline is also using JMS to communicate
+        with the FlightBookingService. So there is nothing new for us, we simply define additional JMS message senders and receivers.</p><pre class="programlisting">
+  &lt;citrus:jms-message-receiver id="smartAirlineBookingRequestReceiver" 
+                                  destination-name="${smart.airline.request.queue}"/&gt;
+  
+  &lt;citrus:jms-message-sender id="smartAirlineBookingResponseSender" 
+                                destination-name="${smart.airline.response.queue}"/&gt;
+        </pre><p>We do not define a new JMS connection factory because TravelAgency and SmartAirline are using the same message broker instance.
+        In case you need to handle multiple connection factories simply define the connection factory with the attribute "connection-factory".</p><pre class="programlisting">
+  &lt;citrus:jms-message-receiver id="smartAirlineBookingRequestReceiver" 
+                                  destination-name="${smart.airline.request.queue}"
+                                  connection-factory="smartAirlineConnectionFactory"/&gt;
+  
+  &lt;citrus:jms-message-sender id="smartAirlineBookingResponseSender" 
+                                destination-name="${smart.airline.response.queue}"
+                                connection-factory="smartAirlineConnectionFactory"/&gt;        
+        </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="samples-flightbooking-http"></a>A.1.3.&nbsp;Configure the Http adapter</h3></div></div><div></div></div><p>The RoyalAirline is connected to our system using Http request/response communication. This means we have to simulate a Http server
+        in the test that accepts client requests and provides proper responses. Citrus offers a Http server implementation that will listen on a
+        port for client requests. The adapter forwards incoming request to the test engine over JMS and receives a proper response that is 
+        forwarded as a Http response to the client. The next picture shows this mechanism in detail.</p><p>
+          </p><div class="mediaobject" align="center"><img src="images/samples/flightbooking/http_adapter.jpg" align="middle"></div><p>
+        </p><p>The RoyalAirline adapter receives client requsts over Http and sends them over JMS to a message receiver as we alredy know it. The
+        test engine validates the received request and provides a proper response back to the adapter. The adapter will transform the response 
+        to Http again and publishes it to the calling client. Citrus offers these kind of adapters for Http and SOAP communication. By writing 
+        your own adapters like this you will be able to extend Citrus so it works with protocols that are not supported yet.</p><p>Let us define the Http adapter in the Spring configuration:</p><pre class="programlisting">
+  &lt;citrus-http:server id="royalAirlineHttpServer" 
+                         port="8091" 
+                         uri="/flightbooking" 
+                         message-handler="jmsForwardingMessageHandler"/&gt;
+          
+  &lt;bean id="jmsForwardingMessageHandler" 
+           class="com.consol.citrus.http.handler.JmsConnectingMessageHandler"&gt;
+      &lt;property name="destinationName" 
+                   value="${royal.airline.request.queue}"/&gt;
+      &lt;property name="connectionFactory" 
+                   ref="connectionFactory" /&gt;
+      &lt;property name="replyTimeout" 
+                   value="2000"/&gt;
+  &lt;/bean&gt;        
+                      
+  &lt;citrus:jms-sync-message-receiver id="royalAirlineBookingRequestReceiver" 
+                                       destination-name="${royal.airline.request.queue}"/&gt;
+  
+  &lt;citrus:jms-reply-message-sender id="royalAirlineBookingResponseSender" 
+                                      reply-destination-holder="royalAirlineBookingRequestReceiver"/&gt;
+        </pre><p>We need to configure a Http server instance with a port, a request URI and a message handler. We define the
+        JMS forwarding message handler to handle request as described. In Addition to the message handler we also need synchrpnous JMS
+        message sender and receiver instances. That's it! We are able to receive Http request in order to simulate the RoyalAirline
+        application. What is missing now? The test case definition itself.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="samples-flightbooking-testcase"></a>A.1.4.&nbsp;The test case</h3></div></div><div></div></div><p>The test case definition is also a Spring configuration file. Citrus offers a customized XML syntax to define a test case.
+        This XML test defining language is supposed to be easy to understand and more specific to the domain we are dealing with. Next listing
+        shows the whole test case definition. Keep in mind that a test case defines every step in the use case. So we define sending and 
+        receiving actions of the use case as described in the sequence diagram we saw earlier.</p><pre class="programlisting">
+  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+  &lt;spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
+                   xmlns:spring="http://www.springframework.org/schema/beans" 
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+                   xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                   http://www.springframework.org/schema/beans/spring-beans-2.5.xsd 
+                   http://www.citrusframework.org/schema/testcase 
+                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd"&gt;
+      &lt;testcase name="FlightBookingTest"&gt;
+          &lt;meta-info&gt;
+              &lt;author&gt;Christoph Deppisch&lt;/author&gt;
+              &lt;creationdate&gt;2009-04-15&lt;/creationdate&gt;
+              &lt;status&gt;FINAL&lt;/status&gt;
+              &lt;last-updated-by&gt;Christoph Deppisch&lt;/last-updated-by&gt;
+              &lt;last-updated-on&gt;2009-04-15T00:00:00&lt;/last-updated-on&gt;
+          &lt;/meta-info&gt;
+          &lt;description&gt;
+              Test flight booking service.
+          &lt;/description&gt;
+          &lt;variables&gt;
+              &lt;variable name="correlationId" value="citrus:concat('Lx1x', 'citrus:randomNumber(10)')"/&gt;
+              &lt;variable name="customerId" value="citrus:concat('Mx1x', citrus:randomNumber(10))"/&gt;
+          &lt;/variables&gt;
+          &lt;actions&gt;
+              &lt;send with="travelAgencyBookingRequestSender"&gt;
+                  &lt;message&gt;
+                      &lt;data&gt;
+                        &lt;![CDATA[
+                          &lt;TravelBookingRequestMessage 
+                            xmlns="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd"&gt;
+                            &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                            &lt;customer&gt;
+                              &lt;id&gt;${customerId}&lt;/id&gt;
+                              &lt;firstname&gt;John&lt;/firstname&gt;
+                              &lt;lastname&gt;Doe&lt;/lastname&gt;
+                            &lt;/customer&gt;
+                            &lt;flights&gt;
+                                &lt;flight&gt;
+                                  &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                                  &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                                  &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                                  &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                                  &lt;date&gt;2009-04-15&lt;/date&gt;
+                                  &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                                  &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                                &lt;/flight&gt;
+                                &lt;flight&gt;
+                                  &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                                  &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                                  &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                                  &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                                  &lt;date&gt;2009-04-15&lt;/date&gt;
+                                  &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                                  &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                                &lt;/flight&gt;
+                            &lt;/flights&gt;                                
+                          &lt;/TravelBookingRequestMessage&gt;
+                        ]]&gt;
+                      &lt;/data&gt;
+                  &lt;/message&gt;
+                  &lt;header&gt;
+                      &lt;element name="correlationId" 
+                                  value="${correlationId}"/&gt;
+                  &lt;/header&gt;
+              &lt;/send&gt;
+              
+              &lt;receive with="smartAirlineBookingRequestReceiver"&gt;
+                  &lt;message&gt;
+                      &lt;data&gt;
+                        &lt;![CDATA[
+                          &lt;FlightBookingRequestMessage 
+                            xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd"&gt;
+                            &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                            &lt;bookingId&gt;???&lt;/bookingId&gt;
+                            &lt;customer&gt;
+                              &lt;id&gt;${customerId}&lt;/id&gt;
+                              &lt;firstname&gt;John&lt;/firstname&gt;
+                              &lt;lastname&gt;Doe&lt;/lastname&gt;
+                            &lt;/customer&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                              &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                          &lt;/FlightBookingRequestMessage&gt;
+                        ]]&gt;
+                      &lt;/data&gt;
+                      &lt;ignore path="//:FlightBookingRequestMessage/:bookingId"/&gt;
+                  &lt;/message&gt;
+                  &lt;header&gt;
+                      &lt;element name="correlationId" 
+                                  value="${correlationId}"/&gt;
+                  &lt;/header&gt;
+                  &lt;extract&gt;
+                      &lt;message path="//:FlightBookingRequestMessage/:bookingId" 
+                                  variable="${smartAirlineBookingId}"/&gt;
+                  &lt;/extract&gt;
+              &lt;/receive&gt;
+              
+              &lt;send with="smartAirlineBookingResponseSender"&gt;
+                  &lt;message&gt;
+                      &lt;data&gt;
+                        &lt;![CDATA[
+                          &lt;FlightBookingConfirmationMessage 
+                            xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd"&gt;
+                            &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                            &lt;bookingId&gt;${smartAirlineBookingId}&lt;/bookingId&gt;
+                            &lt;success&gt;true&lt;/success&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                              &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                          &lt;/FlightBookingConfirmationMessage&gt;
+                        ]]&gt;
+                      &lt;/data&gt;
+                  &lt;/message&gt;
+                  &lt;header&gt;
+                      &lt;element name="correlationId" 
+                                  value="${correlationId}"/&gt;
+                  &lt;/header&gt;
+              &lt;/send&gt;
+              
+              &lt;receive with="royalAirlineBookingRequestReceiver"&gt;
+                  &lt;message&gt;
+                      &lt;data&gt;
+                        &lt;![CDATA[
+                          &lt;FlightBookingRequestMessage 
+                            xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd"&gt;
+                            &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                            &lt;bookingId&gt;???&lt;/bookingId&gt;
+                            &lt;customer&gt;
+                                &lt;id&gt;${customerId}&lt;/id&gt;
+                                &lt;firstname&gt;John&lt;/firstname&gt;
+                                &lt;lastname&gt;Doe&lt;/lastname&gt;
+                            &lt;/customer&gt;
+                            &lt;flight&gt;
+                                &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                                &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                                &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                                &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                                &lt;date&gt;2009-04-15&lt;/date&gt;
+                                &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                                &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                          &lt;/FlightBookingRequestMessage&gt;
+                        ]]&gt;
+                      &lt;/data&gt;
+                      &lt;ignore path="//:FlightBookingRequestMessage/:bookingId"/&gt;
+                  &lt;/message&gt;
+                  &lt;header&gt;
+                      &lt;element name="correlationId" 
+                                  value="${correlationId}"/&gt;
+                  &lt;/header&gt;
+                  &lt;extract&gt;
+                      &lt;message path="//:FlightBookingRequestMessage/:bookingId" 
+                                  variable="${royalAirlineBookingId}"/&gt;
+                  &lt;/extract&gt;
+              &lt;/receive&gt;
+              
+              &lt;send with="royalAirlineBookingResponseSender"&gt;
+                  &lt;message&gt;
+                      &lt;data&gt;
+                        &lt;![CDATA[
+                          &lt;FlightBookingConfirmationMessage 
+                            xmlns="http://www.consol.com/schemas/FlightBooking/AirlineSchema.xsd"&gt;
+                            &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                            &lt;bookingId&gt;${royalAirlineBookingId}&lt;/bookingId&gt;
+                            &lt;success&gt;true&lt;/success&gt;
+                            &lt;flight&gt;
+                              &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                              &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                              &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                              &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                              &lt;date&gt;2009-04-15&lt;/date&gt;
+                              &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                              &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                            &lt;/flight&gt;
+                          &lt;/FlightBookingConfirmationMessage&gt;
+                        ]]&gt;
+                      &lt;/data&gt;
+                  &lt;/message&gt;
+                  &lt;header&gt;
+                      &lt;element name="correlationid" 
+                                  value="${correlationId}"/&gt;
+                  &lt;/header&gt;
+              &lt;/send&gt;
+              
+              &lt;receive with="travelAgencyBookingResponseReceiver"&gt;
+                  &lt;message&gt;
+                      &lt;data&gt;
+                        &lt;![CDATA[
+                          &lt;TravelBookingResponseMessage 
+                            xmlns="http://www.consol.com/schemas/FlightBooking/TravelAgency/TravelAgencySchema.xsd"&gt;
+                            &lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;
+                            &lt;success&gt;true&lt;/success&gt;
+                            &lt;flights&gt;
+                                &lt;flight&gt;
+                                    &lt;flightId&gt;SM 1269&lt;/flightId&gt;
+                                    &lt;airline&gt;SmartAirline&lt;/airline&gt;
+                                    &lt;fromAirport&gt;MUC&lt;/fromAirport&gt;
+                                    &lt;toAirport&gt;FRA&lt;/toAirport&gt;
+                                    &lt;date&gt;2009-04-15&lt;/date&gt;
+                                    &lt;scheduledDeparture&gt;11:55:00&lt;/scheduledDeparture&gt;
+                                    &lt;scheduledArrival&gt;13:00:00&lt;/scheduledArrival&gt;
+                                &lt;/flight&gt;
+                                &lt;flight&gt;
+                                    &lt;flightId&gt;RA 1780&lt;/flightId&gt;
+                                    &lt;airline&gt;RoyalAirline&lt;/airline&gt;
+                                    &lt;fromAirport&gt;FRA&lt;/fromAirport&gt;
+                                    &lt;toAirport&gt;HAM&lt;/toAirport&gt;
+                                    &lt;date&gt;2009-04-15&lt;/date&gt;
+                                    &lt;scheduledDeparture&gt;16:00:00&lt;/scheduledDeparture&gt;
+                                    &lt;scheduledArrival&gt;17:10:00&lt;/scheduledArrival&gt;
+                                &lt;/flight&gt;
+                            &lt;/flights&gt;                                
+                          &lt;/TravelBookingResponseMessage&gt;
+                        ]]&gt;
+                      &lt;/data&gt;
+                  &lt;/message&gt;
+                  &lt;header&gt;
+                      &lt;element name="correlationId" 
+                                  value="${correlationId}"/&gt;
+                  &lt;/header&gt;
+              &lt;/receive&gt;
+              
+          &lt;/actions&gt;
+      &lt;/testcase&gt;
+  &lt;/spring:beans&gt;
+        </pre><p>Similar to a sequence diagram the test case describes every step of the use case. At the very beginning the test case gets
+        name and its meta information. Following with the variable values that are used all over the test. Here it is the correlationId 
+        and the customerId that are used as test variables. Inside message templates header values the variables are referenced several
+        times in the test</p><p><tt class="literal">&lt;correlationId&gt;${correlationId}&lt;/correlationId&gt;</tt></p><p><tt class="literal">&lt;id&gt;${customerId}&lt;/id&gt;</tt></p><p>The sending/receiving actions use a previously defined message sender/receiver. This is the link between test case and basic 
+        Spring configuration we have done before.</p><p><tt class="literal">&lt;send with="travelAgencyBookingRequestSender"&gt;</tt></p><p>The sending action chooses a message sender to actually send the message using a message transport (JMS, Http, SOAP, etc.).
+        After sending this first "TravelBookingRequestMessage" request the test case expects the first "FlightBookingRequestMessage" 
+        message on the SmartAirline JMS destination. In case this message is not arriving in time the test will fail with errors.
+        In positive case our FlightBookingService works well and the message arrives in time. The received message is validated against
+        a defined expected message template. Only in case all content validation steps are successful the test continues with the action
+        chain. And so the test case proceeeds and works through the use case until every message is sent respectively received and 
+        validated. The use case is done automatically without human interaction. Citrus simulates all surrounding applications and 
+        provides detailed validation possibilities of messages.</p></div></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="reporting.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;</td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;18.&nbsp;Reporting and test results&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;</td></tr></table></div></body></html>

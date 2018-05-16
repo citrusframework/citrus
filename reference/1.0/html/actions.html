@@ -1,0 +1,333 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;5.&nbsp;Test actions</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="messaging.html" title="Chapter&nbsp;4.&nbsp;Send and receive messages"><link rel="next" href="templates.html" title="Chapter&nbsp;6.&nbsp;Templates"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;5.&nbsp;Test actions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="messaging.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="templates.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="actions"></a>Chapter&nbsp;5.&nbsp;Test actions</h2></div></div><div></div></div><p>This chapter gives a brief description to all test actions that a tester can incorporate into the test case. 
+  Besides sending and receiving messages the tester may access these actions in order to build a more complex test scenario
+  that fits the desired use case.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-database"></a>5.1.&nbsp;Connecting to the database</h2></div></div><div></div></div><p>In many cases it is necessary to access the database during a test. This enables a tester to also validate 
+    the persistent data in a database. It might also be helpful to prepare the database with some test data before running a test. 
+    You can do this using the two database actions that are descirbed in the following sections.</p><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="actions-database-update"></a>5.1.1.&nbsp;Updating the database</h3></div></div><div></div></div><p>The &lt;sql&gt; action simply executes a group of SQL statements in order to change data in a database.
+      Typically the action is used to prepare the database at the beginning of a test or to clean up the
+      database at the end of a test. You can specify SQL statements like INSERT, UPDATE,
+      DELETE, CREATE TABLE, ALTER TABLE and many more.</p><p>On the one hand you can specify the statements as inline SQL or stored in an external
+      SQL resource file as shown in the next two examples.</p><pre class="programlisting">
+  &lt;actions&gt;
+      &lt;sql datasource="someDataSource"&gt;
+          &lt;statement&gt;DELETE FROM CUSTOMERS&lt;/statement&gt;
+          &lt;statement&gt;DELETE FROM ORDERS&lt;/statement&gt;
+      &lt;/sql&gt;
+      
+      &lt;sql datasource="myDataSource"&gt;
+          &lt;resource file="file:tests/unit/resources/script.sql"/&gt;
+      &lt;/sql&gt;
+  &lt;/actions&gt;
+      </pre><p>The first action uses inline SQL statements defined directly inside the test case. The next action uses an external 
+      SQL resource file instead. The file resource can hold several SQL statements seperated by new lines. All statements inside 
+      the file are executed sequentially by the framework.</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/admons/important.png"></td><th align="left">Important</th></tr><tr><td colspan="2" align="left" valign="top"><p>You have to pay attention to some rules when dealing with external SQL resources.</p><div class="itemizedlist"><ul type="opencircle"><li style="list-style-type: circle"><p>Each statement should begin in a new line</p></li><li style="list-style-type: circle"><p>It is not allowed to define statements with word wrapping</p></li><li style="list-style-type: circle"><p>Comments begin with two dashes "--"</p></li></ul></div></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>The external file is referenced either as file system resource or class path resource,
+        by using the "file:" or "classpath:" prefix.</p></td></tr></table></div><p>Both examples use the "datasource" attribute. This value defines the database data source to be used. The connection to
+      a data source is mandatory, because the test case does not know about user credentials or database names. The 'datasource' attribute 
+      references predefined data sources that are located in a separate Spring configuration file.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h3 class="title"><a name="actions-database-query"></a>5.1.2.&nbsp;Verifying data from the database</h3></div></div><div></div></div><p>The &lt;sql&gt; action is specially designed to execute SQL queries (SELECT * FROM). So the test is able to get data from a database. 
+      The query results are validated against expected data as shown in the next example.</p><pre class="programlisting">
+  &lt;sql datasource="testDataSource"&gt;
+      &lt;statement&gt;select NAME from CUSTOMERS where ID='${customerId}'&lt;/statement&gt;
+      &lt;statement&gt;select count(*) from ERRORS&lt;/statement&gt;
+      &lt;statement&gt;select ID from ORDERS where DESC LIKE 'Def%'&lt;/statement&gt;
+      &lt;statement&gt;select DESCRIPTION from ORDERS where ID='${id}'&lt;/statement&gt;
+      
+      &lt;validate column="ID" value="1"/&gt;
+      &lt;validate column="NAME" value="Deppisch"/&gt;
+      &lt;validate column="COUNT(*)" value="${rowsCount}"/&gt;
+      &lt;validate column="DESCRIPTION" value="null"/&gt;
+  &lt;/sql&gt;
+      </pre><p>The action &lt;sql&gt; offers a wide range of validating functionality for database result sets. First
+      of all you have to select the data via SQL statements. Here again you have the choice to use inline SQL
+      statements or external file resource pattern.</p><p>The result sets are validated through &lt;validate&gt; elements. It is possible to do a detailed check on
+      every selected column of the result set. Simply refer to the selected column name in order to validate its
+      value. The usage of test variables is supported as well as database expressions like count(), avg(), min(),
+      max().</p><p>You simply define the &lt;validate&gt; entry with the column name as the "column" attribute and any expected
+      value expression as expected "value". The framework then will check the column to fit the expected value and raise 
+      validation errors in case of mismatch.</p><p>Looking at the first SELECT statement in the example you will see that test variables are supported in the 
+      SQL statements. The framework will replace the variable with its respective value before sending it to the database.</p><p>In the validation section variables can be used too. Look at the third validation entry, where the variable
+      "${rowsCount}" is used. The last validation in this example shows, that <tt class="literal">NULL</tt> values are 
+      also supported as expected values.</p><p>If a single validation happens to fail, the whole action will fail with respective validation errors.</p><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>When validating database query result sets Citrus can only handle single </p></td></tr></table></div></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-sleep"></a>5.2.&nbsp;Sleep</h2></div></div><div></div></div><p>This action shows how to make the test framework sleep for a given amount of time. The attribute 'time' defines 
+    the amount of time to wait in seconds. As shown in the next example decimal values are supported too. When no waiting time is
+    specified the default time of 5.0 seconds applies.</p><pre class="programlisting">
+  &lt;testcase name="sleepTest"&gt;
+      &lt;actions&gt;
+          &lt;sleep time="3.5"/&gt;
+          
+          &lt;sleep/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>When should somebody use this action? To us this action was always very useful in case the test needed to wait until 
+    an application had done some work. For example in some cases the application took some time to write some data into the database.
+    We waited then a small amount of time in order to avoid unnessesary test failures, because the test framework simply validated 
+    the database too early. Or as another example the test may wait a given time until retry mechanisms are triggered in the tested
+    application and then proceed with the test actions.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-java"></a>5.3.&nbsp;Java</h2></div></div><div></div></div><p>The test framework is written in Java and runs inside a Java virtual machine. The functionality of calling other 
+    Java objects and methods in this same Java VM through Java Reflection is self-evident. 
+    With this action you can call any Java API available at runtime through the specified Java classpath.</p><p>The action syntax looks like follows:</p><pre class="programlisting">
+  &lt;java class="com.consol.citrus.test.util.InvocationDummy"&gt;
+      &lt;constructor&gt;
+          &lt;argument type=""&gt;Test Invocation&lt;/argument&gt;
+      &lt;/constructor&gt;
+      &lt;method name="invoke"&gt;
+          &lt;argument type="String[]"&gt;1,2&lt;/argument&gt;
+      &lt;/method&gt;
+  &lt;/java&gt;
+  
+  &lt;java class="com.consol.citrus.test.util.InvocationDummy"&gt;
+      &lt;constructor&gt;
+          &lt;argument type=""&gt;Test Invocation&lt;/argument&gt;
+      &lt;/constructor&gt;
+      &lt;method name="invoke"&gt;
+          &lt;argument type="int"&gt;4&lt;/argument&gt;
+          &lt;argument type="String"&gt;Test Invocation&lt;/argument&gt;
+          &lt;argument type="boolean"&gt;true&lt;/argument&gt;
+      &lt;/method&gt;
+  &lt;/java&gt;
+      
+  &lt;java class="com.consol.citrus.test.util.InvocationDummy"&gt;
+      &lt;method name="main"&gt;
+          &lt;argument type="String[]"&gt;4,Test,true &lt;/argument&gt;
+      &lt;/method&gt;
+  &lt;/java&gt;
+    </pre><p>The Java class is specified by fully qualified class name. Constructor arguments are added using the &lt;constructor&gt; 
+    element with a list of &lt;argument&gt; child elements. The type of the argument is defined within the respective 
+    attribute "type". By default the type would be String.</p><p>The invoked method on the Java object is simply referenced by its name. Method arguments do not bring anything new 
+    after knowing the constructor argument definition, do they?.</p><p>Method arguments support data type conversion too, even string arrays (useful when
+    calling CLIs). In the third action in the example code you can see that colon separated strings are automatically 
+    converted to string arrays.</p><p>Simple data types are defined by their name (int, boolean, float etc.). Be sure that the invoked method
+    and class constructor fit your arguments and vice versa, otherwise you will cause errors at runtime.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-timeout"></a>5.4.&nbsp;Expect timeouts on a destination</h2></div></div><div></div></div><p>In some cases it might be necessary to validate that a message is <span class="emphasis"><em>not</em></span> present on a destination. 
+    This means that this action expects a timeout when receiving a message from an endpoint destination. For instance the tester 
+    intends to ensure that no message is sent to a certain destination in a time period. In that case the timeout would 
+    not be a test aborting error but the expected behaviour. And in contrast to the normal behaviour when a message is received 
+    in the time period the test will fail with error.</p><p>In order to validate such a timeout situation the action &lt;expectTimout&gt; shall help. The usage
+    is very simple as the following example shows:</p><pre class="programlisting">
+  &lt;testcase name="receiveJMSimeoutTest"&gt;
+      &lt;actions&gt;
+          &lt;expect-timeout message-receiver="myMessageReceiver" 
+                             wait="500"/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>The action offers two attributes:</p><div class="itemizedlist"><ul type="opencircle"><li style="list-style-type: circle"><p><span class="emphasis"><em>message-receiver</em></span>: Reference to a message receiver that will try to receive messages.</p></li><li style="list-style-type: circle"><p><span class="emphasis"><em>wait</em></span>: Time period to wait for messages to arrive</p></li></ul></div><p>TODO: describe receive selected!</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-echo"></a>5.5.&nbsp;Echo</h2></div></div><div></div></div><p>The &lt;echo&gt; action prints messages to the console/logger. This functionality is useful when
+    debugging test runs. The property "message" defines the text that is printed. Tester might use it to print
+    out debug messages and variables as shown the next code example:</p><pre class="programlisting">
+  &lt;testcase name="echoTest"&gt;
+      &lt;variables&gt;
+          &lt;variable name="date" 
+                       value="citrus:currentDate()"/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;echo&gt;
+              &lt;message&gt;Hello Test Framework&lt;/message&gt;
+          &lt;/echo&gt;
+          
+          &lt;echo&gt;
+              &lt;message&gt;Current date is: ${date}&lt;/message&gt;
+          &lt;/echo&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>Result on the console:</p><pre class="programlisting">
+  Hello Test Framework
+  Current time is: 05.08.2008
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-measure-time"></a>5.6.&nbsp;Time measurement</h2></div></div><div></div></div><p>Time measurement during a test can be very helpful. The &lt;trace-time&gt; action creates and monitors 
+    multiple timelines. The action offers the attribute "id" to identify a time line. The tester can of course 
+    use more than one time line with different ids simultaneously.</p><p>Read the next example and you will understand the mix of different time lines:</p><pre class="programlisting">
+  &lt;testcase name="timeWatcherTest_new"&gt;
+      &lt;actions&gt;
+          &lt;trace-time/&gt;
+          
+          &lt;trace-time id="time_line_id"/&gt;
+          
+          &lt;sleep time="3.5"/&gt;
+          
+          &lt;trace-time id=" time_line_id "/&gt;
+          
+          &lt;sleep time="5.0"/&gt;
+          
+          &lt;trace-time/&gt;
+          
+          &lt;trace-time id=" time_line_id "/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>The test output looks like follows:</p><pre class="programlisting">
+  Starting TimeWatcher:
+  Starting TimeWatcher: time_line_id
+  TimeWatcher time_line_id after 3.5 seconds
+  TimeWatcher after 8.5 seconds
+  TimeWatcher time_line_id after 8.5 seconds
+    </pre><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top">In case no time line id is specified the framework will measure the time for a default time line.</td></tr></table></div><p>To print out the current elapsed time for a time line you simply have to place the &lt;trace-time&gt; action into
+    the action chain again and again, using the respective time line identifier. The elapsed time will be printed out to the console every time.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-create-variables"></a>5.7.&nbsp;Create variables</h2></div></div><div></div></div><p>As you know variables usually are defined at the beginning of the test case (<a href="testcase.html#testcase-variables" title="3.1.2.&nbsp;Variables">Section&nbsp;3.1.2, &#8220;Variables&#8221;</a>). 
+    It might also be helpful to reset existing variables as well as to define new variables during the test. The 
+    action &lt;create-variables&gt; is able to declare new variables or overwrite existing ones.</p><pre class="programlisting">
+  &lt;testcase name="createVariablesTest"&gt;
+      &lt;variables&gt;
+          &lt;variable name="myVariable" value="12345"/&gt;
+          &lt;variable name="id" value="54321"/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;echo&gt;
+              &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
+          &lt;/echo&gt;
+          
+          &lt;create-variables&gt;
+              &lt;variable name="myVariable" value="${id}"/&gt;
+              &lt;variable name="newVariable" value="'this is a test'"/&gt;
+          &lt;/create-variables&gt;
+          
+          &lt;echo&gt;
+              &lt;message&gt;Current variable value: ${myVariable} &lt;/message&gt;
+          &lt;/echo&gt;
+      
+          &lt;echo&gt;
+              &lt;message&gt;New variable 'newVariable' has the value: ${newVariable} &lt;/message&gt;
+          &lt;/echo&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>The new variables are valid for the rest of the test. Actions reference them as usual through a variable expression.</p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-trace"></a>5.8.&nbsp;Trace variables</h2></div></div><div></div></div><p>You already know the &lt;echo&gt; action that prints messages to the console or logger. The
+    &lt;trace-variables&gt; action is specially designed to trace all currently valid test variables to the console. 
+    This was mainly used by us for debug reasons. The usage is quite simple:</p><pre class="programlisting">
+  &lt;testcase name="traceVariablesTest"&gt;
+      &lt;variables&gt;
+          &lt;variable name="myVariable" value="12345"/&gt;
+          &lt;variable name="nextVariable" value="54321"/&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;trace-variables&gt;
+              &lt;variable name="myVariable"/&gt;
+              &lt;variable name="nextVariable"/&gt;
+          &lt;/trace-variables&gt;
+          
+          &lt;trace-variables/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>Simply add the &lt;trace-variables&gt; action to your action chain and all variables will be printed out to
+    the console. You are able to define a special set of variables by using the &lt;variable&gt; child
+    elements. See the output that was generated by the test example above:</p><pre class="programlisting">
+  Current value of variable myVariable = 12345
+  Current value of variable nextVariable = 54321
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-fail"></a>5.9.&nbsp;Failing the test</h2></div></div><div></div></div><p>The fail action will generate an exception in order to terminate the test case with error. The test case will
+    therefore not be successful in the reports.</p><p>The user can specify a custom error message for the exception in order to describe the error cause. Here is a 
+    very simple example to clarify the syntax:</p><pre class="programlisting">
+  &lt;testcase name="failTest"&gt;
+      &lt;actions&gt;
+          &lt;fail message="Test will fail with custom message"/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>Test results:</p><pre class="programlisting">
+  Execution of test: failTest failed! Nested exception is: 
+  com.consol.citrus.exceptions.TestSuiteException: Test will fail with custom message
+  
+  [...]
+  
+  TEST RESULTS coreTestSuite
+  
+  failTest          : failed - Exception is: Test will fail with custom message
+  
+  Found 1 test cases to execute
+  Skipped 0 test cases (0.0%)
+  Executed 1 test cases, containing 3 actions
+  Tests failed:        1 (100.0%)
+  Tests successfully:  0 (0.0%) 
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-input"></a>5.10.&nbsp;Input</h2></div></div><div></div></div><p>During the test case execution it is possible to read some user input from the command line. The test execution will 
+    stop and wait for keyboard inputs over the standard input stream. The user has to type the input and end it with the return 
+    key.</p><p>The user input is stored to the respective variable value.</p><pre class="programlisting">
+  &lt;testcase name="inputTest"&gt;
+      &lt;variables&gt;
+          &lt;variable name="userinput" value=""&gt;&lt;/variable&gt;
+          &lt;variable name="userinput1" value=""&gt;&lt;/variable&gt;
+          &lt;variable name="userinput2" value="y"&gt;&lt;/variable&gt;
+          &lt;variable name="userinput3" value="yes"&gt;&lt;/variable&gt;
+          &lt;variable name="userinput4" value=""&gt;&lt;/variable&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;input/&gt;
+          &lt;echo&gt;&lt;message&gt;user input was: ${userinput}&lt;/message&gt;&lt;/echo&gt;
+          
+          &lt;input message="Now press enter:" variable="userinput1"/&gt;
+          &lt;echo&gt;&lt;message&gt;user input was: ${userinput1}&lt;/message&gt;&lt;/echo&gt;
+          
+          &lt;input message="Do you want to continue?" 
+                    valid-answers="y/n" variable="userinput2"/&gt;
+          &lt;echo&gt;&lt;message&gt;user input was: ${userinput2}&lt;/message&gt;&lt;/echo&gt;
+          
+          &lt;input message="Do you want to continue?" 
+                    valid-answers="yes/no" variable="userinput3"/&gt;
+          &lt;echo&gt;&lt;message&gt;user input was: ${userinput3}&lt;/message&gt;&lt;/echo&gt;
+          
+          &lt;input variable="userinput4"/&gt;
+          &lt;echo&gt;&lt;message&gt;user input was: ${userinput4}&lt;/message&gt;&lt;/echo&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>The input action has following attributes:</p><div class="itemizedlist"><ul type="opencircle"><li style="list-style-type: circle"><p><span class="emphasis"><em>message</em></span> -&gt; message displayed to the user</p></li><li style="list-style-type: circle"><p><span class="emphasis"><em>valid-answers</em></span> -&gt; optional slash separated string containing the possible answers</p></li><li style="list-style-type: circle"><p><span class="emphasis"><em>variable</em></span> -&gt; destination variable to store the user input (default = ${userinput})</p></li></ul></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>When user input is restrited to a set of valid answers the input validation of course can fail due to mismatch. 
+        In this case the user is again asked to provide the input until a valid answer is given.</p></td></tr></table></div><div class="note" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Note"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/admons/note.png"></td><th align="left">Note</th></tr><tr><td colspan="2" align="left" valign="top"><p>User inputs may not fit to automatic testing in terms of continuous integration testing where no user is present to 
+        type in the correct answer over the keyboard. In this case you can always skip the user input in advance by specifying
+        a variable that matches the user input variable name. As the user input variable is then already present the user 
+        input is missed out and the test proceeds automatically.</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-load"></a>5.11.&nbsp;Load</h2></div></div><div></div></div><p>You are able to load properties from external property files and store them as test variables. The action will
+    require a file resource either from class path or file system in order to read the property values.</p><p>Let us look at an example to get an idea about this action:</p><p>Content of load.properties:</p><pre class="programlisting">
+  username=Mickey Mouse
+  greeting.text=Hello Test Framework
+    </pre><pre class="programlisting">
+  &lt;testcase name="loadPropertiesTest"&gt;
+      &lt;actions&gt;
+          &lt;load&gt;
+              &lt;properties file="file:tests/resources/load.properties"/&gt;
+          &lt;/load&gt;
+          
+          &lt;trace-variables/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>Output:</p><pre class="programlisting">
+  Current value of variable username = Mickey Mouse
+  Current value of variable greeting.text = Hello Test Framework
+    </pre><p>The action will load all available properties in the file load.properties and store them to the test case
+    as local variables.</p><div class="important" style="margin-left: 0.5in; margin-right: 0.5in;"><table border="0" summary="Important"><tr><td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="images/admons/important.png"></td><th align="left">Important</th></tr><tr><td colspan="2" align="left" valign="top"><p>Existing variables are overwritten!</p></td></tr></table></div></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-purge"></a>5.12.&nbsp;Purging JMS destinations</h2></div></div><div></div></div><p>Purging JMS destinations during the test run is quite essential. Different test cases can influence each other when sending
+    messages to the same JMS destinations. A test case should only receive those messages that actually belong to it. Therefore it is a 
+    good idea to purge all JMS queue destinations between the test cases. Obsolete messages that are stuck in a JMS queue for some 
+    reason are then removed so that the following test case is not offended.</p><p>So we need to purge some JMS queues in out test case. This can be done with following action definition:</p><pre class="programlisting">
+  &lt;testcase name="purgeTest"&gt;
+    &lt;actions&gt;
+        &lt;purge-jms-queues&gt;
+            &lt;queue name="Some.JMS.QUEUE.Name"/&gt;
+            &lt;queue name="Another.JMS.QUEUE.Name"/&gt;
+            &lt;queue name="My.JMS.QUEUE.Name"/&gt;
+        &lt;/purge-jms-queues&gt;
+        
+        &lt;purge-jms-queues connection-factory="connectionFactory"&gt;
+            &lt;queue name="Some.JMS.QUEUE.Name"/&gt;
+            &lt;queue name="Another.JMS.QUEUE.Name"/&gt;
+            &lt;queue name="My.JMS.QUEUE.Name"/&gt;
+        &lt;/purge-jms-queues&gt;
+    &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>Purging the JMS queues in every test case is quite exhausting because every test case needs to define a purging action at the 
+    very beginning of the test. Fortunately the test suite definition offers tasks to run before, between and after the test cases which 
+    should ease up this tasks a lot. The test suite offers a very simple way to purge the destinations between the tests. 
+    See <a href="testsuite.html#testsuite-tasks" title="14.1.&nbsp;Tasks before, between and after the test run">Section&nbsp;14.1, &#8220;Tasks before, between and after the test run&#8221;</a> for more information about this.</p><p>When using the special tasks between a test case you might define a normal Spring bean definition that is referenced then. The 
+    'com.consol.citrus.actions.PurgeJmsQueuesAction' action offers the property "queueNames" to hold all destination names 
+    that are supposed to be purged. As you can see in the next example it is quite easy to specify a group of destinations in the Spring configuration.
+    This purging bean is then added to the test suite in the tasks between section.</p><pre class="programlisting">
+  &lt;bean id="purgeJmsQueues"
+      class="com.consol.citrus.actions.PurgeJmsQueuesAction"&gt;
+      &lt;property name="connectionFactory"&gt;
+          &lt;ref bean="tibcoQueueConnectionFactory"/&gt;
+      &lt;/property&gt;
+      &lt;property name="queueNames"&gt;
+          &lt;list&gt;
+              &lt;value&gt;${jms.queue.hello.request.in}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.hello.response.out}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.echo.request}&lt;/value&gt;
+              &lt;value&gt;${jms.queue.echo.response}&lt;/value&gt;
+              &lt;value&gt;JMS.Queue.Dummy&lt;/value&gt;
+          &lt;/list&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+    </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="actions-generic-action"></a>5.13.&nbsp;Including own actions</h2></div></div><div></div></div><p>The generic &lt;action&gt; element references Spring beans that implement the Java interface 
+    <tt class="literal">com.consol.citrus.TestAction</tt>. This is a very fast way to add your own action 
+    implementations to a test case. You can implement own actions in Java and include them into a test case.</p><pre class="programlisting">
+  &lt;testcase name="actionReferenceTest"&gt;
+      &lt;actions&gt;
+          &lt;action reference="cleanUpDatabase"/&gt;
+          &lt;action reference="mySpecialAction"/&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+    </pre><p>In the example above the called actions are special database cleanup implementations. The actions are defined as Spring beans 
+    in the Citrus configuration and get referenced by their bean name or id.</p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="messaging.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="templates.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;4.&nbsp;Send and receive messages&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;6.&nbsp;Templates</td></tr></table></div></body></html>

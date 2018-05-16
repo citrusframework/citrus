@@ -1,0 +1,225 @@
+/*
+ * Customizations for website.
+ */
+
+img[alt=citrus-logo] {
+    float: right;
+    width: 200px;
+}
+
+.book .book-body .page-wrapper .page-inner section.normal img {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+.book .book-body .page-wrapper .page-inner {
+    max-width: 1170px;
+}
+
+/* Code Highlighting Theme */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+.book .book-body .page-wrapper .page-inner section.normal pre {
+    background-color: #fefefe;
+    border: 1px solid #ddd;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.pln {
+    color: #4d4d4c;
+}
+
+@media screen {
+    .str {
+        color: #008080;
+    }
+
+    .kwd {
+        font-weight: bold;
+        color: #000080;
+    }
+
+    .com {
+        color: #8e908c;
+    }
+
+    .typ {
+        color: #4271ae;
+    }
+
+    .lit {
+        color: #000080;
+    }
+
+    .pun {
+        color: #4d4d4c;
+    }
+
+    .opn {
+        color: #4d4d4c;
+    }
+
+    .clo {
+        color: #4d4d4c;
+    }
+
+    .tag {
+        color: #000080;
+    }
+
+    .atn {
+        color: #3344ee;
+    }
+
+    .atv {
+        color: #008080;
+    }
+
+    .dec {
+        color: #3344ee;
+    }
+
+    .var {
+        font-weight: bold;
+        color: #3344ee;
+    }
+
+    .fun {
+        color: #4271ae;
+    }
+}
+
+@media print, projection {
+    .str {
+        color: #006600;
+    }
+
+    .kwd {
+        color: #006;
+        font-weight: bold;
+    }
+
+    .com {
+        color: #600;
+        font-style: italic;
+    }
+
+    .typ {
+        color: #404;
+        font-weight: bold;
+    }
+
+    .lit {
+        color: #004444;
+    }
+
+    .pun, .opn, .clo {
+        color: #444400;
+    }
+
+    .tag {
+        color: #006;
+        font-weight: bold;
+    }
+
+    .atn {
+        color: #440044;
+    }
+
+    .atv {
+        color: #006600;
+    }
+}
+
+/** Dark color theme */
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .pln,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .pln {
+    color: #9dbed8;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .pun,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .pun {
+    color: #9dbed8;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .tag,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .tag {
+    color: #bbdaff;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .kwd,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .kwd {
+    color: #9dbed8;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .atn,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .atn {
+    color: #7285b7;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .atv,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .atv {
+    color: #d1f1a9;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .lit,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .lit {
+    color: #d1f1a9;
+}
+
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal pre .str,
+.book.color-theme-2 .book-body .page-wrapper .page-inner section.normal code .str {
+    color: #7285b7;
+}
+
+/* Specify class=linenums on a pre to get line numbering */
+ol.linenums {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+/* IE indents via margin-left */
+li.L0,
+li.L1,
+li.L2,
+li.L3,
+li.L4,
+li.L5,
+li.L6,
+li.L7,
+li.L8,
+li.L9 {
+    /* */
+}
+
+/* Alternate shading for lines */
+li.L1,
+li.L3,
+li.L5,
+li.L7,
+li.L9 {
+    /* */
+}
+
+/* Anchor plugin */
+
+a.plugin-anchor span {
+    font-size: 20px !important;
+    margin-left: -45px;
+    padding-left: 0px;
+}
+
+/* Side navigation */
+
+.book .book-body .navigation {
+    top: auto;
+    height: 85px;
+}
+
+.book .book-body .navigation:hover {
+    color: #ccc;
+    background-color: #fafafa;
+}

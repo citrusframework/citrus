@@ -1,0 +1,1812 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Validation Matchers | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./data-dictionary.html" />
+    
+    
+    <link rel="prev" href="./functions.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="38"
+        data-chapter-title="Validation Matchers"
+        data-filepath="validation-matchers.md"
+        data-basepath="."
+        data-revision="Fri Oct 07 2016 09:23:51 GMT+0200 (CEST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes-new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test-case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        Json-path
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop-time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge-jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge-channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge-endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage-server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Generic-action
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Stop-timer
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="15.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.6.</b>
+                        
+                        Repeat-onerror
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Finally-section
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http-websocket
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Message-channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Endpoint-component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Endpoint-adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="38" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Data-dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Test-actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Test-suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Meta-info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Message-tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="45.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.1.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.2.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.3" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.3.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.4" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.4.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.5" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.5.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.6" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.6.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.7" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.7.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.8" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.8.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.9" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.9.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="validation-matcher">Validation matcher</h2>
+<p>Message validation in Citrus is essential. The framework offers several validation mechanisms for different message types and formats. With test variables we are able to check for simple value equality. We ensure that message entries are equal to predefined expected values. Validation matcher add powerful assertion functionality on top of that. You just can use the predefined validation matcher functionalities in order to perform more complex assertions like <strong>contains</strong> or <strong>isNumber</strong> in your validation statements.</p>
+<p>The following sections describe the Citrus default validation matcher implementations that are ready for usage. The matcher implementations should cover the basic assertions on character sequences and numbers. Of course you can add custom validation matcher implementations in order to meet your very specific validation assertions, too.</p>
+<p>First of all let us have a look at a validation matcher statement in action so we understand how to use them in a test case.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">RequestMessage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">MessageBody</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Customer</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Id</span>&gt;</span>@greaterThan(0)@<span class="hljs-tag">&lt;/<span class="hljs-title">Id</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">Name</span>&gt;</span>@equalsIgnoreCase(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">Name</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">Customer</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">MessageBody</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">RequestMessage</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p>The listing above describes a normal message validation block inside a receive test action. We use some inline message payload template as CDATA. As you know Citrus will compare the actual message payload to this expected template in DOM tree comparison. In addition to that you can simply include validation matcher statements. The message element <strong>Id</strong> is automatically validated to be a number greater than zero and the <strong>Name</strong> character sequence is supposed to match &apos;foo&apos; ignoring case spelling considerations.</p>
+<p>Please note the special validation matcher syntax. The statements are surrounded with &apos;@&apos; markers and are identified by some unique name. The optional parameters passed to the matcher implementation state the expected values to match.</p>
+<p><strong>Tip</strong>
+You can use validation matcher with all validation mechanisms - not only with XML validation. Plaintext, JSON, SQL result set validation are also supported.</p>
+<p>A set of validation matcher implementations is usually combined to a validation matcher library. The library has a prefix that will identify the validation matcher inside the test case. The default test framework validation matcher library uses a default prefix (citrus). You can write your own validation matcher library using your own prefix in order to extend the test framework functionality whenever you want.</p>
+<p>The library is built in the Spring configuration and contains a set of validation matcher that are of public use.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:validation</span> <span class="hljs-attribute">matcher-library</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;testMatcherLibrary&quot;</span> <span class="hljs-attribute">prefix</span>=<span class="hljs-value">&quot;foo:&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:matcher</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;isNumber&quot;</span>&gt;</span> class=&quot;com.consol.citrus.validation.matcher.core.IsNumberValidationMatcher&quot;/&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:matcher</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;contains&quot;</span>&gt;</span> class=&quot;com.consol.citrus.validation.matcher.core.ContainsValidationMatcher&quot;/&gt;
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:matcher</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;customMatcher&quot;</span>&gt;</span> ref=&quot;customMatcherBean&quot;/&gt;
+      ...
+      <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:validation</span> <span class="hljs-attribute">matcher-library</span>&gt;</span>
+</code></pre>
+<p>As you can see the library defines one to many validation matcher members either referenced as normal Spring bean or by its implementing Java class name. Citrus constructs the library and you are able to use the validation matcher in your test case with the leading library prefix just like this:</p>
+<pre><code class="lang-xml">@foo:isNumber()@
+      @foo:contains()@
+      @foo:customMatcher()@
+</code></pre>
+<p><strong>Tip</strong>
+You can add custom validation matcher implementations and custom validation matcher libraries. Just use a custom prefix for your library. The default Citrus validation matcher library uses no prefix.See now the following sections describing the default validation validation matcher in Citrus.</p>
+<h3 id="matchesxml">matchesXml()</h3>
+<p>The XML validation matcher implementation is the possibly most exciting one, as we can validate nested XML with full validation power (e.g. ignoring elements, variable support). The matcher checks a nested XML fragment to compare against expected XML. For instance we receive following XML message payload for validation:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">GetCustomerMessage</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">CustomerDetails</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Id</span>&gt;</span>5<span class="hljs-tag">&lt;/<span class="hljs-title">Id</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Name</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">Name</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">Configuration</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[
+            &lt;config&gt;
+                &lt;premium&gt;true&lt;/premium&gt;
+                &lt;last-login&gt;2012-02-24T23:34:23&lt;/last-login&gt;
+                &lt;link&gt;http://www.citrusframework.org/customer/5&lt;/link&gt;
+            &lt;/config&gt;
+          ]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">Configuration</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">CustomerDetails</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">GetCustomerMessage</span>&gt;</span>
+</code></pre>
+<p>As you can see the message payload contains some configuration as nested XML data in a CDATA section. We could validate this CDATA section as static character sequence comparison, true. But the <last-login> timestamp changes its value continuously. This breaks the static validation for CDATA elements in XML. Fortunately the new XML validation matcher provides a solution for us:</last-login></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">GetCustomerMessage</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">CustomerDetails</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Id</span>&gt;</span>5<span class="hljs-tag">&lt;/<span class="hljs-title">Id</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Name</span>&gt;</span>Christoph<span class="hljs-tag">&lt;/<span class="hljs-title">Name</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Configuration</span>&gt;</span>citrus:cdataSection(&apos;@matchesXml(&apos;<span class="hljs-tag">&lt;<span class="hljs-title">config</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">premium</span>&gt;</span>${isPremium}<span class="hljs-tag">&lt;/<span class="hljs-title">premium</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">last-login</span>&gt;</span>@ignore@<span class="hljs-tag">&lt;/<span class="hljs-title">last-login</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">link</span>&gt;</span>http://www.citrusframework.org/customer/5<span class="hljs-tag">&lt;/<span class="hljs-title">link</span>&gt;</span>
+                  <span class="hljs-tag">&lt;/<span class="hljs-title">config</span>&gt;</span>&apos;)@&apos;)<span class="hljs-tag">&lt;/<span class="hljs-title">Configuration</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">CustomerDetails</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">GetCustomerMessage</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p>With the validation matcher you are able to validate the nested XML with full validation power. Ignoring elements is possible and we can also use variables in our control XML.</p>
+<p><strong>Note</strong>
+Nested CDATA elements within other CDATA sections are not allowed by XML standard. This is why we create the nested CDATA section on the fly with the function cdataSection().### equalsIgnoreCase()</p>
+<p>This matcher implementation checks for equality without any case spelling considerations. The matcher expects a single parameter as the expected character sequence to check for.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@equalsIgnoreCase(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="contains">contains()</h3>
+<p>This matcher searches for a character sequence inside the actual value. If the character sequence is not found somewhere the matcher starts complaining.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@contains(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<p>The validation matcher also exist in a case insensitive variant.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@containsIgnoreCase(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="startswith">startsWith()</h3>
+<p>The matcher implementation asserts that the given value starts with a character sequence otherwise the matcher will arise some error.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@startsWith(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="endswith">endsWith()</h3>
+<p>Ends with matcher validates a value to end with a given character sequence.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@endsWith(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="matches">matches()</h3>
+<p>You can check a value to meet a regular expression with this validation matcher. This is for instance very useful for email address validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@matches(&apos;[a-z0-9]&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="matchesdatepattern">matchesDatePattern()</h3>
+<p>Date values are always difficult to check for equality. Especially when you have millisecond timestamps to deal with. Therefore the date pattern validation matcher should have some improvement for you. You simply validate the date format pattern instead of checking for total equality.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@matchesDatePattern(&apos;yyyy-MM-dd&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<p>The example listing uses a date format pattern that is expected. The actual date value is parsed according to this pattern and may cause errors in case the value is no valid date matching the desired format.</p>
+<h3 id="isnumber">isNumber()</h3>
+<p>Checking on values to be of numeric nature is essential. The actual value must be a numeric number otherwise the matcher raises errors. The matcher implementation does not evaluate any parameters.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@isNumber()@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="lowerthan">lowerThan()</h3>
+<p>This matcher checks a number to be lower than a given threshold value.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@lowerThan(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="greaterthan">greaterThan()</h3>
+<p>The matcher implementation will check on numeric values to be greater than a minimum value.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@greaterThan(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<h3 id="isweekday">isWeekday()</h3>
+<p>The matcher works on date values and checks that a given date evaluates to the expected day of the week. The user defines the expected day by its name in uppercase characters. The matcher fails in case the given date is another week day than expected.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@isWeekday(&apos;MONDAY&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
+</code></pre>
+<p>Possible values for the expected day of the week are: MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY or SUNDAY.</p>
+<p>The field value has to be a date value otherwise the matcher will fail to parse the date. The matcher requires a date format which is <strong>dd.MM.yyyy</strong> by default. You can change this date format as follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@isWeekday(MONDAY(&apos;yyyy-MM-dd&apos;))@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
+</code></pre>
+<p>Now the matcher uses the custom date format in order to parse the date value for evaluation. The validation matcher also works with date time values. In this case you have to give a valid date time format respectively (e.g. FRIDAY(&apos;yyyy-MM-dd&apos;T&apos;hh:mm:ss&apos;)).</p>
+<h3 id="variable">variable()</h3>
+<p>This is a very special validation matcher. Instead of performing a validation logic you can save the actual value passed to the validation matcher as new test variable. This comes very handy as you can use the matcher wherever you want: JSON message payloads, XML message payloads, headers and so on.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>@variable(&apos;foo&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+</code></pre>
+<p>The validation matcher creates a new variable <strong>foo</strong> with the actual element value as variable value. When leaving out the control value the field name itself is used as variable name.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">date</span>&gt;</span>@variable()@<span class="hljs-tag">&lt;/<span class="hljs-title">date</span>&gt;</span>
+</code></pre>
+<p>This creates a new variable <strong>date</strong> with the actual element value as variable value.</p>
+<h3 id="daterange">dateRange()</h3>
+<p>The matcher works on date values and checks that a given date is within the expected date range. The user defines the expected date range by specifying a from-date, a to-date and optionally a date format. The matcher fails when the given date lies outside the expected date range.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@dateRange(&apos;01-12-2015&apos;, &apos;31-12-2015&apos;, &apos;dd-MM-yyyy&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
+</code></pre>
+<p>Possible valid values would be &apos;some date&apos; &gt;= &apos;01-12-2015&apos; and &apos;some date&apos; &lt;= &apos;31-12-2015&apos;</p>
+<p>The date-format is optional and when omitted it is assumed that all dates match the default date format <strong>yyyy-MM-dd</strong> . When specifying a custom date format use java&apos;s date format as a reference for valid date formats. Only dates were used in the example above but we could just as easily used date and time as shown in the example below</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someDate</span>&gt;</span>@dateRange(&apos;2015.12.01 07:00:00&apos;, &apos;2015.12.01 19:00:00&apos;, &apos;yyyy.MM.dd HH:mm:ss&apos;)@<span class="hljs-tag">&lt;/<span class="hljs-title">someDate</span>&gt;</span>
+</code></pre>
+<h3 id="assertthat">assertThat()</h3>
+<p>Hamcrest is a very powerful matcher library with extraordinary matcher implementations. You can use Hamcrest matchers also as Citrus validation matcher.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalTo(foo))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+</code></pre>
+<p>In the listing above we are using the <strong>equalTo()</strong> matcher. All Hamcrest matchers are surrounded by a <strong>assertThat</strong> expression. You are able to combine several Hamcrest matchers then in order to construct very powerful validation logic. See the following examples on what is possible then:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalTo(value))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(equalTo(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(is(not(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(is(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(equalToIgnoringCase(VALUE)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(containsString(lue)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(containsString(other))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(startsWith(val)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(endsWith(lue)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(anyOf(startsWith(val), endsWith(lue))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(allOf(startsWith(val), endsWith(lue))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(isEmptyString()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(isEmptyString())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(isEmptyOrNullString()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(nullValue()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(notNullValue()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(empty()@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(empty())@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(greaterThan(4)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(allOf(greaterThan(4), lessThan(6), not(lessThan(5)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(is(not(greaterThan(5)))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(greaterThanOrEqualTo(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(lessThan(5)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(not(lessThan(1))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(lessThanOrEqualTo(4)@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">someValue</span>&gt;</span>@assertThat(hasSize(5))@<span class="hljs-tag">&lt;/<span class="hljs-title">someValue</span>&gt;</span>
+</code></pre>
+<p>Citrus will automatically perform validation matchers on the element value. Only if all matchers are satisfied the validation will pass.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./functions.html" class="navigation navigation-prev " aria-label="Previous page: Functions"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./data-dictionary.html" class="navigation navigation-next " aria-label="Next page: Data-dictionary"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

@@ -1,0 +1,192 @@
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   <title>Chapter&nbsp;13.&nbsp;Functions</title><link rel="stylesheet" href="reference-html.css" type="text/css"><meta name="generator" content="DocBook XSL Stylesheets V1.60.1"><link rel="home" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="up" href="index.html" title="Citrus Framework - Reference Documentation"><link rel="previous" href="soap-webservices.html" title="Chapter&nbsp;12.&nbsp;SOAP WebServices"><link rel="next" href="testsuite.html" title="Chapter&nbsp;14.&nbsp;Testsuite"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table width="100%" summary="Navigation header"><tr><th colspan="3" align="center">Chapter&nbsp;13.&nbsp;Functions</th></tr><tr><td width="20%" align="left"><a accesskey="p" href="soap-webservices.html">Prev</a>&nbsp;</td><th width="60%" align="center">&nbsp;</th><td width="20%" align="right">&nbsp;<a accesskey="n" href="testsuite.html">Next</a></td></tr></table><hr></div><div class="chapter" lang="en"><div class="titlepage"><div><div><h2 class="title"><a name="functions"></a>Chapter&nbsp;13.&nbsp;Functions</h2></div></div><div></div></div><p>The test framework will offer several functions that are useful throughout the test execution. The
+    functions will always return a string value that is ready for use as variable value or directly inside a text
+    message.</p><p>A set of functions is usually combined to a function library. The library has a prefix that will identify
+    the functions inside the test case. The default test framework function library uses a default prefix (citrus).
+    You can write your own function library using your own prefix in order to extend the test framework
+    functionality whenever you want.</p><p>The library is built in the Spring configuration and contains a set of functions that are of
+    public use.</p><pre class="programlisting">
+  &lt;bean id="testFrameworkFunctionLibrary" 
+           class="com.consol.citrus.functions.FunctionLibrary"&gt;
+      &lt;property name="name" value="testFrameworkFunctionLibrary"/&gt;
+      &lt;property name="prefix" value="citrus:"/&gt;
+      &lt;property name="members"&gt;
+          &lt;map&gt;
+            &lt;entry key="randomNumber"&gt;
+                &lt;bean class="com.consol.citrus.functions.RandomNumberFunction"/&gt;
+            &lt;/entry&gt;
+            &lt;entry key="randomString"&gt;
+                &lt;bean class="com.consol.citrus.functions.RandomStringFunction"/&gt;
+            &lt;/entry&gt;
+            ...
+          &lt;/map&gt;
+      &lt;/property&gt;
+  &lt;/bean&gt;
+    </pre><p>In the next chapters the default functions offered by the framework will be described in detail.</p><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-concat"></a>13.1.&nbsp;citrus:concat()</h2></div></div><div></div></div><p>The function will combine several string tokens to a single string value. This means that you can combine
+        a static text value with a variable value for instance. A first example should clarify the usage:</p><pre class="programlisting">
+  &lt;testcase name="concatFunctionTest"&gt;
+      &lt;variables&gt;
+          &lt;variable name="date" 
+                       value="citrus:currentDate(yyyy-MM-dd)" /&gt;
+          &lt;variable name="text" 
+                       value="Hallo Test Framework!" /&gt;
+      &lt;/variables&gt;
+      &lt;actions&gt;
+          &lt;echo&gt;
+              &lt;message&gt;
+                  citrus:concat('Today is: ', ${date}, ' right!?')
+              &lt;/message&gt;
+          &lt;/echo&gt;
+          &lt;echo&gt;
+              &lt;message&gt;
+                  citrus:concat('Text is: ', ${text})
+              &lt;/message&gt;
+          &lt;/echo&gt;
+      &lt;/actions&gt;
+  &lt;/testcase&gt;
+        </pre><p>Please do not forget to mark static text with single quote signs. There is no limitation for string tokens to
+        be combined.</p><p><tt class="literal">citrus:concat('Text1', 'Text2', 'Text3', ${text}, 'Text5', &#8230; , 'TextN')</tt></p><p>The function can be used wherever variables can be used. For instance when validating XML elements in
+        the receive action.</p><pre class="programlisting">
+  &lt;message&gt;
+      &lt;validate path="//element/element" 
+                   value="citrus:concat('Cx1x', ${generatedId})"/&gt;
+  &lt;/message&gt;
+        </pre></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-substring"></a>13.2.&nbsp;citrus:substring()</h2></div></div><div></div></div><p>The function will have three parameters.</p><p>1. String to work on</p><p>2. Starting index</p><p>3. End index (optional)</p><p>Let us have a look at a simple example for this function:</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;
+          citrus:substring('Hallo Test Framework', 6)
+      &lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;
+          citrus:substring('Hallo Test Framework', 0, 5)
+      &lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>Test Framework</em></span></p><p><span class="emphasis"><em>Hallo</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-string-length"></a>13.3.&nbsp;citrus:stringLength()</h2></div></div><div></div></div><p>The function will calculate the number of characters in a string representation and return the number.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:stringLength('Hallo Test Framework')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>20</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-translate"></a>13.4.&nbsp;citrus:translate()</h2></div></div><div></div></div><p>This function will replace regular expression matching values inside a string representation with a
+        specified replacement string.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;
+          citrus:translate('H.llo Test Fr.mework', '\.', 'a')
+      &lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Note that the second parameter will be a regular expression. The third parameter will be a simple
+        replacement string value.</p><p>Function output:</p><p><span class="emphasis"><em>Hallo Test Framework</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-substring-before"></a>13.5.&nbsp;citrus:substringBefore()</h2></div></div><div></div></div><p>The function will search for the first occurrence of a specified string and will return the substring before
+        that occurrence. Let us have a closer look in a simple example:</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;
+          citrus:substringBefore('Test/Framework', '/')
+      &lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>In the specific example the function will search for the &#8216;/&#8217; character and return the string before that index.</p><p>Function output:</p><p><span class="emphasis"><em>Test</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-substring-after"></a>13.6.&nbsp;citrus:substringAfter()</h2></div></div><div></div></div><p>The function will search for the first occurrence of a specified string and will return the substring after that
+        occurrence. Let us clarify this with a simple example:</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;
+          citrus:substringAfter('Test/Framework', '/')
+      &lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Analogue to the substringBefore function the &#8216;/&#8217; character is found in the string. But now the remaining
+        string is returned by the function meaning the substring after this character index.</p><p>Function output:</p><p><span class="emphasis"><em>Framework</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-round"></a>13.7.&nbsp;citrus:round()</h2></div></div><div></div></div><p>This is a simple mathematic function that will round decimal numbers representations to their nearest nondecimal
+        number.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:round('3.14')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>3</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-floor"></a>13.8.&nbsp;citrus:floor()</h2></div></div><div></div></div><p>This function will round down decimal number values.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:floor('3.14')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>3.0</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-ceiling"></a>13.9.&nbsp;citrus:ceiling()</h2></div></div><div></div></div><p>Similar to floor function, but now the function will round up the decimal number values.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:ceiling('3.14')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>4.0</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-random-number"></a>13.10.&nbsp;citrus:randomNumber()</h2></div></div><div></div></div><p>The random number function will provide you the opportunity to generate random number strings
+        containing positive number letters. There is a singular Boolean parameter for that function describing
+        whether the generated String should have leading zero letters or not. Default value for this padding flag
+        will be true.</p><p>Next example will show the function usage:</p><pre class="programlisting">
+  &lt;variables&gt;
+      &lt;variable name="rndNumber1" 
+                   value="citrus:randomNumber(10)"/&gt;
+      &lt;variable name="rndNumber2" 
+                   value="citrus:randomNumber(10, true)"/&gt;
+      &lt;variable name="rndNumber3" 
+                   value="citrus:randomNumber(10, false)"/&gt;
+  &lt;/variables&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>8954638765</em></span></p><p><span class="emphasis"><em>0006387650</em></span></p><p><span class="emphasis"><em>45638765</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-random-string"></a>13.11.&nbsp;citrus:randomString()</h2></div></div><div></div></div><p>This function will generate a random string representation with a defined length. A second parameter for
+        this function will define the case of the generated letters (UPPERCASE, LOWERCASE, MIXED)</p><pre class="programlisting">
+  &lt;variables&gt;
+      &lt;variable name="rndString0" 
+                   value="${citrus:randomString(10)}"/&gt;
+      &lt;variable name="rndString1" 
+                   value="citrus:randomString(10)"/&gt;
+      &lt;variable name="rndString2" 
+                   value="citrus:randomString(10, UPPERCASE)"/&gt;
+      &lt;variable name="rndString3" 
+                   value="citrus:randomString(10, LOWERCASE)"/&gt;
+      &lt;variable name="rndString4" 
+                   value="citrus:randomString(10, MIXED)"/&gt;
+  &lt;/variables&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>Hr546dfA65</em></span></p><p><span class="emphasis"><em>Ag3876det5</em></span></p><p><span class="emphasis"><em>4SDF87TR</em></span></p><p><span class="emphasis"><em>4tkhi7uz</em></span></p><p><span class="emphasis"><em>Vt567JkA32</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-current-date"></a>13.12.&nbsp;citrus:currentDate()</h2></div></div><div></div></div><p>This function will definitely help you when accessing the current date. Some examples will show the
+        usage in detail:</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate()&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd'T'hh:mm:ss')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1y')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1M')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1d')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1h')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1m')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '+1s')&lt;/message&gt;
+  &lt;/echo&gt;
+  &lt;echo&gt;
+      &lt;message&gt;citrus:currentDate('yyyy-MM-dd HH:mm:ss', '-1y')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Note that the currentDate function provides two parameters. First parameter describes the date format
+        string. The second will define a date offset string containing year, month, days, hours, minutes or seconds
+        that will be added or subtracted to or from the actual date value.</p><p>Function output:</p><p><span class="emphasis"><em>01.09.2009</em></span></p><p><span class="emphasis"><em>2009-09-01</em></span></p><p><span class="emphasis"><em>2009-09-01 12:00:00</em></span></p><p><span class="emphasis"><em>2009-09-01T12:00:00</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-upper-case"></a>13.13.&nbsp;citrus:upperCase()</h2></div></div><div></div></div><p>This function converts any string to upper case letters.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:upperCase('Hallo Test Framework')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>HALLO TEST FRAMEWORK</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-lower-case"></a>13.14.&nbsp;citrus:lowerCase()</h2></div></div><div></div></div><p>This function converts any string to lower case letters.</p><pre class="programlisting">
+  &lt;echo&gt;
+      &lt;message&gt;citrus:lowerCase('Hallo Test Framework')&lt;/message&gt;
+  &lt;/echo&gt;
+        </pre><p>Function output:</p><p><span class="emphasis"><em>hallo test framework</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-average"></a>13.15.&nbsp;citrus:average()</h2></div></div><div></div></div><p>The function will sum up all specified number values and divide the result through the number of values.</p><pre class="programlisting">
+  &lt;variable name="avg" 
+               value="citrus:average('3', '4', '5')"/&gt;
+        </pre><p>avg = <span class="emphasis"><em>4.0</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-minimum"></a>13.16.&nbsp;citrus:minimum()</h2></div></div><div></div></div><p>This function returns the minimum value in a set of number values.</p><pre class="programlisting">
+  &lt;variable name="min" 
+               value="citrus:minimum('3', '4', '5')"/&gt;
+        </pre><p>min = <span class="emphasis"><em>3.0</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-maximum"></a>13.17.&nbsp;citrus:maximum()</h2></div></div><div></div></div><p>This function returns the maximum value in a set of number values.</p><pre class="programlisting">
+  &lt;variable name="max" 
+               value="citrus:maximum('3', '4', '5')"/&gt;
+        </pre><p>max = <span class="emphasis"><em>5.0</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-sum"></a>13.18.&nbsp;citrus:sum()</h2></div></div><div></div></div><p>The function will sum up all number values. The number values can also be negative.</p><pre class="programlisting">
+  &lt;variable name="sum" 
+               value="citrus:sum('3', '4', '5')"/&gt;
+        </pre><p>sum = <span class="emphasis"><em>12.0</em></span></p></div><div class="section" lang="en"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="functions-absolute"></a>13.19.&nbsp;citrus:absolute()</h2></div></div><div></div></div><p>The function will return the absolute number value.</p><pre class="programlisting">
+  &lt;variable name="abs" 
+               value="citrus:absolute('-3')"/&gt;
+        </pre><p>abs = <span class="emphasis"><em>3.0</em></span></p></div></div><div class="navfooter"><hr><table width="100%" summary="Navigation footer"><tr><td width="40%" align="left"><a accesskey="p" href="soap-webservices.html">Prev</a>&nbsp;</td><td width="20%" align="center"><a accesskey="u" href="index.html">Up</a></td><td width="40%" align="right">&nbsp;<a accesskey="n" href="testsuite.html">Next</a></td></tr><tr><td width="40%" align="left" valign="top">Chapter&nbsp;12.&nbsp;SOAP WebServices&nbsp;</td><td width="20%" align="center"><a accesskey="h" href="index.html">Home</a></td><td width="40%" align="right" valign="top">&nbsp;Chapter&nbsp;14.&nbsp;Testsuite</td></tr></table></div></body></html>

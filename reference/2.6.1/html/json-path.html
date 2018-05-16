@@ -1,0 +1,1820 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Json-path | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./actions.html" />
+    
+    
+    <link rel="prev" href="./xpath.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="12"
+        data-chapter-title="Json-path"
+        data-filepath="json-path.md"
+        data-basepath="."
+        data-revision="Fri Oct 07 2016 09:23:51 GMT+0200 (CEST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes-new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test-case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        Json-path
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop-time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge-jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge-channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge-endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage-server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Generic-action
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Stop-timer
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="15.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.6.</b>
+                        
+                        Repeat-onerror
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Finally-section
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http-websocket
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Message-channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Endpoint-component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Endpoint-adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Data-dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Test-actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Test-suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Meta-info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Message-tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="45.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.1.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.2.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.3" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.3.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.4" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.4.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.5" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.5.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.6" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.6.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.7" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.7.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.8" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.8.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.9" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.9.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="using-jsonpath">Using JSONPath</h2>
+<p>JSONPath is the JSON equivalent to XPath in the XML message world. With JSONPath expressions you can query and manipulate entries of a JSON message structure. The JSONPath expressions evaluate against a JSON message where the JSON object structure is represented in a dot notated syntax.</p>
+<p>You will see that JSONPath is a very powerful technology when it comes to find object entries in a complex JSON hierarchy structure. Also JSONPath can help to do message manipulations before a message is sent out for instance. Citrus supports JSONPath expressions in various scenarios:</p>
+<ul>
+<li>&lt;message&gt;&lt;element path=&quot;[JSONPath-Expression]&quot;&gt;&lt;/message&gt;</li>
+<li>&lt;validate&gt;&lt;json-path expression=&quot;[JSONPath-Expression]&quot;/&gt;&lt;/validate&gt;</li>
+<li>&lt;extract&gt;&lt;message path=&quot;[JSONPath-Expression]&quot;&gt;&lt;/extract&gt;</li>
+<li>&lt;ignore path=&quot;[JSONPath-Expression]&quot;/&gt;</li>
+</ul>
+<h3 id="manipulate-with-jsonpath">Manipulate with JSONPath</h3>
+<p>First thing we want to do with JSONPath is to manipulate a message content before it is actually sent out. This is very useful when working with message file resources that are reused accross multiple test cases. Each test case can manipulate the message content individually with JSONPath before sending. Lets have a look at this simple sample:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">resource</span> <span class="hljs-attribute">file</span>=<span class="hljs-value">&quot;file:path/to/user.json&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;$.user.name&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Admin&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;$.user.admin&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;true&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;$..status&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;closed&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p>We use a basic message content file that is called <strong>user.json</strong> . The content of the file is following JSON data structure:</p>
+<pre><code class="lang-xml">{ user:
+  {
+    &quot;id&quot;: citrus:randomNumber(10)
+    &quot;name&quot;: &quot;Unknown&quot;,
+    &quot;admin&quot;: &quot;?&quot;,
+    &quot;projects&quot;:
+      [{
+        &quot;name&quot;: &quot;Project1&quot;,
+        &quot;status&quot;: &quot;open&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Project2&quot;,
+        &quot;status&quot;: &quot;open&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Project3&quot;,
+        &quot;status&quot;: &quot;closed&quot;
+      }]
+  }
+}
+</code></pre>
+<p>Citrus loads the file content and used it as message payload. Before the message is sent out the JSONPath expressions have the chance to manipulate the message content. All JSONPath expressions are evaluated and the give values overwrite existing values accordingly. The resulting message looks like follows:</p>
+<pre><code class="lang-xml">{ user:
+  {
+    &quot;id&quot;: citrus:randomNumber(10)
+    &quot;name&quot;: &quot;Admin&quot;,
+    &quot;admin&quot;: &quot;true&quot;,
+    &quot;projects&quot;:
+      [{
+        &quot;name&quot;: &quot;Project1&quot;,
+        &quot;status&quot;: &quot;closed&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Project2&quot;,
+        &quot;status&quot;: &quot;closed&quot;
+      },
+      {
+        &quot;name&quot;: &quot;Project3&quot;,
+        &quot;status&quot;: &quot;closed&quot;
+      }]
+  }
+}
+</code></pre>
+<p>The JSONPath expressions have set the user name to <strong>Admin</strong> . The <strong>admin</strong> boolean property was set to <strong>true</strong> and all project status values were set to <strong>closed</strong> . Now the message is ready to be sent out. In case a JSONPath expression should fail to find a matching element within the message structure the test case will fail.</p>
+<p>With this JSONPath mechanism ou are able to manipulate message content before it is sent or received within Citrus. This makes life very easy when using message resource files that are reused across multiple test cases.</p>
+<h3 id="validate-with-jsonpath">Validate with JSONPath</h3>
+<p>Lets continue to use JSONPath expressions when validating a receive message in Citrus:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.name&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Penny&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$[&apos;user&apos;][&apos;name&apos;]&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${userName}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.aliases&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;[&quot;</span><span class="hljs-value">penny&quot;,&quot;jenny&quot;,&quot;nanny&quot;]&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user[?(@.admin)].password&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;@startsWith(&apos;$%00&apos;)@&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.address[?(@.type=&apos;office&apos;)]&quot;</span>
+        <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;{&quot;</span><span class="hljs-value">city&quot;:&quot;Munich&quot;,&quot;street&quot;:&quot;Company</span> <span class="hljs-attribute">Street</span>&quot;,&quot;<span class="hljs-attribute">type</span>&quot;<span class="hljs-attribute">:</span>&quot;<span class="hljs-attribute">office</span>&quot;}&quot;/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-xml">receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(&quot;$.user.name&quot;, &quot;Penny&quot;)
+    .validate(&quot;$[&apos;user&apos;][&apos;name&apos;]&quot;, &quot;${userName}&quot;)
+    .validate(&quot;$.user.aliases&quot;, &quot;[&quot;penny&quot;,&quot;jenny&quot;,&quot;nanny&quot;]&quot;)
+    .validate(&quot;$.user[?(@.admin)].password&quot;, &quot;@startsWith(&apos;$%00&apos;)@&quot;)
+    .validate(&quot;$.user.address[?(@.type=&apos;office&apos;)]&quot;, &quot;{&quot;city&quot;:&quot;Munich&quot;,&quot;street&quot;:&quot;Company Street&quot;,&quot;type&quot;:&quot;office&quot;}&quot;);
+</code></pre>
+<p>The above JSONPath expressions will be evaluated when Citrus validates the received message. The expression result is compared to the expected value where expectations can be static values as well as test variables and validation matcher expressions. In case a JSONPath expression should not be able to find any elements the test case will also fail.</p>
+<p>JSON is a pretty simple yet powerful message format. Simplified a JSON message just knows JSONObject, JSONArray and JSONValue items. The handling of JSONObject and JSONValue items in JSONPath expressions is straight forward. We just use a dot notated syntax for walking through the JSONObject hierarchy. The handling of JSONArray items is also not very difficult either. Citrus will try the best to convert JSONArray items to String representation values for comparison.</p>
+<p><strong>Important</strong>
+JSONPath expressions will only work on JSON message formats. This is why we have to tell Citrus the correct message format. By default Citrus is working with XML message data and therefore the XML validation mechanisms do apply by default. With the message type attribute set to <strong>json</strong> we make sure that Citrus enables JSON specific features on the message validation such as JSONPath support.</p>
+<p>Now lets get a bit more complex with validation matchers and JSON object functions. Citrus tries to give you the most comfortable validation capabilities when comparing JSON object values and JSON arrays. One first thing you can use is object functions like <strong>keySet()</strong> or <strong>size()</strong> . These functionality is not covered by JSONPath out of the bow but added by Citrus. Se the following example on how to use it:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.keySet()&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;[id,name,admin,projects]&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.aliases.size()&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;3&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-xml">receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(&quot;$.user.keySet()&quot;, &quot;[id,name,admin,projects]&quot;)
+    .validate(&quot;$.user.aliases.size()&quot;, &quot;3&quot;);
+</code></pre>
+<p>The object functions do return special JSON object related properties such as the set of <strong>keys</strong> for an object or the size of an JSON array.</p>
+<p>Now lets get even more comfortable validation capabilities with matchers. Citrus supports Hamcrest matchers which gives us a very powerful way of validating JSON object elements and arrays. See the following examples that demonstrate how this works:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">validate</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.keySet()&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;@assertThat(contains(id,name,admin,projects))@&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">json-path</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.user.aliases.size()&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;@assertThat(allOf(greaterThan(0), lessThan(5)))@&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">validate</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p><strong>Java DSL</strong> </p>
+<pre><code class="lang-xml">receive(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(&quot;$.user.keySet()&quot;, contains(&quot;id&quot;,&quot;name&quot;,&quot;admin&quot;,&quot;projects&quot;))
+    .validate(&quot;$.user.aliases.size()&quot;, allOf(greaterThan(0), lessThan(5)));
+</code></pre>
+<p>When using the XML DSL we have to use the <strong>assertThat</strong> validation matcher syntax for defining the Hamcrest matchers. You can combine matcher implementation as seen in the <strong>allOf(greaterThan(0), lessThan(5))</strong> expression. When using the Java DSL you can just add the matcher as expected result object. Citrus evaluates the matchers and makes sure everything is as expected. This is a very powerful validation mechanism as it combines the Hamcrest matcher capabilities with JSON message validation.</p>
+<h3 id="extract-variables-with-jsonpath">Extract variables with JSONPath</h3>
+<p>Citrus is able to save message content to test variables at test runtime. When an incoming message is passing the message validation the user can extract some values of that received message to new test variables for later use in the test. This is especially handsome when having to send back some dynamic values. So lets save some values using JSONPath:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+    { user:
+      {
+        &quot;name&quot;: &quot;Admin&quot;,
+        &quot;password&quot;: &quot;secret&quot;,
+        &quot;admin&quot;: &quot;true&quot;,
+        &quot;aliases&quot;: [&quot;penny&quot;,&quot;chef&quot;,&quot;master&quot;]
+      }
+    }
+  <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">extract</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;$.user.name&quot;</span> <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;userName&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;$.user.aliases&quot;</span> <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;userAliases&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;$.user[?(@.admin)].password&quot;</span> <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;adminPassword&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">extract</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p>With this example we have extracted three new test variables via JSONPath expression evaluation. The three test variables will be available to all upcoming test actions. The variable values are:</p>
+<pre><code class="lang-xml">userName=Admin
+userAliases=[&quot;penny&quot;,&quot;chef&quot;,&quot;master&quot;]
+adminPassword=secret
+</code></pre>
+<p>As you can see we can also extract complex JSONObject items or JSONArray items. The test variable value is a String representation of the complex object.</p>
+<h3 id="ignore-with-jsonpath">Ignore with JSONPath</h3>
+<p>The next usage scenario for JSONPath expressions in Citrus is the ignoring of elements during message validation. As you already know Citrus provides powerful validation mechanisms for XML and JSON message format. The framework is able to compare received and expected message contents with powerful validator implementations. Now it this time we want to use a JSONPath expression for ignoring a very specific entry in the JSON object structure.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;json&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+  {
+      &quot;users&quot;:
+      [{
+        &quot;name&quot;: &quot;Jane&quot;,
+        &quot;token&quot;: &quot;?&quot;,
+        &quot;lastLogin&quot;: 0
+      },
+      {
+        &quot;name&quot;: &quot;Penny&quot;,
+        &quot;token&quot;: &quot;?&quot;,
+        &quot;lastLogin&quot;: 0
+      },
+      {
+        &quot;name&quot;: &quot;Mary&quot;,
+        &quot;token&quot;: &quot;?&quot;,
+        &quot;lastLogin&quot;: 0
+      }]
+  }
+  <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ignore</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$.users[*].token&quot;</span> /&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">ignore</span> <span class="hljs-attribute">expression</span>=<span class="hljs-value">&quot;$..lastLogin&quot;</span> /&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+</code></pre>
+<p>This time we add JSONPath expressions as ignore statements. This means that we explicitly leave out the evaluated elements from validation. Obviously this mechanism is a good thing to do when dynamic message data simply is not deterministic such as timestamps and dynamic identifiers. In the example above we explicitly skip the <strong>token</strong> entry and all <strong>lastLogin</strong> values that are obviously timestamp values in milliseconds.</p>
+<p>The JSONPath evaluation is very powerful when it comes to select a set of JSON objects and elements. This is how we can ignore several elements with one single JSONPath expression which is very powerful.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./xpath.html" class="navigation navigation-prev " aria-label="Previous page: Xpath"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./actions.html" class="navigation navigation-next " aria-label="Next page: Actions"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

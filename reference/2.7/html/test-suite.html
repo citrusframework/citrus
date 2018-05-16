@@ -1,0 +1,2057 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Test suite | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./meta-info.html" />
+    
+    
+    <link rel="prev" href="./test-actors.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="44"
+        data-chapter-title="Test suite"
+        data-filepath="test-suite.md"
+        data-basepath="."
+        data-revision="Wed Feb 01 2017 17:43:10 GMT+0100 (CET)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.7" data-path="validation-gzip.html">
+            
+                
+                    <a href="./validation-gzip.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.7.</b>
+                        
+                        Gzip
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        JsonPath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge JMS queues
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Stop timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Generic action
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="behaviors.html">
+            
+                
+                    <a href="./behaviors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Test behaviors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="16.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.6.</b>
+                        
+                        Repeat On Error
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="16.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Finally
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="18" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Http Websockets
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        Message channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="kubernetes.html">
+            
+                
+                    <a href="./kubernetes.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Kubernetes
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="selenium.html">
+            
+                
+                    <a href="./selenium.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Selenium
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Endpoint component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Endpoint adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Data dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Test actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="44" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Test suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Meta info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Message tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="47" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>47.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="48" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="48.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>48.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="49" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="49.1" data-path="changes-2-6.html">
+            
+                
+                    <a href="./changes-2-6.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.1.</b>
+                        
+                        Changes 2.6
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.2" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.2.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.3" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.3.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.4" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.4.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.5" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.5.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.6" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.6.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.7" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.7.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.8" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.8.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.9" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.9.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="49.10" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>49.10.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="test-suite-actions"><a name="test-suite-actions" class="plugin-anchor" href="#test-suite-actions"><span class="fa fa-link"></span></a>Test suite actions</h2>
+<p>A test framework should also provide the functionality to do some work before and after the test run. You could think of preparing/deleting the data in a database or starting/stopping a server in this section before/after a test run. These tasks fit best into the initialization and cleanup phases of Citrus.</p>
+<p><strong>Note</strong>
+It is important to notice that the Citrus configuration components that we are going to use in the next section belong to a separate XML namespace <strong>citrus-test</strong> . We have to add the namespace declaration to the XML root element of our XML configuration file accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">spring:beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
+        <span class="hljs-attribute">xmlns:spring</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+        <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+        <span class="hljs-attribute">xmlns:citrus-test</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/testcase&quot;</span>
+        <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/testcase
+        http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd&quot;</span>&gt;</span>
+
+        [...]
+
+        <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<h3 id="before-suite"><a name="before-suite" class="plugin-anchor" href="#before-suite"><span class="fa fa-link"></span></a>Before suite</h3>
+<p>You can influence the behavior of a test run in the initialization phase actually before the tests are executed. See the next code example to find out how it works with actions that take place before the first test is executed:</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsBeforeSuite&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- list of actions before suite --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-suite</span>&gt;</span>
+</code></pre>
+<p>The Citrus configuration component holds a list of Citrus test actions that get executed before the test suite run. You can add all Citrus test actions here as you would do in a normal test case definition.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsBeforeSuite&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:sql</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:statement</span>&gt;</span>CREATE TABLE PERSON (ID integer, NAME char(250))<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-suite</span>&gt;</span>
+</code></pre>
+<p>Note that we must use the Citrus test case namespace for the nested test action definitions. We access the database and create a table PERSON which is obviously needed in our test cases. You can think of several actions here to prepare the database for instance.</p>
+<p><strong>Tip</strong>
+Citrus offers special startup and shutdown actions that may start and stop server implementations automatically. This might be helpful when dealing with Http servers or WebService containers like Jetty. You can also think of starting/stopping a JMS broker before a test run.</p>
+<p>So far we have used XML DSL actions in before suite configuration. Now if you exclusively want to use Java DSL you can do the same with adding a custom class that extends <strong>TestDesignerBeforeSuiteSupport</strong> or <strong>TestRunnerBeforeSuiteSupport</strong> .</p>
+<p><strong>Java DSL designer</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBeforeSuite</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestDesignerBeforeSuiteSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">beforeSuite</span><span class="hljs-params">(TestDesigner designer)</span> </span>{
+        designer.echo(<span class="hljs-string">&quot;This action should be executed before suite&quot;</span>);
+    }
+}
+</code></pre>
+<p>The custom implementation extends <strong>TestDesignerBeforeSuiteSupport</strong> and therefore has to implement the method <strong>beforeSuite</strong> . This method add some Java DSL designer logic to the before suite. The designer instance is injected as method argument. You can use all Java DSL methods to this designer instance. Citrus will automatically find and execute the before suite logic. We only need to add this class to the Spring bean application context. You can do this explicitly:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myBeforeSuite&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.company.citrus.MyBeforeSuite&quot;</span>/&gt;</span>
+</code></pre>
+<p>Of course you can also use other Spring bean mechanisms such as component-scans here too. The respective test runner implementation extends the <strong>TestRunnerBeforeSuiteSupport</strong> and gets a test runner instance as method argument injected.</p>
+<p><strong>Java DSL runner</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBeforeSuite</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestRunnerBeforeSuiteSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">beforeSuite</span><span class="hljs-params">(TestRunner runner)</span> </span>{
+        runner.echo(<span class="hljs-string">&quot;This action should be executed before suite&quot;</span>);
+    }
+}
+</code></pre>
+<p>You can have many before-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name, test group names, environment or system properties that should match accordingly:</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsBeforeSuite&quot;</span> <span class="hljs-attribute">suites</span>=<span class="hljs-value">&quot;databaseSuite&quot;</span> <span class="hljs-attribute">groups</span>=<span class="hljs-value">&quot;e2e&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:sql</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:statement</span>&gt;</span>CREATE TABLE PERSON (ID integer, NAME char(250))<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-suite</span>&gt;</span>
+</code></pre>
+<p>The above before suite container is only executed with the test suite called <strong>databaseSuite</strong> or when the test group <strong>e2e</strong> is defined. Test groups and suite names are only supported when using the TestNG unit test framework. Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. 
+This is why after suite action containers are not restricted in execution when using Citrus with the JUnit test framework. You can define multiple suite names and test groups with comma delimited strings as attribute values.</p>
+<p>When using the Java DSL before suite support you can set suite names and test group filters by simply calling the respective setter methods in your custom implementation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myBeforeSuite&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.company.citrus.MyBeforeSuite&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;suiteNames&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>databaseSuite<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;testGroups&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>e2e<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsBeforeSuite&quot;</span> <span class="hljs-attribute">suites</span>=<span class="hljs-value">&quot;databaseSuite&quot;</span> <span class="hljs-attribute">groups</span>=<span class="hljs-value">&quot;e2e&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:env</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;USER&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:env</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:system</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;test-stage&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;e2e&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:system</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:sql</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:statement</span>&gt;</span>CREATE TABLE PERSON (ID integer, NAME char(250))<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-suite</span>&gt;</span>
+</code></pre>
+<p>In the example above the suite sequence will only apply on environments with <em>USER</em> property set and the system property <em>test-stage</em> must be set to <em>e2e</em>. Otherwise
+the sequence execution is skipped.</p>
+<h3 id="after-suite"><a name="after-suite" class="plugin-anchor" href="#after-suite"><span class="fa fa-link"></span></a>After suite</h3>
+<p>A test run may require the test environment to be clean. Therefore it is a good idea to purge all JMS destinations or clean up the database after the test run in order to avoid errors in follow-up test runs. Just like we prepared some data in actions before suite we can clean up the test run in actions after the tests are finished. The Spring bean syntax here is not significantly different to those in before suite section:</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsAfterSuite&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- list of actions after suite --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-suite</span>&gt;</span>
+</code></pre>
+<p>Again we give the after suite configuration component a unique id within the configuration and put one to many test actions as nested configuration elements to the list of actions executed after the test suite run.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsAfterSuite&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:sql</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:statement</span>&gt;</span>DELETE FROM TABLE PERSON<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-suite</span>&gt;</span>
+</code></pre>
+<p>We have to use the Citrus test case XML namespace when defining nested test actions in after suite list. We just remove all data from the database so we do not influence follow-up tests. Quite simple isn&apos;t it!?</p>
+<p>Of course we can also define Java DSL after suite actions. You can do this by adding a custom class that extends <strong>TestDesignerAfterSuiteSupport</strong> or <strong>TestRunnerAfterSuiteSupport</strong> .</p>
+<p><strong>Java DSL designer</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyAfterSuite</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestDesignerAfterSuiteSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterSuite</span><span class="hljs-params">(TestDesigner designer)</span> </span>{
+        designer.echo(<span class="hljs-string">&quot;This action should be executed after suite&quot;</span>);
+    }
+}
+</code></pre>
+<p>The custom implementation extends <strong>TestDesignerAfterSuiteSupport</strong> and therefore has to implement the method <strong>afterSuite</strong> . This method add some Java DSL designer logic to the after suite. The designer instance is injected as method argument. You can use all Java DSL methods to this designer instance. Citrus will automatically find and execute the after suite logic. We only need to add this class to the Spring bean application context. You can do this explicitly:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myAfterSuite&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.company.citrus.MyAfterSuite&quot;</span>/&gt;</span>
+</code></pre>
+<p>Of course you can also use other Spring bean mechanisms such as component-scans here too. The respective test runner implementation extends the <strong>TestRunnerAfterSuiteSupport</strong> and gets a test runner instance as method argument injected.</p>
+<p><strong>Java DSL runner</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyAfterSuite</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestRunnerAfterSuiteSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterSuite</span><span class="hljs-params">(TestRunner runner)</span> </span>{
+        runner.echo(<span class="hljs-string">&quot;This action should be executed after suite&quot;</span>);
+    }
+}
+</code></pre>
+<p>You can have many after-suite configuration components with different ids in a Citrus project. By default the containers are always executed. But you can restrict the after suite action container execution by defining a suite name, test group names, environment or system properties that should match accordingly:</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsAfterSuite&quot;</span> <span class="hljs-attribute">suites</span>=<span class="hljs-value">&quot;databaseSuite&quot;</span> <span class="hljs-attribute">groups</span>=<span class="hljs-value">&quot;e2e&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:sql</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:statement</span>&gt;</span>DELETE FROM TABLE PERSON<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-suite</span>&gt;</span>
+</code></pre>
+<p>The above after suite container is only executed with the test suite called <strong>databaseSuite</strong> or when the test group <strong>e2e</strong> is defined. Test groups and suite names are only supported when using the TestNG unit test framework. 
+Unfortunately JUnit does not allow to hook into suite execution as easily as TestNG does. This is why after suite action containers are not restricted in execution when using Citrus with the JUnit test framework.</p>
+<p>You can define multiple suite names and test groups with comma delimited strings as attribute values.</p>
+<p>When using the Java DSL before suite support you can set suite names and test group filters by simply calling the respective setter methods in your custom implementation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myAfterSuite&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.company.citrus.MyAfterSuite&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;suiteNames&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>databaseSuite<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;testGroups&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>e2e<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-suite</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;actionsBeforeSuite&quot;</span> <span class="hljs-attribute">suites</span>=<span class="hljs-value">&quot;databaseSuite&quot;</span> <span class="hljs-attribute">groups</span>=<span class="hljs-value">&quot;e2e&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:env</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;USER&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:env</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:system</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;test-stage&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;e2e&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:system</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:sql</span> <span class="hljs-attribute">dataSource</span>=<span class="hljs-value">&quot;testDataSource&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:statement</span>&gt;</span>DELETE FROM TABLE PERSON<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:statement</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:sql</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-suite</span>&gt;</span>
+</code></pre>
+<p>In the example above the suite sequence will only apply on environments with <em>USER</em> property set and the system property <em>test-stage</em> must be set to <em>e2e</em>. Otherwise
+the sequence execution is skipped.</p>
+<h3 id="before-test"><a name="before-test" class="plugin-anchor" href="#before-test"><span class="fa fa-link"></span></a>Before test</h3>
+<p>Before each test is executed it also might sound reasonable to purge all JMS queues for instance. In case a previous test fails some messages might be left in the JMS queues. Also the database might be in dirty state. The follow-up test then will be confronted with these invalid messages and data. Purging all JMS destinations before a test is therefore a good idea. Just like we prepared some data in actions before suite we can clean up the data before a test starts to execute.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- list of actions before test --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>The before test configuration component receives a unique id and a list of test actions that get executed before a test case is started. The component receives usual test action definitions just like you would write them in a normal test case definition. See the example below how to add test actions.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:message</span>&gt;</span>This is executed before each test!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>Note that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed before each test in our test suite run. Also notice that we can restrict the before test container execution. We can restrict execution based on the test name, package, test groups and environment or system properties. See following example how this works:</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultBeforeTest&quot;</span> <span class="hljs-attribute">test</span>=<span class="hljs-value">&quot;*_Ok_Test&quot;</span> <span class="hljs-attribute">package</span>=<span class="hljs-value">&quot;com.consol.citrus.longrunning.*&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:message</span>&gt;</span>This is executed before each test!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>The above before test component is only executed for test cases that match the name pattern <strong>*_Ok_Test</strong> and that match the package <strong>com.consol.citrus.longrunning.*</strong> . Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify before test actions in various ways. Of course you can have multiple before test configuration components at the same time. Citrus will pick the right containers and put it to execution when necessary.</p>
+<p>Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:before-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;specialBeforeTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:env</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;USER&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:env</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:system</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;test-stage&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;e2e&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:system</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:message</span>&gt;</span>This is executed before each test!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:before-test</span>&gt;</span>
+</code></pre>
+<p>In the example above the test sequence will only apply on environments with <em>USER</em> property set and the system property <em>test-stage</em> must be set to <em>e2e</em>. Otherwise
+the sequence execution is skipped.</p>
+<p>When using the Java DSL we need to implement the before test logic in a separate class that extends <strong>TestDesignerBeforeTestSupport</strong> or <strong>TestRunnerBeforeTestSupport</strong> </p>
+<p><strong>Java DSL designer</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBeforeTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestDesignerBeforeTestSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">beforeTest</span><span class="hljs-params">(TestDesigner designer)</span> </span>{
+        designer.echo(<span class="hljs-string">&quot;This action should be executed before each test&quot;</span>);
+    }
+}
+</code></pre>
+<p>As you can see the class implements the method <strong>beforeTest</strong> that is provided with a test designer argument. You simply add the before test actions to the designer instance as usual by calling Java DSL methods on the designer object. Citrus will automatically execute these operations before each test is executed. The same logic applies to the test runner variation that extends <strong>TestRunnerBeforeTestSupport</strong> :</p>
+<p><strong>Java DSL runner</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyBeforeTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestRunnerBeforeTestSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">beforeTest</span><span class="hljs-params">(TestRunner runner)</span> </span>{
+        runner.echo(<span class="hljs-string">&quot;This action should be executed before each test&quot;</span>);
+    }
+}
+</code></pre>
+<p>The before test implementations are added to the Spring bean application context for general activation. You can do this either as explicit Spring bean definition or via package component-scan. Here is a sample for adding the bean implementation explicitly with some configuration</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myBeforeTest&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.company.citrus.MyBeforeTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;packageNamePattern&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;com.consol.citrus.e2e&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>We can add filter properties to the before test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package <strong>com.consol.citrus.e2e</strong> . Leave these properties empty for default actions that are executed before all tests.</p>
+<h3 id="after-test"><a name="after-test" class="plugin-anchor" href="#after-test"><span class="fa fa-link"></span></a>After test</h3>
+<p>The same logic that applies to the <strong>before-test</strong> configuration component can be done after each test. The <strong>after-test</strong> configuration component defines test actions executed after each test. Just like we prepared some data in actions before a test we can clean up the data after a test has finished execution.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultAfterTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-comment">&lt;!-- list of actions after test --&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-test</span>&gt;</span>
+</code></pre>
+<p>The after test configuration component receives a unique id and a list of test actions that get executed after a test case is finished. Notice that the after test actions are executed no matter what result success or failure the previous test case came up to. The component receives usual test action definitions just like you would write them in a normal test case definition. See the example below how to add test actions.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultAfterTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+              <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:message</span>&gt;</span>This is executed after each test!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:message</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-test</span>&gt;</span>
+</code></pre>
+<p>Please be aware of the fact that we must use the Citrus test case XML namespace for the nested test action definitions. You have to declare the XML namespaces accordingly in your configuration root element. The echo test action is now executed after each test in our test suite run. Of course we can restrict the after test container execution. Supported restrictions are based on the test name, package, test groups and environment or system properties. See following example how this works:</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;defaultAfterTest&quot;</span> <span class="hljs-attribute">test</span>=<span class="hljs-value">&quot;*_Error_Test&quot;</span> <span class="hljs-attribute">package</span>=<span class="hljs-value">&quot;com.consol.citrus.error.*&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:message</span>&gt;</span>This is executed after each test!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-test</span>&gt;</span>
+</code></pre>
+<p>The above after test component is obviously only executed for test cases that match the name pattern <strong>*_Error_Test</strong> and that match the package <strong>com.consol.citrus.error.*</strong> . Also we could just use the test name pattern or the package name pattern exclusively. And the execution can be restricted based on the included test groups in our test suite run. This enables us to specify after test actions in various ways. Of course you can have multiple after test configuration components at the same time. 
+Citrus will pick the right containers and put it to execution when necessary.</p>
+<p>Environment or system properties are defined as list of key-value pairs. When specified the properties have to be present with respective value. In case the property value is left out in configuration the property must simply exists on the system
+in order to enable the before suite sequence in that test run.</p>
+<p><strong>XML Config</strong></p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:after-test</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;specialAfterTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:env</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;USER&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:env</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:system</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">citrus:property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;test-stage&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;e2e&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:system</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">citrus:actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">citrus-test:message</span>&gt;</span>This is executed after each test!<span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">citrus-test:echo</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">citrus:actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:after-test</span>&gt;</span>
+</code></pre>
+<p>In the example above the test sequence will only apply on environments with <em>USER</em> property set and the system property <em>test-stage</em> must be set to <em>e2e</em>. Otherwise
+the sequence execution is skipped.</p>
+<p>When using the Java DSL we need to implement the after test logic in a separate class that extends <strong>TestDesignerAfterTestSupport</strong> or <strong>TestRunnerAfterTestSupport</strong> </p>
+<p><strong>Java DSL designer</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyAfterTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestDesignerAfterTestSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterTest</span><span class="hljs-params">(TestDesigner designer)</span> </span>{
+        designer.echo(<span class="hljs-string">&quot;This action should be executed after each test&quot;</span>);
+    }
+}
+</code></pre>
+<p>As you can see the class implements the method <strong>afterTest</strong> that is provided with a test designer argument. You simply add the after test actions to the designer instance as usual by calling Java DSL methods on the designer object. Citrus will automatically execute these operations after each test is executed. The same logic applies to the test runner variation that extends <strong>TestRunnerAfterTestSupport</strong> :</p>
+<p><strong>Java DSL runner</strong></p>
+<pre><code class="lang-java"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">MyAfterTest</span> <span class="hljs-keyword">extends</span> <span class="hljs-title">TestRunnerAfterTestSupport</span> </span>{
+    <span class="hljs-annotation">@Override</span>
+    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">afterTest</span><span class="hljs-params">(TestRunner runner)</span> </span>{
+        runner.echo(<span class="hljs-string">&quot;This action should be executed after each test&quot;</span>);
+    }
+}
+</code></pre>
+<p>The after test implementations are added to the Spring bean application context for general activation. You can do this either as explicit Spring bean definition or via package component-scan. Here is a sample for adding the bean implementation explicitly with some configuration</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;myAfterTest&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;my.company.citrus.MyAfterTest&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;packageNamePattern&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;com.consol.citrus.e2e&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>We can add filter properties to the after test Java DSL actions so they applied to specific packages or test name patterns. The above example will only apply to tests in package <strong>com.consol.citrus.e2e</strong> . Leave these properties empty for default actions that are executed after all tests.</p>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./test-actors.html" class="navigation navigation-prev " aria-label="Previous page: Test actors"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./meta-info.html" class="navigation navigation-next " aria-label="Next page: Meta info"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Improve This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>

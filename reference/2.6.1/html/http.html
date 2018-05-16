@@ -1,0 +1,2241 @@
+<!DOCTYPE HTML>
+<html lang="en" >
+    
+    <head>
+        
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <title>Http | Citrus Reference Guide</title>
+        <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+        <meta name="description" content="">
+        <meta name="generator" content="GitBook 2.6.7">
+        
+        
+        <meta name="HandheldFriendly" content="true"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <link rel="apple-touch-icon-precomposed" sizes="152x152" href="gitbook/images/apple-touch-icon-precomposed-152.png">
+        <link rel="shortcut icon" href="gitbook/images/favicon.ico" type="image/x-icon">
+        
+    <link rel="stylesheet" href="gitbook/style.css">
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-anchors/plugin.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-highlight/website.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-search/search.css">
+        
+    
+        
+        <link rel="stylesheet" href="gitbook/plugins/gitbook-plugin-fontsettings/website.css">
+        
+    
+    
+        <link rel="stylesheet" href="./styles/website.css">
+    
+
+        
+    
+    
+    <link rel="next" href="./http-websocket.html" />
+    
+    
+    <link rel="prev" href="./jms.html" />
+    
+
+        
+    </head>
+    <body>
+        
+        
+    <div class="book"
+        data-level="18"
+        data-chapter-title="Http"
+        data-filepath="http.md"
+        data-basepath="."
+        data-revision="Fri Oct 07 2016 09:23:51 GMT+0200 (CEST)"
+        data-innerlanguage="">
+    
+
+<div class="book-summary">
+    <nav role="navigation">
+        <ul class="summary">
+            
+            
+            
+            
+
+            
+
+            
+    
+        <li class="chapter " data-level="0" data-path="index.html">
+            
+                
+                    <a href="./index.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="1" data-path="preface.html">
+            
+                
+                    <a href="./preface.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>1.</b>
+                        
+                        Preface
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="2" data-path="changes-new.html">
+            
+                
+                    <a href="./changes-new.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>2.</b>
+                        
+                        Changes-new
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="3" data-path="introduction.html">
+            
+                
+                    <a href="./introduction.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>3.</b>
+                        
+                        Introduction
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="4" data-path="setup.html">
+            
+                
+                    <a href="./setup.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>4.</b>
+                        
+                        Setup
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="5" data-path="test-case.html">
+            
+                
+                    <a href="./test-case.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>5.</b>
+                        
+                        Test-case
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="6" data-path="test-variables.html">
+            
+                
+                    <a href="./test-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>6.</b>
+                        
+                        Test-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="7" data-path="run.html">
+            
+                
+                    <a href="./run.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>7.</b>
+                        
+                        Run
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="8" data-path="configuration.html">
+            
+                
+                    <a href="./configuration.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>8.</b>
+                        
+                        Configuration
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="9" data-path="endpoints.html">
+            
+                
+                    <a href="./endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>9.</b>
+                        
+                        Endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10" data-path="validation.html">
+            
+                
+                    <a href="./validation.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.</b>
+                        
+                        Validation
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="10.1" data-path="validation-xml.html">
+            
+                
+                    <a href="./validation-xml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.1.</b>
+                        
+                        Xml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.2" data-path="validation-schema.html">
+            
+                
+                    <a href="./validation-schema.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.2.</b>
+                        
+                        Schema
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.3" data-path="validation-json.html">
+            
+                
+                    <a href="./validation-json.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.3.</b>
+                        
+                        Json
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.4" data-path="validation-xhtml.html">
+            
+                
+                    <a href="./validation-xhtml.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.4.</b>
+                        
+                        Xhtml
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.5" data-path="validation-plaintext.html">
+            
+                
+                    <a href="./validation-plaintext.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.5.</b>
+                        
+                        Plaintext
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="10.6" data-path="validation-binary.html">
+            
+                
+                    <a href="./validation-binary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>10.6.</b>
+                        
+                        Binary
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="11" data-path="xpath.html">
+            
+                
+                    <a href="./xpath.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>11.</b>
+                        
+                        Xpath
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="12" data-path="json-path.html">
+            
+                
+                    <a href="./json-path.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>12.</b>
+                        
+                        Json-path
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13" data-path="actions.html">
+            
+                
+                    <a href="./actions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.</b>
+                        
+                        Actions
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="13.1" data-path="actions-send.html">
+            
+                
+                    <a href="./actions-send.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.1.</b>
+                        
+                        Send
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.2" data-path="actions-receive.html">
+            
+                
+                    <a href="./actions-receive.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.2.</b>
+                        
+                        Receive
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.3" data-path="actions-database.html">
+            
+                
+                    <a href="./actions-database.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.3.</b>
+                        
+                        Database
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.4" data-path="actions-sleep.html">
+            
+                
+                    <a href="./actions-sleep.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.4.</b>
+                        
+                        Sleep
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.5" data-path="actions-java.html">
+            
+                
+                    <a href="./actions-java.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.5.</b>
+                        
+                        Java
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.6" data-path="actions-timeout.html">
+            
+                
+                    <a href="./actions-timeout.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.6.</b>
+                        
+                        Timeout
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.7" data-path="actions-echo.html">
+            
+                
+                    <a href="./actions-echo.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.7.</b>
+                        
+                        Echo
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.8" data-path="actions-stop-time.html">
+            
+                
+                    <a href="./actions-stop-time.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.8.</b>
+                        
+                        Stop-time
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.9" data-path="actions-create-variables.html">
+            
+                
+                    <a href="./actions-create-variables.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.9.</b>
+                        
+                        Create-variables
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.10" data-path="actions-trace.html">
+            
+                
+                    <a href="./actions-trace.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.10.</b>
+                        
+                        Trace
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.11" data-path="actions-transform.html">
+            
+                
+                    <a href="./actions-transform.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.11.</b>
+                        
+                        Transform
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.12" data-path="actions-groovy.html">
+            
+                
+                    <a href="./actions-groovy.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.12.</b>
+                        
+                        Groovy
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.13" data-path="actions-fail.html">
+            
+                
+                    <a href="./actions-fail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.13.</b>
+                        
+                        Fail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.14" data-path="actions-input.html">
+            
+                
+                    <a href="./actions-input.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.14.</b>
+                        
+                        Input
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.15" data-path="actions-load.html">
+            
+                
+                    <a href="./actions-load.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.15.</b>
+                        
+                        Load
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.16" data-path="actions-wait.html">
+            
+                
+                    <a href="./actions-wait.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.16.</b>
+                        
+                        Wait
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.17" data-path="actions-purge-jms.html">
+            
+                
+                    <a href="./actions-purge-jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.17.</b>
+                        
+                        Purge-jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.18" data-path="actions-purge-channels.html">
+            
+                
+                    <a href="./actions-purge-channels.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.18.</b>
+                        
+                        Purge-channels
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.19" data-path="actions-purge-endpoints.html">
+            
+                
+                    <a href="./actions-purge-endpoints.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.19.</b>
+                        
+                        Purge-endpoints
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.20" data-path="actions-assert.html">
+            
+                
+                    <a href="./actions-assert.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.20.</b>
+                        
+                        Assert
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.21" data-path="actions-catch.html">
+            
+                
+                    <a href="./actions-catch.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.21.</b>
+                        
+                        Catch
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.22" data-path="actions-antrun.html">
+            
+                
+                    <a href="./actions-antrun.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.22.</b>
+                        
+                        Antrun
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.23" data-path="actions-manage-server.html">
+            
+                
+                    <a href="./actions-manage-server.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.23.</b>
+                        
+                        Manage-server
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.24" data-path="actions-generic-action.html">
+            
+                
+                    <a href="./actions-generic-action.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.24.</b>
+                        
+                        Generic-action
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="13.25" data-path="actions-stop-timer.html">
+            
+                
+                    <a href="./actions-stop-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>13.25.</b>
+                        
+                        Stop-timer
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="14" data-path="templates.html">
+            
+                
+                    <a href="./templates.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>14.</b>
+                        
+                        Templates
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15" data-path="containers.html">
+            
+                
+                    <a href="./containers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.</b>
+                        
+                        Containers
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="15.1" data-path="containers-sequential.html">
+            
+                
+                    <a href="./containers-sequential.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.1.</b>
+                        
+                        Sequential
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.2" data-path="containers-conditional.html">
+            
+                
+                    <a href="./containers-conditional.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.2.</b>
+                        
+                        Conditional
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.3" data-path="containers-parallel.html">
+            
+                
+                    <a href="./containers-parallel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.3.</b>
+                        
+                        Parallel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.4" data-path="containers-iterate.html">
+            
+                
+                    <a href="./containers-iterate.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.4.</b>
+                        
+                        Iterate
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.5" data-path="containers-repeat.html">
+            
+                
+                    <a href="./containers-repeat.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.5.</b>
+                        
+                        Repeat
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.6" data-path="containers-repeat-onerror.html">
+            
+                
+                    <a href="./containers-repeat-onerror.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.6.</b>
+                        
+                        Repeat-onerror
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.7" data-path="containers-timer.html">
+            
+                
+                    <a href="./containers-timer.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.7.</b>
+                        
+                        Timer
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="15.8" data-path="containers-custom.html">
+            
+                
+                    <a href="./containers-custom.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>15.8.</b>
+                        
+                        Custom
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="16" data-path="finally-section.html">
+            
+                
+                    <a href="./finally-section.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>16.</b>
+                        
+                        Finally-section
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="17" data-path="jms.html">
+            
+                
+                    <a href="./jms.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>17.</b>
+                        
+                        Jms
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter active" data-level="18" data-path="http.html">
+            
+                
+                    <a href="./http.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>18.</b>
+                        
+                        Http
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="19" data-path="http-websocket.html">
+            
+                
+                    <a href="./http-websocket.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>19.</b>
+                        
+                        Http-websocket
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="20" data-path="soap.html">
+            
+                
+                    <a href="./soap.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>20.</b>
+                        
+                        Soap
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="21" data-path="ftp.html">
+            
+                
+                    <a href="./ftp.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>21.</b>
+                        
+                        Ftp
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="22" data-path="message-channel.html">
+            
+                
+                    <a href="./message-channel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>22.</b>
+                        
+                        Message-channel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="23" data-path="file.html">
+            
+                
+                    <a href="./file.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>23.</b>
+                        
+                        File
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="24" data-path="camel.html">
+            
+                
+                    <a href="./camel.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>24.</b>
+                        
+                        Camel
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="25" data-path="vertx.html">
+            
+                
+                    <a href="./vertx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>25.</b>
+                        
+                        Vertx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="26" data-path="mail.html">
+            
+                
+                    <a href="./mail.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>26.</b>
+                        
+                        Mail
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="27" data-path="arquillian.html">
+            
+                
+                    <a href="./arquillian.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>27.</b>
+                        
+                        Arquillian
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="28" data-path="docker.html">
+            
+                
+                    <a href="./docker.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>28.</b>
+                        
+                        Docker
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="29" data-path="ssh.html">
+            
+                
+                    <a href="./ssh.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>29.</b>
+                        
+                        Ssh
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="30" data-path="rmi.html">
+            
+                
+                    <a href="./rmi.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>30.</b>
+                        
+                        Rmi
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="31" data-path="jmx.html">
+            
+                
+                    <a href="./jmx.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>31.</b>
+                        
+                        Jmx
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="32" data-path="cucumber.html">
+            
+                
+                    <a href="./cucumber.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>32.</b>
+                        
+                        Cucumber
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="33" data-path="zookeeper.html">
+            
+                
+                    <a href="./zookeeper.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>33.</b>
+                        
+                        Zookeeper
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="34" data-path="restdocs.html">
+            
+                
+                    <a href="./restdocs.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>34.</b>
+                        
+                        Restdocs
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="35" data-path="endpoint-component.html">
+            
+                
+                    <a href="./endpoint-component.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>35.</b>
+                        
+                        Endpoint-component
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="36" data-path="endpoint-adapter.html">
+            
+                
+                    <a href="./endpoint-adapter.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>36.</b>
+                        
+                        Endpoint-adapter
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="37" data-path="functions.html">
+            
+                
+                    <a href="./functions.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>37.</b>
+                        
+                        Functions
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="38" data-path="validation-matchers.html">
+            
+                
+                    <a href="./validation-matchers.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>38.</b>
+                        
+                        Validation Matchers
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="39" data-path="data-dictionary.html">
+            
+                
+                    <a href="./data-dictionary.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>39.</b>
+                        
+                        Data-dictionary
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="40" data-path="test-actors.html">
+            
+                
+                    <a href="./test-actors.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>40.</b>
+                        
+                        Test-actors
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="41" data-path="test-suite.html">
+            
+                
+                    <a href="./test-suite.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>41.</b>
+                        
+                        Test-suite
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="42" data-path="meta-info.html">
+            
+                
+                    <a href="./meta-info.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>42.</b>
+                        
+                        Meta-info
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="43" data-path="message-tracing.html">
+            
+                
+                    <a href="./message-tracing.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>43.</b>
+                        
+                        Message-tracing
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="44" data-path="reporting.html">
+            
+                
+                    <a href="./reporting.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>44.</b>
+                        
+                        Reporting
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="45" data-path="samples.html">
+            
+                
+                    <a href="./samples.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.</b>
+                        
+                        Samples
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="45.1" data-path="samples-flightbooking.html">
+            
+                
+                    <a href="./samples-flightbooking.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>45.1.</b>
+                        
+                        Flight Booking Sample
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+        <li class="chapter " data-level="46" data-path="appendix.html">
+            
+                
+                    <a href="./appendix.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.</b>
+                        
+                        Appendix
+                    </a>
+            
+            
+            <ul class="articles">
+                
+    
+        <li class="chapter " data-level="46.1" data-path="changes-2-5.html">
+            
+                
+                    <a href="./changes-2-5.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.1.</b>
+                        
+                        Changes 2.5
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.2" data-path="changes-2-4.html">
+            
+                
+                    <a href="./changes-2-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.2.</b>
+                        
+                        Changes 2.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.3" data-path="changes-2-3.html">
+            
+                
+                    <a href="./changes-2-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.3.</b>
+                        
+                        Changes 2.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.4" data-path="changes-2-2.html">
+            
+                
+                    <a href="./changes-2-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.4.</b>
+                        
+                        Changes 2.2
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.5" data-path="changes-2-1.html">
+            
+                
+                    <a href="./changes-2-1.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.5.</b>
+                        
+                        Changes 2.1
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.6" data-path="changes-2-0.html">
+            
+                
+                    <a href="./changes-2-0.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.6.</b>
+                        
+                        Changes 2.0
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.7" data-path="changes-1-4.html">
+            
+                
+                    <a href="./changes-1-4.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.7.</b>
+                        
+                        Changes 1.4
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.8" data-path="changes-1-3.html">
+            
+                
+                    <a href="./changes-1-3.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.8.</b>
+                        
+                        Changes 1.3
+                    </a>
+            
+            
+        </li>
+    
+        <li class="chapter " data-level="46.9" data-path="changes-1-2.html">
+            
+                
+                    <a href="./changes-1-2.html">
+                
+                        <i class="fa fa-check"></i>
+                        
+                            <b>46.9.</b>
+                        
+                        Changes 1.2
+                    </a>
+            
+            
+        </li>
+    
+
+            </ul>
+            
+        </li>
+    
+
+
+            
+            <li class="divider"></li>
+            <li>
+                <a href="https://www.gitbook.com" target="blank" class="gitbook-link">
+                    Published with GitBook
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+</div>
+
+    <div class="book-body">
+        <div class="body-inner">
+            <div class="book-header" role="navigation">
+    <!-- Actions Left -->
+    
+
+    <!-- Title -->
+    <h1>
+        <i class="fa fa-circle-o-notch fa-spin"></i>
+        <a href="./" >Citrus Reference Guide</a>
+    </h1>
+</div>
+
+            <div class="page-wrapper" tabindex="-1" role="main">
+                <div class="page-inner">
+                
+                
+                    <section class="normal" id="section-">
+                    
+                        <h2 id="http-rest-support">HTTP REST support</h2>
+<p>REST APIs have gained more and more significance regarding client-server interfaces. The REST client is nothing but a HTTP client sending HTTP requests usually in JSON data format to a HTTP server. As HTTP is a synchronous protocol by nature the client receives the server response synchronously. Citrus is able to connect with HTTP services and test REST APIs on both client and server side with a powerful JSON message data support. In the next sections you will learn how to invoke HTTP services as a client and how to handle REST HTTP requests in a test case. We deal with setting up a HTTP server in order to accept client requests and provide proper HTTP responses with GET, PUT, DELETE or POST request method.</p>
+<p><strong>Note</strong>
+The http components in Citrus are kept in a separate Maven module. So you should add the module as Maven dependency to your project accordingly.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">dependency</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">groupId</span>&gt;</span>com.consol.citrus<span class="hljs-tag">&lt;/<span class="hljs-title">groupId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">artifactId</span>&gt;</span>citrus-http<span class="hljs-tag">&lt;/<span class="hljs-title">artifactId</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">version</span>&gt;</span>2.6.1<span class="hljs-tag">&lt;/<span class="hljs-title">version</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">dependency</span>&gt;</span>
+</code></pre>
+<p>As Citrus provides a customized HTTP configuration schema for the Spring application context configuration files we have to add name to the top level <strong>beans</strong> element. Simply include the http-config namespace in the configuration XML files as follows.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+   <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+   <span class="hljs-attribute">xmlns:citrus</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/config&quot;</span>
+   <span class="hljs-attribute">xmlns:citrus-http</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/http/config&quot;</span>
+   <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans/spring-beans.xsd
+   http://www.citrusframework.org/schema/config 
+   http://www.citrusframework.org/schema/config/citrus-config.xsd
+   http://www.citrusframework.org/schema/http/config 
+   http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd&quot;</span>&gt;</span>
+
+    [...]
+
+<span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>Now we are ready to use the customized Citrus HTTP configuration elements with the citrus-http namespace prefix.</p>
+<h3 id="http-rest-client">HTTP REST client</h3>
+<p>On the client side we have a simple HTTP message client component connecting to the server. The <strong>request-url</strong> attribute defines the HTTP server endpoint URL to connect to. As usual you can reference this client in your test case in order to send and receive messages. Citrus as client waits for the response message from server. After that the response message goes through the validation process as usual. Let us see how a Citrus HTTP client component looks like:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>
+          <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
+          <span class="hljs-attribute">request-method</span>=<span class="hljs-value">&quot;GET&quot;</span>
+          <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/xml&quot;</span>
+          <span class="hljs-attribute">timeout</span>=<span class="hljs-value">&quot;60000&quot;</span>/&gt;</span>
+</code></pre>
+<p>The <strong>request-method</strong> defines the HTTP method to use. In addition to that we can specify the content-type of the request we are about to send. The client builds the HTTP request and sends it to the HTTP server. While the client is waiting for the synchronous HTTP response to arrive we are able to poll several times for the response message in our test case. As usual aou can use the same client endpoint in your test case to send and receive messages synchronously. In case the reply message comes in too late according to the timeout settings a respective timeout error is raised.</p>
+<p>Http defines several request methods that a client can use to access Http server resources. In the example client above we are using <strong>GET</strong> as default request method. Of course you can overwrite this setting in a test case action by setting the HTTP request method inside the sending test action. The Http client component can be used as normal endpoint in a sending test action. Use something like this in your test:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">TestMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">Text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">Text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">TestMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_method&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;POST&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+</code></pre>
+<p><strong>Tip</strong>
+Citrus uses the Spring REST template mechanism for sending out HTTP requests. This means you have great customizing opportunities with a special REST template configuration. You can think of basic HTTP authentication, read timeouts and special message factory implementations. Just use the custom REST template attribute in client configuration like this:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpClient&quot;</span>
+                               <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/hello&quot;</span>
+                               <span class="hljs-attribute">request-method</span>=<span class="hljs-value">&quot;GET&quot;</span>
+                               <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;text/plain&quot;</span>
+                               <span class="hljs-attribute">rest-template</span>=<span class="hljs-value">&quot;customizedRestTemplate&quot;</span>/&gt;</span>
+
+<span class="hljs-comment">&lt;!-- Customized rest template --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;customizedRestTemplate&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.client.RestTemplate&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;messageConverters&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;converter&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;supportedMediaTypes&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;types&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>text/plain<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;errorHandler&quot;</span>&gt;</span>
+    <span class="hljs-comment">&lt;!-- Custom error handler --&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;requestFactory&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.http.client.HttpComponentsClientHttpRequestFactory&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;readTimeout&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;9000&quot;</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>Up to now we have used a normal <strong>send</strong> test action to send Http requests as a client. This is completely valid strategy as the Citrus Http client is a normal endpoint. But we might want to set some more Http REST specific properties and settings. In order to simplify the Http usage in a test case we can use a special test action implementation. The Citrus Http specific actions are located in a separate XML namespace. So wen need to add this namespace to our test case XML first.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">beans</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.springframework.org/schema/beans&quot;</span>
+        <span class="hljs-attribute">xmlns:xsi</span>=<span class="hljs-value">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span>
+        <span class="hljs-attribute">xmlns:http</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/http/testcase&quot;</span>
+        <span class="hljs-attribute">xsi:schemaLocation</span>=<span class="hljs-value">&quot;
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.citrusframework.org/schema/http/testcase
+        http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd&quot;</span>&gt;</span>
+
+      [...]
+
+    <span class="hljs-tag">&lt;/<span class="hljs-title">beans</span>&gt;</span>
+</code></pre>
+<p>The test case is now ready to use the specific Http test actions by using the prefix <strong>http:</strong> .</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/customer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/xml&quot;</span> <span class="hljs-attribute">accept</span>=<span class="hljs-value">&quot;application/xml, */*&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>
+        <span class="hljs-cdata">&lt;![CDATA[
+          &lt;customer&gt;
+            &lt;id&gt;citrus:randomNumber()&lt;/id&gt;
+            &lt;name&gt;testuser&lt;/name&gt;
+          &lt;/customer&gt;
+        ]]&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
+</code></pre>
+<p>The action above uses several Http specific settings such as the request method <strong>POST</strong> as well as the <strong>content-type</strong> and <strong>accept</strong> headers. As usual the send action needs a target Http client endpoint component. We can specify a request <strong>path</strong> attribute that added as relative path to the base uri used on the client.</p>
+<p>When using a <strong>GET</strong> request we can specify some request uri parameters.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:GET</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/customer/${custom_header_id}&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:params</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/xml&quot;</span> <span class="hljs-attribute">accept</span>=<span class="hljs-value">&quot;application/xml, */*&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:param</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;active&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:params</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:GET</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
+</code></pre>
+<p>The send action above uses a <strong>GET</strong> request on the endpoint uri <strong><a href="http://localhost:8080/customer/1234?type=active" target="_blank">http://localhost:8080/customer/1234?type=active</a></strong> .</p>
+<p>Of course when sending Http client requests we are also interested in receiving Http response messages. We want to validate the success response with Http status code.</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-response</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span> <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;HTTP/1.1&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+          &lt;customerResponse&gt;
+            &lt;success&gt;true&lt;/success&gt;
+          &lt;/customerResponse&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-response</span>&gt;</span>
+</code></pre>
+<p>The <strong>receive-response</strong> test action also uses a client component. We can expect response status code information such as <strong>status</strong> and <strong>reason-phrase</strong> . Of course Citrus will raise a validation exception in case Http status codes mismatch.</p>
+<p>Up to now we have used XML DSL test cases. The Java DSL in Citrus also works with specific Http test actions. See following example and find out how this works:</p>
+<p><strong>XML DSL</strong> </p>
+<pre><code class="lang-xml">@CitrusTest
+public void httpActionTest() {
+    http().client(&quot;httpClient&quot;)
+          .send()
+          .post(&quot;/customer&quot;)
+          .payload(&quot;<span class="hljs-tag">&lt;<span class="hljs-title">customer</span>&gt;</span>&quot; +
+                    &quot;<span class="hljs-tag">&lt;<span class="hljs-title">id</span>&gt;</span>citrus:randomNumber()<span class="hljs-tag">&lt;/<span class="hljs-title">id</span>&gt;</span>&quot; +
+                    &quot;<span class="hljs-tag">&lt;<span class="hljs-title">name</span>&gt;</span>testuser<span class="hljs-tag">&lt;/<span class="hljs-title">name</span>&gt;</span>&quot; +
+                  &quot;<span class="hljs-tag">&lt;/<span class="hljs-title">customer</span>&gt;</span>&quot;)
+          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .contentType(&quot;text/xml&quot;)
+          .accept(&quot;text/xml, */*&quot;);
+
+    http().client(&quot;httpClient&quot;)
+          .receive()
+          .response(HttpStatus.OK)
+          .payload(&quot;<span class="hljs-tag">&lt;<span class="hljs-title">customerResponse</span>&gt;</span>&quot; +
+                    &quot;<span class="hljs-tag">&lt;<span class="hljs-title">success</span>&gt;</span>true<span class="hljs-tag">&lt;/<span class="hljs-title">success</span>&gt;</span>&quot; +
+                  &quot;<span class="hljs-tag">&lt;/<span class="hljs-title">customerResponse</span>&gt;</span>&quot;)
+          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .version(&quot;HTTP/1.1&quot;);
+}
+</code></pre>
+<p>Now we can send and receive messages as Http client with specific test actions. Now lets move on to the Http server.</p>
+<h3 id="http-rest-server">HTTP REST server</h3>
+<p>The HTTP client was quite easy and straight forward. Receiving HTTP messages is a little bit more complicated because Citrus has to provide server functionality listening on a local port for client connections. Therefore Citrus offers an embedded HTTP server which is capable of handling incoming HTTP requests. Once a client connection is accepted the HTTP server must also provide a proper HTTP response to the client. In the next few lines you will see how to simulate server side HTTP REST service with Citrus.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
+                <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+                <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+                <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>/&gt;</span>
+</code></pre>
+<p>Citrus uses an embedded Jetty server that will automatically start when the Spring application context is loaded (auto-start=&quot;true&quot;). The basic connector is listening on port <strong>8080</strong> for requests. Test cases can interact with this server instance via message channels by default. The server provides an inbound channel that holds incoming request messages. The test case can receive those requests from the channel with a normal receive test action. In a second step the test case can provide a synchronous response message as reply which will be automatically sent back to the HTTP client as response.</p>
+<p><img src="images/figure_008.jpg" alt="figure_008.jpg"></p>
+<p>The figure above shows the basic setup with inbound channel and reply channel. You as a tester should not worry about this to much. By default you as a tester just use the server as synchronous endpoint in your test case. This means that you simply receive a message from the server and send a response back.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">testcase</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;httpServerTest&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">actions</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                  [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+
+        <span class="hljs-tag">&lt;<span class="hljs-title">send</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">message</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+                  [...]
+                <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">send</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">actions</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testcase</span>&gt;</span>
+</code></pre>
+<p>As you can see we reference the server id in both receive and send actions. The Citrus server instance will automatically send the response back to the calling HTTP client. In most cases this is exactly what we want to do - send back a response message that is specified inside the test. The HTTP server component by default uses a channel endpoint adapter in order to forward all incoming requests to an in memory message channel. This is done completely behind the scenes. The Http server component provides some more customization possibilities when it comes to endpoint adapter implementations. This topic is discussed in a separate section<a href="endpoint-adapter">endpoint-adapter</a>. Up to now we keep it simple by synchronously receiving and sending messages in the test case.</p>
+<p><strong>Tip</strong>
+The default channel endpoint adapter automatically creates an inbound message channel where incoming messages are stored to internally. So if you need to clean up a server that has already stored some incoming messages you can do this easily by purging the internal message channel. The message channel follows a naming convention <strong>{serverName}.inbound</strong> where <strong>{serverName}</strong> is the Spring bean name of the Citrus server endpoint component. If you purge this internal channel in a before test nature you are sure that obsolete messages on a server instance get purged before each test is executed.</p>
+<p>So lets get back to our mission of providing response messages as server to connected clients. As you might know Http REST works with some characteristic properties when it comes to send and receive messages. For instance a client can send different request methods GET, POST, PUT, DELETE, HEAD and so on. The Citrus server may verify this method when receiving client requests. Therefore we have introduced special Http test actions for server communication. Have a look at a simple example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/test&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">content-type</span>=<span class="hljs-value">&quot;application/xml&quot;</span> <span class="hljs-attribute">accept</span>=<span class="hljs-value">&quot;application/xml, */*&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Authorization&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        &lt;testRequestMessage&gt;
+          &lt;text&gt;Hello HttpServer&lt;/text&gt;
+        &lt;/testRequestMessage&gt;
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:extract</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-MessageId&quot;</span> <span class="hljs-attribute">variable</span>=<span class="hljs-value">&quot;message_id&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:extract</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-request</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">http:send-response</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span> <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;HTTP/1.1&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;X-MessageId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${message_id}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;application/xml&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-cdata">&lt;![CDATA[
+      &lt;testResponseMessage&gt;
+        &lt;text&gt;Hello Citrus&lt;/text&gt;
+      &lt;/testResponseMessage&gt;
+    ]]&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-response</span>&gt;</span>
+</code></pre>
+<p>We receive a client request and validate that the request method is <strong>POST</strong> on request path <strong>/test</strong> . Now we can validate special message headers such as <strong>content-type</strong> . In addition to that we can check custom headers and basic authorization headers. As usual the optional message body is compared to an expected message template. The custom <strong>X-MessageId</strong> header is saved to a test variable <strong>message_id</strong> for later usage in the response.</p>
+<p>The response message defines Http typical entities such as <strong>status</strong> and <strong>reason-phrase</strong> . Here the tester can simulate <strong>404 NOT_FOUND</strong> errors or similar other status codes that get send back to the client. In our example everything is <strong>OK</strong> and we send back a response body and some custom header entries.</p>
+<p>That is basically how Citrus simulates Http server operations. We receive the client request and validate the request properties. Then we send back a response with a Http status code.</p>
+<p>As usual all these Http specific actions are also available in Java DSL.</p>
+<pre><code class="lang-xml">@CitrusTest
+public void httpServerActionTest() {
+    http().server(&quot;helloHttpServer&quot;)
+          .receive()
+          .post(&quot;/test&quot;)
+          .payload(&quot;&lt;testRequestMessage&gt;&quot; +
+                    &quot;&lt;text&lt;Hello HttpServer&lt;/text&gt;&quot; +
+                  &quot;&lt;/testRequestMessage&gt;&quot;)
+          .contentType(&quot;application/xml&quot;)
+          .accept(&quot;application/xml, */*&quot;)
+          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .header(&quot;Authorization&quot;, &quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;)
+          .extractFromHeader(&quot;X-MessageId&quot;, &quot;message_id&quot;);
+
+    http().server(&quot;helloHttpServer&quot;)
+          .send()
+          .response(HttpStatus.OK)
+          .payload(&quot;&lt;testResponseMessage&gt;&quot; +
+                    &quot;&lt;text&lt;Hello Citrus&lt;/text&gt;&quot; +
+                  &quot;&lt;/testResponseMessage&gt;&quot;)
+          .version(&quot;HTTP/1.1&quot;)
+          .contentType(&quot;application/xml&quot;)
+          .header(&quot;CustomHeaderId&quot;, &quot;${custom_header_id}&quot;)
+          .header(&quot;X-MessageId&quot;, &quot;${message_id}&quot;);
+}
+</code></pre>
+<p>This is the exact same example in Java DSL. We select server actions first and receive client requests. Then we send back a response with a <strong>HttpStatus.OK</strong> status. This completes the server actions on Http message transport. Now we continue with some more Http specific settings and features.</p>
+<h3 id="http-headers">HTTP headers</h3>
+<p>When dealing with HTTP request/response communication we always deal with HTTP specific headers. The HTTP protocol defines a group of header attributes that both client and server need to be able to handle. You can set and validate these HTTP headers in Citrus quite easy. Let us have a look at a client operation in Citrus where some HTTP headers are explicitly set before the request is sent out.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml,*/*&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">testRequestMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">http:payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
+</code></pre>
+<p>We are able to set custom headers (<strong>CustomHeaderId</strong>) that go directly into the HTTP header section of the request. In addition to that testers can explicitly set HTTP reserved headers such as <strong>Content-Type</strong> . Fortunately you do not have to set all headers on your own. Citrus will automatically set the required HTTP headers for the request. So we have the following HTTP request which is sent to the server:</p>
+<pre><code class="lang-xml">POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+CustomHeaderId: 123456789
+Accept-Charset: macroman
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8091
+Content-Length: 175
+<span class="hljs-tag">&lt;<span class="hljs-title">testRequestMessage</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
+</code></pre>
+<p>On server side testers are interested in validating the HTTP headers. Within Citrus receive action you simply define the expected header entries. The HTTP specific headers are automatically available for validation as you can see in this example:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:POST</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml,*/*&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">testRequestMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">http:payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:POST</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-request</span>&gt;</span>
+</code></pre>
+<p>The test checks on custom headers and HTTP specific headers to meet the expected values.</p>
+<p>Now that we have accepted the client request and validated the contents we are able to send back a proper HTTP response message. Same thing here with HTTP specific headers. The HTTP protocol defines several headers marking the success or failure of the server operation. In the test case you can set those headers for the response message with conventional Citrus header names. See the following example to find out how that works for you.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-response</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">testResponseMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello Citrus Client<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">testResponseMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">http:payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-response</span>&gt;</span>
+</code></pre>
+<p>Once more we set the custom header entry (<strong>CustomHeaderId</strong>) and a HTTP reserved header (<strong>Content-Type</strong>) for the response message. On top of this we are able to set the response status for the HTTP response. We use the reserved header names <strong>status</strong> in order to mark the success of the server operation. With this mechanism we can easily simulate different server behaviour such as HTTP error response codes (e.g. 404 - Not found, 500 - Internal error). Let us have a closer look at the generated response message:</p>
+<pre><code class="lang-xml">HTTP/1.1 200 OK
+Content-Type: text/xml;charset=UTF-8
+Accept-Charset: macroman
+Content-Length: 205
+Server: Jetty(7.0.0.pre5)
+<span class="hljs-tag">&lt;<span class="hljs-title">testResponseMessage</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello Citrus Client<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testResponseMessage</span>&gt;</span>
+</code></pre>
+<p><strong>Tip</strong>
+You do not have to set the reason phrase all the time. It is sufficient to only set the HTTP status code. Citrus will automatically add the proper reason phrase for well known HTTP status codes.</p>
+<p>The only thing that is missing right now is the validation of HTTP status codes when receiving the server response in a Citrus test case. It is very easy as you can use the Citrus reserved header names for validation, too.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-response</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;200&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;OK&quot;</span> <span class="hljs-attribute">version</span>=<span class="hljs-value">&quot;HTTP/1.1&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;CustomHeaderId&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;${custom_header_id}&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">testResponseMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello Test Framework<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">testResponseMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">http:payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-response</span>&gt;</span>
+</code></pre>
+<p>Up to now we have used some of the basic Citrus reserved HTTP header names (status, version, reason-phrase). In HTTP RESTful services some other header names are essential for validation. These are request attributes like query parameters, context path and request URI. The Citrus server side REST message controller will automatically add all this information to the message header for you. So all you need to do is validate the header entries in your test.</p>
+<p>The next example receives a HTTP GET method request on server side. Here the GET request does not have any message payload, so the validation just works on the information given in the message header. We assume the client to call <strong><a href="http://localhost:8080/app/users?id=123456789" target="_blank">http://localhost:8080/app/users?id=123456789</a></strong> . As a tester we need to validate the request method, request URI, context path and the query parameters.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">server</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">http:GET</span> <span class="hljs-attribute">path</span>=<span class="hljs-value">&quot;/app/users&quot;</span> <span class="hljs-attribute">context-path</span>=<span class="hljs-value">&quot;/app&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:params</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:param</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;id&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;123456789&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:params</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Host&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;localhost:8080&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/html&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Accept&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;text/xml,*/*&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">http:GET</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive-request</span>&gt;</span>
+</code></pre>
+<p><strong>Tip</strong>
+Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.</p>
+<p>As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.</p>
+<h3 id="http-form-urlencoded-data">HTTP form urlencoded data</h3>
+<p>HTML form data can be sent to the server using different methods and content types. One of them is a POST method with <strong>x-www-form-urlencoded</strong> body content. The form data elements are sent to the server using key-value pairs POST data where the form control name is the key and the control data is the url encoded value.</p>
+<p>Form urlencoded form data content could look like this:</p>
+<pre><code class="lang-xml">password=s%21cr%21t&amp;username=foo
+</code></pre>
+<p>A you can see the form data is automatically encoded. In the example above we transmit two form controls <strong>password</strong> and <strong>username</strong> with respective values <strong>s$cr$t</strong> and <strong>foo</strong> . In case we would validate this form data in Citrus we are able to do this with plaintext message validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;plaintext&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">data</span>&gt;</span>
+      <span class="hljs-cdata">&lt;![CDATA[
+        password=s%21cr%21t&amp;username=${username}
+      ]]&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">data</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_method&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;POST&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_request_uri&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;/form-test&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;application/x-www-form-urlencoded&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>Obviously validating these key-value pair character sequences can be hard especially when having HTML forms with lots of form controls. This is why Citrus provides a special message validator for <strong>x-www-form-urlencoded</strong> contents. First of all we have to add <strong>citrus-http</strong> module as dependency to our project if not done so yet. After that we can add the validator implementation to the list of message validators used in Citrus.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus:message-validators</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">citrus:validator</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.http.validation.FormUrlEncodedMessageValidator&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">citrus:message-validators</span>&gt;</span>
+</code></pre>
+<p>Now we are able to receive the urlencoded form data message in a test.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">receive</span> <span class="hljs-attribute">endpoint</span>=<span class="hljs-value">&quot;httpServer&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">message</span> <span class="hljs-attribute">type</span>=<span class="hljs-value">&quot;x-www-form-urlencoded&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">payload</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">form-data</span> <span class="hljs-attribute">xmlns</span>=<span class="hljs-value">&quot;http://www.citrusframework.org/schema/http/message&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">content-type</span>&gt;</span>application/x-www-form-urlencoded<span class="hljs-tag">&lt;/<span class="hljs-title">content-type</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">action</span>&gt;</span>/form-test<span class="hljs-tag">&lt;/<span class="hljs-title">action</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">controls</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">control</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;password&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>${password}<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">control</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">control</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;username&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>${username}<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">control</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">controls</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">form-data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">payload</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">message</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">header</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_method&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;POST&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;citrus_http_request_uri&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;/form-test&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">element</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Content-Type&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;application/x-www-form-urlencoded&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">header</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">receive</span>&gt;</span>
+</code></pre>
+<p>We use a special message type <strong>x-www-form-urlencoded</strong> so the new message validator will take action. The form url encoded message validator is able to handle a special XML representation of the form data. This enables the very powerful XML message validation capabilities of Citrus such as ignoring elements and usage of test variables inline.</p>
+<p>Each form control is translated to a control element with respective name and value properties. The form data is validated in a more comfortable way as the plaintext message validator would be able to offer.</p>
+<h3 id="http-error-handling">HTTP error handling</h3>
+<p>So far we have received response messages with HTTP status code <strong>200 OK</strong> . How to deal with server errors like <strong>404 Not Found</strong> or <strong>500 Internal server error</strong> ? The default HTTP message client error strategy is to propagate server error response messages to the receive action for validation. We simply check on HTTP status code and status text for error validation.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">testRequestMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">http:payload</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">http:receive-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:data</span>&gt;</span><span class="hljs-cdata">&lt;![CDATA[]]&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-title">http:data</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span> <span class="hljs-attribute">status</span>=<span class="hljs-value">&quot;403&quot;</span> <span class="hljs-attribute">reason-phrase</span>=<span class="hljs-value">&quot;FORBIDDEN&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:receive</span>&gt;</span>
+</code></pre>
+<p>The message data can be empty depending on the server logic for these error situations. If we receive additional error information as message payload just add validation assertions as usual.</p>
+<p>Instead of receiving such empty messages with checks on HTTP status header information we can change the error strategy in the message sender component in order to automatically raise exceptions on response messages other than <strong>200 OK</strong> . Therefore we go back to the HTTP message sender configuration for changing the error strategy.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;httpClient&quot;</span>
+                              <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/test&quot;</span>
+                              <span class="hljs-attribute">error-strategy</span>=<span class="hljs-value">&quot;throwsException&quot;</span>/&gt;</span>
+</code></pre>
+<p>Now we expect an exception to be thrown because of the error response. Following from that we have to change our test case. Instead of receiving the error message with receive action we assert the client exception and check on the HTTP status code and status text.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">assert</span> <span class="hljs-attribute">exception</span>=<span class="hljs-value">&quot;org.springframework.web.client.HttpClientErrorException&quot;</span>
+           <span class="hljs-attribute">message</span>=<span class="hljs-value">&quot;403 Forbidden&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">when</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">http:send-request</span> <span class="hljs-attribute">client</span>=<span class="hljs-value">&quot;httpClient&quot;</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">http:body</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">http:payload</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">testRequestMessage</span>&gt;</span>
+                        <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+                    <span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">http:payload</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">http:body</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">http:send-request</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">when</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">assert</span>&gt;</span>
+</code></pre>
+<p>Both ways of handling HTTP error messages on client side are valid for expecting the server to raise HTTP error codes. Choose the preferred way according to your test project requirements.</p>
+<h3 id="http-client-basic-authentication">HTTP client basic authentication</h3>
+<p>As client you may have to use basic authentication in order to access a resource on the server. In most cases this will be username/password authentication where the credentials are transmitted in the request header section as base64 encoding.</p>
+<p>The easiest approach to set the <strong>Authorization</strong> header for a basic authentication HTTP request would be to set it on your own in the send action definition. Of course you have to use the correct basic authentication header syntax with base64 encoding for the username:password phrase. See this simple example.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">http:headers</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">http:header</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;Authorization&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==&quot;</span>/&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">http:headers</span>&gt;</span>
+</code></pre>
+<p>Citrus will add this header to the HTTP requests and the server will read the <strong>Authorization</strong> username and password. For more convenient base64 encoding you can also use a Citrus function, see<a href="functions-encode-base64">functions-encode-base64</a></p>
+<p>Now there is a more comfortable way to set the basic authentication header in all the Citrus requests. As Citrus uses Spring&apos;s REST support with the RestTemplate and ClientHttpRequestFactory the basic authentication is already covered there in a more generic way. You simply have to configure the basic authentication credentials on the RestTemplate&apos;s ClientHttpRequestFactory. Just see the following example and learn how to do that.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:client</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;httpClient&quot;</span>
+                    <span class="hljs-attribute">request-method</span>=<span class="hljs-value">&quot;POST&quot;</span>
+                    <span class="hljs-attribute">request-url</span>=<span class="hljs-value">&quot;http://localhost:8080/test&quot;</span>
+                    <span class="hljs-attribute">request-factory</span>=<span class="hljs-value">&quot;basicAuthFactory&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;basicAuthFactory&quot;</span>
+    <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.http.client.BasicAuthClientHttpRequestFactory&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;authScope&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.apache.http.auth.AuthScope&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;localhost&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;8072&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;basic&quot;</span>/&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;credentials&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.apache.http.auth.UsernamePasswordCredentials&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;someUsername&quot;</span>/&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;somePassword&quot;</span>/&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The advantages of this method is obvious. Now all sending test actions that reference the client component will automatically add the basic authentication header.</p>
+<p><strong>Important</strong>
+Since Citrus has upgraded to Spring 3.1.x the Jakarta commons HTTP client is deprecated with Citrus version 1.2. The formerly used UserCredentialsClientHttpRequestFactory is therefore also deprecated and will not continue with next versions. Please update your configuration if you are coming from Citrus 1.1 or earlier versions.</p>
+<p>The above configuration results in HTTP client requests with authentication headers properly set for basic authentication. The client request factory takes care on adding the proper basic authentication header to each request that is sent with this Citrus message sender. Citrus uses preemtive authentication. The message sender only sends a single request to the server with all authentication information set in the message header. The request which determines the authentication scheme on the server is skipped. This is why you have to add some auth scope in the client request factory so Citrus can setup an authentication cache within the HTTP context in order to have preemtive authentication.</p>
+<p>As a result of the basic auth client request factory the following example request that is created by the Citrus HTTP client has the <strong>Authorization</strong> header set. This is done now automatically for all requests with this HTTP client.</p>
+<pre><code class="lang-xml">POST /test HTTP/1.1
+Accept: text/xml, */*
+Content-Type: text/xml
+Accept-Charset: iso-8859-1, us-ascii, utf-8
+Authorization: Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==
+User-Agent: Jakarta Commons-HttpClient/3.1
+Host: localhost:8080
+Content-Length: 175
+<span class="hljs-tag">&lt;<span class="hljs-title">testRequestMessage</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">text</span>&gt;</span>Hello HttpServer<span class="hljs-tag">&lt;/<span class="hljs-title">text</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">testRequestMessage</span>&gt;</span>
+</code></pre>
+<h3 id="http-server-basic-authentication">HTTP server basic authentication</h3>
+<p>Citrus as a server can also set basic authentication so clients need to authenticate properly when accessing server resources.</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;basicAuthHttpServer&quot;</span>
+                <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8090&quot;</span>
+                <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+                <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>
+                <span class="hljs-attribute">security-handler</span>=<span class="hljs-value">&quot;basicSecurityHandler&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;securityHandler&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.http.security.SecurityHandlerFactory&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;users&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">list</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.http.security.User&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;name&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;citrus&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;password&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;secret&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;roles&quot;</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;CitrusRole&quot;</span>/&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">list</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;constraints&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">map</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">entry</span> <span class="hljs-attribute">key</span>=<span class="hljs-value">&quot;/foo/*&quot;</span>&gt;</span>
+                <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.http.security.BasicAuthConstraint&quot;</span>&gt;</span>
+                    <span class="hljs-tag">&lt;<span class="hljs-title">constructor-arg</span> <span class="hljs-attribute">value</span>=<span class="hljs-value">&quot;CitrusRole&quot;</span>/&gt;</span>
+                <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+            <span class="hljs-tag">&lt;/<span class="hljs-title">entry</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">map</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>We have set a security handler on the server web container with a constraint on all resources with <strong>/foo/*</strong> . Following from that the server requires basic authentication for these resources. The granted users and roles are specified within the security handler bean definition. Connecting clients have to set the basic auth HTTP header properly using the correct user and role for accessing the Citrus server now.</p>
+<p>You can customize the security handler for your very specific needs (e.g. load users and roles with JDBC from a database). Just have a look at the code base and inspect the settings and properties offered by the security handler interface.</p>
+<p><strong>Tip</strong>
+This mechanism is not restricted to basic authentication only. With other settings you can also set up digest or form-based authentication constraints very easy.</p>
+<h3 id="http-servlet-context-customization">HTTP servlet context customization</h3>
+<p>The Citrus HTTP server uses Spring application context loading on startup. For high customizations you can provide a custom servlet context file which holds all custom configurations as Spring beans for the server. Here is a sample servlet context with some basic Spring MVC components and the central HttpMessageController which is responsible for handling incoming requests (GET, PUT, DELETE, POST, etc.).</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;citrusHandlerMapping&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&quot;</span>/&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;citrusMethodHandlerAdapter&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;messageConverters&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-title">util:list</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;converters&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;org.springframework.http.converter.StringHttpMessageConverter&quot;</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;supportedMediaTypes&quot;</span>&gt;</span>
+          <span class="hljs-tag">&lt;<span class="hljs-title">util:list</span>&gt;</span>
+            <span class="hljs-tag">&lt;<span class="hljs-title">value</span>&gt;</span>text/xml<span class="hljs-tag">&lt;/<span class="hljs-title">value</span>&gt;</span>
+          <span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+        <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+      <span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-title">util:list</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-title">bean</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;citrusHttpMessageController&quot;</span> <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.http.controller.HttpMessageController&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-title">property</span> <span class="hljs-attribute">name</span>=<span class="hljs-value">&quot;endpointAdapter&quot;</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-title">bean</span>
+       <span class="hljs-attribute">class</span>=<span class="hljs-value">&quot;com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter&quot;</span>/&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-title">property</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-title">bean</span>&gt;</span>
+</code></pre>
+<p>The beans above are responsible for proper HTTP server configuration. In general you do not need to adjust those beans, but we have the possibility to do so which gives us a great customization and extension points. The important part is the endpoint adapter definition inside the HttpMessageController. Once a client request was accepted the adapter is responsible for generating a proper response to the client.</p>
+<p>You can add the custom servlet context as file resource to the Citrus HTTP server component. Just use the <strong>context-config-location</strong> attribute as follows:</p>
+<pre><code class="lang-xml"><span class="hljs-tag">&lt;<span class="hljs-title">citrus-http:server</span> <span class="hljs-attribute">id</span>=<span class="hljs-value">&quot;helloHttpServer&quot;</span>
+      <span class="hljs-attribute">port</span>=<span class="hljs-value">&quot;8080&quot;</span>
+      <span class="hljs-attribute">auto-start</span>=<span class="hljs-value">&quot;true&quot;</span>
+      <span class="hljs-attribute">context-config-location</span>=<span class="hljs-value">&quot;classpath:com/consol/citrus/http/custom-servlet-context.xml&quot;</span>
+      <span class="hljs-attribute">resource-base</span>=<span class="hljs-value">&quot;src/it/resources&quot;</span>/&gt;</span>
+</code></pre>
+
+                    
+                    </section>
+                
+                
+                </div>
+            </div>
+        </div>
+
+        
+        <a href="./jms.html" class="navigation navigation-prev " aria-label="Previous page: Jms"><i class="fa fa-angle-left"></i></a>
+        
+        
+        <a href="./http-websocket.html" class="navigation navigation-next " aria-label="Next page: Http-websocket"><i class="fa fa-angle-right"></i></a>
+        
+    </div>
+</div>
+
+        
+<script src="gitbook/app.js"></script>
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-edit-link/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/code-tomorrow-scheme.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-code_tomorrow_scheme/plugin.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/lunr.min.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-search/search.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-sharing/buttons.js"></script>
+    
+
+    
+    <script src="gitbook/plugins/gitbook-plugin-fontsettings/buttons.js"></script>
+    
+
+<script>
+require(["gitbook"], function(gitbook) {
+    var config = {"edit-link":{"base":"https://github.com/christophd/citrus/edit/master/src/manual","label":"Edit This Page"},"anchors":{},"code_tomorrow_scheme":{},"highlight":{},"search":{"maxIndexSize":1000000},"sharing":{"all":["facebook","google","twitter","weibo","instapaper"],"facebook":true,"google":false,"instapaper":false,"twitter":true,"vk":false,"weibo":false},"fontsettings":{"family":"sans","size":2,"theme":"white"}};
+    gitbook.start(config);
+});
+</script>
+
+        
+    </body>
+    
+</html>
