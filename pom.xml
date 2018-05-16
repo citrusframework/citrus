@@ -1291,7 +1291,18 @@
             <artifactId>asciidoctor-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>output-html</id>
+                <id>overview-html</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>process-asciidoc</goal>
+                </goals>
+                <configuration>
+                  <sourceDocumentName>overview.adoc</sourceDocumentName>
+                  <backend>html</backend>
+                </configuration>
+              </execution>
+              <execution>
+                <id>docs-html</id>
                 <phase>package</phase>
                 <goals>
                   <goal>process-asciidoc</goal>
@@ -1321,7 +1332,7 @@
             <artifactId>asciidoctor-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>output-pdf</id>
+                <id>docs-pdf</id>
                 <phase>package</phase>
                 <goals>
                   <goal>process-asciidoc</goal>
@@ -1395,6 +1406,28 @@
 
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>dist-docs</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <finalName>docs</finalName>
+                  <appendAssemblyId>false</appendAssemblyId>
+                  <descriptors>
+                    <descriptor>src/main/assembly/dist-docs.xml</descriptor>
+                  </descriptors>
+                  <attach>false</attach>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-resources-plugin</artifactId>
             <executions>
               <execution>
@@ -1407,7 +1440,7 @@
                   <outputDirectory>${project.build.directory}/checkout</outputDirectory>
                   <resources>
                     <resource>
-                      <directory>${project.build.directory}/generated-docs</directory>
+                      <directory>${project.build.directory}/docs</directory>
                       <includes>
                         <include>**/**</include>
                       </includes>

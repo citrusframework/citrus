@@ -1,0 +1,48 @@
+= Citrus Documentation
+:imagesdir: reference/html/images
+
+image::citrus-logo-small.png[citrus-logo]
+
+Citrus provides online and offline documentation as HTML and PDF format. The user guide offers comprehensive descriptions and
+code examples to all Citrus features on board.
+
+In case you miss something in our documentation please tell us. Also in case you discover something wrong or unclear please do not
+hesitate to contact us. Find below the reference documentation for the latest Citrus releases.
+
+[cols="<,<,<"]
+|===
+|Version |HTML |PDF
+
+|Latest	|link:/citrus/reference/html/index.html[HTML] |link:/citrus/reference/pdf/citrus-reference.pdf[PDF]
+|2.7.5	|link:/citrus/reference/2.7.5/html/index.html[HTML] |link:/citrus/reference/2.7.5/pdf/citrus-reference-2.7.5.pdf[PDF]
+|2.7.4	|link:/citrus/reference/2.7.4/html/index.html[HTML] |link:/citrus/reference/2.7.4/pdf/citrus-reference-2.7.4.pdf[PDF]
+|2.7.3	|link:/citrus/reference/2.7.3/html/index.html[HTML] |link:/citrus/reference/2.7.3/pdf/citrus-reference-2.7.3.pdf[PDF]
+|2.7.2	|link:/citrus/reference/2.7.2/html/index.html[HTML] |link:/citrus/reference/2.7.2/pdf/citrus-reference-2.7.2.pdf[PDF]
+|2.7.1	|link:/citrus/reference/2.7.1/html/index.html[HTML] |link:/citrus/reference/2.7.1/pdf/citrus-reference-2.7.1.pdf[PDF]
+|2.7	|link:/citrus/reference/2.7/html/index.html[HTML] |link:/citrus/reference/2.7/pdf/citrus-reference-2.7.pdf[PDF]
+|2.6.2	|link:/citrus/reference/2.6.2/html/index.html[HTML] |link:/citrus/reference/2.6.2/pdf/citrus-reference-2.6.2.pdf[PDF]
+|2.6.1	|link:/citrus/reference/2.6.1/html/index.html[HTML] |link:/citrus/reference/2.6.1/pdf/citrus-reference-2.6.1.pdf[PDF]
+|2.6	|link:/citrus/reference/2.6/html/index.html[HTML] |link:/citrus/reference/2.6/pdf/citrus-reference-2.6.pdf[PDF]
+|2.5.2	|link:/citrus/reference/2.5.2/html/index.html[HTML] |link:/citrus/reference/2.5.2/pdf/citrus-reference-2.5.2.pdf[PDF]
+|2.5.1	|link:/citrus/reference/2.5.1/html/index.html[HTML] |link:/citrus/reference/2.5.1/pdf/citrus-reference-2.5.1.pdf[PDF]
+|2.5	|link:/citrus/reference/2.5/html/index.html[HTML] |link:/citrus/reference/2.5/pdf/citrus-reference-2.5.pdf[PDF]
+|===
+
+== Additional material
+
+* link:https://citrusframework.org/[Citrus Homepage]
+* link:https://citrusframework.org/news[News]
+* link:http://www.github.com/christophd/citrus[Java Sources]
+* link:https://citrusframework.org/docs/setup-maven[Quickstart Maven]
+* link:https://citrusframework.org/docs/setup-gradle[Quickstart Gradle]
+* link:https://citrusframework.org/docs/setup-ant[Quickstart Ant]
+* link:http://labs.consol.de/tags/citrus[Blog]
+* link:https://citrusframework.org/docs/history/[Release History]
+
+== Contribute changes
+
+In case you would like to checkout the Citrus code base and build Citrus yourself follow these instructions:
+
+* link:https://citrusframework.org/docs/development[Development quickstart]
+* link:https://citrusframework.org/docs/conventions[Coding conventions]
+* link:https://citrusframework.org/docs/contribute[How to contribute]
