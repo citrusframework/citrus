@@ -188,4 +188,42 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
 
         verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
     }
+
+    @Test
+    public void testCustomContentType() {
+        TestContext context = testContextFactory.getObject();
+
+        reset(mockResponseEndpointAdapter);
+        when(mockResponseEndpointAdapter.handleMessage(any(Message.class))).thenAnswer(invocation -> {
+            Message request = invocation.getArgument(0);
+
+            Assert.assertTrue(request instanceof HttpMessage);
+            Assert.assertEquals(request.getPayload(String.class), "Hello");
+            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/foo");
+            Assert.assertEquals(request.getHeader(HttpMessageHeaders.HTTP_REQUEST_URI), "/test/hello");
+
+            return new HttpMessage("Hello user")
+                    .contentType("application/bar")
+                    .status(HttpStatus.OK);
+        });
+
+        client.send(new HttpMessage("Hello")
+                .path("/hello")
+                .contentType("application/foo")
+                .method(HttpMethod.POST), context);
+
+        Message response = client.receive(context);
+
+        Assert.assertEquals(response.getPayload(String.class), "Hello user");
+        Assert.assertEquals(response.getHeaders().size(), 9L);
+        Assert.assertNotNull(response.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(response.getHeader(MessageHeaders.TIMESTAMP));
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), HttpStatus.OK.value());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE), HttpStatus.OK.getReasonPhrase().toUpperCase());
+        Assert.assertEquals(response.getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "application/bar");
+
+        verify(mockResponseEndpointAdapter).handleMessage(any(Message.class));
+    }
+
+
 }

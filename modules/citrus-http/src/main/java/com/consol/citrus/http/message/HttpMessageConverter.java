@@ -56,9 +56,9 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             }
         }
 
-        if (httpHeaders.getContentType() == null) {
-            httpHeaders.setContentType(MediaType.parseMediaType((endpointConfiguration.getContentType().contains("charset") || !StringUtils.hasText(endpointConfiguration.getCharset())) ?
-                    endpointConfiguration.getContentType() : endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset()));
+        if (httpHeaders.getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE) == null) {
+            httpHeaders.add(HttpMessageHeaders.HTTP_CONTENT_TYPE, (endpointConfiguration.getContentType().contains("charset") || !StringUtils.hasText(endpointConfiguration.getCharset())) ?
+                    endpointConfiguration.getContentType() : endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset());
         }
 
         Object payload = httpMessage.getPayload();
