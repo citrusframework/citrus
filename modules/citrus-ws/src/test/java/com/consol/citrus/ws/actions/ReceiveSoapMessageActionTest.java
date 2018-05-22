@@ -57,7 +57,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);
@@ -103,7 +103,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);
@@ -153,7 +153,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);
@@ -218,7 +218,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -267,7 +267,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
         
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);
@@ -297,7 +297,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);
@@ -346,7 +346,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);
@@ -397,7 +397,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
         soapMessageAction.setEndpoint(endpoint);
         soapMessageAction.setAttachmentValidator(attachmentValidator);
 
-        soapMessageAction.setValidator(new DomXmlMessageValidator());
+        soapMessageAction.addValidator(new DomXmlMessageValidator());
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         soapMessageAction.setMessageBuilder(controlMessageBuilder);

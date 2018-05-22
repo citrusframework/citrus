@@ -45,11 +45,11 @@ public class PurgeEndpointActionParser implements BeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("receive-timeout"), "receiveTimeout");
 
-        List<String> endpointNames = new ArrayList<String>();
-        ManagedList<BeanDefinition> endpointRefs = new ManagedList<BeanDefinition>();
+        List<String> endpointNames = new ArrayList<>();
+        ManagedList<BeanDefinition> endpointRefs = new ManagedList<>();
         List<?> endpointElements = DomUtils.getChildElementsByTagName(element, "endpoint");
-        for (Iterator<?> iter = endpointElements.iterator(); iter.hasNext();) {
-            Element endpoint = (Element) iter.next();
+        for (Object endpointElement : endpointElements) {
+            Element endpoint = (Element) endpointElement;
             String endpointName = endpoint.getAttribute("name");
             String endpointRef = endpoint.getAttribute("ref");
 

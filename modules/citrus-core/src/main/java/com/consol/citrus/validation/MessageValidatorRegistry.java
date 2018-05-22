@@ -45,7 +45,7 @@ public class MessageValidatorRegistry implements InitializingBean {
     public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
 
     /** List of registered message validator implementations */
-    private List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<MessageValidator<? extends ValidationContext>>();
+    private List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<>();
 
     /**
      * Finds matching message validators for this message type.

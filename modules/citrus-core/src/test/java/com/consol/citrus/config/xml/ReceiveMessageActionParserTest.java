@@ -20,6 +20,7 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
+import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -41,7 +42,7 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
 
     @Test
     public void testReceiveMessageActionParser() {
-        assertActionCount(16);
+        assertActionCount(18);
         assertActionClassAndName(ReceiveMessageAction.class, "receive");
         
         PayloadTemplateMessageBuilder messageBuilder;
@@ -360,5 +361,16 @@ public class ReceiveMessageActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
         Assert.assertEquals(jsonVariableExtractor.getPathExpressions().size(), 1);
         Assert.assertEquals(jsonVariableExtractor.getPathExpressions().get("$.message.text"), "text");
+
+        // 17th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getValidators().size(), 1);
+        Assert.assertEquals(action.getValidators().get(0), beanDefinitionContext.getBean("myValidator", MessageValidator.class));
+
+        // 18th action
+        action = getNextTestActionFromTest();
+        Assert.assertEquals(action.getValidators().size(), 2);
+        Assert.assertEquals(action.getValidators().get(0), beanDefinitionContext.getBean("myValidator", MessageValidator.class));
+        Assert.assertEquals(action.getValidators().get(1), beanDefinitionContext.getBean("defaultPlaintextMessageValidator", MessageValidator.class));
     }
 }

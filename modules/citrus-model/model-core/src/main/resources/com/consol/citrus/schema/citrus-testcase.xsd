@@ -252,6 +252,7 @@
                     <xs:attribute name="schema" type="xs:string"/>
                     <xs:attribute name="schema-repository" type="xs:string"/>
                     <xs:attribute name="validator" type="xs:string"/>
+                    <xs:attribute name="validators" type="xs:string"/>
                     <xs:attribute name="data-dictionary" type="xs:string"/>
                     <xs:attribute name="name" type="xs:string"/>
                     <xs:attribute name="type" default="xml" type="xs:string"/>

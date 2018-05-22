@@ -25,20 +25,13 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
+import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.*;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -55,6 +48,7 @@ import org.springframework.xml.transform.StringResult;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * Receive message action builder offers configuration methods for a receive test action. Build options
@@ -710,26 +704,28 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
     
     /**
-     * Sets explicit message validator for this receive action.
-     * @param validator
+     * Sets explicit message validators for this receive action.
+     * @param validators
      * @return
      */
-    public T validator(MessageValidator<? extends ValidationContext> validator) {
-        getAction().setValidator(validator);
+    public T validator(MessageValidator<? extends ValidationContext> ... validators) {
+        Stream.of(validators).forEach(getAction()::addValidator);
         return self;
     }
     
     /**
-     * Sets explicit message validator by name.
-     * @param validatorName
+     * Sets explicit message validators by name.
+     * @param validatorNames
      * @return
      */
     @SuppressWarnings("unchecked")
-    public T validator(String validatorName) {
+    public T validator(String ... validatorNames) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-        MessageValidator<? extends ValidationContext> validator = applicationContext.getBean(validatorName, MessageValidator.class);
 
-        getAction().setValidator(validator);
+        for (String validatorName : validatorNames) {
+            getAction().addValidator(applicationContext.getBean(validatorName, MessageValidator.class));
+        }
+
         return self;
     }
 

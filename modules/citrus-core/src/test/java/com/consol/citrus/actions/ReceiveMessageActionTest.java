@@ -1573,7 +1573,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(new GroovyXmlMessageValidator());
+        receiveAction.addValidator(new GroovyXmlMessageValidator());
         
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScript("assert root.Message.name() == 'Message'\n" + 
@@ -1602,7 +1602,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction();
         receiveAction.setEndpoint(endpoint);
 
-        receiveAction.setValidator(new GroovyXmlMessageValidator());
+        receiveAction.addValidator(new GroovyXmlMessageValidator());
         ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
         validationContext.setValidationScriptResourcePath("classpath:com/consol/citrus/actions/test-validation-script.groovy");
         

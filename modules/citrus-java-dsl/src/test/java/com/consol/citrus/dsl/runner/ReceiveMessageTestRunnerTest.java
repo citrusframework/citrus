@@ -906,7 +906,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertEquals(action.getValidators().size(), 1L);
+        Assert.assertEquals(action.getValidators().get(0), validator);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "TestMessage");
@@ -951,7 +952,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertEquals(action.getValidators().size(), 1L);
+        Assert.assertEquals(action.getValidators().get(0), validator);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "TestMessage");
@@ -1399,7 +1401,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertEquals(action.getValidators().size(), 1L);
+        Assert.assertEquals(action.getValidators().get(0), validator);
 
         Assert.assertEquals(action.getValidationContexts().size(), 4L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
@@ -1451,7 +1454,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertEquals(action.getValidators().size(), 1L);
+        Assert.assertEquals(action.getValidators().get(0), validator);
 
         Assert.assertEquals(action.getValidationContexts().size(), 4L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
@@ -1502,7 +1506,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertEquals(action.getValidators().size(), 1L);
+        Assert.assertEquals(action.getValidators().get(0), validator);
 
         Assert.assertEquals(action.getValidationContexts().size(), 4L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
@@ -1554,7 +1559,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
-        Assert.assertEquals(action.getValidator(), validator);
+        Assert.assertEquals(action.getValidators().size(), 1L);
+        Assert.assertEquals(action.getValidators().get(0), validator);
 
         Assert.assertEquals(action.getValidationContexts().size(), 4L);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);

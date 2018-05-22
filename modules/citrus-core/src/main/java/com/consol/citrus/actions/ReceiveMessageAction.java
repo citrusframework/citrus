@@ -36,6 +36,7 @@ import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -71,7 +72,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
     private MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
 
     /** MessageValidator responsible for message validation */
-    private MessageValidator<? extends ValidationContext> validator;
+    private List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
 
     /** Optional data dictionary that explicitly modifies message content before validation */
     private DataDictionary dataDictionary;
@@ -196,10 +197,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), receivedMessage);
             }
 
-            if (validator != null) {
-                validator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+            if (!CollectionUtils.isEmpty(validators)) {
+                for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
+                    messageValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+                }
 
-                if (!DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass())) {
+                if (validators.parallelStream()
+                                .map(Object::getClass)
+                                .noneMatch(DefaultMessageHeaderValidator.class::isAssignableFrom)) {
                     MessageValidator defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
                     if (defaultMessageHeaderValidator != null) {
                         defaultMessageHeaderValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
@@ -272,11 +277,21 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Set single message validator.
+     * Set list of message validators.
+     * @param validators the message validators to set
+     */
+    public ReceiveMessageAction setValidators(List<MessageValidator<? extends ValidationContext>> validators) {
+        this.validators.clear();
+        this.validators.addAll(validators);
+        return this;
+    }
+
+    /**
+     * Adds message validator to the list of explicit validators.
      * @param validator the message validator to set
      */
-    public ReceiveMessageAction setValidator(MessageValidator<? extends ValidationContext> validator) {
-        this.validator = validator;
+    public ReceiveMessageAction addValidator(MessageValidator<? extends ValidationContext> validator) {
+        this.validators.add(validator);
         return this;
     }
 
@@ -418,8 +433,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Gets the validator.
      * @return the validator
      */
-    public MessageValidator<? extends ValidationContext> getValidator() {
-        return validator;
+    public List<MessageValidator<? extends ValidationContext>> getValidators() {
+        return Collections.unmodifiableList(validators);
     }
 
     /**

@@ -18,13 +18,9 @@ package com.consol.citrus.config.xml;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.util.ValidateMessageParserUtil;
-import com.consol.citrus.config.util.VariableExtractorParserUtil;
+import com.consol.citrus.config.util.*;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.context.DefaultValidationContext;
-import com.consol.citrus.validation.context.SchemaValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.*;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -33,20 +29,17 @@ import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 /**
  * Bean definition parser for receive action in test case.
@@ -136,9 +129,22 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 validationContexts.add(scriptValidationContext);
             }
 
+            ManagedList<RuntimeBeanReference> validators = new ManagedList<>();
             String messageValidator = messageElement.getAttribute("validator");
             if (StringUtils.hasText(messageValidator)) {
-                builder.addPropertyReference("validator", messageValidator);
+                validators.add(new RuntimeBeanReference(messageValidator));
+            }
+
+            String messageValidators = messageElement.getAttribute("validators");
+            if (StringUtils.hasText(messageValidators)) {
+                Stream.of(messageValidators.split(","))
+                        .map(String::trim)
+                        .map(RuntimeBeanReference::new)
+                        .forEach(validators::add);
+            }
+
+            if (!validators.isEmpty()) {
+                builder.addPropertyValue("validators", validators);
             }
 
             String dataDictionary = messageElement.getAttribute("data-dictionary");

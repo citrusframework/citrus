@@ -22,6 +22,7 @@ import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
 import com.consol.citrus.jmx.model.*;
 import com.consol.citrus.jmx.server.JmxServer;
 import com.consol.citrus.server.AbstractServer;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -50,11 +51,11 @@ public class JmxServerParser extends AbstractServerParser {
         BeanDefinitionParserUtils.setPropertyValue(configurationBuilder, element.getAttribute("timeout"), "timeout");
 
         Element mbeansElement = DomUtils.getChildElementByTagName(element, "mbeans");
-        ManagedList mbeans = new ManagedList();
+        ManagedList<BeanDefinition> mbeans = new ManagedList<>();
         if (mbeansElement != null) {
             List<?> mbeanElement = DomUtils.getChildElementsByTagName(mbeansElement, "mbean");
-            for (Iterator<?> iter = mbeanElement.iterator(); iter.hasNext();) {
-                Element mbean = (Element) iter.next();
+            for (Object aMbeanElement : mbeanElement) {
+                Element mbean = (Element) aMbeanElement;
                 BeanDefinitionBuilder mbeanDefinition = BeanDefinitionBuilder.genericBeanDefinition(ManagedBeanDefinition.class);
                 BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("type"), "type");
                 BeanDefinitionParserUtils.setPropertyValue(mbeanDefinition, mbean.getAttribute("name"), "name");
@@ -65,8 +66,8 @@ public class JmxServerParser extends AbstractServerParser {
                 if (operationsElement != null) {
                     List<?> operationElement = DomUtils.getChildElementsByTagName(operationsElement, "operation");
                     List<ManagedBeanInvocation.Operation> operationList = new ArrayList<>();
-                    for (Iterator<?> operationIter = operationElement.iterator(); operationIter.hasNext(); ) {
-                        Element operation = (Element) operationIter.next();
+                    for (Object anOperationElement : operationElement) {
+                        Element operation = (Element) anOperationElement;
 
                         ManagedBeanInvocation.Operation op = new ManagedBeanInvocation.Operation();
                         op.setName(operation.getAttribute("name"));
@@ -75,8 +76,8 @@ public class JmxServerParser extends AbstractServerParser {
                         if (parameterElement != null) {
                             op.setParameter(new ManagedBeanInvocation.Parameter());
                             List<?> paramElement = DomUtils.getChildElementsByTagName(parameterElement, "param");
-                            for (Iterator<?> paramIter = paramElement.iterator(); paramIter.hasNext(); ) {
-                                Element param = (Element) paramIter.next();
+                            for (Object aParamElement : paramElement) {
+                                Element param = (Element) aParamElement;
                                 OperationParam p = new OperationParam();
                                 p.setType(param.getAttribute("type"));
                                 op.getParameter().getParameter().add(p);
@@ -92,8 +93,8 @@ public class JmxServerParser extends AbstractServerParser {
                 if (attributesElement != null) {
                     List<?> attributeElement = DomUtils.getChildElementsByTagName(attributesElement, "attribute");
                     List<ManagedBeanInvocation.Attribute> attributeList = new ArrayList<>();
-                    for (Iterator<?> attributeIter = attributeElement.iterator(); attributeIter.hasNext(); ) {
-                        Element attribute = (Element) attributeIter.next();
+                    for (Object anAttributeElement : attributeElement) {
+                        Element attribute = (Element) anAttributeElement;
 
                         ManagedBeanInvocation.Attribute att = new ManagedBeanInvocation.Attribute();
                         att.setType(attribute.getAttribute("type"));
