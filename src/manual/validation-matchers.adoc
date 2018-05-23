@@ -326,3 +326,66 @@ In the listing above we are using the *equalTo()* matcher. All Hamcrest matchers
 ----
 
 Citrus will automatically perform validation matchers on the element value. Only if all matchers are satisfied the validation will pass.
+
+[[matcher-ignore-new-line]]
+== ignoreNewLine()
+
+This matcher implementation checks for equality with prior normalization of all new line characters. This includes new line types CR, LF and CRLF as well as multiple new lines in value and control value. So when using
+this validation matcher all new line characters are removed prior to checking for equality.
+
+Lets assume that we have a value with new lines that we want to validate using the matcher implementation:
+
+[source,text]
+----
+<value>This
+is
+a
+value with lots of
+new lines</value>
+----
+
+You can now skip all new line characters in your control value using the `ignoreNewLine matcher`.
+
+[source,xml]
+----
+<value>@ignoreNewLine('This is a value with lots of new lines')@</value>
+----
+
+As you can see the new line characters are not breaking the validation. The other whitespace characters remain untouched though.
+
+[[matcher-trim-whitespace]]
+== trim()
+
+This trim matcher will remove leading and trailing whitespaces before checking for equality.
+
+Lets assume that we have a value with leading and trailing whitespaces:
+
+[source,text]
+----
+<value>
+This is a value   </value>
+----
+
+You can now skip all leading and trailing whitespaces in your control value.
+
+[source,xml]
+----
+<value>@trim('This is a value')@</value>
+----
+
+[[matcher-trim-all-whitespace]]
+== trimAllWhitespaces()
+
+Sometimes it is necessary to check equality of some value without caring for whitespaces at all. The matcher implementation will remove all whitespaces before checking for equality.
+
+[source,text]
+----
+<value>   some value   </value>
+----
+
+You can now skip all whitespaces in your control value.
+
+[source,xml]
+----
+<value>@trimAllWhitespaces('somevalue')@</value>
+----

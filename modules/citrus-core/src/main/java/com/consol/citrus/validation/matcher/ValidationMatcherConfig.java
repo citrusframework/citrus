@@ -34,6 +34,9 @@ public class ValidationMatcherConfig {
 
     private final ContainsIgnoreCaseValidationMatcher containsIgnoreCaseValidationMatcher = new ContainsIgnoreCaseValidationMatcher();
     private final EqualsIgnoreCaseValidationMatcher equalsIgnoreCaseValidationMatcher = new EqualsIgnoreCaseValidationMatcher();
+    private final IgnoreNewLineValidationMatcher ignoreNewLineValidationMatcher = new IgnoreNewLineValidationMatcher();
+    private final TrimValidationMatcher trimValidationMatcher = new TrimValidationMatcher();
+    private final TrimAllWhitespacesValidationMatcher trimAllWhitespacesValidationMatcher = new TrimAllWhitespacesValidationMatcher();
     private final ContainsValidationMatcher containsValidationMatcher = new ContainsValidationMatcher();
     private final GreaterThanValidationMatcher greaterThanValidationMatcher = new GreaterThanValidationMatcher();
     private final LowerThanValidationMatcher lowerThanValidationMatcher = new LowerThanValidationMatcher();
@@ -95,6 +98,9 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.setName("citrusValidationMatcherLibrary");
 
         citrusValidationMatcherLibrary.getMembers().put("equalsIgnoreCase", equalsIgnoreCaseValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("ignoreNewLine", ignoreNewLineValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("trim", trimValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("trimAllWhitespaces", trimAllWhitespacesValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("contains", containsValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("containsIgnoreCase", containsIgnoreCaseValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("greaterThan", greaterThanValidationMatcher);
