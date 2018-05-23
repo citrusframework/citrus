@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.endpoint;
 
+import com.consol.citrus.channel.ChannelEndpointBuilder;
+import com.consol.citrus.channel.ChannelSyncEndpointBuilder;
 import com.consol.citrus.docker.client.DockerClientBuilder;
 import com.consol.citrus.dsl.endpoint.jdbc.JdbcDbServerEndpointBuilder;
 import com.consol.citrus.dsl.endpoint.selenium.SeleniumBrowserEndpointBuilder;
@@ -56,6 +58,14 @@ public abstract class CitrusEndpoints {
      */
     protected CitrusEndpoints() {
         super();
+    }
+
+    /**
+     * Creates new ChannelEndpoint sync or async builder.
+     * @return
+     */
+    public static AsyncSyncEndpointBuilder<ChannelEndpointBuilder, ChannelSyncEndpointBuilder> channel() {
+        return new AsyncSyncEndpointBuilder<>(new ChannelEndpointBuilder(), new ChannelSyncEndpointBuilder());
     }
 
     /**

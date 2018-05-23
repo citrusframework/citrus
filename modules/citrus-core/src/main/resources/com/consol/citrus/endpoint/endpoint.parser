@@ -1,3 +1,5 @@
+endpoint.parser.channel=com.consol.citrus.config.annotation.ChannelEndpointConfigParser
+endpoint.parser.channel.sync=com.consol.citrus.config.annotation.ChannelSyncEndpointConfigParser
 endpoint.parser.jms=com.consol.citrus.jms.config.annotation.JmsEndpointConfigParser
 endpoint.parser.jms.sync=com.consol.citrus.jms.config.annotation.JmsSyncEndpointConfigParser
 endpoint.parser.http.client=com.consol.citrus.http.config.annotation.HttpClientConfigParser

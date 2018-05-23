@@ -1,0 +1,173 @@
+/*
+ * Copyright 2006-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.config.annotation;
+
+import com.consol.citrus.TestActor;
+import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.channel.ChannelMessageConverter;
+import com.consol.citrus.channel.ChannelSyncEndpoint;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.mockito.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.integration.core.MessagingTemplate;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.core.DestinationResolver;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.when;
+
+/**
+ * @author Christoph Deppisch
+ */
+public class ChannelSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(channelName="testChannel")
+    private ChannelSyncEndpoint channelSyncEndpoint1;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(timeout=10000L,
+            channel="channelQueue",
+            correlator="replyMessageCorrelator")
+    private ChannelSyncEndpoint channelSyncEndpoint2;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(messagingTemplate="messagingTemplate",
+            correlator="replyMessageCorrelator")
+    private ChannelSyncEndpoint channelSyncEndpoint3;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(channelName="testChannel",
+            actor="testActor")
+    private ChannelSyncEndpoint channelSyncEndpoint4;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(channelName="testChannel")
+    private ChannelSyncEndpoint channelSyncEndpoint5;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(timeout=10000L,
+            channel="channelQueue",
+            channelResolver="channelResolver",
+            correlator="replyMessageCorrelator")
+    private ChannelSyncEndpoint channelSyncEndpoint6;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(messagingTemplate="messagingTemplate",
+            correlator="replyMessageCorrelator")
+    private ChannelSyncEndpoint channelSyncEndpoint7;
+
+    @CitrusEndpoint
+    @ChannelSyncEndpointConfig(channelName="testChannel",
+            pollingInterval=250,
+            actor="testActor")
+    private ChannelSyncEndpoint channelSyncEndpoint8;
+
+    @Autowired
+    private SpringBeanReferenceResolver referenceResolver;
+
+    @Mock
+    private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
+    @Mock
+    private MessageChannel channelQueue = Mockito.mock(MessageChannel.class);
+    @Mock
+    private ChannelMessageConverter messageConverter = Mockito.mock(ChannelMessageConverter.class);
+    @Mock
+    private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
+    @Mock
+    private EndpointUriResolver channelNameResolver = Mockito.mock(EndpointUriResolver.class);
+    @Mock
+    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    @Mock
+    private TestActor testActor = Mockito.mock(TestActor.class);
+    @Mock
+    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+
+    @BeforeClass
+    public void setup() {
+        MockitoAnnotations.initMocks(this);
+
+        referenceResolver.setApplicationContext(applicationContext);
+
+        when(applicationContext.getBean("messagingTemplate", MessagingTemplate.class)).thenReturn(messagingTemplate);
+        when(applicationContext.getBean("channelQueue", MessageChannel.class)).thenReturn(channelQueue);
+        when(applicationContext.getBean("messageConverter", ChannelMessageConverter.class)).thenReturn(messageConverter);
+        when(applicationContext.getBean("channelResolver", DestinationResolver.class)).thenReturn(channelResolver);
+        when(applicationContext.getBean("channelNameResolver", EndpointUriResolver.class)).thenReturn(channelNameResolver);
+        when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    }
+
+    @Test
+    public void testChannelSyncEndpointAsConsumerParser() {
+        CitrusAnnotations.injectEndpoints(this, context);
+
+        // 1st message receiver
+        Assert.assertEquals(channelSyncEndpoint1.getEndpointConfiguration().getChannelName(), "testChannel");
+        Assert.assertNull(channelSyncEndpoint1.getEndpointConfiguration().getChannel());
+        Assert.assertEquals(channelSyncEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(channelSyncEndpoint1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+
+        // 2nd message receiver
+        Assert.assertNull(channelSyncEndpoint2.getEndpointConfiguration().getChannelName());
+        Assert.assertNotNull(channelSyncEndpoint2.getEndpointConfiguration().getChannel());
+        Assert.assertEquals(channelSyncEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(channelSyncEndpoint2.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+
+        // 3rd message receiver
+        Assert.assertNull(channelSyncEndpoint3.getEndpointConfiguration().getChannelName());
+        Assert.assertNull(channelSyncEndpoint3.getEndpointConfiguration().getChannel());
+        Assert.assertEquals(channelSyncEndpoint3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+
+        // 4th message receiver
+        Assert.assertNotNull(channelSyncEndpoint4.getActor());
+        Assert.assertEquals(channelSyncEndpoint4.getActor(), testActor);
+
+        // 5th message receiver
+        Assert.assertEquals(channelSyncEndpoint5.getEndpointConfiguration().getChannelName(), "testChannel");
+        Assert.assertNull(channelSyncEndpoint5.getEndpointConfiguration().getChannel());
+        Assert.assertEquals(channelSyncEndpoint5.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(channelSyncEndpoint5.getEndpointConfiguration().getPollingInterval(), 500L);
+        Assert.assertEquals(channelSyncEndpoint5.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+
+        // 6th message sender
+        Assert.assertNull(channelSyncEndpoint6.getEndpointConfiguration().getChannelName());
+        Assert.assertNotNull(channelSyncEndpoint6.getEndpointConfiguration().getChannel());
+        Assert.assertEquals(channelSyncEndpoint6.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(channelSyncEndpoint6.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+        Assert.assertEquals(channelSyncEndpoint6.getEndpointConfiguration().getChannelResolver(), channelResolver);
+
+        // 7th message sender
+        Assert.assertNull(channelSyncEndpoint7.getEndpointConfiguration().getChannelName());
+        Assert.assertNull(channelSyncEndpoint7.getEndpointConfiguration().getChannel());
+        Assert.assertEquals(channelSyncEndpoint7.getEndpointConfiguration().getCorrelator(), messageCorrelator);
+
+        // 8th message sender
+        Assert.assertNotNull(channelSyncEndpoint8.getEndpointConfiguration().getPollingInterval());
+        Assert.assertEquals(channelSyncEndpoint8.getEndpointConfiguration().getPollingInterval(), 250L);
+        Assert.assertNotNull(channelSyncEndpoint8.getActor());
+        Assert.assertEquals(channelSyncEndpoint8.getActor(), testActor);
+    }
+}
