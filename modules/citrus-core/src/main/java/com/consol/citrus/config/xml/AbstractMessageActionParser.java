@@ -20,6 +20,7 @@ import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
@@ -239,7 +240,9 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
 
             if (headerElement.hasAttribute("ignore-case")) {
                 boolean ignoreCase = Boolean.valueOf(headerElement.getAttribute("ignore-case"));
-                validationContexts.forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
+                validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
+                                            .map(context -> (HeaderValidationContext) context)
+                                            .forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
             }
         }
     }
@@ -251,7 +254,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      */
     protected void parseExtractHeaderElements(Element element, List<VariableExtractor> variableExtractors) {
         Element extractElement = DomUtils.getChildElementByTagName(element, "extract");
-        Map<String, String> extractHeaderValues = new HashMap<String, String>();
+        Map<String, String> extractHeaderValues = new HashMap<>();
         if (extractElement != null) {
             List<?> headerValueElements = DomUtils.getChildElementsByTagName(extractElement, "header");
             for (Iterator<?> iter = headerValueElements.iterator(); iter.hasNext();) {

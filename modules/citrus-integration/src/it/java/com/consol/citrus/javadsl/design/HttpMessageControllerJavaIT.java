@@ -119,8 +119,8 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                         .contentType("text/html")
                         .header("Host", "localhost:8072")
                         .accept("application/xml;charset=UTF-8")
+                        .queryParam("name", "@ignore@")
                         .queryParam("id", "${id}")
-                        .queryParam("name", "TestUser")
                         .queryParam("alive"))
             )
         );

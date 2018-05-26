@@ -106,7 +106,20 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyValue("messageType", messageType);
             }
 
-            validationContexts.add(new DefaultValidationContext());
+            HeaderValidationContext headerValidationContext = new HeaderValidationContext();
+            validationContexts.add(headerValidationContext);
+
+            String headerValidator = messageElement.getAttribute("header-validator");
+            if (StringUtils.hasText(headerValidator)) {
+                headerValidationContext.addHeaderValidator(headerValidator);
+            }
+
+            String headerValidatorExpression = messageElement.getAttribute("header-validators");
+            if (StringUtils.hasText(headerValidatorExpression)) {
+                Stream.of(headerValidatorExpression.split(","))
+                        .map(String::trim)
+                        .forEach(headerValidationContext::addHeaderValidator);
+            }
 
             XmlMessageValidationContext xmlMessageValidationContext = getXmlMessageValidationContext(messageElement);
             validationContexts.add(xmlMessageValidationContext);
@@ -135,9 +148,9 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 validators.add(new RuntimeBeanReference(messageValidator));
             }
 
-            String messageValidators = messageElement.getAttribute("validators");
-            if (StringUtils.hasText(messageValidators)) {
-                Stream.of(messageValidators.split(","))
+            String messageValidatorExpression = messageElement.getAttribute("validators");
+            if (StringUtils.hasText(messageValidatorExpression)) {
+                Stream.of(messageValidatorExpression.split(","))
                         .map(String::trim)
                         .map(RuntimeBeanReference::new)
                         .forEach(validators::add);
@@ -152,7 +165,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
                 builder.addPropertyReference("dataDictionary", dataDictionary);
             }
         } else {
-            validationContexts.add(new DefaultValidationContext());
+            validationContexts.add(new HeaderValidationContext());
         }
 
         return validationContexts;
@@ -281,7 +294,6 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         context.setSchema(parentContext.getSchema());
         context.setSchemaRepository(parentContext.getSchemaRepository());
         context.setSchemaValidation(parentContext.isSchemaValidationEnabled());
-        context.setHeaderNameIgnoreCase(parentContext.isHeaderNameIgnoreCase());
         context.setDTDResource(parentContext.getDTDResource());
 
         return context;

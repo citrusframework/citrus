@@ -18,8 +18,8 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.*;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.*;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -105,7 +105,12 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             }
 
             boolean ignoreCase = headers.hasAttribute("ignore-case") ? Boolean.valueOf(headers.getAttribute("ignore-case")) : true;
-            validationContexts.forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
+            validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
+                    .map(context -> (HeaderValidationContext) context)
+                    .forEach(context -> {
+                        context.addHeaderValidator(new HttpQueryParamHeaderValidator());
+                        context.setHeaderNameIgnoreCase(ignoreCase);
+                    });
         }
 
         MessageSelectorParser.doParse(element, builder);

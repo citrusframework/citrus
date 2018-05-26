@@ -17,15 +17,15 @@
 package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.*;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.hamcrest.Matcher;
-import org.springframework.util.Assert;
+import com.consol.citrus.validation.context.HeaderValidationContext;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Map;
+import java.util.*;
 
 /**
  * Basic header message validator provides message header validation. Subclasses only have to add
@@ -33,10 +33,14 @@ import java.util.Map;
  * 
  * @author Christoph Deppisch
  */
-public class DefaultMessageHeaderValidator extends AbstractMessageValidator<ValidationContext> {
+public class DefaultMessageHeaderValidator extends AbstractMessageValidator<HeaderValidationContext> {
+
+    /** List of special header validators */
+    @Autowired(required = false)
+    private List<HeaderValidator> validators = new ArrayList<>();
 
     @Override
-    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, ValidationContext validationContext) {
+    public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, HeaderValidationContext validationContext) {
         Map<String, Object> controlHeaders = controlMessage.getHeaders();
         Map<String, Object> receivedHeaders = receivedMessage.getHeaders();
 
@@ -45,87 +49,81 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
         log.debug("Start message header validation ...");
 
         for (Map.Entry<String, Object> entry : controlHeaders.entrySet()) {
-            String headerName = entry.getKey();
-            String actualValue = null;
-
-            if (MessageHeaderUtils.isSpringInternalHeader(headerName) ||
-                    headerName.startsWith(MessageHeaders.MESSAGE_PREFIX)) {
+            if (MessageHeaderUtils.isSpringInternalHeader(entry.getKey()) ||
+                    entry.getKey().startsWith(MessageHeaders.MESSAGE_PREFIX) ||
+                    entry.getKey().equals(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME) ||
+                    entry.getKey().equals(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME) ||
+                    entry.getKey().equals(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME)) {
                 continue;
             }
-            //check if header expression is variable or function
-            headerName = context.resolveDynamicValue(headerName);
 
-            if (!receivedHeaders.containsKey(headerName) &&
-                    validationContext.isHeaderNameIgnoreCase()) {
-                String key = headerName;
-
-                log.debug(String.format("Finding case insensitive header for key '%s'", key));
-                
-                headerName = receivedHeaders
-                        .entrySet()
-                        .parallelStream()
-                        .filter(item -> item.getKey().equalsIgnoreCase(key))
-                        .map(Map.Entry::getKey)
-                        .findFirst()
-                        .orElseThrow(() -> new ValidationException("Validation failed: No matching header for key '" + key + "'"));
-
-                log.info(String.format("Found matching case insensitive header name: %s", headerName));
-            }
+            final String headerName = getHeaderName(entry.getKey(), receivedHeaders, context, validationContext);
 
             if (!receivedHeaders.containsKey(headerName)) {
                 throw new ValidationException("Validation failed: Header element '" + headerName + "' is missing");
             }
 
-            if (receivedHeaders.get(headerName) != null) {
-                actualValue = receivedHeaders.get(headerName).toString();
-            }
-
-            if (entry.getValue() instanceof Matcher) {
-                Assert.isTrue(((Matcher) entry.getValue()).matches(actualValue),
-                        ValidationUtils.buildValueMismatchErrorMessage(
-                                "Values not matching for header '" + headerName + "'", entry.getValue(), actualValue));
-                continue;
-            }
-
-            //check if value expression is variable or function
-            String expectedValue = context.replaceDynamicContentInString(String.valueOf(entry.getValue()));
-
-            try {
-                if (actualValue != null) {
-                    if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
-                        ValidationMatcherUtils.resolveValidationMatcher(headerName, actualValue,
-                                expectedValue, context);
-                        continue;
-                    }
-
-                    Assert.isTrue(expectedValue != null,
-                            "Values not equal for header element '"
-                                    + headerName + "', expected '"
-                                    + null + "' but was '"
-                                    + actualValue + "'");
-
-                    Assert.isTrue(actualValue.equals(expectedValue),
-                            "Values not equal for header element '"
-                                    + headerName + "', expected '"
-                                    + expectedValue + "' but was '"
-                                    + actualValue + "'");
-                } else {
-                    Assert.isTrue(expectedValue == null || expectedValue.length() == 0,
-                            "Values not equal for header element '"
-                                    + headerName + "', expected '"
-                                    + expectedValue + "' but was '"
-                                    + null + "'");
-                }
-            } catch (IllegalArgumentException e) {
-                throw new ValidationException("Validation failed:", e);
-            }
-
-            if (log.isDebugEnabled()) {
-                log.debug("Validating header element: " + headerName + "='" + expectedValue + "': OK.");
-            }
+            Object controlValue = entry.getValue();
+            validationContext.getValidators()
+                    .stream()
+                    .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
+                    .findFirst()
+                    .orElse(
+                        validationContext.getValidatorNames()
+                                .stream()
+                                .map(beanName -> {
+                                    try {
+                                        return context.getApplicationContext().getBean(beanName, HeaderValidator.class);
+                                    } catch (NoSuchBeanDefinitionException e) {
+                                        log.warn("Failed to resolve header validator for name: " + beanName);
+                                        return null;
+                                    }
+                                })
+                                .filter(Objects::nonNull)
+                                .findFirst()
+                                .orElse(
+                                    validators.stream()
+                                            .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
+                                            .findFirst()
+                                            .orElse(new DefaultHeaderValidator())
+                                )
+                    ).validateHeader(headerName, receivedHeaders.get(headerName), controlValue, context, validationContext);
         }
 
         log.info("Message header validation successful: All values OK");
+    }
+
+    /**
+     * Get header name from control message but also check if header expression is a variable or function. In addition to that find case insensitive header name in
+     * received message when feature is activated.
+     *
+     * @param name
+     * @param receivedHeaders
+     * @param context
+     * @param validationContext
+     * @return
+     */
+    private String getHeaderName(String name, Map<String, Object> receivedHeaders, TestContext context, HeaderValidationContext validationContext) {
+        String headerName = context.resolveDynamicValue(name);
+
+        if (!receivedHeaders.containsKey(headerName) &&
+                validationContext.isHeaderNameIgnoreCase()) {
+            String key = headerName;
+
+            log.debug(String.format("Finding case insensitive header for key '%s'", key));
+
+            headerName = receivedHeaders
+                    .entrySet()
+                    .parallelStream()
+                    .filter(item -> item.getKey().equalsIgnoreCase(key))
+                    .map(Map.Entry::getKey)
+                    .findFirst()
+                    .orElseThrow(() -> new ValidationException("Validation failed: No matching header for key '" + key + "'"));
+
+            log.info(String.format("Found matching case insensitive header name: %s", headerName));
+        }
+
+        return headerName;
     }
 
     @Override
@@ -134,7 +132,33 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Vali
     }
 
     @Override
-    protected Class<ValidationContext> getRequiredValidationContextType() {
-        return ValidationContext.class;
+    protected Class<HeaderValidationContext> getRequiredValidationContextType() {
+        return HeaderValidationContext.class;
+    }
+
+    /**
+     * Adds header validator.
+     * @param validator
+     */
+    public void addHeaderValidator(HeaderValidator validator) {
+        this.validators.add(validator);
+    }
+
+    /**
+     * Gets the validators.
+     *
+     * @return
+     */
+    public List<HeaderValidator> getValidators() {
+        return Collections.unmodifiableList(validators);
+    }
+
+    /**
+     * Sets the validators.
+     *
+     * @param validators
+     */
+    public void setValidators(List<HeaderValidator> validators) {
+        this.validators = validators;
     }
 }

@@ -31,6 +31,7 @@ import org.springframework.web.util.UrlPathHelper;
 
 import javax.servlet.http.*;
 import java.util.Enumeration;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -133,18 +134,12 @@ public class HttpMessageController {
             }
         }
 
-        String queryParams = pathHelper.getOriginatingQueryString(servletRequest);
-
-        if (queryParams == null) {
-            queryParams = "";
-        } else {
-            queryParams = queryParams.replaceAll("&", ",");
-        }
-
         request.path(pathHelper.getRequestUri(servletRequest))
                 .uri(pathHelper.getRequestUri(servletRequest))
                 .contextPath(pathHelper.getContextPath(servletRequest))
-                .queryParams(queryParams)
+                .queryParams(Optional.ofNullable(pathHelper.getOriginatingQueryString(servletRequest))
+                                    .map(queryString -> queryString.replaceAll("&", ","))
+                                    .orElse(""))
                 .version(servletRequest.getProtocol())
                 .method(method);
 

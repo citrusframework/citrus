@@ -29,6 +29,7 @@ import java.util.*;
  * @author Christoph Deppisch
  */
 public class XmlMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
+
     /** Map holding xpath expressions to identify the ignored message elements */
     private Set<String> ignoreExpressions = new HashSet<>();
 

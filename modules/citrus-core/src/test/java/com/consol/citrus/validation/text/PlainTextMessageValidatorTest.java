@@ -34,6 +34,7 @@ import java.util.UUID;
 public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
 
     private PlainTextMessageValidator validator;
+    private ValidationContext validationContext = new DefaultValidationContext();
 
     @BeforeMethod
     public void setup() {
@@ -45,7 +46,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello World!");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -54,7 +54,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage(String.format("Hello World, time is %s!", System.currentTimeMillis()));
         Message controlMessage = new DefaultMessage("Hello World, time is @ignore@!");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         controlMessage = new DefaultMessage("Hello @ignore@, time is @ignore@!");
@@ -91,7 +90,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage(String.format("Hello World, time is %s!", time));
         Message controlMessage = new DefaultMessage("Hello World, time is @variable(time)@!");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         Assert.assertEquals(context.getVariable("time"), time.toString());
@@ -127,7 +125,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello @ignore@");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
@@ -147,7 +144,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("@contains('World!')@");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -156,7 +152,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("@contains('Space!')@");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
     
@@ -167,7 +162,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         
         context.setVariable("world", "World");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
     
@@ -176,7 +170,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!");
         Message controlMessage = new DefaultMessage("Hello Citrus!");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {
@@ -196,7 +189,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("   Hello World!   ");
         Message controlMessage = new DefaultMessage("Hello World!");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -205,7 +197,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\nWorld!\n");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -214,7 +205,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage(" Hello\r\n\n  \t World!\t\t\n\n    ");
         Message controlMessage = new DefaultMessage("Hello\n World!\n");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.setIgnoreNewLineType(true);
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
@@ -231,7 +221,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\r\nWorld!\r\n");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
             Assert.fail("Missing exception due to non matching new line whitespaces");
@@ -247,7 +236,6 @@ public class PlainTextMessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello\nWorld!\n");
         Message controlMessage = new DefaultMessage("Hello\rWorld!\r");
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
             Assert.fail("Missing exception due to non matching new line whitespaces");

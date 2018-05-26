@@ -26,7 +26,7 @@ import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.springframework.http.HttpMethod;
@@ -45,7 +45,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
 
         ReceiveMessageAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
@@ -66,7 +66,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
@@ -83,15 +83,15 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/xml");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_ACCEPT), "text/xml");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "id=12345,type=gold,alive");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold,alive");
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "alive=,id=12345,type=gold");
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "alive=,id=12345,type=gold");
         Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(1) instanceof XmlMessageValidationContext);
         Assert.assertTrue(action.getValidationContexts().get(2) instanceof JsonMessageValidationContext);
 
@@ -114,7 +114,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
@@ -130,7 +130,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);
@@ -146,7 +146,7 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 1);
-        Assert.assertTrue(action.getValidationContexts().get(0) instanceof DefaultValidationContext);
+        Assert.assertTrue(action.getValidationContexts().get(0) instanceof HeaderValidationContext);
 
         httpMessageContentBuilder = ((HttpMessageContentBuilder)action.getMessageBuilder());
         Assert.assertNotNull(httpMessageContentBuilder);

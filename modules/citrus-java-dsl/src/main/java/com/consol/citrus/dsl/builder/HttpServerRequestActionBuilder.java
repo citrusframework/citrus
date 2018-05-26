@@ -48,6 +48,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageBuilder<Receiv
         initMessage(httpMessage);
         messageType(MessageType.XML);
         headerNameIgnoreCase(true);
+        headerValidator(new HttpQueryParamHeaderValidator());
     }
 
     /**

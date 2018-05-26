@@ -19,8 +19,7 @@ package com.consol.citrus.validation;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.context.DefaultValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.*;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.*;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
@@ -64,7 +63,7 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.getMessageValidators().add(new GroovyScriptMessageValidator());
 
         List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
 
@@ -90,7 +89,7 @@ public class MessageValidatorRegistryTest {
         Assert.assertNotNull(((AbstractMessageValidator)matchingValidators.get(1)).findValidationContext(validationContexts));
 
         validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
 
@@ -116,7 +115,7 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(2).getClass(), GroovyScriptMessageValidator.class);
 
         List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
 
@@ -182,7 +181,7 @@ public class MessageValidatorRegistryTest {
 
         //xpath message validation context
         validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
         validationContexts.add(new XpathMessageValidationContext());
@@ -221,7 +220,7 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.afterPropertiesSet();
 
         List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
 
@@ -287,7 +286,7 @@ public class MessageValidatorRegistryTest {
 
         //json path message validation context
         validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
         validationContexts.add(new JsonPathMessageValidationContext());
@@ -326,7 +325,7 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.afterPropertiesSet();
 
         List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
 
@@ -389,7 +388,7 @@ public class MessageValidatorRegistryTest {
         messageValidatorRegistry.afterPropertiesSet();
 
         List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(new DefaultValidationContext());
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
 

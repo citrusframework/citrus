@@ -20,27 +20,31 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 
+/**
+ * @author Christoph Deppisch
+ * @since 2.7.6
+ */
 public class IgnoreNewLineValidationMatcherTest extends AbstractTestNGUnitTest {
     
     private IgnoreNewLineValidationMatcher matcher = new IgnoreNewLineValidationMatcher();
     
     @Test
     public void testValidateSuccess() {
-        matcher.validate("field", "value", Arrays.asList("value"), context);
-        matcher.validate("field", "value1 \nvalue2 \nvalue3!", Arrays.asList("value1 value2 value3!"), context);
-        matcher.validate("field", "\nvalue1 \nvalue2 \nvalue3!\n", Arrays.asList("value1 value2 value3!"), context);
-        matcher.validate("field", "value1 \r\nvalue2 \r\nvalue3!\r\n", Arrays.asList("value1 value2 value3!"), context);
-        matcher.validate("field", "\r\nvalue1 \r\nvalue2 \r\nvalue3!", Arrays.asList("value1 value2 value3!"), context);
-        matcher.validate("field", "value1 \n\n\nvalue2 \n\nvalue3!", Arrays.asList("value1 value2 value3!"), context);
-        matcher.validate("field", "value1 \r\n\r\n\r\nvalue2 \r\n\r\nvalue3!", Arrays.asList("value1 value2 value3!"), context);
-        matcher.validate("field", "value1 \n\n\nvalue2 \n\nvalue3!", Arrays.asList("value1 \nvalue2 \nvalue3!"), context);
-        matcher.validate("field", "value1 \r\n\r\n\r\nvalue2 \r\n\r\nvalue3!", Arrays.asList("value1 \r\nvalue2 \r\nvalue3!"), context);
+        matcher.validate("field", "value", Collections.singletonList("value"), context);
+        matcher.validate("field", "value1 \nvalue2 \nvalue3!", Collections.singletonList("value1 value2 value3!"), context);
+        matcher.validate("field", "\nvalue1 \nvalue2 \nvalue3!\n", Collections.singletonList("value1 value2 value3!"), context);
+        matcher.validate("field", "value1 \r\nvalue2 \r\nvalue3!\r\n", Collections.singletonList("value1 value2 value3!"), context);
+        matcher.validate("field", "\r\nvalue1 \r\nvalue2 \r\nvalue3!", Collections.singletonList("value1 value2 value3!"), context);
+        matcher.validate("field", "value1 \n\n\nvalue2 \n\nvalue3!", Collections.singletonList("value1 value2 value3!"), context);
+        matcher.validate("field", "value1 \r\n\r\n\r\nvalue2 \r\n\r\nvalue3!", Collections.singletonList("value1 value2 value3!"), context);
+        matcher.validate("field", "value1 \n\n\nvalue2 \n\nvalue3!", Collections.singletonList("value1 \nvalue2 \nvalue3!"), context);
+        matcher.validate("field", "value1 \r\n\r\n\r\nvalue2 \r\n\r\nvalue3!", Collections.singletonList("value1 \r\nvalue2 \r\nvalue3!"), context);
     }
     
     @Test(expectedExceptions = ValidationException.class)
     public void testValidateError() {
-        matcher.validate("field", "value1 \nvalue2 \nvalue3!", Arrays.asList("value1! value2! value3!"), context);
+        matcher.validate("field", "value1 \nvalue2 \nvalue3!", Collections.singletonList("value1! value2! value3!"), context);
     }
 }

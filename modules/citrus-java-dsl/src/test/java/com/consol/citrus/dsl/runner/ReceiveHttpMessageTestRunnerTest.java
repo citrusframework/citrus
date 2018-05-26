@@ -28,7 +28,7 @@ import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.apache.http.entity.ContentType;
@@ -85,7 +85,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
         Assert.assertEquals(action.getValidationContexts().size(), 3L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
@@ -133,7 +133,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), httpServer);
         Assert.assertEquals(action.getValidationContexts().size(), 3L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
@@ -184,7 +184,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getValidationContexts().size(), 3L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), DefaultValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 

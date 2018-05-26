@@ -32,13 +32,13 @@ import org.testng.annotations.Test;
 public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
 
     private BinaryBase64MessageValidator validator = new BinaryBase64MessageValidator();
+    private ValidationContext validationContext = new DefaultValidationContext();
 
     @Test
     public void testBinaryBase64Validation() {
         Message receivedMessage = new DefaultMessage("Hello World!".getBytes());
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -47,7 +47,6 @@ public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("SGVsbG8gV29ybGQh");
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -56,7 +55,6 @@ public class BinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
         Message receivedMessage = new DefaultMessage("Hello World!".getBytes());
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello Citrus!".getBytes()));
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {

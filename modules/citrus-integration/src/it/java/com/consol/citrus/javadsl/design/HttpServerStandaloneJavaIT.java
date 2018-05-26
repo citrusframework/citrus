@@ -94,9 +94,9 @@ public class HttpServerStandaloneJavaIT extends TestNGCitrusTestDesigner {
         http().client("httpStandaloneClient")
                 .receive()
                 .response()
-                .header(HttpMessageHeaders.HTTP_STATUS_CODE, Matchers.isOneOf(HttpStatus.CREATED.toString(),
-                        HttpStatus.ACCEPTED.toString(),
-                        HttpStatus.OK.toString()));
+                .header(HttpMessageHeaders.HTTP_STATUS_CODE, Matchers.isOneOf(HttpStatus.CREATED.value(),
+                                                                                HttpStatus.ACCEPTED.value(),
+                                                                                HttpStatus.OK.value()));
 
         echo("Test header validation error");
 

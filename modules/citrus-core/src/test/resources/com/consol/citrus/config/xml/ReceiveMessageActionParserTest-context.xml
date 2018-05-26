@@ -180,7 +180,7 @@
             </receive>
 
             <receive endpoint="myMessageEndpoint">
-                <message validator="myValidator">
+                <message validator="myValidator" header-validator="myHeaderValidator">
                     <data>
                         <![CDATA[
                             <TestMessage>Hello Citrus</TestMessage>
@@ -193,7 +193,7 @@
             </receive>
 
             <receive endpoint="myMessageEndpoint">
-                <message validators="myValidator,defaultPlaintextMessageValidator">
+                <message validators="myValidator,defaultPlaintextMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
                     <data>
                         <![CDATA[
                             <TestMessage>Hello Citrus</TestMessage>

@@ -24,10 +24,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.*;
 import com.consol.citrus.validation.callback.ValidationCallback;
-import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.*;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -66,7 +67,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     private String messageType;
 
     /** Validation context used in this action builder */
-    private DefaultValidationContext defaultValidationContext = new DefaultValidationContext();
+    private HeaderValidationContext headerValidationContext = new HeaderValidationContext();
     private XmlMessageValidationContext xmlMessageValidationContext = new XmlMessageValidationContext();
     private JsonMessageValidationContext jsonMessageValidationContext = new JsonMessageValidationContext();
 
@@ -443,18 +444,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T headerNameIgnoreCase(boolean value) {
-        defaultValidationContext.setHeaderNameIgnoreCase(value);
-        xmlMessageValidationContext.setHeaderNameIgnoreCase(value);
-        jsonMessageValidationContext.setHeaderNameIgnoreCase(value);
-
-        if (jsonPathValidationContext != null) {
-            jsonPathValidationContext.setHeaderNameIgnoreCase(value);
-        }
-
-        if (scriptValidationContext != null) {
-            scriptValidationContext.setHeaderNameIgnoreCase(value);
-        }
-
+        headerValidationContext.setHeaderNameIgnoreCase(value);
         return self;
     }
     
@@ -535,7 +525,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
         getAction().setMessageType(messageType);
 
         if (getAction().getValidationContexts().isEmpty()) {
-            getAction().getValidationContexts().add(defaultValidationContext);
+            getAction().getValidationContexts().add(headerValidationContext);
             getAction().getValidationContexts().add(xmlMessageValidationContext);
             getAction().getValidationContexts().add(jsonMessageValidationContext);
         }
@@ -730,6 +720,32 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
+     * Sets explicit header validator for this receive action.
+     * @param validators
+     * @return
+     */
+    public T headerValidator(HeaderValidator... validators) {
+        Stream.of(validators).forEach(headerValidationContext::addHeaderValidator);
+        return self;
+    }
+
+    /**
+     * Sets explicit header validators by name.
+     * @param validatorNames
+     * @return
+     */
+    @SuppressWarnings("unchecked")
+    public T headerValidator(String ... validatorNames) {
+        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+        for (String validatorName : validatorNames) {
+            headerValidationContext.addHeaderValidator(applicationContext.getBean(validatorName, HeaderValidator.class));
+        }
+
+        return self;
+    }
+
+    /**
      * Sets explicit data dictionary for this receive action.
      * @param dictionary
      * @return
@@ -866,7 +882,6 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             xPathContext.setSchema(xmlMessageValidationContext.getSchema());
             xPathContext.setSchemaRepository(xmlMessageValidationContext.getSchemaRepository());
             xPathContext.setSchemaValidation(xmlMessageValidationContext.isSchemaValidationEnabled());
-            xPathContext.setHeaderNameIgnoreCase(xmlMessageValidationContext.isHeaderNameIgnoreCase());
             xPathContext.setDTDResource(xmlMessageValidationContext.getDTDResource());
 
             getAction().getValidationContexts().remove(xmlMessageValidationContext);
@@ -984,10 +999,10 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
 
     /**
-     * Sets the default validation context.
+     * Sets the header validation context.
      * @param validationContext
      */
-    protected void setDefaultValidationContext(DefaultValidationContext validationContext) {
-        this.defaultValidationContext = validationContext;
+    protected void setHeaderValidationContext(HeaderValidationContext validationContext) {
+        this.headerValidationContext = validationContext;
     }
 }

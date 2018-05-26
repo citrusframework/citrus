@@ -26,6 +26,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -89,6 +90,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
@@ -138,6 +140,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
@@ -184,8 +187,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        List<ValidationContext> validationContexts = 
-            new ArrayList<ValidationContext>();
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
@@ -232,8 +235,8 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
-        List<ValidationContext> validationContexts = 
-            new ArrayList<ValidationContext>();
+        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
@@ -283,6 +286,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
@@ -332,6 +336,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
         
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         receiveMessageBean.execute(context);
@@ -382,6 +387,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         
         receiveMessageBean.addVariableExtractors(variableExtractor);
         List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
+        validationContexts.add(new HeaderValidationContext());
         validationContexts.add(validationContext);
         receiveMessageBean.setValidationContexts(validationContexts);
         

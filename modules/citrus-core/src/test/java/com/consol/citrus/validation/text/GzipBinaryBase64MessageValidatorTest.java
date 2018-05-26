@@ -37,13 +37,13 @@ import java.util.zip.GZIPOutputStream;
 public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest {
 
     private GzipBinaryBase64MessageValidator validator = new GzipBinaryBase64MessageValidator();
+    private ValidationContext validationContext = new DefaultValidationContext();
 
     @Test
     public void testGzipBinaryBase64Validation() throws IOException {
         Message receivedMessage = new DefaultMessage(getZippedContent("Hello World!"));
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -52,7 +52,6 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
         Message receivedMessage = new DefaultMessage("SGVsbG8gV29ybGQh");
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello World!".getBytes()));
 
-        ValidationContext validationContext = new DefaultValidationContext();
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
@@ -61,7 +60,6 @@ public class GzipBinaryBase64MessageValidatorTest extends AbstractTestNGUnitTest
         Message receivedMessage = new DefaultMessage(getZippedContent("Hello World!"));
         Message controlMessage = new DefaultMessage(Base64.encodeBase64String("Hello Citrus!".getBytes()));
 
-        ValidationContext validationContext = new DefaultValidationContext();
         try {
             validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
         } catch (ValidationException e) {

@@ -22,6 +22,7 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.testng.annotations.Test;
 
 /**
@@ -31,6 +32,7 @@ public class FormUrlEncodedMessageValidatorTest {
 
     /** Class under test */
     private FormUrlEncodedMessageValidator validator = new FormUrlEncodedMessageValidator();
+    private ValidationContext validationContext = new DefaultValidationContext();
 
     private String expectedFormData = "<form-data xmlns=\"http://www.citrusframework.org/schema/http/message\">\n" +
                 "<content-type>application/x-www-form-urlencoded</content-type>\n" +
@@ -47,7 +49,6 @@ public class FormUrlEncodedMessageValidatorTest {
 
     @Test
     public void testValidateMessagePayload() throws Exception {
-        DefaultValidationContext validationContext = new DefaultValidationContext();
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test")
@@ -59,7 +60,6 @@ public class FormUrlEncodedMessageValidatorTest {
 
     @Test(expectedExceptions = ValidationException.class)
     public void testValidationError() throws Exception {
-        DefaultValidationContext validationContext = new DefaultValidationContext();
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=other")
@@ -71,7 +71,6 @@ public class FormUrlEncodedMessageValidatorTest {
 
     @Test(expectedExceptions = ValidationException.class)
     public void testValidationErrorMissingFormAction() throws Exception {
-        DefaultValidationContext validationContext = new DefaultValidationContext();
         Message controlMessage = new DefaultMessage(expectedFormData);
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test");

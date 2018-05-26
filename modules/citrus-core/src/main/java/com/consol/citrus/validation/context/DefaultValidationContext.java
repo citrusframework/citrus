@@ -21,21 +21,4 @@ package com.consol.citrus.validation.context;
  * @since 2.4
  */
 public class DefaultValidationContext implements ValidationContext {
-
-    /** Should header name validation ignore case sensitivity */
-    private boolean headerNameIgnoreCase = false;
-
-    @Override
-    public boolean isHeaderNameIgnoreCase() {
-        return headerNameIgnoreCase;
-    }
-
-    /**
-     * Sets the headerNameIgnoreCase.
-     *
-     * @param headerNameIgnoreCase
-     */
-    public void setHeaderNameIgnoreCase(boolean headerNameIgnoreCase) {
-        this.headerNameIgnoreCase = headerNameIgnoreCase;
-    }
 }

@@ -33,6 +33,7 @@ import java.nio.charset.Charset;
  * @author Christoph Deppisch
  */
 public class ScriptValidationContext extends DefaultValidationContext {
+
     /** Validation script as file resource path */
     private String validationScriptResourcePath;
 

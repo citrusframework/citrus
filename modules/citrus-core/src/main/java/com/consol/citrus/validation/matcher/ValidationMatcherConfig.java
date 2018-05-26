@@ -54,6 +54,7 @@ public class ValidationMatcherConfig {
     private final NullValidationMatcher nullValidationMatcher = new NullValidationMatcher();
     private final NotNullValidationMatcher notNullValidationMatcher = new NotNullValidationMatcher();
     private final IgnoreValidationMatcher ignoreValidationMatcher = new IgnoreValidationMatcher();
+    private final StringLengthValidationMatcher stringLengthValidationMatcher = new StringLengthValidationMatcher();
 
     @Bean(name = "matchesPath")
     public HamcrestMatcherProvider matchesPath() {
@@ -120,6 +121,7 @@ public class ValidationMatcherConfig {
         citrusValidationMatcherLibrary.getMembers().put("null", nullValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("notNull", notNullValidationMatcher);
         citrusValidationMatcherLibrary.getMembers().put("ignore", ignoreValidationMatcher);
+        citrusValidationMatcherLibrary.getMembers().put("hasLength", stringLengthValidationMatcher);
 
         return citrusValidationMatcherLibrary;
     }

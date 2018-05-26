@@ -75,8 +75,8 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
         }
 
         List<?> params = DomUtils.getChildElementsByTagName(requestElement, "param");
-        for (Iterator<?> iter = params.iterator(); iter.hasNext();) {
-            Element param = (Element) iter.next();
+        for (Object aParam : params) {
+            Element param = (Element) aParam;
             httpMessage.queryParam(param.getAttribute("name"), param.getAttribute("value"));
         }
 

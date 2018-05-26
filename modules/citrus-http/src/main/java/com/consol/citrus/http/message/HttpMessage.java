@@ -27,6 +27,8 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.Cookie;
 import java.io.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -36,6 +38,9 @@ public class HttpMessage extends DefaultMessage {
 
     /** Http cookies */
     private List<Cookie> cookies = new ArrayList<>();
+
+    /** Query params */
+    private Map<String, String> queryParams = new HashMap<>();
 
     /**
      * Empty constructor initializing with empty message payload.
@@ -164,12 +169,16 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http request query params.
+     * Sets the Http request query params query String. Query String is a compilation of key-value pairs separated
+     * by comma character e.g. key1=value1[","key2=value2]. Query String can be empty.
      * @param queryParamString
      */
     public HttpMessage queryParams(String queryParamString) {
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
+
+        this.queryParams = Stream.of(queryParamString.split(",")).map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
         return this;
     }
 
@@ -191,16 +200,15 @@ public class HttpMessage extends DefaultMessage {
             throw new CitrusRuntimeException("Invalid query param name - must not be empty!");
         }
 
-        String queryParams;
-        if (getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS) != null) {
-            queryParams = getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS).toString();
-            queryParams += "," + name + (StringUtils.hasText(value) ? "=" + value : "");
-        } else {
-            queryParams = name + (StringUtils.hasText(value) ? "=" + value : "");
-        }
+        this.queryParams.put(name, value);
 
-        header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParams);
-        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParams);
+        String queryParamString = queryParams.entrySet()
+                                             .stream()
+                                             .map(entry -> entry.getKey() + (entry.getValue() != null ? "=" + entry.getValue() : ""))
+                                             .collect(Collectors.joining(","));
+
+        header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
+        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         return this;
     }
@@ -309,14 +317,16 @@ public class HttpMessage extends DefaultMessage {
      * Gets the Http request query params.
      * @return
      */
-    public String getQueryParams() {
-        Object queryParams = getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS);
+    public Map<String, String> getQueryParams() {
+        return queryParams;
+    }
 
-        if (queryParams != null) {
-            return queryParams.toString();
-        }
-
-        return null;
+    /**
+     * Gets the Http request query param string.
+     * @return
+     */
+    public String getQueryParamString() {
+        return Optional.ofNullable(getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS)).map(Object::toString).orElse("");
     }
 
     /**

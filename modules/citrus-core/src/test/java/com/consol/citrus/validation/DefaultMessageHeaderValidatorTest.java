@@ -20,8 +20,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.context.DefaultValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.context.*;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.*;
@@ -33,7 +32,7 @@ import static org.hamcrest.Matchers.*;
 public class DefaultMessageHeaderValidatorTest extends AbstractTestNGUnitTest {
 
     private DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
-    private ValidationContext validationContext = new DefaultValidationContext();
+    private HeaderValidationContext validationContext = new HeaderValidationContext();
 
     @Test
     public void testValidateNoMessageHeaders() throws Exception {
