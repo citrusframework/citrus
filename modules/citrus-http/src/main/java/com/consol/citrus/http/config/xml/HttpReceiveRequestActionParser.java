@@ -75,6 +75,10 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
         Element body = DomUtils.getChildElementByTagName(requestElement, "body");
         List<ValidationContext> validationContexts = parseValidationContexts(body, builder);
 
+        validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
+                .map(context -> (HeaderValidationContext) context)
+                .forEach(context -> context.addHeaderValidator(new HttpQueryParamHeaderValidator()));
+
         Element headers = DomUtils.getChildElementByTagName(requestElement, "headers");
         if (headers != null) {
             List<?> headerElements = DomUtils.getChildElementsByTagName(headers, "header");
@@ -107,10 +111,7 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
             boolean ignoreCase = headers.hasAttribute("ignore-case") ? Boolean.valueOf(headers.getAttribute("ignore-case")) : true;
             validationContexts.stream().filter(context -> context instanceof HeaderValidationContext)
                     .map(context -> (HeaderValidationContext) context)
-                    .forEach(context -> {
-                        context.addHeaderValidator(new HttpQueryParamHeaderValidator());
-                        context.setHeaderNameIgnoreCase(ignoreCase);
-                    });
+                    .forEach(context -> context.setHeaderNameIgnoreCase(ignoreCase));
         }
 
         MessageSelectorParser.doParse(element, builder);
