@@ -20,9 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Message builder returning a static message every time the build mechanism is called. This
@@ -59,7 +57,7 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
         headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders().entrySet()
                                     .stream()
                                     .filter(entry -> !entry.getKey().equals(MessageHeaders.ID) && !entry.getKey().equals(MessageHeaders.TIMESTAMP))
-                                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
+                                    .collect(HashMap::new, (map, value) -> map.put(value.getKey(), value.getValue()), HashMap::putAll)));
 
         return headers;
     }

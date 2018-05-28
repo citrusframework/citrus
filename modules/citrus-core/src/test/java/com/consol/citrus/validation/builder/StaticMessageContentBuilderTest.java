@@ -16,23 +16,14 @@
 
 package com.consol.citrus.validation.builder;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
 import java.util.Map;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -183,17 +174,31 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMessageTypeIsInHeaders() {
-
         //GIVEN
         messageBuilder = new StaticMessageContentBuilder(new DefaultMessage());
-        final String messageType = "application/json";
-        final TestContext testContext = mock(TestContext.class);
-        when(testContext.resolveDynamicValuesInMap(any())).thenReturn(new HashMap<>());
 
         //WHEN
-        final Map<String, Object> headers = messageBuilder.buildMessageHeaders(testContext, messageType);
+        final Map<String, Object> headers = messageBuilder.buildMessageHeaders(context, MessageType.JSON.name());
 
         //THEN
-        Assert.assertEquals(headers.get(MessageHeaders.MESSAGE_TYPE), messageType);
+        Assert.assertEquals(headers.get(MessageHeaders.MESSAGE_TYPE), MessageType.JSON.name());
+    }
+
+    @Test
+    public void testNullValueInHeaders() {
+        //GIVEN
+        messageBuilder = new StaticMessageContentBuilder(new DefaultMessage()
+                                            .setHeader("foo", "bar")
+                                            .setHeader("bar", null));
+
+        //WHEN
+        final Map<String, Object> headers = messageBuilder.buildMessageHeaders(context, MessageType.JSON.name());
+
+        //THEN
+        Assert.assertTrue(headers.containsKey("bar"));
+        Assert.assertNull(headers.get("bar"));
+        Assert.assertTrue(headers.containsKey("foo"));
+        Assert.assertNotNull(headers.get("foo"));
+        Assert.assertEquals(headers.get("foo"), "bar");
     }
 }
