@@ -216,7 +216,7 @@
     <cucumber.version>2.3.1</cucumber.version>
     <zookeeper.version>3.4.10</zookeeper.version>
     <json.schema.validator.version>2.2.8</json.schema.validator.version>
-    <citrus.db.version>0.1.3</citrus.db.version>
+    <citrus.db.version>0.1.4</citrus.db.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
