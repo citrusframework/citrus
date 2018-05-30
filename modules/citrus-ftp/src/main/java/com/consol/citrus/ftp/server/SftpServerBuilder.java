@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh.server;
+package com.consol.citrus.ftp.server;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.ssh.message.SshMessageConverter;
+import com.consol.citrus.ftp.client.SftpEndpointConfiguration;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
+public class SftpServerBuilder extends AbstractEndpointBuilder<SftpServer> {
 
     /** Endpoint target */
-    private SshServer endpoint = new SshServer();
+    private SftpServer endpoint = new SftpServer();
 
     @Override
-    protected SshServer getEndpoint() {
+    protected SftpServer getEndpoint() {
         return endpoint;
     }
 
@@ -39,8 +39,28 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param port
      * @return
      */
-    public SshServerBuilder port(int port) {
+    public SftpServerBuilder port(int port) {
         endpoint.setPort(port);
+        return this;
+    }
+
+    /**
+     * Sets the autoConnect property.
+     * @param autoConnect
+     * @return
+     */
+    public SftpServerBuilder autoConnect(boolean autoConnect) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setAutoConnect(autoConnect);
+        return this;
+    }
+
+    /**
+     * Sets the autoLogin property.
+     * @param autoLogin
+     * @return
+     */
+    public SftpServerBuilder autoLogin(boolean autoLogin) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setAutoLogin(autoLogin);
         return this;
     }
 
@@ -49,7 +69,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param user
      * @return
      */
-    public SshServerBuilder user(String user) {
+    public SftpServerBuilder user(String user) {
         endpoint.setUser(user);
         return this;
     }
@@ -59,7 +79,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param password
      * @return
      */
-    public SshServerBuilder password(String password) {
+    public SftpServerBuilder password(String password) {
         endpoint.setPassword(password);
         return this;
     }
@@ -69,7 +89,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param hostKeyPath
      * @return
      */
-    public SshServerBuilder hostKeyPath(String hostKeyPath) {
+    public SftpServerBuilder hostKeyPath(String hostKeyPath) {
         endpoint.setHostKeyPath(hostKeyPath);
         return this;
     }
@@ -79,18 +99,8 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param allowedKeyPath
      * @return
      */
-    public SshServerBuilder allowedKeyPath(String allowedKeyPath) {
+    public SftpServerBuilder allowedKeyPath(String allowedKeyPath) {
         endpoint.setAllowedKeyPath(allowedKeyPath);
-        return this;
-    }
-
-    /**
-     * Sets the message converter.
-     * @param messageConverter
-     * @return
-     */
-    public SshServerBuilder messageConverter(SshMessageConverter messageConverter) {
-        endpoint.setMessageConverter(messageConverter);
         return this;
     }
 
@@ -99,7 +109,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param pollingInterval
      * @return
      */
-    public SshServerBuilder pollingInterval(int pollingInterval) {
+    public SftpServerBuilder pollingInterval(int pollingInterval) {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
@@ -109,7 +119,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param endpointAdapter
      * @return
      */
-    public SshServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
+    public SftpServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
         endpoint.setEndpointAdapter(endpointAdapter);
         return this;
     }
@@ -119,7 +129,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param enabled
      * @return
      */
-    public SshServerBuilder debugLogging(boolean enabled) {
+    public SftpServerBuilder debugLogging(boolean enabled) {
         endpoint.setDebugLogging(enabled);
         return this;
     }
@@ -129,7 +139,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param timeout
      * @return
      */
-    public SshServerBuilder timeout(long timeout) {
+    public SftpServerBuilder timeout(long timeout) {
         endpoint.getEndpointConfiguration().setTimeout(timeout);
         return this;
     }
@@ -139,7 +149,7 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
      * @param autoStart
      * @return
      */
-    public SshServerBuilder autoStart(boolean autoStart) {
+    public SftpServerBuilder autoStart(boolean autoStart) {
         endpoint.setAutoStart(autoStart);
         return this;
     }

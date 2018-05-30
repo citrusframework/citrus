@@ -61,10 +61,28 @@ public @interface SftpClientConfig {
     String password() default "";
 
     /**
+     * PrivateKeyPath.
+     * @return
+     */
+    String privateKeyPath() default "";
+
+    /**
+     * <privateKeyPassword.
+     * @return
+     */
+    String privateKeyPassword() default "";
+
+    /**
      * StrictHostChecking.
      * @return
      */
     boolean strictHostChecking() default false;
+
+    /**
+     * KnownHosts.
+     * @return
+     */
+    String knownHosts() default "";
 
     /**
      * Message correlator.

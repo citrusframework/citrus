@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ssh.config.annotation;
+package com.consol.citrus.ftp.config.annotation;
 
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 
@@ -22,24 +22,18 @@ import java.lang.annotation.*;
 
 /**
  * @author Christoph Deppisch
- * @since 2.5
+ * @since 2.7.6
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.ssh.client")
-public @interface SshClientConfig {
-
-    /**
-     * Host.
-     * @return
-     */
-    String host() default "localhost";
+@CitrusEndpointConfig(qualifier = "endpoint.parser.sftp.server")
+public @interface SftpServerConfig {
 
     /**
      * Server port.
      * @return
      */
-    int port() default 2222;
+    int port() default 22;
 
     /**
      * User.
@@ -54,40 +48,16 @@ public @interface SshClientConfig {
     String password() default "";
 
     /**
-     * PrivateKeyPath.
+     * HostKeyPath.
      * @return
      */
-    String privateKeyPath() default "";
+    String hostKeyPath() default "";
 
     /**
-     * <privateKeyPassword.
+     * AllowedKeyPath.
      * @return
      */
-    String privateKeyPassword() default "";
-
-    /**
-     * StrictHostChecking.
-     * @return
-     */
-    boolean strictHostChecking() default false;
-
-    /**
-     * KnownHosts.
-     * @return
-     */
-    String knownHosts() default "";
-
-    /**
-     * CommandTimeout.
-     * @return
-     */
-    long commandTimeout() default 1000L * 60L * 5L;
-
-    /**
-     * ConnectionTimeout.
-     * @return
-     */
-    int connectionTimeout() default 1000 * 60 * 1;
+    String allowedKeyPath() default "";
 
     /**
      * Message converter.
@@ -96,16 +66,40 @@ public @interface SshClientConfig {
     String messageConverter() default  "";
 
     /**
-     * Message correlator.
-     * @return
-     */
-    String correlator() default "";
-
-    /**
      * Polling interval.
      * @return
      */
     int pollingInterval() default 500;
+
+    /**
+     * Endpoint adapter reference.
+     * @return
+     */
+    String endpointAdapter() default "";
+
+    /**
+     * Debug logging enabled.
+     * @return
+     */
+    boolean debugLogging() default false;
+
+    /**
+     * Auto start.
+     * @return
+     */
+    boolean autoStart() default false;
+
+    /**
+     * Auto connect.
+     * @return
+     */
+    boolean autoConnect() default true;
+
+    /**
+     * Auto login.
+     * @return
+     */
+    boolean autoLogin() default true;
 
     /**
      * Timeout.

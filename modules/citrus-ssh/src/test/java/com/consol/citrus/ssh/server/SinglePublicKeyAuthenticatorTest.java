@@ -104,7 +104,7 @@ public class SinglePublicKeyAuthenticatorTest {
      * @throws IOException
      */
     private File copyToTempFile(String pResource) throws IOException {
-        File temp = File.createTempFile("citrus-ssh-test", "pem");
+        File temp = File.createTempFile("citrus-ssh", "pem");
         FileCopyUtils.copy(getClass().getResourceAsStream(pResource),
                            new FileOutputStream(temp));
         return temp;

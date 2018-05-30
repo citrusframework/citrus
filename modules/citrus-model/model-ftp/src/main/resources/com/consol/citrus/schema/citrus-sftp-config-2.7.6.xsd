@@ -20,6 +20,65 @@
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
+  <xs:element name="server">
+    <xs:annotation>
+      <xs:documentation>SSH server component</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="port" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Port to listen to. Default is 22
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="auto-start" type="xs:boolean">
+        <xs:annotation>
+          <xs:documentation>
+            Whether to start this SSH server automatically. Default is true. If set to false,
+            a test action is responsible for starting/stopping the server
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="auto-connect" type="xs:boolean"/>
+      <xs:attribute name="auto-login" type="xs:boolean"/>
+      <xs:attribute name="host-key-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to PEM encoded key pair (public and private key) which is used as host key.
+            By default, a standard, fixed keypair is used.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="user" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            User which is allowed to connect.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Password for authenticating the user.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="allowed-key-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to a public key in PEM format. If prefixed with 'classpath:' it is read
+            as a resource.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="endpoint-adapter" type="xs:string"/>
+      <xs:attribute name="interceptors" type="xs:string"/>
+      <xs:attribute name="debug-logging" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="client">
     <xs:annotation>
       <xs:documentation>Sftp client component sends commands to server instance and receives reply messages.</xs:documentation>
@@ -30,7 +89,28 @@
       <xs:attribute name="port" type="xs:string"/>
       <xs:attribute name="username" type="xs:string"/>
       <xs:attribute name="password" type="xs:string"/>
+      <xs:attribute name="private-key-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to a private key, which can be either a plain file path or an class resource if prefixed with 'classpath:'
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="private-key-password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Optional password for the private key
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="strict-host-checking" type="xs:boolean"/>
+      <xs:attribute name="known-hosts-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to a known hosts file. If prefixed with 'classpath:' this file is looked up as a resource in the classpath.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="message-correlator" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>

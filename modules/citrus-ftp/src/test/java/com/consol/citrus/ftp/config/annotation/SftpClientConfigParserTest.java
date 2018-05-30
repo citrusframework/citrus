@@ -47,7 +47,10 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
             autoReadFiles = false,
             username="user",
             password="consol",
+            privateKeyPath="classpath:com/consol/citrus/sftp/citrus.priv",
+            privateKeyPassword="consol",
             strictHostChecking = true,
+            knownHosts="classpath:com/consol/citrus/sftp/known_hosts",
             timeout=10000L)
     private SftpClient sftpClient2;
 
@@ -96,7 +99,10 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertTrue(sftpClient1.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertNull(sftpClient1.getEndpointConfiguration().getPrivateKeyPath());
+        Assert.assertNull(sftpClient1.getEndpointConfiguration().getPrivateKeyPassword());
         Assert.assertFalse(sftpClient1.getEndpointConfiguration().isStrictHostChecking());
+        Assert.assertNull(sftpClient1.getEndpointConfiguration().getKnownHosts());
 
         // 2nd sftp client
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getHost(), "localhost");
@@ -104,7 +110,10 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPassword(), "consol");
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPrivateKeyPath(), "classpath:com/consol/citrus/sftp/citrus.priv");
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getKnownHosts(), "classpath:com/consol/citrus/sftp/known_hosts");
         Assert.assertFalse(sftpClient2.getEndpointConfiguration().isAutoReadFiles());
         Assert.assertTrue(sftpClient2.getEndpointConfiguration().isStrictHostChecking());
 

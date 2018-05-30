@@ -27,11 +27,9 @@ import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 
@@ -44,9 +42,12 @@ public class SftpClient extends FtpClient {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SftpClient.class);
 
+    /** Session for the SSH communication */
+    private Session session;
+
     /** Apache ftp client */
     private JSch ssh;
-    private Session session;
+
     private ChannelSftp sftp;
 
     /**
@@ -208,24 +209,75 @@ public class SftpClient extends FtpClient {
 
     @Override
     protected void connectAndLogin() {
+        if (getEndpointConfiguration().isStrictHostChecking()) {
+            setKnownHosts();
+        }
+
         if (session == null || !session.isConnected()) {
+            try {
+                if (StringUtils.hasText(getEndpointConfiguration().getPrivateKeyPath())) {
+                    ssh.addIdentity(getPrivateKeyPath(), getEndpointConfiguration().getPrivateKeyPassword());
+                }
+            } catch (JSchException e) {
+                throw new CitrusRuntimeException("Cannot add private key " + getEndpointConfiguration().getPrivateKeyPath() + ": " + e,e);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Cannot open private key file " + getEndpointConfiguration().getPrivateKeyPath() + ": " + e,e);
+            }
+
             try {
                 session = ssh.getSession(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort());
 
-                session.setUserInfo(new UserInfoWithPlainPassword(getEndpointConfiguration().getPassword()));
-                session.setPassword(getEndpointConfiguration().getPassword());
+                if (StringUtils.hasText(getEndpointConfiguration().getPassword())) {
+                    session.setUserInfo(new UserInfoWithPlainPassword(getEndpointConfiguration().getPassword()));
+                    session.setPassword(getEndpointConfiguration().getPassword());
+                }
 
                 session.setConfig("StrictHostKeyChecking", getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
 
-                session.connect(5000);
+                session.connect((int) getEndpointConfiguration().getTimeout());
+
                 Channel channel = session.openChannel("sftp");
-                channel.connect(5000);
+                channel.connect((int) getEndpointConfiguration().getTimeout());
                 sftp = (ChannelSftp) channel;
 
                 log.info("Opened secure connection to FTP server");
             } catch (JSchException e) {
                 throw new CitrusRuntimeException(String.format("Failed to login to FTP server using credentials: %s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword()), e);
             }
+        }
+    }
+
+    private void setKnownHosts() {
+        if (getEndpointConfiguration().getKnownHosts() == null) {
+            throw new CitrusRuntimeException("Strict host checking is enabled but no knownHosts given");
+        }
+
+        try {
+            InputStream khIs = FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).getInputStream();
+            if (khIs == null) {
+                throw new CitrusRuntimeException("Cannot find knownHosts at " + getEndpointConfiguration().getKnownHosts());
+            }
+            ssh.setKnownHosts(khIs);
+        } catch (JSchException e) {
+            throw new CitrusRuntimeException("Cannot add known hosts from " + getEndpointConfiguration().getKnownHosts() + ": " + e,e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Cannot find known hosts file " + getEndpointConfiguration().getKnownHosts() + ": " + e,e);
+        }
+    }
+
+    private String getPrivateKeyPath() throws IOException {
+        if (!StringUtils.hasText(getEndpointConfiguration().getPrivateKeyPath())) {
+            return null;
+        } else if (getEndpointConfiguration().getPrivateKeyPath().startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
+            File priv = File.createTempFile("citrus-sftp","priv");
+            InputStream is = getClass().getClassLoader().getResourceAsStream(getEndpointConfiguration().getPrivateKeyPath().substring(ResourceUtils.CLASSPATH_URL_PREFIX.length()));
+            if (is == null) {
+                throw new CitrusRuntimeException("No private key found at " + getEndpointConfiguration().getPrivateKeyPath());
+            }
+            FileCopyUtils.copy(is, new FileOutputStream(priv));
+            return priv.getAbsolutePath();
+        } else {
+            return getEndpointConfiguration().getPrivateKeyPath();
         }
     }
 

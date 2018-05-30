@@ -18,7 +18,10 @@
                      auto-read-files="false"
                      username="user"
                      password="consol"
+                     private-key-path="classpath:com/consol/citrus/sftp/citrus.priv"
+                     private-key-password="consol"
                      strict-host-checking="true"
+                     known-hosts-path="classpath:com/consol/citrus/sftp/known_hosts"
                      timeout="10000"/>
 
   <citrus-sftp:client id="ftpClient3"

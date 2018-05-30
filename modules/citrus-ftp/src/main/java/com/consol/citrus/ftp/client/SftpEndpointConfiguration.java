@@ -22,8 +22,17 @@ package com.consol.citrus.ftp.client;
  */
 public class SftpEndpointConfiguration extends FtpEndpointConfiguration {
 
+    /** Path to private key of user */
+    private String privateKeyPath;
+
+    /** Password for private key */
+    private String privateKeyPassword;
+
     /** Whether strict host checking should be performed */
     private boolean strictHostChecking = false;
+
+    /** If strict host checking is used, path to the 'known_hosts' file */
+    private String knownHosts;
 
     /**
      * Gets the strictHostChecking.
@@ -41,5 +50,59 @@ public class SftpEndpointConfiguration extends FtpEndpointConfiguration {
      */
     public void setStrictHostChecking(boolean strictHostChecking) {
         this.strictHostChecking = strictHostChecking;
+    }
+
+    /**
+     * Gets the knownHosts.
+     *
+     * @return
+     */
+    public String getKnownHosts() {
+        return knownHosts;
+    }
+
+    /**
+     * Sets the knownHosts.
+     *
+     * @param knownHosts
+     */
+    public void setKnownHosts(String knownHosts) {
+        this.knownHosts = knownHosts;
+    }
+
+    /**
+     * Gets the privateKeyPath.
+     *
+     * @return
+     */
+    public String getPrivateKeyPath() {
+        return privateKeyPath;
+    }
+
+    /**
+     * Sets the privateKeyPath.
+     *
+     * @param privateKeyPath
+     */
+    public void setPrivateKeyPath(String privateKeyPath) {
+        this.privateKeyPath = privateKeyPath;
+    }
+
+    /**
+     * Gets the privateKeyPassword.
+     *
+     * @return
+     */
+    public String getPrivateKeyPassword() {
+        return privateKeyPassword;
+    }
+
+    /**
+     * Sets the privateKeyPassword.
+     *
+     * @param privateKeyPassword
+     */
+    public void setPrivateKeyPassword(String privateKeyPassword) {
+        this.privateKeyPassword = privateKeyPassword;
     }
 }

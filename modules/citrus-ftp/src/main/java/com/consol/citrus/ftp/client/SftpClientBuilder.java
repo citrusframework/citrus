@@ -85,12 +85,42 @@ public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
     }
 
     /**
+     * Sets the privateKeyPath property.
+     * @param privateKeyPath
+     * @return
+     */
+    public SftpClientBuilder privateKeyPath(String privateKeyPath) {
+        endpoint.getEndpointConfiguration().setPrivateKeyPath(privateKeyPath);
+        return this;
+    }
+
+    /**
+     * Sets the privateKeyPassword property.
+     * @param privateKeyPassword
+     * @return
+     */
+    public SftpClientBuilder privateKeyPassword(String privateKeyPassword) {
+        endpoint.getEndpointConfiguration().setPrivateKeyPassword(privateKeyPassword);
+        return this;
+    }
+
+    /**
      * Sets the strictHostChecking property.
      * @param strictHostChecking
      * @return
      */
     public SftpClientBuilder strictHostChecking(boolean strictHostChecking) {
         endpoint.getEndpointConfiguration().setStrictHostChecking(strictHostChecking);
+        return this;
+    }
+
+    /**
+     * Sets the knownHosts property.
+     * @param knownHosts
+     * @return
+     */
+    public SftpClientBuilder knownHosts(String knownHosts) {
+        endpoint.getEndpointConfiguration().setKnownHosts(knownHosts);
         return this;
     }
 

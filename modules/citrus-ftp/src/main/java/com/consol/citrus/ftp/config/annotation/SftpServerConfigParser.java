@@ -19,65 +19,58 @@ package com.consol.citrus.ftp.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
-import com.consol.citrus.ftp.client.*;
-import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.ftp.server.SftpServer;
+import com.consol.citrus.ftp.server.SftpServerBuilder;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
- * @since 2.7.5
+ * @since 2.7.6
  */
-public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpClientConfig, SftpClient> {
+public class SftpServerConfigParser extends AbstractAnnotationConfigParser<SftpServerConfig, SftpServer> {
 
     /**
      * Constructor matching super.
      * @param referenceResolver
      */
-    public SftpClientConfigParser(ReferenceResolver referenceResolver) {
+    public SftpServerConfigParser(ReferenceResolver referenceResolver) {
         super(referenceResolver);
     }
 
     @Override
-    public SftpClient parse(SftpClientConfig annotation) {
-        SftpClientBuilder builder = new SftpClientBuilder();
-
-        if (StringUtils.hasText(annotation.host())) {
-            builder.host(annotation.host());
-        }
+    public SftpServer parse(SftpServerConfig annotation) {
+        SftpServerBuilder builder = new SftpServerBuilder();
 
         builder.port(annotation.port());
-        builder.autoReadFiles(annotation.autoReadFiles());
 
-        if (StringUtils.hasText(annotation.username())) {
-            builder.username(annotation.username());
+        if (StringUtils.hasText(annotation.user())) {
+            builder.user(annotation.user());
         }
 
         if (StringUtils.hasText(annotation.password())) {
             builder.password(annotation.password());
         }
 
-        if (StringUtils.hasText(annotation.privateKeyPath())) {
-            builder.privateKeyPath(annotation.privateKeyPath());
+        if (StringUtils.hasText(annotation.hostKeyPath())) {
+            builder.hostKeyPath(annotation.hostKeyPath());
         }
 
-        if (StringUtils.hasText(annotation.privateKeyPassword())) {
-            builder.privateKeyPassword(annotation.privateKeyPassword());
+        if (StringUtils.hasText(annotation.allowedKeyPath())) {
+            builder.allowedKeyPath(annotation.allowedKeyPath());
         }
-
-        builder.strictHostChecking(annotation.strictHostChecking());
-
-        if (StringUtils.hasText(annotation.knownHosts())) {
-            builder.knownHosts(annotation.knownHosts());
-        }
-
-        if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
-        }
-
-        builder.errorHandlingStrategy(annotation.errorStrategy());
 
         builder.pollingInterval(annotation.pollingInterval());
 
+        builder.debugLogging(annotation.debugLogging());
+
+        if (StringUtils.hasText(annotation.endpointAdapter())) {
+            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+        }
+
+        builder.autoStart(annotation.autoStart());
+        builder.autoConnect(annotation.autoConnect());
+        builder.autoLogin(annotation.autoLogin());
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {

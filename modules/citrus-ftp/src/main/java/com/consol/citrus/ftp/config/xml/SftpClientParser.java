@@ -35,7 +35,10 @@ public class SftpClientParser extends FtpClientParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("private-key-path"), "privateKeyPath");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("private-key-password"), "privateKeyPassword");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("strict-host-checking"), "strictHostChecking");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("known-hosts-path"), "knownHosts");
     }
 
     @Override

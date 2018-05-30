@@ -26,6 +26,7 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.security.PublicKey;
@@ -42,7 +43,6 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SinglePublicKeyAuthenticator.class);
 
-    public static final String CLASSPATH_PREFIX = "classpath:";
     private PublicKey allowedKey;
     private String user;
 
@@ -59,8 +59,8 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
         user = pUser;
         InputStream is = null;
         try {
-            if (pPublicKeyPath.startsWith(CLASSPATH_PREFIX)) {
-                String resource = pPublicKeyPath.substring(CLASSPATH_PREFIX.length());
+            if (pPublicKeyPath.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
+                String resource = pPublicKeyPath.substring(ResourceUtils.CLASSPATH_URL_PREFIX.length());
                 is = getClass().getClassLoader().getResourceAsStream(resource);
                 if (is == null) {
                     throw new CitrusRuntimeException("No key resource found at classpath at " + resource);

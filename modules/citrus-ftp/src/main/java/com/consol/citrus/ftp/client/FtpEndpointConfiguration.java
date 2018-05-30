@@ -19,6 +19,10 @@ package com.consol.citrus.ftp.client;
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.ftp.message.FtpMarshaller;
 import com.consol.citrus.message.*;
+import org.apache.commons.net.ftp.FTPCmd;
+
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -54,7 +58,8 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
     private MessageCorrelator correlator = new DefaultMessageCorrelator();
 
     /** Comma delimited list of ftp commands to auto handle on server */
-    private String autoHandleCommands;
+    private String autoHandleCommands = Stream.of(FTPCmd.PORT.getCommand(),
+                                                  FTPCmd.TYPE.getCommand()).collect(Collectors.joining(","));
 
     /** Auto read file content retrieved from server */
     private boolean autoReadFiles = true;

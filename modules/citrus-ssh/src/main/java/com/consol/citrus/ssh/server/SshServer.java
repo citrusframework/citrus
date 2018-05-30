@@ -16,18 +16,26 @@
 
 package com.consol.citrus.ssh.server;
 
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
 import com.consol.citrus.ssh.SshCommand;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.message.SshMessageConverter;
+import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
+import org.apache.sshd.common.scp.AbstractScpTransferEventListenerAdapter;
+import org.apache.sshd.common.scp.ScpTransferEventListener;
 import org.apache.sshd.common.util.SecurityUtils;
+import org.apache.sshd.server.Command;
+import org.apache.sshd.server.scp.ScpCommandFactory;
+import org.apache.sshd.server.subsystem.sftp.*;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 
 /**
@@ -80,6 +88,24 @@ public class SshServer extends AbstractServer {
     /** SSH server used **/
     private org.apache.sshd.server.SshServer sshd;
 
+    /**  This servers endpoint configuration */
+    private final SshEndpointConfiguration endpointConfiguration;
+
+    /**
+     * Default constructor using default endpoint configuration.
+     */
+    public SshServer() {
+        this(new SshEndpointConfiguration());
+    }
+
+    /**
+     * Constructor using endpoint configuration.
+     * @param endpointConfiguration
+     */
+    public SshServer(SshEndpointConfiguration endpointConfiguration) {
+        this.endpointConfiguration = endpointConfiguration;
+    }
+
     @Override
     protected void startup() {
         if (!StringUtils.hasText(user)) {
@@ -115,13 +141,41 @@ public class SshServer extends AbstractServer {
         }
 
         // Setup endpoint adapter
-        sshd.setCommandFactory(command -> new SshCommand(command, getEndpointAdapter(), getEndpointConfiguration()));
+        ScpCommandFactory commandFactory = new ScpCommandFactory.Builder()
+                .withDelegate(command -> new SshCommand(command, getEndpointAdapter(), endpointConfiguration))
+                .build();
+
+        commandFactory.addEventListener(getScpTransferEventListener());
+        sshd.setCommandFactory(commandFactory);
+
+        ArrayList<NamedFactory<Command>> subsystemFactories = new ArrayList<>();
+        SftpSubsystemFactory sftpSubsystemFactory = new SftpSubsystemFactory.Builder().build();
+        sftpSubsystemFactory.addSftpEventListener(getSftpEventListener());
+
+        subsystemFactories.add(sftpSubsystemFactory);
+        sshd.setSubsystemFactories(subsystemFactories);
 
         try {
             sshd.start();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to start SSH server - " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Gets Scp trsanfer event listener. By default uses abstract implementation that use trace level logging of all operations.
+     * @return
+     */
+    protected ScpTransferEventListener getScpTransferEventListener() {
+        return new AbstractScpTransferEventListenerAdapter() {};
+    }
+
+    /**
+     * Gets Sftp event listener. By default uses abstract implementation that use trace level logging of all operations.
+     * @return
+     */
+    protected SftpEventListener getSftpEventListener() {
+        return new AbstractSftpEventListenerAdapter(){};
     }
 
     @Override
@@ -134,12 +188,7 @@ public class SshServer extends AbstractServer {
     }
 
     @Override
-    public SshEndpointConfiguration getEndpointConfiguration() {
-        SshEndpointConfiguration endpointConfiguration = new SshEndpointConfiguration();
-        endpointConfiguration.setMessageConverter(messageConverter);
-        endpointConfiguration.setPort(port);
-        endpointConfiguration.setUser(user);
-        endpointConfiguration.setPassword(password);
+    public AbstractPollableEndpointConfiguration getEndpointConfiguration() {
         return endpointConfiguration;
     }
 
@@ -157,6 +206,7 @@ public class SshServer extends AbstractServer {
      */
     public void setPort(int port) {
         this.port = port;
+        this.endpointConfiguration.setPort(port);
     }
 
     /**
@@ -173,6 +223,7 @@ public class SshServer extends AbstractServer {
      */
     public void setUser(String user) {
         this.user = user;
+        this.endpointConfiguration.setUser(user);
     }
 
     /**
@@ -189,6 +240,7 @@ public class SshServer extends AbstractServer {
      */
     public void setPassword(String password) {
         this.password = password;
+        this.endpointConfiguration.setPassword(password);
     }
 
     /**
@@ -237,6 +289,7 @@ public class SshServer extends AbstractServer {
      */
     public void setMessageConverter(SshMessageConverter messageConverter) {
         this.messageConverter = messageConverter;
+        this.endpointConfiguration.setMessageConverter(messageConverter);
     }
 
 }

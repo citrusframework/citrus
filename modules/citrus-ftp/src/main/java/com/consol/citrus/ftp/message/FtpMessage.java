@@ -333,6 +333,16 @@ public class FtpMessage extends DefaultMessage {
     }
 
     /**
+     * Check if reply code is set on this message.
+     * @return
+     */
+    public boolean hasException() {
+        return Optional.ofNullable(commandResult)
+                        .map(result -> StringUtils.hasText(result.getException()))
+                        .orElse(false);
+    }
+
+    /**
      * Gets the reply string.
      */
     public String getReplyString() {
@@ -378,7 +388,9 @@ public class FtpMessage extends DefaultMessage {
      */
     private <T extends CommandResultType> T getCommandResult() {
         if (commandResult == null) {
-            this.commandResult = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+            if (getPayload() instanceof String) {
+                this.commandResult = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+            }
         }
 
         return (T) commandResult;
@@ -390,7 +402,9 @@ public class FtpMessage extends DefaultMessage {
      */
     private <T extends CommandType> T getCommand() {
         if (command == null) {
-            this.command = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+            if (getPayload() instanceof String) {
+                this.command = (T) marshaller.unmarshal(new StringSource(getPayload(String.class)));
+            }
         }
 
         return (T) command;

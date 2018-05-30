@@ -200,35 +200,33 @@ public abstract class FileUtils {
         /* walk through the directories */
         while (dirs.size() > 0) {
             final File file = dirs.pop();
-            File[] found = file.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    File tmp = new File(dir.getPath() + File.separator + name);
+            File[] foundFiles = file.listFiles((dir, name) -> {
+                File tmp = new File(dir.getPath() + File.separator + name);
 
-                    boolean accepted = tmp.isDirectory();
+                boolean accepted = tmp.isDirectory();
 
-                    for (String fileNamePattern : fileNamePatterns) {
-                        if (fileNamePattern.contains("/")) {
-                            fileNamePattern = fileNamePattern.substring(fileNamePattern.lastIndexOf('/') + 1);
-                        }
-
-                        fileNamePattern = fileNamePattern.replace(".", "\\.").replace("*", ".*");
-
-                        if (name.matches(fileNamePattern)) {
-                            accepted = true;
-                        }
+                for (String fileNamePattern : fileNamePatterns) {
+                    if (fileNamePattern.contains("/")) {
+                        fileNamePattern = fileNamePattern.substring(fileNamePattern.lastIndexOf('/') + 1);
                     }
 
-                    /* Only allowing XML files as spring configuration files */
-                    return accepted && !name.startsWith("CVS") && !name.startsWith(".svn") && !name.startsWith(".git");
+                    fileNamePattern = fileNamePattern.replace(".", "\\.").replace("*", ".*");
+
+                    if (name.matches(fileNamePattern)) {
+                        accepted = true;
+                    }
                 }
+
+                /* Only allowing XML files as spring configuration files */
+                return accepted && !name.startsWith("CVS") && !name.startsWith(".svn") && !name.startsWith(".git");
             });
 
-            for (int i = 0; i < found.length; i++) {
+            for (File found : Optional.ofNullable(foundFiles).orElse(new File[] {})) {
                 /* Subfolder support */
-                if (found[i].isDirectory()) {
-                    dirs.push(found[i]);
+                if (found.isDirectory()) {
+                    dirs.push(found);
                 } else {
-                    files.add(found[i]);
+                    files.add(found);
                 }
             }
         }

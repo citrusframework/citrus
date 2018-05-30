@@ -44,7 +44,10 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertTrue(ftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertNull(ftpClient.getEndpointConfiguration().getPrivateKeyPath());
+        Assert.assertNull(ftpClient.getEndpointConfiguration().getPrivateKeyPassword());
         Assert.assertFalse(ftpClient.getEndpointConfiguration().isStrictHostChecking());
+        Assert.assertNull(ftpClient.getEndpointConfiguration().getKnownHosts());
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
 
@@ -56,7 +59,10 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPassword(), "consol");
         Assert.assertFalse(ftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPrivateKeyPath(), "classpath:com/consol/citrus/sftp/citrus.priv");
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
         Assert.assertTrue(ftpClient.getEndpointConfiguration().isStrictHostChecking());
+        Assert.assertEquals(ftpClient.getEndpointConfiguration().getKnownHosts(), "classpath:com/consol/citrus/sftp/known_hosts");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
 
