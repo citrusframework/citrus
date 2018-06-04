@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://www.citrusframework.org/schema/scp/config"
+           targetNamespace="http://www.citrusframework.org/schema/scp/config"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <xs:element name="client">
+    <xs:annotation>
+      <xs:documentation>Sftp client component sends commands to server instance and receives reply messages.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="host" type="xs:string"/>
+      <xs:attribute name="port" type="xs:string"/>
+      <xs:attribute name="port-option" type="xs:string"/>
+      <xs:attribute name="username" type="xs:string"/>
+      <xs:attribute name="password" type="xs:string"/>
+      <xs:attribute name="private-key-path" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Path to a private key, which can be either a plain file path or an class resource if prefixed with 'classpath:'
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="private-key-password" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Optional password for the private key
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="message-correlator" type="xs:string"/>
+      <xs:attribute name="actor" type="xs:string"/>
+      <xs:attribute name="timeout" type="xs:string"/>
+      <xs:attribute name="polling-interval" type="xs:string"/>
+      <xs:attribute name="error-strategy">
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="throwsException"/>
+            <xs:enumeration value="propagateError"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

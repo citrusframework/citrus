@@ -23,8 +23,7 @@ import com.consol.citrus.dsl.endpoint.jdbc.JdbcDbServerEndpointBuilder;
 import com.consol.citrus.dsl.endpoint.selenium.SeleniumBrowserEndpointBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointBuilder;
-import com.consol.citrus.ftp.client.FtpClientBuilder;
-import com.consol.citrus.ftp.client.SftpClientBuilder;
+import com.consol.citrus.ftp.client.*;
 import com.consol.citrus.ftp.server.FtpServerBuilder;
 import com.consol.citrus.ftp.server.SftpServerBuilder;
 import com.consol.citrus.http.client.HttpClientBuilder;
@@ -132,6 +131,14 @@ public abstract class CitrusEndpoints {
      */
     public static ClientServerEndpointBuilder<SftpClientBuilder, SftpServerBuilder> sftp() {
         return new ClientServerEndpointBuilder<>(new SftpClientBuilder(), new SftpServerBuilder());
+    }
+
+    /**
+     * Creates new ScpClient or SftpServer builder.
+     * @return
+     */
+    public static ClientServerEndpointBuilder<ScpClientBuilder, SftpServerBuilder> scp() {
+        return new ClientServerEndpointBuilder<>(new ScpClientBuilder(), new SftpServerBuilder());
     }
 
     /**

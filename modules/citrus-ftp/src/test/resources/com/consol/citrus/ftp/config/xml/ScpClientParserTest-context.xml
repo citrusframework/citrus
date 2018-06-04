@@ -2,34 +2,32 @@
 <beans  xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:citrus="http://www.citrusframework.org/schema/config"
-        xmlns:citrus-sftp="http://www.citrusframework.org/schema/sftp/config"
+        xmlns:citrus-scp="http://www.citrusframework.org/schema/scp/config"
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-                            http://www.citrusframework.org/schema/sftp/config http://www.citrusframework.org/schema/sftp/config/citrus-sftp-config.xsd">
+                            http://www.citrusframework.org/schema/scp/config http://www.citrusframework.org/schema/scp/config/citrus-scp-config.xsd">
 
-  <citrus-sftp:client id="sftpClient1"
+  <citrus-scp:client id="scpClient1"
                      host="localhost"
                      port="22222"/>
 
-  <citrus-sftp:client id="sftpClient2"
+  <citrus-scp:client id="scpClient2"
                      host="localhost"
                      port="22222"
+                     port-option="-p"
                      error-strategy="throwsException"
-                     auto-read-files="false"
                      username="user"
                      password="consol"
-                     private-key-path="classpath:com/consol/citrus/sftp/citrus.priv"
+                     private-key-path="classpath:com/consol/citrus/scp/citrus.priv"
                      private-key-password="consol"
-                     strict-host-checking="true"
-                     known-hosts-path="classpath:com/consol/citrus/sftp/known_hosts"
                      timeout="10000"/>
 
-  <citrus-sftp:client id="sftpClient3"
+  <citrus-scp:client id="scpClient3"
                      host="localhost"
                      port="22222"
                      message-correlator="replyMessageCorrelator"/>
 
-  <citrus-sftp:client id="sftpClient4"
+  <citrus-scp:client id="scpClient4"
                      host="localhost"
                      port="22222"
                      polling-interval="250"

@@ -17,6 +17,7 @@ endpoint.parser.kubernetes.client=com.consol.citrus.kubernetes.config.annotation
 endpoint.parser.selenium.browser=com.consol.citrus.selenium.config.annotation.SeleniumBrowserConfigParser
 endpoint.parser.ftp.client=com.consol.citrus.ftp.config.annotation.FtpClientConfigParser
 endpoint.parser.ftp.server=com.consol.citrus.ftp.config.annotation.FtpServerConfigParser
+endpoint.parser.scp.client=com.consol.citrus.ftp.config.annotation.ScpClientConfigParser
 endpoint.parser.sftp.client=com.consol.citrus.ftp.config.annotation.SftpClientConfigParser
 endpoint.parser.sftp.server=com.consol.citrus.ftp.config.annotation.SftpServerConfigParser
 endpoint.parser.ssh.client=com.consol.citrus.ssh.config.annotation.SshClientConfigParser

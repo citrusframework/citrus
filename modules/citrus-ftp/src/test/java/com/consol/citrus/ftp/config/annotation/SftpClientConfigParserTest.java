@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
  */
 public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
 
-    @CitrusEndpoint(name = "ftpClient1")
+    @CitrusEndpoint(name = "sftpClient1")
     @SftpClientConfig(port = 22221)
     private SftpClient sftpClient1;
 

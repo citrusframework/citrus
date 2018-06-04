@@ -72,21 +72,30 @@ public class SftpClient extends FtpClient {
 
     @Override
     protected FtpMessage executeCommand(CommandType ftpCommand, TestContext context) {
+        if (ftpCommand.getSignal().equals(FTPCmd.MKD.getCommand())) {
+            return createDir(ftpCommand);
+        } else if (ftpCommand.getSignal().equals(FTPCmd.LIST.getCommand())) {
+            return listFiles(FtpMessage.list(ftpCommand.getArguments()).getPayload(ListCommand.class), context);
+        } else if (ftpCommand.getSignal().equals(FTPCmd.DELE.getCommand())) {
+            return deleteFile(FtpMessage.delete(ftpCommand.getArguments()).getPayload(DeleteCommand.class), context);
+        } else if (ftpCommand.getSignal().equals(FTPCmd.STOR.getCommand())) {
+            return storeFile(FtpMessage.put(ftpCommand.getArguments()).getPayload(PutCommand.class), context);
+        } else if (ftpCommand.getSignal().equals(FTPCmd.RETR.getCommand())) {
+            return retrieveFile(FtpMessage.get(ftpCommand.getArguments()).getPayload(GetCommand.class), context);
+        } else {
+            throw new CitrusRuntimeException(String.format("Unsupported ftp command '%s'", ftpCommand.getSignal()));
+        }
+    }
+
+    /**
+     * Execute mkDir command and create new directory.
+     * @param ftpCommand
+     * @return
+     */
+    protected FtpMessage createDir(CommandType ftpCommand) {
         try {
-            if (ftpCommand.getSignal().equals(FTPCmd.MKD.getCommand())) {
-                sftp.mkdir(ftpCommand.getArguments());
-                return FtpMessage.result(FTPReply.PATHNAME_CREATED, "Pathname created", true);
-            } else if (ftpCommand.getSignal().equals(FTPCmd.LIST.getCommand())) {
-                return listFiles(FtpMessage.list(ftpCommand.getArguments()).getPayload(ListCommand.class), context);
-            } else if (ftpCommand.getSignal().equals(FTPCmd.DELE.getCommand())) {
-                return deleteFile(FtpMessage.delete(ftpCommand.getArguments()).getPayload(DeleteCommand.class), context);
-            } else if (ftpCommand.getSignal().equals(FTPCmd.STOR.getCommand())) {
-                return storeFile(FtpMessage.put(ftpCommand.getArguments()).getPayload(PutCommand.class), context);
-            } else if (ftpCommand.getSignal().equals(FTPCmd.RETR.getCommand())) {
-                return retrieveFile(FtpMessage.get(ftpCommand.getArguments()).getPayload(GetCommand.class), context);
-            } else {
-                throw new CitrusRuntimeException(String.format("Unsupported ftp command '%s'", ftpCommand.getSignal()));
-            }
+            sftp.mkdir(ftpCommand.getArguments());
+            return FtpMessage.result(FTPReply.PATHNAME_CREATED, "Pathname created", true);
         } catch (SftpException e) {
             throw new CitrusRuntimeException("Failed to execute ftp command", e);
         }
@@ -273,7 +282,7 @@ public class SftpClient extends FtpClient {
         }
     }
 
-    private String getPrivateKeyPath() throws IOException {
+    protected String getPrivateKeyPath() throws IOException {
         if (!StringUtils.hasText(getEndpointConfiguration().getPrivateKeyPath())) {
             return null;
         } else if (getEndpointConfiguration().getPrivateKeyPath().startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {

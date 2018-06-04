@@ -38,45 +38,45 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
 
         Assert.assertEquals(clients.size(), 4);
 
-        // 1st ftp client
-        SftpClient ftpClient = clients.get("ftpClient1");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertTrue(ftpClient.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertNull(ftpClient.getEndpointConfiguration().getPrivateKeyPath());
-        Assert.assertNull(ftpClient.getEndpointConfiguration().getPrivateKeyPassword());
-        Assert.assertFalse(ftpClient.getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertNull(ftpClient.getEndpointConfiguration().getKnownHosts());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
+        // 1st sftp client
+        SftpClient sftpClient = clients.get("sftpClient1");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assert.assertTrue(sftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertNull(sftpClient.getEndpointConfiguration().getPrivateKeyPath());
+        Assert.assertNull(sftpClient.getEndpointConfiguration().getPrivateKeyPassword());
+        Assert.assertFalse(sftpClient.getEndpointConfiguration().isStrictHostChecking());
+        Assert.assertNull(sftpClient.getEndpointConfiguration().getKnownHosts());
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
 
-        // 2nd ftp client
-        ftpClient = clients.get("ftpClient2");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getUser(), "user");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPassword(), "consol");
-        Assert.assertFalse(ftpClient.getEndpointConfiguration().isAutoReadFiles());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPrivateKeyPath(), "classpath:com/consol/citrus/sftp/citrus.priv");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
-        Assert.assertTrue(ftpClient.getEndpointConfiguration().isStrictHostChecking());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getKnownHosts(), "classpath:com/consol/citrus/sftp/known_hosts");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
+        // 2nd sftp client
+        sftpClient = clients.get("sftpClient2");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getUser(), "user");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPassword(), "consol");
+        Assert.assertFalse(sftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPrivateKeyPath(), "classpath:com/consol/citrus/sftp/citrus.priv");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
+        Assert.assertTrue(sftpClient.getEndpointConfiguration().isStrictHostChecking());
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getKnownHosts(), "classpath:com/consol/citrus/sftp/known_hosts");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getTimeout(), 10000L);
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
 
-        // 3rd ftp client
-        ftpClient = clients.get("ftpClient3");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
-        Assert.assertNotNull(ftpClient.getEndpointConfiguration().getCorrelator());
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
+        // 3rd sftp client
+        sftpClient = clients.get("sftpClient3");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getHost(), "localhost");
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertNotNull(sftpClient.getEndpointConfiguration().getCorrelator());
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator(), beanDefinitionContext.getBean("replyMessageCorrelator"));
 
-        // 4th ftp client
-        ftpClient = clients.get("ftpClient4");
-        Assert.assertNotNull(ftpClient.getActor());
-        Assert.assertEquals(ftpClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
-        Assert.assertEquals(ftpClient.getEndpointConfiguration().getPollingInterval(), 250L);
+        // 4th sftp client
+        sftpClient = clients.get("sftpClient4");
+        Assert.assertNotNull(sftpClient.getActor());
+        Assert.assertEquals(sftpClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
+        Assert.assertEquals(sftpClient.getEndpointConfiguration().getPollingInterval(), 250L);
     }
 }

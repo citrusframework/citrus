@@ -1,0 +1,134 @@
+/*
+ * Copyright 2006-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.ftp.client;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.ftp.message.FtpMessage;
+import com.consol.citrus.ftp.model.*;
+import com.consol.citrus.util.FileUtils;
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.util.io.NoCloseInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+
+import java.io.*;
+import java.util.Optional;
+
+/**
+ * @author Christoph Deppisch
+ * @since 2.7.6
+ */
+public class ScpClient extends SftpClient {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(ScpClient.class);
+
+    private org.apache.sshd.client.scp.ScpClient scpClient;
+
+    /**
+     * Default constructor initializing endpoint configuration.
+     */
+    public ScpClient() {
+        this(new ScpEndpointConfiguration());
+    }
+
+    /**
+     * Default constructor using endpoint configuration.
+     * @param endpointConfiguration
+     */
+    protected ScpClient(ScpEndpointConfiguration endpointConfiguration) {
+        super(endpointConfiguration);
+    }
+
+    @Override
+    public ScpEndpointConfiguration getEndpointConfiguration() {
+        return (ScpEndpointConfiguration) super.getEndpointConfiguration();
+    }
+
+    @Override
+    protected FtpMessage createDir(CommandType ftpCommand) {
+        throw new UnsupportedOperationException("SCP client does not support create directory operation - please use sftp client");
+    }
+
+    @Override
+    protected FtpMessage listFiles(ListCommand list, TestContext context) {
+        throw new UnsupportedOperationException("SCP client does not support list files operation - please use sftp client");
+    }
+
+    @Override
+    protected FtpMessage deleteFile(DeleteCommand delete, TestContext context) {
+        throw new UnsupportedOperationException("SCP client does not support delete file operation - please use sftp client");
+    }
+
+    @Override
+    protected FtpMessage storeFile(PutCommand command, TestContext context) {
+        try {
+            scpClient.upload(FileUtils.getFileResource(command.getFile().getPath(), context).getFile().getAbsolutePath(), command.getTarget().getPath());
+        } catch (IOException e) {
+            log.error("Failed to store file via SCP", e);
+            return FtpMessage.error();
+
+        }
+        return FtpMessage.success();
+    }
+
+    @Override
+    protected FtpMessage retrieveFile(GetCommand command, TestContext context) {
+        try {
+            Resource target = FileUtils.getFileResource(command.getTarget().getPath(), context);
+            if (!Optional.ofNullable(target.getFile().getParentFile()).map(File::mkdirs).orElse(true)) {
+                log.warn("Failed to create target directories in path: " + target.getFile().getAbsolutePath());
+            }
+
+            scpClient.download(command.getFile().getPath(), target.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            log.error("Failed to retrieve file via SCP", e);
+            return FtpMessage.error();
+        }
+
+        return FtpMessage.success();
+    }
+
+    @Override
+    protected void connectAndLogin() {
+        PrintStream out = Optional.ofNullable(getEndpointConfiguration().getStdout()).orElse(System.out);
+        PrintStream err = Optional.ofNullable(getEndpointConfiguration().getStderr()).orElse(System.err);
+
+        try (BufferedReader stdinReader = new BufferedReader(new InputStreamReader(new NoCloseInputStream(Optional.ofNullable(getEndpointConfiguration().getStdin()).orElse(System.in))))) {
+            ClientSession session = SshClient.setupClientSession(getEndpointConfiguration().getPortOption(), stdinReader, out, err,
+                                        getEndpointConfiguration().getPortOption(), String.valueOf(getEndpointConfiguration().getPort()),
+                                               "-o", "HostKeyAlgorithms=+ssh-dss",
+                                               "-i", getPrivateKeyPath(),
+                                               "-l", getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost());
+            scpClient = session.createScpClient();
+        } catch (Exception e) {
+            throw new CitrusRuntimeException(String.format("Failed to login to SCP server using credentials: %s:%s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword(), getEndpointConfiguration().getPrivateKeyPath()), e);
+
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+    }
+
+    @Override
+    public void destroy() throws Exception {
+    }
+}
