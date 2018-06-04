@@ -45,6 +45,7 @@ public class SftpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertTrue(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoConnect());
         Assert.assertNull(server.getAllowedKeyPath());
         Assert.assertNull(server.getHostKeyPath());
+        Assert.assertNull(server.getUserHomePath());
         Assert.assertNull(server.getUser());
         Assert.assertNull(server.getPassword());
         Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);
@@ -60,6 +61,7 @@ public class SftpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(((SftpEndpointConfiguration) server.getEndpointConfiguration()).isAutoConnect());
         Assert.assertEquals(server.getAllowedKeyPath(), "classpath:com/consol/citrus/sftp/citrus_pub.pem");
         Assert.assertEquals(server.getHostKeyPath(), "classpath:com/consol/citrus/sftp/citrus.pem");
+        Assert.assertEquals(server.getUserHomePath(), "/home/user");
         Assert.assertEquals(server.getUser(), "foo");
         Assert.assertEquals(server.getPassword(), "bar");
         Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);

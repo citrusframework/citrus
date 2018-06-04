@@ -57,6 +57,10 @@ public class SshServerConfigParser extends AbstractAnnotationConfigParser<SshSer
             builder.hostKeyPath(annotation.hostKeyPath());
         }
 
+        if (StringUtils.hasText(annotation.userHomePath())) {
+            builder.userHomePath(annotation.userHomePath());
+        }
+
         if (StringUtils.hasText(annotation.allowedKeyPath())) {
             builder.allowedKeyPath(annotation.allowedKeyPath());
         }

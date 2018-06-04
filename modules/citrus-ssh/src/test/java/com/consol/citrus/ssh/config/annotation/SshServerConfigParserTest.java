@@ -49,6 +49,7 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
             port=10022,
             allowedKeyPath="classpath:com/consol/citrus/ssh/citrus_pub.pem",
             hostKeyPath="classpath:com/consol/citrus/ssh/citrus.pem",
+            userHomePath="/home/user",
             user="foo",
             password="bar",
             messageConverter="messageConverter",
@@ -94,6 +95,7 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(sshServer1.isAutoStart());
         Assert.assertNull(sshServer1.getAllowedKeyPath());
         Assert.assertNull(sshServer1.getHostKeyPath());
+        Assert.assertNull(sshServer1.getUserHomePath());
         Assert.assertNull(sshServer1.getUser());
         Assert.assertNull(sshServer1.getPassword());
         Assert.assertTrue(sshServer1.getEndpointAdapter() instanceof ChannelEndpointAdapter);
@@ -106,6 +108,7 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(sshServer2.isAutoStart());
         Assert.assertEquals(sshServer2.getAllowedKeyPath(), "classpath:com/consol/citrus/ssh/citrus_pub.pem");
         Assert.assertEquals(sshServer2.getHostKeyPath(), "classpath:com/consol/citrus/ssh/citrus.pem");
+        Assert.assertEquals(sshServer2.getUserHomePath(), "/home/user");
         Assert.assertEquals(sshServer2.getUser(), "foo");
         Assert.assertEquals(sshServer2.getPassword(), "bar");
         Assert.assertTrue(sshServer2.getEndpointAdapter() instanceof ChannelEndpointAdapter);

@@ -24,6 +24,7 @@ import com.consol.citrus.ftp.model.Command;
 import com.consol.citrus.ftp.model.CommandResult;
 import com.consol.citrus.ssh.server.SshServer;
 import org.apache.commons.net.ftp.FTPCmd;
+import org.apache.ftpserver.ftplet.DataType;
 import org.apache.sshd.common.scp.ScpTransferEventListener;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.subsystem.sftp.FileHandle;
@@ -123,7 +124,7 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
 
     @Override
     public void reading(ServerSession session, String remoteHandle, FileHandle localHandle, long offset, byte[] data, int dataOffset, int dataLen) {
-        FtpMessage response = handleMessage(FtpMessage.get(remoteHandle));
+        FtpMessage response = handleMessage(FtpMessage.get(localHandle.getFile().toString(), remoteHandle, DataType.ASCII));
         if (response.hasException()) {
             throw new CitrusRuntimeException(response.getPayload(CommandResult.class).getException());
         }
@@ -131,7 +132,7 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
 
     @Override
     public void writing(ServerSession session, String remoteHandle, FileHandle localHandle, long offset, byte[] data, int dataOffset, int dataLen) {
-        FtpMessage response = handleMessage(FtpMessage.put(remoteHandle));
+        FtpMessage response = handleMessage(FtpMessage.put(remoteHandle, localHandle.getFile().toString(), DataType.ASCII));
         if (response.hasException()) {
             throw new CitrusRuntimeException(response.getPayload(CommandResult.class).getException());
         }

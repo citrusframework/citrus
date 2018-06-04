@@ -95,6 +95,16 @@ public class SftpServerBuilder extends AbstractEndpointBuilder<SftpServer> {
     }
 
     /**
+     * Sets the userHomePath property.
+     * @param userHomePath
+     * @return
+     */
+    public SftpServerBuilder userHomePath(String userHomePath) {
+        endpoint.setUserHomePath(userHomePath);
+        return this;
+    }
+
+    /**
      * Sets the allowedKeyPath property.
      * @param allowedKeyPath
      * @return

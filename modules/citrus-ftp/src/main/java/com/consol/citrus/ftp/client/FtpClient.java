@@ -118,7 +118,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             } else if (ftpCommand instanceof DeleteCommand) {
                 response = deleteFile((DeleteCommand) ftpCommand, context);
             } else {
-                response = executeCommand(ftpCommand);
+                response = executeCommand(ftpCommand, context);
             }
 
             if (getEndpointConfiguration().getErrorHandlingStrategy().equals(ErrorHandlingStrategy.THROWS_EXCEPTION)) {
@@ -135,7 +135,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
     }
 
-    protected FtpMessage executeCommand(CommandType ftpCommand) {
+    protected FtpMessage executeCommand(CommandType ftpCommand, TestContext context) {
         try {
             int reply = ftpClient.sendCommand(ftpCommand.getSignal(), ftpCommand.getArguments());
             return FtpMessage.result(reply, ftpClient.getReplyString(), isPositive(reply));
@@ -291,7 +291,9 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
             String remoteFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
             String localFilePath = addFileNameToTargetPath(remoteFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));
 
-            Files.createDirectories(Paths.get(localFilePath).getParent());
+            if (Paths.get(localFilePath).getParent() != null) {
+                Files.createDirectories(Paths.get(localFilePath).getParent());
+            }
 
             try (FileOutputStream localFileOutputStream = new FileOutputStream(localFilePath)) {
                 ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(command.getFile().getType())));

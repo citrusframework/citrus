@@ -16,6 +16,7 @@
                      port="10022"
                      allowed-key-path="classpath:com/consol/citrus/sftp/citrus_pub.pem"
                      host-key-path="classpath:com/consol/citrus/sftp/citrus.pem"
+                     user-home-path="/home/user"
                      user="foo"
                      password="bar"/>
 

@@ -35,6 +35,7 @@ public class SshServerParser extends AbstractServerParser {
     protected void parseServer(BeanDefinitionBuilder builder, Element element, ParserContext parserContext) {
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("port"), "port");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("host-key-path"), "hostKeyPath");
+        BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("user-home-path"), "userHomePath");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("user"), "user");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("password"), "password");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("allowed-key-path"), "allowedKeyPath");

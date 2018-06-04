@@ -75,6 +75,16 @@ public class SshServerBuilder extends AbstractEndpointBuilder<SshServer> {
     }
 
     /**
+     * Sets the userHomePath property.
+     * @param userHomePath
+     * @return
+     */
+    public SshServerBuilder userHomePath(String userHomePath) {
+        endpoint.setUserHomePath(userHomePath);
+        return this;
+    }
+
+    /**
      * Sets the allowedKeyPath property.
      * @param allowedKeyPath
      * @return

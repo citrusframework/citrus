@@ -54,6 +54,12 @@ public @interface SftpServerConfig {
     String hostKeyPath() default "";
 
     /**
+     * UserHomeDir.
+     * @return
+     */
+    String userHomePath() default "";
+
+    /**
      * AllowedKeyPath.
      * @return
      */

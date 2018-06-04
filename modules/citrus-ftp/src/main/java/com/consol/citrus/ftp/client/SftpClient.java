@@ -71,11 +71,19 @@ public class SftpClient extends FtpClient {
     }
 
     @Override
-    protected FtpMessage executeCommand(CommandType ftpCommand) {
+    protected FtpMessage executeCommand(CommandType ftpCommand, TestContext context) {
         try {
             if (ftpCommand.getSignal().equals(FTPCmd.MKD.getCommand())) {
                 sftp.mkdir(ftpCommand.getArguments());
                 return FtpMessage.result(FTPReply.PATHNAME_CREATED, "Pathname created", true);
+            } else if (ftpCommand.getSignal().equals(FTPCmd.LIST.getCommand())) {
+                return listFiles(FtpMessage.list(ftpCommand.getArguments()).getPayload(ListCommand.class), context);
+            } else if (ftpCommand.getSignal().equals(FTPCmd.DELE.getCommand())) {
+                return deleteFile(FtpMessage.delete(ftpCommand.getArguments()).getPayload(DeleteCommand.class), context);
+            } else if (ftpCommand.getSignal().equals(FTPCmd.STOR.getCommand())) {
+                return storeFile(FtpMessage.put(ftpCommand.getArguments()).getPayload(PutCommand.class), context);
+            } else if (ftpCommand.getSignal().equals(FTPCmd.RETR.getCommand())) {
+                return retrieveFile(FtpMessage.get(ftpCommand.getArguments()).getPayload(GetCommand.class), context);
             } else {
                 throw new CitrusRuntimeException(String.format("Unsupported ftp command '%s'", ftpCommand.getSignal()));
             }
@@ -162,7 +170,7 @@ public class SftpClient extends FtpClient {
             String localFilePath = context.replaceDynamicContentInString(put.getFile().getPath());
             String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(put.getTarget().getPath()));
 
-            try (InputStream localFileInputStream = FileUtils.getFileResource(localFilePath).getInputStream()) {
+            try (InputStream localFileInputStream = new FileInputStream(FileUtils.getFileResource(localFilePath).getFile())) {
                 sftp.put(localFileInputStream, remoteFilePath);
             }
         } catch (IOException | SftpException e) {

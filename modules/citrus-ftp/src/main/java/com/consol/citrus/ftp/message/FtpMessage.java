@@ -19,6 +19,7 @@ package com.consol.citrus.ftp.message;
 import com.consol.citrus.ftp.model.*;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.util.FileUtils;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.ftpserver.ftplet.DataType;
@@ -95,90 +96,112 @@ public class FtpMessage extends DefaultMessage {
 
     /**
      * Creates new put command message.
-     * @param targetPath
+     * @param localPath
      * @return
      */
-    public static FtpMessage put(String targetPath) {
-        return put(targetPath, DataType.ASCII);
+    public static FtpMessage put(String localPath) {
+        return put(localPath, DataType.ASCII);
     }
 
     /**
      * Creates new put command message.
-     * @param targetPath
+     * @param localPath
      * @param type
      * @return
      */
-    public static FtpMessage put(String targetPath, DataType type) {
+    public static FtpMessage put(String localPath, DataType type) {
+        return put(localPath, FileUtils.getFileResource(localPath).getFilename(), type);
+    }
+
+    /**
+     * Creates new put command message.
+     * @param localPath
+     * @param remotePath
+     * @param type
+     * @return
+     */
+    public static FtpMessage put(String localPath, String remotePath, DataType type) {
         PutCommand cmd = new PutCommand();
         cmd.setSignal(FTPCmd.STOR.getCommand());
 
         PutCommand.File file = new PutCommand.File();
-        file.setPath(targetPath);
+        file.setPath(localPath);
         file.setType(type.name());
         cmd.setFile(file);
 
         PutCommand.Target target = new PutCommand.Target();
-        target.setPath(targetPath);
+        target.setPath(remotePath);
         cmd.setTarget(target);
         return new FtpMessage(cmd);
     }
 
     /**
      * Creates new get command message.
-     * @param targetPath
+     * @param remotePath
      * @return
      */
-    public static FtpMessage get(String targetPath) {
-        return get(targetPath, DataType.ASCII);
+    public static FtpMessage get(String remotePath) {
+        return get(remotePath, DataType.ASCII);
     }
 
     /**
      * Creates new get command message.
-     * @param targetPath
+     * @param remotePath
      * @param type
      * @return
      */
-    public static FtpMessage get(String targetPath, DataType type) {
+    public static FtpMessage get(String remotePath, DataType type) {
+        return get(remotePath, FileUtils.getFileResource(remotePath).getFilename(), type);
+    }
+
+    /**
+     * Creates new get command message.
+     * @param remotePath
+     * @param localPath
+     * @param type
+     * @return
+     */
+    public static FtpMessage get(String remotePath, String localPath, DataType type) {
         GetCommand cmd = new GetCommand();
         cmd.setSignal(FTPCmd.RETR.getCommand());
 
         GetCommand.File file = new GetCommand.File();
-        file.setPath(targetPath);
+        file.setPath(remotePath);
         file.setType(type.name());
         cmd.setFile(file);
 
         GetCommand.Target target = new GetCommand.Target();
-        target.setPath(targetPath);
+        target.setPath(localPath);
         cmd.setTarget(target);
         return new FtpMessage(cmd);
     }
 
     /**
      * Creates new delete command message.
-     * @param targetPath
+     * @param remotePath
      * @return
      */
-    public static FtpMessage delete(String targetPath) {
+    public static FtpMessage delete(String remotePath) {
         DeleteCommand cmd = new DeleteCommand();
         cmd.setSignal(FTPCmd.DELE.getCommand());
 
         DeleteCommand.Target target = new DeleteCommand.Target();
-        target.setPath(targetPath);
+        target.setPath(remotePath);
         cmd.setTarget(target);
         return new FtpMessage(cmd);
     }
 
     /**
      * Creates new delete command message.
-     * @param targetPath
+     * @param remotePath
      * @return
      */
-    public static FtpMessage list(String targetPath) {
+    public static FtpMessage list(String remotePath) {
         ListCommand cmd = new ListCommand();
         cmd.setSignal(FTPCmd.LIST.getCommand());
 
         ListCommand.Target target = new ListCommand.Target();
-        target.setPath(targetPath);
+        target.setPath(remotePath);
         cmd.setTarget(target);
         return new FtpMessage(cmd);
     }
@@ -190,7 +213,7 @@ public class FtpMessage extends DefaultMessage {
     }
 
     public static FtpMessage success(int replyCode) {
-        return success(replyCode, "");
+        return success(replyCode, "@ignore@");
     }
 
     public static FtpMessage success(int replyCode, String replyString) {
@@ -204,7 +227,7 @@ public class FtpMessage extends DefaultMessage {
     }
 
     public static FtpMessage error(int replyCode) {
-        return success(replyCode, "");
+        return success(replyCode, "@ignore@");
     }
 
     public static FtpMessage error(int replyCode, String replyString) {

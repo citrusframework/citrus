@@ -23,6 +23,7 @@ import com.consol.citrus.ssh.SshCommand;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
 import org.apache.sshd.common.scp.AbstractScpTransferEventListenerAdapter;
@@ -35,8 +36,8 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.nio.file.*;
+import java.util.*;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -74,15 +75,18 @@ public class SshServer extends AbstractServer {
     /** User's password or ... **/
     private String password;
 
-    /** ... path to its public key **/
-    /** Use this to convert to PEM: ssh-keygen -f key.pub -e -m pem **/
+    /** ... path to its public key
+      Use this to convert to PEM: ssh-keygen -f key.pub -e -m pem **/
     private String allowedKeyPath;
 
-    /** Path to our own host keys. If not provided, a default is used. The format of this **/
-    /** file should be PEM, a serialized {@link java.security.KeyPair}. **/
+    /* Path to our own host keys. If not provided, a default is used. The format of this
+       file should be PEM, a serialized {@link java.security.KeyPair}. **/
     private String hostKeyPath;
 
-    /** Ssh message converter */
+    /** User home directory path  **/
+    private String userHomePath;
+
+    /** Ssh message converter **/
     private SshMessageConverter messageConverter = new SshMessageConverter();
 
     /** SSH server used **/
@@ -113,6 +117,20 @@ public class SshServer extends AbstractServer {
         }
         sshd = org.apache.sshd.server.SshServer.setUpDefaultServer();
         sshd.setPort(port);
+
+        VirtualFileSystemFactory fileSystemFactory = new VirtualFileSystemFactory();
+        Path userHomeDir = Optional.ofNullable(userHomePath).map(Paths::get).map(Path::toAbsolutePath).orElse(Paths.get(String.format("target/%s/home/%s", getName(), user)).toAbsolutePath());
+
+        if (!Files.exists(userHomeDir)) {
+            try {
+                Files.createDirectories(userHomeDir);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to setup user home dir", e);
+            }
+        }
+
+        fileSystemFactory.setUserHomeDir(user, userHomeDir);
+        sshd.setFileSystemFactory(fileSystemFactory);
 
         if (hostKeyPath != null) {
             AbstractFileKeyPairProvider fileKeyPairProvider = SecurityUtils.createFileKeyPairProvider();
@@ -273,6 +291,24 @@ public class SshServer extends AbstractServer {
      */
     public void setHostKeyPath(String hostKeyPath) {
         this.hostKeyPath = hostKeyPath;
+    }
+
+    /**
+     * Gets the userHomePath.
+     *
+     * @return
+     */
+    public String getUserHomePath() {
+        return userHomePath;
+    }
+
+    /**
+     * Sets the userHomePath.
+     *
+     * @param userHomePath
+     */
+    public void setUserHomePath(String userHomePath) {
+        this.userHomePath = userHomePath;
     }
 
     /**

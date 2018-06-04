@@ -14,6 +14,7 @@
                      port="10022"
                      allowed-key-path="classpath:com/consol/citrus/ssh/citrus_pub.pem"
                      host-key-path="classpath:com/consol/citrus/ssh/citrus.pem"
+                     user-home-path="/home/user"
                      message-converter="sshMessageConverter"
                      user="foo"
                      password="bar"/>

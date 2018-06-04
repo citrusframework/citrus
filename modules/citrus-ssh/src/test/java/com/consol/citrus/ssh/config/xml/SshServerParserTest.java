@@ -42,6 +42,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertNull(server.getAllowedKeyPath());
         Assert.assertNull(server.getHostKeyPath());
+        Assert.assertNull(server.getUserHomePath());
         Assert.assertNull(server.getUser());
         Assert.assertNull(server.getPassword());
         Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);
@@ -55,6 +56,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertEquals(server.getAllowedKeyPath(), "classpath:com/consol/citrus/ssh/citrus_pub.pem");
         Assert.assertEquals(server.getHostKeyPath(), "classpath:com/consol/citrus/ssh/citrus.pem");
+        Assert.assertEquals(server.getUserHomePath(), "/home/user");
         Assert.assertEquals(server.getUser(), "foo");
         Assert.assertEquals(server.getPassword(), "bar");
         Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);

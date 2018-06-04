@@ -51,6 +51,7 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
             autoConnect = false,
             autoLogin = false,
             hostKeyPath="classpath:com/consol/citrus/sftp/citrus.pem",
+            userHomePath="/home/user",
             user="foo",
             password="bar",
             messageConverter="messageConverter",
@@ -95,6 +96,7 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((SftpEndpointConfiguration) sftpServer1.getEndpointConfiguration()).isAutoConnect());
         Assert.assertNull(sftpServer1.getAllowedKeyPath());
         Assert.assertNull(sftpServer1.getHostKeyPath());
+        Assert.assertNull(sftpServer1.getUserHomePath());
         Assert.assertNull(sftpServer1.getUser());
         Assert.assertNull(sftpServer1.getPassword());
         Assert.assertTrue(sftpServer1.getEndpointAdapter() instanceof ChannelEndpointAdapter);
@@ -109,6 +111,7 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(((SftpEndpointConfiguration) sftpServer2.getEndpointConfiguration()).isAutoConnect());
         Assert.assertEquals(sftpServer2.getAllowedKeyPath(), "classpath:com/consol/citrus/sftp/citrus_pub.pem");
         Assert.assertEquals(sftpServer2.getHostKeyPath(), "classpath:com/consol/citrus/sftp/citrus.pem");
+        Assert.assertEquals(sftpServer2.getUserHomePath(), "/home/user");
         Assert.assertEquals(sftpServer2.getUser(), "foo");
         Assert.assertEquals(sftpServer2.getPassword(), "bar");
         Assert.assertTrue(sftpServer2.getEndpointAdapter() instanceof ChannelEndpointAdapter);
