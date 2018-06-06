@@ -55,8 +55,5 @@ public class JmsSyncEndpointParser extends AbstractJmsEndpointParser {
 
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration,
                 element.getAttribute("message-correlator"), "correlator");
-
-        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration,
-                element.getAttribute("polling-interval"), "pollingInterval");
     }
 }

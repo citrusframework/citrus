@@ -79,4 +79,28 @@
                        timeout="${default.timeout}"
                        pub-sub-domain="true"/>
 
+  <citrus-jms:endpoint id="helloServiceJmsTopicSubscriberEndpoint"
+                       destination-name="Citrus.HelloService.Topic"
+                       timeout="${default.timeout}"
+                       auto-start="true"
+                       pub-sub-domain="true"/>
+
+  <citrus-jms:endpoint id="helloServiceJmsTopicDurableSubscriberEndpoint"
+                       connection-factory="topicConnectionFactory"
+                       destination-name="Citrus.HelloService.Durable.Topic"
+                       timeout="${default.timeout}"
+                       auto-start="true"
+                       durable-subscription="true"
+                       pub-sub-domain="true"/>
+
+  <bean id="topicConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+    <constructor-arg>
+      <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+        <property name="brokerURL" value="${jms.broker.url}" />
+        <property name="watchTopicAdvisories" value="false"/>
+        <property name="clientID" value="citrusDurableConnectionFactory"/>
+      </bean>
+    </constructor-arg>
+  </bean>
+
 </beans>

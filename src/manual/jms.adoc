@@ -198,20 +198,89 @@ Now the only thing that changes here is that we first receive a message in our t
 [[jms-topics]]
 == JMS topics
 
-Up to now we have used JMS queue destinations on our endpoints. Citrus is also able to connect to JMS topic destinations. In contrary to JMS queues which represents the *point-to-point* communication JMS topics use *publish-subscribe* mechanism in order to spread messages over JMS. A JMS topic producer publishes messages to the topic, while the topic accepts multiple message subscriptions and delivers the message to all subscribers.
+Up to now we have used JMS queue destinations on our endpoints. Citrus is also able to connect to JMS topic destinations. In contrary to JMS queues which represents the *point-to-point* communication JMS topics use *publish-subscribe* mechanism in order to spread messages over JMS.
+A JMS topic producer publishes messages to the topic, while the topic accepts multiple message subscriptions and delivers the message to all subscribers.
 
-The Citrus JMS endpoints offer the attribute *'pub-sub-domain'* . Once this attribute is set to *true* Citrus will use JMS topics instead of queue destinations. See the following example where the publish-subscribe attribute is set to true in JMS message endpoint components.
+The Citrus JMS endpoints offer the attribute *'pub-sub-domain'*. Once this attribute is set to *true* Citrus will use JMS topics instead of queue destinations.
+
+NOTE: When using JMS topics in your project you may want to configure a `javax.jms.TopicConnectionFactory` instead of a `javax.jms.QueueConnectionFactory`.
+
+See the following example where the publish-subscribe attribute is set to true in JMS message endpoint components.
 
 [source,xml]
 ----
-<citrus-jms:endpoint id="helloServiceQueueEndpoint"
-            destination="helloServiceQueue"
+<citrus-jms:endpoint id="helloServiceTopicEndpoint"
+            destination="helloServiceTopic"
             pub-sub-domain="true"/>
 ----
 
-When using JMS topics you will be able to subscribe several test actions to the topic destination and receive a message multiple times as all subscribers will receive the message.
+When using JMS topics you will be able to subscribe several test actions to the topic destination and receive a message multiple times as all subscribers will receive the message. Also other applications besides Citrus are also able to consume
+messages with a topic subscription. This allows Citrus and other software components to coexist in a test environment.
 
-IMPORTANT: It is very important to keep in mind that Citrus does not deal with durable subscribers. This means that messages that were sent in advance to the message subscription are not delivered to the message endpoint. So racing conditions may cause problems when using JMS topic endpoints in Citrus. Be sure to let Citrus subscribe to the topic before messages are sent to it. Otherwise you may loose some messages that were sent in advance to the subscription.
+[[jms-topic-subscriber]]
+=== JMS topic subscriber
+
+By default Citrus does not deal with durable subscribers when using JMS topics. This means that messages that were sent in advance to the message subscription are not delivered to the Citrus message endpoint. Following from that racing conditions may cause problems when using JMS topic endpoints in Citrus.
+Be sure to start the Citrus subscription before messages are sent to the topic. Otherwise you may loose some messages that were sent in advance to the subscription. By default Citrus will use a subscription per receive action using the JMS endpoint in the test cases. This means that the topic subscription is
+started and stopped per receive action when the action is performed inside a test case.
+
+In order to solve racing conditions for messages that are sent prior to the subscription you can also use a `auto-start` setting on the JMS endpoint component. This causes Citrus to start/stop the subscription based on the endpoint lifecycle instead of linking the subscription to the receive action. When the endpoint is ready
+the subscription is started and all incoming message events are cached and stored to a internal in memory message channel for later consumption in the tests. Here is the endpoint configuration with `auto-start` enabled.
+
+[source,xml]
+----
+<citrus-jms:endpoint id="helloServiceTopicEndpoint"
+            destination="helloServiceTopic"
+            pub-sub-domain="true"
+            auto-start="true"/>
+----
+
+NOTE: The `auto-start` option is only valid in combination with `pub-sub-domain` enabled. Other combinations may be ignored or lead to configuration failure at startup.
+
+Now with `auto-start` set to `true` the Citrus JMS endpoint will setup a subscription at the very beginning when the endpoint is loaded in the project. The internal message channel name is derived from the JMS endpoint id and follows the pattern:
+
+`{citrus-jms:endpoint@id}":subscriber.inbound"`
+
+The in memory channel id is the combined result of the JMS endpoint id and the prefix `:subscriber.inbound`. In our example this would be `helloServiceTopicEndpoint:subscriber.inbound`. Now all messages sent to the topic in advance to the tests are cached and ready for consumption and verification in the test.
+In the test nothing really changes for you. You simply use a receive test action on the JMS endpoint as you would have done before. In the background Citrus will automatically receive the messages from the in memory cache. This mechanism enables us to not loose any messages that were sent to the topic in prior
+to Citrus firing up the test cases.
+
+IMPORTANT: There is a small downside of the `auto-start` topic subscriber. As incoming events are cached internally you will not be able to receive the same topic event in multiple receive actions within the Citrus project. If you need to receive the topic message in several places within Citrus you need
+to set up several JMS topic endpoints with `auto-start` enabled. In case you just have one receive action at a time you are good to go with the `auto-start` subscriber as it is described here.
+
+[[jms-topic-durable-subscription]]
+== JMS topic durable subscription
+
+When using durable subscriptions on JMS message brokers the message events on a topic are preserved for a subscriber even if the subscriber is inactive. This means that the subscriber may not loose any message events on that particular topic as the subscription is durable and all events are stored for later consumption.
+In case you want to activate durable subscriptions on the Citrus JMS endpoint use the `durable-subscription` setting in the configuration:
+
+[source,xml]
+----
+<citrus-jms:endpoint id="helloServiceTopicEndpoint"
+            connection-factory="topicConnectionFactory"
+            destination="helloServiceTopic"
+            pub-sub-domain="true"
+            durable-subscription="true"
+            auto-start="true"/>
+
+<bean id="topicConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
+  <constructor-arg>
+    <bean class="org.apache.activemq.ActiveMQConnectionFactory">
+      <property name="brokerURL" value="${jms.broker.url}" />
+      <property name="watchTopicAdvisories" value="false"/>
+      <property name="clientID" value="citrusDurableConnectionFactory"/>
+    </bean>
+  </constructor-arg>
+</bean>
+----
+
+The durable subscription in Citrus implies that the subscriber is started when the endpoint configuration is done. All messages received on that subscription are cached internally until the receive action in the test case is performed for actual message consumption. The `auto-start` setting is required to be enabled
+for this reason when using durable subscriptions.
+
+By default Citrus is using the JMS endpoint subscriber name as durable subscription name (e.g. *helloServiceTopicEndpoint:subscriber*). You can overwrite the durable subscriber name with `durable-subscriber-name` setting on the endpoint.
+
+In addition to that you need to add a client id on the connection factory so the message broker is able to identify the durable subscription with the client address. Also we use the `SingleConnectionFactory` implementation of Spring as a connection factory wrapper so we do not fail because of multiple connections with the
+same durable subscriber id.
 
 [[jms-message-headers]]
 == JMS message headers

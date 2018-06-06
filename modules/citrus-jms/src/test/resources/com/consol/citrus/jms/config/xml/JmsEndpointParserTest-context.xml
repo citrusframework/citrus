@@ -20,6 +20,9 @@
 
   <citrus-jms:endpoint id="jmsEndpoint3"
                                pub-sub-domain="true"
+                               auto-start="true"
+                               durable-subscription="true"
+                               durable-subscriber-name="durableSubscriber"
                                use-object-messages="true"
                                jms-template="jmsTemplate"/>
 

@@ -80,6 +80,9 @@ public abstract class AbstractJmsEndpointParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("message-converter"), "messageConverter");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("destination-resolver"), "destinationResolver");
         BeanDefinitionParserUtils.setPropertyReference(endpointConfiguration, element.getAttribute("destination-name-resolver"), "destinationNameResolver");
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration,
+                element.getAttribute("polling-interval"), "pollingInterval");
     }
 
 }

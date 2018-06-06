@@ -16,6 +16,7 @@
 
 package com.consol.citrus.context;
 
+import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.MessageListeners;
@@ -78,11 +79,32 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     private static Logger log = LoggerFactory.getLogger(TestContextFactory.class);
 
     /**
+     * Create new empty instance that has
+     * @return
+     */
+    public static TestContextFactory newInstance() {
+        TestContextFactory factory = new TestContextFactory();
+
+        factory.setFunctionRegistry(new FunctionRegistry());
+        factory.setValidationMatcherRegistry(new ValidationMatcherRegistry());
+        factory.setGlobalVariables(new GlobalVariables());
+        factory.setMessageValidatorRegistry(new MessageValidatorRegistry());
+        factory.setTestListeners(new TestListeners());
+        factory.setMessageListeners(new MessageListeners());
+        factory.setGlobalMessageConstructionInterceptors(new GlobalMessageConstructionInterceptors());
+        factory.setEndpointFactory(new DefaultEndpointFactory());
+        factory.setReferenceResolver(new SpringBeanReferenceResolver());
+        factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
+
+        return factory;
+    }
+
+    /**
      * Construct new factory instance from application context.
      * @param applicationContext
      * @return
      */
-    public static final TestContextFactory newInstance(ApplicationContext applicationContext) {
+    public static TestContextFactory newInstance(ApplicationContext applicationContext) {
         TestContextFactory factory = new TestContextFactory();
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(FunctionRegistry.class))) {
@@ -115,6 +137,14 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(EndpointFactory.class))) {
             factory.setEndpointFactory(applicationContext.getBean(EndpointFactory.class));
+        }
+
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ReferenceResolver.class))) {
+            factory.setReferenceResolver(applicationContext.getBean(ReferenceResolver.class));
+        }
+
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(NamespaceContextBuilder.class))) {
+            factory.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
         }
 
         factory.setApplicationContext(applicationContext);

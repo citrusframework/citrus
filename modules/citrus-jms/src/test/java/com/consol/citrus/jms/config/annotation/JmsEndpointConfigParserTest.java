@@ -33,8 +33,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
+import javax.jms.*;
 
 import static org.mockito.Mockito.when;
 
@@ -58,14 +57,25 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
     @CitrusEndpoint
     @JmsEndpointConfig(pubSubDomain=true,
+            autoStart=true,
             useObjectMessages=true,
             jmsTemplate="jmsTemplate")
     private JmsEndpoint jmsEndpoint3;
 
     @CitrusEndpoint
+    @JmsEndpointConfig(pubSubDomain=true,
+            autoStart=true,
+            durableSubscription=true,
+            durableSubscriberName="durableSubscriber",
+            useObjectMessages=true,
+            destinationName = "JMS.Topic.Test",
+            connectionFactory="jmsTopicConnectionFactory")
+    private JmsEndpoint jmsEndpoint4;
+
+    @CitrusEndpoint
     @JmsEndpointConfig(destinationName="JMS.Queue.Test",
             actor="testActor")
-    private JmsEndpoint jmsEndpoint4;
+    private JmsEndpoint jmsEndpoint5;
 
     @Autowired
     private SpringBeanReferenceResolver referenceResolver;
@@ -76,6 +86,16 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
     private Destination jmsQueue = Mockito.mock(Destination.class);
     @Mock
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    @Mock
+    private TopicConnectionFactory topicConnectionFactory = Mockito.mock(TopicConnectionFactory.class);
+    @Mock
+    private TopicConnection topicConnection = Mockito.mock(TopicConnection.class);
+    @Mock
+    private TopicSession topicSession = Mockito.mock(TopicSession.class);
+    @Mock
+    private Topic topic = Mockito.mock(Topic.class);
+    @Mock
+    private TopicSubscriber topicSubscriber = Mockito.mock(TopicSubscriber.class);
     @Mock
     private ConnectionFactory jmsConnectionFactory = Mockito.mock(ConnectionFactory.class);
     @Mock
@@ -90,18 +110,28 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
     private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
 
     @BeforeClass
-    public void setup() {
+    public void setup() throws JMSException {
         MockitoAnnotations.initMocks(this);
 
         referenceResolver.setApplicationContext(applicationContext);
 
         when(applicationContext.getBean("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
+
+        when(jmsTemplate.getConnectionFactory()).thenReturn(topicConnectionFactory);
+        when(topicConnectionFactory.createTopicConnection()).thenReturn(topicConnection);
+        when(topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(topicSession);
+        when(jmsTemplate.getDefaultDestinationName()).thenReturn("JMS.Topic.Test");
+        when(topicSession.createTopic("JMS.Topic.Test")).thenReturn(topic);
+        when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
+        when(topicSession.createDurableSubscriber(topic, "durableSubscriber")).thenReturn(topicSubscriber);
+
         when(applicationContext.getBean("jmsQueue", Destination.class)).thenReturn(jmsQueue);
         when(applicationContext.getBean("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
         when(applicationContext.getBean("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
         when(applicationContext.getBean("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
         when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         when(applicationContext.getBean("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
+        when(applicationContext.getBean("jmsTopicConnectionFactory", ConnectionFactory.class)).thenReturn(topicConnectionFactory);
         when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
     }
 
@@ -116,6 +146,9 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().getDestinationName(), "JMS.Queue.Test");
         Assert.assertNull(jmsEndpoint1.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().isPubSubDomain(), false);
+        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().isAutoStart(), false);
+        Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().isDurableSubscription(), false);
         Assert.assertEquals(jmsEndpoint1.getEndpointConfiguration().isUseObjectMessages(), false);
 
         // 2nd message receiver
@@ -129,14 +162,26 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmsEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
 
         // 3rd message receiver
+        Assert.assertEquals(jmsEndpoint3.getEndpointConfiguration().getJmsTemplate(), jmsTemplate);
         Assert.assertNull(jmsEndpoint3.getEndpointConfiguration().getConnectionFactory());
         Assert.assertNull(jmsEndpoint3.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsEndpoint3.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsEndpoint3.getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertEquals(jmsEndpoint3.getEndpointConfiguration().isAutoStart(), true);
         Assert.assertEquals(jmsEndpoint3.getEndpointConfiguration().isUseObjectMessages(), true);
 
         // 4th message receiver
-        Assert.assertNotNull(jmsEndpoint4.getActor());
-        Assert.assertEquals(jmsEndpoint4.getActor(), testActor);
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getConnectionFactory(), topicConnectionFactory);
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getDestinationName(), "JMS.Topic.Test");
+        Assert.assertNull(jmsEndpoint4.getEndpointConfiguration().getDestination());
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().isAutoStart(), true);
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().isDurableSubscription(), true);
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().getDurableSubscriberName(), "durableSubscriber");
+        Assert.assertEquals(jmsEndpoint4.getEndpointConfiguration().isUseObjectMessages(), true);
+
+        // 5th message receiver
+        Assert.assertNotNull(jmsEndpoint5.getActor());
+        Assert.assertEquals(jmsEndpoint5.getActor(), testActor);
     }
 }

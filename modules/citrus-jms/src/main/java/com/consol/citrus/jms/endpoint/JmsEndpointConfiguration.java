@@ -16,7 +16,7 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
+import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.resolver.DynamicDestinationNameResolver;
 import com.consol.citrus.jms.message.JmsMessageConverter;
@@ -34,7 +34,7 @@ import javax.jms.*;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
+public class JmsEndpointConfiguration extends AbstractPollableEndpointConfiguration {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JmsEndpointConfiguration.class);
@@ -65,6 +65,13 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
 
     /** Use topics instead of queues */
     private boolean pubSubDomain = false;
+
+    /** Start topic subscription immediately at startup and cache all incoming message events in local channel */
+    private boolean autoStart = false;
+
+    /** Durable subscriber settings */
+    private boolean durableSubscription = false;
+    private String durableSubscriberName;
 
     /** Should always use object messages */
     private boolean useObjectMessages = false;
@@ -278,5 +285,59 @@ public class JmsEndpointConfiguration extends AbstractEndpointConfiguration {
      */
     public void setDestinationNameResolver(EndpointUriResolver destinationNameResolver) {
         this.destinationNameResolver = destinationNameResolver;
+    }
+
+    /**
+     * Gets the autoStart.
+     *
+     * @return
+     */
+    public boolean isAutoStart() {
+        return autoStart;
+    }
+
+    /**
+     * Sets the autoStart.
+     *
+     * @param autoStart
+     */
+    public void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+    }
+
+    /**
+     * Gets the durableSubscription.
+     *
+     * @return
+     */
+    public boolean isDurableSubscription() {
+        return durableSubscription;
+    }
+
+    /**
+     * Sets the durableSubscription.
+     *
+     * @param durableSubscription
+     */
+    public void setDurableSubscription(boolean durableSubscription) {
+        this.durableSubscription = durableSubscription;
+    }
+
+    /**
+     * Gets the durableSubscriberName.
+     *
+     * @return
+     */
+    public String getDurableSubscriberName() {
+        return durableSubscriberName;
+    }
+
+    /**
+     * Sets the durableSubscriberName.
+     *
+     * @param durableSubscriberName
+     */
+    public void setDurableSubscriberName(String durableSubscriberName) {
+        this.durableSubscriberName = durableSubscriberName;
     }
 }

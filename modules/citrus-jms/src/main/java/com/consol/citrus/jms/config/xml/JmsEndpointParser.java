@@ -16,10 +16,14 @@
 
 package com.consol.citrus.jms.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for JMS endpoint component.
@@ -28,6 +32,16 @@ import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
  * @since 1.4
  */
 public class JmsEndpointParser extends AbstractJmsEndpointParser {
+
+    @Override
+    protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
+        super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
+
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-start"), "autoStart");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("durable-subscription"), "durableSubscription");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("durable-subscriber-name"), "durableSubscriberName");
+    }
+
     @Override
     protected Class<? extends Endpoint> getEndpointClass() {
         return JmsEndpoint.class;

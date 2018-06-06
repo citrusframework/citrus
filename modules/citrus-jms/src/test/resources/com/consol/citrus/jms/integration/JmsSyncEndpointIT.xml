@@ -19,9 +19,9 @@
     <description>Test sends and receives messages on an synchronous JMS queue endpoint with reply message handling.</description>
 
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
     </variables>
 
     <actions>

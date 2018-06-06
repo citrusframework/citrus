@@ -120,6 +120,36 @@ public class JmsEndpointBuilder extends AbstractEndpointBuilder<JmsEndpoint> {
     }
 
     /**
+     * Sets the autoStart property.
+     * @param autoStart
+     * @return
+     */
+    public JmsEndpointBuilder autoStart(boolean autoStart) {
+        endpoint.getEndpointConfiguration().setAutoStart(autoStart);
+        return this;
+    }
+
+    /**
+     * Sets the durableSubscription property.
+     * @param durableSubscription
+     * @return
+     */
+    public JmsEndpointBuilder durableSubscription(boolean durableSubscription) {
+        endpoint.getEndpointConfiguration().setDurableSubscription(durableSubscription);
+        return this;
+    }
+
+    /**
+     * Sets the durableSubscriberName property.
+     * @param durableSubscriberName
+     * @return
+     */
+    public JmsEndpointBuilder durableSubscriberName(String durableSubscriberName) {
+        endpoint.getEndpointConfiguration().setDurableSubscriberName(durableSubscriberName);
+        return this;
+    }
+
+    /**
      * Sets the useObjectMessages property.
      * @param useObjectMessages
      * @return

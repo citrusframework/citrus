@@ -37,7 +37,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
     private static Logger log = LoggerFactory.getLogger(JmsConsumer.class);
 
     /** Endpoint configuration */
-    private final JmsEndpointConfiguration endpointConfiguration;
+    protected final JmsEndpointConfiguration endpointConfiguration;
 
     /**
      * Default constructor using endpoint.

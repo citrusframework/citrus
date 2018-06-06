@@ -87,7 +87,23 @@ public class JmsEndpointConfigParser extends AbstractAnnotationConfigParser<JmsE
                     "or one of destination or destination-name must be provided");
         }
 
+        if (annotation.autoStart() && !annotation.pubSubDomain()) {
+            throw new CitrusRuntimeException("When providing auto start enabled,  " +
+                    "pubSubDomain should also be enabled");
+        }
+
+        if (annotation.durableSubscription() && !annotation.pubSubDomain()) {
+            throw new CitrusRuntimeException("When providing durable subscription enabled,  " +
+                    "pubSubDomain should also be enabled");
+        }
+
         builder.pubSubDomain(annotation.pubSubDomain());
+        builder.autoStart(annotation.autoStart());
+        builder.durableSubscription(annotation.durableSubscription());
+        if (StringUtils.hasText(annotation.durableSubscriberName())) {
+            builder.durableSubscriberName(annotation.durableSubscriberName());
+        }
+
         builder.useObjectMessages(annotation.useObjectMessages());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
