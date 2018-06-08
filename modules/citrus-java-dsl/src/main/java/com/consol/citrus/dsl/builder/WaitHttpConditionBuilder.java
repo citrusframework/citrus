@@ -16,8 +16,8 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.actions.WaitAction;
 import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.container.Wait;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
@@ -25,19 +25,15 @@ import org.springframework.http.HttpStatus;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class WaitHttpConditionBuilder extends WaitConditionBuilder {
-
-    /** The target condition to build */
-    private final HttpCondition condition;
+public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition> {
 
     /**
      * Default constructor using fields.
      * @param action
      * @param condition
      */
-    public WaitHttpConditionBuilder(WaitAction action, HttpCondition condition) {
+    public WaitHttpConditionBuilder(Wait action, HttpCondition condition) {
         super(action, condition);
-        this.condition = condition;
     }
 
     /**
@@ -46,7 +42,7 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder {
      * @return
      */
     public WaitHttpConditionBuilder timeout(String timeout) {
-        condition.setTimeout(timeout);
+        getCondition().setTimeout(timeout);
         return this;
     }
 
@@ -56,7 +52,7 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder {
      * @return
      */
     public WaitHttpConditionBuilder timeout(Long timeout) {
-        condition.setTimeout(timeout.toString());
+        getCondition().setTimeout(timeout.toString());
         return this;
     }
 
@@ -66,7 +62,7 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder {
      * @return
      */
     public WaitHttpConditionBuilder status(HttpStatus status) {
-        condition.setHttpResponseCode(String.valueOf(status.value()));
+        getCondition().setHttpResponseCode(String.valueOf(status.value()));
         return this;
     }
 
@@ -76,7 +72,37 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder {
      * @return
      */
     public WaitHttpConditionBuilder method(HttpMethod method) {
-        condition.setMethod(method.name());
+        getCondition().setMethod(method.name());
         return this;
+    }
+
+    @Override
+    public WaitHttpConditionBuilder ms(Long milliseconds) {
+        return (WaitHttpConditionBuilder) super.ms(milliseconds);
+    }
+
+    @Override
+    public WaitHttpConditionBuilder ms(String milliseconds) {
+        return (WaitHttpConditionBuilder) super.ms(milliseconds);
+    }
+
+    @Override
+    public WaitHttpConditionBuilder seconds(Long seconds) {
+        return (WaitHttpConditionBuilder) super.seconds(seconds);
+    }
+
+    @Override
+    public WaitHttpConditionBuilder seconds(String seconds) {
+        return (WaitHttpConditionBuilder) super.seconds(seconds);
+    }
+
+    @Override
+    public WaitHttpConditionBuilder interval(Long interval) {
+        return (WaitHttpConditionBuilder) super.interval(interval);
+    }
+
+    @Override
+    public WaitHttpConditionBuilder interval(String interval) {
+        return (WaitHttpConditionBuilder) super.interval(interval);
     }
 }

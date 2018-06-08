@@ -4,7 +4,7 @@
 							xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 							xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 																	http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-  <testcase name="WaitActionIT">
+  <testcase name="WaitIT">
     <meta-info>
       <author>Chrisotph Deppisch</author>
       <creationdate>2015-11-03</creationdate>
@@ -31,6 +31,16 @@
 			</wait>
 
       <echo>
+        <message>Check action condition</message>
+      </echo>
+
+			<wait>
+				<action>
+          <sleep milliseconds="500"/>
+        </action>
+			</wait>
+
+      <echo>
         <message>Test Http condition error</message>
       </echo>
 
@@ -50,6 +60,20 @@
         <when>
           <wait milliseconds="300" interval="100">
             <file path="does/not/exist/file.txt"/>
+          </wait>
+        </when>
+      </assert>
+
+      <echo>
+        <message>Test action condition error</message>
+      </echo>
+
+      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException" message="@startsWith('Failed to check test action condition')@">
+        <when>
+          <wait milliseconds="300" interval="100">
+            <action>
+              <sleep milliseconds="500"/>
+            </action>
           </wait>
         </when>
       </assert>

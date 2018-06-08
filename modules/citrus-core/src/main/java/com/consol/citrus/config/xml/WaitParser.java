@@ -16,11 +16,13 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.actions.WaitAction;
 import com.consol.citrus.condition.*;
+import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.container.Wait;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.xerces.util.DOMUtil;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -28,17 +30,19 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
+import java.util.Map;
+
 /**
  * Bean definition parser for wait action in test case.
  *
  * @author Martin Maher
  * @since 2.4
  */
-public class WaitActionParser implements BeanDefinitionParser {
+public class WaitParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(WaitAction.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Wait.class);
 
         DescriptionElementParser.doParse(element, builder);
 
@@ -55,17 +59,27 @@ public class WaitActionParser implements BeanDefinitionParser {
             throw new CitrusRuntimeException("Invalid 'wait' action configuration. No 'condition' is configured");
         } else {
             String conditionName = conditionElement.getTagName();
-            Condition condition;
-            if (conditionName.equals("http")) {
-                condition = parseHttpCondition(conditionElement);
-            } else if (conditionName.equals("file")) {
-                condition = parseFileCondition(conditionElement);
-            } else if (conditionName.equals("message")) {
-                condition = parseMessageCondition(conditionElement);
-            } else {
-                throw new CitrusRuntimeException(String.format("Invalid 'wait' action configuration. Unknown condition '%s'", conditionName));
+            Object condition = null;
+            switch (conditionName) {
+                case "http":
+                    condition = parseHttpCondition(conditionElement);
+                    break;
+                case "file":
+                    condition = parseFileCondition(conditionElement);
+                    break;
+                case "message":
+                    condition = parseMessageCondition(conditionElement);
+                    break;
+                case "action":
+                    builder.addPropertyValue("action", parseActionCondition(conditionElement, parserContext));
+                    break;
+                default:
+                    throw new CitrusRuntimeException(String.format("Invalid 'wait' action configuration. Unknown condition '%s'", conditionName));
             }
-            builder.addPropertyValue("condition", condition);
+
+            if (condition != null) {
+                builder.addPropertyValue("condition", condition);
+            }
         }
         return builder.getBeanDefinition();
     }
@@ -106,6 +120,29 @@ public class WaitActionParser implements BeanDefinitionParser {
         condition.setMessageName(element.getAttribute("name"));
 
         return condition;
+    }
+
+    /**
+     * Parse test action condition.
+     * @param element
+     * @param parserContext
+     * @return
+     */
+    private BeanDefinition parseActionCondition(Element element, ParserContext parserContext) {
+        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
+
+        Element action = DOMUtil.getFirstChildElement(element);
+        if (action != null) {
+            BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
+
+            if (parser !=  null) {
+                return parser.parse(action, parserContext);
+            } else {
+                return parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext);
+            }
+        }
+
+        throw new BeanCreationException("Invalid wait for action condition - action not set properly");
     }
 
     /**

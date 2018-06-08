@@ -834,6 +834,13 @@
                         <xs:attribute name="name" type="xs:string" use="required" />
                     </xs:complexType>
                 </xs:element>
+                <xs:element name="action" minOccurs="0">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:group ref="actionGroup"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </xs:choice>
         </xs:sequence>
         <xs:attribute name="seconds" type="xs:string" use="optional" />

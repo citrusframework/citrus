@@ -17,9 +17,8 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.WaitAction;
-import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
+import com.consol.citrus.condition.*;
+import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -53,15 +52,15 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor(builder -> builder.condition(condition).seconds(seconds).interval(interval));
+                waitFor().condition(condition).seconds(seconds).interval(interval);
             }
         };
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
 
-        WaitAction action = (WaitAction)test.getActions().get(0);
+        Wait action = (Wait)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertEquals(action.getSeconds(), seconds);
         Assert.assertEquals(action.getInterval(), interval);
@@ -83,15 +82,121 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
+                waitFor().file(file).seconds(seconds).interval(interval);
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
+
+        Wait action = (Wait)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "wait");
+        Assert.assertEquals(action.getSeconds(), seconds);
+        Assert.assertEquals(action.getInterval(), interval);
+        Assert.assertEquals(action.getCondition().getClass(), FileCondition.class);
+    }
+
+    @Test
+    public void testWaitActionBuilderSuccess() {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                waitFor().execution().action(sleep(200L)).seconds(1L).interval(100L);
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
+
+        Wait action = (Wait)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "wait");
+        Assert.assertEquals(action.getSeconds(), "1");
+        Assert.assertEquals(action.getInterval(), "100");
+        Assert.assertEquals(action.getCondition().getClass(), ActionCondition.class);
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    public void testWaitFileBuilderFailed() {
+        reset(file);
+
+        when(file.getPath()).thenReturn("path/to/some/file.txt");
+        when(file.exists()).thenReturn(false);
+
+        final String seconds = "1";
+        final String interval = "500";
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                waitFor().file(file).seconds(seconds).interval(interval);
+            }
+        };
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    public void testWaitActionBuilderFailed() {
+        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                waitFor().execution().action(fail("I am failing!")).ms(500L).interval(100L);
+            }
+        };
+    }
+
+    @Test
+    public void testWaitBuilderDeprecated() {
+        reset(condition);
+        when(condition.getName()).thenReturn("check");
+        when(condition.isSatisfied(any(TestContext.class))).thenReturn(Boolean.FALSE);
+        when(condition.isSatisfied(any(TestContext.class))).thenReturn(Boolean.TRUE);
+        when(condition.getSuccessMessage(any(TestContext.class))).thenReturn("Condition success!");
+        final String seconds = "3";
+        final String interval = "500";
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                waitFor(builder -> builder.condition(condition).seconds(seconds).interval(interval));
+            }
+        };
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
+
+        Wait action = (Wait)test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "wait");
+        Assert.assertEquals(action.getSeconds(), seconds);
+        Assert.assertEquals(action.getInterval(), interval);
+        Assert.assertEquals(action.getCondition(), condition);
+    }
+
+    @Test
+    public void testWaitFileBuilderSuccessDeprecated() {
+        reset(file);
+
+        when(file.getPath()).thenReturn("path/to/some/file.txt");
+        when(file.exists()).thenReturn(false);
+        when(file.exists()).thenReturn(true);
+        when(file.isFile()).thenReturn(true);
+
+        final String seconds = "3";
+        final String interval = "500";
+
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
                 waitFor(builder -> builder.file(file).seconds(seconds).interval(interval));
             }
         };
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
 
-        WaitAction action = (WaitAction)test.getActions().get(0);
+        Wait action = (Wait)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertEquals(action.getSeconds(), seconds);
         Assert.assertEquals(action.getInterval(), interval);
@@ -99,7 +204,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)
-    public void testWaitFileBuilderFailed() {
+    public void testWaitFileBuilderFailedDeprecated() {
         reset(file);
 
         when(file.getPath()).thenReturn("path/to/some/file.txt");

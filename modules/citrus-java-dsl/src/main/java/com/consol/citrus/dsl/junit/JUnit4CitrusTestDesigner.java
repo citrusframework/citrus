@@ -297,7 +297,7 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public WaitActionBuilder waitFor() {
+    public WaitBuilder waitFor() {
         return testDesigner.waitFor();
     }
 

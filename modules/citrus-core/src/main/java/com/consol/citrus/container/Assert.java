@@ -33,6 +33,7 @@ import java.util.List;
  * @since 2009
  */
 public class Assert extends AbstractActionContainer {
+
     /** Nested test action */
     private TestAction action;
 

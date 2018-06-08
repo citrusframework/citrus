@@ -289,7 +289,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public WaitActionBuilder waitFor() {
+    public WaitBuilder waitFor() {
         return testDesigner.waitFor();
     }
 

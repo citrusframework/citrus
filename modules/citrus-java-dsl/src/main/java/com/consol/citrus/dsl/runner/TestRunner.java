@@ -18,8 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.*;
 import com.consol.citrus.actions.*;
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.container.Template;
+import com.consol.citrus.container.*;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
@@ -272,8 +271,16 @@ public interface TestRunner extends ApplicationContextAware {
      *
      * @param configurer
      * @return
+     * @deprecated in favor of {@link TestRunner#waitFor()}
      */
-    WaitAction waitFor(BuilderSupport<WaitActionBuilder> configurer);
+    @Deprecated
+    Wait waitFor(BuilderSupport<WaitBuilder> configurer);
+
+    /**
+     * Creates a wait action that waits for a condition to be satisfied before continuing.
+     * @return
+     */
+    WaitBuilder waitFor();
 
     /**
      * Creates a new start server action definition

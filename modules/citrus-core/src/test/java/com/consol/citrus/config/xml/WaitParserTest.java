@@ -16,7 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.actions.WaitAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.Wait;
 import com.consol.citrus.condition.*;
 import com.consol.citrus.testng.AbstractActionParserTest;
 import org.testng.Assert;
@@ -26,7 +27,7 @@ import org.testng.annotations.Test;
  * @author Martin Maher
  * @since 2.4
  */
-public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
+public class WaitParserTest extends AbstractActionParserTest<Wait> {
 
     private static final String DEFAULT_WAIT_TIME = "5000";
     private static final String DEFAULT_INTERVAL = "1000";
@@ -38,10 +39,10 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         String httpUrl = "http://some.url/";
         String filePath = "/some/path";
 
-        assertActionCount(5);
-        assertActionClassAndName(WaitAction.class, "wait");
+        assertActionCount(6);
+        assertActionClassAndName(Wait.class, "wait");
 
-        WaitAction action = getNextTestActionFromTest();
+        Wait action = getNextTestActionFromTest();
         Condition condition = getFileCondition(filePath);
         validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
@@ -60,6 +61,10 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         action = getNextTestActionFromTest();
         condition = getMessageCondition("request");
         validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
+
+        action = getNextTestActionFromTest();
+        condition = getActionCondition();
+        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
     }
 
     private Condition getFileCondition(String path) {
@@ -74,6 +79,10 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         return condition;
     }
 
+    private Condition getActionCondition() {
+        return new ActionCondition(new EchoAction().setMessage("Citrus rocks!"));
+    }
+
     private Condition getHttpCondition(String url, String responseCode, String timeout) {
         HttpCondition condition = new HttpCondition();
         condition.setUrl(url);
@@ -82,12 +91,14 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
         return condition;
     }
 
-    private void validateWaitAction(WaitAction action, String expectedSeconds, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
+    private void validateWaitAction(Wait action, String expectedSeconds, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
         Assert.assertEquals(action.getSeconds(), expectedSeconds);
         Assert.assertEquals(action.getMilliseconds(), expectedMilliseconds);
         Assert.assertEquals(action.getInterval(), expectedInterval);
 
-        Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
+        if (!(expectedCondition instanceof ActionCondition)) {
+            Assert.assertEquals(action.getCondition().getClass(), expectedCondition.getClass());
+        }
 
         if (expectedCondition instanceof HttpCondition) {
             HttpCondition condition = (HttpCondition) action.getCondition();
@@ -106,6 +117,11 @@ public class WaitActionParserTest extends AbstractActionParserTest<WaitAction> {
             Assert.assertNotNull(condition);
             Assert.assertEquals(condition.getName(), expectedCondition.getName());
             Assert.assertEquals(condition.getMessageName(), ((MessageCondition) expectedCondition).getMessageName());
+        } else if (expectedCondition instanceof ActionCondition) {
+            ActionCondition condition = (ActionCondition) action.getCondition();
+            Assert.assertNull(condition);
+            Assert.assertEquals(action.getTestAction(0).getName(), ((ActionCondition) expectedCondition).getAction().getName());
+            Assert.assertEquals(((EchoAction) action.getTestAction(0)).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
         }
     }
 }

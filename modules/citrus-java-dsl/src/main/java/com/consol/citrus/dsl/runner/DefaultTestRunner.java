@@ -178,7 +178,6 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public <T extends TestAction> T run(T testAction) {
         if (testAction instanceof TestActionContainer) {
-
             if (containers.lastElement().equals(testAction)) {
                 containers.pop();
             } else {
@@ -340,10 +339,19 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public WaitAction waitFor(BuilderSupport<WaitActionBuilder> configurer) {
-        WaitActionBuilder builder = new WaitActionBuilder();
+    @Deprecated
+    public Wait waitFor(BuilderSupport<WaitBuilder> configurer) {
+        WaitBuilder builder = new WaitBuilder(null, new Wait());
         configurer.configure(builder);
+        containers.push(builder.build());
         return run(builder.build());
+    }
+
+    @Override
+    public WaitBuilder waitFor() {
+        WaitBuilder builder = new WaitBuilder(this, new Wait());
+        containers.push(builder.build());
+        return builder;
     }
 
     @Override

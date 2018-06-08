@@ -4,7 +4,7 @@
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-  <testcase name="WaitActionParserTest">
+  <testcase name="WaitParserTest">
     <actions>
       <wait>
         <description>some description</description>
@@ -25,6 +25,14 @@
 
       <wait>
         <message name="request"/>
+      </wait>
+
+      <wait>
+        <action>
+          <echo>
+            <message>Citrus rocks!</message>
+          </echo>
+        </action>
       </wait>
     </actions>
   </testcase>

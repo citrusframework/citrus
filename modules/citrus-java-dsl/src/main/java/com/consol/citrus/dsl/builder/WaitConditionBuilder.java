@@ -16,27 +16,27 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.actions.WaitAction;
+import com.consol.citrus.container.Wait;
 import com.consol.citrus.condition.Condition;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class WaitConditionBuilder {
+public class WaitConditionBuilder<T extends Condition> {
 
     /** Condition */
-    private final Condition condition;
+    private final T condition;
 
     /** Wait test action */
-    private final WaitAction action;
+    protected final Wait action;
 
     /**
      * Default constructor using fields.
      * @param action
      * @param condition
      */
-    public WaitConditionBuilder(WaitAction action, Condition condition) {
+    public WaitConditionBuilder(Wait action, T condition) {
         this.action = action;
         this.condition = condition;
     }
@@ -101,4 +101,12 @@ public class WaitConditionBuilder {
         return this;
     }
 
+    /**
+     * Gets the condition.
+     *
+     * @return
+     */
+    public T getCondition() {
+        return condition;
+    }
 }

@@ -17,6 +17,7 @@
 package com.consol.citrus.actions;
 
 import com.consol.citrus.condition.Condition;
+import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
@@ -31,7 +32,7 @@ import static org.testng.Assert.fail;
  * @author Martin Maher
  * @since 2.4
  */
-public class WaitActionTest {
+public class WaitTest {
     private TestContext contextMock = Mockito.mock(TestContext.class);
     private Condition conditionMock = Mockito.mock(Condition.class);
     private long startTime;
@@ -42,7 +43,7 @@ public class WaitActionTest {
         String seconds = "10";
         String interval = "1000";
 
-        WaitAction testling = getWaitAction(seconds, interval);
+        Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
@@ -61,7 +62,7 @@ public class WaitActionTest {
         String seconds = "4";
         String interval = "1000";
 
-        WaitAction testling = getWaitAction(seconds, interval);
+        Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
@@ -81,7 +82,7 @@ public class WaitActionTest {
         String seconds = "1";
         String interval = "10000";
 
-        WaitAction testling = getWaitAction(seconds, interval);
+        Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
@@ -100,7 +101,7 @@ public class WaitActionTest {
         String seconds = "3";
         String interval = "1000";
 
-        WaitAction testling = getWaitAction(seconds, interval);
+        Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
@@ -125,7 +126,7 @@ public class WaitActionTest {
         String seconds = "1";
         String interval = "10000";
 
-        WaitAction testling = getWaitAction(seconds, interval);
+        Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
         prepareContextMock(seconds, interval);
@@ -149,8 +150,8 @@ public class WaitActionTest {
         when(contextMock.replaceDynamicContentInString(interval)).thenReturn(interval);
     }
 
-    private WaitAction getWaitAction(String waitTimeSeconds, String interval) {
-        WaitAction testling = new WaitAction();
+    private Wait getWaitAction(String waitTimeSeconds, String interval) {
+        Wait testling = new Wait();
         testling.setCondition(conditionMock);
 
         if (StringUtils.hasText(waitTimeSeconds)) {

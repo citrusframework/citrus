@@ -320,7 +320,7 @@ public interface TestDesigner extends ApplicationContextAware {
      *
      * @return
      */
-    WaitActionBuilder waitFor();
+    WaitBuilder waitFor();
 
     /**
      * Creates a new start server action definition

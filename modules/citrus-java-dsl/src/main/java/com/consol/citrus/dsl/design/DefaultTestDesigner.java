@@ -415,11 +415,8 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public WaitActionBuilder waitFor() {
-        WaitAction action = new WaitAction();
-        WaitActionBuilder builder = new WaitActionBuilder(action);
-        action(builder);
-        return builder;
+    public WaitBuilder waitFor() {
+        return new WaitBuilder(this, new Wait(), containers);
     }
 
     @Override

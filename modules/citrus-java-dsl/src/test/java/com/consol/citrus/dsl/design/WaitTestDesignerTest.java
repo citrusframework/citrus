@@ -17,7 +17,8 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.WaitAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.container.Wait;
 import com.consol.citrus.condition.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -35,6 +36,7 @@ import static org.mockito.Mockito.when;
  * @since 2.4
  */
 public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
+
     @Test
     public void testWaitHttpBuilder() {
         final String seconds = "3";
@@ -54,9 +56,9 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
 
-        WaitAction action = (WaitAction) test.getActions().get(0);
+        Wait action = (Wait) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertEquals(action.getSeconds(), seconds);
         Assert.assertEquals(action.getInterval(), interval);
@@ -87,9 +89,9 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
 
-        WaitAction action = (WaitAction) test.getActions().get(0);
+        Wait action = (Wait) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertNull(action.getSeconds());
         Assert.assertEquals(action.getMilliseconds(), milliseconds);
@@ -120,9 +122,9 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
 
-        WaitAction action = (WaitAction) test.getActions().get(0);
+        Wait action = (Wait) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertNull(action.getSeconds());
         Assert.assertEquals(action.getMilliseconds(), milliseconds);
@@ -147,9 +149,9 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), WaitAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
 
-        WaitAction action = (WaitAction) test.getActions().get(0);
+        Wait action = (Wait) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertNull(action.getSeconds());
         Assert.assertEquals(action.getMilliseconds(), "5000");
@@ -157,6 +159,57 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCondition().getClass(), MessageCondition.class);
         MessageCondition condition = (MessageCondition) action.getCondition();
         Assert.assertEquals(condition.getMessageName(), messageName);
+    }
+
+    @Test
+    public void testWaitActionBuilder() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                waitFor()
+                    .execution()
+                    .action(new EchoAction());
+            }
+        };
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
+
+        Wait action = (Wait) test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "wait");
+        Assert.assertNull(action.getSeconds());
+        Assert.assertEquals(action.getMilliseconds(), "5000");
+        Assert.assertEquals(action.getInterval(), "1000");
+        Assert.assertEquals(action.getAction().getClass(), EchoAction.class);
+        Assert.assertEquals(action.getAction().getName(), "echo");
+    }
+
+    @Test
+    public void testWaitActionFluentBuilder() {
+        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+            @Override
+            public void configure() {
+                waitFor()
+                    .execution()
+                    .action(echo("Citrus rocks!"));
+            }
+        };
+        builder.configure();
+
+        TestCase test = builder.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), Wait.class);
+
+        Wait action = (Wait) test.getActions().get(0);
+        Assert.assertEquals(action.getName(), "wait");
+        Assert.assertNull(action.getSeconds());
+        Assert.assertEquals(action.getMilliseconds(), "5000");
+        Assert.assertEquals(action.getInterval(), "1000");
+        Assert.assertEquals(action.getAction().getClass(), EchoAction.class);
+        Assert.assertEquals(action.getAction().getName(), "echo");
+        Assert.assertEquals(((EchoAction) action.getAction()).getMessage(), "Citrus rocks!");
     }
 
 }
