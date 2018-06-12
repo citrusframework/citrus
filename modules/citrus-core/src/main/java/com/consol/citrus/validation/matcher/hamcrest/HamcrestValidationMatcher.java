@@ -48,7 +48,9 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
     private List<String> mapMatchers = Arrays.asList("hasEntry", "hasKey", "hasValue");
 
-    private List<String> numericMatchers = Arrays.asList( "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo" );
+    private List<String> optionMatchers = Arrays.asList("isOneOf", "isIn");
+
+    private List<String> numericMatchers = Arrays.asList( "greaterThan", "greaterThanOrEqualTo", "lessThan", "lessThanOrEqualTo", "closeTo" );
 
     private List<String> containerMatchers = Arrays.asList( "is", "not", "everyItem" );
 
@@ -77,7 +79,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         String[] matcherParameter = matcherExpression.trim().substring(matcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
         for (int i = 0; i < matcherParameter.length; i++) {
-            matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i]);
+            matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i].trim());
         }
 
         Matcher matcher = getMatcher(matcherName, matcherParameter);
@@ -88,7 +90,11 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         } else if (mapMatchers.contains(matcherName)) {
             assertThat(getMap(matcherValue), matcher);
         } else if (numericMatchers.contains(matcherName)) {
-            assertThat(new NumericComparable(matcherValue), matcher);
+            if (matcherName.equals("closeTo")) {
+                assertThat(Double.valueOf(matcherValue), matcher);
+            } else {
+                assertThat(new NumericComparable(matcherValue), matcher);
+            }
         } else if (iterableMatchers.contains(matcherName) && containsNumericMatcher(matcherExpression)) {
             assertThat(new NumericComparable(matcherValue), matcher);
         } else {
@@ -172,7 +178,13 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             }
 
             if (numericMatchers.contains(matcherName)) {
-                Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, Comparable.class);
+                Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, double.class, double.class);
+
+                if (matcherMethod != null) {
+                    return (Matcher) matcherMethod.invoke(null, Double.valueOf(matcherParameter[0]), matcherParameter.length > 1 ? Double.valueOf(matcherParameter[1]) : 0.0D);
+                }
+
+                matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName, Comparable.class);
 
                 if (matcherMethod != null) {
                     return (Matcher) matcherMethod.invoke(null, matcherParameter[0]);
@@ -212,6 +224,20 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                     return (Matcher) matcherMethod.invoke(null, matcherParameter[0], matcherParameter[1]);
                 }
             }
+
+            if (optionMatchers.contains(matcherName)) {
+                Method matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Object[].class);
+
+                if (matcherMethod != null) {
+                    return (Matcher) matcherMethod.invoke(null, new Object[] { matcherParameter });
+                }
+
+                matcherMethod =  ReflectionUtils.findMethod(Matchers.class, matcherName, Collection.class);
+
+                if (matcherMethod != null) {
+                    return (Matcher) matcherMethod.invoke(null, new Object[] { getCollection(StringUtils.arrayToCommaDelimitedString(matcherParameter)) });
+                }
+            }
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new CitrusRuntimeException("Failed to invoke matcher", e);
         }
@@ -232,8 +258,8 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         }
 
         return Arrays.stream(StringUtils.commaDelimitedListToStringArray(arrayString))
-                .map(VariableUtils::cutOffDoubleQuotes)
                 .map(String::trim)
+                .map(VariableUtils::cutOffDoubleQuotes)
                 .collect(Collectors.toList());
     }
 
