@@ -25,6 +25,7 @@ import com.jcraft.jsch.*;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
+import org.apache.ftpserver.ftplet.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.*;
@@ -174,12 +175,13 @@ public class SftpClient extends FtpClient {
     }
 
     @Override
-    protected FtpMessage storeFile(PutCommand put, TestContext context) {
+    protected FtpMessage storeFile(PutCommand command, TestContext context) {
         try {
-            String localFilePath = context.replaceDynamicContentInString(put.getFile().getPath());
-            String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(put.getTarget().getPath()));
+            String localFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
+            String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));
 
-            try (InputStream localFileInputStream = new FileInputStream(FileUtils.getFileResource(localFilePath).getFile())) {
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElse(DataType.BINARY.name()));
+            try (InputStream localFileInputStream = getLocalFileInputStream(command.getFile().getPath(), dataType, context)) {
                 sftp.put(localFileInputStream, remoteFilePath);
             }
         } catch (IOException | SftpException e) {
@@ -209,7 +211,7 @@ public class SftpClient extends FtpClient {
 
             if (getEndpointConfiguration().isAutoReadFiles()) {
                 String fileContent;
-                if (command.getFile().getType().equals(DATA_TYPE_BINARY)) {
+                if (command.getFile().getType().equals(DataType.BINARY.name())) {
                     fileContent = Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(localFilePath).getInputStream()));
                 } else {
                     fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));

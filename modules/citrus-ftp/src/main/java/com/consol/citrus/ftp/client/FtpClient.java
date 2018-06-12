@@ -32,6 +32,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ProtocolCommandEvent;
 import org.apache.commons.net.ProtocolCommandListener;
 import org.apache.commons.net.ftp.*;
+import org.apache.ftpserver.ftplet.DataType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
@@ -54,8 +55,6 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(FtpClient.class);
-
-    protected final static String DATA_TYPE_BINARY = "BINARY";
 
     /** Apache ftp client */
     private FTPClient ftpClient;
@@ -259,16 +258,17 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
     /**
      * Performs store file operation.
-     * @param put
+     * @param command
      * @param context
      */
-    protected FtpMessage storeFile(PutCommand put, TestContext context) {
+    protected FtpMessage storeFile(PutCommand command, TestContext context) {
         try {
-            String localFilePath = context.replaceDynamicContentInString(put.getFile().getPath());
-            String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(put.getTarget().getPath()));
+            String localFilePath = context.replaceDynamicContentInString(command.getFile().getPath());
+            String remoteFilePath = addFileNameToTargetPath(localFilePath, context.replaceDynamicContentInString(command.getTarget().getPath()));
 
-            try (InputStream localFileInputStream = FileUtils.getFileResource(localFilePath).getInputStream()) {
-                ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(Optional.ofNullable(put.getFile().getType()).orElse(DATA_TYPE_BINARY))));
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElse(DataType.BINARY.name()));
+            try (InputStream localFileInputStream = getLocalFileInputStream(command.getFile().getPath(), dataType, context)) {
+                ftpClient.setFileType(getFileType(dataType));
 
                 if (!ftpClient.storeFile(remoteFilePath, localFileInputStream)) {
                     throw new IOException("Failed to put file to FTP server. Remote path: " + remoteFilePath
@@ -280,6 +280,25 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         }
 
         return FtpMessage.putResult(ftpClient.getReplyCode(), ftpClient.getReplyString(), isPositive(ftpClient.getReplyCode()));
+    }
+
+    /**
+     * Constructs local file input stream. When using ASCII data type the test variable replacement is activated otherwise
+     * plain byte stream is used.
+     *
+     * @param path
+     * @param dataType
+     * @param context
+     * @return
+     * @throws IOException
+     */
+    protected InputStream getLocalFileInputStream(String path, String dataType, TestContext context) throws IOException {
+        if (dataType.equals(DataType.ASCII.name())) {
+            String content = context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(path)));
+            return new ByteArrayInputStream(content.getBytes(FileUtils.getDefaultCharset()));
+        } else {
+            return FileUtils.getFileResource(path).getInputStream();
+        }
     }
 
     /**
@@ -295,8 +314,9 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                 Files.createDirectories(Paths.get(localFilePath).getParent());
             }
 
+            String dataType = context.replaceDynamicContentInString(Optional.ofNullable(command.getFile().getType()).orElse(DataType.BINARY.name()));
             try (FileOutputStream localFileOutputStream = new FileOutputStream(localFilePath)) {
-                ftpClient.setFileType(getFileType(context.replaceDynamicContentInString(command.getFile().getType())));
+                ftpClient.setFileType(getFileType(dataType));
 
                 if (!ftpClient.retrieveFile(remoteFilePath, localFileOutputStream)) {
                     throw new CitrusRuntimeException("Failed to get file from FTP server. Remote path: " + remoteFilePath
@@ -306,7 +326,7 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
 
             if (getEndpointConfiguration().isAutoReadFiles()) {
                 String fileContent;
-                if (command.getFile().getType().equals(DATA_TYPE_BINARY)) {
+                if (command.getFile().getType().equals(DataType.BINARY.name())) {
                     fileContent = Base64.encodeBase64String(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(localFilePath).getInputStream()));
                 } else {
                     fileContent = FileUtils.readToString(FileUtils.getFileResource(localFilePath));
