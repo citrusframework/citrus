@@ -96,29 +96,33 @@
           </send>
         </iterate>
 
-        <iterate condition="@assertThat(lessThanOrEqualTo(10))@" start="5">
-          <receive endpoint="helloServiceJmsTopicSubscriberEndpoint" timeout="5000">
-            <description>
-              Receive asynchronous hello response: HelloService -> TestFramework
-            </description>
-            <message>
-              <data>
-                <![CDATA[
-                    <HelloRequest>
-                       <MessageId>${messageId}</MessageId>
-                       <CorrelationId>${correlationId}_${i}</CorrelationId>
-                       <User>${user}</User>
-                       <Text>Hello TestFramework</Text>
-                    </HelloRequest>
-                  ]]>
-              </data>
-            </message>
-            <header>
-              <element name="Operation" value="sayHello"/>
-              <element name="CorrelationId" value="${correlationId}"/>
-            </header>
-          </receive>
-        </iterate>
+        <sequential>
+          <sleep milliseconds="500"/>
+
+          <iterate condition="@assertThat(lessThanOrEqualTo(10))@" start="5">
+            <receive endpoint="helloServiceJmsTopicSubscriberEndpoint" timeout="5000">
+              <description>
+                Receive asynchronous hello response: HelloService -> TestFramework
+              </description>
+              <message>
+                <data>
+                  <![CDATA[
+                      <HelloRequest>
+                         <MessageId>${messageId}</MessageId>
+                         <CorrelationId>${correlationId}_${i}</CorrelationId>
+                         <User>${user}</User>
+                         <Text>Hello TestFramework</Text>
+                      </HelloRequest>
+                    ]]>
+                </data>
+              </message>
+              <header>
+                <element name="Operation" value="sayHello"/>
+                <element name="CorrelationId" value="${correlationId}"/>
+              </header>
+            </receive>
+          </iterate>
+        </sequential>
       </parallel>
 
       <parallel>
