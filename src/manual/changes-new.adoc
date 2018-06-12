@@ -3,6 +3,14 @@
 
 We have the following features included in the box.
 
+[[changes-2-7-6]]
+== Since Citrus 2.7.6
+
+[[changes-hamcrest-number-matchers]]
+=== Hamcrest matchers
+
+We have added new Hamcrest matcher support in XML. This is `isOneOf` and `isIn` as well as `closeTo`. All implementations are now available in XML when using `@assertThat()@` validation expressions.
+
 [[changes-2-7-5]]
 == Since Citrus 2.7.5
 
