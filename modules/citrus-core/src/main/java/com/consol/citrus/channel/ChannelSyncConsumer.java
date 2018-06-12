@@ -97,7 +97,7 @@ public class ChannelSyncConsumer extends ChannelConsumer implements ReplyProduce
         if (receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL) instanceof MessageChannel) {
             replyChannel = (MessageChannel)receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL);
         } else if (StringUtils.hasText((String) receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL))) {
-            replyChannel = resolveChannelName(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL).toString());
+            replyChannel = resolveChannelName(receivedMessage.getHeader(org.springframework.messaging.MessageHeaders.REPLY_CHANNEL).toString(), context);
         }
 
         if (replyChannel != null) {

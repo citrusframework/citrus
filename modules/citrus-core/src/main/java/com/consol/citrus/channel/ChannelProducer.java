@@ -63,7 +63,7 @@ public class ChannelProducer implements Producer {
         }
 
         try {
-            endpointConfiguration.getMessagingTemplate().send(getDestinationChannel(),
+            endpointConfiguration.getMessagingTemplate().send(getDestinationChannel(context),
                     endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
         } catch (MessageDeliveryException e) {
             throw new CitrusRuntimeException("Failed to send message to channel: '" + destinationChannelName + "'", e);
@@ -78,12 +78,13 @@ public class ChannelProducer implements Producer {
      * to a channel.
      *
      * @return the destination channel object.
+     * @param context
      */
-    protected MessageChannel getDestinationChannel() {
+    protected MessageChannel getDestinationChannel(TestContext context) {
         if (endpointConfiguration.getChannel() != null) {
             return endpointConfiguration.getChannel();
         } else if (StringUtils.hasText(endpointConfiguration.getChannelName())) {
-            return resolveChannelName(endpointConfiguration.getChannelName());
+            return resolveChannelName(endpointConfiguration.getChannelName(), context);
         } else {
             throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
                     "please specify destination channel");
@@ -110,11 +111,16 @@ public class ChannelProducer implements Producer {
     /**
      * Resolve the channel by name.
      * @param channelName the name to resolve
+     * @param context the test context
      * @return the MessageChannel object
      */
-    protected MessageChannel resolveChannelName(String channelName) {
+    protected MessageChannel resolveChannelName(String channelName, TestContext context) {
         if (endpointConfiguration.getChannelResolver() == null) {
-            endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
+            if (endpointConfiguration.getBeanFactory() != null) {
+                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
+            } else {
+                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(context.getApplicationContext()));
+            }
         }
 
         return endpointConfiguration.getChannelResolver().resolveDestination(channelName);

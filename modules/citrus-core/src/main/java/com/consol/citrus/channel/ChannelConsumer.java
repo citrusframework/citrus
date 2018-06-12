@@ -55,7 +55,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
         String destinationChannelName;
-        MessageChannel destinationChannel = getDestinationChannel();
+        MessageChannel destinationChannel = getDestinationChannel(context);
 
         if (StringUtils.hasText(selector)) {
             destinationChannelName = getDestinationChannelName() + "(" + selector + ")";
@@ -107,13 +107,14 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
      * Either a direct channel object is set or a channel name which will be resolved
      * to a channel.
      *
+     * @param context the test context
      * @return the destination channel object.
      */
-    protected MessageChannel getDestinationChannel() {
+    protected MessageChannel getDestinationChannel(TestContext context) {
         if (endpointConfiguration.getChannel() != null) {
             return endpointConfiguration.getChannel();
         } else if (StringUtils.hasText(endpointConfiguration.getChannelName())) {
-            return resolveChannelName(endpointConfiguration.getChannelName());
+            return resolveChannelName(endpointConfiguration.getChannelName(), context);
         } else {
             throw new CitrusRuntimeException("Neither channel name nor channel object is set - " +
                     "please specify destination channel");
@@ -140,11 +141,16 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
     /**
      * Resolve the channel by name.
      * @param channelName the name to resolve
+     * @param context
      * @return the MessageChannel object
      */
-    protected MessageChannel resolveChannelName(String channelName) {
+    protected MessageChannel resolveChannelName(String channelName, TestContext context) {
         if (endpointConfiguration.getChannelResolver() == null) {
-            endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
+            if (endpointConfiguration.getBeanFactory() != null) {
+                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
+            } else {
+                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(context.getApplicationContext()));
+            }
         }
 
         return endpointConfiguration.getChannelResolver().resolveDestination(channelName);
