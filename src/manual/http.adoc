@@ -10,7 +10,7 @@ NOTE: The http components in Citrus are kept in a separate Maven module. So you 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-http</artifactId>
-  <version>2.7.6</version>
+  <version>2.7.7-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -520,10 +520,18 @@ The only thing that is missing right now is the validation of HTTP status codes 
 </http:receive-response>
 ----
 
+TIP: Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.
+
+As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.
+
+[[http-query-params]]
+== HTTP query parameter
+
 Up to now we have used some of the basic Citrus reserved HTTP header names (status, version, reason-phrase). In HTTP RESTful services some other header names are essential for validation. These are request attributes like query parameters, context path and request URI. The Citrus server side REST message controller will automatically add all this information to the message header for you. So all you need to do is validate the header entries in your test.
 
 The next example receives a HTTP GET method request on server side. Here the GET request does not have any message payload, so the validation just works on the information given in the message header. We assume the client to call `http://localhost:8080/app/users?id=123456789`. As a tester we need to validate the request method, request URI, context path and the query parameters.
 
+.XML DSL
 [source,xml]
 ----
 <http:receive-request server="httpServer">
@@ -531,10 +539,8 @@ The next example receives a HTTP GET method request on server side. Here the GET
     <http:params>
         <http:param name="id" value="123456789"/>
     </http:params>
-    <http:headers>
+    <http:headers content-type="application/xml" accept="application/xml">
         <http:header name="Host" value="localhost:8080"/>
-        <http:header name="Content-Type" value="application/xml"/>
-        <http:header name="Accept" value="application/xml"/>
     </http:headers>
     <http:body>
         <http:data></http:data>
@@ -543,9 +549,52 @@ The next example receives a HTTP GET method request on server side. Here the GET
 </http:receive-request>
 ----
 
-TIP: Be aware of the slight differences in request URI and context path. The context path gives you the web application context path within the servlet container for your web application. The request URI always gives you the complete path that was called for this request.
+.Java DSL
+[source,java]
+----
+http()
+    .server(httpServer)
+    .receive()
+    .get("/api/users")
+    .queryParam("id", "123456789")
+    .header("Host", "localhost:8080")
+    .contentType(MediaType.APPLICATION_XML_VALUE)
+    .accept(MediaType.APPLICATION_XML_VALUE);
+----
 
-As you can see we are able to validate all parts of the initial request endpoint URI the client was calling. This completes the HTTP header processing within Citrus. On both client and server side Citrus is able to set and validate HTTP specific header entries which is essential for simulating HTTP communication.
+The http server is able to validate incoming Http query parameters. You can add as many parameters as you would like to verify. Each parameter value is able to use test variables and validation matcher expressions as usual.
+
+On the client side we are able to send query parameters in our request.
+
+.XML DSL
+[source,xml]
+----
+<http:send-request client="httpClient">
+  <http:GET path="/app/users">
+    <http:params>
+        <http:param name="id" value="123456789"/>
+    </http:params>
+    <http:headers content-type="application/xml" accept="application/xml"/>
+    <http:body>
+        <http:data></http:data>
+    </http:body>
+  </http:GET>
+</http:send-request>
+----
+
+.Java DSL
+[source,java]
+----
+http()
+    .client(httpClient)
+    .send()
+    .get("/api/users")
+    .queryParam("id", "123456789")
+    .contentType(MediaType.APPLICATION_XML_VALUE)
+    .accept(MediaType.APPLICATION_XML_VALUE);
+----
+
+The parameter are automatically added to the request URL that is configured on the `httpClient` component.
 
 [[http-server-interceptors]]
 == HTTP server interceptors

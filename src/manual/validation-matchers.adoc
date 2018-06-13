@@ -323,6 +323,10 @@ In the listing above we are using the *equalTo()* matcher. All Hamcrest matchers
 <someValue>@assertThat(not(lessThan(1)))@</someValue>
 <someValue>@assertThat(lessThanOrEqualTo(4))@</someValue>
 <someValue>@assertThat(hasSize(5))@</someValue>
+<someValue>@assertThat(closeTo(9.0))@</someValue>
+<someValue>@assertThat(closeTo(9.0, 0.5))@</someValue>
+<someValue>@assertThat(isIn(foo, bar))@</someValue>
+<someValue>@assertThat(isOneOf(foo, bar))@</someValue>
 ----
 
 Citrus will automatically perform validation matchers on the element value. Only if all matchers are satisfied the validation will pass.

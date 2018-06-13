@@ -10,6 +10,47 @@ We have the following features included in the box.
 === Hamcrest matchers
 
 We have added new Hamcrest matcher support in XML. This is `isOneOf` and `isIn` as well as `closeTo`. All implementations are now available in XML when using `@assertThat()@` validation expressions.
+Read more about it in section link:#matcher-assert-that[matcher-assert-that].
+
+[[changes-wait-for-action]]
+=== Wait for test action
+
+The wait action is able to wait for a condition to pass during a test case. Up to now you were able to wait for Http URL to return a status code, a file to be present and a message to arrive. A new
+condition implementation enables you to wait for another test action to perform successfully. In case of error or time delay in the test action the condition will wait until the action is finished. This
+enables you to wait for Docker images to start, JMS messages to arrive and many more.
+
+Read more about it in sections link:#containers-wait[wait-for] and link:#containers-wait-action[wait-for-action].
+
+[[changes-sftp-scp]]
+=== SFTP/SCP support
+
+The FTP endpoints (client/server) in Citrus were enhanced to also handle SFTP and SCP secure file transfer. The new support results in new client and server components for SFTP and SCP so you can
+choose how the files should be sent/received to/from the server.
+
+Read more about it in sections link:#ftp[FTP] and link:#sftp[SFTP/SCP].
+
+[[changes-jms-durable-scubscribers]]
+=== JMS Topic durable subscribers
+
+The Citrus JMS topic client is now able to use durable subscriptions and/or to start and reuse the subscription throughout the whole test suite. The topic subscription is then started at the very beginning
+and incoming events are stored to a local in memory cache. This mechanism is used to not loose any events that are triggered before the test case is receiving the messages from that JMS topic.
+
+Read more about it in section link:#jms-topic-subscriber[JMS topics] and link:#jms-topic-durable-subscription[JMS durable subscriber].
+
+[[changes-http-query-params]]
+=== Improved Http query param handling
+
+Http clients and servers are able to add query parameter to a GET Http URL. The handling of those parameters has significantly changed in this release in order to simplify query parameter support in Citrus. You can now
+validate a sub set of query parameters and you are now able to use validation matchers and `@ignore@` expressions when validating query parameters on the server.
+
+Read more about it in section link:#http[Http support].
+
+[[changes-validation-matcher-new-line]]
+=== Validation matchers
+
+We have added some new validation matcher implementations `ignoreNewLine`, `trim` and `trimAllWhitespace`.
+
+Read more about it in section link:#matcher-ignore-new-line[ignore-new-line], link:#matcher-trim[trim] and link:#matcher-trim-all-whitespace[trim-all-whitespace].
 
 [[changes-2-7-5]]
 == Since Citrus 2.7.5

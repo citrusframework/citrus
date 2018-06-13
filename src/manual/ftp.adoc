@@ -10,7 +10,7 @@ NOTE: The FTP components in Citrus are maintained in their own Maven module. So 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-ftp</artifactId>
-  <version>2.7.6</version>
+  <version>2.7.7-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -40,25 +40,45 @@ Now we are ready to use the customized Citrus FTP configuration elements with th
 [[ftp-client]]
 == FTP client
 
-We want to use Citrus fo connect to dome FTP server as a client sending commands such as creating a directory or listing all files. Citrus offers a client component doing exactly this FTP client connection.
+We want to use Citrus to connect to some FTP server as a client sending commands such as creating a directory or listing files. Citrus offers a client component doing exactly this FTP client connection.
 
+.XML
 [source,xml]
 ----
 <citrus-ftp:client id="ftpClient"
       host="localhost"
-      port="22222"
+      port="2222"
       username="admin"
       password="admin"
       timeout="10000"/>
 ----
 
+.Java
+[source, java]
+----
+@Bean
+public FtpClient ftpClient() {
+    return CitrusEndpoints.ftp()
+            .client()
+            .port(2222)
+            .username("citrus")
+            .password("admin")
+            .timeout(10000L)
+            .build();
+}
+----
+
 The configuration above describes a Citrus ftp client connected to a ftp server with `ftp://localhost:22222`. For authentication username and password are defined as well as the global connection timeout. The client will automatically send username and password for proper authentication to the server when opening a new connection.
+
+[[ftp-client-commands]]
+=== FTP client commands
 
 In a test case you are now able to use the client to push commands to the server.
 
+.XML DSL
 [source,xml]
 ----
-<send endpoint="ftpClient" fork="true">
+<send endpoint="ftpClient">
   <message>
     <payload>
       <ftp:command>
@@ -82,22 +102,242 @@ In a test case you are now able to use the client to push commands to the server
 </receive>
 ----
 
+.Java DSL
+[source,java]
+----
+send(ftpClient)
+    .message(FtpMessage.command(FTPCmd.MKD).arguments("test"));
+
+CommandResult result = new CommandResult();
+result.setSuccess(true);
+result.setReplyCode(String.valueOf(257));
+result.setReplyString("@contains(\"/test\" created)@");
+
+receive(ftpClient)
+    .message(FtpMessage.result(result));
+----
+
 As you can see most of the ftp communication parameters are specified in a ftp command message. Citrus automatically converts those information to proper FTP commands and response messages.
+
+[[ftp-client-store]]
+=== Store files
+
+The client is able to store files on the server using file transfer.
+
+.XML DSL
+[source,xml]
+----
+<send endpoint="ftpClient">
+  <message>
+    <payload>
+      <ftp:put-command>
+        <ftp:file path="test/hello.txt" type="ASCII"/>
+        <ftp:target path="/test/hello.txt"/>
+      </ftp:put-command>
+    </payload>
+  </message>
+</send>
+
+<receive endpoint="ftpClient">
+  <message>
+    <payload>
+      <ftp:put-command-result>
+        <ftp:success>true</ftp:success>
+        <ftp:reply-code>226</ftp:reply-code>
+        <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+      </ftp:put-command-result>
+    </payload>
+  </message>
+</receive>
+----
+
+.Java DSL
+[source,java]
+----
+send(ftpClient)
+        .message(FtpMessage.put("test/hello.txt", DataType.ASCII).arguments(""));
+
+PutCommandResult result = new PutCommandResult();
+        result.setSuccess(true);
+        result.setReplyCode(String.valueOf(226));
+        result.setReplyString("@contains(Transfer complete)@");
+
+receive(ftpClient)
+        .message(FtpMessage.result(result));
+----
+
+The file store operation uses the put command as message payload when sending the file request. The file content is loaded from external file resource. You can choose the transfer type `ASCII` and `BINARY`.
+When the file is stored on server side we receive a success result message with respective reply code and string for validation.
+
+[[ftp-client-retrieve]]
+=== Retrieve files
+
+We are able to retrieve files from a FTP server. We need to specify the target file path that we want to get on the server user home directory.
+
+.XML DSL
+[source,xml]
+----
+<send endpoint="ftpClient">
+  <message>
+    <payload>
+      <ftp:get-command>
+        <ftp:file path="test/hello.txt" type="ASCII"/>
+        <ftp:target path="target/test/hello.txt"/>
+      </ftp:get-command>
+    </payload>
+  </message>
+</send>
+
+<receive endpoint="ftpClient">
+  <message>
+    <payload>
+      <ftp:get-command-result>
+        <ftp:success>true</ftp:success>
+        <ftp:reply-code>226</ftp:reply-code>
+        <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+        <ftp:file path="target/test/hello.txt">
+          <ftp:data>citrus:readFile('classpath:test/hello.txt')</ftp:data>
+        </ftp:file>
+      </ftp:get-command-result>
+    </payload>
+  </message>
+</receive>
+----
+
+.Java DSL
+[source,java]
+----
+send(ftpClient)
+        .message(FtpMessage.get("test/hello.txt", "target/test/hello.txt", DataType.ASCII));
+
+receive(ftpClient)
+        .message(FtpMessage.result(getRetrieveFileCommandResult("target/test/hello.txt", new ClassPathResource("test/hello.txt"))));
+----
+
+[source,java]
+----
+private GetCommandResult getRetrieveFileCommandResult(String path, Resource content) throws IOException {
+    GetCommandResult result = new GetCommandResult();
+    result.setSuccess(true);
+    result.setReplyCode(String.valueOf(226));
+    result.setReplyString("@contains('Transfer complete')@");
+
+    GetCommandResult.File entryResult = new GetCommandResult.File();
+    entryResult.setPath(path);
+    entryResult.setData(FileUtils.readToString(content));
+    result.setFile(entryResult);
+
+    return result;
+}
+----
+
+When file transfer is complete we are able to verify the file content in a command result. The file content is provided as data string.
+
+[[ftp-client-list]]
+=== List files
+
+Listing files on the server is possible with the list command.
+
+.XML
+[source,xml]
+----
+<send endpoint="ftpClient">
+  <message>
+    <payload>
+      <ftp:list-command>
+        <ftp:target path="test" />
+      </ftp:list-command>
+    </payload>
+  </message>
+</send>
+
+<receive endpoint="ftpClient">
+  <message>
+    <payload>
+      <ftp:list-command-result>
+        <ftp:success>true</ftp:success>
+        <ftp:reply-code>226</ftp:reply-code>
+        <ftp:reply-string>@contains('Closing data connection')@</ftp:reply-string>
+        <ftp:files>
+          <ftp:file path="hello.txt"/>
+        </ftp:files>
+      </ftp:list-command-result>
+    </payload>
+  </message>
+</receive>
+----
+
+.Java
+[source,java]
+----
+send(ftpClient)
+        .message(FtpMessage.list("test"));
+
+receive(ftpClient)
+        .message(FtpMessage.result(getListCommandResult("hello.txt")));
+----
+
+[source,java]
+----
+private ListCommandResult getListCommandResult(String ... fileNames) {
+    ListCommandResult result = new ListCommandResult();
+    result.setSuccess(true);
+    result.setReplyCode(String.valueOf(226));
+    result.setReplyString("@contains('Closing data connection')@");
+
+    ListCommandResult.Files expectedFiles = new ListCommandResult.Files();
+
+    for (String fileName : fileNames) {
+        ListCommandResult.Files.File entry = new ListCommandResult.Files.File();
+        entry.setPath(fileName);
+        expectedFiles.getFiles().add(entry);
+    }
+
+    result.setFiles(expectedFiles);
+
+    return result;
+}
+----
+
+Listing files results in a command result that gives us the list of files on the server directory. We are able to verify that list with respective file paths.
 
 [[ftp-server]]
 == FTP server
 
 Now that we are able to access FTP as a client we might also want to simulate the server side. Therefore Citrus offers a server component that is listening on a port for incoming FTP connections. The server has a default home directory on the local file system specified. But you can also define home directories per user. For now let us have a look at the server configuration component:
 
+.XML
 [source,xml]
 ----
 <citrus-ftp:server id="ftpServer">
-      port="22222"
+      port="2222"
       auto-start="true"
+      auto-handle-commands="MKD,PORT,TYPE"
       user-manager-properties="classpath:ftp.server.properties"/>
 ----
 
-The ftp server configuration is quite simple. The server starts automatically and binds to a port. The user configuration is read from a *user-manager-property* file. Let us have a look at the content of this user management file:
+.Java
+[source,java]
+----
+@Bean
+public FtpServer ftpListServer() {
+    return CitrusEndpoints.ftp()
+            .server()
+            .port(2222)
+            .autoLogin(true)
+            .autoStart(true)
+            .autoHandleCommands(Stream.of(FTPCmd.MKD.getCommand(),
+                                          FTPCmd.PORT.getCommand(),
+                                          FTPCmd.TYPE.getCommand()).collect(Collectors.joining(",")))
+            .userManagerProperties(new ClassPathResource("citrus.ftp.user.properties"))
+            .build();
+----
+
+The ftp server configuration is quite simple. The server starts automatically and binds to a port. With `autoLogin` and `autoHandleCommands` we can specify the behavior of the server.
+When `autoLogin` is enabled the server will automatically accept user login requests. With `autoHandleCommands` we can set a list of commands that should also be handled automatically so we do not
+have to verify those commands in a test case. The server will automatically respond with a positive command result then.
+
+The user configuration is read from a *user-manager-property* file. Let us have a look at the content of this user management file:
 
 [source,xml]
 ----
@@ -123,11 +363,74 @@ ftpserver.user.anonymous.uploadrate=4800
 ftpserver.user.anonymous.downloadrate=4800
 ----
 
-As you can see you are able to define as many user for the ftp server as you like. Username and password define the authentication on the server. In addition to that you have plenty of configuration possibilities per user. Citrus uses the Apache ftp server implementation.
+The FTP server defines two accounts `citrus` and `anonymous`. Clients may authenticate to the server using these credentials. Based on the user account
+we can set a user workspace home directory. The server will save incoming stored files to this directory and the server will read retrieved files from that
+home directory.
+
+In case you want to setup some files in that directory in order to provide it to clients, please copy those files to that home directory prior to the test.
+
+The ftp-client connects to the server using the user credentials and is then able to store and retrieve files in a test.
+
+You are able to define as many user for the ftp server as you like. In addition to that you have plenty of configuration possibilities per user. Citrus uses the Apache ftp server implementation.
 So for more details on configuration capabilities please consult the official Apache ftp server documentation.
 
-Now we would like to use the server in a test case. Very easy you just have to define a receive message action within your test case that uses the server id as endpoint reference:
+The following listings show how to handle incoming commands representing different file operation such as store and retrieve. In the test we indicate the server response that we would link the server to respond with. Positive command results accept the client command and execute the command. As we have a fully qualified ftp server running the client can store, retrieve files and create and change directories.
+All incoming commands result in a file system change in the user home directory. So stored files are stored in that working directory and retrieved files are read form that directory. In the test case we only receive the commands for validation purpose and to indicate server
+success or failure response.
 
+[[ftp-server-command]]
+=== FTP server commands
+
+Now we would like to use the server in a test case. Each operation that arrives on the server is automatically forwarded to the test case for validation. This means that we can
+verify any command on the server by using a normal receive action in our test.
+
+.XML DSL
+[source,xml]
+----
+<receive endpoint="ftpServer">
+  <message>
+    <payload>
+      <ftp:command>
+        <ftp:signal>MKD</ftp:signal>
+        <ftp:arguments>/test</ftp:arguments>
+      </ftp:command>
+    </payload>
+  </message>
+</receive>
+
+<send endpoint="ftpServer">
+  <message>
+    <payload>
+      <ftp:command-result>
+        <ftp:success>true</ftp:success>
+      </ftp:command-result>
+    </payload>
+  </message>
+</send>
+----
+
+.Java DSL
+[source,java]
+----
+receive(ftpServer)
+    .message(FtpMessage.command(FTPCmd.MKD).arguments("test"));
+
+send(ftpServer)
+    .message(FtpMessage.success());
+----
+
+The receive action uses the command signal and argument for validation. In the sample above we receive a `MKD` signal with argument `/test` which implies a create directory command. The server respectively the
+test case is now able to simulate the response for this command. We respond with a success command result. Following from that the Citrus FTP server implementation will create that directory in the user home directory
+and respond to the client with a proper success message.
+
+Of course you can also simulate error scenarios here. Just respond in the test with a negative command result.
+
+[[ftp-server-store]]
+=== Store files
+
+Clients are able to store files on the server component. Each file store operation is executed in the user home directory when the command result is successful. In a test you can verify the `STOR` signal coming from the client.
+
+.XML DSL
 [source,xml]
 ----
 <echo>
@@ -154,7 +457,28 @@ Now we would like to use the server in a test case. Very easy you just have to d
     </payload>
   </message>
 </send>
+----
 
+.Java DSL
+[source,java]
+----
+receive(ftpServer)
+        .message(FtpMessage.command(FTPCmd.STOR).arguments("test/hello.txt"));
+
+send(ftpServer)
+        .message(FtpMessage.success());
+----
+
+After that you should find a new file in the user home directory with the given file path. The file transfer is automatically handled by the Citrus FTP server component.
+
+[[ftp-server-retrieve]]
+=== Retrieve files
+
+Clients should be able to get files from the server by using get/retrieve commands. In the request the client needs to give the target file path based on the user home directory.
+
+.XML DSL
+[source,xml]
+----
 <echo>
   <message>Retrieve file from server</message>
 </echo>
@@ -181,6 +505,57 @@ Now we would like to use the server in a test case. Very easy you just have to d
 </send>
 ----
 
-The listing above shows two incoming commands representing a file store and retrieve operation. We indicate with re send actions that we would link the server to respond with positive feedback and to accept the commands. As we have a fully qualified ftp server running the client can store, retrieve files and create and change directories.
-All incoming commands result in a file system change in the server working directory. So stored files are stored in that working directory and retrieved files are read form that directory. In the test case we only receive the commands for validation purpose and to indicate server
-success or failure response.
+.Java DSL
+[source,java]
+----
+receive(ftpServer)
+        .message(FtpMessage.command(FTPCmd.RETR).arguments("test/hello.txt"));
+
+send(ftpServer)
+        .message(FtpMessage.success());
+----
+
+The file request is verified with proper signal and arguments. When the server command result is positive the Citrus FTP server will transfer the file content to the calling client.
+
+[[ftp-server-list]]
+=== List files
+
+When clients request for listing files on the server we get a list command on the server.
+
+.XML DSL
+[source,xml]
+----
+<receive endpoint="ftpServer">
+  <message>
+    <payload>
+      <ftp:command>
+        <ftp:signal>LIST</ftp:signal>
+        <ftp:arguments>test</ftp:arguments>
+      </ftp:command>
+    </payload>
+  </message>
+</receive>
+
+<send endpoint="ftpServer">
+  <message>
+    <payload>
+      <ftp:command-result>
+        <ftp:success>true</ftp:success>
+      </ftp:command-result>
+    </payload>
+  </message>
+</send>
+----
+
+.Java DSL
+[source,java]
+----
+receive(ftpServer)
+        .message(FtpMessage.command(FTPCmd.LIST).arguments("test"));
+
+send(ftpServer)
+        .message(FtpMessage.success());
+----
+
+As you can see the list command is verified with proper signal and arguments that specifies the target folder to list the files for. When the command result is positive the
+FTP server implementation will send back a proper list command result for that given directory in the user home directory.
