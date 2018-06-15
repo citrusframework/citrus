@@ -99,7 +99,7 @@ public class SshServerTest {
     @Test
     public void wrongHostKey() {
         prepareServer(true);
-        server.setHostKeyPath("/never/existing/directory");
+        server.setHostKeyPath("file:/never/existing/directory");
         server.start();
         try {
             org.apache.sshd.server.SshServer sshd = (org.apache.sshd.server.SshServer) ReflectionTestUtils.getField(server, "sshd");
