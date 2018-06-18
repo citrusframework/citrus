@@ -16,7 +16,9 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.container.*;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.SequenceAfterTest;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -27,9 +29,18 @@ import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.concurrent.*;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -250,21 +261,24 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         CitrusRuntimeException runtimeException = null;
         if (CollectionUtils.isEmpty(context.getExceptions()) &&
                 Optional.ofNullable(testResult).map(TestResult::isSuccess).orElse(false)) {
+            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
             try {
                 CompletableFuture<Boolean> finished = new CompletableFuture<>();
-                Executors.newSingleThreadScheduledExecutor()
-                        .scheduleAtFixedRate(() -> {
-                            if (isDone(context)) {
-                                finished.complete(true);
-                            } else {
-                                log.debug("Wait for test actions to finish properly ...");
-                            }
-                        }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
+                scheduledExecutor.scheduleAtFixedRate(() -> {
+                    if (isDone(context)) {
+                        finished.complete(true);
+                    } else {
+                        log.debug("Wait for test actions to finish properly ...");
+                    }
+                }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
 
                 finished.get(timeout, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 runtimeException = new CitrusRuntimeException("Failed to wait for nested test actions to finish properly", e);
             } finally {
+                if (scheduledExecutor != null) {
+                   scheduledExecutor.shutdown();
+                }
                 if (!CollectionUtils.isEmpty(context.getExceptions())) {
                     CitrusRuntimeException ex = context.getExceptions().remove(0);
                     testResult = TestResult.failed(getName(), testClass.getName(), ex);
