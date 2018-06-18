@@ -18,8 +18,10 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.dsl.runner.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
 import org.springframework.core.io.ClassPathResource;
@@ -71,5 +73,20 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
             .interval(300L)
             .ms(500L)
             .action(sleep(250L));
+    }
+
+    @CitrusTest
+    public void waitBehavior() {
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                try {
+                    waitFor()
+                        .file(new ClassPathResource("citrus.properties").getFile());
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException(e);
+                }
+            }
+        });
     }
 }

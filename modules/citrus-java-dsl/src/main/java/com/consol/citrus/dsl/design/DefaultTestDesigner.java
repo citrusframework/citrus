@@ -56,7 +56,7 @@ public class DefaultTestDesigner implements TestDesigner {
     private ApplicationContext applicationContext;
 
     /** Optional stack of containers cached for execution */
-    private Stack<AbstractActionContainer> containers = new Stack<>();
+    protected Stack<AbstractActionContainer> containers = new Stack<>();
 
     /** Default constructor */
     public DefaultTestDesigner() {
@@ -197,7 +197,7 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
         AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
-        this.containers.push(containerBuilder.build());
+        containers.push(containerBuilder.build());
         return containerBuilder;
     }
 
