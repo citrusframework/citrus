@@ -26,6 +26,7 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.lang.management.ManagementFactory;
 import java.util.*;
 
 /**
@@ -192,4 +193,18 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         
         testcase.execute(context);
     }
+
+    @Test
+    public void testThreadLeak() {
+        int initialThreadCount = ManagementFactory.getThreadMXBean().getThreadCount();
+
+        TestCase testcase = new TestCase();
+        testcase.setName("ThreadLeakTestCase");
+        testcase.addTestAction(new EchoAction());
+        testcase.execute(context);
+
+        int finalThreadCount = ManagementFactory.getThreadMXBean().getThreadCount();
+        Assert.assertEquals(finalThreadCount, initialThreadCount);
+    }
+
 }
