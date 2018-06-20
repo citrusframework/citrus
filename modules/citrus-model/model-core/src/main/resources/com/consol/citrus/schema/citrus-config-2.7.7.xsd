@@ -178,6 +178,7 @@
             </xs:sequence>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="schema-mapping-strategy" type="xs:string"/>
+            <xs:attribute name="type" default="xml" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
@@ -355,6 +356,12 @@
                   <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/http/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/camel/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/selenium/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/docker/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/kubernetes/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/zookeeper/testcase" processContents="strict"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -381,6 +388,12 @@
                   <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/http/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/camel/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/selenium/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/docker/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/kubernetes/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/zookeeper/testcase" processContents="strict"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -407,6 +420,12 @@
                   <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/http/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/camel/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/selenium/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/docker/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/kubernetes/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/zookeeper/testcase" processContents="strict"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
@@ -434,6 +453,12 @@
                   <xs:any namespace="http://www.citrusframework.org/schema/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/jms/testcase" processContents="strict"/>
                   <xs:any namespace="http://www.citrusframework.org/schema/ws/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/http/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/camel/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/selenium/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/docker/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/kubernetes/testcase" processContents="strict"/>
+                  <xs:any namespace="http://www.citrusframework.org/schema/zookeeper/testcase" processContents="strict"/>
                 </xs:choice>
               </xs:sequence>
             </xs:complexType>
