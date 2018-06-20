@@ -109,7 +109,7 @@
             <xs:element name="arguments" minOccurs="0">
               <xs:complexType>
                 <xs:sequence>
-                  <xs:element name="argument" type="xs:string"/>
+                  <xs:element name="argument" type="xs:string" maxOccurs="unbounded"/>
                 </xs:sequence>
               </xs:complexType>
             </xs:element>
