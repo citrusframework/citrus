@@ -8,7 +8,7 @@
   <version>2.7.7-SNAPSHOT</version>
   <name>citrus</name>
   <description>Citrus Test Framework</description>
-  <url>http://www.citrusframework.org</url>
+  <url>https://citrusframework.org</url>
   <inceptionYear>2008</inceptionYear>
 
   <licenses>
