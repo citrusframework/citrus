@@ -36,7 +36,7 @@ Next let us have a look at a simple example:
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor().http("http://sample.org/resource").seconds(10L).interval(2000L);
+    waitFor().http().seconds(10L).interval(2000L).url("http://sample.org/resource");
 }
 ----
 
@@ -64,7 +64,7 @@ Next let us have a look at the file condition usage:
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor().file("path/to/resource/file.txt");
+    waitFor().file().path("path/to/resource/file.txt");
 }
 ----
 
@@ -92,7 +92,7 @@ Next let us have a look at the message condition usage:
 ----
 @CitrusTest
 public void waitTest() {
-    waitFor().message("helloRequest");
+    waitFor().message().name("helloRequest");
 }
 ----
 

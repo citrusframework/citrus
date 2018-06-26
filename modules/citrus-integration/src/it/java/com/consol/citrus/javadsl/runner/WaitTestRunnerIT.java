@@ -46,7 +46,8 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void waitFile() throws IOException {
         waitFor()
-            .file(new ClassPathResource("citrus.properties").getFile());
+            .file()
+            .resource(new ClassPathResource("citrus.properties").getFile());
     }
 
     @CitrusTest
@@ -57,7 +58,8 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
         start(httpServer);
 
         waitFor()
-            .http(String.format("http://localhost:%s", serverPort));
+            .http()
+            .url(String.format("http://localhost:%s", serverPort));
 
         waitFor()
             .execution()
@@ -82,7 +84,8 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
             public void apply() {
                 try {
                     waitFor()
-                        .file(new ClassPathResource("citrus.properties").getFile());
+                        .file()
+                        .resource(new ClassPathResource("citrus.properties").getFile());
                 } catch (IOException e) {
                     throw new CitrusRuntimeException(e);
                 }

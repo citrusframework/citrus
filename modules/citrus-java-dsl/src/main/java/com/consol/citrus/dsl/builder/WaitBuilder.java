@@ -22,7 +22,6 @@ import com.consol.citrus.container.Wait;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
-import java.io.File;
 import java.util.Stack;
 
 /**
@@ -61,46 +60,29 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
      * @param condition
      * @return
      */
-    public WaitConditionBuilder condition(Condition condition) {
+    public Wait condition(Condition condition) {
         container.setCondition(condition);
-
-        if (designer != null) {
-            designer.action(this);
-        } else if (runner != null) {
-            runner.run(this.build());
-        }
-
-        return new WaitConditionBuilder<>(action, condition);
+        return this.buildAndRun();
     }
 
     /**
      * The HTTP condition to wait for during execution.
-     * @param url
      * @return
      */
-    public WaitHttpConditionBuilder http(String url) {
+    public WaitHttpConditionBuilder http() {
         HttpCondition condition = new HttpCondition();
-        condition.setUrl(url);
-
         container.setCondition(condition);
-        if (designer != null) {
-            designer.action(this);
-        } else if (runner != null) {
-            runner.run(this.build());
-        }
-
-        return new WaitHttpConditionBuilder(container, condition);
+        return new WaitHttpConditionBuilder(condition, this);
     }
 
     /**
      * The message condition to wait for during execution.
-     * @param name
      * @return
      */
-    public WaitConditionBuilder message(String name) {
+    public WaitMessageConditionBuilder message() {
         MessageCondition condition = new MessageCondition();
-        condition.setMessageName(name);
-        return condition(condition);
+        container.setCondition(condition);
+        return new WaitMessageConditionBuilder(condition, this);
     }
 
     /**
@@ -110,29 +92,111 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
     public WaitActionConditionBuilder execution() {
         ActionCondition condition = new ActionCondition();
         container.setCondition(condition);
-        containers.push(this.build());
+        containers.push(container);
         return new WaitActionConditionBuilder(container, condition, this);
     }
 
     /**
      * The file condition to wait for during execution.
-     * @param path
      * @return
      */
-    public WaitConditionBuilder file(String path) {
+    public WaitFileConditionBuilder file() {
         FileCondition condition = new FileCondition();
-        condition.setFilePath(path);
-        return condition(condition);
+        container.setCondition(condition);
+        return new WaitFileConditionBuilder(condition, this);
     }
 
     /**
-     * The file condition to wait for during execution.
-     * @param file
+     * The total length of seconds to wait on the condition to be satisfied
+     * @param seconds
      * @return
      */
-    public WaitConditionBuilder file(File file) {
-        FileCondition condition = new FileCondition();
-        condition.setFile(file);
-        return condition(condition);
+    public WaitBuilder seconds(String seconds) {
+        container.setSeconds(seconds);
+        return this;
+    }
+
+    /**
+     * The total length of seconds to wait on the condition to be satisfied
+     * @param seconds
+     * @return
+     */
+    public WaitBuilder seconds(Long seconds) {
+        container.setSeconds(seconds.toString());
+        return this;
+    }
+
+    /**
+     * The total length of milliseconds to wait on the condition to be satisfied
+     * @param milliseconds
+     * @return
+     */
+    public WaitBuilder ms(String milliseconds) {
+        container.setMilliseconds(milliseconds);
+        return this;
+    }
+
+    /**
+     * The total length of milliseconds to wait on the condition to be satisfied
+     * @param milliseconds
+     * @return
+     */
+    public WaitBuilder ms(Long milliseconds) {
+        container.setMilliseconds(String.valueOf(milliseconds));
+        return this;
+    }
+
+    /**
+     * The total length of milliseconds to wait on the condition to be satisfied
+     * @param milliseconds
+     * @return
+     */
+    public WaitBuilder milliseconds(String milliseconds) {
+        container.setMilliseconds(milliseconds);
+        return this;
+    }
+
+    /**
+     * The total length of milliseconds to wait on the condition to be satisfied
+     * @param milliseconds
+     * @return
+     */
+    public WaitBuilder milliseconds(Long milliseconds) {
+        container.setMilliseconds(String.valueOf(milliseconds));
+        return this;
+    }
+
+    /**
+     * The interval in seconds to use between each test of the condition
+     * @param interval
+     * @return
+     */
+    public WaitBuilder interval(String interval) {
+        container.setInterval(interval);
+        return this;
+    }
+
+    /**
+     * The interval in seconds to use between each test of the condition
+     * @param interval
+     * @return
+     */
+    public WaitBuilder interval(Long interval) {
+        container.setInterval(String.valueOf(interval));
+        return this;
+    }
+
+    /**
+     * Finishes action build process.
+     * @return
+     */
+    public Wait buildAndRun() {
+        if (designer != null) {
+            designer.action(this);
+        } else if (runner != null) {
+            runner.run(super.build());
+        }
+
+        return super.build();
     }
 }

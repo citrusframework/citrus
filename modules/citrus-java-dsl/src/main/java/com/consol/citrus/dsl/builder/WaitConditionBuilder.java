@@ -16,29 +16,33 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.container.Wait;
 import com.consol.citrus.condition.Condition;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class WaitConditionBuilder<T extends Condition> {
+public abstract class WaitConditionBuilder<T extends Condition, S extends WaitConditionBuilder> {
+
+    /** Parent wait action builder */
+    private final WaitBuilder builder;
 
     /** Condition */
     private final T condition;
 
-    /** Wait test action */
-    protected final Wait action;
+    /** Self reference */
+    private S self;
 
     /**
      * Default constructor using fields.
-     * @param action
      * @param condition
+     * @param builder
      */
-    public WaitConditionBuilder(Wait action, T condition) {
-        this.action = action;
+    public WaitConditionBuilder(T condition, WaitBuilder builder) {
         this.condition = condition;
+        this.builder = builder;
+
+        this.self = (S) this;
     }
 
     /**
@@ -46,9 +50,9 @@ public class WaitConditionBuilder<T extends Condition> {
      * @param seconds
      * @return
      */
-    public WaitConditionBuilder seconds(String seconds) {
-        action.setSeconds(seconds);
-        return this;
+    public S seconds(String seconds) {
+        builder.seconds(seconds);
+        return self;
     }
 
     /**
@@ -56,9 +60,9 @@ public class WaitConditionBuilder<T extends Condition> {
      * @param seconds
      * @return
      */
-    public WaitConditionBuilder seconds(Long seconds) {
-        action.setSeconds(seconds.toString());
-        return this;
+    public S seconds(Long seconds) {
+        builder.seconds(seconds.toString());
+        return self;
     }
 
     /**
@@ -66,9 +70,9 @@ public class WaitConditionBuilder<T extends Condition> {
      * @param milliseconds
      * @return
      */
-    public WaitConditionBuilder ms(String milliseconds) {
-        action.setMilliseconds(milliseconds);
-        return this;
+    public S ms(String milliseconds) {
+        builder.milliseconds(milliseconds);
+        return self;
     }
 
     /**
@@ -76,9 +80,29 @@ public class WaitConditionBuilder<T extends Condition> {
      * @param milliseconds
      * @return
      */
-    public WaitConditionBuilder ms(Long milliseconds) {
-        action.setMilliseconds(String.valueOf(milliseconds));
-        return this;
+    public S ms(Long milliseconds) {
+        builder.milliseconds(String.valueOf(milliseconds));
+        return self;
+    }
+
+    /**
+     * The total length of milliseconds to wait on the condition to be satisfied
+     * @param milliseconds
+     * @return
+     */
+    public S milliseconds(String milliseconds) {
+        builder.milliseconds(milliseconds);
+        return self;
+    }
+
+    /**
+     * The total length of milliseconds to wait on the condition to be satisfied
+     * @param milliseconds
+     * @return
+     */
+    public S milliseconds(Long milliseconds) {
+        builder.milliseconds(String.valueOf(milliseconds));
+        return self;
     }
 
     /**
@@ -86,9 +110,9 @@ public class WaitConditionBuilder<T extends Condition> {
      * @param interval
      * @return
      */
-    public WaitConditionBuilder interval(String interval) {
-        action.setInterval(interval);
-        return this;
+    public S interval(String interval) {
+        builder.interval(interval);
+        return self;
     }
 
     /**
@@ -96,9 +120,9 @@ public class WaitConditionBuilder<T extends Condition> {
      * @param interval
      * @return
      */
-    public WaitConditionBuilder interval(Long interval) {
-        action.setInterval(String.valueOf(interval));
-        return this;
+    public S interval(Long interval) {
+        builder.interval(String.valueOf(interval));
+        return self;
     }
 
     /**
@@ -108,5 +132,14 @@ public class WaitConditionBuilder<T extends Condition> {
      */
     public T getCondition() {
         return condition;
+    }
+
+    /**
+     * Gets the builder.
+     *
+     * @return
+     */
+    public WaitBuilder getBuilder() {
+        return builder;
     }
 }

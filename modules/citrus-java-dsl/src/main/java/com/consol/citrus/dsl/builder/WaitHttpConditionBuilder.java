@@ -25,15 +25,20 @@ import org.springframework.http.HttpStatus;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition> {
+public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition, WaitHttpConditionBuilder> {
 
     /**
      * Default constructor using fields.
-     * @param action
      * @param condition
+     * @param builder
      */
-    public WaitHttpConditionBuilder(Wait action, HttpCondition condition) {
-        super(action, condition);
+    public WaitHttpConditionBuilder(HttpCondition condition, WaitBuilder builder) {
+        super(condition, builder);
+    }
+
+    public Wait url(String requestUrl) {
+        getCondition().setUrl(requestUrl);
+        return getBuilder().buildAndRun();
     }
 
     /**
@@ -74,35 +79,5 @@ public class WaitHttpConditionBuilder extends WaitConditionBuilder<HttpCondition
     public WaitHttpConditionBuilder method(HttpMethod method) {
         getCondition().setMethod(method.name());
         return this;
-    }
-
-    @Override
-    public WaitHttpConditionBuilder ms(Long milliseconds) {
-        return (WaitHttpConditionBuilder) super.ms(milliseconds);
-    }
-
-    @Override
-    public WaitHttpConditionBuilder ms(String milliseconds) {
-        return (WaitHttpConditionBuilder) super.ms(milliseconds);
-    }
-
-    @Override
-    public WaitHttpConditionBuilder seconds(Long seconds) {
-        return (WaitHttpConditionBuilder) super.seconds(seconds);
-    }
-
-    @Override
-    public WaitHttpConditionBuilder seconds(String seconds) {
-        return (WaitHttpConditionBuilder) super.seconds(seconds);
-    }
-
-    @Override
-    public WaitHttpConditionBuilder interval(Long interval) {
-        return (WaitHttpConditionBuilder) super.interval(interval);
-    }
-
-    @Override
-    public WaitHttpConditionBuilder interval(String interval) {
-        return (WaitHttpConditionBuilder) super.interval(interval);
     }
 }
