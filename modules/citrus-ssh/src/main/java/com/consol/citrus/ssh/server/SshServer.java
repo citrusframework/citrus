@@ -25,12 +25,11 @@ import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
-import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
-import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
+import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.scp.AbstractScpTransferEventListenerAdapter;
 import org.apache.sshd.common.scp.ScpTransferEventListener;
-import org.apache.sshd.common.util.SecurityUtils;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.subsystem.sftp.*;
 import org.springframework.core.io.ClassPathResource;
@@ -138,21 +137,18 @@ public class SshServer extends AbstractServer {
             Resource hostKey = FileUtils.getFileResource(hostKeyPath);
 
             if (hostKey instanceof ClassPathResource) {
-                AbstractClassLoadableResourceKeyPairProvider resourceKeyPairProvider = SecurityUtils.createClassLoadableResourceKeyPairProvider();
-                resourceKeyPairProvider.setResources(Collections.singletonList(((ClassPathResource) hostKey).getPath()));
+                ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList(((ClassPathResource) hostKey).getPath()));
                 sshd.setKeyPairProvider(resourceKeyPairProvider);
             } else {
                 try {
-                    AbstractFileKeyPairProvider fileKeyPairProvider = SecurityUtils.createFileKeyPairProvider();
-                    fileKeyPairProvider.setPaths(Collections.singletonList(hostKey.getFile().toPath()));
+                    FileKeyPairProvider fileKeyPairProvider = new FileKeyPairProvider(Collections.singletonList(hostKey.getFile().toPath()));
                     sshd.setKeyPairProvider(fileKeyPairProvider);
                 } catch (IOException e) {
                     throw new CitrusRuntimeException("Failed to read host key path", e);
                 }
             }
         } else {
-            AbstractClassLoadableResourceKeyPairProvider resourceKeyPairProvider = SecurityUtils.createClassLoadableResourceKeyPairProvider();
-            resourceKeyPairProvider.setResources(Collections.singletonList("com/consol/citrus/ssh/citrus.pem"));
+            ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider(Collections.singletonList("com/consol/citrus/ssh/citrus.pem"));
             sshd.setKeyPairProvider(resourceKeyPairProvider);
         }
 

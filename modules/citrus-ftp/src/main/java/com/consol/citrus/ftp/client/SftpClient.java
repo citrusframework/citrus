@@ -26,6 +26,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.ftpserver.ftplet.DataType;
+import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.*;
@@ -251,7 +252,7 @@ public class SftpClient extends FtpClient {
                     session.setPassword(getEndpointConfiguration().getPassword());
                 }
 
-                session.setConfig("StrictHostKeyChecking", getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
+                session.setConfig(KnownHostsServerKeyVerifier.STRICT_CHECKING_OPTION, getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
 
                 session.connect((int) getEndpointConfiguration().getTimeout());
 

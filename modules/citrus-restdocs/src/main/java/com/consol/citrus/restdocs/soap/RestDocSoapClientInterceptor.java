@@ -79,7 +79,7 @@ public class RestDocSoapClientInterceptor implements ClientInterceptor {
      * @return this {@code RestDocClientInterceptor}
      */
     public RestDocSoapClientInterceptor snippets(Snippet... snippets) {
-        this.documentationGenerator.addSnippets(snippets);
+        this.documentationGenerator.withSnippets(snippets);
         return this;
     }
 

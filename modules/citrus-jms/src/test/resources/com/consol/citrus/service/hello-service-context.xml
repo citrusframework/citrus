@@ -14,24 +14,29 @@
   <!-- Async JMS adapters -->
   <jms:message-driven-channel-adapter id="helloReqeustIn"
                                       destination-name="Citrus.HelloService.Request.Queue"
+                                      connection-factory="connectionFactory"
                                       channel="helloRequests"/>
 
   <jms:outbound-channel-adapter id="helloResponseOut"
                                 destination-name="Citrus.HelloService.Response.Queue"
+                                connection-factory="connectionFactory"
                                 channel="helloResponses"/>
 
   <!-- SOAP adapters -->
   <jms:message-driven-channel-adapter id="helloSoapReqeustIn"
                                       destination-name="Citrus.HelloSoapService.Request.Queue"
+                                      connection-factory="connectionFactory"
                                       channel="helloSoapRequests"/>
 
   <jms:outbound-channel-adapter id="helloSoapResponseOut"
                                 destination-name="Citrus.HelloSoapService.Response.Queue"
+                                connection-factory="connectionFactory"
                                 channel="helloSoapResponses"/>
 
   <!-- Sync JMS adapters -->
   <jms:inbound-gateway id="helloSyncRequestsIn"
                        request-destination-name="Citrus.HelloService.InOut.Queue"
+                       connection-factory="connectionFactory"
                        request-channel="helloSyncRequests"/>
 
   <int:poller id="poller"

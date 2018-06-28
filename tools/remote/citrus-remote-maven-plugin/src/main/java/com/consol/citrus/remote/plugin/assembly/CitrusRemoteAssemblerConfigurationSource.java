@@ -20,8 +20,8 @@ import com.consol.citrus.remote.plugin.config.AssemblyConfiguration;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
-import org.apache.maven.plugin.assembly.AssemblerConfigurationSource;
-import org.apache.maven.plugin.assembly.utils.InterpolationConstants;
+import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
+import org.apache.maven.plugins.assembly.utils.InterpolationConstants;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
 import org.apache.maven.shared.utils.cli.CommandLineUtils;
@@ -202,11 +202,6 @@ public class CitrusRemoteAssemblerConfigurationSource implements AssemblerConfig
     }
 
     @Override
-    public String getClassifier() {
-        return null;
-    }
-
-    @Override
     public List<String> getFilters() {
         return Collections.emptyList();
     }
@@ -227,16 +222,6 @@ public class CitrusRemoteAssemblerConfigurationSource implements AssemblerConfig
     }
 
     @Override
-    public String getDescriptorId() {
-        return null;
-    }
-
-    @Override
-    public String getDescriptor() {
-        return null;
-    }
-
-    @Override
     public String getTarLongFileMode() {
         return "warn";
     }
@@ -244,11 +229,6 @@ public class CitrusRemoteAssemblerConfigurationSource implements AssemblerConfig
     @Override
     public File getSiteDirectory() {
         return null;
-    }
-
-    @Override
-    public boolean isSiteIncluded() {
-        return false;
     }
 
     @Override

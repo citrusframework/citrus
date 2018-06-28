@@ -16,15 +16,18 @@
         <property name="brokerURL" value="tcp://localhost:61616" />
     </bean>
     
-    <jms:message-driven-channel-adapter id="helloRequestsIn" 
+    <jms:message-driven-channel-adapter id="helloRequestsIn"
+                                        connection-factory="connectionFactory"
                                         destination-name="Citrus.Hello.Request.Queue" 
                                         channel="helloRequests"/>
 
-    <jms:outbound-channel-adapter id="helloResponsesOut" 
+    <jms:outbound-channel-adapter id="helloResponsesOut"
+                                  connection-factory="connectionFactory"
                                   destination-name="Citrus.Hello.Response.Queue"
                                   channel="helloResponses" />
                         
     <jms:inbound-gateway id="syncHelloRequestsIn"
+                         connection-factory="connectionFactory"
                          request-destination-name="Citrus.Hello.Sync.Request.Queue"
                          request-channel="syncHelloRequests"/>
 </beans>

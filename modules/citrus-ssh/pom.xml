@@ -38,6 +38,14 @@
       <groupId>org.apache.sshd</groupId>
       <artifactId>sshd-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.sshd</groupId>
+      <artifactId>sshd-scp</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sshd</groupId>
+      <artifactId>sshd-sftp</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>com.jcraft</groupId>

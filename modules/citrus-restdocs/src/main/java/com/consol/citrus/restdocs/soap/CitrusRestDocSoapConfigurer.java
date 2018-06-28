@@ -36,7 +36,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<CitrusSnippetConfigurer, CitrusRestDocSoapConfigurer>
+public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<CitrusSnippetConfigurer, CitrusSnippetConfigurer, CitrusRestDocSoapConfigurer>
         implements ClientInterceptor, TestListener {
 
     public static final String REST_DOC_SOAP_CONFIGURATION = "com.consol.citrus.restdocs.soap.configuration";
@@ -51,6 +51,11 @@ public class CitrusRestDocSoapConfigurer extends RestDocumentationConfigurer<Cit
 
     @Override
     public CitrusSnippetConfigurer snippets() {
+        return this.snippetConfigurer;
+    }
+
+    @Override
+    public CitrusSnippetConfigurer operationPreprocessors() {
         return this.snippetConfigurer;
     }
 

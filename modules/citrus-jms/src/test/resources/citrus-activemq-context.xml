@@ -18,7 +18,6 @@
 
   <bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
     <property name="brokerURL" value="${jms.broker.url}" />
-    <property name="watchTopicAdvisories" value="false"/>
   </bean>
 
 </beans>

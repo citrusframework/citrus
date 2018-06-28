@@ -18,8 +18,8 @@ package com.consol.citrus.cucumber.step.runner.core;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.dsl.runner.TestRunner;
-import cucumber.api.DataTable;
 import cucumber.api.java.en.Given;
+import io.cucumber.datatable.DataTable;
 
 import java.util.Map;
 

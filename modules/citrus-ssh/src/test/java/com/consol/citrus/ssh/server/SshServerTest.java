@@ -18,10 +18,10 @@ package com.consol.citrus.ssh.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ssh.SshCommand;
-import org.apache.sshd.common.keyprovider.AbstractFileKeyPairProvider;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
-import org.apache.sshd.server.Command;
-import org.apache.sshd.server.CommandFactory;
+import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.command.CommandFactory;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -104,7 +104,7 @@ public class SshServerTest {
         try {
             org.apache.sshd.server.SshServer sshd = (org.apache.sshd.server.SshServer) ReflectionTestUtils.getField(server, "sshd");
             KeyPairProvider prov = sshd.getKeyPairProvider();
-            assertTrue(prov instanceof AbstractFileKeyPairProvider);
+            assertTrue(prov instanceof FileKeyPairProvider);
             Iterable<KeyPair> keys = prov.loadKeys();
             assertFalse(keys.iterator().hasNext());
         } finally {

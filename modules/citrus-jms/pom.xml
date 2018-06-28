@@ -31,7 +31,7 @@
     </dependency>
     <dependency>
       <groupId>javax.jms</groupId>
-      <artifactId>com.springsource.javax.jms</artifactId>
+      <artifactId>javax.jms-api</artifactId>
     </dependency>
 
     <!-- SOAP WebService support -->

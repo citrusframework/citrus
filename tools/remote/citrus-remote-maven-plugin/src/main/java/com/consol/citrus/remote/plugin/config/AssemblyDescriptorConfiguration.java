@@ -16,8 +16,8 @@
 
 package com.consol.citrus.remote.plugin.config;
 
-import org.apache.maven.plugin.assembly.model.Assembly;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.assembly.model.Assembly;
 
 import java.io.Serializable;
 

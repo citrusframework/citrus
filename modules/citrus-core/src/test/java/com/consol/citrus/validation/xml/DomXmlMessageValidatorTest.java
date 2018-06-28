@@ -124,7 +124,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateXMLSchema(message, new XmlMessageValidationContext());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = ".*Invalid content was found starting with element 'wrong'.*")
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = ".*Invalid content was found starting with element '\\{\"http://citrusframework.org/test\":wrong\\}'.*")
     public void validateXMLSchemaNestedError() throws Exception {
         Message message = new DefaultMessage("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\">" +
                 "<SOAP-ENV:Header/>" +
@@ -153,7 +153,7 @@ public class DomXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validator.validateXMLSchema(message, new XmlMessageValidationContext());
     }
 
-    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = ".*Invalid content was found starting with element 'wrong'.*")
+    @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = ".*Invalid content was found starting with element '\\{\"http://citrusframework.org/test\":wrong\\}'.*")
     public void validateXMLSchemaNestedWithNamespaceInRootError() throws Exception {
         Message message = new DefaultMessage("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns=\"http://citrusframework.org/test\">" +
                 "<SOAP-ENV:Header/>" +
