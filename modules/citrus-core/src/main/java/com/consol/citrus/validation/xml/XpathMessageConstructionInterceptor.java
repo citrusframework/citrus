@@ -30,7 +30,9 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -102,11 +104,8 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
             }
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (node.getFirstChild() == null) {
-                    node.appendChild(doc.createTextNode(valueExpression));
-                } else {
-                    node.getFirstChild().setNodeValue(valueExpression);
-                }
+                //fix: otherwise there will be a new line in the output
+                node.setTextContent(valueExpression);
             } else {
                 node.setNodeValue(valueExpression);
             }
