@@ -1,5 +1,5 @@
 ### Citrus Version
-> Note: only the latest version is supported
+
 
 ### Expected behavior
 
