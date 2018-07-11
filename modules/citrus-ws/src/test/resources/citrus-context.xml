@@ -121,44 +121,6 @@
   <bean id="soapEndpointUriResolver"
         class="com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
 
-  <bean id="basicAuthClient" class="org.springframework.ws.transport.http.HttpComponentsMessageSender">
-    <property name="authScope">
-      <bean class="org.apache.http.auth.AuthScope">
-        <constructor-arg value="localhost"/>
-        <constructor-arg value="6666"/>
-        <constructor-arg value=""/>
-        <constructor-arg value="basic"/>
-      </bean>
-    </property>
-    <property name="credentials">
-      <bean class="org.apache.http.auth.UsernamePasswordCredentials">
-        <constructor-arg value="citrus"/>
-        <constructor-arg value="secret"/>
-      </bean>
-    </property>
-  </bean>
-
-  <bean id="basicSecurityHandler" class="com.consol.citrus.ws.security.SecurityHandlerFactory">
-    <property name="users">
-      <list>
-        <bean class="com.consol.citrus.ws.security.User">
-          <property name="name" value="citrus"/>
-          <property name="password" value="secret"/>
-          <property name="roles" value="CitrusRole"/>
-        </bean>
-      </list>
-    </property>
-    <property name="constraints">
-      <map>
-        <entry key="/*">
-          <bean class="com.consol.citrus.ws.security.BasicAuthConstraint">
-            <constructor-arg value="CitrusRole"/>
-          </bean>
-        </entry>
-      </map>
-    </property>
-  </bean>
-
   <!-- Soap message endpoints -->
   <citrus-ws:client id="helloSoapClient"
                     request-url="http://localhost:13080/hello"
@@ -217,18 +179,5 @@
                     message-factory="soap12MessageFactory"
                     timeout="3000"
                     resource-base="src/it/resources"/>
-
-  <citrus-ws:client id="basicMessageSenderAuthWsClient"
-                    timeout="1000"
-                    message-sender="basicAuthClient"
-                    request-url="http://localhost:6666/"/>
-
-  <citrus-ws:server id="basicMessageSenderAuthWsServer"
-                    port="6666"
-                    auto-start="true"
-                    resource-base="src/it/resources"
-                    security-handler="basicSecurityHandler"/>
-
-
 
 </beans>
