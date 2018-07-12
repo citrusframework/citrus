@@ -1110,7 +1110,7 @@
           </executions>
           <configuration>
             <useAgent>true</useAgent>
-            <keyname>christoph.deppisch@consol.de</keyname>
+            <keyname>dev@citrusframework.org</keyname>
             <skip>${skip.gpg}</skip>
             <gpgArguments>
               <arg>--allow-weak-digest-algos</arg>
