@@ -116,7 +116,7 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
             }
         }
 
-        log.info("XPath element validation successful: All elements OK");
+        log.debug("XPath element validation successful: All elements OK");
     }
 
     @Override

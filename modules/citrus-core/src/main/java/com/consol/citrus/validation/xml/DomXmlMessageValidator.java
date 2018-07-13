@@ -107,7 +107,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
             }
 
-            log.info("XML message validation successful: All values OK");
+            log.debug("XML message validation successful: All values OK");
         } catch (ClassCastException | DOMException | LSException e) {
             throw new CitrusRuntimeException(e);
         } catch (IllegalArgumentException e) {
@@ -209,7 +209,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             
             SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
-                log.info("XML schema validation successful: All values OK");
+                log.debug("XML schema validation successful: All values OK");
             } else {
                 log.error("XML schema validation failed for message:\n" +
                         XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
@@ -278,7 +278,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             }
         }
 
-        log.info("XML namespace validation successful: All values OK");
+        log.debug("XML namespace validation successful: All values OK");
     }
 
     private void doElementNameValidation(Node received, Node source) {

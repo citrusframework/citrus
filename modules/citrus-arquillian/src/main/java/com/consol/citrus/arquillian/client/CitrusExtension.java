@@ -42,7 +42,7 @@ public class CitrusExtension implements LoadableExtension {
     @Override
     public void register(ExtensionBuilder builder) {
         if (Validate.classExists(CitrusExtensionConstants.CITRUS)) {
-            log.info("Citrus extension is active");
+            log.debug("Citrus extension is active");
             builder.service(AuxiliaryArchiveAppender.class, CitrusArchiveAppender.class);
             builder.service(ApplicationArchiveProcessor.class, CitrusArchiveProcessor.class);
 

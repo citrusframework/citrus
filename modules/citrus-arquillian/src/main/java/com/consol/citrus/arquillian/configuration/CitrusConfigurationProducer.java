@@ -40,7 +40,7 @@ public class CitrusConfigurationProducer {
 
     public void configure(@Observes ArquillianDescriptor descriptor) {
         try {
-            log.info("Producing Citrus configuration");
+            log.debug("Producing Citrus configuration");
             configurationInstance.set(CitrusConfiguration.from(descriptor));
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);

@@ -79,7 +79,7 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
             simpleJsonSchema.afterPropertiesSet();
             schemas.add(simpleJsonSchema);
         } else {
-            log.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
+            log.debug("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");
         }
     }
 

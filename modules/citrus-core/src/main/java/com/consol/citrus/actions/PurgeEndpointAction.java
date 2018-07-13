@@ -86,7 +86,7 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
             purgeEndpoint(resolveEndpointName(endpointName), context);
         }
 
-        log.info("Purged message endpoints");
+        log.debug("Purged message endpoints");
     }
 
     /**
