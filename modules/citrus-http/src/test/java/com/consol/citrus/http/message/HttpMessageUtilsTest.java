@@ -18,9 +18,14 @@ package com.consol.citrus.http.message;
 
 import com.consol.citrus.message.*;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.Cookie;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -102,5 +107,30 @@ public class HttpMessageUtilsTest {
         Assert.assertEquals(to.getHeader("X-Foo"), "foo");
         Assert.assertEquals(to.getHeaderData().size(), 1L);
         Assert.assertEquals(to.getHeaderData().get(0), "HeaderData");
+    }
+
+    @Test(dataProvider = "queryParamStrings")
+    public void testQueryParamsExtraction(String queryParamString, Map<String, String> params) {
+        HttpMessage message = new HttpMessage();
+        message.queryParams(queryParamString);
+        Assert.assertEquals(message.getQueryParams().size(), params.size());
+        params.forEach((key, value) -> Assert.assertEquals(message.getQueryParams().get(key), value));
+    }
+
+    @DataProvider
+    public Object[][] queryParamStrings() {
+        return new Object[][] {
+            new Object[] { "", Collections.emptyMap() },
+            new Object[] { "key=value", Collections.singletonMap("key", "value") },
+            new Object[] { "key1=value1,key2=value2", Stream.of(new String[] { "key1", "value1" },
+                                                                new String[] { "key2", "value2" })
+                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])) },
+            new Object[] { "key1,key2=value2", Stream.of(new String[] { "key1", "" },
+                                                         new String[] { "key2", "value2" })
+                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])) },
+            new Object[] { "key1,key2", Stream.of(new String[] { "key1", "" },
+                                                  new String[] { "key2", "" })
+                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1])) }
+        };
     }
 }

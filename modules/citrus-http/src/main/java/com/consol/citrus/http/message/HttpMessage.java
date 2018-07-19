@@ -178,6 +178,7 @@ public class HttpMessage extends DefaultMessage {
         header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         this.queryParams = Stream.of(queryParamString.split(",")).map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                                                                        .filter(keyValue -> StringUtils.hasText(keyValue[0]))
                                                                         .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
         return this;
     }
