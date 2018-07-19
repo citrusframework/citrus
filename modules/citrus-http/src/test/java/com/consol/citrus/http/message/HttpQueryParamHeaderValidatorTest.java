@@ -43,6 +43,7 @@ public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
     @DataProvider
     public Object[][] successData() {
         return new Object[][] {
+                new Object[] { "foobar", "@contains(foo)@" },
                 new Object[] { "foo=fooValue,bar=barValue", "foo=fooValue,bar=barValue" },
                 new Object[] { "foo=,bar=barValue", "foo=,bar=barValue" },
                 new Object[] { null, null },
@@ -71,6 +72,7 @@ public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
     @DataProvider
     public Object[][] errorData() {
         return new Object[][] {
+                new Object[] { "foobar", "@contains(wrong)@" },
                 new Object[] { "foo=fooValue,bar=barValue", "foo=fooValue,bar=wrong" },
                 new Object[] { "foo=,bar=barValue", "foo=fooValue,bar=barValue" },
                 new Object[] { "foo=fooValue,bar=barValue", "foo=,bar=barValue" },

@@ -20,6 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.DefaultHeaderValidator;
 import com.consol.citrus.validation.context.HeaderValidationContext;
+import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -35,6 +36,13 @@ public class HttpQueryParamHeaderValidator extends DefaultHeaderValidator {
 
     @Override
     public void validateHeader(String name, Object received, Object control, TestContext context, HeaderValidationContext validationContext) {
+        if (ValidationMatcherUtils.isValidationMatcherExpression(Optional.ofNullable(control)
+                .map(Object::toString)
+                .orElse(""))) {
+            super.validateHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS, received, control, context, validationContext);
+            return;
+        }
+
         Map<String, String> receiveParams = convertToMap(received);
         Map<String, String> controlParams = convertToMap(control);
 
