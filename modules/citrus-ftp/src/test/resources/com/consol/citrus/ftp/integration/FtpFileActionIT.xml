@@ -27,49 +27,49 @@
         <message>Sending MKD command to FTP server</message>
       </echo>
 
-          <send endpoint="ftpClient" fork="true">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>MKD</ftp:signal>
-                  <ftp:arguments>test</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>MKD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>MKD</ftp:signal>
-                  <ftp:arguments>test</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>MKD</ftp:signal>
+              <ftp:arguments>test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpClient">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                  <ftp:reply-code>257</ftp:reply-code>
-                  <ftp:reply-string>257 "/test" created.</ftp:reply-string>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>257</ftp:reply-code>
+              <ftp:reply-string>257 "/test" created.</ftp:reply-string>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </receive>
 
       <echo>
         <message>Directory 'test' created on FTP server</message>
@@ -79,49 +79,69 @@
         <message>Sending store file command to FTP server</message>
       </echo>
 
-          <send endpoint="ftpClient" fork="true">
-            <message>
-              <payload>
-                <ftp:put-command>
-                  <ftp:file path="ftp/hello.txt" type="ASCII"/>
-                  <ftp:target path="/test/hello.txt"/>
-                </ftp:put-command>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:put-command>
+              <ftp:file path="ftp/hello.txt" type="ASCII"/>
+              <ftp:target path="/test/hello.txt"/>
+            </ftp:put-command>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>STOR</ftp:signal>
-                  <ftp:arguments>/test/hello.txt</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASV</ftp:signal>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpClient">
-            <message>
-              <payload>
-                <ftp:put-command-result>
-                  <ftp:success>true</ftp:success>
-                  <ftp:reply-code>226</ftp:reply-code>
-                  <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-                </ftp:put-command-result>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>STOR</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:put-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+            </ftp:put-command-result>
+          </payload>
+        </message>
+      </receive>
 
       <echo>
         <message>Testing of store file command finished successfully</message>
@@ -131,51 +151,71 @@
         <message>Sending LIST command to FTP server</message>
       </echo>
 
-          <send endpoint="ftpClient" fork="true">
-            <message>
-              <payload>
-                <ftp:list-command>
-                  <ftp:target path="/test" />
-                </ftp:list-command>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:list-command>
+              <ftp:target path="/test" />
+            </ftp:list-command>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>LIST</ftp:signal>
-                  <ftp:arguments>/test</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASV</ftp:signal>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpClient">
-            <message>
-              <payload>
-                <ftp:list-command-result>
-                  <ftp:success>true</ftp:success>
-                  <ftp:reply-code>226</ftp:reply-code>
-                  <ftp:reply-string>@contains('Closing data connection')@</ftp:reply-string>
-                  <ftp:files>
-                    <ftp:file path="hello.txt"/>
-                  </ftp:files>
-                </ftp:list-command-result>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>LIST</ftp:signal>
+              <ftp:arguments>/test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:list-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Closing data connection')@</ftp:reply-string>
+              <ftp:files>
+                <ftp:file path="hello.txt"/>
+              </ftp:files>
+            </ftp:list-command-result>
+          </payload>
+        </message>
+      </receive>
 
       <echo>
         <message>Testing of LIST command finished successfully</message>
@@ -185,52 +225,72 @@
         <message>Sending retrieve file command to FTP server</message>
       </echo>
 
-          <send endpoint="ftpClient" fork="true">
-            <message>
-              <payload>
-                <ftp:get-command>
-                  <ftp:file path="/test/hello.txt" type="ASCII"/>
-                  <ftp:target path="target/ftp/hello.txt"/>
-                </ftp:get-command>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:get-command>
+              <ftp:file path="/test/hello.txt" type="ASCII"/>
+              <ftp:target path="target/ftp/hello.txt"/>
+            </ftp:get-command>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>RETR</ftp:signal>
-                  <ftp:arguments>/test/hello.txt</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASV</ftp:signal>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpClient">
-            <message>
-              <payload>
-                <ftp:get-command-result>
-                  <ftp:success>true</ftp:success>
-                  <ftp:reply-code>226</ftp:reply-code>
-                  <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
-                  <ftp:file path="target/ftp/hello.txt">
-                    <ftp:data>Hello FTP server!</ftp:data>
-                  </ftp:file>
-                </ftp:get-command-result>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>RETR</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:get-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>226</ftp:reply-code>
+              <ftp:reply-string>@contains('Transfer complete')@</ftp:reply-string>
+              <ftp:file path="target/ftp/hello.txt">
+                <ftp:data>Hello FTP server!</ftp:data>
+              </ftp:file>
+            </ftp:get-command-result>
+          </payload>
+        </message>
+      </receive>
 
       <echo>
         <message>Testing of retrieve file command finished successfully</message>
@@ -240,152 +300,192 @@
         <message>Sending delete command to FTP server</message>
       </echo>
 
-          <send endpoint="ftpClient" fork="true">
-            <message>
-              <payload>
-                <ftp:delete-command>
-                  <ftp:target path="/test"/>
-                </ftp:delete-command>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpClient" fork="true">
+        <message>
+          <payload>
+            <ftp:delete-command>
+              <ftp:target path="/test"/>
+            </ftp:delete-command>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>CWD</ftp:signal>
-                  <ftp:arguments>/test</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>CWD</ftp:signal>
+              <ftp:arguments>/test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>CWD</ftp:signal>
-                  <ftp:arguments>/test</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>CWD</ftp:signal>
+              <ftp:arguments>/test</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>LIST</ftp:signal>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASV</ftp:signal>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>CWD</ftp:signal>
-                  <ftp:arguments>/test/hello.txt</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>LIST</ftp:signal>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>LIST</ftp:signal>
-                  <ftp:arguments>/test/hello.txt</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>CWD</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command>
-                  <ftp:signal>DELE</ftp:signal>
-                  <ftp:arguments>/test/hello.txt</ftp:arguments>
-                </ftp:command>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>PASV</ftp:signal>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="ftpServer">
-            <message>
-              <payload>
-                <ftp:command-result>
-                  <ftp:success>true</ftp:success>
-                </ftp:command-result>
-              </payload>
-            </message>
-          </send>
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
 
-          <receive endpoint="ftpClient">
-            <message>
-              <payload>
-                <ftp:delete-command-result>
-                  <ftp:success>true</ftp:success>
-                  <ftp:reply-code>250</ftp:reply-code>
-                  <ftp:reply-string>@contains('250 Requested file action okay, deleted /test/hello.txt.')@</ftp:reply-string>
-                </ftp:delete-command-result>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>LIST</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command>
+              <ftp:signal>DELE</ftp:signal>
+              <ftp:arguments>/test/hello.txt</ftp:arguments>
+            </ftp:command>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="ftpServer">
+        <message>
+          <payload>
+            <ftp:command-result>
+              <ftp:success>true</ftp:success>
+            </ftp:command-result>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="ftpClient">
+        <message>
+          <payload>
+            <ftp:delete-command-result>
+              <ftp:success>true</ftp:success>
+              <ftp:reply-code>250</ftp:reply-code>
+              <ftp:reply-string>@contains('250 Requested file action okay, deleted /test/hello.txt.')@</ftp:reply-string>
+            </ftp:delete-command-result>
+          </payload>
+        </message>
+      </receive>
 
       <echo>
         <message>Testing of delete file command finished successfully</message>

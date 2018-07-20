@@ -45,6 +45,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
     @FtpClientConfig(host = "localhost",
             port=22222,
             autoReadFiles = false,
+            localPassiveMode = false,
             username="user",
             password="consol",
             timeout=10000L)
@@ -95,6 +96,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(ftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertTrue(ftpClient1.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertTrue(ftpClient1.getEndpointConfiguration().isLocalPassiveMode());
 
         // 2nd ftp client
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getHost(), "localhost");
@@ -104,6 +106,7 @@ public class FtpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getPassword(), "consol");
         Assert.assertEquals(ftpClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertFalse(ftpClient2.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertFalse(ftpClient2.getEndpointConfiguration().isLocalPassiveMode());
 
         // 3rd ftp client
         Assert.assertEquals(ftpClient3.getEndpointConfiguration().getHost(), "localhost");

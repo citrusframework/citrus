@@ -45,6 +45,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
     @SftpClientConfig(host = "localhost",
             port=22222,
             autoReadFiles = false,
+            localPassiveMode = false,
             username="user",
             password="consol",
             privateKeyPath="classpath:com/consol/citrus/sftp/citrus.priv",
@@ -99,6 +100,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(sftpClient1.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertTrue(sftpClient1.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertTrue(sftpClient1.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertNull(sftpClient1.getEndpointConfiguration().getPrivateKeyPath());
         Assert.assertNull(sftpClient1.getEndpointConfiguration().getPrivateKeyPassword());
         Assert.assertFalse(sftpClient1.getEndpointConfiguration().isStrictHostChecking());
@@ -115,6 +117,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getKnownHosts(), "classpath:com/consol/citrus/sftp/known_hosts");
         Assert.assertFalse(sftpClient2.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertFalse(sftpClient2.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertTrue(sftpClient2.getEndpointConfiguration().isStrictHostChecking());
 
         // 3rd sftp client
