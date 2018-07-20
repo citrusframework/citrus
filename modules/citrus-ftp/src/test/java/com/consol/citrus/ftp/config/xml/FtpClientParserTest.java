@@ -44,6 +44,7 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertTrue(ftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertTrue(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 5000L);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
 
@@ -55,6 +56,7 @@ public class FtpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getPassword(), "consol");
         Assert.assertFalse(ftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertFalse(ftpClient.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(ftpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
 

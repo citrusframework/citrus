@@ -65,6 +65,16 @@ public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
     }
 
     /**
+     * Sets the local passive mode property.
+     * @param localPassiveMode
+     * @return
+     */
+    public SftpClientBuilder localPassiveMode(boolean localPassiveMode) {
+        endpoint.getEndpointConfiguration().setLocalPassiveMode(localPassiveMode);
+        return this;
+    }
+
+    /**
      * Sets the client username.
      * @param username
      * @return

@@ -44,6 +44,7 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getPort(), new Integer(22222));
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertTrue(sftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertTrue(sftpClient.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertNull(sftpClient.getEndpointConfiguration().getPrivateKeyPath());
         Assert.assertNull(sftpClient.getEndpointConfiguration().getPrivateKeyPassword());
         Assert.assertFalse(sftpClient.getEndpointConfiguration().isStrictHostChecking());
@@ -59,6 +60,7 @@ public class SftpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getUser(), "user");
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getPassword(), "consol");
         Assert.assertFalse(sftpClient.getEndpointConfiguration().isAutoReadFiles());
+        Assert.assertFalse(sftpClient.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getPrivateKeyPath(), "classpath:com/consol/citrus/sftp/citrus.priv");
         Assert.assertEquals(sftpClient.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
         Assert.assertTrue(sftpClient.getEndpointConfiguration().isStrictHostChecking());

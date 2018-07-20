@@ -411,6 +411,10 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
                     throw new CitrusRuntimeException(String.format("Failed to login to FTP server using credentials: %s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword()));
                 }
             }
+
+            if (getEndpointConfiguration().isLocalPassiveMode()) {
+                ftpClient.enterLocalPassiveMode();
+            }
         }
     }
 
@@ -451,8 +455,6 @@ public class FtpClient extends AbstractEndpoint implements Producer, ReplyConsum
         FTPClientConfig config = new FTPClientConfig();
         config.setServerTimeZoneId(TimeZone.getDefault().getID());
         ftpClient.configure(config);
-
-        ftpClient.enterLocalPassiveMode();
 
         ftpClient.addProtocolCommandListener(new ProtocolCommandListener() {
             @Override

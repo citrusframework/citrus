@@ -16,6 +16,7 @@
                      port="22222"
                      error-strategy="throwsException"
                      auto-read-files="false"
+                     local-passive-mode="false"
                      username="user"
                      password="consol"
                      timeout="10000"/>

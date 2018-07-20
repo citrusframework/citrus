@@ -49,6 +49,12 @@ public @interface SftpClientConfig {
     boolean autoReadFiles() default true;
 
     /**
+     * Local passive mode
+     * @return
+     */
+    boolean localPassiveMode() default true;
+
+    /**
      * Username
      * @return
      */
