@@ -19,17 +19,27 @@ package com.consol.citrus.jms.endpoint;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import javax.jms.*;
-
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.Session;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicSession;
+import javax.jms.TopicSubscriber;
 import java.util.Collections;
 
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -73,8 +83,6 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         when(topicConnection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE)).thenReturn(topicSession);
         when(jmsTemplate.getDefaultDestinationName()).thenReturn("JMS.Topic.Test");
         when(topicSession.createTopic("JMS.Topic.Test")).thenReturn(topic);
-        when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
-        when(topicSession.createDurableSubscriber(topic, "jmsTopicEndpoint:subscriber")).thenReturn(topicSubscriber);
 
         when(applicationContext.getBean("jmsQueue", Destination.class)).thenReturn(queue);
         when(applicationContext.getBean("jmsTopic", Destination.class)).thenReturn(topic);
@@ -86,8 +94,10 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
     }
 
     @BeforeMethod
-    public void clearSubscriberMocking() {
-        reset(topicSubscriber);
+    public void clearSubscriberMocking() throws JMSException{
+        topicSubscriber = mock(TopicSubscriber.class);
+        when(topicSession.createSubscriber(topic)).thenReturn(topicSubscriber);
+        when(topicSession.createDurableSubscriber(topic, "jmsTopicEndpoint:subscriber")).thenReturn(topicSubscriber);
     }
 
     @Test
