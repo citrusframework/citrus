@@ -48,29 +48,29 @@ import static org.mockito.Mockito.when;
 public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
 
     @Mock
-    private JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
+    private JmsTemplate jmsTemplate;
     @Mock
-    private Destination queue = Mockito.mock(Destination.class);
+    private Destination queue;
     @Mock
-    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private ConnectionFactory connectionFactory;
     @Mock
-    private TopicConnectionFactory topicConnectionFactory = Mockito.mock(TopicConnectionFactory.class);
+    private TopicConnectionFactory topicConnectionFactory;
     @Mock
-    private TopicConnection topicConnection = Mockito.mock(TopicConnection.class);
+    private TopicConnection topicConnection;
     @Mock
-    private TopicSession topicSession = Mockito.mock(TopicSession.class);
+    private TopicSession topicSession;
     @Mock
-    private Topic topic = Mockito.mock(Topic.class);
+    private Topic topic;
     @Mock
-    private TopicSubscriber topicSubscriber = Mockito.mock(TopicSubscriber.class);
+    private TopicSubscriber topicSubscriber;
     @Mock
-    private ConnectionFactory jmsConnectionFactory = Mockito.mock(ConnectionFactory.class);
+    private ConnectionFactory jmsConnectionFactory;
     @Mock
-    private JmsMessageConverter messageConverter = Mockito.mock(JmsMessageConverter.class);
+    private JmsMessageConverter messageConverter;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private TestActor testActor;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ApplicationContext applicationContext;
 
     @BeforeClass
     public void setup() throws JMSException {
@@ -119,7 +119,7 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(consumer instanceof JmsTopicSubscriber);
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) consumer;
-        Assert.assertEquals(jmsTopicSubscriber.isRunning(), true);
+        Assert.assertTrue(jmsTopicSubscriber.isRunning());
 
         Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
         Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo2");
@@ -209,7 +209,7 @@ public class JmsTopicSubscriberTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(consumer instanceof JmsTopicSubscriber);
 
         JmsTopicSubscriber jmsTopicSubscriber = (JmsTopicSubscriber) consumer;
-        Assert.assertEquals(jmsTopicSubscriber.isRunning(), true);
+        Assert.assertTrue(jmsTopicSubscriber.isRunning());
 
         Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo1");
         Assert.assertEquals(consumer.receive(context, endpointConfiguration.getTimeout()).getPayload(String.class), "Foo2");
