@@ -64,7 +64,7 @@ public class CreateDocsMojoTest {
         when(excelTestDocGenerator.withAuthor("Citrus")).thenReturn(excelTestDocGenerator);
         when(excelTestDocGenerator.withPageTitle("SampleTests")).thenReturn(excelTestDocGenerator);
         when(excelTestDocGenerator.withOutputFile("SampleTests.xls")).thenReturn(excelTestDocGenerator);
-        when(excelTestDocGenerator.useSrcDirectory("src/test")).thenReturn(excelTestDocGenerator);
+        when(excelTestDocGenerator.useSrcDirectory("src/test/")).thenReturn(excelTestDocGenerator);
         when(excelTestDocGenerator.withCustomHeaders("Id,Name,Description")).thenReturn(excelTestDocGenerator);
         
         mojo.execute();
@@ -105,7 +105,7 @@ public class CreateDocsMojoTest {
         when(htmlTestDocGenerator.withLogo("citrus-logo.png")).thenReturn(htmlTestDocGenerator);
         when(htmlTestDocGenerator.withPageTitle("SampleTests")).thenReturn(htmlTestDocGenerator);
         when(htmlTestDocGenerator.withOutputFile("SampleTests.html")).thenReturn(htmlTestDocGenerator);
-        when(htmlTestDocGenerator.useSrcDirectory("src/test")).thenReturn(htmlTestDocGenerator);
+        when(htmlTestDocGenerator.useSrcDirectory("src/test/")).thenReturn(htmlTestDocGenerator);
         when(htmlTestDocGenerator.withOverviewTitle("Tests")).thenReturn(htmlTestDocGenerator);
 
         mojo.execute();
