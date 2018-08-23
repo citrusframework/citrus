@@ -19,7 +19,9 @@ package com.consol.citrus.mvn.plugin;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.mvn.plugin.config.docs.DocsConfiguration;
 import com.consol.citrus.mvn.plugin.config.tests.TestConfiguration;
-import org.apache.maven.plugin.*;
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Parameter;
 
 import java.util.List;
@@ -36,8 +38,8 @@ public abstract class AbstractCitrusMojo extends AbstractMojo {
     /**
      * Mojo looks in this directory for test files that are included in this report. Defaults to "src/test/"
      */
-    @Parameter(property = "citrus.test.src.directory", defaultValue = "src/test")
-    private String testSrcDirectory = "src/test";
+    @Parameter(property = "citrus.test.src.directory", defaultValue = "src/test/")
+    private String testSrcDirectory = "src/test/";
 
     /**
      * Which target code base type to use for test execution (default: java; options: java, xml)

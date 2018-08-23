@@ -25,10 +25,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
@@ -158,7 +171,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
      */
     protected List<File> getTestFiles() throws IOException {
         if (testFiles == null) {
-            testFiles = FileUtils.findFiles(srcDirectory + "resources" + File.separator, Citrus.getXmlTestFileNamePattern());
+            testFiles = FileUtils.findFiles(Paths.get(srcDirectory, "resources").toString(), Citrus.getXmlTestFileNamePattern());
         }
         
         return testFiles;
