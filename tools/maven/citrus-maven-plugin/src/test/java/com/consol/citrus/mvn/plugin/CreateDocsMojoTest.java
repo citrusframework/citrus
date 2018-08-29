@@ -29,6 +29,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Christoph Deppisch
@@ -128,5 +129,12 @@ public class CreateDocsMojoTest {
         mojo.execute();
 
         verify(htmlTestDocGenerator, times(0)).generateDoc();
+    }
+
+    @Test
+    public void testSrcDirectory() throws PrompterException, MojoExecutionException, MojoFailureException {
+        reset(prompter, htmlTestDocGenerator);
+
+        assertEquals(mojo.getTestSrcDirectory(), "src/test/");
     }
 }

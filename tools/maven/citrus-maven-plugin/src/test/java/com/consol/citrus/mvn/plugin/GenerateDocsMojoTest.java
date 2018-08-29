@@ -27,6 +27,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author Christoph Deppisch
@@ -95,5 +96,10 @@ public class GenerateDocsMojoTest {
         mojo.execute();
 
         verify(htmlTestDocGenerator).generateDoc();
+    }
+
+    @Test
+    public void testSrcDirectory() {
+        assertEquals(mojo.getTestSrcDirectory(), "src/test/");
     }
 }
