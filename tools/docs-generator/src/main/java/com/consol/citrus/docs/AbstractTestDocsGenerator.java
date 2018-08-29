@@ -29,6 +29,7 @@ import javax.xml.parsers.*;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
@@ -158,7 +159,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
      */
     protected List<File> getTestFiles() throws IOException {
         if (testFiles == null) {
-            testFiles = FileUtils.findFiles(srcDirectory + "resources" + File.separator, Citrus.getXmlTestFileNamePattern());
+            testFiles = FileUtils.findFiles(Paths.get(srcDirectory, "resources").toString(), Citrus.getXmlTestFileNamePattern());
         }
         
         return testFiles;

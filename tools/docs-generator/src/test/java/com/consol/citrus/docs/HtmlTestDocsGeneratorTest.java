@@ -16,9 +16,11 @@
 
 package com.consol.citrus.docs;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.generate.xml.XmlTestGenerator;
 import com.consol.citrus.util.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -26,6 +28,10 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.List;
+
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * @author Christoph Deppisch
@@ -97,5 +103,16 @@ public class HtmlTestDocsGeneratorTest {
                                                         File.separator + "sample" +
                                                         File.separator + "SampleIT.xml\">SampleIT.xml</a>"));
         
+    }
+
+    @Test
+    public void testTestSourcePath() throws IOException {
+        String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
+        String resourcesDirectory = Paths.get(srcDirectory, "resources").toString();
+
+        HtmlTestDocsGenerator generator = HtmlTestDocsGenerator.build();
+        List<File> testFiles = generator.getTestFiles();
+
+        testFiles.forEach(file -> assertTrue(StringUtils.contains(file.getAbsolutePath(), resourcesDirectory)));
     }
 }
