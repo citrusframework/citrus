@@ -41,6 +41,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
@@ -48,23 +49,23 @@ import java.util.Properties;
 public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     
     /** Logger */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    Logger log = LoggerFactory.getLogger(getClass());
     
     private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
 
     private static final String OUTPUT_DIRECTORY = "target" + File.separator + "docs";
     
-    protected String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
-    protected String testDocTemplate;
-    protected String outputFile;
+    String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
+    private String testDocTemplate;
+    String outputFile;
     
     private List<File> testFiles = null;
     
     /**
      * Default constructor using template name.
      */
-    public AbstractTestDocsGenerator(String outputFile, String testDocTemplate) {
+    AbstractTestDocsGenerator(final String outputFile, final String testDocTemplate) {
         this.outputFile = outputFile;
         this.testDocTemplate = testDocTemplate;
     }
@@ -78,7 +79,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
         BufferedOutputStream buffered = null;
         
         try {
-            Properties props = getTestDocProperties();
+            final Properties props = getTestDocProperties();
             
             fos = getFileOutputStream(outputFile);
             buffered = new BufferedOutputStream(fos);
@@ -91,20 +92,16 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                 } else if (line.trim().equalsIgnoreCase(BODY_PLACEHOLDER)) {
                     doBody(buffered);
                 } else {
-                    buffered.write((PropertyUtils.replacePropertiesInString(line, props) + "\n").getBytes("UTF-8"));
+                    buffered.write((PropertyUtils.replacePropertiesInString(line, props) + "\n").getBytes(StandardCharsets.UTF_8));
                 }
             }
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (SAXException e) {
+        } catch (final TransformerException | IOException | SAXException e) {
             throw new CitrusRuntimeException(e);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     log.error("Failed to close reader", e);
                 }
             }
@@ -112,7 +109,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
             if (buffered != null) {
                 try {
                     buffered.flush();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     log.error("Failed to close output stream", e);
                 }
             }
@@ -120,7 +117,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
             if (fos != null) {
                 try {
                     fos.close();
-                } catch (IOException e) {
+                } catch (final IOException e) {
                     log.error("Failed to close file", e);
                 }
             }
@@ -129,11 +126,11 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
 
     /**
      * Creates a output file out put stream with given file name.
-     * @return
-     * @throws IOException 
+     * @return The output stream of the output file
+     * @throws IOException If the stream couldn't be created
      */
-    protected FileOutputStream getFileOutputStream(String fileName) throws IOException {
-        File file = new File(OUTPUT_DIRECTORY);
+    FileOutputStream getFileOutputStream(final String fileName) throws IOException {
+        final File file = new File(OUTPUT_DIRECTORY);
         if (!file.exists()) {
             if (!file.mkdirs()) {
                 throw new CitrusRuntimeException("Unable to create folder structure for test documentation");
@@ -166,7 +163,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
      * @return
      * @throws IOException 
      */
-    protected List<File> getTestFiles() throws IOException {
+    List<File> getTestFiles() throws IOException {
         if (testFiles == null) {
             testFiles = FileUtils.findFiles(Paths.get(srcDirectory, "resources").toString(), Citrus.getXmlTestFileNamePattern());
         }
@@ -178,12 +175,12 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
      * Gets a document builder instance properly configured.
      * @return
      */
-    protected DocumentBuilder getDocumentBuilder() {
+    DocumentBuilder getDocumentBuilder() {
         try {
-            DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setNamespaceAware(true);
             return documentBuilderFactory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
+        } catch (final ParserConfigurationException e) {
             throw new CitrusRuntimeException(e);
         }
     }
@@ -193,20 +190,18 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
      * @param fileName
      * @return
      */
-    protected Transformer getTransformer(String fileName, String mediaType, String method) {
+    Transformer getTransformer(final String fileName, final String mediaType, final String method) {
         try {
-            Source source = new StreamSource(new ClassPathResource(fileName, getClass()).getInputStream());
+            final Source source = new StreamSource(new ClassPathResource(fileName, getClass()).getInputStream());
             
-            TransformerFactory factory = TransformerFactory.newInstance();
-            Transformer t = factory.newTransformer(source);
+            final TransformerFactory factory = TransformerFactory.newInstance();
+            final Transformer t = factory.newTransformer(source);
 
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, mediaType);
             t.setOutputProperty(OutputKeys.METHOD, method);
             
             return t;
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IOException e) {
+        } catch (final TransformerException | IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }
@@ -214,7 +209,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     /**
      * @param srcDirectory the srcDirectory to set
      */
-    public void setSrcDirectory(String srcDirectory) {
+    void setSrcDirectory(final String srcDirectory) {
         this.srcDirectory = srcDirectory;
     }
 
@@ -228,14 +223,14 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     /**
      * @param outputFile the outputFile to set
      */
-    public void setOutputFile(String outputFile) {
+    void setOutputFile(final String outputFile) {
         this.outputFile = outputFile;
     }
 
     /**
      * @return the outputFile
      */
-    public String getOutputFile() {
+    String getOutputFile() {
         return outputFile;
     }
 
@@ -243,7 +238,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
      * Gets the outputDirectory.
      * @return the outputDirectory
      */
-    public static String getOutputDirectory() {
+    static String getOutputDirectory() {
         return OUTPUT_DIRECTORY;
     }
 }
