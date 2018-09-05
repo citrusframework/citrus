@@ -28,8 +28,14 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.contains;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.nullable;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -129,12 +135,5 @@ public class CreateDocsMojoTest {
         mojo.execute();
 
         verify(htmlTestDocGenerator, times(0)).generateDoc();
-    }
-
-    @Test
-    public void testSrcDirectory() throws PrompterException, MojoExecutionException, MojoFailureException {
-        reset(prompter, htmlTestDocGenerator);
-
-        assertEquals(mojo.getTestSrcDirectory(), "src/test/");
     }
 }

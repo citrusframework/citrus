@@ -45,9 +45,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
-/**
- * @author Christoph Deppisch
- */
 public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     
     /** Logger */

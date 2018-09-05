@@ -18,7 +18,9 @@ package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.docs.ExcelTestDocsGenerator;
 import com.consol.citrus.docs.HtmlTestDocsGenerator;
-import com.consol.citrus.mvn.plugin.config.docs.*;
+import com.consol.citrus.mvn.plugin.config.docs.DocsConfiguration;
+import com.consol.citrus.mvn.plugin.config.docs.ExcelDocConfiguration;
+import com.consol.citrus.mvn.plugin.config.docs.HtmlDocConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.PrompterException;
@@ -26,8 +28,9 @@ import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -96,10 +99,5 @@ public class GenerateDocsMojoTest {
         mojo.execute();
 
         verify(htmlTestDocGenerator).generateDoc();
-    }
-
-    @Test
-    public void testSrcDirectory() {
-        assertEquals(mojo.getTestSrcDirectory(), "src/test/");
     }
 }
