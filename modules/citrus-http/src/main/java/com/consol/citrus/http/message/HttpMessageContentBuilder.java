@@ -17,13 +17,17 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import javax.servlet.http.Cookie;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -60,22 +64,19 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
         message.setName(delegate.getMessageName());
         message.setPayload(constructed.getPayload());
         message.setCookies(constructCookies(context));
-        copyHeaders(constructed, message);
+        replaceHeaders(constructed, message);
 
         return message;
     }
 
     /**
-     * Copies all headers except id and timestamp
-     * @param from The message to copy the headers from
+     * Replaces all headers
+     * @param from The message to take the headers from
      * @param to The message to set the headers to
      */
-    private void copyHeaders(Message from, Message to) {
-        for (Map.Entry<String, Object> headerEntry : from.getHeaders().entrySet()) {
-            if (notIdOrTimestamp(headerEntry.getKey())) {
-                to.setHeader(headerEntry.getKey(), headerEntry.getValue());
-            }
-        }
+    private void replaceHeaders(Message from, Message to) {
+        to.getHeaders().clear();
+        to.getHeaders().putAll(from.getHeaders());
     }
 
     /**
