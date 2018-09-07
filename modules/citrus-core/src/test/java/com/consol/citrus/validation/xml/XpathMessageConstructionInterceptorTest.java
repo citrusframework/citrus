@@ -25,6 +25,7 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -134,5 +135,28 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
+    }
+
+    @Test
+    public void testAddTextToEmptyElement(){
+
+        //GIVEN
+        final Message message = new DefaultMessage(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<TestMessage>" +
+                    "<Text></Text>" +
+                "</TestMessage>");
+        final Map<String, String> xPathExpression = Collections.singletonMap("//TestMessage/Text", "foobar");
+
+        //WHEN
+        final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpression);
+
+        //THEN
+        Assert.assertTrue(StringUtils
+                .trimAllWhitespace(
+                        interceptor
+                                .interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context)
+                                .getPayload(String.class))
+                .contains("<Text>foobar</Text>"));
     }
 }
