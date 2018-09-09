@@ -17,18 +17,17 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import javax.servlet.http.Cookie;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- * @since 2.7
- */
 public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     private final HttpMessage template;
@@ -36,67 +35,54 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     /**
      * Default constructor using fields.
-     * @param httpMessage
-     * @param delegate
+     * @param httpMessage The template http message to use for message creation
+     * @param delegate The message builder to use for message creation
      */
-    public HttpMessageContentBuilder(HttpMessage httpMessage, AbstractMessageContentBuilder delegate) {
+    public HttpMessageContentBuilder(final HttpMessage httpMessage, final AbstractMessageContentBuilder delegate) {
         this.template = httpMessage;
         this.delegate = delegate;
     }
 
     @Override
-    public Message buildMessageContent(TestContext context, String messageType) {
+    public Message buildMessageContent(final TestContext context, final String messageType) {
         return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
     }
 
     @Override
-    public Message buildMessageContent(TestContext context, String messageType, MessageDirection direction) {
+    public Message buildMessageContent(final TestContext context, final String messageType, final MessageDirection direction) {
         //Copy the initial message, so that it is not manipulated during the test.
-        HttpMessage message = new HttpMessage(template);
+        final HttpMessage message = new HttpMessage(template);
 
         delegate.getMessageHeaders().putAll(template.getHeaders());
-        Message constructed = delegate.buildMessageContent(context, messageType, direction);
+        final Message constructed = delegate.buildMessageContent(context, messageType, direction);
 
         message.setName(delegate.getMessageName());
         message.setPayload(constructed.getPayload());
         message.setCookies(constructCookies(context));
-        copyHeaders(constructed, message);
+        replaceHeaders(constructed, message);
 
         return message;
     }
 
     /**
-     * Copies all headers except id and timestamp
-     * @param from The message to copy the headers from
+     * Replaces all headers
+     * @param from The message to take the headers from
      * @param to The message to set the headers to
      */
-    private void copyHeaders(Message from, Message to) {
-        for (Map.Entry<String, Object> headerEntry : from.getHeaders().entrySet()) {
-            if (notIdOrTimestamp(headerEntry.getKey())) {
-                to.setHeader(headerEntry.getKey(), headerEntry.getValue());
-            }
-        }
-    }
-
-    /**
-     * Checks whether the given message header is not an ID or a TIMESTAMP
-     * @param messageHeader The message header to be checked
-     * @return whether the given message header is not an ID or a TIMESTAMP
-     */
-    private boolean notIdOrTimestamp(String messageHeader) {
-        return !(MessageHeaders.ID.equals(messageHeader) ||
-                 MessageHeaders.TIMESTAMP.equals(messageHeader));
+    private void replaceHeaders(final Message from, final Message to) {
+        to.getHeaders().clear();
+        to.getHeaders().putAll(from.getHeaders());
     }
 
     /**
      * Replaces the dynamic content in the given list of cookies
      * @param context The context to replace the variables with
      */
-    private Cookie[] constructCookies(TestContext context) {
-        List<Cookie> cookies = new ArrayList<>();
+    private Cookie[] constructCookies(final TestContext context) {
+        final List<Cookie> cookies = new ArrayList<>();
 
-        for (Cookie cookie: template.getCookies()) {
-            Cookie constructed = new Cookie(cookie.getName(), cookie.getValue());
+        for (final Cookie cookie: template.getCookies()) {
+            final Cookie constructed = new Cookie(cookie.getName(), cookie.getValue());
 
             if (cookie.getValue() != null) {
                 constructed.setValue(context.replaceDynamicContentInString(cookie.getValue()));
@@ -122,7 +108,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
             cookies.add(constructed);
         }
 
-        return cookies.toArray(new Cookie[cookies.size()]);
+        return cookies.toArray(new Cookie[0]);
     }
 
     @Override
@@ -136,7 +122,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public void setMessageInterceptors(List<MessageConstructionInterceptor> messageInterceptors) {
+    public void setMessageInterceptors(final List<MessageConstructionInterceptor> messageInterceptors) {
         delegate.setMessageInterceptors(messageInterceptors);
     }
 
@@ -146,12 +132,12 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public void setMessageName(String messageName) {
+    public void setMessageName(final String messageName) {
         delegate.setMessageName(messageName);
     }
 
     @Override
-    public void setMessageHeaders(Map<String, Object> messageHeaders) {
+    public void setMessageHeaders(final Map<String, Object> messageHeaders) {
         delegate.setMessageHeaders(messageHeaders);
     }
 
@@ -161,7 +147,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public void setHeaderResources(List<String> headerResources) {
+    public void setHeaderResources(final List<String> headerResources) {
         delegate.setHeaderResources(headerResources);
     }
 
@@ -171,7 +157,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public void setHeaderData(List<String> headerData) {
+    public void setHeaderData(final List<String> headerData) {
         delegate.setHeaderData(headerData);
     }
 
@@ -181,34 +167,24 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public Object buildMessagePayload(TestContext context, String messageType) {
+    public Object buildMessagePayload(final TestContext context, final String messageType) {
         return delegate.buildMessagePayload(context, messageType);
     }
 
     @Override
-    public void add(MessageConstructionInterceptor interceptor) {
+    public void add(final MessageConstructionInterceptor interceptor) {
         delegate.add(interceptor);
     }
 
     @Override
-    public void setDataDictionary(DataDictionary dataDictionary) {
+    public void setDataDictionary(final DataDictionary dataDictionary) {
         delegate.setDataDictionary(dataDictionary);
     }
 
-    /**
-     * Gets the delegate.
-     *
-     * @return
-     */
     public AbstractMessageContentBuilder getDelegate() {
         return delegate;
     }
 
-    /**
-     * Gets the message.
-     *
-     * @return
-     */
     public HttpMessage getMessage() {
         return template;
     }
