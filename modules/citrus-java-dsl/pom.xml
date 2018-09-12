@@ -30,6 +30,14 @@
 
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-kafka</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-ws</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>

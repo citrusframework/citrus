@@ -28,7 +28,7 @@ import com.consol.citrus.vertx.endpoint.VertxEndpointConfiguration;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class VertxMessageConverter implements MessageConverter<io.vertx.core.eventbus.Message, VertxEndpointConfiguration> {
+public class VertxMessageConverter implements MessageConverter<io.vertx.core.eventbus.Message, io.vertx.core.eventbus.Message, VertxEndpointConfiguration> {
 
     @Override
     public Message convertInbound(io.vertx.core.eventbus.Message vertxMessage, VertxEndpointConfiguration endpointConfiguration, TestContext context) {

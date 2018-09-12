@@ -34,7 +34,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesMessageConverter implements MessageConverter<KubernetesCommand<?>, KubernetesEndpointConfiguration> {
+public class KubernetesMessageConverter implements MessageConverter<KubernetesCommand<?>, KubernetesCommand<?>, KubernetesEndpointConfiguration> {
 
     @Override
     public KubernetesCommand<?> convertOutbound(Message message, KubernetesEndpointConfiguration endpointConfiguration, TestContext context) {

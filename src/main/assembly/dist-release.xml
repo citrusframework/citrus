@@ -12,6 +12,7 @@
       <includes>
         <include>com.consol.citrus:citrus-core</include>
         <include>com.consol.citrus:citrus-jms</include>
+        <include>com.consol.citrus:citrus-kafka</include>
         <include>com.consol.citrus:citrus-jdbc</include>
         <include>com.consol.citrus:citrus-ws</include>
         <include>com.consol.citrus:citrus-http</include>
@@ -179,6 +180,13 @@
     </fileSet>
     <fileSet>
       <directory>modules/citrus-jms/target</directory>
+      <outputDirectory>src</outputDirectory>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>modules/citrus-kafka/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>

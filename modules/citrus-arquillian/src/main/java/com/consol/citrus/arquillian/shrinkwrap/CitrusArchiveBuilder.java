@@ -95,6 +95,7 @@ public final class CitrusArchiveBuilder {
     public CitrusArchiveBuilder all() {
         core();
         jms();
+        kafka();
         jdbc();
         http();
         websocket();
@@ -132,6 +133,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder jms() {
         artifactCoordinates.add(getCoordinates("citrus-jms"));
+        return this;
+    }
+
+    /**
+     * Gets the kafka Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder kafka() {
+        artifactCoordinates.add(getCoordinates("citrus-kafka"));
         return this;
     }
 

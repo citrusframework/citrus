@@ -38,6 +38,7 @@
     <module>modules/citrus-core</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>
+    <module>modules/citrus-kafka</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-websocket</module>
     <module>modules/citrus-ssh</module>
@@ -196,10 +197,11 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <spring.version>5.0.7.RELEASE</spring.version>
+    <spring.version>5.0.8.RELEASE</spring.version>
     <spring.ws.version>3.0.1.RELEASE</spring.ws.version>
     <spring.integration.version>5.0.6.RELEASE</spring.integration.version>
     <spring.restdocs.version>2.0.1.RELEASE</spring.restdocs.version>
+    <kafka.version>2.0.0</kafka.version>
     <apache.camel.version>2.21.1</apache.camel.version>
     <activemq.version>5.15.4</activemq.version>
     <vertx.version>3.5.2</vertx.version>
@@ -536,6 +538,13 @@
         <artifactId>ant</artifactId>
         <version>1.10.4</version>
         <scope>provided</scope>
+      </dependency>
+
+      <!-- Citrus Kafka dependencies -->
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <version>${kafka.version}</version>
       </dependency>
 
       <!-- Citrus mail dependencies -->

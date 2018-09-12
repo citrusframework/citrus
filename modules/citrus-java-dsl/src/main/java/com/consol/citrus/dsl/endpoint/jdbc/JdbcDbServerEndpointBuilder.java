@@ -16,33 +16,30 @@
 
 package com.consol.citrus.dsl.endpoint.jdbc;
 
-import com.consol.citrus.endpoint.EndpointBuilder;
+import com.consol.citrus.dsl.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.jdbc.server.JdbcServer;
+import com.consol.citrus.jdbc.server.JdbcServerBuilder;
 
 /**
  * Jdbc database server endpoint builder wrapper.
  *
- * @param <T>
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcDbServerEndpointBuilder<T extends EndpointBuilder<JdbcServer>> {
-
-    private final T builder;
+public class JdbcDbServerEndpointBuilder extends AbstractEndpointBuilder<JdbcServer, JdbcServerBuilder> {
 
     /**
-     * Default constructor using browser builder implementation.
-     * @param builder
+     * Default constructor using server builder implementation.
      */
-    public JdbcDbServerEndpointBuilder(T builder) {
-        this.builder = builder;
+    public JdbcDbServerEndpointBuilder() {
+        super(new JdbcServerBuilder());
     }
 
     /**
      * Returns browser builder for further fluent api calls.
      * @return
      */
-    public T server() {
+    public JdbcServerBuilder server() {
         return builder;
     }
 }

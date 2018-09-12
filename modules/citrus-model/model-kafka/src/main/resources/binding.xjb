@@ -1,0 +1,36 @@
+<bindings xmlns="http://java.sun.com/xml/ns/jaxb"
+          xmlns:xs="http://www.w3.org/2001/XMLSchema"
+          xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+          version="2.1"
+          extensionBindingPrefixes="xjc">
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-kafka-config.xsd">
+    <globalBindings>
+      <xjc:javaType
+              name="java.util.Calendar"
+              xmlType="xs:dateTime"
+              adapter="org.w3._2001.xmlschema.Adapter1" />
+      <xjc:javaType
+              name="java.util.Calendar"
+              xmlType="xs:date"
+              adapter="org.w3._2001.xmlschema.Adapter2" />
+      <xjc:simple />
+    </globalBindings>
+    <schemaBindings>
+      <package name="com.consol.citrus.model.config.kafka"/>
+      <nameXmlTransform>
+        <elementName prefix="Kafka" suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+  <bindings schemaLocation="com/consol/citrus/schema/citrus-kafka-testcase.xsd">
+    <schemaBindings>
+      <package name="com.consol.citrus.model.testcase.kafka"/>
+      <nameXmlTransform>
+        <elementName suffix="Model" />
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+
+</bindings>
