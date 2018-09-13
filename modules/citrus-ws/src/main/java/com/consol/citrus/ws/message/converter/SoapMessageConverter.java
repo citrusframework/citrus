@@ -88,11 +88,12 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             soapMessage = new SoapMessage(message);
         }
 
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+
         // Copy payload into soap-body:
         String payload = soapMessage.getPayload(String.class);
         if (StringUtils.hasText(payload)) {
             try {
-                TransformerFactory transformerFactory = TransformerFactory.newInstance();
                 Transformer transformer = transformerFactory.newTransformer();
                 transformer.transform(new StringSource(payload), soapRequest.getSoapBody().getPayloadResult());
             } catch (TransformerException e) {
