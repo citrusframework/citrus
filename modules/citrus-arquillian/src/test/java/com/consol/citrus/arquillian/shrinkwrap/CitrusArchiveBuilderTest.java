@@ -31,7 +31,7 @@ public class CitrusArchiveBuilderTest {
     public void setCitrusVersion() {
         Field version = ReflectionUtils.findField(Citrus.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "2.7.7");
+        ReflectionUtils.setField(version, Citrus.class, "2.7.8-SNAPSHOT");
     }
 
     @Test
