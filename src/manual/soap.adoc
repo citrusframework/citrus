@@ -1178,7 +1178,9 @@ Citrus provides a comfortable way to set the HTTP message sender with basic auth
       <bean class="org.apache.http.auth.AuthScope">
         <constructor-arg value="localhost"/>
         <constructor-arg value="8090"/>
-        <constructor-arg value=""/>
+        <constructor-arg>
+          <null/>
+        </constructor-arg>
         <constructor-arg value="basic"/>
       </bean>
   </property>

@@ -18,7 +18,9 @@ package com.consol.citrus.mvn.plugin;
 
 import com.consol.citrus.docs.ExcelTestDocsGenerator;
 import com.consol.citrus.docs.HtmlTestDocsGenerator;
-import com.consol.citrus.mvn.plugin.config.docs.*;
+import com.consol.citrus.mvn.plugin.config.docs.DocsConfiguration;
+import com.consol.citrus.mvn.plugin.config.docs.ExcelDocConfiguration;
+import com.consol.citrus.mvn.plugin.config.docs.HtmlDocConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.components.interactivity.PrompterException;
@@ -26,7 +28,9 @@ import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -60,7 +64,7 @@ public class GenerateDocsMojoTest {
         when(excelTestDocGenerator.withAuthor("Citrus")).thenReturn(excelTestDocGenerator);
         when(excelTestDocGenerator.withPageTitle("SampleTests")).thenReturn(excelTestDocGenerator);
         when(excelTestDocGenerator.withOutputFile("SampleTests.xls")).thenReturn(excelTestDocGenerator);
-        when(excelTestDocGenerator.useSrcDirectory("src/test")).thenReturn(excelTestDocGenerator);
+        when(excelTestDocGenerator.useSrcDirectory("src/test/")).thenReturn(excelTestDocGenerator);
         when(excelTestDocGenerator.withCustomHeaders("Id,Name,Description")).thenReturn(excelTestDocGenerator);
 
         mojo.setDocs(docs);
@@ -87,7 +91,7 @@ public class GenerateDocsMojoTest {
         when(htmlTestDocGenerator.withLogo("citrus-logo.png")).thenReturn(htmlTestDocGenerator);
         when(htmlTestDocGenerator.withPageTitle("SampleTests")).thenReturn(htmlTestDocGenerator);
         when(htmlTestDocGenerator.withOutputFile("SampleTests.html")).thenReturn(htmlTestDocGenerator);
-        when(htmlTestDocGenerator.useSrcDirectory("src/test")).thenReturn(htmlTestDocGenerator);
+        when(htmlTestDocGenerator.useSrcDirectory("src/test/")).thenReturn(htmlTestDocGenerator);
         when(htmlTestDocGenerator.withOverviewTitle("Tests")).thenReturn(htmlTestDocGenerator);
 
         mojo.setDocs(docs);

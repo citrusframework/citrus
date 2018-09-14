@@ -30,7 +30,9 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 /**
@@ -56,9 +58,9 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
 
     /**
      * Default constructor using fields.
-     * @param xPathExpressions
+     * @param xPathExpressions The xPaths to apply to the messages
      */
-    public XpathMessageConstructionInterceptor(Map<String, String> xPathExpressions) {
+    public XpathMessageConstructionInterceptor(final Map<String, String> xPathExpressions) {
         super();
         this.xPathExpressions.putAll(xPathExpressions);
     }
@@ -71,25 +73,25 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      * needs to be XML here.
      */
     @Override
-    public Message interceptMessage(Message message, String messageType, TestContext context) {
+    public Message interceptMessage(final Message message, final String messageType, final TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
 
-        Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
+        final Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
 
         if (doc == null) {
             throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
         }
 
-        for (Entry<String, String> entry : xPathExpressions.entrySet()) {
-            String pathExpression = entry.getKey();
+        for (final Entry<String, String> entry : xPathExpressions.entrySet()) {
+            final String pathExpression = entry.getKey();
             String valueExpression = entry.getValue();
 
             //check if value expr is variable or function (and resolve it if yes)
             valueExpression = context.replaceDynamicContentInString(valueExpression);
 
-            Node node;
+            final Node node;
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 node = XPathUtils.evaluateAsNode(doc, pathExpression,
                                                 context.getNamespaceContextBuilder().buildContext(message, Collections.emptyMap()));
@@ -102,11 +104,8 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
             }
 
             if (node.getNodeType() == Node.ELEMENT_NODE) {
-                if (node.getFirstChild() == null) {
-                    node.appendChild(doc.createTextNode(valueExpression));
-                } else {
-                    node.getFirstChild().setNodeValue(valueExpression);
-                }
+                //fix: otherwise there will be a new line in the output
+                node.setTextContent(valueExpression);
             } else {
                 node.setNodeValue(valueExpression);
             }
@@ -121,14 +120,14 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
     }
 
     @Override
-    public boolean supportsMessageType(String messageType) {
+    public boolean supportsMessageType(final String messageType) {
         return MessageType.XML.toString().equalsIgnoreCase(messageType) || MessageType.XHTML.toString().equalsIgnoreCase(messageType);
     }
 
     /**
      * @param xPathExpressions the xPathExpressions to set
      */
-    public void setXPathExpressions(Map<String, String> xPathExpressions) {
+    public void setXPathExpressions(final Map<String, String> xPathExpressions) {
         this.xPathExpressions = xPathExpressions;
     }
 
