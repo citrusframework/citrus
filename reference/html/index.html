@@ -544,8 +544,8 @@ table.CodeRay td.code>pre{padding:0}
 <div class="details">
 <span id="author" class="author">Christoph Deppisch</span><br>
 <span id="author2" class="author">Martin Maher</span><br>
-<span id="revnumber">version 2.7.6,</span>
-<span id="revdate">2018-06-13</span>
+<span id="revnumber">version 2.7.7,</span>
+<span id="revdate">2018-09-18</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">citrus</div>
@@ -553,41 +553,46 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#preface">1. Preface</a></li>
 <li><a href="#changes-new">2. What&#8217;s new in Citrus 2.7?!</a>
 <ul class="sectlevel2">
-<li><a href="#changes-2-7-6">2.1. Since Citrus 2.7.6</a>
+<li><a href="#changes-2-7-7">2.1. Since Citrus 2.7.7</a>
 <ul class="sectlevel3">
-<li><a href="#changes-hamcrest-number-matchers">2.1.1. Hamcrest matchers</a></li>
-<li><a href="#changes-wait-for-action">2.1.2. Wait for test action</a></li>
-<li><a href="#changes-sftp-scp">2.1.3. SFTP/SCP support</a></li>
-<li><a href="#changes-jms-durable-scubscribers">2.1.4. JMS Topic durable subscribers</a></li>
-<li><a href="#changes-http-query-params">2.1.5. Improved Http query param handling</a></li>
-<li><a href="#changes-validation-matcher-new-line">2.1.6. Validation matchers</a></li>
+<li><a href="#changes-bugs">2.1.1. Bugfix, bugfix, bugfix</a></li>
 </ul>
 </li>
-<li><a href="#changes-2-7-5">2.2. Since Citrus 2.7.5</a>
+<li><a href="#changes-2-7-6">2.2. Since Citrus 2.7.6</a>
 <ul class="sectlevel3">
-<li><a href="#changes-message-selector">2.2.1. Message selector on non-XML payloads</a></li>
-<li><a href="#changes-zip-archives">2.2.2. Send and receive zip archives</a></li>
-<li><a href="#changes-ftp-rewrite">2.2.3. Support FTP store and retrieve file operations</a></li>
-<li><a href="#changes-binary-message">2.2.4. Binary messages</a></li>
+<li><a href="#changes-hamcrest-number-matchers">2.2.1. Hamcrest matchers</a></li>
+<li><a href="#changes-wait-for-action">2.2.2. Wait for test action</a></li>
+<li><a href="#changes-sftp-scp">2.2.3. SFTP/SCP support</a></li>
+<li><a href="#changes-jms-durable-scubscribers">2.2.4. JMS Topic durable subscribers</a></li>
+<li><a href="#changes-http-query-params">2.2.5. Improved Http query param handling</a></li>
+<li><a href="#changes-validation-matcher-new-line">2.2.6. Validation matchers</a></li>
 </ul>
 </li>
-<li><a href="#changes-2-7-4">2.3. Since Citrus 2.7.4</a>
+<li><a href="#changes-2-7-5">2.3. Since Citrus 2.7.5</a>
 <ul class="sectlevel3">
-<li><a href="#changes-jdbc">2.3.1. JDBC server</a></li>
-<li><a href="#changes-async">2.3.2. Async container</a></li>
-<li><a href="#changes-property-functions">2.3.3. System/Env property functions</a></li>
-<li><a href="#changes-url-encode-functions">2.3.4. URL encode/decode functions</a></li>
+<li><a href="#changes-message-selector">2.3.1. Message selector on non-XML payloads</a></li>
+<li><a href="#changes-zip-archives">2.3.2. Send and receive zip archives</a></li>
+<li><a href="#changes-ftp-rewrite">2.3.3. Support FTP store and retrieve file operations</a></li>
+<li><a href="#changes-binary-message">2.3.4. Binary messages</a></li>
 </ul>
 </li>
-<li><a href="#changes-2-7-3">2.4. Since Citrus 2.7.3</a>
+<li><a href="#changes-2-7-4">2.4. Since Citrus 2.7.4</a>
 <ul class="sectlevel3">
-<li><a href="#changes-plaintext-ignore">2.4.1. Ignore sections in plain text</a></li>
-<li><a href="#changes-json-schema-validation">2.4.2. Json schema validation</a></li>
-<li><a href="#changes-junit5">2.4.3. JUnit5 support</a></li>
-<li><a href="#changes-refactoring">2.4.4. Refactoring</a></li>
+<li><a href="#changes-jdbc">2.4.1. JDBC server</a></li>
+<li><a href="#changes-async">2.4.2. Async container</a></li>
+<li><a href="#changes-property-functions">2.4.3. System/Env property functions</a></li>
+<li><a href="#changes-url-encode-functions">2.4.4. URL encode/decode functions</a></li>
 </ul>
 </li>
-<li><a href="#changes-bugfixes">2.5. Bugfixes</a></li>
+<li><a href="#changes-2-7-3">2.5. Since Citrus 2.7.3</a>
+<ul class="sectlevel3">
+<li><a href="#changes-plaintext-ignore">2.5.1. Ignore sections in plain text</a></li>
+<li><a href="#changes-json-schema-validation">2.5.2. Json schema validation</a></li>
+<li><a href="#changes-junit5">2.5.3. JUnit5 support</a></li>
+<li><a href="#changes-refactoring">2.5.4. Refactoring</a></li>
+</ul>
+</li>
+<li><a href="#changes-bugfixes">2.6. Bugfixes</a></li>
 </ul>
 </li>
 <li><a href="#introduction">3. Introduction</a>
@@ -1301,7 +1306,7 @@ table.CodeRay td.code>pre{padding:0}
 <div class="sectionbody">
 <div class="paragraph">
 <p><strong>Copyright © 2018 ConSol Software GmbH</strong><br>
-<strong>Version: 2.7.6</strong></p>
+<strong>Version: 2.7.7</strong></p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -1358,16 +1363,25 @@ construction, please do not hesitate to give any comments or requests to us usin
 <p>We have the following features included in the box.</p>
 </div>
 <div class="sect2">
-<h3 id="changes-2-7-6"><a class="anchor" href="#changes-2-7-6"></a><a class="link" href="#changes-2-7-6">2.1. Since Citrus 2.7.6</a></h3>
+<h3 id="changes-2-7-7"><a class="anchor" href="#changes-2-7-7"></a><a class="link" href="#changes-2-7-7">2.1. Since Citrus 2.7.7</a></h3>
 <div class="sect3">
-<h4 id="changes-hamcrest-number-matchers"><a class="anchor" href="#changes-hamcrest-number-matchers"></a><a class="link" href="#changes-hamcrest-number-matchers">2.1.1. Hamcrest matchers</a></h4>
+<h4 id="changes-bugs"><a class="anchor" href="#changes-bugs"></a><a class="link" href="#changes-bugs">2.1.1. Bugfix, bugfix, bugfix</a></h4>
+<div class="paragraph">
+<p>See the complete list of <a href="https://github.com/citrusframework/citrus/milestone/12?closed=1">v2.7.7 bugfixes</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="changes-2-7-6"><a class="anchor" href="#changes-2-7-6"></a><a class="link" href="#changes-2-7-6">2.2. Since Citrus 2.7.6</a></h3>
+<div class="sect3">
+<h4 id="changes-hamcrest-number-matchers"><a class="anchor" href="#changes-hamcrest-number-matchers"></a><a class="link" href="#changes-hamcrest-number-matchers">2.2.1. Hamcrest matchers</a></h4>
 <div class="paragraph">
 <p>We have added new Hamcrest matcher support in XML. This is <code>isOneOf</code> and <code>isIn</code> as well as <code>closeTo</code>. All implementations are now available in XML when using <code>@assertThat()@</code> validation expressions.
 Read more about it in section <a href="#matcher-assert-that">matcher-assert-that</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-wait-for-action"><a class="anchor" href="#changes-wait-for-action"></a><a class="link" href="#changes-wait-for-action">2.1.2. Wait for test action</a></h4>
+<h4 id="changes-wait-for-action"><a class="anchor" href="#changes-wait-for-action"></a><a class="link" href="#changes-wait-for-action">2.2.2. Wait for test action</a></h4>
 <div class="paragraph">
 <p>The wait action is able to wait for a condition to pass during a test case. Up to now you were able to wait for Http URL to return a status code, a file to be present and a message to arrive. A new
 condition implementation enables you to wait for another test action to perform successfully. In case of error or time delay in the test action the condition will wait until the action is finished. This
@@ -1378,7 +1392,7 @@ enables you to wait for Docker images to start, JMS messages to arrive and many 
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-sftp-scp"><a class="anchor" href="#changes-sftp-scp"></a><a class="link" href="#changes-sftp-scp">2.1.3. SFTP/SCP support</a></h4>
+<h4 id="changes-sftp-scp"><a class="anchor" href="#changes-sftp-scp"></a><a class="link" href="#changes-sftp-scp">2.2.3. SFTP/SCP support</a></h4>
 <div class="paragraph">
 <p>The FTP endpoints (client/server) in Citrus were enhanced to also handle SFTP and SCP secure file transfer. The new support results in new client and server components for SFTP and SCP so you can
 choose how the files should be sent/received to/from the server.</p>
@@ -1388,7 +1402,7 @@ choose how the files should be sent/received to/from the server.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-jms-durable-scubscribers"><a class="anchor" href="#changes-jms-durable-scubscribers"></a><a class="link" href="#changes-jms-durable-scubscribers">2.1.4. JMS Topic durable subscribers</a></h4>
+<h4 id="changes-jms-durable-scubscribers"><a class="anchor" href="#changes-jms-durable-scubscribers"></a><a class="link" href="#changes-jms-durable-scubscribers">2.2.4. JMS Topic durable subscribers</a></h4>
 <div class="paragraph">
 <p>The Citrus JMS topic client is now able to use durable subscriptions and/or to start and reuse the subscription throughout the whole test suite. The topic subscription is then started at the very beginning
 and incoming events are stored to a local in memory cache. This mechanism is used to not loose any events that are triggered before the test case is receiving the messages from that JMS topic.</p>
@@ -1398,7 +1412,7 @@ and incoming events are stored to a local in memory cache. This mechanism is use
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-http-query-params"><a class="anchor" href="#changes-http-query-params"></a><a class="link" href="#changes-http-query-params">2.1.5. Improved Http query param handling</a></h4>
+<h4 id="changes-http-query-params"><a class="anchor" href="#changes-http-query-params"></a><a class="link" href="#changes-http-query-params">2.2.5. Improved Http query param handling</a></h4>
 <div class="paragraph">
 <p>Http clients and servers are able to add query parameter to a GET Http URL. The handling of those parameters has significantly changed in this release in order to simplify query parameter support in Citrus. You can now
 validate a sub set of query parameters and you are now able to use validation matchers and <code>@ignore@</code> expressions when validating query parameters on the server.</p>
@@ -1408,7 +1422,7 @@ validate a sub set of query parameters and you are now able to use validation ma
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-validation-matcher-new-line"><a class="anchor" href="#changes-validation-matcher-new-line"></a><a class="link" href="#changes-validation-matcher-new-line">2.1.6. Validation matchers</a></h4>
+<h4 id="changes-validation-matcher-new-line"><a class="anchor" href="#changes-validation-matcher-new-line"></a><a class="link" href="#changes-validation-matcher-new-line">2.2.6. Validation matchers</a></h4>
 <div class="paragraph">
 <p>We have added some new validation matcher implementations <code>ignoreNewLine</code>, <code>trim</code> and <code>trimAllWhitespace</code>.</p>
 </div>
@@ -1418,9 +1432,9 @@ validate a sub set of query parameters and you are now able to use validation ma
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-2-7-5"><a class="anchor" href="#changes-2-7-5"></a><a class="link" href="#changes-2-7-5">2.2. Since Citrus 2.7.5</a></h3>
+<h3 id="changes-2-7-5"><a class="anchor" href="#changes-2-7-5"></a><a class="link" href="#changes-2-7-5">2.3. Since Citrus 2.7.5</a></h3>
 <div class="sect3">
-<h4 id="changes-message-selector"><a class="anchor" href="#changes-message-selector"></a><a class="link" href="#changes-message-selector">2.2.1. Message selector on non-XML payloads</a></h4>
+<h4 id="changes-message-selector"><a class="anchor" href="#changes-message-selector"></a><a class="link" href="#changes-message-selector">2.3.1. Message selector on non-XML payloads</a></h4>
 <div class="paragraph">
 <p>Citrus has always been able to select messages on a queue or channel in a receive test action in order to pick a message
 of matching headers and or payload contents from a list of inbound messages. This enabled us to perform parallel testing and in addition to that
@@ -1435,14 +1449,14 @@ nature based on non XML payloads, too.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-zip-archives"><a class="anchor" href="#changes-zip-archives"></a><a class="link" href="#changes-zip-archives">2.2.2. Send and receive zip archives</a></h4>
+<h4 id="changes-zip-archives"><a class="anchor" href="#changes-zip-archives"></a><a class="link" href="#changes-zip-archives">2.3.2. Send and receive zip archives</a></h4>
 <div class="paragraph">
 <p>Citrus provides a special message implementation that automatically adds the payload in form of one to many files and directories to a zip archive. The final zipped content is then
 provided as binary message payload. This makes it very easy to send and receive zipped files and directories within Citrus.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-ftp-rewrite"><a class="anchor" href="#changes-ftp-rewrite"></a><a class="link" href="#changes-ftp-rewrite">2.2.3. Support FTP store and retrieve file operations</a></h4>
+<h4 id="changes-ftp-rewrite"><a class="anchor" href="#changes-ftp-rewrite"></a><a class="link" href="#changes-ftp-rewrite">2.3.3. Support FTP store and retrieve file operations</a></h4>
 <div class="paragraph">
 <p>The FTP support has been rewritten to a certain extend in this release. This is because the former implementation has been too close to the FTP protocol. The new implementation is much
 more comfortable when it comes to store and retrieve files on a FTP server. Also you can now check on a server side that files are pushed or retrieved via client interaction.</p>
@@ -1452,7 +1466,7 @@ more comfortable when it comes to store and retrieve files on a FTP server. Also
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-binary-message"><a class="anchor" href="#changes-binary-message"></a><a class="link" href="#changes-binary-message">2.2.4. Binary messages</a></h4>
+<h4 id="changes-binary-message"><a class="anchor" href="#changes-binary-message"></a><a class="link" href="#changes-binary-message">2.3.4. Binary messages</a></h4>
 <div class="paragraph">
 <p>Handling of binary message content has been possible in Citrus. We have had some issues though when using non standard binary Content-Type headers in Http communication. The binary content was then treated
 as String content obviously corrupting the binary content while processing. Also the Http client has not been able to retrieve binary message content from the server in order to validate the binary
@@ -1464,9 +1478,9 @@ streams. All issues are fixed with this release and in combination with extended
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-2-7-4"><a class="anchor" href="#changes-2-7-4"></a><a class="link" href="#changes-2-7-4">2.3. Since Citrus 2.7.4</a></h3>
+<h3 id="changes-2-7-4"><a class="anchor" href="#changes-2-7-4"></a><a class="link" href="#changes-2-7-4">2.4. Since Citrus 2.7.4</a></h3>
 <div class="sect3">
-<h4 id="changes-jdbc"><a class="anchor" href="#changes-jdbc"></a><a class="link" href="#changes-jdbc">2.3.1. JDBC server</a></h4>
+<h4 id="changes-jdbc"><a class="anchor" href="#changes-jdbc"></a><a class="link" href="#changes-jdbc">2.4.1. JDBC server</a></h4>
 <div class="paragraph">
 <p>Preparing databases for testing can be hard times. Creating all tables and preparing the test data with all constraints and data integrity is often a full time job and
 very exhausting. Instead of preparing a real database would&#8217;nt it be nice to just mock the database queries with proper result set generation just in time within the test? But at the same time
@@ -1481,7 +1495,7 @@ This enables us to test the data access in a database persistence layer without 
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-async"><a class="anchor" href="#changes-async"></a><a class="link" href="#changes-async">2.3.2. Async container</a></h4>
+<h4 id="changes-async"><a class="anchor" href="#changes-async"></a><a class="link" href="#changes-async">2.4.2. Async container</a></h4>
 <div class="paragraph">
 <p>Sometimes it is good to execute test actions in parallel so you can do things simultaneously in a test case. In some cases it is just to execute a single test action in parallel to the rest of the test. When using send operations
 you already could have used <code>fork="true"</code> option on that test action. The async test action container provides such functionality for all other test actions, too. Just add a test action to the async container and
@@ -1492,22 +1506,22 @@ the action is executed in a separate thread. The test case is not blocked with t
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-property-functions"><a class="anchor" href="#changes-property-functions"></a><a class="link" href="#changes-property-functions">2.3.3. System/Env property functions</a></h4>
+<h4 id="changes-property-functions"><a class="anchor" href="#changes-property-functions"></a><a class="link" href="#changes-property-functions">2.4.3. System/Env property functions</a></h4>
 <div class="paragraph">
 <p>There are new functions available to access System properties and environment settings. This enables you to resolve property values in test cases at runtime. See how to use this functions in chapter <a href="#functions">functions</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-url-encode-functions"><a class="anchor" href="#changes-url-encode-functions"></a><a class="link" href="#changes-url-encode-functions">2.3.4. URL encode/decode functions</a></h4>
+<h4 id="changes-url-encode-functions"><a class="anchor" href="#changes-url-encode-functions"></a><a class="link" href="#changes-url-encode-functions">2.4.4. URL encode/decode functions</a></h4>
 <div class="paragraph">
 <p>Two new functions enable you to URL encode/decode a String with proper URL escaping. See how to use this functions in chapter <a href="#functions">functions</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-2-7-3"><a class="anchor" href="#changes-2-7-3"></a><a class="link" href="#changes-2-7-3">2.4. Since Citrus 2.7.3</a></h3>
+<h3 id="changes-2-7-3"><a class="anchor" href="#changes-2-7-3"></a><a class="link" href="#changes-2-7-3">2.5. Since Citrus 2.7.3</a></h3>
 <div class="sect3">
-<h4 id="changes-plaintext-ignore"><a class="anchor" href="#changes-plaintext-ignore"></a><a class="link" href="#changes-plaintext-ignore">2.4.1. Ignore sections in plain text</a></h4>
+<h4 id="changes-plaintext-ignore"><a class="anchor" href="#changes-plaintext-ignore"></a><a class="link" href="#changes-plaintext-ignore">2.5.1. Ignore sections in plain text</a></h4>
 <div class="paragraph">
 <p>Plain text message validation is usually based on a complete String equals comparison. With latest release we added the possibility to ignore some sections with
 well known <code>@ignore@</code> keyword placeholder. The message validator will automatically ignore words or character sections based on that. Read more about this in chapter
@@ -1518,21 +1532,21 @@ well known <code>@ignore@</code> keyword placeholder. The message validator will
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-json-schema-validation"><a class="anchor" href="#changes-json-schema-validation"></a><a class="link" href="#changes-json-schema-validation">2.4.2. Json schema validation</a></h4>
+<h4 id="changes-json-schema-validation"><a class="anchor" href="#changes-json-schema-validation"></a><a class="link" href="#changes-json-schema-validation">2.5.2. Json schema validation</a></h4>
 <div class="paragraph">
 <p>When dealing with Json message content the latest release allows adding of schema validation. The Json structure is validated with proper schema as of Open API (Swagger) schema rules.
 As usual the available schema files are defined in a schema repository in the project configuration. Read more about this in chapter <a href="#json-schema-validation">json schema validation</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-junit5"><a class="anchor" href="#changes-junit5"></a><a class="link" href="#changes-junit5">2.4.3. JUnit5 support</a></h4>
+<h4 id="changes-junit5"><a class="anchor" href="#changes-junit5"></a><a class="link" href="#changes-junit5">2.5.3. JUnit5 support</a></h4>
 <div class="paragraph">
 <p>With this release you are able to integrate Citrus with JUnit5 the new generation of the famous unit testing framework. We provide a Citrus JUnit5 extension that can do the trick.
 Read more about this in chapter <a href="#run-with-junit5">run with JUnit5</a>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="changes-refactoring"><a class="anchor" href="#changes-refactoring"></a><a class="link" href="#changes-refactoring">2.4.4. Refactoring</a></h4>
+<h4 id="changes-refactoring"><a class="anchor" href="#changes-refactoring"></a><a class="link" href="#changes-refactoring">2.5.4. Refactoring</a></h4>
 <div class="paragraph">
 <p>Deprecated APIs and classes that coexisted a long time are now removed. If your project is using on of these deprecated
 classes you may run into compile time errors.
@@ -1542,11 +1556,11 @@ that replaced the old deprecated stuff.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="changes-bugfixes"><a class="anchor" href="#changes-bugfixes"></a><a class="link" href="#changes-bugfixes">2.5. Bugfixes</a></h3>
+<h3 id="changes-bugfixes"><a class="anchor" href="#changes-bugfixes"></a><a class="link" href="#changes-bugfixes">2.6. Bugfixes</a></h3>
 <div class="paragraph">
 <p>Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues
 makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete
-<a href="http://www.citrusframework.org/changes-report.html">changes log</a> of each release.</p>
+<a href="https://www.citrusframework.org/changes-report.html">changes log</a> of each release.</p>
 </div>
 </div>
 </div>
@@ -1708,7 +1722,7 @@ away without any adjustments. Try to execute the following commands:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">mvn clean verify
-mvn clean verify -Dtest=MyFirstCitrusTest</code></pre>
+mvn clean verify -Dit.test=MyFirstCitrusTest</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -1743,7 +1757,7 @@ in your Maven pom.xml as a dependency like follows.</p>
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-core&lt;/artifactId&gt;
-  &lt;version&gt;2.7.6&lt;/version&gt;
+  &lt;version&gt;2.7.7&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 </div>
@@ -1760,7 +1774,7 @@ in your Maven pom.xml as a dependency like follows.</p>
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;com.consol.citrus&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-java-dsl&lt;/artifactId&gt;
-  &lt;version&gt;2.7.6&lt;/version&gt;
+  &lt;version&gt;2.7.7&lt;/version&gt;
   &lt;scope&gt;test&lt;/scope&gt;
 &lt;/dependency&gt;</pre>
 </div>
@@ -1777,7 +1791,7 @@ in your Maven pom.xml as a dependency like follows.</p>
 <pre>&lt;plugin&gt;
   &lt;groupId&gt;com.consol.citrus.mvn&lt;/groupId&gt;
   &lt;artifactId&gt;citrus-maven-plugin&lt;/artifactId&gt;
-  &lt;version&gt;2.7.6&lt;/version&gt;
+  &lt;version&gt;2.7.7&lt;/version&gt;
   &lt;configuration&gt;
     &lt;author&gt;Donald Duck&lt;/author&gt;
     &lt;targetPackage&gt;com.consol.citrus&lt;/targetPackage&gt;
@@ -1825,7 +1839,7 @@ The Citrus integration tests are executed automatically during the build process
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml">mvn clean verify
-mvn clean verify -Dtest=MyFirstCitrusIT</code></pre>
+mvn clean verify -Dit.test=MyFirstCitrusIT</code></pre>
 </div>
 </div>
 <div class="admonitionblock important">
@@ -1871,7 +1885,7 @@ and the project version.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy">rootProject.name = <span class="string"><span class="delimiter">'</span><span class="content">citrus-sample-gradle</span><span class="delimiter">'</span></span>
 group <span class="string"><span class="delimiter">'</span><span class="content">com.consol.citrus.samples</span><span class="delimiter">'</span></span>
-version <span class="string"><span class="delimiter">'</span><span class="content">2.7.6</span><span class="delimiter">'</span></span></code></pre>
+version <span class="string"><span class="delimiter">'</span><span class="content">2.7.7</span><span class="delimiter">'</span></span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1895,8 +1909,8 @@ to add the ConSol Labs snapshot repository which is optional. Now lets move on w
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="groovy">dependencies {
-    testCompile <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">com.consol.citrus</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">citrus-core</span><span class="delimiter">'</span></span>, <span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">2.7.6</span><span class="delimiter">'</span></span>
-    testCompile <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">com.consol.citrus</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">citrus-java-dsl</span><span class="delimiter">'</span></span>, <span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">2.7.6</span><span class="delimiter">'</span></span>
+    testCompile <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">com.consol.citrus</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">citrus-core</span><span class="delimiter">'</span></span>, <span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">2.7.7</span><span class="delimiter">'</span></span>
+    testCompile <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">com.consol.citrus</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">citrus-java-dsl</span><span class="delimiter">'</span></span>, <span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">2.7.7</span><span class="delimiter">'</span></span>
     testCompile <span class="key">group</span>: <span class="string"><span class="delimiter">'</span><span class="content">org.testng</span><span class="delimiter">'</span></span>, <span class="key">name</span>: <span class="string"><span class="delimiter">'</span><span class="content">testng</span><span class="delimiter">'</span></span>, <span class="key">version</span>: <span class="string"><span class="delimiter">'</span><span class="content">6.11</span><span class="delimiter">'</span></span>
     [...]
 }</code></pre>
@@ -2239,7 +2253,7 @@ There you can find a tutorial which describes the Citrus Java project set up wit
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-java-dsl<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
   <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -11210,7 +11224,7 @@ and bind it to the test action.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
 <span class="directive">public</span> <span class="type">void</span> waitTest() {
-    waitFor().http(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://sample.org/resource</span><span class="delimiter">&quot;</span></span>).seconds(<span class="integer">10L</span>).interval(<span class="integer">2000L</span>);
+    waitFor().http().seconds(<span class="integer">10L</span>).interval(<span class="integer">2000L</span>).url(<span class="string"><span class="delimiter">&quot;</span><span class="content">http://sample.org/resource</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
 </div>
@@ -11240,7 +11254,7 @@ and bind it to the test action.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
 <span class="directive">public</span> <span class="type">void</span> waitTest() {
-    waitFor().file(<span class="string"><span class="delimiter">&quot;</span><span class="content">path/to/resource/file.txt</span><span class="delimiter">&quot;</span></span>);
+    waitFor().file().path(<span class="string"><span class="delimiter">&quot;</span><span class="content">path/to/resource/file.txt</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
 </div>
@@ -11270,7 +11284,7 @@ and bind it to the test action.</p>
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="annotation">@CitrusTest</span>
 <span class="directive">public</span> <span class="type">void</span> waitTest() {
-    waitFor().message(<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRequest</span><span class="delimiter">&quot;</span></span>);
+    waitFor().message().name(<span class="string"><span class="delimiter">&quot;</span><span class="content">helloRequest</span><span class="delimiter">&quot;</span></span>);
 }</code></pre>
 </div>
 </div>
@@ -11447,7 +11461,7 @@ The JMS components in Citrus are kept in a separate Maven module. If not already
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-jms<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -11923,7 +11937,7 @@ The http components in Citrus are kept in a separate Maven module. So you should
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-http<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -13307,7 +13321,7 @@ chain including default servlet filters mentioned above.</p>
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>citrus-websocket<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -13558,7 +13572,7 @@ The SOAP WebService components in Citrus are kept in a separate Maven module. So
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-ws<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -14967,7 +14981,9 @@ The <strong>ws:attachment</strong> element specifies a validator instance. This 
       <span class="tag">&lt;bean</span> <span class="attribute-name">class</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">org.apache.http.auth.AuthScope</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
         <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">localhost</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
         <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">8090</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
-        <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;constructor-arg&gt;</span>
+          <span class="tag">&lt;null</span><span class="tag">/&gt;</span>
+        <span class="tag">&lt;/constructor-arg&gt;</span>
         <span class="tag">&lt;constructor-arg</span> <span class="attribute-name">value</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">basic</span><span class="delimiter">&quot;</span></span><span class="tag">/&gt;</span>
       <span class="tag">&lt;/bean&gt;</span>
   <span class="tag">&lt;/property&gt;</span>
@@ -15416,7 +15432,7 @@ The FTP components in Citrus are maintained in their own Maven module. So you sh
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-ftp<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -17290,7 +17306,7 @@ The camel components in Citrus are kept in a separate Maven module. So you shoul
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-camel<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -17833,7 +17849,7 @@ The Vert.x components in Citrus are kept in a separate Maven module. So you shou
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-vertx<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -18091,7 +18107,7 @@ The mail components in Citrus are kept in a separate Maven module. So you should
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-mail<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -18479,7 +18495,7 @@ We have no user inbox where incoming mails are stored. The mail server just forw
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;extension</span> <span class="attribute-name">qualifier</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrus</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>
-    <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrusVersion</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>2.7.6<span class="tag">&lt;/property&gt;</span>
+    <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">citrusVersion</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>2.7.7<span class="tag">&lt;/property&gt;</span>
     <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">autoPackage</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>true<span class="tag">&lt;/property&gt;</span>
     <span class="tag">&lt;property</span> <span class="attribute-name">name</span>=<span class="string"><span class="delimiter">&quot;</span><span class="content">suiteName</span><span class="delimiter">&quot;</span></span><span class="tag">&gt;</span>citrus-arquillian-suite<span class="tag">&lt;/property&gt;</span>
 <span class="tag">&lt;/extension&gt;</span></code></pre>
@@ -18520,7 +18536,7 @@ com.consol.citrus.config.CitrusSpringConfig is loaded to set up the Spring appli
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-arquillian<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
   <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -18839,7 +18855,7 @@ The Docker test components in Citrus are kept in a separate Maven module. If not
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-docker<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -19145,7 +19161,7 @@ The Kubernetes test components in Citrus are kept in a separate Maven module. If
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-kubernetes<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -20299,7 +20315,7 @@ The RMI components in Citrus are kept in a separate Maven module. So you should 
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-rmi<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -20607,7 +20623,7 @@ The JMX components in Citrus are kept in a separate Maven module. So you should 
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-jmx<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -21023,7 +21039,7 @@ The Cucumber components in Citrus are kept in a separate Maven module. If not al
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-cucumber<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -22051,7 +22067,7 @@ The Zookeeper test components in Citrus are kept in a separate Maven module. If 
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
       <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
       <span class="tag">&lt;artifactId&gt;</span>citrus-zookeeper<span class="tag">&lt;/artifactId&gt;</span>
-      <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+      <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
       <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -22318,7 +22334,7 @@ The Spring Restdocs support components in Citrus are kept in a separate Maven mo
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-restdocs<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -22633,7 +22649,7 @@ The Selenium test components in Citrus are kept in a separate Maven module. If n
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
   <span class="tag">&lt;groupId&gt;</span>com.consol.citrus<span class="tag">&lt;/groupId&gt;</span>
   <span class="tag">&lt;artifactId&gt;</span>citrus-selenium<span class="tag">&lt;/artifactId&gt;</span>
-  <span class="tag">&lt;version&gt;</span>2.7.6<span class="tag">&lt;/version&gt;</span>
+  <span class="tag">&lt;version&gt;</span>2.7.7<span class="tag">&lt;/version&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
 </div>
@@ -28921,8 +28937,8 @@ you can map values from the actual request message that has triggered the respon
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.7.6<br>
-Last updated 2018-06-13 10:06:01 MESZ
+Version 2.7.7<br>
+Last updated 2018-09-18 10:14:37 MESZ
 </div>
 </div>
 <style>
