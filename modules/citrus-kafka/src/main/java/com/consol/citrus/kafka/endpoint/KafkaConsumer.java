@@ -95,10 +95,6 @@ public class KafkaConsumer extends AbstractMessageConsumer {
     public void stop() {
         try {
             if (CollectionUtils.isEmpty(consumer.subscription())) {
-                if (endpointConfiguration.isAutoCommit()) {
-                    consumer.commitSync(Duration.ofMillis(endpointConfiguration.getTimeout()));
-                }
-
                 consumer.unsubscribe();
             }
         } finally {

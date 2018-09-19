@@ -23,7 +23,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-@Test(enabled = false)
+@Test
 public class KafkaEndpointFactoryIT extends AbstractTestNGCitrusTest {
 
     @CitrusXmlTest(name = "KafkaEndpointFactoryIT")

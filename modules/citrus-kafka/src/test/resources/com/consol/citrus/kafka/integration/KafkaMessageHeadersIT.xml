@@ -69,7 +69,7 @@
           <element name="citrus_kafka_messageKey" value="1"/>
           <element name="citrus_kafka_topic" value="hello"/>
           <element name="citrus_kafka_partition" value="0"/>
-          <element name="citrus_kafka_offset" value="@greaterThan(0)@"/>
+          <element name="citrus_kafka_offset" value="@assertThat(greaterThanOrEqualTo(0))@"/>
         </header>
       </receive>
     </actions>

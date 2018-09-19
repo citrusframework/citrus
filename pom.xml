@@ -543,6 +543,23 @@
       <!-- Citrus Kafka dependencies -->
       <dependency>
         <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka_2.11</artifactId>
+        <version>${kafka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka-clients</artifactId>
+        <classifier>test</classifier>
+        <version>${kafka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
+        <artifactId>kafka_2.11</artifactId>
+        <classifier>test</classifier>
+        <version>${kafka.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.kafka</groupId>
         <artifactId>kafka-clients</artifactId>
         <version>${kafka.version}</version>
       </dependency>

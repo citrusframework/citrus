@@ -28,7 +28,7 @@
       <repeat-onerror-until-true condition="i gt 100">
         <assert exception="com.consol.citrus.exceptions.ActionTimeoutException">
           <when>
-            <receive endpoint="kafka:test" timeout="500">
+            <receive endpoint="kafka:test?consumerGroup=testGroup" timeout="500">
               <message/>
             </receive>
           </when>
@@ -59,7 +59,7 @@
         </header>
       </send>
 
-      <receive endpoint="kafka:test">
+      <receive endpoint="kafka:test?consumerGroup=testGroup">
         <description>Receive Kafka request: Kafka topic -> Citrus</description>
         <message>
           <data>
@@ -83,7 +83,7 @@
         <message>Test 2: Send Kafka request and receive async Kafka response (file resource payload)</message>
       </echo>
 
-      <send endpoint="kafka:test">
+      <send endpoint="kafka:test?consumerGroup=testGroup">
         <description>Send asynchronous Kafka request: Citrus -> Kafka topic</description>
         <message>
           <resource file="classpath:com/consol/citrus/templates/HelloRequest.xml"/>
@@ -94,7 +94,7 @@
         </header>
       </send>
 
-      <receive endpoint="kafka:test">
+      <receive endpoint="kafka:test?consumerGroup=testGroup">
         <description>Receive asynchronous Kafka response: Kafka topic -> Citrus</description>
         <message>
           <resource file="classpath:com/consol/citrus/templates/HelloRequest.xml"/>
@@ -109,7 +109,7 @@
         <message>Test 3: Send Kafka request and receive async Kafka response (Kafka message selector)</message>
       </echo>
 
-      <send endpoint="kafka:test">
+      <send endpoint="kafka:test?consumerGroup=testGroup">
         <description>Send asynchronous Kafka request: Citrus -> Kafka topic</description>
         <message>
           <data>
@@ -129,7 +129,7 @@
         </header>
       </send>
 
-      <send endpoint="kafka:test">
+      <send endpoint="kafka:test?consumerGroup=testGroup">
         <description>Send asynchronous Kafka request: Citrus -> Kafka topic</description>
         <message>
           <data>
@@ -149,7 +149,7 @@
         </header>
       </send>
 
-      <receive endpoint="kafka:test">
+      <receive endpoint="kafka:test?consumerGroup=testGroup">
         <message>
           <data>
             <![CDATA[
@@ -168,7 +168,7 @@
         </header>
       </receive>
 
-      <receive endpoint="kafka:test">
+      <receive endpoint="kafka:test?consumerGroup=testGroup">
         <message>
           <data>
             <![CDATA[
@@ -193,7 +193,7 @@
 
       <assert exception="com.consol.citrus.exceptions.ActionTimeoutException">
         <when>
-          <receive endpoint="kafka:test" timeout="500">
+          <receive endpoint="kafka:test?consumerGroup=testGroup" timeout="500">
             <message/>
           </receive>
         </when>
