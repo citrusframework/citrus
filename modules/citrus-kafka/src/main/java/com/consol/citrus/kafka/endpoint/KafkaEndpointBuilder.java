@@ -109,11 +109,11 @@ public class KafkaEndpointBuilder extends AbstractEndpointBuilder<KafkaEndpoint>
     }
 
     /**
-     * Sets the group property.
+     * Sets the consumer group property.
      * @param group
      * @return
      */
-    public KafkaEndpointBuilder group(String group) {
+    public KafkaEndpointBuilder consumerGroup(String group) {
         endpoint.getEndpointConfiguration().setConsumerGroup(group);
         return this;
     }

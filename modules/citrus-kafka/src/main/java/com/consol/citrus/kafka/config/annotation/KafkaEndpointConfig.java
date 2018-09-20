@@ -125,7 +125,7 @@ public @interface KafkaEndpointConfig {
      * Consumer group id.
      * @return
      */
-    String group() default KafkaMessageHeaders.KAFKA_PREFIX + "group";
+    String consumerGroup() default KafkaMessageHeaders.KAFKA_PREFIX + "group";
 
     /**
      * Timeout.

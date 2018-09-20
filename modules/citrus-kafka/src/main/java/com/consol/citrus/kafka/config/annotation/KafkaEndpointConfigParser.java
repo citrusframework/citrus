@@ -64,7 +64,7 @@ public class KafkaEndpointConfigParser extends AbstractAnnotationConfigParser<Ka
             builder.clientId(annotation.clientId());
         }
 
-        builder.group(annotation.group());
+        builder.consumerGroup(annotation.consumerGroup());
 
         if (StringUtils.hasText(annotation.producerProperties())) {
             builder.producerProperties(getReferenceResolver().resolve(annotation.producerProperties(), Map.class));

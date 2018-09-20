@@ -57,7 +57,7 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
             valueSerializer = ByteArraySerializer.class,
             keyDeserializer = StringDeserializer.class,
             valueDeserializer = ByteArrayDeserializer.class,
-            group = "citrus_group")
+            consumerGroup = "citrus_group")
     private KafkaEndpoint kafkaEndpoint2;
 
     @CitrusEndpoint
