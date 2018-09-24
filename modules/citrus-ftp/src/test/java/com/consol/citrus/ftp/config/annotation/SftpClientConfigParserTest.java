@@ -30,6 +30,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
+import java.util.Map;
+
 import static org.mockito.Mockito.when;
 
 /**
@@ -52,6 +55,8 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
             privateKeyPassword="consol",
             strictHostChecking = true,
             knownHosts="classpath:com/consol/citrus/sftp/known_hosts",
+            preferredAuthentications="gssapi-with-mic",
+            sessionConfigs="sessionConfig",
             timeout=10000L)
     private SftpClient sftpClient2;
 
@@ -86,6 +91,7 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         referenceResolver.setApplicationContext(applicationContext);
 
         when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(applicationContext.getBean("sessionConfig", Map.class)).thenReturn(Collections.singletonMap("PreferredAuthentications", "gssapi-with-mic"));
         when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
     }
 
@@ -105,6 +111,8 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(sftpClient1.getEndpointConfiguration().getPrivateKeyPassword());
         Assert.assertFalse(sftpClient1.getEndpointConfiguration().isStrictHostChecking());
         Assert.assertNull(sftpClient1.getEndpointConfiguration().getKnownHosts());
+        Assert.assertEquals(sftpClient1.getEndpointConfiguration().getPreferredAuthentications(), "publickey,password,keyboard-interactive");
+        Assert.assertEquals(sftpClient1.getEndpointConfiguration().getSessionConfigs().size(), 0L);
 
         // 2nd sftp client
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getHost(), "localhost");
@@ -116,6 +124,9 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPrivateKeyPassword(), "consol");
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(sftpClient2.getEndpointConfiguration().getKnownHosts(), "classpath:com/consol/citrus/sftp/known_hosts");
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getPreferredAuthentications(), "gssapi-with-mic");
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getSessionConfigs().size(), 1L);
+        Assert.assertEquals(sftpClient2.getEndpointConfiguration().getSessionConfigs().get("PreferredAuthentications"), "gssapi-with-mic");
         Assert.assertFalse(sftpClient2.getEndpointConfiguration().isAutoReadFiles());
         Assert.assertFalse(sftpClient2.getEndpointConfiguration().isLocalPassiveMode());
         Assert.assertTrue(sftpClient2.getEndpointConfiguration().isStrictHostChecking());

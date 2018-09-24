@@ -118,6 +118,20 @@
           </xs:documentation>
         </xs:annotation>
       </xs:attribute>
+      <xs:attribute name="preferred-authentications" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Ordered list of preferred authentications. Client will try to authentication with these methods first.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="session-configs" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>
+            Reference to a map of session properties as key-value pairs. Applied on Jsch session on client.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
       <xs:attribute name="message-correlator" type="xs:string"/>
       <xs:attribute name="actor" type="xs:string"/>
       <xs:attribute name="timeout" type="xs:string"/>

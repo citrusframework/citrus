@@ -91,6 +91,18 @@ public @interface SftpClientConfig {
     String knownHosts() default "";
 
     /**
+     * Preferred authentications.
+     * @return
+     */
+    String preferredAuthentications() default "publickey,password,keyboard-interactive";
+
+    /**
+     * Session configuration properties.
+     * @return
+     */
+    String sessionConfigs() default "";
+
+    /**
      * Message correlator.
      * @return
      */
