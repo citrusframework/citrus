@@ -16,6 +16,8 @@
 
 package com.consol.citrus.ftp.client;
 
+import java.util.*;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
@@ -33,6 +35,12 @@ public class SftpEndpointConfiguration extends FtpEndpointConfiguration {
 
     /** If strict host checking is used, path to the 'known_hosts' file */
     private String knownHosts;
+
+    /** List of preferred authentications */
+    private String preferredAuthentications = "publickey,password,keyboard-interactive";
+
+    /** Configuration map with properties on session  */
+    private Map<String, String> sessionConfigs = Collections.emptyMap();
 
     /**
      * Gets the strictHostChecking.
@@ -104,5 +112,41 @@ public class SftpEndpointConfiguration extends FtpEndpointConfiguration {
      */
     public void setPrivateKeyPassword(String privateKeyPassword) {
         this.privateKeyPassword = privateKeyPassword;
+    }
+
+    /**
+     * Gets the preferredAuthentications.
+     *
+     * @return
+     */
+    public String getPreferredAuthentications() {
+        return preferredAuthentications;
+    }
+
+    /**
+     * Sets the preferredAuthentications.
+     *
+     * @param preferredAuthentications
+     */
+    public void setPreferredAuthentications(String preferredAuthentications) {
+        this.preferredAuthentications = preferredAuthentications;
+    }
+
+    /**
+     * Gets the sessionConfigs.
+     *
+     * @return
+     */
+    public Map<String, String> getSessionConfigs() {
+        return sessionConfigs;
+    }
+
+    /**
+     * Sets the sessionConfigs.
+     *
+     * @param sessionConfigs
+     */
+    public void setSessionConfigs(Map<String, String> sessionConfigs) {
+        this.sessionConfigs = sessionConfigs;
     }
 }

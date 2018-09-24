@@ -252,6 +252,12 @@ public class SftpClient extends FtpClient {
                 }
 
                 session.setConfig("StrictHostKeyChecking", getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
+                session.setConfig("PreferredAuthentications", getEndpointConfiguration().getPreferredAuthentications());
+
+                getEndpointConfiguration().getSessionConfigs().entrySet()
+                        .stream()
+                        .peek(entry -> log.info(String.format("Setting session configuration: %s='%s'", entry.getKey(), entry.getValue())))
+                        .forEach(entry -> session.setConfig(entry.getKey(), entry.getValue()));
 
                 session.connect((int) getEndpointConfiguration().getTimeout());
 
@@ -272,11 +278,7 @@ public class SftpClient extends FtpClient {
         }
 
         try {
-            InputStream khIs = FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).getInputStream();
-            if (khIs == null) {
-                throw new CitrusRuntimeException("Cannot find knownHosts at " + getEndpointConfiguration().getKnownHosts());
-            }
-            ssh.setKnownHosts(khIs);
+            ssh.setKnownHosts(FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).getInputStream());
         } catch (JSchException e) {
             throw new CitrusRuntimeException("Cannot add known hosts from " + getEndpointConfiguration().getKnownHosts() + ": " + e,e);
         } catch (IOException e) {
