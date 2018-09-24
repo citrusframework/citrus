@@ -44,17 +44,9 @@
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
-  <bean id="embeddedKafkaServer" class="com.consol.citrus.kafka.embedded.EmbeddedKafkaServer"
-                                 init-method="start"
-                                 destroy-method="stop">
-    <property name="port" value="9092"/>
-    <property name="topics">
-      <set>
-        <value>hello</value>
-        <value>test</value>
-      </set>
-    </property>
-  </bean>
+  <!-- Embedded Kafka server with embedded Zookeeper -->
+  <citrus-kafka:embedded-server id="embeddedKafkaServer"
+                                topics="hello,test"/>
 
   <!-- Kafka endpoints -->
   <citrus-kafka:endpoint id="helloKafkaEndpoint"

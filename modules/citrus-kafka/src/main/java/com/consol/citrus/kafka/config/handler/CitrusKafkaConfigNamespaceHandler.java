@@ -27,6 +27,7 @@ public class CitrusKafkaConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     @Override
     public void init() {
+        registerBeanDefinitionParser("embedded-server", new KafkaEmbeddedServerParser());
         registerBeanDefinitionParser("endpoint", new KafkaEndpointParser());
     }
 }

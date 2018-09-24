@@ -20,9 +20,26 @@
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 
+
+  <xs:element name="embedded-server">
+    <xs:annotation>
+      <xs:documentation>Embedded Kafka message broker composed of embedded Zookeeper and Kafka server with test configuration.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:attribute name="id" type="xs:ID"/>
+      <xs:attribute name="zookeeper-port" type="xs:string"/>
+      <xs:attribute name="kafka-server-port" type="xs:string"/>
+      <xs:attribute name="topics" type="xs:string"/>
+      <xs:attribute name="partitions" type="xs:int"/>
+      <xs:attribute name="broker-properties" type="xs:string"/>
+      <xs:attribute name="log-dir-path" type="xs:string"/>
+      <xs:attribute name="auto-delete-logs" type="xs:boolean"/>
+    </xs:complexType>
+  </xs:element>
+
   <xs:element name="endpoint">
     <xs:annotation>
-      <xs:documentation>Kafka toopic endpoint able to produce and consume messages on a Kafka message broker.</xs:documentation>
+      <xs:documentation>Kafka endpoint able to produce and consume messages to and from topics on a Kafka message broker.</xs:documentation>
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID"/>

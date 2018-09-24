@@ -27,40 +27,55 @@ import org.apache.kafka.common.utils.Time;
 import org.apache.zookeeper.server.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.SocketUtils;
+import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * Embedded Kafka server with reference to embedded Zookeeper cluster for testing purpose. Starts single Zookeeper instance with logs in Java temp directory. Starts single Kafka server
+ * and automatically creates given topics with admin client.
+ *
  * @author Christoph Deppisch
  * @since 2.8
  */
-public class EmbeddedKafkaServer {
+public class EmbeddedKafkaServer implements InitializingBean, DisposableBean {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(EmbeddedKafkaServer.class);
 
-    /** Zookeeper embedded server and client */
+    /** Zookeeper embedded server and factory */
     private ZooKeeperServer zookeeper;
     private ServerCnxnFactory serverFactory;
 
-    /** Running Kafka server instance */
+    /** Zookeeper server port */
+    private int zookeeperPort = SocketUtils.findAvailableTcpPort();
+
+    /** Kafka server instance */
     private KafkaServer kafkaServer;
 
     /** Kafka server port */
-    private int zookeeperPort = 21181;
-
-    /** Kafka server port */
-    private int port = 9092;
+    private int kafkaServerPort = 9092;
 
     /** Number of partitions to create for each topic */
     private int partitions = 1;
 
     /** Topics to create on embedded server */
-    private Set<String> topics = Collections.singleton("citrus");
+    private String topics = "citrus";
+
+    /** Path to log directory for Zookeeper server */
+    private String logDirPath;
+
+    /** Auto delete log dir on exit */
+    private boolean autoDeleteLogs = true;
 
     /** Kafka broker server properties */
     private Map<String, String> brokerProperties = Collections.emptyMap();
@@ -79,7 +94,7 @@ public class EmbeddedKafkaServer {
             throw new CitrusRuntimeException("Failed to start embedded zookeeper server", e);
         }
 
-        Properties brokerConfigProperties = createBrokerProperties("localhost:" + zookeeperPort, port, logDir);
+        Properties brokerConfigProperties = createBrokerProperties("localhost:" + zookeeperPort, kafkaServerPort, logDir);
         brokerConfigProperties.setProperty(KafkaConfig.ReplicaSocketTimeoutMsProp(), "1000");
         brokerConfigProperties.setProperty(KafkaConfig.ControllerSocketTimeoutMsProp(), "1000");
         brokerConfigProperties.setProperty(KafkaConfig.OffsetsTopicReplicationFactorProp(), "1");
@@ -94,7 +109,7 @@ public class EmbeddedKafkaServer {
         kafkaServer.startup();
         kafkaServer.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol.PLAINTEXT));
 
-        createKafkaTopics(topics);
+        createKafkaTopics(StringUtils.commaDelimitedListToSet(topics));
     }
 
     /**
@@ -127,11 +142,21 @@ public class EmbeddedKafkaServer {
         }
     }
 
+    @Override
+    public void destroy() throws Exception {
+        stop();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        start();
+    }
+
     /**
      * Creates new embedded Zookeeper server.
      * @return
      */
-    private ZooKeeperServer createZookeeperServer(File logDir) {
+    protected ZooKeeperServer createZookeeperServer(File logDir) {
         try {
             return new ZooKeeperServer(logDir, logDir, 2000);
         } catch (IOException e) {
@@ -139,16 +164,40 @@ public class EmbeddedKafkaServer {
         }
     }
 
-    private File createLogDir() {
-        String dataDirectory = System.getProperty("java.io.tmpdir");
-        return new File(dataDirectory, "zookeeper").getAbsoluteFile();
+    /**
+     * Creates Zookeeper log directory. By default logs are created in Java temp directory.
+     * By default directory is automatically deleted on exit.
+     *
+     * @return
+     */
+    protected File createLogDir() {
+        File logDir = Optional.ofNullable(logDirPath)
+                                    .map(Paths::get)
+                                    .map(Path::toFile)
+                                    .orElse(new File(System.getProperty("java.io.tmpdir")));
+
+        if (!logDir.exists()) {
+            if (!logDir.mkdirs()) {
+                log.warn("Unable to create log directory: " + logDir.getAbsolutePath());
+                logDir = new File(System.getProperty("java.io.tmpdir"));
+                log.info("Using default log directory: " + logDir.getAbsolutePath());
+            }
+        }
+
+        File logs = new File(logDir, "zookeeper" + System.currentTimeMillis()).getAbsoluteFile();
+
+        if (autoDeleteLogs) {
+            logs.deleteOnExit();
+        }
+
+        return logs;
     }
 
     /**
      * Create server factory for embedded Zookeeper server instance.
      * @return
      */
-    private ServerCnxnFactory createServerFactory() {
+    protected ServerCnxnFactory createServerFactory() {
         try {
             ServerCnxnFactory serverFactory = new NIOServerCnxnFactory();
             serverFactory.configure(new InetSocketAddress(zookeeperPort), 5000);
@@ -162,9 +211,9 @@ public class EmbeddedKafkaServer {
      * Create topics on embedded Kafka server.
      * @param topics
      */
-    private void createKafkaTopics(Set<String> topics) {
+    protected void createKafkaTopics(Set<String> topics) {
         Map<String, Object> adminConfigs = new HashMap<>();
-        adminConfigs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:" + port);
+        adminConfigs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:" + kafkaServerPort);
         try (AdminClient admin = AdminClient.create(adminConfigs)) {
             List<NewTopic> newTopics = topics.stream()
                     .map(t -> new NewTopic(t, partitions, (short) 1))
@@ -185,7 +234,7 @@ public class EmbeddedKafkaServer {
      * @param logDir
      * @return
      */
-    private Properties createBrokerProperties(String zooKeeperConnect, int kafkaServerPort, File logDir) {
+    protected Properties createBrokerProperties(String zooKeeperConnect, int kafkaServerPort, File logDir) {
         Properties props = new Properties();
 
         props.put(KafkaConfig.BrokerIdProp(), "0");
@@ -206,7 +255,7 @@ public class EmbeddedKafkaServer {
 
         props.put(KafkaConfig.ListenersProp(), SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
 
-        props.forEach((key, value) -> System.out.println(key + "=" + value));
+        props.forEach((key, value) -> log.debug(String.format("Using default Kafka broker property %s='%s'", key ,value)));
 
         return props;
     }
@@ -230,21 +279,21 @@ public class EmbeddedKafkaServer {
     }
 
     /**
-     * Gets the port.
+     * Gets the kafkaServerPort.
      *
      * @return
      */
-    public int getPort() {
-        return port;
+    public int getKafkaServerPort() {
+        return kafkaServerPort;
     }
 
     /**
-     * Sets the port.
+     * Sets the kafkaServerPort.
      *
-     * @param port
+     * @param kafkaServerPort
      */
-    public void setPort(int port) {
-        this.port = port;
+    public void setKafkaServerPort(int kafkaServerPort) {
+        this.kafkaServerPort = kafkaServerPort;
     }
 
     /**
@@ -270,7 +319,7 @@ public class EmbeddedKafkaServer {
      *
      * @return
      */
-    public Set<String> getTopics() {
+    public String getTopics() {
         return topics;
     }
 
@@ -279,7 +328,7 @@ public class EmbeddedKafkaServer {
      *
      * @param topics
      */
-    public void setTopics(Set<String> topics) {
+    public void setTopics(String topics) {
         this.topics = topics;
     }
 
@@ -299,5 +348,41 @@ public class EmbeddedKafkaServer {
      */
     public void setBrokerProperties(Map<String, String> brokerProperties) {
         this.brokerProperties = brokerProperties;
+    }
+
+    /**
+     * Gets the logDirPath.
+     *
+     * @return
+     */
+    public String getLogDirPath() {
+        return logDirPath;
+    }
+
+    /**
+     * Sets the logDirPath.
+     *
+     * @param logDirPath
+     */
+    public void setLogDirPath(String logDirPath) {
+        this.logDirPath = logDirPath;
+    }
+
+    /**
+     * Gets the autoDeleteLogs.
+     *
+     * @return
+     */
+    public boolean isAutoDeleteLogs() {
+        return autoDeleteLogs;
+    }
+
+    /**
+     * Sets the autoDeleteLogs.
+     *
+     * @param autoDeleteLogs
+     */
+    public void setAutoDeleteLogs(boolean autoDeleteLogs) {
+        this.autoDeleteLogs = autoDeleteLogs;
     }
 }
