@@ -261,7 +261,11 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         CitrusRuntimeException runtimeException = null;
         if (CollectionUtils.isEmpty(context.getExceptions()) &&
                 Optional.ofNullable(testResult).map(TestResult::isSuccess).orElse(false)) {
-            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor();
+            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread newThread = Executors.defaultThreadFactory().newThread(r);
+                newThread.setName("citrus-finisher-" + newThread.getName());
+                return newThread;
+            });
             try {
                 CompletableFuture<Boolean> finished = new CompletableFuture<>();
                 scheduledExecutor.scheduleAtFixedRate(() -> {
