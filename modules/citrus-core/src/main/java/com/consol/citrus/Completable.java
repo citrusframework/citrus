@@ -20,7 +20,7 @@ import com.consol.citrus.context.TestContext;
 
 /**
  * Interface indicates that test action is aware of its completed state. This is used when test case needs to wait for nested actions to finish
- * working before closing the test case. Asynchronous test action execution may implement this interface in order to publicate the completed state of
+ * working before closing the test case. Asynchronous test action execution may implement this interface in order to publish the completed state of
  * forked processes.
  *
  * @author Christoph Deppisch

@@ -36,7 +36,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusSnippetConfigurer, CitrusRestDocConfigurer>
+public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusSnippetConfigurer, CitrusSnippetConfigurer, CitrusRestDocConfigurer>
         implements ClientHttpRequestInterceptor, TestListener {
 
     private final CitrusSnippetConfigurer snippetConfigurer = new CitrusSnippetConfigurer(this);
@@ -49,6 +49,11 @@ public class CitrusRestDocConfigurer extends RestDocumentationConfigurer<CitrusS
 
     @Override
     public CitrusSnippetConfigurer snippets() {
+        return this.snippetConfigurer;
+    }
+
+    @Override
+    public CitrusSnippetConfigurer operationPreprocessors() {
         return this.snippetConfigurer;
     }
 

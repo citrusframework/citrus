@@ -26,10 +26,10 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.model.PageValidator;
 import com.consol.citrus.selenium.model.WebPage;
 import com.consol.citrus.variable.VariableUtils;
-import cucumber.api.DataTable;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.*;
+import io.cucumber.datatable.DataTable;
 import org.springframework.util.StringUtils;
 
 import java.util.*;

@@ -71,7 +71,7 @@ public class RestDocClientInterceptor implements ClientHttpRequestInterceptor {
      * @return this {@code RestDocClientInterceptor}
      */
     public RestDocClientInterceptor snippets(Snippet... snippets) {
-        this.documentationGenerator.addSnippets(snippets);
+        this.documentationGenerator.withSnippets(snippets);
         return this;
     }
 

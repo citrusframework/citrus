@@ -29,7 +29,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message, ChannelEndpointConfiguration> {
+public class ChannelMessageConverter implements MessageConverter<org.springframework.messaging.Message, org.springframework.messaging.Message, ChannelEndpointConfiguration> {
 
     @Override
     public org.springframework.messaging.Message convertOutbound(Message internalMessage, ChannelEndpointConfiguration endpointConfiguration, TestContext context) {

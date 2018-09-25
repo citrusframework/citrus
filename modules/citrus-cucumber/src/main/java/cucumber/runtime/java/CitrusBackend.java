@@ -30,6 +30,7 @@ import cucumber.runtime.io.ResourceLoaderClassFinder;
 import cucumber.runtime.java.spring.CitrusSpringObjectFactory;
 import cucumber.runtime.snippets.FunctionNameGenerator;
 import gherkin.pickles.PickleStep;
+import io.cucumber.stepexpression.TypeRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -38,6 +39,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -47,26 +49,29 @@ public class CitrusBackend implements Backend {
 
     /** Citrus instance used by all scenarios */
     private static Citrus citrus;
-    private static InitializationHook initializationHook;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusBackend.class);
 
     /** Basic resource loader */
     private ResourceLoader resourceLoader;
+    private TypeRegistry typeRegistry;
 
     /**
      * Constructor using resource loader.
      * @param resourceLoader
      */
-    public CitrusBackend(ResourceLoader resourceLoader) {
+    public CitrusBackend(ResourceLoader resourceLoader, TypeRegistry typeRegistry) {
         this.resourceLoader = resourceLoader;
+        this.typeRegistry = typeRegistry;
+
+        Citrus.CitrusInstanceManager.addInstanceProcessor(instance -> instance.beforeSuite(CitrusReporter.SUITE_NAME));
     }
 
     @Override
     public void loadGlue(Glue glue, List<String> gluePaths) {
         try {
-            initializationHook = new InitializationHook(glue, gluePaths, getObjectFactory());
+            Citrus.CitrusInstanceManager.addInstanceProcessor(new XmlStepInstanceProcessor(glue, gluePaths, getObjectFactory(), typeRegistry));
         } catch (IllegalAccessException e) {
             throw new CitrusRuntimeException("Failed to add XML step definition", e);
         }
@@ -84,10 +89,6 @@ public class CitrusBackend implements Backend {
         } catch (NoSuchMethodException | IllegalAccessException e) {
             throw new CucumberException("Unable to add Citrus lifecylce hooks");
         }
-    }
-
-    @Override
-    public void setUnreportedStepExecutor(UnreportedStepExecutor executor) {
     }
 
     @Override
@@ -125,10 +126,6 @@ public class CitrusBackend implements Backend {
     public static Citrus getCitrus() {
         if (citrus == null) {
             citrus = Citrus.newInstance();
-
-            if (initializationHook != null) {
-                initializationHook.run();
-            }
         }
 
         return citrus;
@@ -153,10 +150,6 @@ public class CitrusBackend implements Backend {
         }
 
         citrus = Citrus.newInstance(applicationContext);
-
-        if (initializationHook != null) {
-            initializationHook.run();
-        }
     }
 
     /**
@@ -171,34 +164,37 @@ public class CitrusBackend implements Backend {
      * Initialization hook performs before suite actions and XML step initialization. Called as soon as citrus instance is requested
      * from outside for the first time. Performs only once.
      */
-    private static class InitializationHook implements Runnable {
+    private static class XmlStepInstanceProcessor implements Citrus.InstanceProcessor {
 
         private final Glue glue;
         private final List<String> gluePaths;
         private final ObjectFactory objectFactory;
+        private TypeRegistry typeRegistry;
 
-        private boolean performed = false;
-
-        InitializationHook(Glue glue, List<String> gluePaths, ObjectFactory objectFactory) {
+        XmlStepInstanceProcessor(Glue glue, List<String> gluePaths, ObjectFactory objectFactory, TypeRegistry typeRegistry) {
             this.glue = glue;
             this.gluePaths = gluePaths;
             this.objectFactory = objectFactory;
+            this.typeRegistry = typeRegistry;
         }
 
         @Override
-        public void run() {
-            if (!performed) {
-                getCitrus().beforeSuite(CitrusReporter.SUITE_NAME);
+        public void process(Citrus instance) {
+            for (String gluePath : gluePaths) {
+                String xmlStepConfigLocation = "classpath*:" + gluePath.replaceAll("\\.", "/").replaceAll("^classpath:", "") + "/**/*Steps.xml";
 
-                for (String gluePath : gluePaths) {
-                    ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{"classpath*:" + gluePath.replaceAll("\\.", "/").replaceAll("^classpath:", "") + "/**/*Steps.xml"}, true, getCitrus().getApplicationContext());
+                log.info(String.format("Loading XML step definitions %s", xmlStepConfigLocation));
 
-                    for (StepTemplate stepTemplate : ctx.getBeansOfType(StepTemplate.class).values()) {
-                        glue.addStepDefinition(new XmlStepDefinition(stepTemplate, objectFactory));
+                ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[]{ xmlStepConfigLocation }, true, instance.getApplicationContext());
+
+                Map<String, StepTemplate> xmlSteps = ctx.getBeansOfType(StepTemplate.class);
+
+                for (StepTemplate stepTemplate : xmlSteps.values()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Found XML step definition: %s %s", stepTemplate.getName(), stepTemplate.getPattern().pattern()));
                     }
+                    glue.addStepDefinition(new XmlStepDefinition(stepTemplate, objectFactory, typeRegistry));
                 }
-
-                performed = true;
             }
         }
     }

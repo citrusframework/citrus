@@ -74,6 +74,11 @@ public class RestDocConfiguredHttpRequest implements HttpRequest {
     }
 
     @Override
+    public String getMethodValue() {
+        return delegate.getMethodValue();
+    }
+
+    @Override
     public URI getURI() {
         return delegate.getURI();
     }

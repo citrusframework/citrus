@@ -19,9 +19,12 @@ package com.consol.citrus.ftp.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
-import com.consol.citrus.ftp.client.*;
+import com.consol.citrus.ftp.client.SftpClient;
+import com.consol.citrus.ftp.client.SftpClientBuilder;
 import com.consol.citrus.message.MessageCorrelator;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -47,6 +50,7 @@ public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpC
 
         builder.port(annotation.port());
         builder.autoReadFiles(annotation.autoReadFiles());
+        builder.localPassiveMode(annotation.localPassiveMode());
 
         if (StringUtils.hasText(annotation.username())) {
             builder.username(annotation.username());
@@ -68,6 +72,14 @@ public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpC
 
         if (StringUtils.hasText(annotation.knownHosts())) {
             builder.knownHosts(annotation.knownHosts());
+        }
+
+        if (StringUtils.hasText(annotation.preferredAuthentications())) {
+            builder.preferredAuthentications(annotation.preferredAuthentications());
+        }
+
+        if (StringUtils.hasText(annotation.sessionConfigs())) {
+            builder.sessionConfigs(getReferenceResolver().resolve(annotation.sessionConfigs(), Map.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {

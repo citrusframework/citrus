@@ -29,7 +29,7 @@ import org.springframework.ws.context.MessageContext;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public interface WebServiceMessageConverter extends MessageConverter<WebServiceMessage, WebServiceEndpointConfiguration> {
+public interface WebServiceMessageConverter extends MessageConverter<WebServiceMessage, WebServiceMessage, WebServiceEndpointConfiguration> {
 
     /**
      * Conversion method for inbound messages. Given inbound WebService message is translated to internal message representation. Given message context is

@@ -47,9 +47,13 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 waitFor()
-                    .http(url).method(HttpMethod.GET).status(HttpStatus.OK).timeout(500L)
-                    .seconds(seconds)
-                    .interval(interval);
+                    .http()
+                        .method(HttpMethod.GET)
+                        .status(HttpStatus.OK)
+                        .timeout(500L)
+                        .seconds(seconds)
+                        .interval(interval)
+                        .url(url);
             }
         };
         builder.configure();
@@ -80,9 +84,10 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 waitFor()
-                    .file(filePath)
+                    .file()
                     .ms(milliseconds)
-                    .interval(interval);
+                    .interval(interval)
+                    .path(filePath);
             }
         };
         builder.configure();
@@ -113,9 +118,10 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 waitFor()
-                    .file(file)
+                    .file()
                     .ms(milliseconds)
-                    .interval(interval);
+                    .interval(interval)
+                    .resource(file);
             }
         };
         builder.configure();
@@ -142,7 +148,8 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
             @Override
             public void configure() {
                 waitFor()
-                    .message(messageName);
+                    .message()
+                    .name(messageName);
             }
         };
         builder.configure();

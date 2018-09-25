@@ -47,7 +47,7 @@ import java.util.*;
  * @author Christian Guggenmos
  * @since 2.0
  */
-public class MailMessageConverter implements MessageConverter<MimeMailMessage, MailEndpointConfiguration> {
+public class MailMessageConverter implements MessageConverter<MimeMailMessage, MimeMailMessage, MailEndpointConfiguration> {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MailMessageConverter.class);

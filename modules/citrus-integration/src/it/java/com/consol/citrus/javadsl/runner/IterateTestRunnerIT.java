@@ -19,9 +19,11 @@ package com.consol.citrus.javadsl.runner;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.runner.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 /**
@@ -75,5 +77,15 @@ public class IterateTestRunnerIT extends TestNGCitrusTestRunner {
 
         iterate().condition("i lt 5").index("i")
                 .actions(createVariable("index", "${i}"), anonymous);
+    }
+
+    @CitrusTest
+    public void iterateBehavior() {
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                iterate().condition(lessThan(3)).actions(echo("index is: ${i}"));
+            }
+        });
     }
 }

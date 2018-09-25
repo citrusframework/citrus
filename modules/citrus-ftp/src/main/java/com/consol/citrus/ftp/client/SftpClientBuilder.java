@@ -20,6 +20,8 @@ import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
 
+import java.util.Map;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
@@ -61,6 +63,16 @@ public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
      */
     public SftpClientBuilder autoReadFiles(boolean autoReadFiles) {
         endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
+        return this;
+    }
+
+    /**
+     * Sets the local passive mode property.
+     * @param localPassiveMode
+     * @return
+     */
+    public SftpClientBuilder localPassiveMode(boolean localPassiveMode) {
+        endpoint.getEndpointConfiguration().setLocalPassiveMode(localPassiveMode);
         return this;
     }
 
@@ -121,6 +133,26 @@ public class SftpClientBuilder extends AbstractEndpointBuilder<SftpClient> {
      */
     public SftpClientBuilder knownHosts(String knownHosts) {
         endpoint.getEndpointConfiguration().setKnownHosts(knownHosts);
+        return this;
+    }
+
+    /**
+     * Sets the preferred authentications property.
+     * @param preferredAuthentications
+     * @return
+     */
+    public SftpClientBuilder preferredAuthentications(String preferredAuthentications) {
+        endpoint.getEndpointConfiguration().setPreferredAuthentications(preferredAuthentications);
+        return this;
+    }
+
+    /**
+     * Sets the sessionConfigs property.
+     * @param sessionConfigs
+     * @return
+     */
+    public SftpClientBuilder sessionConfigs(Map<String, String> sessionConfigs) {
+        endpoint.getEndpointConfiguration().setSessionConfigs(sessionConfigs);
         return this;
     }
 

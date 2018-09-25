@@ -35,7 +35,7 @@ import java.util.*;
  * 
  * @author Christoph Deppisch
  */
-public class JmsMessageConverter implements MessageConverter<javax.jms.Message, JmsEndpointConfiguration> {
+public class JmsMessageConverter implements MessageConverter<javax.jms.Message, javax.jms.Message, JmsEndpointConfiguration> {
 
     @Override
     public javax.jms.Message convertOutbound(Message message, JmsEndpointConfiguration endpointConfiguration, TestContext context) {

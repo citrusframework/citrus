@@ -22,10 +22,12 @@ import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.ssh.model.SshResponse;
 import com.consol.citrus.util.FileUtils;
-import org.apache.sshd.server.*;
+import org.apache.sshd.common.util.io.IoUtils;
+import org.apache.sshd.server.Environment;
+import org.apache.sshd.server.ExitCallback;
+import org.apache.sshd.server.command.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
 
@@ -93,6 +95,9 @@ public class SshCommand implements Command, Runnable {
             exitCallback.onExit(sshResponse.getExit());
         } catch (IOException exp) {
             exitCallback.onExit(1, exp.getMessage());
+        } finally {
+            IoUtils.closeQuietly(stderr);
+            IoUtils.closeQuietly(stdout);
         }
     }
 
@@ -129,7 +134,7 @@ public class SshCommand implements Command, Runnable {
      */
     private void copyToStream(String txt, OutputStream stream) throws IOException {
         if (txt != null) {
-            FileCopyUtils.copy(txt.getBytes(), stream);
+            stream.write(txt.getBytes());
         }
     }
 

@@ -29,7 +29,7 @@ import javax.xml.transform.Source;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class RmiMessageConverter implements MessageConverter<RmiServiceInvocation, RmiEndpointConfiguration> {
+public class RmiMessageConverter implements MessageConverter<RmiServiceInvocation, RmiServiceInvocation, RmiEndpointConfiguration> {
 
     @Override
     public RmiServiceInvocation convertOutbound(Message internalMessage, RmiEndpointConfiguration endpointConfiguration, TestContext context) {

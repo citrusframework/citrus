@@ -49,6 +49,12 @@ public @interface SftpClientConfig {
     boolean autoReadFiles() default true;
 
     /**
+     * Local passive mode
+     * @return
+     */
+    boolean localPassiveMode() default true;
+
+    /**
      * Username
      * @return
      */
@@ -83,6 +89,18 @@ public @interface SftpClientConfig {
      * @return
      */
     String knownHosts() default "";
+
+    /**
+     * Preferred authentications.
+     * @return
+     */
+    String preferredAuthentications() default "publickey,password,keyboard-interactive";
+
+    /**
+     * Session configuration properties.
+     * @return
+     */
+    String sessionConfigs() default "";
 
     /**
      * Message correlator.

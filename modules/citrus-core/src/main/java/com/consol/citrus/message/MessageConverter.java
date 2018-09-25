@@ -26,7 +26,7 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public interface MessageConverter<T, C extends EndpointConfiguration> {
+public interface MessageConverter<I, O, C extends EndpointConfiguration> {
 
     /**
      * Converts internal message representation to external message for outbound communication.
@@ -36,7 +36,7 @@ public interface MessageConverter<T, C extends EndpointConfiguration> {
      * @param context
      * @return
      */
-    T convertOutbound(Message internalMessage, C endpointConfiguration, TestContext context);
+    O convertOutbound(Message internalMessage, C endpointConfiguration, TestContext context);
 
     /**
      * Converts internal message representation to external message for outbound communication.
@@ -49,7 +49,7 @@ public interface MessageConverter<T, C extends EndpointConfiguration> {
      * @param context
      * @return
      */
-    void convertOutbound(T externalMessage, Message internalMessage, C endpointConfiguration, TestContext context);
+    void convertOutbound(O externalMessage, Message internalMessage, C endpointConfiguration, TestContext context);
 
     /**
      * Converts external message to internal representation.
@@ -59,5 +59,5 @@ public interface MessageConverter<T, C extends EndpointConfiguration> {
      * @param context
      * @return
      */
-    Message convertInbound(T externalMessage, C endpointConfiguration, TestContext context);
+    Message convertInbound(I externalMessage, C endpointConfiguration, TestContext context);
 }

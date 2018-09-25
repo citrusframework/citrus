@@ -10,7 +10,7 @@
    must include the following acknowledgement:
 
      "This product includes software developed by the Citrus
-      Project (https://www.citrusframework.org)."
+      Project (https://citrusframework.org)."
 
    Alternatively, this acknowledgement may appear in the software itself,
    if and wherever such third-party acknowledgements normally appear.
@@ -29,4 +29,4 @@
    along with Citrus. If not, see <http://www.apache.org/licenses/LICENSE-2.0>.
   
    dev@citrusframework.org
-   https://www.citrusframework.org
+   https://citrusframework.org
