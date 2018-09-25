@@ -31,7 +31,7 @@ public class CitrusArchiveBuilderTest {
     public void setCitrusVersion() {
         Field version = ReflectionUtils.findField(Citrus.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "2.7.7-SNAPSHOT");
+        ReflectionUtils.setField(version, Citrus.class, "2.8.0-SNAPSHOT");
     }
 
     @Test
@@ -43,10 +43,11 @@ public class CitrusArchiveBuilderTest {
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 20);
+        Assert.assertEquals(artifactResources.length, 21);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");
+        verifyArtifact(artifactResources, "citrus-kafka-.*jar");
         verifyArtifact(artifactResources, "citrus-jdbc-.*jar");
         verifyArtifact(artifactResources, "citrus-http-.*jar");
         verifyArtifact(artifactResources, "citrus-websocket-.*jar");
@@ -76,10 +77,11 @@ public class CitrusArchiveBuilderTest {
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 20);
+        Assert.assertEquals(artifactResources.length, 21);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");
+        verifyArtifact(artifactResources, "citrus-kafka-.*jar");
         verifyArtifact(artifactResources, "citrus-jdbc-.*jar");
         verifyArtifact(artifactResources, "citrus-http-.*jar");
         verifyArtifact(artifactResources, "citrus-websocket-.*jar");

@@ -17,7 +17,10 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.dsl.builder.FinallySequenceBuilder;
+
+import java.util.Stack;
 
 /**
  * @author Christoph Deppisch
@@ -37,6 +40,13 @@ public abstract class AbstractTestBehavior extends DefaultTestRunner implements 
     @Override
     public void apply(TestRunner target) {
         this.target = target;
+        containers = new Stack<AbstractActionContainer>() {
+            @Override
+            public AbstractActionContainer push(AbstractActionContainer item) {
+                target.container(item);
+                return item;
+            }
+        };
         apply();
     }
 

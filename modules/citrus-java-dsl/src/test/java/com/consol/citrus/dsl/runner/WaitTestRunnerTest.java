@@ -52,7 +52,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor().condition(condition).seconds(seconds).interval(interval);
+                waitFor().seconds(seconds).interval(interval).condition(condition);
             }
         };
 
@@ -82,7 +82,10 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor().file(file).seconds(seconds).interval(interval);
+                waitFor().file()
+                         .seconds(seconds)
+                         .interval(interval)
+                         .resource(file);
             }
         };
 
@@ -102,7 +105,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor().execution().action(sleep(200L)).seconds(1L).interval(100L);
+                waitFor().execution().seconds(1L).interval(300L).action(sleep(200L));
             }
         };
 
@@ -113,7 +116,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         Wait action = (Wait)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "wait");
         Assert.assertEquals(action.getSeconds(), "1");
-        Assert.assertEquals(action.getInterval(), "100");
+        Assert.assertEquals(action.getInterval(), "300");
         Assert.assertEquals(action.getCondition().getClass(), ActionCondition.class);
     }
 
@@ -130,7 +133,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor().file(file).seconds(seconds).interval(interval);
+                waitFor().file().seconds(seconds).interval(interval).resource(file);
             }
         };
     }
@@ -140,7 +143,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor().execution().action(fail("I am failing!")).ms(500L).interval(100L);
+                waitFor().execution().ms(500L).interval(100L).action(fail("I am failing!"));
             }
         };
     }
@@ -152,13 +155,16 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         when(condition.isSatisfied(any(TestContext.class))).thenReturn(Boolean.FALSE);
         when(condition.isSatisfied(any(TestContext.class))).thenReturn(Boolean.TRUE);
         when(condition.getSuccessMessage(any(TestContext.class))).thenReturn("Condition success!");
+
         final String seconds = "3";
         final String interval = "500";
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor(builder -> builder.condition(condition).seconds(seconds).interval(interval));
+                waitFor(builder -> builder.interval(interval)
+                                          .seconds(seconds)
+                                          .condition(condition));
             }
         };
 
@@ -188,7 +194,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor(builder -> builder.file(file).seconds(seconds).interval(interval));
+                waitFor(builder -> builder.seconds(seconds).interval(interval).file().resource(file));
             }
         };
 
@@ -216,7 +222,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
-                waitFor(builder -> builder.file(file).seconds(seconds).interval(interval));
+                waitFor(builder -> builder.file().seconds(seconds).interval(interval).resource(file));
             }
         };
     }

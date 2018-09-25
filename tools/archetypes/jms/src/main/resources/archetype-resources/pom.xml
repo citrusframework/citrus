@@ -9,7 +9,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <citrus.version>2.7.7-SNAPSHOT</citrus.version>
+    <citrus.version>2.8.0-SNAPSHOT</citrus.version>
     <slf4j.version>1.7.25</slf4j.version>
     <testng.version>6.11</testng.version>
     <activemq.version>5.15.0</activemq.version>

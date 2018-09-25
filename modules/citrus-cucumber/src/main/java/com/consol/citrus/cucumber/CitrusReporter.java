@@ -16,8 +16,8 @@
 
 package com.consol.citrus.cucumber;
 
+import cucumber.api.event.*;
 import cucumber.runtime.DefaultSummaryPrinter;
-import cucumber.runtime.Runtime;
 import cucumber.runtime.java.CitrusBackend;
 
 /**
@@ -29,8 +29,8 @@ public class CitrusReporter extends DefaultSummaryPrinter {
     public static final String SUITE_NAME = "cucumber-suite";
 
     @Override
-    public void print(Runtime runtime) {
-        CitrusBackend.getCitrus().afterSuite(SUITE_NAME);
-        super.print(runtime);
+    public void setEventPublisher(EventPublisher publisher) {
+        publisher.registerHandlerFor(TestRunFinished.class, event -> CitrusBackend.getCitrus().afterSuite(SUITE_NAME));
+        super.setEventPublisher(publisher);
     }
 }

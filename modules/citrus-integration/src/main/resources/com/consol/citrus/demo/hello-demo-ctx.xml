@@ -12,15 +12,18 @@
 
     <import resource="classpath:com/consol/citrus/demo/hello-common-context.xml"/>
     
-    <jms:message-driven-channel-adapter id="helloReqeustIn" 
+    <jms:message-driven-channel-adapter id="helloReqeustIn"
+                                        connection-factory="connectionFactory"
                                         destination-name="Demo.Hello.Request.Queue" 
                                         channel="helloRequests"/>
                                         
-    <jms:outbound-channel-adapter id="helloResponseOut" 
+    <jms:outbound-channel-adapter id="helloResponseOut"
+                                  connection-factory="connectionFactory"
                                   destination-name="Demo.Hello.Response.Queue"
                                   channel="helloResponses"/>
     
     <jms:inbound-gateway id="syncHelloRequestsIn"
+                         connection-factory="connectionFactory"
                          request-destination-name="Demo.Sync.Hello.Request.Queue"
                          request-channel="syncHelloRequests"/>
     

@@ -22,13 +22,18 @@ import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.ftp.model.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.keyverifier.*;
+import org.apache.sshd.client.scp.DefaultScpClientCreator;
 import org.apache.sshd.client.session.ClientSession;
-import org.apache.sshd.common.util.io.NoCloseInputStream;
+import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 /**
@@ -108,16 +113,30 @@ public class ScpClient extends SftpClient {
 
     @Override
     protected void connectAndLogin() {
-        PrintStream out = Optional.ofNullable(getEndpointConfiguration().getStdout()).orElse(System.out);
-        PrintStream err = Optional.ofNullable(getEndpointConfiguration().getStderr()).orElse(System.err);
+        try {
+            SshClient client = SshClient.setUpDefaultClient();
+            client.start();
 
-        try (BufferedReader stdinReader = new BufferedReader(new InputStreamReader(new NoCloseInputStream(Optional.ofNullable(getEndpointConfiguration().getStdin()).orElse(System.in))))) {
-            ClientSession session = SshClient.setupClientSession(getEndpointConfiguration().getPortOption(), stdinReader, out, err,
-                                        getEndpointConfiguration().getPortOption(), String.valueOf(getEndpointConfiguration().getPort()),
-                                               "-o", "HostKeyAlgorithms=+ssh-dss",
-                                               "-i", getPrivateKeyPath(),
-                                               "-l", getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost());
-            scpClient = session.createScpClient();
+            if (getEndpointConfiguration().isStrictHostChecking()) {
+                client.setServerKeyVerifier(new KnownHostsServerKeyVerifier(RejectAllServerKeyVerifier.INSTANCE, FileUtils.getFileResource(getEndpointConfiguration().getKnownHosts()).getFile().toPath()));
+            } else {
+                client.setServerKeyVerifier(AcceptAllServerKeyVerifier.INSTANCE);
+            }
+
+            ClientSession session = client.connect(getEndpointConfiguration().getUser(), getEndpointConfiguration().getHost(), getEndpointConfiguration().getPort()).verify(getEndpointConfiguration().getTimeout()).getSession();
+            session.addPasswordIdentity(getEndpointConfiguration().getPassword());
+
+            Resource privateKey = FileUtils.getFileResource(getPrivateKeyPath());
+
+            if (privateKey instanceof ClassPathResource) {
+                new ClassLoadableResourceKeyPairProvider(privateKey.getFile().getPath()).loadKeys().forEach(session::addPublicKeyIdentity);
+            } else {
+                new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys().forEach(session::addPublicKeyIdentity);
+            }
+
+            session.auth().verify(getEndpointConfiguration().getTimeout());
+
+            scpClient = new DefaultScpClientCreator().createScpClient(session);
         } catch (Exception e) {
             throw new CitrusRuntimeException(String.format("Failed to login to SCP server using credentials: %s:%s:%s", getEndpointConfiguration().getUser(), getEndpointConfiguration().getPassword(), getEndpointConfiguration().getPrivateKeyPath()), e);
 

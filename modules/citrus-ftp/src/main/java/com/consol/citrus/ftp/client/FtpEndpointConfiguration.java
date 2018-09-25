@@ -64,6 +64,9 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
     /** Auto read file content retrieved from server */
     private boolean autoReadFiles = true;
 
+    /** File transfer passive mode */
+    private boolean localPassiveMode = true;
+
     /**
      * Gets the ftp host.
      * @return
@@ -250,5 +253,23 @@ public class FtpEndpointConfiguration extends AbstractPollableEndpointConfigurat
      */
     public void setAutoReadFiles(boolean autoReadFiles) {
         this.autoReadFiles = autoReadFiles;
+    }
+
+    /**
+     * Gets the localPassiveMode.
+     *
+     * @return
+     */
+    public boolean isLocalPassiveMode() {
+        return localPassiveMode;
+    }
+
+    /**
+     * Sets the localPassiveMode.
+     *
+     * @param localPassiveMode
+     */
+    public void setLocalPassiveMode(boolean localPassiveMode) {
+        this.localPassiveMode = localPassiveMode;
     }
 }

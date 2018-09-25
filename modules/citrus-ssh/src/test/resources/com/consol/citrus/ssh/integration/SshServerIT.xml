@@ -28,54 +28,50 @@
         <message>Contact the SSH server and issue a simple command with sending some standard input</message>
       </echo>
 
-      <parallel>
-        <send endpoint="sshClient">
-          <message>
-            <payload>
-                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
-                  <command>shutdown</command>
-                  <stdin>input</stdin>
-                </ssh-request>
-            </payload>
-          </message>
-        </send>
+      <send endpoint="sshClient" fork="true">
+        <message>
+          <payload>
+              <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
+                <command>shutdown</command>
+                <stdin>input</stdin>
+              </ssh-request>
+          </payload>
+        </message>
+      </send>
 
-        <sequential>
-          <receive endpoint="sshServer">
-            <message>
-              <payload>
-                <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
-                    <command>shutdown</command>
-                    <stdin>input</stdin>
-                  </ssh-request>
-              </payload>
-            </message>
-          </receive>
+      <receive endpoint="sshServer">
+        <message>
+          <payload>
+            <ssh-request xmlns="http://www.citrusframework.org/schema/ssh/message">
+                <command>shutdown</command>
+                <stdin>input</stdin>
+              </ssh-request>
+          </payload>
+        </message>
+      </receive>
 
-          <send endpoint="sshServer">
-            <message>
-              <payload>
-                  <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
-                    <stdout>Hello Citrus</stdout>
-                    <exit>0</exit>
-                  </ssh-response>
-              </payload>
-            </message>
-          </send>
-        </sequential>
-      </parallel>
-
-      <receive endpoint="sshClient">
+      <send endpoint="sshServer">
         <message>
           <payload>
               <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
                 <stdout>Hello Citrus</stdout>
-                <stderr/>
                 <exit>0</exit>
               </ssh-response>
           </payload>
         </message>
-      </receive>
+      </send>
+
+    <receive endpoint="sshClient">
+      <message>
+        <payload>
+            <ssh-response xmlns="http://www.citrusframework.org/schema/ssh/message">
+              <stdout>Hello Citrus</stdout>
+              <stderr/>
+              <exit>0</exit>
+            </ssh-response>
+        </payload>
+      </message>
+    </receive>
     </actions>
   </testcase>
 </spring:beans>

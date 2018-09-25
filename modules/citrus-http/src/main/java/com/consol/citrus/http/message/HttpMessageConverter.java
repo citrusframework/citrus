@@ -33,7 +33,7 @@ import java.util.*;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEndpointConfiguration> {
+public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEntity<?>, HttpEndpointConfiguration> {
 
     @Override
     public HttpEntity<?> convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {

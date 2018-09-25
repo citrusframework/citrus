@@ -69,6 +69,7 @@ include::zookeeper.adoc[]
 include::restdocs.adoc[]
 include::selenium.adoc[]
 include::jdbc.adoc[]
+include::kafka.adoc[]
 include::endpoint-component.adoc[]
 include::endpoint-adapter.adoc[]
 

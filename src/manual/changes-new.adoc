@@ -3,6 +3,14 @@
 
 We have the following features included in the box.
 
+[[changes-2-7-7]]
+== Since Citrus 2.7.7
+
+[[changes-bugs]]
+=== Bugfix, bugfix, bugfix
+
+See the complete list of https://github.com/citrusframework/citrus/milestone/12?closed=1[v2.7.7 bugfixes].
+
 [[changes-2-7-6]]
 == Since Citrus 2.7.6
 
@@ -161,4 +169,4 @@ that replaced the old deprecated stuff.
 
 Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues
 makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete
-http://www.citrusframework.org/changes-report.html[changes log] of each release.
+https://www.citrusframework.org/changes-report.html[changes log] of each release.

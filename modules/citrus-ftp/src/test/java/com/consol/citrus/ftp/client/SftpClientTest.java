@@ -20,10 +20,9 @@ import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.ftp.model.*;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.NamedFactory;
-import org.apache.sshd.common.keyprovider.AbstractClassLoadableResourceKeyPairProvider;
-import org.apache.sshd.common.util.SecurityUtils;
-import org.apache.sshd.server.Command;
+import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -36,9 +35,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.*;
 
-import static org.apache.commons.net.ftp.FTPReply.CLOSING_DATA_CONNECTION;
-import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
-import static org.apache.commons.net.ftp.FTPReply.FILE_STATUS_OK;
+import static org.apache.commons.net.ftp.FTPReply.*;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -202,15 +199,17 @@ public class SftpClientTest extends AbstractFtpClientTest {
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(2223);
 
-        AbstractClassLoadableResourceKeyPairProvider resourceKeyPairProvider = SecurityUtils.createClassLoadableResourceKeyPairProvider();
+        ClassLoadableResourceKeyPairProvider resourceKeyPairProvider = new ClassLoadableResourceKeyPairProvider();
         resourceKeyPairProvider.setResources(Collections.singletonList("com/consol/citrus/ssh/citrus.pem"));
         sshd.setKeyPairProvider(resourceKeyPairProvider);
 
         sshd.setPasswordAuthenticator((username, password, session) -> true);
 
-        List<NamedFactory<Command>> namedFactoryList = new ArrayList<>();
-        namedFactoryList.add(new SftpSubsystemFactory());
-        sshd.setSubsystemFactories(namedFactoryList);
+        ArrayList<NamedFactory<Command>> subsystemFactories = new ArrayList<>();
+        SftpSubsystemFactory sftpSubsystemFactory = new SftpSubsystemFactory.Builder().build();
+
+        subsystemFactories.add(sftpSubsystemFactory);
+        sshd.setSubsystemFactories(subsystemFactories);
 
         sshd.start();
 

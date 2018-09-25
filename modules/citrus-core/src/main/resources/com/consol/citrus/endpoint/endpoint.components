@@ -1,5 +1,6 @@
 channel=com.consol.citrus.channel.ChannelEndpointComponent
 jms=com.consol.citrus.jms.endpoint.JmsEndpointComponent
+kafka=com.consol.citrus.kafka.endpoint.KafkaEndpointComponent
 http=com.consol.citrus.http.client.HttpEndpointComponent
 https=com.consol.citrus.http.client.HttpsEndpointComponent
 soap=com.consol.citrus.ws.client.WebServiceEndpointComponent

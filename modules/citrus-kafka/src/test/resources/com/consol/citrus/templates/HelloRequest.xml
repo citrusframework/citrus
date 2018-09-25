@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+  <MessageId>${messageId}</MessageId>
+  <CorrelationId>${correlationId}</CorrelationId>
+  <User>${user}</User>
+  <Text>Hello TestFramework</Text>
+</HelloRequest>

@@ -17,10 +17,13 @@
 package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.design.AbstractTestBehavior;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import org.testng.annotations.Test;
+
+import static org.hamcrest.Matchers.lessThan;
 
 /**
  * @author Christoph Deppisch
@@ -57,5 +60,15 @@ public class IterateJavaIT extends TestNGCitrusTestDesigner {
         };
 
         iterate().condition("i lt 5").index("i").actions(createVariable("index", "${i}"), anonymous);
+    }
+
+    @CitrusTest
+    public void iterateBehavior() {
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                iterate().condition(lessThan(3)).actions(echo("index is: ${i}"));
+            }
+        });
     }
 }

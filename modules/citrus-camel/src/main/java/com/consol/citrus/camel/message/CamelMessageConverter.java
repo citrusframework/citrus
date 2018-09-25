@@ -31,7 +31,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public class CamelMessageConverter implements MessageConverter<Exchange, CamelEndpointConfiguration> {
+public class CamelMessageConverter implements MessageConverter<Exchange, Exchange, CamelEndpointConfiguration> {
 
     @Override
     public Exchange convertOutbound(Message message, CamelEndpointConfiguration endpointConfiguration, TestContext context) {

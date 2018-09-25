@@ -21,16 +21,16 @@ import com.consol.citrus.remote.plugin.config.*;
 import org.apache.maven.archiver.MavenArchiveConfiguration;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugin.assembly.AssemblerConfigurationSource;
-import org.apache.maven.plugin.assembly.InvalidAssemblerConfigurationException;
-import org.apache.maven.plugin.assembly.archive.ArchiveCreationException;
-import org.apache.maven.plugin.assembly.archive.AssemblyArchiver;
-import org.apache.maven.plugin.assembly.format.AssemblyFormattingException;
-import org.apache.maven.plugin.assembly.io.AssemblyReadException;
-import org.apache.maven.plugin.assembly.io.AssemblyReader;
-import org.apache.maven.plugin.assembly.model.Assembly;
 import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.assembly.AssemblerConfigurationSource;
+import org.apache.maven.plugins.assembly.InvalidAssemblerConfigurationException;
+import org.apache.maven.plugins.assembly.archive.ArchiveCreationException;
+import org.apache.maven.plugins.assembly.archive.AssemblyArchiver;
+import org.apache.maven.plugins.assembly.format.AssemblyFormattingException;
+import org.apache.maven.plugins.assembly.io.AssemblyReadException;
+import org.apache.maven.plugins.assembly.io.AssemblyReader;
+import org.apache.maven.plugins.assembly.model.Assembly;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.MavenProjectHelper;
 import org.apache.maven.shared.filtering.MavenReaderFilter;
@@ -144,7 +144,7 @@ public abstract class AbstractCitrusRemoteAssemblyMojo extends AbstractCitrusRem
 
         try {
             for (String format : assembly.getFormats()) {
-                assemblyArchiver.createArchive(assembly, finalName + "-" + assembly.getId(), format, source, false);
+                assemblyArchiver.createArchive(assembly, finalName + "-" + assembly.getId(), format, source, false, "merge");
             }
         } catch (ArchiveCreationException | AssemblyFormattingException e) {
             throw new MojoExecutionException("Failed to create assembly for test jar", e);

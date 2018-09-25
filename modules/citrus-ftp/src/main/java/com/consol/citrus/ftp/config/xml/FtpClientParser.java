@@ -40,6 +40,7 @@ public class FtpClientParser extends AbstractEndpointParser {
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("host"), "host");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("port"), "port");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("auto-read-files"), "autoReadFiles");
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("local-passive-mode"), "localPassiveMode");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("username"), "user");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("password"), "password");
 

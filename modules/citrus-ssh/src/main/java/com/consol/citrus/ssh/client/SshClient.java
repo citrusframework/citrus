@@ -28,6 +28,7 @@ import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.ssh.model.SshResponse;
 import com.consol.citrus.util.FileUtils;
 import com.jcraft.jsch.*;
+import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.springframework.util.*;
 
 import java.io.*;
@@ -175,7 +176,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
                     session.setUserInfo(new UserInfoWithPlainPassword(getEndpointConfiguration().getPassword()));
                     session.setPassword(getEndpointConfiguration().getPassword());
                 }
-                session.setConfig("StrictHostKeyChecking", getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
+                session.setConfig(KnownHostsServerKeyVerifier.STRICT_CHECKING_OPTION, getEndpointConfiguration().isStrictHostChecking() ? "yes" : "no");
                 session.connect();
             } catch (JSchException e) {
                 throw new CitrusRuntimeException("Cannot connect via SSH: " + e,e);

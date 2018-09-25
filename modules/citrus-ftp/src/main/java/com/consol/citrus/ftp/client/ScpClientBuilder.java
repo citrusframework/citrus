@@ -65,16 +65,6 @@ public class ScpClientBuilder extends AbstractEndpointBuilder<ScpClient> {
     }
 
     /**
-     * Sets the auto read files property.
-     * @param autoReadFiles
-     * @return
-     */
-    public ScpClientBuilder autoReadFiles(boolean autoReadFiles) {
-        endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
-        return this;
-    }
-
-    /**
      * Sets the client username.
      * @param username
      * @return

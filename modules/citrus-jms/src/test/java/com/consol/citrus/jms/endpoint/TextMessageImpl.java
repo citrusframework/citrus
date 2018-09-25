@@ -23,11 +23,11 @@ import java.util.*;
  * @author Christoph Deppisch
  */
 public class TextMessageImpl implements TextMessage {
-    private String payload = "";
+    private String payload;
     
     private Destination replyDestination = null;
     
-    private Map<String, Object> headers = new HashMap<String, Object>();
+    private Map<String, Object> headers;
     
     public TextMessageImpl(String payload, Map<String, Object> headers) {
         this.payload = payload;
@@ -45,6 +45,8 @@ public class TextMessageImpl implements TextMessage {
     public void setJMSPriority(int priority) throws JMSException {}
     public void setJMSMessageID(String id) throws JMSException {}
     public void setJMSExpiration(long expiration) throws JMSException {}
+    public long getJMSDeliveryTime() throws JMSException { return 0; }
+    public void setJMSDeliveryTime(long deliveryTime) throws JMSException {}
     public void setJMSDestination(Destination destination) throws JMSException {}
     public void setJMSDeliveryMode(int deliveryMode) throws JMSException {}
     public void setJMSCorrelationIDAsBytes(byte[] correlationID) throws JMSException {}
@@ -79,6 +81,8 @@ public class TextMessageImpl implements TextMessage {
     public boolean getBooleanProperty(String name) throws JMSException {return false;}
     public void clearProperties() throws JMSException {}
     public void clearBody() throws JMSException {}
+    public <T> T getBody(Class<T> c) throws JMSException { return (T) payload; }
+    public boolean isBodyAssignableTo(Class c) throws JMSException { return true; }
     public void acknowledge() throws JMSException {}
     public void setText(String string) throws JMSException {this.payload = string;}
     public String getText() throws JMSException {return payload;}

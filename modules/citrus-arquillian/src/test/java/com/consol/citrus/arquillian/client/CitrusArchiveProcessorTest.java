@@ -46,7 +46,7 @@ public class CitrusArchiveProcessorTest {
     public void setCitrusVersion() {
         Field version = ReflectionUtils.findField(Citrus.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "2.7.7-SNAPSHOT");
+        ReflectionUtils.setField(version, Citrus.class, "2.8.0-SNAPSHOT");
     }
 
     @BeforeMethod
@@ -65,6 +65,7 @@ public class CitrusArchiveProcessorTest {
         archiveProcessor.process(enterpriseArchive, new TestClass(this.getClass()));
         verifyArtifact(enterpriseArchive, "/citrus-core-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-jms-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-kafka-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-jdbc-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-http-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-websocket-.*jar");
@@ -98,6 +99,7 @@ public class CitrusArchiveProcessorTest {
         archiveProcessor.process(enterpriseArchive, new TestClass(this.getClass()));
         verifyArtifact(enterpriseArchive, "/citrus-core-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-jms-.*jar");
+        verifyArtifact(enterpriseArchive, "/citrus-kafka-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-jdbc-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-http-.*jar");
         verifyArtifact(enterpriseArchive, "/citrus-websocket-.*jar");
@@ -125,6 +127,7 @@ public class CitrusArchiveProcessorTest {
         archiveProcessor.process(webArchive, new TestClass(this.getClass()));
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-core-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-jms-.*jar");
+        verifyArtifact(webArchive, "/WEB-INF/lib/citrus-kafka-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-jdbc-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-http-.*jar");
         verifyArtifact(webArchive, "/WEB-INF/lib/citrus-websocket-.*jar");

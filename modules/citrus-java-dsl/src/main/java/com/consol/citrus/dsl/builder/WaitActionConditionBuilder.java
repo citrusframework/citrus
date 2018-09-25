@@ -24,20 +24,19 @@ import com.consol.citrus.container.Wait;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondition> {
-
+public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondition, WaitActionConditionBuilder> {
 
     /** Parent wait action builder */
-    private final WaitBuilder builder;
+    private final Wait action;
 
     /**
      * Default constructor using fields.
-     * @param action
      * @param condition
+     * @param builder
      */
     public WaitActionConditionBuilder(Wait action, ActionCondition condition, WaitBuilder builder) {
-        super(action, condition);
-        this.builder = builder;
+        super(condition, builder);
+        this.action = action;
     }
 
     /**
@@ -45,46 +44,17 @@ public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondi
      * @param action
      * @return
      */
-    public WaitActionConditionBuilder action(TestAction action) {
+    public Wait action(TestAction action) {
         if (action instanceof TestActionBuilder) {
             getCondition().setAction(((TestActionBuilder) action).build());
             this.action.setAction(((TestActionBuilder) action).build());
-            builder.actions(((TestActionBuilder) action).build());
+            getBuilder().actions(((TestActionBuilder) action).build());
         } else {
             getCondition().setAction(action);
             this.action.setAction(action);
-            builder.actions(action);
+            getBuilder().actions(action);
         }
-        return this;
-    }
 
-    @Override
-    public WaitActionConditionBuilder ms(Long milliseconds) {
-        return (WaitActionConditionBuilder) super.ms(milliseconds);
-    }
-
-    @Override
-    public WaitActionConditionBuilder ms(String milliseconds) {
-        return (WaitActionConditionBuilder) super.ms(milliseconds);
-    }
-
-    @Override
-    public WaitActionConditionBuilder seconds(Long seconds) {
-        return (WaitActionConditionBuilder) super.seconds(seconds);
-    }
-
-    @Override
-    public WaitActionConditionBuilder seconds(String seconds) {
-        return (WaitActionConditionBuilder) super.seconds(seconds);
-    }
-
-    @Override
-    public WaitActionConditionBuilder interval(Long interval) {
-        return (WaitActionConditionBuilder) super.interval(interval);
-    }
-
-    @Override
-    public WaitActionConditionBuilder interval(String interval) {
-        return (WaitActionConditionBuilder) super.interval(interval);
+        return getBuilder().build();
     }
 }

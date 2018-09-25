@@ -17,6 +17,7 @@
 package com.consol.citrus.ssh.server;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.util.io.IoUtils;
 import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
@@ -26,7 +27,6 @@ import org.bouncycastle.openssl.PEMKeyPair;
 import org.bouncycastle.openssl.PEMParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.ResourceUtils;
 
 import java.io.*;
 import java.security.PublicKey;
@@ -51,30 +51,22 @@ class SinglePublicKeyAuthenticator implements PublickeyAuthenticator {
     /**
      * Constructor
      *
-     * @param pUser user to verify against
-     * @param pPublicKeyPath path to a single public key PEM, either in the filesystem or, if prefixed
+     * @param username user to verify against
+     * @param publicKeyPath path to a single public key PEM, either in the filesystem or, if prefixed
      *                       with 'classpath:' taken from the classpath.
      */
-    public SinglePublicKeyAuthenticator(String pUser, String pPublicKeyPath) {
-        user = pUser;
+    public SinglePublicKeyAuthenticator(String username, String publicKeyPath) {
+        this.user = username;
         InputStream is = null;
         try {
-            if (pPublicKeyPath.startsWith(ResourceUtils.CLASSPATH_URL_PREFIX)) {
-                String resource = pPublicKeyPath.substring(ResourceUtils.CLASSPATH_URL_PREFIX.length());
-                is = getClass().getClassLoader().getResourceAsStream(resource);
-                if (is == null) {
-                    throw new CitrusRuntimeException("No key resource found at classpath at " + resource);
-                }
-            } else {
-                is = new FileInputStream(pPublicKeyPath);
-            }
+            is = FileUtils.getFileResource(publicKeyPath).getInputStream();
             allowedKey = readKey(is);
             if (allowedKey == null) {
-                throw new CitrusRuntimeException("No public key found at " + pPublicKeyPath + ", although the file/resource exists. " +
+                throw new CitrusRuntimeException("No public key found at " + publicKeyPath + ", although the file/resource exists. " +
                                                  "It is probably not in a PEM form or contains more than only a public key.");
             }
-        } catch (FileNotFoundException e) {
-            throw new CitrusRuntimeException("public key file does not exist at " + pPublicKeyPath,e);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(String.format("Failed to read public key file at %s", publicKeyPath),e);
         } finally {
             IoUtils.closeQuietly(is);
         }

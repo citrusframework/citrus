@@ -23,6 +23,7 @@ import com.consol.citrus.ssh.model.SshMarshaller;
 import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.jcraft.jsch.*;
+import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -191,10 +192,10 @@ public class SshClientTest extends AbstractTestNGUnitTest {
     private void strictHostChecking(boolean flag,String knownHosts) {
         if (flag) {
             client.getEndpointConfiguration().setStrictHostChecking(true);
-            session.setConfig("StrictHostKeyChecking","yes");
+            session.setConfig(KnownHostsServerKeyVerifier.STRICT_CHECKING_OPTION,"yes");
             client.getEndpointConfiguration().setKnownHosts(knownHosts);
         } else {
-            session.setConfig("StrictHostKeyChecking","no");
+            session.setConfig(KnownHostsServerKeyVerifier.STRICT_CHECKING_OPTION,"no");
         }
 
     }

@@ -65,6 +65,16 @@ public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
     }
 
     /**
+     * Sets the local passive mode property.
+     * @param localPassiveMode
+     * @return
+     */
+    public FtpClientBuilder localPassiveMode(boolean localPassiveMode) {
+        endpoint.getEndpointConfiguration().setLocalPassiveMode(localPassiveMode);
+        return this;
+    }
+
+    /**
      * Sets the client username.
      * @param username
      * @return

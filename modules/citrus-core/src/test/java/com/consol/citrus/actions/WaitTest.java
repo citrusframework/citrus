@@ -51,7 +51,7 @@ public class WaitTest {
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
         when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
         startTimer();
-        testling.doExecute(contextMock);
+        testling.execute(contextMock);
         stopTimer();
 
         assertConditionExecutedWithinSeconds("1");
@@ -71,7 +71,7 @@ public class WaitTest {
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
         when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
         startTimer();
-        testling.doExecute(contextMock);
+        testling.execute(contextMock);
         stopTimer();
 
         assertConditionExecutedWithinSeconds(seconds);
@@ -90,7 +90,7 @@ public class WaitTest {
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
         when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
         startTimer();
-        testling.doExecute(contextMock);
+        testling.execute(contextMock);
         stopTimer();
 
         assertConditionExecutedWithinSeconds(seconds);
@@ -110,7 +110,7 @@ public class WaitTest {
         when(conditionMock.getErrorMessage(contextMock)).thenReturn("Condition failed!");
         startTimer();
         try {
-            testling.doExecute(contextMock);
+            testling.execute(contextMock);
             fail("Was expecting CitrusRuntimeException to be thrown");
         } catch (CitrusRuntimeException e) {
             // expected
@@ -135,7 +135,7 @@ public class WaitTest {
         when(conditionMock.getErrorMessage(contextMock)).thenReturn("Condition failed!");
         startTimer();
         try {
-            testling.doExecute(contextMock);
+            testling.execute(contextMock);
             fail("Was expecting CitrusRuntimeException to be thrown");
         } catch (CitrusRuntimeException e) {
             // expected
