@@ -26,14 +26,13 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.lang.management.ManagementFactory;
 import java.util.*;
 
 /**
  * @author Christoph Deppisch
  */
 public class TestCaseTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testExecution() {
         TestCase testcase = new TestCase();
@@ -196,15 +195,13 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testThreadLeak() {
-        int initialThreadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-
         TestCase testcase = new TestCase();
         testcase.setName("ThreadLeakTestCase");
         testcase.addTestAction(new EchoAction());
         testcase.execute(context);
 
-        int finalThreadCount = ManagementFactory.getThreadMXBean().getThreadCount();
-        Assert.assertEquals(finalThreadCount, initialThreadCount);
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Assert.assertEquals(threadSet.stream().filter(t -> t.getName().startsWith("citrus-finisher-")).count(), 0);
     }
 
 }
