@@ -45,7 +45,7 @@
         </message>
         <header>
           <element name="Operation" value="sayHello"/>
-          <element name="citrus_kafka_messageKey" value="1" type="integer"/>
+          <element name="citrus_kafka_messageKey" value="1"/>
         </header>
       </send>
 

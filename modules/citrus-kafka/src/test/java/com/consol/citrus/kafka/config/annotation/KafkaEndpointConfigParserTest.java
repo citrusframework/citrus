@@ -53,9 +53,9 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
             offsetReset = "latest",
             messageConverter="messageConverter",
             headerMapper = "headerMapper",
-            keySerializer = StringSerializer.class,
+            keySerializer = IntegerSerializer.class,
             valueSerializer = ByteArraySerializer.class,
-            keyDeserializer = StringDeserializer.class,
+            keyDeserializer = IntegerDeserializer.class,
             valueDeserializer = ByteArrayDeserializer.class,
             consumerGroup = "citrus_group")
     private KafkaEndpoint kafkaEndpoint2;
@@ -108,9 +108,9 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getPartition(), 0);
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getConsumerGroup(), KafkaMessageHeaders.KAFKA_PREFIX + "group");
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getKeySerializer(), IntegerSerializer.class);
+        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getKeySerializer(), StringSerializer.class);
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getValueSerializer(), StringSerializer.class);
-        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getKeyDeserializer(), IntegerDeserializer.class);
+        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getKeyDeserializer(), StringDeserializer.class);
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getValueDeserializer(), StringDeserializer.class);
 
         // 2nd endpoint
@@ -126,9 +126,9 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getPartition(), 1);
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getConsumerGroup(), "citrus_group");
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getKeySerializer(), StringSerializer.class);
+        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getKeySerializer(), IntegerSerializer.class);
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getValueSerializer(), ByteArraySerializer.class);
-        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getKeyDeserializer(), StringDeserializer.class);
+        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getKeyDeserializer(), IntegerDeserializer.class);
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getValueDeserializer(), ByteArrayDeserializer.class);
 
         // 3rd endpoint

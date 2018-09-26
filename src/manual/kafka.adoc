@@ -172,13 +172,13 @@ The following table shows all available settings on a Kafka endpoint in Citrus:
 
 | key-serializer
 | No
-| org.apache.kafka.common.serialization.IntegerSerializer
-| Serializer implementation that converts message key values. By default keys are serialized to Integer values.
+| org.apache.kafka.common.serialization.StringSerializer
+| Serializer implementation that converts message key values. By default keys are serialized to String values.
 
 | key-deserializer
 | No
-| org.apache.kafka.common.serialization.IntegerDeserializer
-| Deserializer implementation that converts message key values. By default keys are deserialized as Integer values.
+| org.apache.kafka.common.serialization.StringDeserializer
+| Deserializer implementation that converts message key values. By default keys are deserialized as String values.
 
 | value-serializer
 | No
@@ -292,7 +292,8 @@ send(helloKafkaEndpoint)
 The header entries above are used in a send operation in order to overwrite the topic destination, to set the record key and to specify the target partition of the producer record. These settings do only
 apply for the very specific send operation. Default values on the Kafka endpoint are overwritten respectively.
 
-TIP: Typing of message header entries may also be of interest in order to meet the Kafka standards. For instance the following message key is of type `int` and is therefore transferred via Kafka's key-serializer as a int value.
+TIP: Typing of message header entries may also be of interest in order to meet the Kafka standards. For instance the following message key is of type `java.lang.Integer` and is therefore transferred via Kafka's key-serializer as a integer value.
+You need to set the header type to `integer` and use a `org.apache.kafka.common.serialization.IntegerSerializer` as key-serializer on the Kafka endpoint configuration.
 
 [source,xml]
 ----

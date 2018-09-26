@@ -55,9 +55,9 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerGroup(), KafkaMessageHeaders.KAFKA_PREFIX + "group");
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerProperties().size(), 0);
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getProducerProperties().size(), 0);
-        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeySerializer(), IntegerSerializer.class);
+        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeySerializer(), StringSerializer.class);
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueSerializer(), StringSerializer.class);
-        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), IntegerDeserializer.class);
+        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), StringDeserializer.class);
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueDeserializer(), StringDeserializer.class);
 
         // 2nd message receiver
@@ -75,9 +75,9 @@ public class KafkaEndpointParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getPartition(), 1);
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getConsumerGroup(), "citrus_group");
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeySerializer(), StringSerializer.class);
+        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeySerializer(), IntegerSerializer.class);
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueSerializer(), ByteArraySerializer.class);
-        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), StringDeserializer.class);
+        Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getKeyDeserializer(), IntegerDeserializer.class);
         Assert.assertEquals(kafkaEndpoint.getEndpointConfiguration().getValueDeserializer(), ByteArrayDeserializer.class);
 
         // 3rd message receiver
