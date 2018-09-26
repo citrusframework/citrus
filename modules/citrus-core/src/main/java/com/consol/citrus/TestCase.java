@@ -50,7 +50,10 @@ import java.util.concurrent.TimeoutException;
  */
 public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
-    /** Further chain of test actions to be executed in any case (success, error)
+    /** Used to identify the citrus threads pool */
+    protected static final String FINISHER_THREAD_PREFIX = "citrus-finisher-";
+
+	/** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
     private List<TestAction> finalActions = new ArrayList<>();
 
@@ -263,7 +266,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 Optional.ofNullable(testResult).map(TestResult::isSuccess).orElse(false)) {
             ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
                 Thread newThread = Executors.defaultThreadFactory().newThread(r);
-                newThread.setName("citrus-finisher-" + newThread.getName());
+                newThread.setName(FINISHER_THREAD_PREFIX.concat(newThread.getName()));
                 return newThread;
             });
             try {
