@@ -50,10 +50,10 @@ import java.util.concurrent.TimeoutException;
  */
 public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
-    /** Used to identify the citrus threads pool */
+    /** Used to identify citrus threads pool */
     protected static final String FINISHER_THREAD_PREFIX = "citrus-finisher-";
 
-	/** Further chain of test actions to be executed in any case (success, error)
+    /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
     private List<TestAction> finalActions = new ArrayList<>();
 
