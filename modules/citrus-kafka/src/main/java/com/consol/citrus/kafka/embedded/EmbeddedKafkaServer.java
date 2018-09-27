@@ -84,6 +84,11 @@ public class EmbeddedKafkaServer implements InitializingBean, DisposableBean {
      * Start embedded server instances for Kafka and Zookeeper.
      */
     public void start() {
+        if (kafkaServer != null) {
+            log.warn("Found instance of Kafka server - avoid duplicate Kafka server startup");
+            return;
+        }
+
         File logDir = createLogDir();
         zookeeper = createZookeeperServer(logDir);
         serverFactory = createServerFactory();
@@ -222,7 +227,7 @@ public class EmbeddedKafkaServer implements InitializingBean, DisposableBean {
             try {
                 createTopics.all().get();
             } catch (Exception e) {
-                throw new CitrusRuntimeException("Failed to create Kafka topics", e);
+                log.warn("Failed to create Kafka topics", e);
             }
         }
     }
