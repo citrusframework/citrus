@@ -25,7 +25,6 @@ import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
-import org.mockito.Mockito;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.WebServiceMessage;
@@ -40,6 +39,7 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.xml.namespace.QName;
@@ -59,7 +59,7 @@ import java.util.Set;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -72,15 +72,26 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
     private static final String XML_PROCESSING_INSTRUCTION = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>";
 
-    private SoapMessageFactory soapMessageFactory = Mockito.mock(SoapMessageFactory.class);
-    private org.springframework.ws.soap.SoapMessage soapRequest = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
-    private org.springframework.ws.soap.SoapMessage soapResponse = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
-    private SoapEnvelope soapEnvelope = Mockito.mock(SoapEnvelope.class);
-    private SoapBody soapBody = Mockito.mock(SoapBody.class);
-    private SoapHeader soapHeader = Mockito.mock(SoapHeader.class);
-    private SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
+    private SoapMessageFactory soapMessageFactory;
+    private org.springframework.ws.soap.SoapMessage soapRequest;
+    private org.springframework.ws.soap.SoapMessage soapResponse;
+    private SoapEnvelope soapEnvelope;
+    private SoapBody soapBody;
+    private SoapHeader soapHeader;
+    private SoapHeaderElement soapHeaderElement;
 
     private String payload = "<testMessage>Hello</testMessage>";
+
+    @BeforeMethod
+    public void resetMocks() {
+        soapMessageFactory = mock(SoapMessageFactory.class);
+        soapRequest = mock(org.springframework.ws.soap.SoapMessage.class);
+        soapResponse = mock(org.springframework.ws.soap.SoapMessage.class);
+        soapEnvelope = mock(SoapEnvelope.class);
+        soapBody = mock(SoapBody.class);
+        soapHeader = mock(SoapHeader.class);
+        soapHeaderElement = mock(SoapHeaderElement.class);
+    }
 
     @Test
     public void testOutboundSoapMessageCreation() {
@@ -90,8 +101,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setMessageFactory(soapMessageFactory);
 
         final StringResult soapBodyResult = new StringResult();
-
-        reset(soapMessageFactory, soapRequest, soapBody);
 
         when(soapMessageFactory.createWebServiceMessage()).thenReturn(soapRequest);
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
@@ -109,8 +118,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         final StringResult soapBodyResult = new StringResult();
 
-        reset(soapRequest, soapBody);
-
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(soapBodyResult);
 
@@ -124,8 +131,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     public void testOutboundSoapAction() {
         final Message testMessage = new DefaultMessage(payload)
                 .setHeader(SoapMessageHeaders.SOAP_ACTION, "soapAction");
-
-        reset(soapRequest, soapBody);
 
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -145,8 +150,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
                 .addHeaderData(soapHeaderContent);
 
         final StringResult soapHeaderResult = new StringResult();
-
-        reset(soapRequest, soapBody, soapHeader);
 
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -172,8 +175,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         final StringResult soapHeaderResult = new StringResult();
 
-        reset(soapRequest, soapBody, soapHeader);
-
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
 
@@ -191,8 +192,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage(payload)
                 .setHeader("operation", "unitTest")
                 .setHeader("messageId", "123456789");
-
-        reset(soapRequest, soapBody, soapHeader, soapHeaderElement);
 
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -212,8 +211,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final Message testMessage = new DefaultMessage(payload)
                 .setHeader("{http://www.citrus.com}citrus:operation", "unitTest")
                 .setHeader("{http://www.citrus.com}citrus:messageId", "123456789");
-
-        reset(soapRequest, soapBody, soapHeader, soapHeaderElement);
 
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -235,12 +232,10 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
                 .setHeader(SoapMessageHeaders.HTTP_PREFIX + "operation", "unitTest")
                 .setHeader(SoapMessageHeaders.HTTP_PREFIX + "messageId", "123456789");
 
-        final SaajSoapMessage saajSoapRequest = Mockito.mock(SaajSoapMessage.class);
-        final SOAPMessage saajMessage = Mockito.mock(SOAPMessage.class);
+        final SaajSoapMessage saajSoapRequest = mock(SaajSoapMessage.class);
+        final SOAPMessage saajMessage = mock(SOAPMessage.class);
 
         final MimeHeaders mimeHeaders = new MimeHeaders();
-
-        reset(saajSoapRequest, soapBody, soapHeader, soapEnvelope, saajMessage);
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
 
@@ -270,10 +265,8 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
         endpointConfiguration.setHandleMimeHeaders(false);
 
-        final SaajSoapMessage saajSoapRequest = Mockito.mock(SaajSoapMessage.class);
-        final SOAPMessage saajMessage = Mockito.mock(SOAPMessage.class);
-
-        reset(saajSoapRequest, soapBody, soapHeader, soapEnvelope, saajMessage);
+        final SaajSoapMessage saajSoapRequest = mock(SaajSoapMessage.class);
+        final SOAPMessage saajMessage = mock(SOAPMessage.class);
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
 
@@ -293,8 +286,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         final SoapMessage testMessage = new SoapMessage(payload);
         testMessage.addAttachment(attachment);
-
-        reset(soapRequest, soapBody);
 
         when(soapRequest.getSoapBody()).thenReturn(soapBody);
         when(soapBody.getPayloadResult()).thenReturn(new StringResult());
@@ -320,8 +311,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     public void testInboundSoapBody() {
         final StringSource soapBodySource = new StringSource(payload);
 
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         when(soapResponse.getPayloadSource()).thenReturn(soapBodySource);
@@ -345,8 +334,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     public void testInboundSoapBodyOnlyRootElement() {
         final StringSource soapBodySource = new StringSource("<testMessage/>");
 
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         when(soapResponse.getPayloadSource()).thenReturn(soapBodySource);
@@ -369,8 +356,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     @Test
     public void testInboundSoapAction() {
         final StringSource soapBodySource = new StringSource(payload);
-
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
@@ -400,8 +385,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         final StringSource soapBodySource = new StringSource(payload);
 
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         when(soapResponse.getPayloadSource()).thenReturn(soapBodySource);
@@ -428,8 +411,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
 
         final Set<SoapHeaderElement> soapHeaders = new HashSet<>();
         soapHeaders.add(soapHeaderElement);
-
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
@@ -466,8 +447,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final Set<Attachment> soapAttachments = new HashSet<>();
         soapAttachments.add(attachment);
 
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         when(soapResponse.getPayloadSource()).thenReturn(soapBodySource);
@@ -499,8 +478,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     public void testInboundSoapBodyWithNamespaceTranslation() {
         final StringSource soapBodySource = new StringSource(payload);
 
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new DOMSource(XMLUtils.parseMessagePayload(getSoapRequestPayload(payload, "xmlns:foo=\"http://citruframework.org/foo\"")).getFirstChild()));
         when(soapResponse.getPayloadSource()).thenReturn(soapBodySource);
@@ -523,8 +500,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
     @Test
     public void testInboundSoapBodyWithNamespaceTranslationXmlProcessingInstruction() {
         final StringSource soapBodySource = new StringSource(XML_PROCESSING_INSTRUCTION + payload);
-
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new DOMSource(XMLUtils.parseMessagePayload(getSoapRequestPayload(payload, "xmlns:foo=\"http://citruframework.org/foo\"")).getFirstChild()));
@@ -550,8 +525,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final String payload = "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
                 "other=\"true\"/>";
         final StringSource soapBodySource = new StringSource(payload);
-
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new DOMSource(XMLUtils.parseMessagePayload(getSoapRequestPayload(payload, "skip=\"true\"", "xmlns:foo=\"http://citruframework.org/foo\"",
@@ -579,8 +552,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         final String payload = "<testMessage xmlns:foo=\"http://citruframework.org/foo\" xmlns:bar=\"http://citruframework.org/bar\" " +
                 "other=\"true\">Hello</testMessage>";
         final StringSource soapBodySource = new StringSource(payload);
-
-        reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new DOMSource(XMLUtils.parseMessagePayload(getSoapRequestPayload(payload, "skip=\"true\"", "xmlns:foo=\"http://citruframework.org/foo\"",
@@ -616,6 +587,21 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getHeaderData().size(), 1L);
         Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + "<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"/>");
     }
+
+//    @Test
+//    public void testEmptyOutboundSoapBodyIsParsedSuccessfully(){
+//
+//        //GIVEN
+//
+//        final WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
+//        endpointConfiguration.setMessageFactory(soapMessageFactory);
+//
+//        //WHEN
+//        soapMessageConverter.convertOutbound(soapMessage, endpointConfiguration, context);
+//
+//        //THEN
+//
+//    }
 
     private String getSoapRequestPayload() {
         return getSoapRequestPayload(payload);
