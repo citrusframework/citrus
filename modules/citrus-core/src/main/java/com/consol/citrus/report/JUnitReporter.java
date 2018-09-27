@@ -20,6 +20,7 @@ import com.consol.citrus.TestResult;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -108,12 +109,12 @@ public class JUnitReporter extends AbstractTestReporter {
         for (TestResult result: results) {
             Properties detailProps = new Properties();
             detailProps.put("test.class", result.getClassName());
-            detailProps.put("test.name", result.getTestName());
+            detailProps.put("test.name", StringEscapeUtils.escapeXml(result.getTestName()));
             detailProps.put("test.duration", "0.0");
 
             if (result.isFailed()) {
                 detailProps.put("test.error.cause", Optional.ofNullable(result.getCause()).map(Object::getClass).map(Class::getName).orElse(result.getFailureType()));
-                detailProps.put("test.error.msg", result.getErrorMessage());
+                detailProps.put("test.error.msg", StringEscapeUtils.escapeXml(result.getErrorMessage()));
                 detailProps.put("test.error.stackTrace", Optional.ofNullable(result.getCause()).map(cause -> {
                     StringWriter writer = new StringWriter();
                     cause.printStackTrace(new PrintWriter(writer));
