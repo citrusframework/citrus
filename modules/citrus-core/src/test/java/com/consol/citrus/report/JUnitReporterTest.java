@@ -107,4 +107,26 @@ public class JUnitReporterTest {
                 "    <testcase name=\"barTest\" classname=\"com.consol.citrus.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
                 "</testsuite>");
     }
+
+    @Test
+    public void testGenerateTestResultsWithFailedTestsWithInvalidXMLChars() throws Exception {
+        reporter.getTestResults().addResult(TestResult.success("foo\"Test", JUnitReporterTest.class.getName()));
+        reporter.getTestResults().addResult(TestResult.failed("bar\"Test", JUnitReporterTest.class.getName(), new NullPointerException("Something \"went wrong!")));
+        reporter.generateTestResults();
+
+        String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
+        String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
+
+        Assert.assertTrue(reportFile.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<testsuite name=\"com.consol.citrus.report.JUnitReporterTest\" time=\"0.0\" tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\">\n" +
+            "    <testcase name=\"foo&quot;Test\" classname=\"com.consol.citrus.report.JUnitReporterTest\" time=\"0.0\"/>\n" +
+            "    <testcase name=\"bar&quot;Test\" classname=\"com.consol.citrus.report.JUnitReporterTest\" time=\"0.0\">\n" +
+            "      <failure type=\"java.lang.NullPointerException\" message=\"Something &quot;went wrong!\">\n" +
+            "        <![CDATA[\n" +
+            "        java.lang.NullPointerException: Something \"went wrong!"));
+
+        Assert.assertTrue(testSuiteFile.contains("<testsuite name=\"" + reporter.getSuiteName() + "\""));
+        Assert.assertTrue(testSuiteFile.contains("tests=\"2\" errors=\"0\" skipped=\"0\" failures=\"1\""));
+        Assert.assertTrue(testSuiteFile.contains("<failure type=\"java.lang.NullPointerException\" message=\"Something &quot;went wrong!\">"));
+    }
 }
