@@ -88,14 +88,17 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             soapMessage = new SoapMessage(message);
         }
 
-        // Copy payload into soap-body:
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
 
-        try {
-            Transformer transformer = transformerFactory.newTransformer();
-            transformer.transform(new StringSource(soapMessage.getPayload(String.class)), soapRequest.getSoapBody().getPayloadResult());
-        } catch (TransformerException e) {
-            throw new CitrusRuntimeException("Failed to write SOAP body payload", e);
+        // Copy payload into soap-body:
+        String payload = soapMessage.getPayload(String.class);
+        if (StringUtils.hasText(payload)) {
+            try {
+                Transformer transformer = transformerFactory.newTransformer();
+                transformer.transform(new StringSource(payload), soapRequest.getSoapBody().getPayloadResult());
+            } catch (TransformerException e) {
+                throw new CitrusRuntimeException("Failed to write SOAP body payload", e);
+            }
         }
 
         // Copy headers into soap-header:
