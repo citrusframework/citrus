@@ -266,7 +266,6 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         endpointConfiguration.setHandleMimeHeaders(false);
 
         final SaajSoapMessage saajSoapRequest = mock(SaajSoapMessage.class);
-        final SOAPMessage saajMessage = mock(SOAPMessage.class);
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
 
