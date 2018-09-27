@@ -60,6 +60,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -587,20 +588,22 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getHeaderData().get(0), XML_PROCESSING_INSTRUCTION + "<SOAP-ENV:Header xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"/>");
     }
 
-//    @Test
-//    public void testEmptyOutboundSoapBodyIsParsedSuccessfully(){
-//
-//        //GIVEN
-//
-//        final WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
-//        endpointConfiguration.setMessageFactory(soapMessageFactory);
-//
-//        //WHEN
-//        soapMessageConverter.convertOutbound(soapMessage, endpointConfiguration, context);
-//
-//        //THEN
-//
-//    }
+    @Test
+    public void testEmptyOutboundSoapBodyNotParsed(){
+
+        //GIVEN
+        final DefaultMessage emptyMessage = new DefaultMessage("");
+        final WebServiceEndpointConfiguration endpointConfiguration = new WebServiceEndpointConfiguration();
+        endpointConfiguration.setMessageFactory(soapMessageFactory);
+        when(soapRequest.getSoapBody()).thenReturn(soapBody);
+        when(soapBody.getPayloadResult()).thenReturn(new StringResult());
+
+        //WHEN
+        soapMessageConverter.convertOutbound(soapRequest, emptyMessage, endpointConfiguration, context);
+
+        //THEN
+        verify(soapRequest, never()).getPayloadResult();
+    }
 
     private String getSoapRequestPayload() {
         return getSoapRequestPayload(payload);
