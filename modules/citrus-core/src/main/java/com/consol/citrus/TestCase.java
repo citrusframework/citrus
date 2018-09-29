@@ -39,6 +39,9 @@ import java.util.concurrent.*;
  */
 public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
+    /** Used to identify citrus threads pool */
+    protected static final String FINISHER_THREAD_PREFIX = "citrus-finisher-";
+
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
     private List<TestAction> finalActions = new ArrayList<>();
@@ -250,21 +253,28 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         CitrusRuntimeException runtimeException = null;
         if (CollectionUtils.isEmpty(context.getExceptions()) &&
                 Optional.ofNullable(testResult).map(TestResult::isSuccess).orElse(false)) {
+            ScheduledExecutorService scheduledExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread newThread = Executors.defaultThreadFactory().newThread(r);
+                newThread.setName(FINISHER_THREAD_PREFIX.concat(newThread.getName()));
+                return newThread;
+            });
             try {
                 CompletableFuture<Boolean> finished = new CompletableFuture<>();
-                Executors.newSingleThreadScheduledExecutor()
-                        .scheduleAtFixedRate(() -> {
-                            if (isDone(context)) {
-                                finished.complete(true);
-                            } else {
-                                log.debug("Wait for test actions to finish properly ...");
-                            }
-                        }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
+                scheduledExecutor.scheduleAtFixedRate(() -> {
+                    if (isDone(context)) {
+                        finished.complete(true);
+                    } else {
+                        log.debug("Wait for test actions to finish properly ...");
+                    }
+                }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
 
                 finished.get(timeout, TimeUnit.MILLISECONDS);
             } catch (InterruptedException | ExecutionException | TimeoutException e) {
                 runtimeException = new CitrusRuntimeException("Failed to wait for nested test actions to finish properly", e);
             } finally {
+                if (scheduledExecutor != null) {
+                   scheduledExecutor.shutdown();
+                }
                 if (!CollectionUtils.isEmpty(context.getExceptions())) {
                     CitrusRuntimeException ex = context.getExceptions().remove(0);
                     testResult = TestResult.failed(getName(), testClass.getName(), ex);

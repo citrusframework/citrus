@@ -192,4 +192,16 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         
         testcase.execute(context);
     }
+
+    @Test
+    public void testThreadLeak() {
+        TestCase testcase = new TestCase();
+        testcase.setName("ThreadLeakTestCase");
+        testcase.addTestAction(new EchoAction());
+        testcase.execute(context);
+
+        Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
+        Assert.assertEquals(threadSet.stream().filter(t -> t.getName().startsWith(TestCase.FINISHER_THREAD_PREFIX)).filter(t -> t.isAlive()).count(), 0);
+    }
+
 }
