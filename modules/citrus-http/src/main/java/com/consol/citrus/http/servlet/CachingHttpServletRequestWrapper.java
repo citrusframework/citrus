@@ -55,7 +55,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
         Map<String, String[]> params = new HashMap<>();
         if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
-            if ("application/x-www-form-urlencoded".equals(getContentType())) {
+            if (getContentType() != null && getContentType().contains("application/x-www-form-urlencoded")) {
                 fillParams(params, new String(body, Charset.forName(Citrus.CITRUS_FILE_ENCODING)));
             } else {
                 return super.getParameterMap();
