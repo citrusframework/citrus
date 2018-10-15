@@ -151,6 +151,32 @@ public class CachingHttpServletRequestWrapperTest {
 
     }
 
+    @Test(dataProvider = "bodyPayloadRequestMethods")
+    public void testParseUrlEncodedBodyWithExtendedApplicationType(final RequestMethod requestMethod)  throws Exception{
+
+        //GIVEN
+        //Initialize body member
+        when(serverRequestMock.getInputStream())
+                .thenReturn(new DelegatingServletInputStream(
+                        new ByteArrayInputStream(
+                                ("&" + requestMethod.name() + "=" + requestMethod.name()).getBytes())));
+        wrapper.getInputStream();
+
+        when(serverRequestMock.getContentType())
+                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset("UTF-8").toString());
+
+        when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
+
+        //WHEN
+        final Map<String, String[]> parameterMap = wrapper.getParameterMap();
+
+        //THEN
+        assertEquals(parameterMap.keySet().size(),1);
+        assertTrue(parameterMap.containsKey(requestMethod.name()));
+        assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
+
+    }
+
 
     /**
      * Utility class to wrap a byte input stream as a servlet input stream
