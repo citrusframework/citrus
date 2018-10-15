@@ -26,14 +26,17 @@ import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 /**
  * Caching wrapper saves request body data to cache when read.
- * @author Christoph Deppisch
  */
 public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
     /** Cached request data initialized when first read from input stream */

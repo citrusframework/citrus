@@ -17,12 +17,18 @@
 package com.consol.citrus.http.servlet;
 
 import org.apache.http.entity.ContentType;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import javax.servlet.ReadListener;
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 
@@ -118,5 +124,73 @@ public class CachingHttpServletRequestWrapperTest {
         assertEquals(parameterMap.keySet().size(),1);
         assertTrue(parameterMap.containsKey(expectedKey));
 
+    }
+
+    @Test(dataProvider = "bodyPayloadRequestMethods")
+    public void testParseUrlEncodedBody(final RequestMethod requestMethod)  throws Exception{
+
+        //GIVEN
+        //Initialize body member
+        when(serverRequestMock.getInputStream())
+                .thenReturn(new DelegatingServletInputStream(
+                        new ByteArrayInputStream(
+                                ("&" + requestMethod.name() + "=" + requestMethod.name()).getBytes())));
+        wrapper.getInputStream();
+
+        when(serverRequestMock.getContentType()).thenReturn(ContentType.APPLICATION_FORM_URLENCODED.toString());
+
+        when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
+
+        //WHEN
+        final Map<String, String[]> parameterMap = wrapper.getParameterMap();
+
+        //THEN
+        assertEquals(parameterMap.keySet().size(),1);
+        assertTrue(parameterMap.containsKey(requestMethod.name()));
+        assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
+
+    }
+
+
+    /**
+     * Utility class to wrap a byte input stream as a servlet input stream
+     */
+    class DelegatingServletInputStream extends ServletInputStream {
+
+        private final InputStream sourceStream;
+
+        /**
+         * Create a DelegatingServletInputStream for the given source stream.
+         * @param sourceStream the source stream (never <code>null</code>)
+         */
+        DelegatingServletInputStream(final InputStream sourceStream) {
+            Assert.notNull(sourceStream, "Source InputStream must not be null");
+            this.sourceStream = sourceStream;
+        }
+
+
+        public int read() throws IOException {
+            return this.sourceStream.read();
+        }
+
+        public void close() throws IOException {
+            super.close();
+            this.sourceStream.close();
+        }
+
+        @Override
+        public boolean isFinished() {
+            return false;
+        }
+
+        @Override
+        public boolean isReady() {
+            return false;
+        }
+
+        @Override
+        public void setReadListener(final ReadListener readListener) {
+
+        }
     }
 }
