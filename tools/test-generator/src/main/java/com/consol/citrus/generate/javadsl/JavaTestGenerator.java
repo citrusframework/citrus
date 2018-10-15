@@ -16,7 +16,9 @@
 
 package com.consol.citrus.generate.javadsl;
 
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.AbstractTestGenerator;
 import com.consol.citrus.generate.UnitFramework;
@@ -119,9 +121,12 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
      * @return
      */
     protected MethodSpec getTestMethod(String name) {
+        ParameterSpec.Builder methodParamBuilder = ParameterSpec.builder(TestRunner.class, "testRunner")
+                .addAnnotation(CitrusResource.class);
         MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(name)
                 .addModifiers(Modifier.PUBLIC)
-                .addAnnotation(getCitrusAnnotation());
+                .addAnnotation(getCitrusAnnotation())
+                .addParameter(methodParamBuilder.build());
 
         Stream.of(getTestAnnotations()).forEach(methodBuilder::addAnnotation);
 
