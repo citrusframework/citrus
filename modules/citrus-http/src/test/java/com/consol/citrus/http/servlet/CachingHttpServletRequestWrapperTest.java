@@ -16,6 +16,7 @@
 
 package com.consol.citrus.http.servlet;
 
+import org.apache.http.entity.ContentType;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -41,8 +42,8 @@ public class CachingHttpServletRequestWrapperTest {
         wrapper = new CachingHttpServletRequestWrapper(serverRequestMock);
     }
 
-    @DataProvider(name = "QueryStringRequestMethods")
-    public static Object[] QueryStringRequestMethods() {
+    @DataProvider(name = "queryStringRequestMethods")
+    public static Object[] queryStringRequestMethods() {
         return new Object[]{
                 RequestMethod.DELETE,
                 RequestMethod.GET,
@@ -50,6 +51,14 @@ public class CachingHttpServletRequestWrapperTest {
                 RequestMethod.OPTIONS,
                 RequestMethod.PATCH,
                 RequestMethod.TRACE
+        };
+    }
+
+    @DataProvider(name = "bodyPayloadRequestMethods")
+    public static Object[] bodyPayloadRequestMethods() {
+        return new Object[]{
+                RequestMethod.POST,
+                RequestMethod.PUT
         };
     }
 
@@ -68,7 +77,7 @@ public class CachingHttpServletRequestWrapperTest {
         assertTrue(parameterMap.containsKey(expectedKey));
     }
 
-    @Test(dataProvider = "QueryStringRequestMethods")
+    @Test(dataProvider = "queryStringRequestMethods")
     public void testFillMapFromQueryString(final RequestMethod requestMethod) throws Exception{
 
         //GIVEN
@@ -85,5 +94,29 @@ public class CachingHttpServletRequestWrapperTest {
         assertEquals(parameterMap.keySet().size(),1);
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
+    }
+
+    @Test(dataProvider = "bodyPayloadRequestMethods")
+    public void testDelegateGetParameterIfContentTypeNotUrlencoded(final RequestMethod requestMethod)  throws Exception{
+
+        //GIVEN
+        //Initialize body member
+        when(serverRequestMock.getInputStream()).thenReturn(null);
+        wrapper.getInputStream();
+
+        when(serverRequestMock.getContentType()).thenReturn(ContentType.APPLICATION_JSON.toString());
+
+        when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
+
+        final String expectedKey = "foobar";
+        when(serverRequestMock.getParameterMap()).thenReturn(Collections.singletonMap(expectedKey, new String[]{}));
+
+        //WHEN
+        final Map<String, String[]> parameterMap = wrapper.getParameterMap();
+
+        //THEN
+        assertEquals(parameterMap.keySet().size(),1);
+        assertTrue(parameterMap.containsKey(expectedKey));
+
     }
 }
