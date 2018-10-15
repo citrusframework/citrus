@@ -16,18 +16,12 @@
 
 package com.consol.citrus.http.servlet;
 
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import javax.servlet.ReadListener;
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collections;
 import java.util.Map;
 
@@ -78,7 +72,8 @@ public class CachingHttpServletRequestWrapperTest {
     public void testFillMapFromQueryString(final RequestMethod requestMethod) throws Exception{
 
         //GIVEN
-        when(serverRequestMock.getInputStream()).thenReturn(getServletInputStream());
+        //Initialize body member
+        when(serverRequestMock.getInputStream()).thenReturn(null);
         wrapper.getInputStream();
 
         when(serverRequestMock.getQueryString()).thenReturn("&" + requestMethod.name() + "=" + requestMethod.name());
@@ -91,55 +86,4 @@ public class CachingHttpServletRequestWrapperTest {
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
     }
-
-
-
-
-    //
-    // Utilities
-    //
-
-    private ServletInputStream getServletInputStream() {
-        return new DelegatingServletInputStream(new ByteArrayInputStream("Valar morghulis".getBytes()));
-    }
-
-    class DelegatingServletInputStream extends ServletInputStream {
-
-        private final InputStream sourceStream;
-
-        /**
-         * Create a DelegatingServletInputStream for the given source stream.
-         * @param sourceStream the source stream (never <code>null</code>)
-         */
-        DelegatingServletInputStream(final InputStream sourceStream) {
-            Assert.notNull(sourceStream, "Source InputStream must not be null");
-            this.sourceStream = sourceStream;
-        }
-
-
-        public int read() throws IOException {
-            return this.sourceStream.read();
-        }
-
-        public void close() throws IOException {
-            super.close();
-            this.sourceStream.close();
-        }
-
-        @Override
-        public boolean isFinished() {
-            return false;
-        }
-
-        @Override
-        public boolean isReady() {
-            return false;
-        }
-
-        @Override
-        public void setReadListener(final ReadListener readListener) {
-
-        }
-    }
-
 }
