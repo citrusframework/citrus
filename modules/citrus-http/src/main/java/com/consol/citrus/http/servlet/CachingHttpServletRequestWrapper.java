@@ -44,9 +44,10 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
     /**
      * Default constructor using initial servlet request.
-     * @param request
+     * @param request The request to wrap
      */
-    public CachingHttpServletRequestWrapper(HttpServletRequest request) {
+    @SuppressWarnings("WeakerAccess")
+    public CachingHttpServletRequestWrapper(final HttpServletRequest request) {
         super(request);
     }
 
@@ -56,7 +57,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
             return super.getParameterMap();
         }
 
-        Map<String, String[]> params = new HashMap<>();
+        final Map<String, String[]> params = new HashMap<>();
         if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
             if (getContentType() != null && getContentType().startsWith("application/x-www-form-urlencoded")) {
                 fillParams(params, new String(body, Charset.forName(Citrus.CITRUS_FILE_ENCODING)));
@@ -84,19 +85,23 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
     /**
      * Adds parameter name value paris extracted from given query string.
-     * @param params
-     * @param queryString
+     * @param params The parameter map to alter
+     * @param queryString The query string to extract the values from
      */
-    private void fillParams(Map<String, String[]> params, String queryString) {
+    private void fillParams(final Map<String, String[]> params, final String queryString) {
         if (StringUtils.hasText(queryString)) {
-            StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
+            final StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
             while (tokenizer.hasMoreTokens()) {
-                String[] nameValuePair = tokenizer.nextToken().split("=");
+                final String[] nameValuePair = tokenizer.nextToken().split("=");
 
                 try {
-                    params.put(URLDecoder.decode(nameValuePair[0], Citrus.CITRUS_FILE_ENCODING), new String[] { URLDecoder.decode(nameValuePair[1], Citrus.CITRUS_FILE_ENCODING) });
-                } catch (UnsupportedEncodingException e) {
-                    throw new CitrusRuntimeException(String.format("Failed to decode query param value '%s=%s'", nameValuePair[0], nameValuePair[1]), e);
+                    params.put(URLDecoder.decode(nameValuePair[0], Citrus.CITRUS_FILE_ENCODING),
+                            new String[] { URLDecoder.decode(nameValuePair[1], Citrus.CITRUS_FILE_ENCODING) });
+                } catch (final UnsupportedEncodingException e) {
+                    throw new CitrusRuntimeException(String.format(
+                            "Failed to decode query param value '%s=%s'",
+                            nameValuePair[0],
+                            nameValuePair[1]), e);
                 }
             }
         }
@@ -121,12 +126,12 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
         }
 
         @Override
-        public void setReadListener(ReadListener readListener) {
+        public void setReadListener(final ReadListener readListener) {
             throw new CitrusRuntimeException("Unsupported operation");
         }
 
         @Override
-        public int read() throws IOException {
+        public int read() {
             return is.read();
         }
     }
