@@ -21,17 +21,17 @@ public class JavaDslTestGeneratorTest {
         generatorUnderTest.withName("FooTest")
                 .withDisabled(false)
                 .withFramework(UnitFramework.JUNIT5)
-                .useSrcDirectory("target")
                 .usePackage("com.consol.citrus");
 
         generatorUnderTest.create();
 
-        File javaFile = new File("target/java/com/consol/citrus/FooTest.java");
+        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "/java/com/consol/citrus/FooTest.java");
         Assert.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@ExtendWith(com.consol.citrus.dsl.junit.jupiter.CitrusExtension.class)"));
         Assert.assertTrue(javaContent.contains("public void fooTest(@CitrusResource TestRunner testRunner) {"));
+        Assert.assertTrue(javaContent.contains("testRunner.echo(\"TODO: Code the test FooTest\");"));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
