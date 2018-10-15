@@ -31,6 +31,7 @@ public class JavaDslTestGeneratorTest {
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@ExtendWith(com.consol.citrus.dsl.junit.jupiter.CitrusExtension.class)"));
+        Assert.assertTrue(javaContent.contains("public void fooTest(@CitrusResource TestRunner testRunner) {"));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
