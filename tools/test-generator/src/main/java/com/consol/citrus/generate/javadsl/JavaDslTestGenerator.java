@@ -49,7 +49,7 @@ public class JavaDslTestGenerator<T extends JavaDslTestGenerator> extends JavaTe
     @Override
     protected AnnotationSpec getBaseExtension() {
         return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api.extension","ExtendWith"))
-                .addMember("value", "com.consol.citrus.junit.jupiter.CitrusExtension")
+                .addMember("value", "com.consol.citrus.dsl.junit.jupiter.CitrusExtension.class")
                 .build();
     }
 
