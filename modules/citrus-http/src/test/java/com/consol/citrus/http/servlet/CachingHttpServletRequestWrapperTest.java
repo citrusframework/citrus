@@ -137,7 +137,7 @@ public class CachingHttpServletRequestWrapperTest {
                                 ("&" + requestMethod.name() + "=" + requestMethod.name()).getBytes())));
         wrapper.getInputStream();
 
-        when(serverRequestMock.getContentType()).thenReturn(ContentType.APPLICATION_FORM_URLENCODED.toString());
+        when(serverRequestMock.getContentType()).thenReturn("application/x-www-form-urlencoded");
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 
@@ -148,7 +148,6 @@ public class CachingHttpServletRequestWrapperTest {
         assertEquals(parameterMap.keySet().size(),1);
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
-
     }
 
     @Test(dataProvider = "bodyPayloadRequestMethods")
