@@ -48,11 +48,11 @@ public class KafkaEndpointConfiguration extends AbstractPollableEndpointConfigur
     private KafkaMessageConverter messageConverter = new KafkaMessageConverter();
 
     /** Key and value serializer types */
-    private Class<? extends Serializer> keySerializer = IntegerSerializer.class;
+    private Class<? extends Serializer> keySerializer = StringSerializer.class;
     private Class<? extends Serializer> valueSerializer = StringSerializer.class;
 
     /** Key and value deserializer types */
-    private Class<? extends Deserializer> keyDeserializer = IntegerDeserializer.class;
+    private Class<? extends Deserializer> keyDeserializer = StringDeserializer.class;
     private Class<? extends Deserializer> valueDeserializer = StringDeserializer.class;
 
     /** Consumer/producer properties */

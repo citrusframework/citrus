@@ -25,8 +25,8 @@
                                topic="test"
                                partition="1"
                                consumer-group="citrus_group"
-                               key-serializer="org.apache.kafka.common.serialization.StringSerializer"
-                               key-deserializer="org.apache.kafka.common.serialization.StringDeserializer"
+                               key-serializer="org.apache.kafka.common.serialization.IntegerSerializer"
+                               key-deserializer="org.apache.kafka.common.serialization.IntegerDeserializer"
                                value-serializer="org.apache.kafka.common.serialization.ByteArraySerializer"
                                value-deserializer="org.apache.kafka.common.serialization.ByteArrayDeserializer"/>
 
