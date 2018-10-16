@@ -18,7 +18,10 @@ package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.generate.UnitFramework;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
 import java.util.List;
