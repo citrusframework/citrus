@@ -1,5 +1,6 @@
 package com.consol.citrus.generate.javadsl;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
