@@ -16,23 +16,18 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.actions.AbstractAsyncTestAction;
-import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.TestUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class TestCaseTest extends AbstractTestNGUnitTest {
     
@@ -66,7 +61,8 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.execute(context);
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class, expectedExceptionsMessageRegExp = "Failed to wait for nested test actions to finish properly")
+    @Test(expectedExceptions = TestCaseFailedException.class,
+          expectedExceptionsMessageRegExp = "Failed to wait for test container to finish properly")
     public void testWaitForFinishTimeout() {
         final TestCase testcase = new TestCase();
         testcase.setTimeout(500L);
@@ -210,7 +206,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         //THEN
         final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         Assert.assertEquals(threadSet.stream()
-                .filter(t -> t.getName().startsWith(TestCase.FINISHER_THREAD_PREFIX))
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX))
                 .filter(Thread::isAlive)
                 .count(),
                 0);

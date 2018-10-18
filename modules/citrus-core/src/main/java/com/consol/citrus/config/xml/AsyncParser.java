@@ -31,9 +31,7 @@ import org.w3c.dom.Element;
  */
 public class AsyncParser implements BeanDefinitionParser {
 
-    /**
-     * @see BeanDefinitionParser#parse(Element, ParserContext)
-     */
+    @Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Async.class);
 

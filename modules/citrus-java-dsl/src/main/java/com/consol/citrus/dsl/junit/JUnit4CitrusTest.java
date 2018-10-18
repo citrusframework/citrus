@@ -81,8 +81,6 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
             try {
                 ReflectionUtils.invokeMethod(frameworkMethod.getMethod(), this,
                         resolveParameter(frameworkMethod, testCase, context));
-
-                citrus.run(testCase, context);
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
@@ -90,6 +88,8 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
                 testCase.finish(context);
                 throw new TestCaseFailedException(e);
             }
+
+            citrus.run(testCase, context);
         } else if (frameworkMethod.getAttribute(RUNNER_ATTRIBUTE) != null) {
             TestRunner testRunner = (TestRunner) frameworkMethod.getAttribute(RUNNER_ATTRIBUTE);
 

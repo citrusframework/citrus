@@ -20,17 +20,21 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import java.util.concurrent.*;
+
+import static org.testng.Assert.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
+
     @Test
     public void testAsyncBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
@@ -43,19 +47,18 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
                         echo("${var}"),
                         sleep(100L)
                     );
-
-                sleep(200L);
             }
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 2);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Async.class);
         assertEquals(test.getActions().get(0).getName(), "async");
 
         Async container = (Async)test.getActions().get(0);
         assertEquals(container.getActionCount(), 2);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
+        assertEquals(container.getActions().get(1).getClass(), SleepAction.class);
     }
 
     @Test
@@ -82,13 +85,11 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
                             }
                         }
                     );
-
-                sleep(200L);
             }
         };
 
         TestCase test = builder.getTestCase();
-        assertEquals(test.getActionCount(), 2);
+        assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Async.class);
         assertEquals(test.getActions().get(0).getName(), "async");
 
@@ -98,5 +99,90 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
         assertTrue(container.getActions().get(1).getClass().isAnonymousClass());
         assertEquals(container.getActions().get(2).getClass(), SleepAction.class);
         assertTrue(container.getActions().get(3).getClass().isAnonymousClass());
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    public void testAsyncError() {
+        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            @Override
+            public void execute() {
+                variable("var", "foo");
+
+                async()
+                    .actions(
+                        fail("Something went wrong!")
+                    );
+            }
+        };
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    public void testAsyncErrorActions() throws Exception {
+        CompletableFuture<Boolean> successActionPerformed = new CompletableFuture<>();
+        CompletableFuture<Boolean> errorActionPerformed = new CompletableFuture<>();
+
+        try {
+            new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+                @Override
+                public void execute() {
+                    variable("var", "foo");
+
+                    async()
+                        .actions(
+                            sleep(100),
+                            fail("Something went wrong!")
+                        ).addSuccessAction(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                successActionPerformed.complete(true);
+                            }
+                        }).addErrorAction(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                errorActionPerformed.complete(true);
+                            }
+                        });
+                }
+            };
+        } finally {
+            assertFalse(successActionPerformed.isDone());
+            errorActionPerformed.get(1000L, TimeUnit.MILLISECONDS);
+        }
+    }
+
+    @Test
+    public void testAsyncSuccessActions() throws Exception {
+        CompletableFuture<Boolean> successActionPerformed = new CompletableFuture<>();
+        CompletableFuture<Boolean> errorActionPerformed = new CompletableFuture<>();
+
+        try {
+            new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+                @Override
+                public void execute() {
+                    variable("var", "foo");
+
+                    async()
+                        .actions(
+                            sleep(100),
+                            echo("Do something!")
+                        ).addSuccessAction(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                successActionPerformed.complete(true);
+                            }
+                        }).addErrorAction(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                errorActionPerformed.complete(true);
+                            }
+                        });
+                }
+            };
+        } finally {
+            assertFalse(errorActionPerformed.isDone());
+            successActionPerformed.get(1000L, TimeUnit.MILLISECONDS);
+            Assert.assertEquals(context.getExceptions().size(), 0L);
+        }
+
     }
 }

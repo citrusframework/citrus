@@ -120,8 +120,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         try {
             ReflectionUtils.invokeMethod(method, this,
                     resolveParameter(testResult, method, testCase, context, invocationCount));
-
-            citrus.run(testCase, context);
         } catch (TestCaseFailedException e) {
             throw e;
         } catch (Exception | AssertionError e) {
@@ -129,6 +127,8 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
             testCase.finish(context);
             throw new TestCaseFailedException(e);
         }
+
+        citrus.run(testCase, context);
     }
 
     /**

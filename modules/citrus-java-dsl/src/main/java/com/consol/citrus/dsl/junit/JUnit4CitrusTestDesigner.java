@@ -70,7 +70,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
         if (isConfigure(frameworkMethod.getMethod())) {
             try {
                 configure();
-                citrus.run(testCase, context);
             } catch (TestCaseFailedException e) {
                 throw e;
             } catch (Exception | AssertionError e) {
@@ -78,6 +77,8 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
                 testCase.finish(context);
                 throw new TestCaseFailedException(e);
             }
+
+            citrus.run(testCase, context);
         } else {
             super.invokeTestMethod(frameworkMethod, testCase, context);
         }

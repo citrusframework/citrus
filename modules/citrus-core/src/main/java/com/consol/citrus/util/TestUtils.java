@@ -16,9 +16,10 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.container.TestActionContainer;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.FailureStackElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +30,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.parsers.SAXParserFactory;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Utility class for test cases providing several utility 
@@ -38,9 +40,10 @@ import java.util.*;
  */
 public abstract class TestUtils {
 
-    /**
-     * Logger
-     */
+    /** Used to identify waiting task threads pool */
+    public static final String WAIT_THREAD_PREFIX = "citrus-waiting-";
+
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestUtils.class);
     
     /**
@@ -49,6 +52,63 @@ public abstract class TestUtils {
     private TestUtils() {
         super();
     }
+
+    /**
+     * Wait for container completion with default timeout.
+     * @param container
+     * @param context
+     */
+    public static void waitForCompletion(final Completable container,
+                                         final TestContext context) {
+        waitForCompletion(container, context, 10000L);
+    }
+
+    /**
+     * Wait for container completion using default thread executor.
+     * @param container
+     * @param context
+     * @param timeout
+     */
+    public static void waitForCompletion(final Completable container,
+                                         final TestContext context, long timeout) {
+        waitForCompletion(Executors.newSingleThreadScheduledExecutor(TestUtils::createWaitingThread), container, context, timeout);
+    }
+
+    /**
+     * Uses given scheduler to wait for container to finish properly. Method polls for done state on container for given
+     * amount of time.
+     *
+     * @param scheduledExecutor
+     * @param container
+     * @param context
+     * @param timeout
+     */
+    public static void waitForCompletion(final ScheduledExecutorService scheduledExecutor,
+                                         final Completable container,
+                                         final TestContext context, long timeout) {
+        try {
+            final CompletableFuture<Boolean> finished = new CompletableFuture<>();
+            scheduledExecutor.scheduleAtFixedRate(() -> {
+                if (container.isDone(context)) {
+                    finished.complete(true);
+                } else {
+                    log.debug("Wait for test container to finish properly ...");
+                }
+            }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
+
+            finished.get(timeout, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+            throw new CitrusRuntimeException("Failed to wait for test container to finish properly", e);
+        } finally {
+            scheduledExecutor.shutdown();
+        }
+    }
+
+    private static Thread createWaitingThread(final Runnable runnable) {
+        final Thread waitThread = Executors.defaultThreadFactory().newThread(runnable);
+        waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
+        return waitThread;
+    }
     
     /**
      * 
@@ -56,7 +116,7 @@ public abstract class TestUtils {
      * @return
      */
     public static List<FailureStackElement> getFailureStack(final TestCase test) {
-        final List<FailureStackElement> failureStack = new ArrayList<FailureStackElement>();
+        final List<FailureStackElement> failureStack = new ArrayList<>();
         
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
@@ -174,7 +234,7 @@ public abstract class TestUtils {
      */
     private static class FailureStackFinder {
         /** Action list */
-        private Stack<TestAction> actionStack = new Stack<TestAction>();
+        private Stack<TestAction> actionStack = new Stack<>();
         
         /** Test action we are currently working on */
         private TestAction action = null;
