@@ -18,7 +18,10 @@ package com.consol.citrus.generate.javadsl;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.generate.UnitFramework;
-import com.squareup.javapoet.*;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.TypeName;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,14 +52,14 @@ public class JavaDslTestGenerator<T extends JavaDslTestGenerator> extends JavaTe
     @Override
     protected AnnotationSpec getBaseExtension() {
         return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api.extension","ExtendWith"))
-                .addMember("value", "com.consol.citrus.junit.jupiter.CitrusExtension")
+                .addMember("value", "com.consol.citrus.dsl.junit.jupiter.CitrusExtension.class")
                 .build();
     }
 
     @Override
     protected List<CodeBlock> getActions() {
         List<CodeBlock> codeBlocks = new ArrayList<>();
-        codeBlocks.add(CodeBlock.builder().add("echo(\"TODO: Code the test $L\");", getName()).build());
+        codeBlocks.add(CodeBlock.builder().add("testRunner.echo(\"TODO: Code the test $L\");", getName()).build());
         return codeBlocks;
     }
 }
