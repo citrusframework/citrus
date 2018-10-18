@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="AsyncFailIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2018-10-18</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2018-10-18T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Async container with failed actions should raise test case error.</description>
+
+    <actions>
+      <async>
+        <actions>
+          <fail message="Fail!"/>
+        </actions>
+        <success>
+          <echo><message>Success!</message></echo>
+        </success>
+        <error>
+          <echo><message>Failed!</message></echo>
+        </error>
+      </async>
+    </actions>
+  </testcase>
+</spring:beans>

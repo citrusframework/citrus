@@ -23,7 +23,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.builder.*;
 import com.consol.citrus.dsl.container.FinallySequence;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
@@ -150,15 +149,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public void stop() {
-        try {
-            if (!CollectionUtils.isEmpty(context.getExceptions())) {
-                CitrusRuntimeException ex = context.getExceptions().remove(0);
-                testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), ex));
-                throw new TestCaseFailedException(ex);
-            }
-        } finally {
-            testCase.finish(context);
-        }
+        testCase.finish(context);
     }
 
     @Override

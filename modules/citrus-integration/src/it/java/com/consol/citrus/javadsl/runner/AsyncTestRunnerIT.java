@@ -20,15 +20,16 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Test
 public class AsyncTestRunnerIT extends TestNGCitrusTestRunner {
-    
+
+    @Test
     @CitrusTest
     public void asyncContainer() {
         async().actions(
@@ -58,5 +59,13 @@ public class AsyncTestRunnerIT extends TestNGCitrusTestRunner {
         sleep(1000L);
 
         traceVariables("anonymous");
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    @CitrusTest
+    public void asyncContainerError() {
+        async().actions(
+            fail("Should fail async container")
+        );
     }
 }

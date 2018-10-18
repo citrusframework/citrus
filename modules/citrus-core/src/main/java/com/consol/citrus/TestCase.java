@@ -16,31 +16,19 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.container.SequenceAfterTest;
-import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestActionListeners;
+import com.consol.citrus.util.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -50,9 +38,6 @@ import java.util.concurrent.TimeoutException;
  */
 @SuppressWarnings({"unused", "JavaDoc"})
 public class TestCase extends AbstractActionContainer implements BeanNameAware {
-
-    /** Used to identify citrus threads pool */
-    static final String FINISHER_THREAD_PREFIX = "citrus-finisher-";
 
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
@@ -174,15 +159,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 testResult = TestResult.failed(getName(), testClass.getName(), e);
                 throw new TestCaseFailedException(e);
             } finally {
-                try {
-                    if (contextContainsExceptions(context)) {
-                        final CitrusRuntimeException ex = context.getExceptions().remove(0);
-                        testResult = TestResult.failed(getName(), testClass.getName(), ex);
-                        throw new TestCaseFailedException(ex);
-                    }
-                } finally {
-                    finish(context);
-                }
+                finish(context);
             }
         } else {
             testResult = TestResult.skipped(getName(), testClass.getName());
@@ -231,7 +208,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param context
      */
     public void executeAction(final TestAction action, final TestContext context) {
-        if (contextContainsExceptions(context)) {
+        if (context.hasExceptions()) {
             throw context.getExceptions().remove(0);
         }
 
@@ -256,28 +233,23 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * Usually used for clean up tasks.
      */
     public void finish(final TestContext context) {
-        CitrusRuntimeException runtimeException = null;
-        if (testCaseWasSuccessful(context)) {
-            final ScheduledExecutorService scheduledExecutor =
-                    Executors.newSingleThreadScheduledExecutor(this::createFinisherThread);
-            try {
-                waitForNestedTestActions(context, scheduledExecutor);
-            } catch (final InterruptedException | ExecutionException | TimeoutException e) {
-                runtimeException =
-                        new CitrusRuntimeException("Failed to wait for nested test actions to finish properly", e);
-            } finally {
-                scheduledExecutor.shutdown();
-                if (contextContainsExceptions(context)) {
-                    final CitrusRuntimeException ex = context.getExceptions().remove(0);
-                    testResult = TestResult.failed(getName(), testClass.getName(), ex);
-                    runtimeException = ex;
+        try {
+            CitrusRuntimeException contextException = null;
+            if (testResult == null) {
+                if (context.hasExceptions()) {
+                    contextException = context.getExceptions().remove(0);
+                    testResult = TestResult.failed(getName(), testClass.getName(), contextException);
+                } else {
+                    testResult = TestResult.success(getName(), testClass.getName());
                 }
             }
-        }
 
-        context.getTestListeners().onTestFinish(this);
+            if (context.isSuccess(testResult)) {
+                TestUtils.waitForCompletion(this, context, timeout);
+            }
 
-        try {
+            context.getTestListeners().onTestFinish(this);
+
             if (!finalActions.isEmpty()) {
                 log.debug("Entering finally block in test case");
 
@@ -293,13 +265,16 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 }
             }
 
-            if (testResult == null) {
-                testResult = TestResult.success(getName(), testClass.getName());
+            if (testResult.isSuccess() && context.hasExceptions()) {
+                contextException = context.getExceptions().remove(0);
+                testResult = TestResult.failed(getName(), testClass.getName(), contextException);
             }
 
-            if (runtimeException != null) {
-                throw runtimeException;
+            if (contextException != null) {
+                throw new TestCaseFailedException(contextException);
             }
+        } catch (final TestCaseFailedException e) {
+            throw e;
         } catch (final Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), testClass.getName(), e);
             throw new TestCaseFailedException(e);
@@ -314,37 +289,6 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
             afterTest(context);
         }
-    }
-
-    private void waitForNestedTestActions(final TestContext context,
-                                          final ScheduledExecutorService scheduledExecutor)
-            throws InterruptedException, ExecutionException, TimeoutException {
-
-        final CompletableFuture<Boolean> finished = new CompletableFuture<>();
-        scheduledExecutor.scheduleAtFixedRate(() -> {
-            if (isDone(context)) {
-                finished.complete(true);
-            } else {
-                log.debug("Wait for test actions to finish properly ...");
-            }
-        }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
-
-        finished.get(timeout, TimeUnit.MILLISECONDS);
-    }
-
-    private boolean contextContainsExceptions(final TestContext context) {
-        return !CollectionUtils.isEmpty(context.getExceptions());
-    }
-
-    private boolean testCaseWasSuccessful(final TestContext context) {
-        return CollectionUtils.isEmpty(context.getExceptions()) &&
-                Optional.ofNullable(testResult).map(TestResult::isSuccess).orElse(false);
-    }
-
-    private Thread createFinisherThread(final Runnable runnable) {
-        final Thread newThread = Executors.defaultThreadFactory().newThread(runnable);
-        newThread.setName(FINISHER_THREAD_PREFIX.concat(newThread.getName()));
-        return newThread;
     }
 
     /**

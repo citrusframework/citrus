@@ -20,17 +20,18 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-@Test
 public class AsyncJavaIT extends TestNGCitrusTestDesigner {
-    
+
+    @Test
     @CitrusTest
-    public void asyncContainer() throws InterruptedException {
+    public void asyncContainer() {
         async().actions(
             stopTime(),
             sleep(500),
@@ -82,5 +83,13 @@ public class AsyncJavaIT extends TestNGCitrusTestDesigner {
         sleep(500L);
 
         traceVariables("anonymous");
+    }
+
+    @Test(expectedExceptions = TestCaseFailedException.class)
+    @CitrusTest
+    public void asyncContainerError() {
+        async().actions(
+            fail("Should fail async container")
+        );
     }
 }

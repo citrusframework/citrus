@@ -16,8 +16,7 @@
 
 package com.consol.citrus.context;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.*;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -682,5 +681,25 @@ public class TestContext {
      */
     public List<CitrusRuntimeException> getExceptions() {
         return exceptions;
+    }
+
+    /**
+     * Gets exception collection state.
+     * @return
+     */
+    public boolean hasExceptions() {
+        return !CollectionUtils.isEmpty(getExceptions());
+    }
+
+    /**
+     * Checks test result success in combination with this context exception state.
+     * @param testResult
+     * @return
+     */
+    public boolean isSuccess(TestResult testResult) {
+        return !hasExceptions() &&
+                Optional.ofNullable(testResult)
+                        .map(TestResult::isSuccess)
+                        .orElse(false);
     }
 }

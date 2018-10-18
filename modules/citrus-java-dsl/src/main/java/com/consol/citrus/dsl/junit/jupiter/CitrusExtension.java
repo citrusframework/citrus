@@ -72,16 +72,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
             if (isDesignerMethod(extensionContext.getRequiredTestMethod()) ||
                     isDesignerClass(extensionContext.getRequiredTestClass())) {
                 TestContext context = getTestContext(extensionContext);
-
-                try {
-                    getCitrus(extensionContext).run(testCase, context);
-                } catch (TestCaseFailedException e) {
-                    throw e;
-                } catch (Exception | AssertionError e) {
-                    testCase.setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(), e));
-                    testCase.finish(context);
-                    throw new TestCaseFailedException(e);
-                }
+                getCitrus(extensionContext).run(testCase, context);
             } else if (isRunnerMethod(extensionContext.getRequiredTestMethod()) ||
                     isRunnerClass(extensionContext.getRequiredTestClass())) {
                 getTestRunner(extensionContext).stop();
