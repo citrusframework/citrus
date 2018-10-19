@@ -36,7 +36,7 @@ public interface EndpointAdapter {
     Message handleMessage(Message message);
 
     /**
-     * Gets message endpoint to interact with tis endpoint adapter.
+     * Gets message endpoint to interact with this endpoint adapter.
      * @return
      */
     Endpoint getEndpoint();
