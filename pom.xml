@@ -204,7 +204,7 @@
     <kafka.version>2.0.0</kafka.version>
     <apache.camel.version>2.21.1</apache.camel.version>
     <activemq.version>5.15.4</activemq.version>
-    <vertx.version>3.5.2</vertx.version>
+    <vertx.version>3.5.4</vertx.version>
     <groovy.version>2.5.0</groovy.version>
     <jetty.version>9.4.11.v20180605</jetty.version>
     <testng.version>6.11</testng.version>

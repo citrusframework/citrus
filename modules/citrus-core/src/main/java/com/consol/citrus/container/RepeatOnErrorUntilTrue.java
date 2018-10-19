@@ -95,7 +95,7 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     }
 
     /**
-     * Setter for auto sleep time (in seconds).
+     * Setter for auto sleep time (in milliseconds).
      * @param autoSleep
      */
     public void setAutoSleep(Long autoSleep) {
