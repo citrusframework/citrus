@@ -17,20 +17,17 @@
 package com.consol.citrus.http.servlet;
 
 import org.apache.http.entity.ContentType;
+import org.springframework.http.MediaType;
 import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.*;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -69,7 +66,7 @@ public class CachingHttpServletRequestWrapperTest {
     }
 
     @Test
-    public void testDelegateGetParameterIfBodyIsNull(){
+    public void testDelegateGetParameterIfBodyIsNull() {
 
         //GIVEN
         final String expectedKey = "foobar";
@@ -84,7 +81,7 @@ public class CachingHttpServletRequestWrapperTest {
     }
 
     @Test(dataProvider = "queryStringRequestMethods")
-    public void testFillMapFromQueryString(final RequestMethod requestMethod) throws Exception{
+    public void testFillMapFromQueryString(final RequestMethod requestMethod) throws Exception {
 
         //GIVEN
         //Initialize body member
@@ -103,7 +100,7 @@ public class CachingHttpServletRequestWrapperTest {
     }
 
     @Test(dataProvider = "bodyPayloadRequestMethods")
-    public void testDelegateGetParameterIfContentTypeNotUrlencoded(final RequestMethod requestMethod)  throws Exception{
+    public void testDelegateGetParameterIfContentTypeNotUrlencoded(final RequestMethod requestMethod)  throws Exception {
 
         //GIVEN
         //Initialize body member
@@ -127,17 +124,17 @@ public class CachingHttpServletRequestWrapperTest {
     }
 
     @Test(dataProvider = "bodyPayloadRequestMethods")
-    public void testParseUrlEncodedBody(final RequestMethod requestMethod)  throws Exception{
+    public void testParseUrlEncodedBody(final RequestMethod requestMethod)  throws Exception {
 
         //GIVEN
         //Initialize body member
         when(serverRequestMock.getInputStream())
                 .thenReturn(new DelegatingServletInputStream(
                         new ByteArrayInputStream(
-                                ("&" + requestMethod.name() + "=" + requestMethod.name()).getBytes())));
+                                (requestMethod.name() + "=" + requestMethod.name()).getBytes())));
         wrapper.getInputStream();
 
-        when(serverRequestMock.getContentType()).thenReturn("application/x-www-form-urlencoded");
+        when(serverRequestMock.getContentType()).thenReturn(MediaType.APPLICATION_FORM_URLENCODED_VALUE);
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 
@@ -151,18 +148,18 @@ public class CachingHttpServletRequestWrapperTest {
     }
 
     @Test(dataProvider = "bodyPayloadRequestMethods")
-    public void testParseUrlEncodedBodyWithExtendedApplicationType(final RequestMethod requestMethod)  throws Exception{
+    public void testParseUrlEncodedBodyWithExtendedApplicationType(final RequestMethod requestMethod)  throws Exception {
 
         //GIVEN
         //Initialize body member
         when(serverRequestMock.getInputStream())
                 .thenReturn(new DelegatingServletInputStream(
                         new ByteArrayInputStream(
-                                ("&" + requestMethod.name() + "=" + requestMethod.name()).getBytes())));
+                                (requestMethod.name() + "=" + requestMethod.name()).getBytes())));
         wrapper.getInputStream();
 
         when(serverRequestMock.getContentType())
-                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset("UTF-8").toString());
+                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(Charset.forName("UTF-8")).toString());
 
         when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
 
@@ -173,9 +170,34 @@ public class CachingHttpServletRequestWrapperTest {
         assertEquals(parameterMap.keySet().size(),1);
         assertTrue(parameterMap.containsKey(requestMethod.name()));
         assertEquals(parameterMap.get(requestMethod.name()), new String[]{requestMethod.name()});
-
     }
 
+    @Test
+    public void testParseUrlEncodedBodyWithSpecialEncoding()  throws Exception {
+
+        //GIVEN
+        final RequestMethod requestMethod = RequestMethod.POST;
+
+        //Initialize body member
+        when(serverRequestMock.getInputStream())
+                .thenReturn(new DelegatingServletInputStream(
+                        new ByteArrayInputStream(
+                                (requestMethod.name() + "=ÄäÖöÜü").getBytes(Charset.forName("ISO-8859-1")))));
+        wrapper.getInputStream();
+
+        when(serverRequestMock.getContentType())
+                .thenReturn(ContentType.APPLICATION_FORM_URLENCODED.withCharset(Charset.forName("ISO-8859-1")).toString());
+
+        when(serverRequestMock.getMethod()).thenReturn(requestMethod.name());
+
+        //WHEN
+        final Map<String, String[]> parameterMap = wrapper.getParameterMap();
+
+        //THEN
+        assertEquals(parameterMap.keySet().size(),1);
+        assertTrue(parameterMap.containsKey(requestMethod.name()));
+        assertEquals(parameterMap.get(requestMethod.name()), new String[]{ "ÄäÖöÜü" });
+    }
 
     /**
      * Utility class to wrap a byte input stream as a servlet input stream
