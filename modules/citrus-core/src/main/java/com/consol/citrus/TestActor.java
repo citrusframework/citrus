@@ -18,7 +18,7 @@ package com.consol.citrus;
 
 /**
  * Actor performs send/receive message actions. With send/receive actors we can enable/disable Citrus message simulation
- * very easy. This enables a fast switch in end-to-end testing when a simulated application suddenly is real and we have to disable
+ * very easily. This enables a fast switch in end-to-end testing when a simulated application suddenly is real and we have to disable
  * the simulated communication parts in a test.
  *  
  * @author Christoph Deppisch
