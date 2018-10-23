@@ -105,19 +105,7 @@ Contact user@citrusframework.org directly for any request or questions
 Bugs
 ---------
 
-Please report any bugs and/or feature requests to dev@citrusframework.org
-or directly to http://github.com/citrusframework/citrus/issues
-  
-Team
----------
-
-```
-ConSol Software GmbH
-Christoph Deppisch
-christoph.deppisch@consol.de
-
-http://www.citrusframework.org
-```
+Please report any bugs and/or feature requests directly to http://github.com/citrusframework/citrus/issues
 
 Information
 ---------
