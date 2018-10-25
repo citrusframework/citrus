@@ -9,4 +9,10 @@ install:
   - mvn dependency:get -Dartifact=org.yaml:snakeyaml:1.15
 
 script:
-  - mvn --batch-mode -q clean install
+  - mvn --batch-mode -q clean install sonar:sonar -Pjacoco
+
+addons:
+  sonarcloud:
+    organization: "citrusframework"
+    token:
+      secure: "n4Sy3R9ITnwByay1EaC6/hFb8wWVVlvGGK7x3vUD1+rEC4CwpR16oYu7IeCanLQj861/+HAynd7lJiD0klCPGkfJ69pol55VN98EAh1VQzHH6tkicVUgLEjDXZw/PlmIxlW/OzR6aSRV6E0CsYE6ZD4jP5AHV43jZvgddfbtQmg="
