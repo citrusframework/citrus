@@ -11,6 +11,11 @@ install:
 script:
   - mvn --batch-mode -q clean install sonar:sonar -Pjacoco
 
+cache:
+  directories:
+  - '$HOME/.m2/repository'
+  - '$HOME/.sonar/cache'
+
 addons:
   sonarcloud:
     organization: "citrusframework"
