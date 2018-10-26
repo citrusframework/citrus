@@ -1,8 +1,8 @@
 Citrus Integration Testing ![Logo][1]
 ==============
 
-master: [![Build Status](https://travis-ci.org/citrusframework/citrus.svg?branch=master)](https://travis-ci.org/citrusframework/citrus)  
-v2.7-bugfix: [![Build Status](https://travis-ci.org/citrusframework/citrus.svg?branch=v2.7-bugfix)](https://travis-ci.org/citrusframework/citrus)
+master: [![Build Status](https://travis-ci.com/citrusframework/citrus.svg?branch=master)](https://travis-ci.org/citrusframework/citrus)  
+v2.7-bugfix: [![Build Status](https://travis-ci.com/citrusframework/citrus.svg?branch=v2.7-bugfix)](https://travis-ci.org/citrusframework/citrus)
 
 Welcome to Citrus
 ---------
