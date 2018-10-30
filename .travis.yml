@@ -9,7 +9,7 @@ install:
   - mvn dependency:get -Dartifact=org.yaml:snakeyaml:1.15
 
 script:
-  - mvn --batch-mode -q clean install sonar:sonar -Pjacoco
+  - mvn --batch-mode -q clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
 
 cache:
   directories:
