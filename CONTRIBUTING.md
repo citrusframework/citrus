@@ -22,7 +22,7 @@ Before you open an issue concerning your question, please make sure that none of
 
 If your question is still unanswered, please use our
 [question template](https://github.com/citrusframework/citrus/issues/new?template=question.md)
-to create a new question on github or ask a new question on [stackoverflow](http://stackoverflow.com)
+to create a new question on github or ask a new question on [stackoverflow](https://stackoverflow.com/questions/ask)
 tagged with `citrus-framework`.
 
 
