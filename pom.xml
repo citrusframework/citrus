@@ -74,46 +74,6 @@
       </roles>
     </developer>
     <developer>
-      <id>cwied</id>
-      <name>Christian Wied</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>philkom</id>
-      <name>Philipp Komninos</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jblipphaus</id>
-      <name>Jan Lipphaus</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jza</id>
-      <name>Jan Zahalka</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
       <id>maherma</id>
       <name>Martin Maher</name>
       <email>citrus-dev-l@consol.de</email>
@@ -121,16 +81,6 @@
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>movchin</id>
-      <name>Michael Movchin</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Web Developer</role>
       </roles>
     </developer>
     <developer>
