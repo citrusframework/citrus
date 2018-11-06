@@ -5,8 +5,5 @@ jdk:
 dist: trusty
 sudo: required
 
-install:
-  - mvn dependency:get -Dartifact=org.yaml:snakeyaml:1.15
-
 script:
   - mvn --batch-mode -q clean install
