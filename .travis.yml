@@ -5,5 +5,8 @@ jdk:
 dist: trusty
 sudo: required
 
+install:
+  - mvn dependency:resolve
+
 script:
-  - mvn --batch-mode -q clean install
+  - mvn --batch-mode -q install
