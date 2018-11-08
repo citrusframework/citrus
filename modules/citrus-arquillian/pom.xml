@@ -26,13 +26,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.yaml</groupId>
-      <artifactId>snakeyaml</artifactId>
-      <version>1.15</version>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jms</artifactId>
       <version>${project.version}</version>
