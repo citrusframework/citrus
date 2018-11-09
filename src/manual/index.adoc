@@ -1,6 +1,6 @@
 [[citrus]]
 = Citrus
-Christoph Deppisch;Martin Maher
+Authors: The Citrus Community
 :revnumber: {version}
 :revdate: {localdate}
 :sectanchors:
