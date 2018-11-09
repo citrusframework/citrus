@@ -5,8 +5,7 @@ jdk:
 dist: trusty
 sudo: required
 
-install:
-  - mvn dependency:get -Dartifact=org.yaml:snakeyaml:1.15
+install: true
 
 script:
   - mvn --batch-mode -q clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
