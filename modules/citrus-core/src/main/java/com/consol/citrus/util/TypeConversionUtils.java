@@ -165,7 +165,7 @@ public abstract class TypeConversionUtils {
             if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
                 return (T) new String(((ByteBuffer) target).array());
             } else if (byte[].class.isAssignableFrom(target.getClass())) {
-                return (T) new String((byte[]) target);
+                return (T) Arrays.toString((byte[]) target);
             }
         }
 

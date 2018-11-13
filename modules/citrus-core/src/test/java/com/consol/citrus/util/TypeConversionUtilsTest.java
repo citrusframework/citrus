@@ -50,7 +50,7 @@ public class TypeConversionUtilsTest {
         Assert.assertEquals(TypeConversionUtils.convertIfNecessary(payload, InputStream.class).getClass(), ByteArrayInputStream.class);
         Assert.assertEquals(TypeConversionUtils.convertIfNecessary(payload, Source.class).getClass(), StringSource.class);
         Assert.assertEquals(TypeConversionUtils.convertIfNecessary(payload, byte[].class), payload.getBytes());
-        Assert.assertEquals(TypeConversionUtils.convertIfNecessary(payload.getBytes(), String.class), new String(payload.getBytes()));
+        Assert.assertEquals(TypeConversionUtils.convertIfNecessary(payload.getBytes(), String.class), Arrays.toString(payload.getBytes()));
         Assert.assertEquals(TypeConversionUtils.convertIfNecessary(ByteBuffer.wrap(payload.getBytes()), String.class), payload);
     }
 
