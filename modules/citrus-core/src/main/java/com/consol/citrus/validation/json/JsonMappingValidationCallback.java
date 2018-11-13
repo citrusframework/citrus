@@ -68,6 +68,9 @@ public abstract class JsonMappingValidationCallback<T> extends AbstractValidatio
         }
 
         try {
+            if (byte[].class.isAssignableFrom(message.getPayload().getClass())) {
+                return jsonMapper.readValue((byte[]) message.getPayload(), resultType);
+            }
             return jsonMapper.readValue(message.getPayload(String.class), resultType);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to unmarshal message payload", e);
