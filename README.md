@@ -13,7 +13,7 @@ applications. Citrus simulates surrounding interface partners
 supporting a huge set of different transports and protocols like
 Http, JMS, TCP/IP, FTP, SOAP, XML and JSON.
 
-Visit our official website at 'https://www.citrusframework.org'
+Visit our official website at 'https://citrusframework.org'
 for more information and a detailed documentation.
 
 Preconditions
@@ -66,7 +66,7 @@ repository with git://github.com/citrusframework/citrus.git as URL
 https://labs.consol.de and checkout the various post categories for
 selecting a specific topic.
 
-* https://www.citrusframework.org offers tutorials and more information about
+* https://citrusframework.org offers tutorials and more information about
 Citrus framework.
 
 Samples
@@ -98,7 +98,7 @@ Consulting
 ---------
 
 Just in case you need professional support for Citrus have a look at
-'https://www.citrusframework.org/docs/consulting/'.
+'https://citrusframework.org/docs/consulting/'.
 Contact user@citrusframework.org directly for any request or questions
 (or use the contact form at 'https://www.consol.com/contact/')
 
@@ -110,9 +110,9 @@ Please report any bugs and/or feature requests directly to https://github.com/ci
 Information
 ---------
 
-For more information on Citrus see [www.citrusframework.org][2], including
+For more information on Citrus see [citrusframework.org][2], including
 a complete [reference manual][3].
 
- [1]: https://www.citrusframework.org/img/brand-logo.png "Citrus"
- [2]: https://www.citrusframework.org
- [3]: https://www.citrusframework.org/reference/html/
+ [1]: https://citrusframework.org/img/brand-logo.png "Citrus"
+ [2]: https://citrusframework.org
+ [3]: https://citrusframework.org/reference/html/
