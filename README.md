@@ -1,7 +1,7 @@
 Citrus Integration Testing ![Logo][1]
 ==============
 
-master: [![Build Status](https://travis-ci.com/citrusframework/citrus.svg?branch=master)](https://travis-ci.com/citrusframework/citrus) [![<Sonarcloud quality gate>](https://sonarcloud.io/api/project_badges/measure?project=citrus&metric=alert_status)](https://sonarcloud.io/api/project_badges/measure?project=citrus&metric=alert_status)     
+master: [![Build Status](https://travis-ci.com/citrusframework/citrus.svg?branch=master)](https://travis-ci.com/citrusframework/citrus) [![<Sonarcloud quality gate>](https://sonarcloud.io/api/project_badges/measure?project=citrus&metric=alert_status)](https://sonarcloud.io/dashboard?id=citrus)     
 v2.7-bugfix: [![Build Status](https://travis-ci.com/citrusframework/citrus.svg?branch=v2.7-bugfix)](https://travis-ci.com/citrusframework/citrus)
 
 Welcome to Citrus
