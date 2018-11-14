@@ -20,4 +20,5 @@ http\://www.citrusframework.org/schema/mail/config/citrus-mail-config-2.7.5.xsd=
 http\://www.citrusframework.org/schema/mail/config/citrus-mail-config-2.7.6.xsd=com/consol/citrus/schema/citrus-mail-config-2.7.6.xsd
 http\://www.citrusframework.org/schema/mail/config/citrus-mail-config-2.7.7.xsd=com/consol/citrus/schema/citrus-mail-config-2.7.7.xsd
 http\://www.citrusframework.org/schema/mail/config/citrus-mail-config-2.7.8.xsd=com/consol/citrus/schema/citrus-mail-config-2.7.8.xsd
+http\://www.citrusframework.org/schema/mail/config/citrus-mail-config-2.7.9.xsd=com/consol/citrus/schema/citrus-mail-config-2.7.9.xsd
 http\://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd=com/consol/citrus/schema/citrus-mail-config.xsd

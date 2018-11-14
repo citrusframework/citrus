@@ -18,6 +18,7 @@ http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-2.7.5.xsd=co
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-2.7.6.xsd=com/consol/citrus/schema/citrus-jms-config-2.7.6.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-2.7.7.xsd=com/consol/citrus/schema/citrus-jms-config-2.7.7.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-2.7.8.xsd=com/consol/citrus/schema/citrus-jms-config-2.7.8.xsd
+http\://www.citrusframework.org/schema/jms/config/citrus-jms-config-2.7.9.xsd=com/consol/citrus/schema/citrus-jms-config-2.7.9.xsd
 http\://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd=com/consol/citrus/schema/citrus-jms-config.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.0.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.0.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.1.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.1.xsd
@@ -39,4 +40,5 @@ http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.7.5.xs
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.7.6.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.7.6.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.7.7.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.7.7.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.7.8.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.7.8.xsd
+http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase-2.7.9.xsd=com/consol/citrus/schema/citrus-jms-testcase-2.7.9.xsd
 http\://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd=com/consol/citrus/schema/citrus-jms-testcase.xsd
