@@ -63,10 +63,10 @@ Resources
 repository with git://github.com/citrusframework/citrus.git as URL
 
 * Find our blog and more interesting articles around Citrus on
-http://labs.consol.de and checkout the various post categories for
+https://labs.consol.de and checkout the various post categories for
 selecting a specific topic.
 
-* http://www.citrusframework.org offers tutorials and more information about
+* https://www.citrusframework.org offers tutorials and more information about
 Citrus framework.
 
 Samples
@@ -86,7 +86,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-  http://www.apache.org/licenses/LICENSE-2.0
+  https://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -98,14 +98,14 @@ Consulting
 ---------
 
 Just in case you need professional support for Citrus have a look at
-'http://www.citrusframework.org/docs/consulting/'.
+'https://www.citrusframework.org/docs/consulting/'.
 Contact user@citrusframework.org directly for any request or questions
-(or use the contact form at 'http://www.consol.com/contact/')
+(or use the contact form at 'https://www.consol.com/contact/')
 
 Bugs
 ---------
 
-Please report any bugs and/or feature requests directly to http://github.com/citrusframework/citrus/issues
+Please report any bugs and/or feature requests directly to https://github.com/citrusframework/citrus/issues
 
 Information
 ---------
@@ -113,6 +113,6 @@ Information
 For more information on Citrus see [www.citrusframework.org][2], including
 a complete [reference manual][3].
 
- [1]: http://www.citrusframework.org/img/brand-logo.png "Citrus"
- [2]: http://www.citrusframework.org
- [3]: http://www.citrusframework.org/reference/html/
+ [1]: https://www.citrusframework.org/img/brand-logo.png "Citrus"
+ [2]: https://www.citrusframework.org
+ [3]: https://www.citrusframework.org/reference/html/
