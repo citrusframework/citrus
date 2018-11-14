@@ -7,8 +7,7 @@ sudo: required
 
 install: true
 
-script:
-  - mvn --batch-mode -q clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=citrus
+script: bash scripts/build.sh
 
 cache:
   directories:
