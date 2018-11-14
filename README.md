@@ -13,7 +13,7 @@ applications. Citrus simulates surrounding interface partners
 supporting a huge set of different transports and protocols like
 Http, JMS, TCP/IP, FTP, SOAP, XML and JSON.
 
-Visit our official website at 'http://www.citrusframework.org'
+Visit our official website at 'https://www.citrusframework.org'
 for more information and a detailed documentation.
 
 Preconditions
@@ -32,9 +32,9 @@ and executing test cases). You can use the Java IDE that you like best
 like Eclipse or IntelliJ IDEA.
 
 * Maven 3.0.x or higher (optional)
-Citrus projects will fit best with Maven (http://maven.apache.org).
+Citrus projects will fit best with Maven (https://maven.apache.org).
 However it is not required to use Maven. You can also run tests using
-ANT (http://ant.apache.org/) for instance.
+ANT (https://ant.apache.org/) for instance.
    
 Installation
 ---------
