@@ -68,7 +68,39 @@ public SftpClient sftpClient() {
 }
 ----
 
-The configuration above describes a Citrus sftp client. The sftp-client connects to the server using the user credentials and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
+The configuration above describes a Citrus sftp client. The sftp-client connects to the server using the user credentials
+and/or the private key authentication. The client will automatically authenticate to the server when opening a new connection.
+As the Citrus stfp client supports various authentication methods, the following order is default: `publickey,password,keyboard-interactive`.
+You're able to configure the default order with the `preferred-authentications` attribute in XML or the
+`preferredAuthentications` method in Java.
+
+.XML
+[source,xml]
+----
+<citrus-sftp:client id="sftpClient"
+           strict-host-checking="false"
+           port="2222"
+           username="citrus"
+           private-key-path="classpath:ssh/citrus.priv",
+           preferred-authentications="publickey,password,gssapi-with-mic,keyboard-interactive"
+           timeout="10000"/>
+----
+
+.Java
+[source, java]
+----
+@Bean
+public SftpClient sftpClient() {
+    return CitrusEndpoints.sftp()
+            .client()
+            .strictHostChecking(false)
+            .port(2222)
+            .username("citrus")
+            .privateKeyPath("classpath:ssh/citrus.priv")
+            .preferredAuthentications("publickey,password,gssapi-with-mic,keyboard-interactive")
+            .build();
+}
+----
 
 [[sftp-client-commands]]
 === SFTP client commands
