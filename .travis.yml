@@ -5,6 +5,11 @@ jdk:
 dist: trusty
 sudo: required
 
+# infinite depth for better sonar metrics
+git:
+  depth: false
+
+# Skip installation step
 install: true
 
 script: bash scripts/build.sh
