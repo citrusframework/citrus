@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then
+if [ "${SONAR_SCANNER_HOME}" != "" ]; then
     COMMAND="mvn --batch-mode -q clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=citrus"
 else
     COMMAND="mvn --batch-mode -q clean install"
