@@ -407,6 +407,25 @@ public class HttpMessage extends DefaultMessage {
      * @param cookies
      */
     public void setCookies(Cookie[] cookies) {
+        clearCookies();
+        addCookies(cookies);
+    }
+
+    /**
+     * Clears existing cookies.
+     *
+     * @param cookies
+     */
+    public void clearCookies() {
+        this.cookies.clear();
+    }
+
+    /**
+     * Adds new cookies.
+     *
+     * @param cookies
+     */
+    public void addCookies(Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 cookie(cookie);
