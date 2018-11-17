@@ -66,7 +66,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             return new ResponseEntity<>(payload, httpHeaders, httpMessage.getStatusCode());
         } else {
             for (Cookie cookie : httpMessage.getCookies()) {
-                httpHeaders.set("Cookie", cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
+                httpHeaders.add("Cookie", cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
             }
         }
 
