@@ -19,12 +19,22 @@ package com.consol.citrus.http.message;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
-import com.consol.citrus.message.*;
-import org.springframework.http.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.MessageHeaders;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Message converter implementation able to convert HTTP request and response entities to internal message
@@ -66,7 +76,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             return new ResponseEntity<>(payload, httpHeaders, httpMessage.getStatusCode());
         } else {
             for (Cookie cookie : httpMessage.getCookies()) {
-                httpHeaders.set("Cookie", cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
+                httpHeaders.add("Cookie", cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
             }
         }
 
