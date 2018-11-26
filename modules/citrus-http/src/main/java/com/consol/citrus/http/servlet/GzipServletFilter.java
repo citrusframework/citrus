@@ -16,18 +16,19 @@
 
 package com.consol.citrus.http.servlet;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.filter.OncePerRequestFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 /**
- * Filter watches for gzip accept header and add gzip compression on response body when applicable. Only
- * applies gzip compression on requests with Accept-Encoding="gzip".
+ * Filter watches for gzip content and accept header in order to add automatic gzip decompression on request
+ * and compression on response body when applicable. Only applies gzip request decompression on requests with Content-Encoding="gzip".
+ * Only applies gzip response compression on requests with Accept-Encoding="gzip".
  *
  * @author Christoph Deppisch
  * @since 2.6.2
@@ -37,13 +38,23 @@ public class GzipServletFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
+        HttpServletRequest filteredRequest = request;
+        HttpServletResponse filteredResponse = response;
+
+        String contentEncoding = request.getHeader(HttpHeaders.CONTENT_ENCODING);
+        if (contentEncoding != null && contentEncoding.contains("gzip")) {
+            filteredRequest = new GzipHttpServletRequestWrapper(request);
+        }
+
         String acceptEncoding = request.getHeader(HttpHeaders.ACCEPT_ENCODING);
-        if (acceptEncoding != null && acceptEncoding.indexOf("gzip") >= 0) {
-            GzipHttpServletResponseWrapper gzipResponse = new GzipHttpServletResponseWrapper(response);
-            filterChain.doFilter(request, gzipResponse);
-            gzipResponse.finish();
-        } else {
-            filterChain.doFilter(request, response);
+        if (acceptEncoding != null && acceptEncoding.contains("gzip")) {
+            filteredResponse = new GzipHttpServletResponseWrapper(response);
+        }
+
+        filterChain.doFilter(filteredRequest, filteredResponse);
+
+        if (filteredResponse instanceof GzipHttpServletResponseWrapper) {
+            ((GzipHttpServletResponseWrapper) filteredResponse).finish();
         }
     }
 }
