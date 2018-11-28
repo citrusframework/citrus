@@ -92,5 +92,15 @@ public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {
                 throw new CitrusRuntimeException("Failed to read gzip input stream", e);
             }
         }
+
+        @Override
+        public int read(byte[] b) throws IOException {
+            return gzipStream.read(b);
+        }
+
+        @Override
+        public int read(byte[] b, int off, int len) throws IOException {
+            return gzipStream.read(b, off, len);
+        }
     }
 }
