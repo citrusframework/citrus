@@ -51,18 +51,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         HttpMessage httpMessage = convertOutboundMessage(message);
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        endpointConfiguration
-                .getHeaderMapper()
-                .fromHeaders(
-                        new org.springframework.messaging.MessageHeaders(httpMessage.getHeaders()),
-                        httpHeaders);
-
-        copyOutboundMessageHeaders(httpMessage, httpHeaders);
-
-        if (httpHeaders.getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE) == null) {
-            httpHeaders.add(HttpMessageHeaders.HTTP_CONTENT_TYPE, composeContentTypeHeaderValue(endpointConfiguration));
-        }
+        HttpHeaders httpHeaders = createHttpHeaders(httpMessage, endpointConfiguration);
 
         Object payload = httpMessage.getPayload();
         if (httpMessage.getStatusCode() != null) {
@@ -218,13 +207,21 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
     }
 
     /**
-     * Copies the header entries of the outbound HttpMessage into a HttpHeaders object,
-     * without replacing existing header entries.
-     *
+     * Creates HttpHeaders based on the outbound message and the endpoint configurations header mapper.
      * @param httpMessage The HttpMessage to copy the headers from
-     * @param httpHeaders The httpHeaders to fill.
+     * @param endpointConfiguration The endpoint configuration to get th header mapper from
      */
-    private void copyOutboundMessageHeaders(HttpMessage httpMessage, HttpHeaders httpHeaders) {
+    private HttpHeaders createHttpHeaders(HttpMessage httpMessage,
+                                          HttpEndpointConfiguration endpointConfiguration) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        endpointConfiguration
+                .getHeaderMapper()
+                .fromHeaders(
+                        new org.springframework.messaging.MessageHeaders(httpMessage.getHeaders()),
+                        httpHeaders);
+
         Map<String, Object> messageHeaders = httpMessage.getHeaders();
         for (Map.Entry<String, Object> header : messageHeaders.entrySet()) {
             if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
@@ -233,6 +230,12 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
                 httpHeaders.add(header.getKey(), header.getValue().toString());
             }
         }
+
+        if (httpHeaders.getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE) == null) {
+            httpHeaders.add(HttpMessageHeaders.HTTP_CONTENT_TYPE, composeContentTypeHeaderValue(endpointConfiguration));
+        }
+
+        return httpHeaders;
     }
 
     /**
