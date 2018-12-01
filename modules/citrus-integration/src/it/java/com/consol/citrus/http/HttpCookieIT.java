@@ -22,7 +22,7 @@ public class HttpCookieIT extends TestNGCitrusTestRunner{
 
     @Test
     @CitrusTest
-    public void testGet() {
+    public void testCookiesAreTransmittedToServer() {
 
         //GIVEN
         final Cookie aCookie = new Cookie("a", "a");
