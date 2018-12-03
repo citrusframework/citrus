@@ -33,6 +33,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -85,38 +86,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
-                List<String> cookies = message.getHeaders().get("Set-Cookie");
-                if (cookies != null) {
-                    for (String cookieString : cookies) {
-                        Cookie cookie = new Cookie(getCookieParam("Name", cookieString), getCookieParam("Value", cookieString));
-
-                        if (cookieString.contains("Comment")) {
-                            cookie.setComment(getCookieParam("Comment", cookieString));
-                        }
-
-                        if (cookieString.contains("Path")) {
-                            cookie.setPath(getCookieParam("Path", cookieString));
-                        }
-
-                        if (cookieString.contains("Domain")) {
-                            cookie.setDomain(getCookieParam("Domain", cookieString));
-                        }
-
-                        if (cookieString.contains("Max-Age")) {
-                            cookie.setMaxAge(Integer.valueOf(getCookieParam("Max-Age", cookieString)));
-                        }
-
-                        if (cookieString.contains("Secure")) {
-                            cookie.setSecure(Boolean.valueOf(getCookieParam("Secure", cookieString)));
-                        }
-
-                        if (cookieString.contains("Version")) {
-                            cookie.setVersion(Integer.valueOf(getCookieParam("Version", cookieString)));
-                        }
-
-                        httpMessage.cookie(cookie);
-                    }
-                }
+                httpMessage.setCookies(convertInboundCookies(message));
             }
         }
 
@@ -133,20 +103,20 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
     /**
      * Extract cookie param from cookie string as it was provided by "Set-Cookie" header.
-     * @param param
-     * @param cookieString
-     * @return
+     * @param param The parameter to extract from the cookie string
+     * @param cookieString The cookie string from the cookie header to extract the parameter from
+     * @return The value of the requested parameter
      */
     private String getCookieParam(String param, String cookieString) {
         if (param.equals("Name")) {
-            return cookieString.substring(0, cookieString.indexOf("="));
+            return cookieString.substring(0, cookieString.indexOf('='));
         }
 
         if (param.equals("Value")) {
             if (cookieString.contains(";")) {
-                return cookieString.substring(cookieString.indexOf("=") + 1, cookieString.indexOf(";"));
+                return cookieString.substring(cookieString.indexOf('=') + 1, cookieString.indexOf(';'));
             } else {
-                return cookieString.substring(cookieString.indexOf("=") + 1);
+                return cookieString.substring(cookieString.indexOf('=') + 1);
             }
         }
 
@@ -154,12 +124,13 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             return "true";
         }
 
-        if (cookieString.contains(param + "=")) {
-            int endParam = cookieString.indexOf(";", cookieString.indexOf(param + "="));
+        if (cookieString.contains(param + '=')) {
+            final int endParam = cookieString.indexOf(';', cookieString.indexOf(param + '='));
+            final int beginIndex = cookieString.indexOf(param + '=') + param.length() + 1;
             if (endParam > 0) {
-                return cookieString.substring(cookieString.indexOf(param + "=") + param.length() + 1, endParam);
+                return cookieString.substring(beginIndex, endParam);
             } else {
-                return cookieString.substring(cookieString.indexOf(param + "=") + param.length() + 1);
+                return cookieString.substring(beginIndex);
             }
         }
 
@@ -173,7 +144,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      *
      * @param httpHeaders all message headers in their pre nature.
      * @param mappedHeaders the previously mapped header entries (all standard headers).
-     * @return
+     * @return The map of custom headers
      */
     private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, Object> mappedHeaders) {
         Map<String, String> customHeaders = new HashMap<>();
@@ -315,5 +286,59 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      */
     private Object extractMessageBody(HttpEntity<?> message) {
         return message.getBody() != null ? message.getBody() : "";
+    }
+
+    /**
+     * Converts cookies from a HttpEntity into Cookie objects
+     * @param httpEntity The message to convert
+     * @return A array of converted cookies
+     */
+    private Cookie[] convertInboundCookies(HttpEntity<?> httpEntity) {
+        final List<Cookie> cookies = new LinkedList<>();
+
+        List<String> inboundCookies = httpEntity.getHeaders().get("Set-Cookie");
+        if (inboundCookies != null) {
+            for (String cookieString : inboundCookies) {
+                Cookie cookie = convertCookieString(cookieString);
+                cookies.add(cookie);
+            }
+        }
+
+        return cookies.toArray(new Cookie[0]);
+    }
+
+    /**
+     * Converts a cookie string from a http header value into a Cookie object
+     * @param cookieString The string to convert
+     * @return The Cookie representation of the given String
+     */
+    private Cookie convertCookieString(String cookieString) {
+        Cookie cookie = new Cookie(getCookieParam("Name", cookieString), getCookieParam("Value", cookieString));
+
+        if (cookieString.contains("Comment")) {
+            cookie.setComment(getCookieParam("Comment", cookieString));
+        }
+
+        if (cookieString.contains("Path")) {
+            cookie.setPath(getCookieParam("Path", cookieString));
+        }
+
+        if (cookieString.contains("Domain")) {
+            cookie.setDomain(getCookieParam("Domain", cookieString));
+        }
+
+        if (cookieString.contains("Max-Age")) {
+            cookie.setMaxAge(Integer.valueOf(getCookieParam("Max-Age", cookieString)));
+        }
+
+        if (cookieString.contains("Secure")) {
+            cookie.setSecure(Boolean.valueOf(getCookieParam("Secure", cookieString)));
+        }
+
+        if (cookieString.contains("Version")) {
+            cookie.setVersion(Integer.valueOf(getCookieParam("Version", cookieString)));
+        }
+
+        return cookie;
     }
 }
