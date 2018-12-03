@@ -21,13 +21,19 @@ import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.integration.mapping.HeaderMapper;
+import org.springframework.messaging.MessageHeaders;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.Cookie;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertNull;
 
@@ -296,5 +302,41 @@ public class HttpMessageConverterTest {
 
         //THEN
         assertNull(httpEntity.getBody());
+    }
+
+    @Test
+    public void testHttpMessageWithStatusCodeContainsNoCookiesOnOutbound(){
+        /* I've added this test to ensure that the current implementation of the HttpMessageConverter
+         * is fixed. Nevertheless, I doubt that cookies should not be set, if a http status code is preset in a
+         * incoming HTTP message. So this test might be subject to change.
+         */
+
+        //GIVEN
+        HttpMessage message = new HttpMessage();
+        message.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, "200");
+
+        Cookie cookie = new Cookie("foo","bar");
+        message.cookie(cookie);
+
+        //WHEN
+        final HttpEntity<?> httpEntity = messageConverter.convertOutbound(message, endpointConfiguration, testContext);
+
+        //THEN
+        assertNull(httpEntity.getHeaders().get("Cookie"));
+    }
+
+    @Test
+    public void testSpringIntegrationHeaderMapperIsUsedOnOutbound(){
+
+        //GIVEN
+        @SuppressWarnings("unchecked")
+        HeaderMapper<HttpHeaders> headersHeaderMapperMock = (HeaderMapper<HttpHeaders>) mock(HeaderMapper.class);
+        endpointConfiguration.setHeaderMapper(headersHeaderMapperMock);
+
+        //WHEN
+        messageConverter.convertOutbound(new HttpMessage(), endpointConfiguration, testContext);
+
+        //THEN
+        verify(headersHeaderMapperMock).fromHeaders(any(MessageHeaders.class), any(HttpHeaders.class));
     }
 }
