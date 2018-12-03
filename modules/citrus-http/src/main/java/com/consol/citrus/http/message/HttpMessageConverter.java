@@ -74,7 +74,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
                                       HttpEndpointConfiguration endpointConfiguration,
                                       TestContext context) {
         Map<String, Object> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
-        HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders));
+        HttpMessage httpMessage = new HttpMessage(extractMessageBody(message), convertHeaderTypes(mappedHeaders));
 
         for (Map.Entry<String, String> customHeader : getCustomHeaders(message.getHeaders(), mappedHeaders).entrySet()) {
             httpMessage.setHeader(customHeader.getKey(), customHeader.getValue());
@@ -82,7 +82,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         if (message instanceof ResponseEntity<?>) {
             httpMessage.status(((ResponseEntity<?>) message).getStatusCode());
-            httpMessage.version("HTTP/1.1"); //TODO check if we have access to version information
+            httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
                 List<String> cookies = message.getHeaders().get("Set-Cookie");
@@ -148,6 +148,10 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             } else {
                 return cookieString.substring(cookieString.indexOf("=") + 1);
             }
+        }
+
+        if("Secure".equals(param) && cookieString.contains("Secure")) {
+            return "true";
         }
 
         if (cookieString.contains(param + "=")) {
@@ -302,5 +306,14 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         return (endpointConfiguration.getContentType().contains("charset") || !StringUtils.hasText(endpointConfiguration.getCharset())) ?
                 endpointConfiguration.getContentType() :
                 endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset();
+    }
+
+    /**
+     * Extracts the message body from the given HttpEntity or returns a default
+     * @param message The message to extract the body from
+     * @return The body of the HttpEntity or a default value, if no payload is available
+     */
+    private Object extractMessageBody(HttpEntity<?> message) {
+        return message.getBody() != null ? message.getBody() : "";
     }
 }
