@@ -40,6 +40,7 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
@@ -48,13 +49,17 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class HttpMessageConverterTest {
 
-    private HttpMessageConverter messageConverter = new HttpMessageConverter();
+    private CookieParser cookieParserMock;
+    private HttpMessageConverter messageConverter;
 
     private HttpEndpointConfiguration endpointConfiguration;
     private TestContext testContext = new TestContext();
 
     @BeforeMethod
     public void setUp(){
+        cookieParserMock = mock(CookieParser.class);
+        messageConverter = new HttpMessageConverter(cookieParserMock);
+
         endpointConfiguration = new HttpEndpointConfiguration();
         testContext = new TestContext();
     }
@@ -477,25 +482,21 @@ public class HttpMessageConverterTest {
     public void testNoCookiesPreservedByDefaultOnInbound(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("Path=foo"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
+        messageConverter.convertInbound(ResponseEntity.EMPTY, endpointConfiguration, testContext);
 
         //THEN
-        assertTrue(httpMessage.getCookies().isEmpty());
+        verify(cookieParserMock, never()).convertCookies(any());
     }
 
     @Test
     public void testCookiesPreservedOnConfigurationOnInbound(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
+        Cookie cookieMock = mock(Cookie.class);
+        final ResponseEntity<?> responseEntity = ResponseEntity.ok("foobar");
+        when(cookieParserMock.convertCookies(responseEntity)).thenReturn(new Cookie[]{cookieMock});
 
         endpointConfiguration.setHandleCookies(true);
 
@@ -505,162 +506,10 @@ public class HttpMessageConverterTest {
 
         //THEN
         assertEquals(1, httpMessage.getCookies().size());
-        assertEquals("foo", httpMessage.getCookies().get(0).getName());
-        assertEquals("bar", httpMessage.getCookies().get(0).getValue());
+        assertEquals(cookieMock, httpMessage.getCookies().get(0));
     }
 
-    @Test
-    public void testAdditionalCookieDirectivesAreDiscardedForValueOnInbound(){
 
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;HttpOnly"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals("foo", httpMessage.getCookies().get(0).getName());
-        assertEquals("bar", httpMessage.getCookies().get(0).getValue());
-    }
-
-    @Test
-    public void testCookieCommentIsPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Comment=wtf"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals("wtf", httpMessage.getCookies().get(0).getComment());
-    }
-
-    @Test
-    public void testCookiePathIsPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Path=foobar"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals("foobar", httpMessage.getCookies().get(0).getPath());
-    }
-
-    @Test
-    public void testCookieDomainIsPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Domain=whatever"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals("whatever", httpMessage.getCookies().get(0).getDomain());
-    }
-
-    @Test
-    public void testCookieMaxAgeIsPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Max-Age=42"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals(42, httpMessage.getCookies().get(0).getMaxAge());
-    }
-
-    @Test
-    public void testCookieSecureIsPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Secure"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertTrue(httpMessage.getCookies().get(0).getSecure());
-    }
-
-    @Test
-    public void testCookieVersionIsPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals(1, httpMessage.getCookies().get(0).getVersion());
-    }
-
-    @Test
-    public void testCookieEndParameterIsRecognizedAndPreservedOnInbound(){
-
-        //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1;"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        endpointConfiguration.setHandleCookies(true);
-
-        //WHEN
-        final HttpMessage httpMessage =
-                messageConverter.convertInbound(responseEntity, endpointConfiguration, testContext);
-
-        //THEN
-        assertEquals(1, httpMessage.getCookies().size());
-        assertEquals(1, httpMessage.getCookies().get(0).getVersion());
-    }
 
     @Test
     public void testSpringIntegrationHeaderMapperListResultIsConvertedOnInbound(){

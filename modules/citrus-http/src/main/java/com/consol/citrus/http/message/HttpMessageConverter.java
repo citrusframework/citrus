@@ -17,7 +17,6 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageConverter;
@@ -33,7 +32,6 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.Cookie;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -44,6 +42,16 @@ import java.util.Map;
  * @since 2.0
  */
 public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEndpointConfiguration> {
+
+    private CookieParser cookieParser;
+
+    public HttpMessageConverter() {
+        cookieParser = new CookieParser();
+    }
+
+    public HttpMessageConverter(CookieParser cookieParser) {
+        this.cookieParser = cookieParser;
+    }
 
     @Override
     public HttpEntity<?> convertOutbound(Message message,
@@ -86,7 +94,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
-                httpMessage.setCookies(convertInboundCookies(message));
+                httpMessage.setCookies(cookieParser.convertCookies(message));
             }
         }
 
@@ -101,41 +109,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         throw new UnsupportedOperationException("HttpMessageConverter does not support predefined HttpEntity objects");
     }
 
-    /**
-     * Extract cookie param from cookie string as it was provided by "Set-Cookie" header.
-     * @param param The parameter to extract from the cookie string
-     * @param cookieString The cookie string from the cookie header to extract the parameter from
-     * @return The value of the requested parameter
-     */
-    private String getCookieParam(String param, String cookieString) {
-        if (param.equals("Name")) {
-            return cookieString.substring(0, cookieString.indexOf('='));
-        }
 
-        if (param.equals("Value")) {
-            if (cookieString.contains(";")) {
-                return cookieString.substring(cookieString.indexOf('=') + 1, cookieString.indexOf(';'));
-            } else {
-                return cookieString.substring(cookieString.indexOf('=') + 1);
-            }
-        }
-
-        if("Secure".equals(param) && cookieString.contains("Secure")) {
-            return "true";
-        }
-
-        if (cookieString.contains(param + '=')) {
-            final int endParam = cookieString.indexOf(';', cookieString.indexOf(param + '='));
-            final int beginIndex = cookieString.indexOf(param + '=') + param.length() + 1;
-            if (endParam > 0) {
-                return cookieString.substring(beginIndex, endParam);
-            } else {
-                return cookieString.substring(beginIndex);
-            }
-        }
-
-        throw new CitrusRuntimeException(String.format("Unable to get cookie argument '%s' from cookie String: %s", param, cookieString));
-    }
 
     /**
      * Message headers consist of standard HTTP message headers and custom headers.
@@ -286,59 +260,5 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      */
     private Object extractMessageBody(HttpEntity<?> message) {
         return message.getBody() != null ? message.getBody() : "";
-    }
-
-    /**
-     * Converts cookies from a HttpEntity into Cookie objects
-     * @param httpEntity The message to convert
-     * @return A array of converted cookies
-     */
-    private Cookie[] convertInboundCookies(HttpEntity<?> httpEntity) {
-        final List<Cookie> cookies = new LinkedList<>();
-
-        List<String> inboundCookies = httpEntity.getHeaders().get("Set-Cookie");
-        if (inboundCookies != null) {
-            for (String cookieString : inboundCookies) {
-                Cookie cookie = convertCookieString(cookieString);
-                cookies.add(cookie);
-            }
-        }
-
-        return cookies.toArray(new Cookie[0]);
-    }
-
-    /**
-     * Converts a cookie string from a http header value into a Cookie object
-     * @param cookieString The string to convert
-     * @return The Cookie representation of the given String
-     */
-    private Cookie convertCookieString(String cookieString) {
-        Cookie cookie = new Cookie(getCookieParam("Name", cookieString), getCookieParam("Value", cookieString));
-
-        if (cookieString.contains("Comment")) {
-            cookie.setComment(getCookieParam("Comment", cookieString));
-        }
-
-        if (cookieString.contains("Path")) {
-            cookie.setPath(getCookieParam("Path", cookieString));
-        }
-
-        if (cookieString.contains("Domain")) {
-            cookie.setDomain(getCookieParam("Domain", cookieString));
-        }
-
-        if (cookieString.contains("Max-Age")) {
-            cookie.setMaxAge(Integer.valueOf(getCookieParam("Max-Age", cookieString)));
-        }
-
-        if (cookieString.contains("Secure")) {
-            cookie.setSecure(Boolean.valueOf(getCookieParam("Secure", cookieString)));
-        }
-
-        if (cookieString.contains("Version")) {
-            cookie.setVersion(Integer.valueOf(getCookieParam("Version", cookieString)));
-        }
-
-        return cookie;
     }
 }
