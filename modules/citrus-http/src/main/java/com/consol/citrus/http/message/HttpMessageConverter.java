@@ -68,7 +68,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         } else {
             for (Cookie cookie : httpMessage.getCookies()) {
                 httpHeaders.add(
-                        "Cookie",
+                        HttpHeaders.COOKIE,
                         cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
             }
         }
@@ -91,6 +91,9 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         if (message instanceof ResponseEntity<?>) {
             httpMessage.status(((ResponseEntity<?>) message).getStatusCode());
+
+            // We've no information here about the HTTP Version in this context.
+            // Because HTTP/2 is not supported anyways currently, this should be acceptable.
             httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
