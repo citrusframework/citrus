@@ -18,6 +18,7 @@ package com.consol.citrus.http.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 
 import javax.servlet.http.Cookie;
 import java.util.LinkedList;
@@ -42,7 +43,7 @@ class CookieParser {
     Cookie[] convertCookies(HttpEntity<?> httpEntity) {
         final List<Cookie> cookies = new LinkedList<>();
 
-        List<String> inboundCookies = httpEntity.getHeaders().get("Set-Cookie");
+        List<String> inboundCookies = httpEntity.getHeaders().get(HttpHeaders.SET_COOKIE);
         if (inboundCookies != null) {
             for (String cookieString : inboundCookies) {
                 Cookie cookie = convertCookieString(cookieString);
@@ -108,7 +109,7 @@ class CookieParser {
         }
 
         if(SECURE.equals(param) && cookieString.contains(SECURE)) {
-            return "true";
+            return String.valueOf(true);
         }
 
         if (cookieString.contains(param + '=')) {
