@@ -91,7 +91,6 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
                 sequential().actions(
                         //THEN
                         http(http -> http.server(httpServer).receive().post()),
-                        http(http -> http.server(httpServer).respond(HttpStatus.NOT_FOUND)),
                         http(http -> http.server(httpServer).receive().post()),
                         http(http -> http.server(httpServer).respond(HttpStatus.OK))
                 )
