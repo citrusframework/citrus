@@ -20,19 +20,17 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-/**
- * @author Christoph Deppisch
- */
+
 @Test
 public class WaitJavaIT extends TestNGCitrusTestDesigner {
 
@@ -51,19 +49,80 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     }
 
     @CitrusTest
-    public void waitHttp() {
-        httpServer.setPort(serverPort);
-        httpServer.setEndpointAdapter(new EmptyResponseEndpointAdapter());
+    public void waitHttpDeprecated() {
 
+        //GIVEN
+        String server = String.format("http://localhost:%s", serverPort);
+        httpServer.setPort(serverPort);
         start(httpServer);
 
-        waitFor()
-            .http()
-            .url(String.format("http://localhost:%s", serverPort));
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .http(server).getBuilder().build()
+                ),
+                sequential().actions(
+                        //THEN
+                        http().server(httpServer).receive().head(),
+                        http().server(httpServer).respond(HttpStatus.NOT_FOUND),
+                        http().server(httpServer).receive().head(),
+                        http().server(httpServer).respond(HttpStatus.OK)
+                )
+        );
 
-        waitFor()
-            .execution()
-            .action(send(String.format("http://localhost:%s", serverPort)));
+        doFinally().actions(stop(httpServer));
+    }
+
+    @CitrusTest
+    public void waitHttpAsAction() {
+
+        //GIVEN
+        String server = String.format("http://localhost:%s", serverPort);
+        httpServer.setPort(serverPort);
+        start(httpServer);
+
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .execution()
+                                .action(send(server))
+                ),
+                sequential().actions(
+                        //THEN
+                        http().server(httpServer).receive().post(),
+                        http().server(httpServer).receive().post(),
+                        http().server(httpServer).respond(HttpStatus.OK)
+                )
+        );
+
+        doFinally().actions(stop(httpServer));
+    }
+
+    @CitrusTest
+    public void waitHttp() {
+
+        //GIVEN
+        String server = String.format("http://localhost:%s", serverPort);
+        httpServer.setPort(serverPort);
+        start(httpServer);
+
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .http()
+                                .url(server)
+                ),
+                sequential().actions(
+                        //THEN
+                        http().server(httpServer).receive().head(),
+                        http().server(httpServer).respond(HttpStatus.NOT_FOUND),
+                        http().server(httpServer).receive().head(),
+                        http().server(httpServer).respond(HttpStatus.OK)
+                )
+        );
 
         doFinally().actions(stop(httpServer));
     }
