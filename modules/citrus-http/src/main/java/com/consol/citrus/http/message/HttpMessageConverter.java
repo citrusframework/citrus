@@ -17,80 +17,73 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
-import com.consol.citrus.message.*;
-import org.springframework.http.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.MessageHeaders;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Message converter implementation able to convert HTTP request and response entities to internal message
  * representation and other way round.
  *
- * @author Christoph Deppisch
  * @since 2.0
  */
 public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEntity<?>, HttpEndpointConfiguration> {
 
+    private CookieParser cookieParser;
+
+    public HttpMessageConverter() {
+        cookieParser = new CookieParser();
+    }
+
+    public HttpMessageConverter(CookieParser cookieParser) {
+        this.cookieParser = cookieParser;
+    }
+
     @Override
-    public HttpEntity<?> convertOutbound(Message message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
-        HttpMessage httpMessage;
-        if (message instanceof HttpMessage) {
-            httpMessage = (HttpMessage) message;
-        } else {
-            httpMessage = new HttpMessage(message);
-        }
+    public HttpEntity<?> convertOutbound(Message message,
+                                         HttpEndpointConfiguration endpointConfiguration,
+                                         TestContext context) {
 
-        HttpHeaders httpHeaders = new HttpHeaders();
-        endpointConfiguration.getHeaderMapper().fromHeaders(new org.springframework.messaging.MessageHeaders(httpMessage.getHeaders()), httpHeaders);
+        HttpMessage httpMessage = convertOutboundMessage(message);
 
-        Map<String, Object> messageHeaders = httpMessage.getHeaders();
-        for (Map.Entry<String, Object> header : messageHeaders.entrySet()) {
-            if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
-                    !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
-                    !httpHeaders.containsKey(header.getKey())) {
-                httpHeaders.add(header.getKey(), header.getValue().toString());
-            }
-        }
-
-        if (httpHeaders.getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE) == null) {
-            httpHeaders.add(HttpMessageHeaders.HTTP_CONTENT_TYPE, (endpointConfiguration.getContentType().contains("charset") || !StringUtils.hasText(endpointConfiguration.getCharset())) ?
-                    endpointConfiguration.getContentType() : endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset());
-        }
+        HttpHeaders httpHeaders = createHttpHeaders(httpMessage, endpointConfiguration);
 
         Object payload = httpMessage.getPayload();
         if (httpMessage.getStatusCode() != null) {
             return new ResponseEntity<>(payload, httpHeaders, httpMessage.getStatusCode());
         } else {
             for (Cookie cookie : httpMessage.getCookies()) {
-                httpHeaders.set("Cookie", cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
+                httpHeaders.add(
+                        HttpHeaders.COOKIE,
+                        cookie.getName() + "=" + context.replaceDynamicContentInString(cookie.getValue()));
             }
         }
 
-        HttpMethod method = endpointConfiguration.getRequestMethod();
-        if (httpMessage.getRequestMethod() != null) {
-            method = httpMessage.getRequestMethod();
-        }
+        HttpMethod method = determineHttpMethod(endpointConfiguration, httpMessage);
 
-        if (httpMethodSupportsBody(method)) {
-            return new HttpEntity<>(payload, httpHeaders);
-        } else {
-            return new HttpEntity<>(httpHeaders);
-        }
-    }
-
-    private boolean httpMethodSupportsBody(HttpMethod method) {
-        return HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)
-                || HttpMethod.DELETE.equals(method) || HttpMethod.PATCH.equals(method);
+        return createHttpEntity(httpHeaders, payload, method);
     }
 
     @Override
-    public HttpMessage convertInbound(HttpEntity<?> message, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
+    public HttpMessage convertInbound(HttpEntity<?> message,
+                                      HttpEndpointConfiguration endpointConfiguration,
+                                      TestContext context) {
         Map<String, Object> mappedHeaders = endpointConfiguration.getHeaderMapper().toHeaders(message.getHeaders());
-        HttpMessage httpMessage = new HttpMessage(message.getBody() != null ? message.getBody() : "", convertHeaderTypes(mappedHeaders));
+        HttpMessage httpMessage = new HttpMessage(extractMessageBody(message), convertHeaderTypes(mappedHeaders));
 
         for (Map.Entry<String, String> customHeader : getCustomHeaders(message.getHeaders(), mappedHeaders).entrySet()) {
             httpMessage.setHeader(customHeader.getKey(), customHeader.getValue());
@@ -98,77 +91,28 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
 
         if (message instanceof ResponseEntity<?>) {
             httpMessage.status(((ResponseEntity<?>) message).getStatusCode());
-            httpMessage.version("HTTP/1.1"); //TODO check if we have access to version information
+
+            // We've no information here about the HTTP Version in this context.
+            // Because HTTP/2 is not supported anyways currently, this should be acceptable.
+            httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
-                List<String> cookies = message.getHeaders().get("Set-Cookie");
-                if (cookies != null) {
-                    for (String cookieString : cookies) {
-                        Cookie cookie = new Cookie(getCookieParam("Name", cookieString), getCookieParam("Value", cookieString));
-
-                        if (cookieString.contains("Comment")) {
-                            cookie.setComment(getCookieParam("Comment", cookieString));
-                        }
-
-                        if (cookieString.contains("Path")) {
-                            cookie.setPath(getCookieParam("Path", cookieString));
-                        }
-
-                        if (cookieString.contains("Domain")) {
-                            cookie.setDomain(getCookieParam("Domain", cookieString));
-                        }
-
-                        if (cookieString.contains("Max-Age")) {
-                            cookie.setMaxAge(Integer.valueOf(getCookieParam("Max-Age", cookieString)));
-                        }
-
-                        if (cookieString.contains("Secure")) {
-                            cookie.setSecure(Boolean.valueOf(getCookieParam("Secure", cookieString)));
-                        }
-
-                        if (cookieString.contains("Version")) {
-                            cookie.setVersion(Integer.valueOf(getCookieParam("Version", cookieString)));
-                        }
-
-                        httpMessage.cookie(cookie);
-                    }
-                }
+                httpMessage.setCookies(cookieParser.convertCookies(message));
             }
         }
 
         return httpMessage;
     }
 
-    /**
-     * Extract cookie param from cookie string as it was provided by "Set-Cookie" header.
-     * @param param
-     * @param cookieString
-     * @return
-     */
-    private String getCookieParam(String param, String cookieString) {
-        if (param.equals("Name")) {
-            return cookieString.substring(0, cookieString.indexOf("="));
-        }
-
-        if (param.equals("Value")) {
-            if (cookieString.contains(";")) {
-                return cookieString.substring(cookieString.indexOf("=") + 1, cookieString.indexOf(";"));
-            } else {
-                return cookieString.substring(cookieString.indexOf("=") + 1);
-            }
-        }
-
-        if (cookieString.contains(param + "=")) {
-            int endParam = cookieString.indexOf(";", cookieString.indexOf(param + "="));
-            if (endParam > 0) {
-                return cookieString.substring(cookieString.indexOf(param + "=") + param.length() + 1, endParam);
-            } else {
-                return cookieString.substring(cookieString.indexOf(param + "=") + param.length() + 1);
-            }
-        }
-
-        throw new CitrusRuntimeException(String.format("Unable to get cookie argument '%s' from cookie String: %s", param, cookieString));
+    @Override
+    public void convertOutbound(HttpEntity externalMessage,
+                                Message internalMessage,
+                                HttpEndpointConfiguration endpointConfiguration,
+                                TestContext context) {
+        throw new UnsupportedOperationException("HttpMessageConverter does not support predefined HttpEntity objects");
     }
+
+
 
     /**
      * Message headers consist of standard HTTP message headers and custom headers.
@@ -177,7 +121,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
      *
      * @param httpHeaders all message headers in their pre nature.
      * @param mappedHeaders the previously mapped header entries (all standard headers).
-     * @return
+     * @return The map of custom headers
      */
     private Map<String, String> getCustomHeaders(HttpHeaders httpHeaders, Map<String, Object> mappedHeaders) {
         Map<String, String> customHeaders = new HashMap<>();
@@ -214,8 +158,110 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
         return convertedHeaders;
     }
 
-    @Override
-    public void convertOutbound(HttpEntity externalMessage, Message internalMessage, HttpEndpointConfiguration endpointConfiguration, TestContext context) {
-        throw new UnsupportedOperationException("HttpMessageConverter does not support predefined HttpEntity objects");
+    /**
+     * Creates HttpHeaders based on the outbound message and the endpoint configurations header mapper.
+     * @param httpMessage The HttpMessage to copy the headers from
+     * @param endpointConfiguration The endpoint configuration to get th header mapper from
+     */
+    private HttpHeaders createHttpHeaders(HttpMessage httpMessage,
+                                          HttpEndpointConfiguration endpointConfiguration) {
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        endpointConfiguration
+                .getHeaderMapper()
+                .fromHeaders(
+                        new org.springframework.messaging.MessageHeaders(httpMessage.getHeaders()),
+                        httpHeaders);
+
+        Map<String, Object> messageHeaders = httpMessage.getHeaders();
+        for (Map.Entry<String, Object> header : messageHeaders.entrySet()) {
+            if (!header.getKey().startsWith(MessageHeaders.PREFIX) &&
+                    !MessageHeaderUtils.isSpringInternalHeader(header.getKey()) &&
+                    !httpHeaders.containsKey(header.getKey())) {
+                httpHeaders.add(header.getKey(), header.getValue().toString());
+            }
+        }
+
+        if (httpHeaders.getFirst(HttpMessageHeaders.HTTP_CONTENT_TYPE) == null) {
+            httpHeaders.add(HttpMessageHeaders.HTTP_CONTENT_TYPE, composeContentTypeHeaderValue(endpointConfiguration));
+        }
+
+        return httpHeaders;
+    }
+
+    /**
+     *
+     * @param endpointConfiguration The HttpEndpointConfiguration to get the default request method from
+     * @param httpMessage The HttpMessage to override the default with if necessary
+     * @return The HttpMethod of the message to send
+     */
+    private HttpMethod determineHttpMethod(HttpEndpointConfiguration endpointConfiguration,
+                                           HttpMessage httpMessage) {
+        HttpMethod method = endpointConfiguration.getRequestMethod();
+        if (httpMessage.getRequestMethod() != null) {
+            method = httpMessage.getRequestMethod();
+        }
+        return method;
+    }
+
+    /**
+     * Composes a HttpEntity based on the given parameters
+     * @param httpHeaders The headers to set
+     * @param payload The payload to set
+     * @param method The HttpMethod to use
+     * @return The composed HttpEntitiy
+     */
+    private HttpEntity<?> createHttpEntity(HttpHeaders httpHeaders, Object payload, HttpMethod method) {
+        if (httpMethodSupportsBody(method)) {
+            return new HttpEntity<>(payload, httpHeaders);
+        } else {
+            return new HttpEntity<>(httpHeaders);
+        }
+    }
+
+    /**
+     * Converts the outbound Message object into a HttpMessage
+     * @param message The message to convert
+     * @return The converted message as HttpMessage
+     */
+    private HttpMessage convertOutboundMessage(Message message) {
+        HttpMessage httpMessage;
+        if (message instanceof HttpMessage) {
+            httpMessage = (HttpMessage) message;
+        } else {
+            httpMessage = new HttpMessage(message);
+        }
+        return httpMessage;
+    }
+
+    /**
+     * Determines whether the given message type supports a message body
+     * @param method The HttpMethod to evaluate
+     * @return Whether a message body is supported
+     */
+    private boolean httpMethodSupportsBody(HttpMethod method) {
+        return HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method)
+                || HttpMethod.DELETE.equals(method) || HttpMethod.PATCH.equals(method);
+    }
+
+    /**
+     * Creates the content type header value enriched with charset information if possible
+     * @param endpointConfiguration The endpoint configuration to get the content type from
+     * @return The content type header including charset information
+     */
+    private String composeContentTypeHeaderValue(HttpEndpointConfiguration endpointConfiguration) {
+        return (endpointConfiguration.getContentType().contains("charset") || !StringUtils.hasText(endpointConfiguration.getCharset())) ?
+                endpointConfiguration.getContentType() :
+                endpointConfiguration.getContentType() + ";charset=" + endpointConfiguration.getCharset();
+    }
+
+    /**
+     * Extracts the message body from the given HttpEntity or returns a default
+     * @param message The message to extract the body from
+     * @return The body of the HttpEntity or a default value, if no payload is available
+     */
+    private Object extractMessageBody(HttpEntity<?> message) {
+        return message.getBody() != null ? message.getBody() : "";
     }
 }
