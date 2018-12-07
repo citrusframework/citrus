@@ -6,7 +6,12 @@ We have the following features included in the box.
 [[changes-2-7-9]]
 == Since Citrus 2.7.9
 
-[[fixed-breaking-changes-2-7-8]]
+[[changes-bugs-2-7-9]]
+=== Fixed bugs
+
+* https://github.com/citrusframework/citrus/issues/561[#561 - Lost cookie entries except the last one]
+
+[[fixed-breaking-changes-2-7-9]]
 === Fixed breaking changes
 
 We've received reports from Citrus users pointing out several breaking changes in the public API that have been introduced
