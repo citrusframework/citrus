@@ -137,6 +137,12 @@ knowledge about the Citrus framework.
   dependent of the reported bug.
 
 ### Definition of done
-TODO!
+The definition of done (DOD) specifies the exit-criteria for an issue that is currently in progress to be passed for
+review. If you're working on an issue which you would like to pass for review, it would be great, if you could ensure
+that all of the following criteria are met. This helps us to review your changes as effective as possible.
+
+* All requirements of the linked issue have been fulfilled
+* Automated tests for the issue have been created and passed
+* The documentation has been updated
 
  [1]: http://www.citrusframework.org/img/brand-logo.png
