@@ -79,8 +79,8 @@ a look at our [types of change](#types-of-change) and the estimated requirements
 
 We also always high appreciate contributions to milestones and we love to work closely with the community.
 So if you'd like to work on an issue that is scheduled for a release, please make sure to stay in close contact with the
-maintainers and, that it's possible for you to propose a [pull request](#pull-request) before the planned release date
-of the milestone.  
+maintainers and make sure that it's possible for you to propose a [pull request](#pull-requests) before the planned
+release date of the milestone, if specified.  
 
 #### Unsure where to begin contributing to Citrus?
 You can start by looking for issues labeled with `good first issue` which should only require a few lines of code, and
@@ -91,7 +91,7 @@ Pull requests are required for every contribution to Citrus including contributi
 Before you propose a pull request, please ensure, that the [definition of done](#definition-of-done) is fulfilled.
 
 This helps us to reach several goals:
-* Maintain the quality of Citrus
+* Maintain the high quality standards of Citrus
 * Make changes transparent to the community
 * Discuss changes to ensure that the best possible solution will make it into the next release
 * Enable a sustainable system for Citrus maintainers to review contributions
@@ -107,7 +107,7 @@ The pull request workflow is as follows:
   [quality gate](https://sonarcloud.io/dashboard?id=com.consol.citrus%3Acitrus) is fulfilled.
   
 #### Review criteria
-The review of proposed code will focus on some criteria important to this project.
+The review of proposed code will focus on some important criteria for this project.
 
 * The code should follow common style and design principles
 * The code should have a suitable test coverage
@@ -119,7 +119,7 @@ knowledge about the Citrus framework.
  
 * Maintenance  
   Tasks required to keep the framework up to date. E.g. updating dependencies or Java version. Depending on the tasks, 
-  the changes may vary from from smaller to larger size with a according time required. Most of the tasks just require a
+  the changes may vary from smaller to larger size with a according time required. Most of the tasks just require a
   little knowledge about the framework as the correctness of the change is verified by automated unit- and
   integration tests.
 * Enhancements  
