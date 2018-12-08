@@ -89,6 +89,9 @@ a test or two.
 ### Pull Requests
 Pull requests are required for every contribution to Citrus including contributions from maintainers and administrators.
 Before you propose a pull request, please ensure, that the [definition of done](#definition-of-done) is fulfilled.
+Please ensure that every pull request is linked to an issue. If you open a pull request without an existing issue, please 
+open an issue as well to point out the requirements for the change. That helps us to separate the functional discussion
+from the technical discussion of the pull request.
 
 This helps us to reach several goals:
 * Maintain the high quality standards of Citrus
