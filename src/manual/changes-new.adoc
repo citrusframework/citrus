@@ -3,8 +3,51 @@
 
 We have the following features included in the box.
 
+[[changes-2-7-9]]
+== Since Citrus 2.7.9
+
+[[changes-bugs-2-7-9]]
+=== Fixed bugs
+
+* https://github.com/citrusframework/citrus/issues/561[#561 - Lost cookie entries except the last one]
+
+[[changes-2-7-8]]
+== Since Citrus 2.7.8
+
+[[changes-sftp]]
+=== STFP preferred authentication settings
+https://github.com/citrusframework/citrus/issues/483[#483 - Add SFTP client preferred authentications setting]
+
+We've change the default authentication order for the SFTP client, so that it prevents early keyboard interaction. To be
+able to change the order of authentication methods depending on the current use case, we've introduced configuration
+options for this.
+
+For more information, please have a look at the link:#sftp-client[SFTP Client] section.
+
+
+[[changes-maintenance]]
+=== Maintenance tasks
+
+* https://github.com/citrusframework/citrus/issues/520[#520 - update vertx-core because of vulnerabilities]
+* https://github.com/citrusframework/citrus/issues/509[#509 - Inconsistencies in Java doc for RepeatOnError]
+
+[[changes-bugs-2-7-8]]
+=== Fixed bugs
+
+* https://github.com/citrusframework/citrus/issues/451[#451 - Citrus-Maven-Plugin: 'Generate Docs'-Mojo fails due to broken path]
+* https://github.com/citrusframework/citrus/issues/418[#418 - Thread leak in TestCase.finish()]
+* https://github.com/citrusframework/citrus/issues/428[#428 - Citrus reports containing invalid XML]
+* https://github.com/citrusframework/citrus/issues/505[#505 - Maven Goal 'citrus:create-test' generate test class with compile error]
+* https://github.com/citrusframework/citrus/issues/516[#516 - Exception in async container is suppressed when used with TestNGCitrusTestRunner]
+* https://github.com/citrusframework/citrus/issues/524[#524 - Initial local build failing in citrus-arquillian]
+
 [[changes-2-7-7]]
 == Since Citrus 2.7.7
+
+[[changes-SshServer]]
+=== Read SshServer key from classpath
+
+It's now possible to load the host key from the classpath.
 
 [[changes-bugs]]
 === Bugfix, bugfix, bugfix
@@ -100,6 +143,11 @@ To mention only one of these enhancements we now have a binary message stream va
 
 [[changes-2-7-4]]
 == Since Citrus 2.7.4
+
+[[changes-swagger]]
+=== Test generation from swagger definitions
+
+It's now possible to generate a basic Test setup from swagger.json files using the Citrus Maven plugin.
 
 [[changes-jdbc]]
 === JDBC server
