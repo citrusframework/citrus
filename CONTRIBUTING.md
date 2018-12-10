@@ -11,6 +11,10 @@ pull request.
 _Credit: This Contribution guidelines are based on the
 [Atom contribution guidelines](https://github.com/atom/atom/blob/master/CONTRIBUTING.md)_
 
+> Note: If you want your contributions in the official Citrus code repository you have to agree that your changes are
+released under the same license as Citrus uses to that time and that the Citrus team might change the licensing of
+Citrus in future.
+
 #### Table Of Contents
 
 * [I just have a question](#i-just-have-a-question)
