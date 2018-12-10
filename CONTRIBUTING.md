@@ -13,8 +13,8 @@ _Credit: This Contribution guidelines are based on the
 
 #### Table Of Contents
 
-[I just have a question](#i-just-have-a-question)
-[How Can I Contribute?](#how-can-i-contribute)
+* [I just have a question](#i-just-have-a-question)
+* [How Can I Contribute?](#how-can-i-contribute)
   * [Reporting Bugs](#reporting-bugs)
   * [Suggesting Changes](#suggesting-changes)
   * [Contributions](#contributions)
