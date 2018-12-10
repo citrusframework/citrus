@@ -20,6 +20,7 @@ _Credit: This Contribution guidelines are based on the
   * [Contributions](#contributions)
   * [Pull Requests](#pull-requests)
   * [Types of change](#types-of-change)
+  * [Definition of ready](#definition-of-ready)
   * [Definition of done](#definition-of-done)
 
 ## I just have a question
@@ -45,8 +46,9 @@ community understand your report :pencil:, reproduce the behavior :computer: :co
 
 Before creating bug reports, please check [this list](#before-submitting-a-bug-report) as you might find out that you 
 don't need to create one. When you are creating a bug report, please fill out 
-[the required template](https://github.com/citrusframework/citrus/issues/new?template=bug_report.md).The information it
-asks for helps us resolve issues faster. Please ensure that the bug is reproducible with the latest version of Citrus.
+[the required template](https://github.com/citrusframework/citrus/issues/new?template=bug_report.md) and ensure, that
+the [definition of ready](#definition-of-ready) is fulfilled. The information it asks for helps us resolve issues faster.
+Please ensure that the bug is reproducible with the latest version of Citrus.
 
 > **Note:** If you find a **Closed** issue that seems like it is the same thing that you're experiencing, open a new 
 issue and include a link to the original issue in the body of your new one.
@@ -67,9 +69,10 @@ Following these guidelines helps maintainers and the community understand your s
 suggestions :mag_right:. We distinguish between different [types of change](#types-of-change):
 Maintenance, Enhancements, Features and Bugs. This section only concerns the first three of these.
 
-Before creating a suggestion, please check Check if there's already an [issue](https://github.com/citrusframework/citrus/issues) addressing your suggestion.
-When you are creating an enhancement suggestion, please
-fill in [the template](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md).
+Before creating a suggestion, please check Check if there's already an [issue](https://github.com/citrusframework/citrus/issues)
+addressing your suggestion. When you are creating an enhancement suggestion, please fill in
+[the template](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md) and ensure, that the 
+[definition of ready](#definition-of-ready) is fulfilled.
 
 ### Contributions
 Please feel free to begin with any issue you would like to work on. It might be helpful to get some orientation by having
@@ -135,6 +138,21 @@ knowledge about the Citrus framework.
   Parts of the framework that don't work as specified in the 
   [Citrus documentation](http://citrusframework.org/citrus/reference/html/index.html). Scope and required knowledge are
   dependent of the reported bug.
+
+### Definition of ready
+The definition of ready (DOR) specifies the entry-criteria for an issue that is currently in in the backlog to be moved
+to the *ready* state so that it's possible to work in it. If you open a new issue, it would be great if you could ensure
+that the following criteria are met. This helps us to understand your issue and allows us to start developing right away
+without any further research/reconstruction efforts.
+
+* The corresponding issue template for [bugs](https://github.com/citrusframework/citrus/issues/new?template=bug_report.md)
+  or [features](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md) has been filled out completely
+* Bigger changes have been transformed to epics and were broken down into smaller issues.
+* The context of the issue is understood by at least one maintainer
+  * Therefore it's important to provide as many context as possible
+* Acceptance criteria are given
+  * In case of a bug: There is a test to pass
+  * In case of a feature/enhancement: There is at least one acceptance criteria derived from the user story
 
 ### Definition of done
 The definition of done (DOD) specifies the exit-criteria for an issue that is currently in progress to be passed for
