@@ -71,7 +71,7 @@ Maintenance, Enhancements, Features and Bugs. This section only concerns the fir
 about how to report bugs, [this](#reporting-bugs) might help you.
 
 Before creating a suggestion, please check Check if there's already an [issue](https://github.com/citrusframework/citrus/issues)
-addressing your suggestion. When you are creating an enhancement suggestion, please fill in
+addressing your suggestion. When you are creating an enhancement/feature suggestion, please fill in
 [the template](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md) and ensure, that the 
 [definition of ready](#definition-of-ready) is fulfilled.
 
