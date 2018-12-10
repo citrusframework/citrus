@@ -67,7 +67,8 @@ issue and include a link to the original issue in the body of your new one.
 This section guides you through submitting enhancement suggestions, feature requests or maintenance tasks for Citrus.
 Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related
 suggestions :mag_right:. We distinguish between different [types of change](#types-of-change):
-Maintenance, Enhancements, Features and Bugs. This section only concerns the first three of these.
+Maintenance, Enhancements, Features and Bugs. This section only concerns the first three of these. If you want to learn
+about how to report bugs, [this](#reporting-bugs) might help you.
 
 Before creating a suggestion, please check Check if there's already an [issue](https://github.com/citrusframework/citrus/issues)
 addressing your suggestion. When you are creating an enhancement suggestion, please fill in
