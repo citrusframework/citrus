@@ -94,8 +94,8 @@ a test or two.
 Pull requests are required for every contribution to Citrus including contributions from maintainers and administrators.
 Before you propose a pull request, please ensure, that the [definition of done](#definition-of-done) is fulfilled.
 Please ensure that every pull request is linked to an issue. If you open a pull request without an existing issue, please 
-open an issue as well to point out the requirements for the change. That helps us to separate the functional discussion
-from the technical discussion of the pull request.
+open an issue as well, to point out the requirements for the change. That helps us to separate the functional discussion 
+(issue) from the technical discussion (pull-request).
 
 This helps us to reach several goals:
 * Maintain the high quality standards of Citrus
@@ -111,12 +111,12 @@ The pull request workflow is as follows:
   the build of the pull request is successful before the review begins. 
 * A maintainer will [review](#review-criteria) your changes and provide feedback to you.
 * If the pull request is project internal, it is required that the 
-  [quality gate](https://sonarcloud.io/dashboard?id=com.consol.citrus%3Acitrus) is fulfilled.
+  [quality gate](https://sonarcloud.io/dashboard?id=citrus) is fulfilled.
   
 #### Review criteria
 The review of proposed code will focus on some important criteria for this project.
 
-* The code should follow common style and design principles
+* The code should follow common style and design principles as well as our [sonarcloud rule set](https://sonarcloud.io/dashboard?id=citrus)
 * The code should have a suitable test coverage
 * The changes should be documented
 
@@ -124,31 +124,31 @@ The review of proposed code will focus on some important criteria for this proje
 We distinguish between different types of change which indicate different level of complexity, scope and required
 knowledge about the Citrus framework.
  
-* Maintenance  
-  Tasks required to keep the framework up to date. E.g. updating dependencies or Java version. Depending on the tasks, 
+* **Maintenance**  
+  Tasks required to keep the framework up to date. E.g. updating dependencies. Depending on the tasks, 
   the changes may vary from smaller to larger size with a according time required. Most of the tasks just require a
-  little knowledge about the framework as the correctness of the change is verified by automated unit- and
+  little knowledge about the framework as the correctness of the change is verified by automated unit and
   integration tests.
-* Enhancements  
+* **Enhancements**  
   Smaller or medium size improvements of the functionality of Citrus. Those tasks are completable in a limited amount of
   time with a little or average knowledge about the Citrus internals.
-* Features  
+* **Features**  
   Medium or large additions to the framework. E.g. the integration of a new technology. Those changes require a medium
   or large amount of time and a deep knowledge of the framework.
-* Bug  
+* **Bug**  
   Parts of the framework that don't work as specified in the 
   [Citrus documentation](http://citrusframework.org/citrus/reference/html/index.html). Scope and required knowledge are
   dependent of the reported bug.
 
 ### Definition of ready
 The definition of ready (DOR) specifies the entry-criteria for an issue that is currently in in the backlog to be moved
-to the *ready* state so that it's possible to work in it. If you open a new issue, it would be great if you could ensure
-that the following criteria are met. This helps us to understand your issue and allows us to start developing right away
+to the *ready* state so that it's possible to work on it. If you open a new issue, it would be great if you could ensure
+that the following criteria are met. This helps us to understand your issue and allows to start developing right away
 without any further research/reconstruction efforts.
 
 * The corresponding issue template for [bugs](https://github.com/citrusframework/citrus/issues/new?template=bug_report.md)
   or [features](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md) has been filled out completely
-* Bigger changes have been transformed to epics and were broken down into smaller issues.
+* Bigger changes have been transformed to epics and were broken down into smaller issues
 * The context of the issue is understood by at least one maintainer
   * Therefore it's important to provide as many context as possible
 * Acceptance criteria are given
@@ -161,7 +161,8 @@ review. If you're working on an issue which you would like to pass for review, i
 that all of the following criteria are met. This helps us to review your changes as effective as possible.
 
 * All requirements of the linked issue have been fulfilled
-* Automated tests for the issue have been created and passed
+* Automated tests for the acceptance criteria have been created and passed
+* Automated unit and integration tests have been created and passed
 * The documentation has been updated
 
  [1]: http://www.citrusframework.org/img/brand-logo.png
