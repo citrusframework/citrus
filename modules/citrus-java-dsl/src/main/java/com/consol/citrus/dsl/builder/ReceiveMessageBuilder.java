@@ -338,10 +338,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T headerFragment(Object model) {
+    	return doHeaderFragment(model, null);
+    }
+    
+    protected T doHeaderFragment(Object model, StringResult stringResult) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
-            return headerFragment(model, applicationContext.getBean(Marshaller.class));
+            return doHeaderFragment(model, applicationContext.getBean(Marshaller.class), stringResult);
         } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
             return headerFragment(model, applicationContext.getBean(ObjectMapper.class));
         }
@@ -358,13 +362,17 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T headerFragment(Object model, String mapperName) {
+    	return doHeaderFragment(model, mapperName, null);
+    }
+    
+    protected T doHeaderFragment(Object model, String mapperName, StringResult stringResult) {
         Assert.notNull(applicationContext, "Citrus application context is not initialized!");
 
         if (applicationContext.containsBean(mapperName)) {
             Object mapper = applicationContext.getBean(mapperName);
 
             if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                return headerFragment(model, (Marshaller) mapper);
+                return doHeaderFragment(model, (Marshaller) mapper, stringResult);
             } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
                 return headerFragment(model, (ObjectMapper) mapper);
             } else {
@@ -383,8 +391,11 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * @return
      */
     public T headerFragment(Object model, Marshaller marshaller) {
-        StringResult result = new StringResult();
-
+    	return doHeaderFragment(model, marshaller, null);
+    }
+    
+    protected T doHeaderFragment(Object model, Marshaller marshaller, StringResult stringResult) {
+         StringResult result = stringResult == null ? new StringResult() : stringResult;
         try {
             marshaller.marshal(model, result);
         } catch (XmlMappingException e) {
@@ -568,6 +579,26 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
             getXPathValidationContext().getXpathExpressions().put(path, controlValue);
         }
 
+        return self;
+    }
+    
+    /**
+     * Adds message element validation.
+     * @param map Map of paths to control values
+     * @return
+     */
+    public T validateXpath(Map<String, Object> map) {
+        getXPathValidationContext().getXpathExpressions().putAll(map);
+        return self;
+    }
+    
+    /**
+     * Adds message element validation.
+     * @param map Map of paths to control values
+     * @return
+     */
+    public T validateJsonPath(Map<String, Object> map) {
+    	getJsonPathValidationContext().getJsonPathExpressions().putAll(map);
         return self;
     }
     
@@ -896,6 +927,7 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
      * Creates new script validation context if not done before and gets the script validation context.
      */
     private ScriptValidationContext getScriptValidationContext() {
+        Assert.notNull(this.messageType, "Message Type is not initialized!");
         if (scriptValidationContext == null) {
             scriptValidationContext = new ScriptValidationContext(messageType.toString());
 
