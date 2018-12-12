@@ -60,6 +60,10 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
             remoteServer="http://localhost:9090/selenium")
     private SeleniumBrowser browser3;
 
+    @CitrusEndpoint
+    @SeleniumBrowserConfig(browserType="htmlunit")
+    private SeleniumBrowser browserWithDeprecatedConfig;
+
     @Mock
     private WebDriverEventListener eventListener = Mockito.mock(WebDriverEventListener.class);
     @Mock
@@ -83,10 +87,9 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSeleniumBrowserParser() {
+    public void parseBrowserConfig_browserUsingMinimalConfig_shouldParseConfigurationSuccessfully() {
         CitrusAnnotations.injectEndpoints(this, context);
 
-        // 1st browser
         Assert.assertNotNull(browser1);
         Assert.assertEquals(browser1.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
         Assert.assertNull(browser1.getEndpointConfiguration().getStartPageUrl());
@@ -96,8 +99,12 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(browser1.getEndpointConfiguration().getFirefoxProfile());
         Assert.assertNull(browser1.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser1.getEndpointConfiguration().getTimeout(), 5000L);
+    }
 
-        // 2nd browser
+    @Test
+    public void parseBrowserConfig_firefoxBrowserUsingFullConfig_shouldParseConfigurationSuccessfully() {
+        CitrusAnnotations.injectEndpoints(this, context);
+
         Assert.assertNotNull(browser2);
         Assert.assertEquals(browser2.getEndpointConfiguration().getBrowserType(), BrowserType.FIREFOX);
         Assert.assertEquals(browser2.getEndpointConfiguration().getStartPageUrl(), "http://citrusframework.org");
@@ -108,11 +115,23 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(browser2.getEndpointConfiguration().isJavaScript(), false);
         Assert.assertNull(browser2.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser2.getEndpointConfiguration().getTimeout(), 10000L);
+    }
 
-        // 3rd browser
+    @Test
+    public void parseBrowserConfig_remoteBrowserConfig_shouldParseConfigurationSuccessfully() {
+        CitrusAnnotations.injectEndpoints(this, context);
+
         Assert.assertNotNull(browser3);
         Assert.assertEquals(browser3.getEndpointConfiguration().getBrowserType(), BrowserType.IE);
         Assert.assertEquals(browser3.getEndpointConfiguration().getRemoteServerUrl(), "http://localhost:9090/selenium");
     }
+
+    @Test
+    public void parseBrowserConfig_browserUsingDeprecatedConfig_shouldParseConfigurationSuccessfully() {
+        CitrusAnnotations.injectEndpoints(this, context);
+
+        Assert.assertNotNull(browserWithDeprecatedConfig);
+        Assert.assertEquals(browserWithDeprecatedConfig.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
+  }
 
 }

@@ -38,6 +38,7 @@ public class SeleniumBrowserParser extends AbstractEndpointParser {
     protected void parseEndpointConfiguration(BeanDefinitionBuilder endpointConfiguration, Element element, ParserContext parserContext) {
         super.parseEndpointConfiguration(endpointConfiguration, element, parserContext);
 
+        BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("browser-type"), "browserType");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("type"), "browserType");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("version"), "version");
         BeanDefinitionParserUtils.setPropertyValue(endpointConfiguration, element.getAttribute("start-page"), "startPageUrl");
