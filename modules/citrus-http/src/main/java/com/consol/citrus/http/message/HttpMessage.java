@@ -503,27 +503,7 @@ public class HttpMessage extends DefaultMessage {
                 request.version(requestLine[2]);
             }
 
-            String line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                if (!line.contains(":")) {
-                    throw new CitrusRuntimeException(String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
-                }
-
-                String[] keyValue = line.split(":");
-                request.setHeader(keyValue[0].trim(), keyValue[1].trim());
-                line = reader.readLine();
-            }
-
-            StringBuilder bodyBuilder = new StringBuilder();
-            line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                bodyBuilder.append(line).append(System.getProperty("line.separator"));
-                line = reader.readLine();
-            }
-
-            request.setPayload(bodyBuilder.toString().trim());
-
-            return request;
+            return parseHttpMessage(reader, request);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw request data", e);
         }
@@ -547,29 +527,34 @@ public class HttpMessage extends DefaultMessage {
                 response.status(HttpStatus.valueOf(Integer.valueOf(statusLine[1])));
             }
 
-            String line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                if (!line.contains(":")) {
-                    throw new CitrusRuntimeException(String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
-                }
-
-                String[] keyValue = line.split(":");
-                response.setHeader(keyValue[0].trim(), keyValue[1].trim());
-                line = reader.readLine();
-            }
-
-            StringBuilder bodyBuilder = new StringBuilder();
-            line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                bodyBuilder.append(line).append(System.getProperty("line.separator"));
-                line = reader.readLine();
-            }
-
-            response.setPayload(bodyBuilder.toString().trim());
-
-            return response;
+            return parseHttpMessage(reader, response);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw response data", e);
         }
+    }
+
+    private static HttpMessage parseHttpMessage(BufferedReader reader, HttpMessage message) throws IOException {
+        String line = reader.readLine();
+        while (StringUtils.hasText(line)) {
+            if (!line.contains(":")) {
+                throw new CitrusRuntimeException(
+                        String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
+            }
+
+            String[] keyValue = line.split(":");
+            message.setHeader(keyValue[0].trim(), keyValue[1].trim());
+            line = reader.readLine();
+        }
+
+        StringBuilder bodyBuilder = new StringBuilder();
+        line = reader.readLine();
+        while (StringUtils.hasText(line)) {
+            bodyBuilder.append(line).append(System.getProperty("line.separator"));
+            line = reader.readLine();
+        }
+
+        message.setPayload(bodyBuilder.toString().trim());
+
+        return message;
     }
 }
