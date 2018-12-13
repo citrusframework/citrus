@@ -25,8 +25,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -404,28 +410,10 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Sets the cookies.
      *
-     * @param cookies
+     * @param cookies The cookies to set
      */
     public void setCookies(Cookie[] cookies) {
-        clearCookies();
-        addCookies(cookies);
-    }
-
-    /**
-     * Clears existing cookies.
-     *
-     * @param cookies
-     */
-    public void clearCookies() {
         this.cookies.clear();
-    }
-
-    /**
-     * Adds new cookies.
-     *
-     * @param cookies
-     */
-    public void addCookies(Cookie[] cookies) {
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 cookie(cookie);
