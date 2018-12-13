@@ -49,7 +49,7 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class HttpMessageConverterTest {
 
-    private CookieParser cookieParserMock;
+    private CookieConverter cookieConverterMock;
     private HttpMessageConverter messageConverter;
 
     private HttpEndpointConfiguration endpointConfiguration;
@@ -57,8 +57,8 @@ public class HttpMessageConverterTest {
 
     @BeforeMethod
     public void setUp(){
-        cookieParserMock = mock(CookieParser.class);
-        messageConverter = new HttpMessageConverter(cookieParserMock);
+        cookieConverterMock = mock(CookieConverter.class);
+        messageConverter = new HttpMessageConverter(cookieConverterMock);
 
         endpointConfiguration = new HttpEndpointConfiguration();
         testContext = new TestContext();
@@ -487,7 +487,7 @@ public class HttpMessageConverterTest {
         messageConverter.convertInbound(ResponseEntity.EMPTY, endpointConfiguration, testContext);
 
         //THEN
-        verify(cookieParserMock, never()).convertCookies(any());
+        verify(cookieConverterMock, never()).convertCookies(any());
     }
 
     @Test
@@ -496,7 +496,7 @@ public class HttpMessageConverterTest {
         //GIVEN
         Cookie cookieMock = mock(Cookie.class);
         final ResponseEntity<?> responseEntity = ResponseEntity.ok("foobar");
-        when(cookieParserMock.convertCookies(responseEntity)).thenReturn(new Cookie[]{cookieMock});
+        when(cookieConverterMock.convertCookies(responseEntity)).thenReturn(new Cookie[]{cookieMock});
 
         endpointConfiguration.setHandleCookies(true);
 

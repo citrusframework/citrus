@@ -43,14 +43,14 @@ import java.util.Map;
  */
 public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEndpointConfiguration> {
 
-    private CookieParser cookieParser;
+    private CookieConverter cookieConverter;
 
     public HttpMessageConverter() {
-        cookieParser = new CookieParser();
+        cookieConverter = new CookieConverter();
     }
 
-    public HttpMessageConverter(CookieParser cookieParser) {
-        this.cookieParser = cookieParser;
+    public HttpMessageConverter(CookieConverter cookieConverter) {
+        this.cookieConverter = cookieConverter;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, Htt
             httpMessage.version("HTTP/1.1");
 
             if (endpointConfiguration.isHandleCookies()) {
-                httpMessage.setCookies(cookieParser.convertCookies(message));
+                httpMessage.setCookies(cookieConverter.convertCookies(message));
             }
         }
 

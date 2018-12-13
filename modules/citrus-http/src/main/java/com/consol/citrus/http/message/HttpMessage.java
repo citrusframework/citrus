@@ -48,6 +48,8 @@ public class HttpMessage extends DefaultMessage {
     /** Query params */
     private Map<String, String> queryParams = new HashMap<>();
 
+    private CookieConverter cookieConverter = new CookieConverter();
+
     /**
      * Empty constructor initializing with empty message payload.
      */
@@ -442,43 +444,11 @@ public class HttpMessage extends DefaultMessage {
     public HttpMessage cookie(Cookie cookie) {
         this.cookies.add(cookie);
 
-        setHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + cookie.getName(), getCookieString(cookie));
+        setHeader(
+                HttpMessageHeaders.HTTP_COOKIE_PREFIX + cookie.getName(),
+                cookieConverter.getCookieString(cookie));
 
         return this;
-    }
-
-    private String getCookieString(Cookie cookie) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(cookie.getName());
-        builder.append("=");
-        builder.append(cookie.getValue());
-
-        if (cookie.getVersion() > 0) {
-            builder.append(";Version=").append(cookie.getVersion());
-        }
-
-        if (StringUtils.hasText(cookie.getPath())) {
-            builder.append(";Path=").append(cookie.getPath());
-        }
-
-        if (StringUtils.hasText(cookie.getDomain())) {
-            builder.append(";Domain=").append(cookie.getDomain());
-        }
-
-        if (cookie.getMaxAge() > 0) {
-            builder.append(";Max-Age=").append(cookie.getMaxAge());
-        }
-
-        if (StringUtils.hasText(cookie.getComment())) {
-            builder.append(";Comment=").append(cookie.getComment());
-        }
-
-        if (cookie.getSecure()) {
-            builder.append(";Secure=").append(cookie.getSecure());
-        }
-
-        return builder.toString();
     }
 
     /**

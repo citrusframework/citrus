@@ -27,9 +27,9 @@ import java.util.Collections;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
 
-public class CookieParserTest {
+public class CookieConverterTest {
 
-    private CookieParser cookieParser = new CookieParser();
+    private CookieConverter cookieConverter = new CookieConverter();
 
     @Test
     public void testCookiesAreParsedCorrectly(){
@@ -40,7 +40,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -57,7 +57,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -74,7 +74,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -90,7 +90,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -106,7 +106,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -122,7 +122,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -138,7 +138,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -155,7 +155,7 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
@@ -171,10 +171,106 @@ public class CookieParserTest {
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
         //WHEN
-        final Cookie[] cookies = cookieParser.convertCookies(responseEntity);
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
         assertEquals(1, cookies.length);
         assertEquals(1, cookies[0].getVersion());
+    }
+
+    @Test
+    public void testCookieStringContainsVersion(){
+
+        //GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
+        cookie.setVersion(42);
+
+        String expectedCookieString = "foo=bar;Version=42";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
+    }
+
+    @Test
+    public void testCookieStringContainsPath(){
+
+        //GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
+        cookie.setPath("/foo/bar");
+
+        String expectedCookieString = "foo=bar;Path=/foo/bar";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
+    }
+
+    @Test
+    public void testCookieStringContainsDomain(){
+
+        //GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
+        cookie.setDomain("localhost");
+
+        String expectedCookieString = "foo=bar;Domain=localhost";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
+    }
+
+    @Test
+    public void testCookieStringContainsMaxAge(){
+
+        //GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
+        cookie.setMaxAge(42);
+
+        String expectedCookieString = "foo=bar;Max-Age=42";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
+    }
+
+    @Test
+    public void testCookieStringContainsComment(){
+
+        //GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
+        cookie.setComment("whatever");
+
+        String expectedCookieString = "foo=bar;Comment=whatever";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
+    }
+
+    @Test
+    public void testCookieStringContainsSecure(){
+
+        //GIVEN
+        Cookie cookie = new Cookie("foo", "bar");
+        cookie.setSecure(true);
+
+        String expectedCookieString = "foo=bar;Secure";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
     }
 }
