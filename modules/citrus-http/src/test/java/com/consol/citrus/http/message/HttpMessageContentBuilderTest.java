@@ -25,6 +25,8 @@ import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.servlet.http.Cookie;
+
 public class HttpMessageContentBuilderTest {
 
     @Test
@@ -50,5 +52,26 @@ public class HttpMessageContentBuilderTest {
         Assert.assertEquals(msg.getHeader(MessageHeaders.TIMESTAMP), builtMessage.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(MessageType.XML.toString(), builtMessage.getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertEquals(builtMessage.getHeader("foo"), "bar");
+    }
+
+    @Test
+    public void testTemplateHeadersArePreserved(){
+
+        //GIVEN
+        final HttpMessage msg = new HttpMessage("testPayload");
+        msg.setCookies(new Cookie[]{new Cookie("foo","bar")});
+
+        final HttpMessageContentBuilder builder =
+                new HttpMessageContentBuilder(msg, new StaticMessageContentBuilder(msg));
+
+        //WHEN
+        final HttpMessage builtMessage = (HttpMessage) builder.buildMessageContent(
+                new TestContext(),
+                String.valueOf(MessageType.XML));
+
+        //THEN
+        Assert.assertEquals(builtMessage.getCookies().size(), 1);
+        Assert.assertEquals(builtMessage.getCookies().get(0).getName(), "foo");
+        Assert.assertEquals(builtMessage.getCookies().get(0).getValue(), "bar");
     }
 }
