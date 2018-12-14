@@ -11,9 +11,9 @@ pull request.
 _Credit: This Contribution guidelines are based on the
 [Atom contribution guidelines](https://github.com/atom/atom/blob/master/CONTRIBUTING.md)_
 
-> Note: If you want your contributions in the official Citrus code repository you have to agree that your changes are
-released under the same license as Citrus uses to that time and that the Citrus team might change the licensing of
-Citrus in future.
+> Note: In order to have your contributions included in the official Citrus code repository you have to agree to release
+your changes under the same licensing agreement that Citrus uses at that time. Please also note that the Citrus team
+might change the licensing of Citrus some time in future.
 
 #### Table Of Contents
 
@@ -23,13 +23,13 @@ Citrus in future.
   * [Suggesting Changes](#suggesting-changes)
   * [Contributions](#contributions)
   * [Pull Requests](#pull-requests)
-  * [Types of change](#types-of-change)
+  * [Types of changes](#types-of-changes)
   * [Definition of ready](#definition-of-ready)
   * [Definition of done](#definition-of-done)
 
 ## I just have a question
 
-Before you open an issue concerning your question, please make sure that none of the following steps led to an answer.
+Before you open an issue concerning your question, please make sure that none of the following steps already lead to an answer.
 
 * Searching for a similar [question on github](https://github.com/citrusframework/citrus/issues?utf8=%E2%9C%93&q=is%3Aissue+label%3A%22Type%3A+Question%22).
 * Searching for an answer on [stackoverflow](https://stackoverflow.com/questions/tagged/citrus-framework).
@@ -70,7 +70,7 @@ issue and include a link to the original issue in the body of your new one.
 
 This section guides you through submitting enhancement suggestions, feature requests or maintenance tasks for Citrus.
 Following these guidelines helps maintainers and the community understand your suggestion :pencil: and find related
-suggestions :mag_right:. We distinguish between different [types of change](#types-of-change):
+suggestions :mag_right:. We distinguish between different [different types of changes](#types-of-changes):
 Maintenance, Enhancements, Features and Bugs. This section only concerns the first three of these. If you want to learn
 about how to report bugs, [this](#reporting-bugs) might help you.
 
@@ -81,7 +81,7 @@ addressing your suggestion. When you are creating an enhancement/feature suggest
 
 ### Contributions
 Please feel free to begin with any issue you would like to work on. It might be helpful to get some orientation by having
-a look at our [types of change](#types-of-change) and the estimated requirements linked to them.  
+a look at our [types of changes](#types-of-changes) and the estimated requirements linked to them.  
 
 >**Important Note**: If you'd like to contribute a bug fix, please ensure to branch from `v2.7-bugfix` instead of master.
 
@@ -124,8 +124,8 @@ The review of proposed code will focus on some important criteria for this proje
 * The code should have a suitable test coverage
 * The changes should be documented
 
-### Types of change
-We distinguish between different types of change which indicate different level of complexity, scope and required
+### Types of changes
+We distinguish between different types of changes which indicate different level of complexity, scope and required
 knowledge about the Citrus framework.
  
 * **Maintenance**  
