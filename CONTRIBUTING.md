@@ -85,7 +85,7 @@ a look at our [types of changes](#types-of-changes) and the estimated requiremen
 
 >**Important Note**: If you'd like to contribute a bug fix, please ensure to branch from `v2.7-bugfix` instead of master.
 
-We also always high appreciate contributions to milestones and we love to work closely with the community.
+We also highly appreciate contributions to milestones and we love to work closely with the community.
 So if you'd like to work on an issue that is scheduled for a release, please make sure to stay in close contact with the
 maintainers and make sure that it's possible for you to propose a [pull request](#pull-requests) before the planned
 release date of the milestone, if specified.  
@@ -129,10 +129,9 @@ We distinguish between different types of changes which indicate different level
 knowledge about the Citrus framework.
  
 * **Maintenance**  
-  Tasks required to keep the framework up to date. E.g. updating dependencies. Depending on the tasks, 
-  the changes may vary from smaller to larger size with a according time required. Most of the tasks just require a
-  little knowledge about the framework as the correctness of the change is verified by automated unit and
-  integration tests.
+  Tasks required to keep the framework up to date. E.g. updating dependencies. Tasks may vary in size from smaller to
+  larger changes. Most of the tasks just require a little knowledge about the framework as the correctness of the 
+  change is verified by automated unit and integration tests.
 * **Enhancements**  
   Smaller or medium size improvements of the functionality of Citrus. Those tasks are completable in a limited amount of
   time with a little or average knowledge about the Citrus internals.
@@ -154,7 +153,7 @@ without any further research/reconstruction efforts.
   or [features](https://github.com/citrusframework/citrus/issues/new?template=feature_request.md) has been filled out completely
 * Bigger changes have been transformed to epics and were broken down into smaller issues
 * The context of the issue is understood by at least one maintainer
-  * Therefore it's important to provide as many context as possible
+  * Therefore it's important to provide as much context as possible
 * Acceptance criteria are given
   * In case of a bug: There is a test to pass
   * In case of a feature/enhancement: There is at least one acceptance criteria derived from the user story
