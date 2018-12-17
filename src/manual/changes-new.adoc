@@ -11,6 +11,17 @@ We have the following features included in the box.
 
 * https://github.com/citrusframework/citrus/issues/561[#561 - Lost cookie entries except the last one]
 
+[[fixed-breaking-changes-2-7-9]]
+=== Fixed breaking changes
+
+We've received reports from Citrus users pointing out several breaking changes in the public API that have been introduced
+with minor versions. Because of that, we've reviewed the public API from release 2.7 until today and reconstructed the
+the removed/changed methods to ease the migration to newer Citrus versions. All methods that have been added back for
+downwards compatibility are marked as `@Deprecated` and will be removed with the next major release.
+
+* https://github.com/citrusframework/citrus/issues/547[#547 - Breaking change in waitFor().http() public API]
+* https://github.com/citrusframework/citrus/issues/551[#551 - Breaking change in selenium().browser().type() public API]
+
 [[changes-2-7-8]]
 == Since Citrus 2.7.8
 
