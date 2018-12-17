@@ -54,6 +54,9 @@ public class HttpMessageConverterTest {
 
     private HttpEndpointConfiguration endpointConfiguration;
     private TestContext testContext = new TestContext();
+    private HttpMessage message;
+
+    private final String payload = "Hello World!";
 
     @BeforeMethod
     public void setUp(){
@@ -62,13 +65,13 @@ public class HttpMessageConverterTest {
 
         endpointConfiguration = new HttpEndpointConfiguration();
         testContext = new TestContext();
+        message = new HttpMessage();
     }
 
     @Test
     public void testDefaultMessageIsConvertedOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World!";
         Message message = new DefaultMessage(payload);
 
         //WHEN
@@ -83,7 +86,6 @@ public class HttpMessageConverterTest {
 
         //GIVEN
         Cookie cookie = new Cookie("foo","bar");
-        HttpMessage message = new HttpMessage();
         message.cookie(cookie);
 
         String expectedCookie = "foo=bar";
@@ -103,7 +105,6 @@ public class HttpMessageConverterTest {
 
         //GIVEN
         Cookie cookie = new Cookie("foo","${foobar}");
-        HttpMessage message = new HttpMessage();
         message.cookie(cookie);
 
         testContext.setVariable("foobar", "bar");
@@ -124,7 +125,6 @@ public class HttpMessageConverterTest {
     public void testHttpMessageHeadersAreReplacedOnOutbound(){
 
         //GIVEN
-        HttpMessage message = new HttpMessage();
         message.header("foo","bar");
 
         //WHEN
@@ -141,7 +141,6 @@ public class HttpMessageConverterTest {
     public void testHttpContentTypeIsPresent(){
 
         //GIVEN
-        HttpMessage message = new HttpMessage();
         endpointConfiguration.setContentType("foobar");
 
         //WHEN
@@ -158,7 +157,6 @@ public class HttpMessageConverterTest {
     public void testHttpContentTypeContainsAlteredCharsetIsPresent(){
 
         //GIVEN
-        HttpMessage message = new HttpMessage();
         endpointConfiguration.setContentType("foobar");
         endpointConfiguration.setCharset("whatever");
 
@@ -176,7 +174,6 @@ public class HttpMessageConverterTest {
     public void testHttpContentTypeCharsetIsMissingWhenEmptyIsPresent(){
 
         //GIVEN
-        HttpMessage message = new HttpMessage();
         endpointConfiguration.setContentType("foobar");
         endpointConfiguration.setCharset("");
 
@@ -194,8 +191,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsSetForPostOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.POST);
         message.setPayload(payload);
 
@@ -210,8 +205,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsSetForPutOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.PUT);
         message.setPayload(payload);
 
@@ -226,8 +219,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsSetForDeleteOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.DELETE);
         message.setPayload(payload);
 
@@ -242,8 +233,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsSetForPatchOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.PATCH);
         message.setPayload(payload);
 
@@ -258,8 +247,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsNotSetForGetOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.GET);
         message.setPayload(payload);
 
@@ -274,8 +261,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsNotSetForHeadOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.HEAD);
         message.setPayload(payload);
 
@@ -290,8 +275,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsNotSetForOptionsOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.OPTIONS);
         message.setPayload(payload);
 
@@ -306,8 +289,6 @@ public class HttpMessageConverterTest {
     public void testHttpMethodBodyIsNotSetForTraceOnOutbound(){
 
         //GIVEN
-        final String payload = "Hello World";
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, HttpMethod.TRACE);
         message.setPayload(payload);
 
@@ -326,7 +307,6 @@ public class HttpMessageConverterTest {
          */
 
         //GIVEN
-        HttpMessage message = new HttpMessage();
         message.setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, "200");
 
         Cookie cookie = new Cookie("foo","bar");
@@ -393,7 +373,6 @@ public class HttpMessageConverterTest {
     public void testHttpEntityMessageBodyIsPreservedOnInbound(){
 
         //GIVEN
-        final String payload = "Hello World";
         final HttpEntity<String> httpEntity = new HttpEntity<>(payload);
 
         //WHEN

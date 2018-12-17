@@ -33,16 +33,18 @@ public class CookieEnricherTest {
     private final CookieEnricher cookieEnricher = new CookieEnricher();
     private TestContext testContextMock;
 
+    private Cookie cookie;
+
     @BeforeMethod
     public void setUp(){
         testContextMock = new TestContext();
+        cookie = new Cookie("foo", "bar");
     }
 
     @Test
     public void testCookiesArePreserved(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setMaxAge(42);
         cookie.setVersion(24);
         cookie.setHttpOnly(true);
@@ -57,6 +59,7 @@ public class CookieEnricherTest {
 
         final Cookie enrichedCookie = enrichedCookies.get(0);
         assertEquals(enrichedCookie.getName(), "foo");
+        assertEquals(enrichedCookie.getValue(), "bar");
         assertEquals(enrichedCookie.getMaxAge(), 42);
         assertEquals(enrichedCookie.getVersion(), 24);
         assertTrue(enrichedCookie.isHttpOnly());
@@ -67,9 +70,7 @@ public class CookieEnricherTest {
     public void testTwoCookiesArePreserved(){
 
         //GIVEN
-        Cookie cookie1 = new Cookie("foo", "bar");
-        Cookie cookie2 = new Cookie("foo", "bar");
-        final List<Cookie> cookies = Arrays.asList(cookie1, cookie2);
+        final List<Cookie> cookies = Arrays.asList(cookie, cookie);
 
         //WHEN
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
@@ -91,7 +92,6 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         //THEN
-        assertEquals(enrichedCookies.size(), 1);
         assertEquals(enrichedCookies.get(0).getName(), "foo");
         assertEquals(enrichedCookies.get(0).getValue(), "bar");
     }
@@ -100,7 +100,6 @@ public class CookieEnricherTest {
     public void testCommentVariablesAreReplaced(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setComment("${variable}");
         final List<Cookie> cookies = Collections.singletonList(cookie);
 
@@ -110,7 +109,6 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         //THEN
-        assertEquals(enrichedCookies.size(), 1);
         assertEquals(enrichedCookies.get(0).getName(), "foo");
         assertEquals(enrichedCookies.get(0).getComment(), "foobar");
     }
@@ -119,7 +117,6 @@ public class CookieEnricherTest {
     public void testPathVariablesAreReplaced(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setPath("/path/to/${variable}");
         final List<Cookie> cookies = Collections.singletonList(cookie);
 
@@ -129,7 +126,6 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         //THEN
-        assertEquals(enrichedCookies.size(), 1);
         assertEquals(enrichedCookies.get(0).getName(), "foo");
         assertEquals(enrichedCookies.get(0).getPath(), "/path/to/foobar");
     }
@@ -138,7 +134,6 @@ public class CookieEnricherTest {
     public void testDomainVariablesAreReplaced(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setDomain("${variable}");
         final List<Cookie> cookies = Collections.singletonList(cookie);
 
@@ -148,7 +143,6 @@ public class CookieEnricherTest {
         final List<Cookie> enrichedCookies = cookieEnricher.enrich(cookies, testContextMock);
 
         //THEN
-        assertEquals(enrichedCookies.size(), 1);
         assertEquals(enrichedCookies.get(0).getName(), "foo");
         assertEquals(enrichedCookies.get(0).getDomain(), "localhost");
     }

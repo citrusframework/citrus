@@ -19,6 +19,7 @@ package com.consol.citrus.http.message;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.Cookie;
@@ -31,11 +32,19 @@ public class CookieConverterTest {
 
     private CookieConverter cookieConverter = new CookieConverter();
 
+    private Cookie cookie;
+    private HttpHeaders cookieHeaders;
+
+    @BeforeMethod
+    public void setUp(){
+        cookie = new Cookie("foo", "bar");
+        cookieHeaders = new HttpHeaders();
+    }
+
     @Test
     public void testCookiesAreParsedCorrectly(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -43,7 +52,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals("foo", cookies[0].getName());
         assertEquals("bar", cookies[0].getValue());
     }
@@ -52,7 +60,6 @@ public class CookieConverterTest {
     public void testAdditionalCookieDirectivesAreDiscarded(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;HttpOnly"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -60,7 +67,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals("foo", cookies[0].getName());
         assertEquals("bar", cookies[0].getValue());
     }
@@ -69,7 +75,6 @@ public class CookieConverterTest {
     public void testCookieCommentIsPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Comment=wtf"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -77,7 +82,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals("wtf", cookies[0].getComment());
     }
 
@@ -85,7 +89,6 @@ public class CookieConverterTest {
     public void testCookieDomainIsPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Domain=whatever"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -93,7 +96,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals("whatever", cookies[0].getDomain());
     }
 
@@ -101,7 +103,6 @@ public class CookieConverterTest {
     public void testCookieEndParameterIsRecognizedAndPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1;"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -109,7 +110,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals(1, cookies[0].getVersion());
     }
 
@@ -117,7 +117,6 @@ public class CookieConverterTest {
     public void testCookieMaxAgeIsPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Max-Age=42"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -125,7 +124,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals(42, cookies[0].getMaxAge());
     }
 
@@ -133,7 +131,6 @@ public class CookieConverterTest {
     public void testCookiePathIsPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Path=foobar"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -141,7 +138,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals("foobar", cookies[0].getPath());
     }
 
@@ -150,7 +146,6 @@ public class CookieConverterTest {
     public void testCookieSecureIsPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Secure"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -158,7 +153,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertTrue(cookies[0].getSecure());
     }
 
@@ -166,7 +160,6 @@ public class CookieConverterTest {
     public void testCookieVersionIsPreserved(){
 
         //GIVEN
-        final HttpHeaders cookieHeaders = new HttpHeaders();
         cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1"));
         final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
 
@@ -174,7 +167,6 @@ public class CookieConverterTest {
         final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
 
         //THEN
-        assertEquals(1, cookies.length);
         assertEquals(1, cookies[0].getVersion());
     }
 
@@ -182,9 +174,7 @@ public class CookieConverterTest {
     public void testCookieStringContainsVersion(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setVersion(42);
-
         String expectedCookieString = "foo=bar;Version=42";
 
         //WHEN
@@ -198,9 +188,7 @@ public class CookieConverterTest {
     public void testCookieStringContainsPath(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setPath("/foo/bar");
-
         String expectedCookieString = "foo=bar;Path=/foo/bar";
 
         //WHEN
@@ -214,9 +202,7 @@ public class CookieConverterTest {
     public void testCookieStringContainsDomain(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setDomain("localhost");
-
         String expectedCookieString = "foo=bar;Domain=localhost";
 
         //WHEN
@@ -230,9 +216,7 @@ public class CookieConverterTest {
     public void testCookieStringContainsMaxAge(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setMaxAge(42);
-
         String expectedCookieString = "foo=bar;Max-Age=42";
 
         //WHEN
@@ -246,9 +230,7 @@ public class CookieConverterTest {
     public void testCookieStringContainsComment(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setComment("whatever");
-
         String expectedCookieString = "foo=bar;Comment=whatever";
 
         //WHEN
@@ -262,9 +244,7 @@ public class CookieConverterTest {
     public void testCookieStringContainsSecure(){
 
         //GIVEN
-        Cookie cookie = new Cookie("foo", "bar");
         cookie.setSecure(true);
-
         String expectedCookieString = "foo=bar;Secure";
 
         //WHEN
