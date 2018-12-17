@@ -16,7 +16,11 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.condition.*;
+import com.consol.citrus.condition.ActionCondition;
+import com.consol.citrus.condition.Condition;
+import com.consol.citrus.condition.FileCondition;
+import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.condition.MessageCondition;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -28,7 +32,6 @@ import java.util.Stack;
  * Wait action pauses test execution until a condition is satisfied. If the condition is not satisfied after the
  * configured timeout then the test exits with an error.
  *
- * @author Martin Maher
  * @since 2.4
  */
 public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
@@ -63,6 +66,19 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
     public Wait condition(Condition condition) {
         container.setCondition(condition);
         return this.buildAndRun();
+    }
+
+    /**
+     * The HTTP condition to wait for during execution.
+     * @deprecated in favor of {@link #http()}
+     */
+    @Deprecated
+    public WaitHttpConditionBuilder http(String url) {
+        HttpCondition condition = new HttpCondition();
+        condition.setUrl(url);
+        container.setCondition(condition);
+        this.buildAndRun();
+        return new WaitHttpConditionBuilder(condition, this);
     }
 
     /**
