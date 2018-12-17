@@ -34,9 +34,6 @@ import java.io.IOException;
 @Test
 public class WaitJavaIT extends TestNGCitrusTestDesigner {
 
-    /** Random http server port */
-    private final static int serverPort = SocketUtils.findAvailableTcpPort();
-
     @CitrusEndpoint(name = "waitHttpServer")
     @HttpServerConfig
     private HttpServer httpServer;
@@ -52,9 +49,7 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     public void waitHttpDeprecated() {
 
         //GIVEN
-        String server = String.format("http://localhost:%s", serverPort);
-        httpServer.setPort(serverPort);
-        start(httpServer);
+        String server = startHttpServerAndGetUrl();
 
         parallel().actions(
                 sequential().actions(
@@ -78,9 +73,7 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     public void waitHttpAsAction() {
 
         //GIVEN
-        String server = String.format("http://localhost:%s", serverPort);
-        httpServer.setPort(serverPort);
-        start(httpServer);
+        String server = startHttpServerAndGetUrl();
 
         parallel().actions(
                 sequential().actions(
@@ -104,9 +97,7 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     public void waitHttp() {
 
         //GIVEN
-        String server = String.format("http://localhost:%s", serverPort);
-        httpServer.setPort(serverPort);
-        start(httpServer);
+        String server = startHttpServerAndGetUrl();
 
         parallel().actions(
                 sequential().actions(
@@ -150,5 +141,13 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
                 }
             }
         });
+    }
+
+    private String startHttpServerAndGetUrl() {
+        final int serverPort = SocketUtils.findAvailableTcpPort();
+        String server = String.format("http://localhost:%s", serverPort);
+        httpServer.setPort(serverPort);
+        start(httpServer);
+        return server;
     }
 }
