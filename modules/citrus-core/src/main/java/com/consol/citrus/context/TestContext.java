@@ -16,16 +16,21 @@
 
 package com.consol.citrus.context;
 
-import com.consol.citrus.*;
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestResult;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessageStore;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.types.Tuple;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
@@ -36,7 +41,9 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -46,58 +53,86 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Class holding and managing test variables. The test context also provides utility methods
  * for replacing dynamic content(variables and functions) in message payloads and headers.
- * 
- * @author Christoph Deppisch
  */
 public class TestContext {
     /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(TestContext.class);
-    
-    /** Local variables */
+
+    /**
+     * Local variables
+     */
     protected Map<String, Object> variables;
-    
-    /** Global variables */
+
+    /**
+     * Global variables
+     */
     private GlobalVariables globalVariables;
 
-    /** Message store */
+    /**
+     * Message store
+     */
     private MessageStore messageStore = new DefaultMessageStore();
-    
-    /** Function registry holding all available functions */
+
+    /**
+     * Function registry holding all available functions
+     */
     private FunctionRegistry functionRegistry = new FunctionRegistry();
 
-    /** Endpoint factory creates endpoint instances */
+    /**
+     * Endpoint factory creates endpoint instances
+     */
     private EndpointFactory endpointFactory;
 
-    /** Bean reference resolver */
+    /**
+     * Bean reference resolver
+     */
     private ReferenceResolver referenceResolver;
-    
-    /** Registered message validators */
+
+    /**
+     * Registered message validators
+     */
     private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
-    
-    /** Registered validation matchers */
+
+    /**
+     * Registered validation matchers
+     */
     private ValidationMatcherRegistry validationMatcherRegistry = new ValidationMatcherRegistry();
 
-    /** List of test listeners to be informed on test events */
+    /**
+     * List of test listeners to be informed on test events
+     */
     private TestListeners testListeners = new TestListeners();
 
-    /** List of message listeners to be informed on inbound and outbound message exchange */
+    /**
+     * List of message listeners to be informed on inbound and outbound message exchange
+     */
     private MessageListeners messageListeners = new MessageListeners();
 
-    /** List of global message construction interceptors */
+    /**
+     * List of global message construction interceptors
+     */
     private GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors = new GlobalMessageConstructionInterceptors();
 
-    /** Central namespace context builder */
+    /**
+     * Central namespace context builder
+     */
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
-    /** Spring bean application context */
+    /**
+     * Spring bean application context
+     */
     private ApplicationContext applicationContext;
 
-    /** Timers registered in test context, that can be stopped */
+    /**
+     * Timers registered in test context, that can be stopped
+     */
     protected Map<String, StopTimer> timers = new ConcurrentHashMap<>();
 
-    /** List of exceptions that actions raised during execution of forked operations */
+    /**
+     * List of exceptions that actions raised during execution of forked operations
+     */
     private List<CitrusRuntimeException> exceptions = new ArrayList<>();
 
     /**
@@ -106,16 +141,16 @@ public class TestContext {
     public TestContext() {
         variables = new ConcurrentHashMap<>();
     }
-    
+
     /**
-     * Gets the value for the given variable expression. Expression usually is the 
+     * Gets the value for the given variable expression. Expression usually is the
      * simple variable name, with optional expression prefix/suffix.
-     * 
+     * <p>
      * In case variable is not known to the context throw runtime exception.
-     * 
+     *
      * @param variableExpression expression to search for.
-     * @throws CitrusRuntimeException
      * @return value of the variable
+     * @throws CitrusRuntimeException
      */
     public String getVariable(final String variableExpression) {
         return getVariable(variableExpression, String.class);
@@ -123,6 +158,7 @@ public class TestContext {
 
     /**
      * Gets typed variable value.
+     *
      * @param variableExpression
      * @param type
      * @param <T>
@@ -135,10 +171,10 @@ public class TestContext {
     /**
      * Gets the value for the given variable as object representation.
      * Use this method if you seek for test objects stored in the context.
-     * 
+     *
      * @param variableExpression expression to search for.
-     * @throws CitrusRuntimeException
      * @return value of the variable as object
+     * @throws CitrusRuntimeException
      */
     public Object getVariableObject(final String variableExpression) {
         String variableName = VariableUtils.cutOffVariablesPrefix(variableExpression);
@@ -160,6 +196,7 @@ public class TestContext {
     /**
      * Gets variable from path expression. Variable paths are translated to reflection fields on object instances.
      * Path separators are '.'. Each separator is handled as object hierarchy.
+     *
      * @param instance
      * @param pathExpression
      */
@@ -189,17 +226,17 @@ public class TestContext {
     }
 
     /**
-     * Creates a new variable in this test context with the respective value. In case variable already exists 
+     * Creates a new variable in this test context with the respective value. In case variable already exists
      * variable is overwritten.
-     * 
+     *
      * @param variableName the name of the new variable
-     * @param value the new variable value
-     * @throws CitrusRuntimeException
+     * @param value        the new variable value
      * @return
+     * @throws CitrusRuntimeException
      */
     public void setVariable(final String variableName, Object value) {
         if (!StringUtils.hasText(variableName) || VariableUtils.cutOffVariablesPrefix(variableName).length() == 0) {
-            throw new CitrusRuntimeException("Can not create variable '"+ variableName + "', please define proper variable name");
+            throw new CitrusRuntimeException("Can not create variable '" + variableName + "', please define proper variable name");
         }
 
         if (value == null) {
@@ -215,7 +252,8 @@ public class TestContext {
 
     /**
      * Add variables to context.
-     * @param variableNames the variable names to set
+     *
+     * @param variableNames  the variable names to set
      * @param variableValues the variable values to set
      */
     public void addVariables(String[] variableNames, Object[] variableValues) {
@@ -232,11 +270,11 @@ public class TestContext {
             }
         }
     }
-    
+
     /**
-     * Add several new variables to test context. Existing variables will be 
+     * Add several new variables to test context. Existing variables will be
      * overwritten.
-     * 
+     *
      * @param variablesToSet the list of variables to set.
      */
     public void addVariables(Map<String, Object> variablesToSet) {
@@ -260,17 +298,38 @@ public class TestContext {
         Map<String, T> target = new LinkedHashMap<>(map.size());
 
         for (Entry<String, T> entry : map.entrySet()) {
-            String key = replaceDynamicContentInString(entry.getKey());
-            T value = entry.getValue();
-
-            if (value instanceof String) {
-                //put value into target map, but check if value is variable or function first
-                target.put(key, (T) replaceDynamicContentInString((String) value));
-            } else {
-                target.put(key, value);
-            }
+            final Tuple<String, T> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
+            target.put(adaptedEntry._1, adaptedEntry._2);
         }
         return target;
+    }
+
+    /**
+     * Resolves any dynamic content in the supplied key, value pair
+     *
+     * @param key   a key, optionally containing dynamic content
+     * @param value a value, optionally containing dynamic content
+     * @param <K>
+     * @param <V>
+     * @return a tuple containing a copy of the {@code key} and {@code value} with dynamic content replaced
+     */
+    private <K, V> Tuple<K, V> resolveDynamicContent(K key, V value) {
+        final K adaptedKey;
+
+        if (key instanceof String) {
+            adaptedKey = (K) replaceDynamicContentInString((String) key);
+        } else {
+            adaptedKey = key;
+        }
+
+        final V adaptedValue;
+        if (value instanceof String) {
+            adaptedValue = (V) replaceDynamicContentInString((String) value);
+        } else {
+            adaptedValue = value;
+        }
+
+        return Tuple.createTuple(adaptedKey, adaptedValue);
     }
 
     /**
@@ -302,7 +361,7 @@ public class TestContext {
     public <T> T[] resolveDynamicValuesInArray(final T[] array) {
         return resolveDynamicValuesInList(Arrays.asList(array)).toArray(Arrays.copyOf(array, array.length));
     }
-    
+
     /**
      * Clears variables in this test context. Initially adds all global variables.
      */
@@ -310,19 +369,20 @@ public class TestContext {
         variables.clear();
         variables.putAll(globalVariables.getVariables());
     }
-    
+
     /**
      * Checks if variables are present right now.
+     *
      * @return boolean flag to mark existence
      */
     public boolean hasVariables() {
         return !CollectionUtils.isEmpty(variables);
     }
-    
+
     /**
-     * Method replacing variable declarations and place holders as well as 
+     * Method replacing variable declarations and place holders as well as
      * function expressions in a string
-     * 
+     *
      * @param str the string to parse.
      * @return resulting string without any variable place holders.
      */
@@ -331,10 +391,10 @@ public class TestContext {
     }
 
     /**
-     * Method replacing variable declarations and functions in a string, optionally 
+     * Method replacing variable declarations and functions in a string, optionally
      * the variable values get surrounded with single quotes.
-     * 
-     * @param str the string to parse for variable place holders.
+     *
+     * @param str           the string to parse for variable place holders.
      * @param enableQuoting flag marking surrounding quotes should be added or not.
      * @return resulting string without any variable place holders.
      */
@@ -348,10 +408,11 @@ public class TestContext {
 
         return result;
     }
-    
+
     /**
      * Checks weather the given expression is a variable or function and resolves the value
      * accordingly
+     *
      * @param expression the expression to resolve
      * @return the resolved expression value
      */
@@ -367,6 +428,7 @@ public class TestContext {
     /**
      * Handles error creating a new CitrusRuntimeException and
      * informs test listeners.
+     *
      * @param testName
      * @param packageName
      * @param message
@@ -388,9 +450,10 @@ public class TestContext {
 
         return exception;
     }
-    
+
     /**
      * Setter for test variables in this context.
+     *
      * @param variables
      */
     public void setVariables(Map<String, Object> variables) {
@@ -399,6 +462,7 @@ public class TestContext {
 
     /**
      * Getter for test variables in this context.
+     *
      * @return test variables for this test context.
      */
     public Map<String, Object> getVariables() {
@@ -406,17 +470,25 @@ public class TestContext {
     }
 
     /**
-     * Get global variables.
+     * Copies the passed {@code globalVariables} and adds them to the test context.
+     * <br/>If any of the copied global variables contain dynamic content (references to other global variables or
+     * functions) then this is resolved now. As a result it is important {@link #setFunctionRegistry(FunctionRegistry)}
+     * is called first before calling this method.
+     *
      * @param globalVariables
      */
-	public void setGlobalVariables(GlobalVariables globalVariables) {
-		this.globalVariables = globalVariables;
-		
-		variables.putAll(globalVariables.getVariables());
-	}
+    public void setGlobalVariables(GlobalVariables globalVariables) {
+        this.globalVariables = new GlobalVariables();
+        for (Entry<String, Object> entry : globalVariables.getVariables().entrySet()) {
+            final Tuple<String, Object> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
+            variables.put(adaptedEntry._1, adaptedEntry._2);
+            this.globalVariables.getVariables().put(adaptedEntry._1, adaptedEntry._2);
+        }
+    }
 
     /**
      * Set global variables.
+     *
      * @return the globalVariables
      */
     public Map<String, Object> getGlobalVariables() {
@@ -443,6 +515,7 @@ public class TestContext {
 
     /**
      * Get the current function registry.
+     *
      * @return the functionRegistry
      */
     public FunctionRegistry getFunctionRegistry() {
@@ -451,6 +524,7 @@ public class TestContext {
 
     /**
      * Set the function registry.
+     *
      * @param functionRegistry the functionRegistry to set
      */
     public void setFunctionRegistry(FunctionRegistry functionRegistry) {
@@ -459,6 +533,7 @@ public class TestContext {
 
     /**
      * Set the message validator registry.
+     *
      * @param messageValidatorRegistry the messageValidatorRegistry to set
      */
     public void setMessageValidatorRegistry(MessageValidatorRegistry messageValidatorRegistry) {
@@ -467,6 +542,7 @@ public class TestContext {
 
     /**
      * Get the message validator registry.
+     *
      * @return the messageValidatorRegistry
      */
     public MessageValidatorRegistry getMessageValidatorRegistry() {
@@ -475,6 +551,7 @@ public class TestContext {
 
     /**
      * Get the current validation matcher registry
+     *
      * @return
      */
     public ValidationMatcherRegistry getValidationMatcherRegistry() {
@@ -483,6 +560,7 @@ public class TestContext {
 
     /**
      * Set the validation matcher registry
+     *
      * @param validationMatcherRegistry
      */
     public void setValidationMatcherRegistry(ValidationMatcherRegistry validationMatcherRegistry) {
@@ -491,6 +569,7 @@ public class TestContext {
 
     /**
      * Gets the message listeners.
+     *
      * @return
      */
     public MessageListeners getMessageListeners() {
@@ -499,6 +578,7 @@ public class TestContext {
 
     /**
      * Set the message listeners.
+     *
      * @param messageListeners
      */
     public void setMessageListeners(MessageListeners messageListeners) {
@@ -507,6 +587,7 @@ public class TestContext {
 
     /**
      * Gets the test listeners.
+     *
      * @return
      */
     public TestListeners getTestListeners() {
@@ -515,6 +596,7 @@ public class TestContext {
 
     /**
      * Set the test listeners.
+     *
      * @param testListeners
      */
     public void setTestListeners(TestListeners testListeners) {
@@ -523,6 +605,7 @@ public class TestContext {
 
     /**
      * Gets the global message construction interceptors.
+     *
      * @return
      */
     public GlobalMessageConstructionInterceptors getGlobalMessageConstructionInterceptors() {
@@ -531,6 +614,7 @@ public class TestContext {
 
     /**
      * Sets the global messsage construction interceptors.
+     *
      * @param messageConstructionInterceptors
      */
     public void setGlobalMessageConstructionInterceptors(GlobalMessageConstructionInterceptors messageConstructionInterceptors) {
@@ -539,6 +623,7 @@ public class TestContext {
 
     /**
      * Gets the endpoint factory.
+     *
      * @return
      */
     public EndpointFactory getEndpointFactory() {
@@ -547,6 +632,7 @@ public class TestContext {
 
     /**
      * Sets the endpoint factory.
+     *
      * @param endpointFactory
      */
     public void setEndpointFactory(EndpointFactory endpointFactory) {
@@ -573,6 +659,7 @@ public class TestContext {
 
     /**
      * Sets the namespace context builder.
+     *
      * @param namespaceContextBuilder
      */
     public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
@@ -581,6 +668,7 @@ public class TestContext {
 
     /**
      * Gets the namespace context builder.
+     *
      * @return
      */
     public NamespaceContextBuilder getNamespaceContextBuilder() {
@@ -589,6 +677,7 @@ public class TestContext {
 
     /**
      * Gets the Spring bean application context.
+     *
      * @return
      */
     public ApplicationContext getApplicationContext() {
@@ -597,6 +686,7 @@ public class TestContext {
 
     /**
      * Sets the Spring bean application context.
+     *
      * @param applicationContext
      */
     public void setApplicationContext(ApplicationContext applicationContext) {
@@ -605,6 +695,7 @@ public class TestContext {
 
     /**
      * Informs message listeners if present that inbound message was received.
+     *
      * @param receivedMessage
      */
     public void onInboundMessage(Message receivedMessage) {
@@ -619,6 +710,7 @@ public class TestContext {
 
     /**
      * Informs message listeners if present that new outbound message is about to be sent.
+     *
      * @param message
      */
     public void onOutboundMessage(Message message) {
@@ -633,6 +725,7 @@ public class TestContext {
 
     /**
      * Registers a StopTimer in the test context, so that the associated timer can be stopped later on.
+     *
      * @param timerId a unique timer id
      */
     public void registerTimer(String timerId, StopTimer timer) {
@@ -644,6 +737,7 @@ public class TestContext {
 
     /**
      * Stops the timer matching the supplied id
+     *
      * @param timerId
      * @return true if time found and stopped, matching the supplied timerId
      */
@@ -668,6 +762,7 @@ public class TestContext {
     /**
      * Add new exception to the context marking the test as failed. This
      * is usually used by actions to mark exceptions during forked operations.
+     *
      * @param exception
      */
     public void addException(CitrusRuntimeException exception) {
@@ -685,6 +780,7 @@ public class TestContext {
 
     /**
      * Gets exception collection state.
+     *
      * @return
      */
     public boolean hasExceptions() {
@@ -693,6 +789,7 @@ public class TestContext {
 
     /**
      * Checks test result success in combination with this context exception state.
+     *
      * @param testResult
      * @return
      */
