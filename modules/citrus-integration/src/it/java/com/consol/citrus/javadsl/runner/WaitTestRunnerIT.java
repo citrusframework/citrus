@@ -145,6 +145,19 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
     }
 
     @CitrusTest
+    public void waitForFileUsingResourceDeprecated() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file(file);
+            }
+        });
+    }
+
+    @CitrusTest
     public void waitForFileUsingPath() {
         File file = FileHelper.createTmpFile();
 
