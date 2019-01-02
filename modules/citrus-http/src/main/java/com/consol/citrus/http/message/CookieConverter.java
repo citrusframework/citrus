@@ -43,6 +43,7 @@ class CookieConverter implements Serializable {
     private static final String DOMAIN = "Domain";
     private static final String MAX_AGE = "Max-Age";
     private static final String VERSION = "Version";
+    private static final String HTTP_ONLY = "HttpOnly";
 
     /**
      * Converts cookies from a HttpEntity into Cookie objects
@@ -99,6 +100,10 @@ class CookieConverter implements Serializable {
             builder.append(";" + SECURE);
         }
 
+        if (cookie.isHttpOnly()) {
+            builder.append(";" + HTTP_ONLY);
+        }
+
         return builder.toString();
     }
 
@@ -134,6 +139,10 @@ class CookieConverter implements Serializable {
             cookie.setVersion(Integer.valueOf(getCookieParam(VERSION, cookieString)));
         }
 
+        if (cookieString.contains(HTTP_ONLY)) {
+            cookie.setHttpOnly(Boolean.valueOf(getCookieParam(HTTP_ONLY, cookieString)));
+        }
+
         return cookie;
     }
 
@@ -156,7 +165,7 @@ class CookieConverter implements Serializable {
             }
         }
 
-        if(SECURE.equals(param) && cookieString.contains(SECURE)) {
+        if(containsFlag(SECURE, param, cookieString) || containsFlag(HTTP_ONLY, param, cookieString)) {
             return String.valueOf(true);
         }
 
@@ -172,5 +181,9 @@ class CookieConverter implements Serializable {
 
         throw new CitrusRuntimeException(String.format(
                 "Unable to get cookie argument '%s' from cookie String: %s", param, cookieString));
+    }
+
+    private boolean containsFlag(String flag, String param, String cookieString) {
+        return flag.equals(param) && cookieString.contains(flag);
     }
 }

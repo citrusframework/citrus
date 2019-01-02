@@ -157,6 +157,20 @@ public class CookieConverterTest {
     }
 
     @Test
+    public void testCookieHttpOnlyIsPreserved(){
+
+        //GIVEN
+        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;HttpOnly"));
+        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
+
+        //WHEN
+        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
+
+        //THEN
+        assertTrue(cookies[0].isHttpOnly());
+    }
+
+    @Test
     public void testCookieStringContainsVersion(){
 
         //GIVEN
@@ -232,6 +246,20 @@ public class CookieConverterTest {
         //GIVEN
         cookie.setSecure(true);
         String expectedCookieString = "foo=bar;Secure";
+
+        //WHEN
+        final String cookieString = cookieConverter.getCookieString(cookie);
+
+        //THEN
+        assertEquals(cookieString, expectedCookieString);
+    }
+
+    @Test
+    public void testCookieStringContainsHttpOnly(){
+
+        //GIVEN
+        cookie.setHttpOnly(true);
+        String expectedCookieString = "foo=bar;HttpOnly";
 
         //WHEN
         final String cookieString = cookieConverter.getCookieString(cookie);
