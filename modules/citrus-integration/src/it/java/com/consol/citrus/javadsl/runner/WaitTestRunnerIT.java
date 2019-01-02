@@ -18,6 +18,7 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.common.FileHelper;
 import com.consol.citrus.dsl.runner.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -28,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 
 @Test
@@ -40,8 +42,8 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void waitFile() throws IOException {
         waitFor()
-            .file()
-            .resource(new ClassPathResource("citrus.properties").getFile());
+                .file()
+                .resource(new ClassPathResource("citrus.properties").getFile());
     }
 
     @CitrusTest
@@ -120,24 +122,51 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void waitAction() {
         waitFor()
-            .execution()
-            .interval(300L)
-            .ms(500L)
-            .action(sleep(250L));
+                .execution()
+                .interval(300L)
+                .ms(500L)
+                .action(sleep(250L));
     }
 
     @CitrusTest
-    public void waitBehavior() {
+    public void waitForFileUsingResource() {
         applyBehavior(new AbstractTestBehavior() {
             @Override
             public void apply() {
                 try {
                     waitFor()
-                        .file()
-                        .resource(new ClassPathResource("citrus.properties").getFile());
+                            .file()
+                            .resource(new ClassPathResource("citrus.properties").getFile());
                 } catch (IOException e) {
                     throw new CitrusRuntimeException(e);
                 }
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingPath() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file()
+                        .path(file.toURI().toString());
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingPathDeprecated() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file(file.toURI().toString());
             }
         });
     }
