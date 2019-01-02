@@ -22,6 +22,7 @@ import com.consol.citrus.container.Wait;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
+import java.io.File;
 import java.util.Stack;
 
 /**
@@ -115,7 +116,6 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
         return new WaitActionConditionBuilder(container, condition, this);
     }
 
-
     /**
      * The file condition to wait for during execution.
      *
@@ -125,6 +125,20 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
     public WaitFileConditionBuilder file(String filePath) {
         FileCondition condition = new FileCondition();
         condition.setFilePath(filePath);
+        container.setCondition(condition);
+        this.buildAndRun();
+        return new WaitFileConditionBuilder(condition, this);
+    }
+
+    /**
+     * The file condition to wait for during execution.
+     *
+     * @deprecated in favor of {@link #file()}
+     */
+    @Deprecated
+    public WaitFileConditionBuilder file(File file) {
+        FileCondition condition = new FileCondition();
+        condition.setFile(file);
         container.setCondition(condition);
         this.buildAndRun();
         return new WaitFileConditionBuilder(condition, this);
