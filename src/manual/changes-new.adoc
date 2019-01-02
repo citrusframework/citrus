@@ -19,6 +19,7 @@ with minor versions. Because of that, we've reviewed the public API from release
 the removed/changed methods to ease the migration to newer Citrus versions. All methods that have been added back for
 downwards compatibility are marked as `@Deprecated` and will be removed with the next major release.
 
+* https://github.com/citrusframework/citrus/issues/552[#552 - Breaking change in MessageContentBuilder.buildMessageContent() public API]
 * https://github.com/citrusframework/citrus/issues/547[#547 - Breaking change in waitFor().http() public API]
 * https://github.com/citrusframework/citrus/issues/557[#557 - Breaking change in waitFor().file(String) public API]
 * https://github.com/citrusframework/citrus/issues/558[#558 - Breaking change in waitFor().file(File) public API]

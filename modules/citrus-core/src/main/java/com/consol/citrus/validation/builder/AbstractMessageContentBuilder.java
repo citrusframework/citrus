@@ -62,16 +62,6 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<>();
 
     /**
-     * Constructs the control message without any specific direction inbound or outbound.
-     * @param context
-     * @param messageType
-     * @return
-     */
-    public Message buildMessageContent(final TestContext context, final String messageType) {
-        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
-    }
-
-    /**
      * Constructs the control message with headers and payload coming from 
      * subclass implementation.
      */
