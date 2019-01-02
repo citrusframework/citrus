@@ -100,20 +100,6 @@ public class CookieConverterTest {
     }
 
     @Test
-    public void testCookieEndParameterIsRecognizedAndPreserved(){
-
-        //GIVEN
-        cookieHeaders.put("Set-Cookie", Collections.singletonList("foo=bar;Version=1;"));
-        final ResponseEntity<?> responseEntity = new ResponseEntity<>(cookieHeaders, HttpStatus.OK);
-
-        //WHEN
-        final Cookie[] cookies = cookieConverter.convertCookies(responseEntity);
-
-        //THEN
-        assertEquals(1, cookies[0].getVersion());
-    }
-
-    @Test
     public void testCookieMaxAgeIsPreserved(){
 
         //GIVEN
