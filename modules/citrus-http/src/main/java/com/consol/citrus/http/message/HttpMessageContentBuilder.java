@@ -44,11 +44,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public Message buildMessageContent(final TestContext context, final String messageType) {
-        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
-    }
-
-    @Override
     public Message buildMessageContent(final TestContext context, final String messageType, final MessageDirection direction) {
         //Copy the initial message, so that it is not manipulated during the test.
         final HttpMessage message = new HttpMessage(template);
