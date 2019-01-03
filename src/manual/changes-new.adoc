@@ -21,6 +21,7 @@ downwards compatibility are marked as `@Deprecated` and will be removed with the
 
 * https://github.com/citrusframework/citrus/issues/547[#547 - Breaking change in waitFor().http() public API]
 * https://github.com/citrusframework/citrus/issues/551[#551 - Breaking change in selenium().browser().type() public API]
+* https://github.com/citrusframework/citrus/issues/556[#556 - Breaking change in waitFor().message() public API]
 
 [[changes-2-7-8]]
 == Since Citrus 2.7.8
