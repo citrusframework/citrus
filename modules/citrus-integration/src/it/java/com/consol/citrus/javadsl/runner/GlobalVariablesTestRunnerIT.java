@@ -54,14 +54,6 @@ public class GlobalVariablesTestRunnerIT extends TestNGCitrusTestRunner {
 
     @CitrusTest
     @Parameters({"runner", "context"})
-    public void randomGlobalVariable_readMultipleTimes_valueShouldRemainConstantOnEachRead(
-            @Optional @CitrusResource TestRunner runner, @Optional @CitrusResource TestContext context) {
-        runner.echo("globalRandomNumber1: ${globalRandomNumber1}");
-        assertVariableValuesMatchWhenReadMultipleTimes(context, "globalRandomNumber1");
-    }
-
-    @CitrusTest
-    @Parameters({"runner", "context"})
     public void multipleGlobalVariablesWithCrossReferencesAndFunctions_readMultipleTimes_valueShouldRemainConstantOnEachRead(
             @Optional @CitrusResource TestRunner runner, @Optional @CitrusResource TestContext context) {
         runner.echo("globalSum1: ${globalSum1}");
@@ -74,8 +66,8 @@ public class GlobalVariablesTestRunnerIT extends TestNGCitrusTestRunner {
     }
 
     private void assertVariableValuesMatchWhenReadMultipleTimes(final TestContext testContext, final String name) {
-        String val1 = testContext.getVariable(name);
-        String val2 = testContext.getVariable(name);
+        String val1 = testContext.resolveDynamicValue(testContext.getVariable(name));
+        String val2 = testContext.resolveDynamicValue(testContext.getVariable(name));
         if (val1.equals(val2)) {
             log.debug(String.format("Values match for variable %s. Value: %s", name, val1));
         } else {
@@ -84,8 +76,8 @@ public class GlobalVariablesTestRunnerIT extends TestNGCitrusTestRunner {
     }
 
     private void assertVariableValuesMatch(final TestContext testContext, final String name1, final String name2) {
-        String val1 = testContext.getVariable(name1);
-        String val2 = testContext.getVariable(name2);
+        String val1 = testContext.resolveDynamicValue(testContext.getVariable(name1));
+        String val2 = testContext.resolveDynamicValue(testContext.getVariable(name2));
         if (val1.equals(val2)) {
             log.debug(String.format("Values match for variables %s and %s. Value: %s", name1, name2, val1));
         } else {

@@ -30,7 +30,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
-import com.consol.citrus.types.Tuple;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
@@ -38,6 +37,7 @@ import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import org.javatuples.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -298,8 +298,8 @@ public class TestContext {
         Map<String, T> target = new LinkedHashMap<>(map.size());
 
         for (Entry<String, T> entry : map.entrySet()) {
-            final Tuple<String, T> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
-            target.put(adaptedEntry._1, adaptedEntry._2);
+            final KeyValue<String, T> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
+            target.put(adaptedEntry.getKey(), adaptedEntry.getValue());
         }
         return target;
     }
@@ -313,23 +313,10 @@ public class TestContext {
      * @param <V>
      * @return a tuple containing a copy of the {@code key} and {@code value} with dynamic content replaced
      */
-    private <K, V> Tuple<K, V> resolveDynamicContent(K key, V value) {
-        final K adaptedKey;
-
-        if (key instanceof String) {
-            adaptedKey = (K) replaceDynamicContentInString((String) key);
-        } else {
-            adaptedKey = key;
-        }
-
-        final V adaptedValue;
-        if (value instanceof String) {
-            adaptedValue = (V) replaceDynamicContentInString((String) value);
-        } else {
-            adaptedValue = value;
-        }
-
-        return Tuple.createTuple(adaptedKey, adaptedValue);
+    private <K, V> KeyValue<K, V> resolveDynamicContent(K key, V value) {
+        final K adaptedKey = resolveDynamicContentIfRequired(key);
+        final V adaptedValue = resolveDynamicContentIfRequired(value);
+        return KeyValue.with(adaptedKey, adaptedValue);
     }
 
     /**
@@ -349,6 +336,23 @@ public class TestContext {
             }
         }
         return variableFreeList;
+    }
+
+    /**
+     * Checks for and resolves the dynamic content in the the supplied {@code value}.
+     *
+     * @param value the value, optionally containing dynamic content
+     * @param <V>
+     * @return the original value or the value with the resolved dynamic content
+     */
+    private <V> V resolveDynamicContentIfRequired(V value) {
+        final V adaptedValue;
+        if (value instanceof String) {
+            adaptedValue = (V) replaceDynamicContentInString((String) value);
+        } else {
+            adaptedValue = value;
+        }
+        return adaptedValue;
     }
 
     /**
@@ -480,9 +484,9 @@ public class TestContext {
     public void setGlobalVariables(GlobalVariables globalVariables) {
         this.globalVariables = new GlobalVariables();
         for (Entry<String, Object> entry : globalVariables.getVariables().entrySet()) {
-            final Tuple<String, Object> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
-            variables.put(adaptedEntry._1, adaptedEntry._2);
-            this.globalVariables.getVariables().put(adaptedEntry._1, adaptedEntry._2);
+            final KeyValue<String, Object> adaptedEntry = resolveDynamicContent(entry.getKey(), entry.getValue());
+            variables.put(adaptedEntry.getKey(), adaptedEntry.getValue());
+            this.globalVariables.getVariables().put(adaptedEntry.getKey(), adaptedEntry.getValue());
         }
     }
 
