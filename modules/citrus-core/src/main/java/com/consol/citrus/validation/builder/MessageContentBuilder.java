@@ -39,6 +39,18 @@ public interface MessageContentBuilder {
     Message buildMessageContent(TestContext context, String messageType, MessageDirection direction);
 
     /**
+     * Builds the control message.
+     * @param context the current test context.
+     * @param messageType the message type to build.
+     * @return the constructed message object.
+     * @deprecated in favor of using {@link #buildMessageContent(TestContext, String, MessageDirection)}.
+     */
+    @Deprecated
+    default Message buildMessageContent(TestContext context, String messageType){
+        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
+    }
+
+    /**
      * Adds a message construction interceptor.
      * @param interceptor
      */

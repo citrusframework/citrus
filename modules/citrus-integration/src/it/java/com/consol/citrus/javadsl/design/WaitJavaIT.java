@@ -18,9 +18,9 @@ package com.consol.citrus.javadsl.design;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.common.FileHelper;
 import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.MessageType;
@@ -29,6 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -185,17 +186,55 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     }
 
     @CitrusTest
-    public void waitBehavior() {
+    public void waitForFileUsingResource() {
+        File file = FileHelper.createTmpFile();
+
         applyBehavior(new AbstractTestBehavior() {
             @Override
             public void apply() {
-                try {
-                    waitFor()
-                            .file()
-                            .resource(new ClassPathResource("citrus.properties").getFile());
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException(e);
-                }
+                waitFor()
+                        .file()
+                        .resource(file);
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingResourceDeprecated() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file(file);
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingPath() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file()
+                        .path(file.toURI().toString());
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingPathDeprecated() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file(file.toURI().toString());
             }
         });
     }
