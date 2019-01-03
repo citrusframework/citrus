@@ -16,16 +16,13 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.condition.ActionCondition;
-import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
-import com.consol.citrus.condition.HttpCondition;
-import com.consol.citrus.condition.MessageCondition;
+import com.consol.citrus.condition.*;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.TestRunner;
 
+import java.io.File;
 import java.util.Stack;
 
 /**
@@ -40,6 +37,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * Constructor using designer and action field.
+     *
      * @param designer
      * @param action
      */
@@ -50,6 +48,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * Constructor using runner and action field.
+     *
      * @param runner
      * @param action
      */
@@ -60,6 +59,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * Condition to wait for during execution.
+     *
      * @param condition
      * @return
      */
@@ -70,6 +70,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The HTTP condition to wait for during execution.
+     *
      * @deprecated in favor of {@link #http()}
      */
     @Deprecated
@@ -83,6 +84,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The HTTP condition to wait for during execution.
+     *
      * @return
      */
     public WaitHttpConditionBuilder http() {
@@ -93,6 +95,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The message condition to wait for during execution.
+     *
      * @return
      */
     public WaitMessageConditionBuilder message() {
@@ -103,6 +106,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The test action condition to wait for during execution.
+     *
      * @return
      */
     public WaitActionConditionBuilder execution() {
@@ -114,6 +118,35 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The file condition to wait for during execution.
+     *
+     * @deprecated in favor of {@link #file()}
+     */
+    @Deprecated
+    public WaitFileConditionBuilder file(String filePath) {
+        FileCondition condition = new FileCondition();
+        condition.setFilePath(filePath);
+        container.setCondition(condition);
+        this.buildAndRun();
+        return new WaitFileConditionBuilder(condition, this);
+    }
+
+    /**
+     * The file condition to wait for during execution.
+     *
+     * @deprecated in favor of {@link #file()}
+     */
+    @Deprecated
+    public WaitFileConditionBuilder file(File file) {
+        FileCondition condition = new FileCondition();
+        condition.setFile(file);
+        container.setCondition(condition);
+        this.buildAndRun();
+        return new WaitFileConditionBuilder(condition, this);
+    }
+
+    /**
+     * The file condition to wait for during execution.
+     *
      * @return
      */
     public WaitFileConditionBuilder file() {
@@ -124,6 +157,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The total length of seconds to wait on the condition to be satisfied
+     *
      * @param seconds
      * @return
      */
@@ -134,6 +168,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The total length of seconds to wait on the condition to be satisfied
+     *
      * @param seconds
      * @return
      */
@@ -144,6 +179,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The total length of milliseconds to wait on the condition to be satisfied
+     *
      * @param milliseconds
      * @return
      */
@@ -154,6 +190,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The total length of milliseconds to wait on the condition to be satisfied
+     *
      * @param milliseconds
      * @return
      */
@@ -164,6 +201,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The total length of milliseconds to wait on the condition to be satisfied
+     *
      * @param milliseconds
      * @return
      */
@@ -174,6 +212,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The total length of milliseconds to wait on the condition to be satisfied
+     *
      * @param milliseconds
      * @return
      */
@@ -184,6 +223,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The interval in seconds to use between each test of the condition
+     *
      * @param interval
      * @return
      */
@@ -194,6 +234,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * The interval in seconds to use between each test of the condition
+     *
      * @param interval
      * @return
      */
@@ -204,6 +245,7 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
 
     /**
      * Finishes action build process.
+     *
      * @return
      */
     public Wait buildAndRun() {
