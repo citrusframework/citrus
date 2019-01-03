@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 public class HttpMessage extends DefaultMessage {
 
     /** Http cookies */
-    private List<Cookie> cookies = new ArrayList<>();
+    private Map<String, Cookie> cookies = new HashMap<>();
 
     /** Query params */
     private Map<String, String> queryParams = new HashMap<>();
@@ -89,7 +89,7 @@ public class HttpMessage extends DefaultMessage {
      */
     private void copyCookies(Message message) {
         if (message instanceof HttpMessage) {
-            this.cookies.addAll(((HttpMessage) message).getCookies());
+            this.cookies.putAll(((HttpMessage) message).getCookiesMap());
         }
     }
 
@@ -419,6 +419,15 @@ public class HttpMessage extends DefaultMessage {
      * @return The list of cookies for this message
      */
     public List<Cookie> getCookies() {
+        return new ArrayList<>(cookies.values());
+    }
+
+    /**
+     * Get the cookies represented as a map with the cookie name as key
+     *
+     * @return A map of Cookies identified by the cookie name
+     */
+    private Map<String, Cookie> getCookiesMap() {
         return cookies;
     }
 
@@ -442,7 +451,7 @@ public class HttpMessage extends DefaultMessage {
      * @return The altered HttpMessage
      */
     public HttpMessage cookie(Cookie cookie) {
-        this.cookies.add(cookie);
+        this.cookies.put(cookie.getName(), cookie);
 
         setHeader(
                 HttpMessageHeaders.HTTP_COOKIE_PREFIX + cookie.getName(),

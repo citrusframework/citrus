@@ -52,6 +52,26 @@ public class HttpMessageTest {
         assertTrue(httpMessage.getCookies().contains(cookie));
     }
 
+    /**
+     * Required by https://tools.ietf.org/html/rfc6265#section-4.1.1
+     */
+    @Test
+    public void testCookiesWithSameNamesAreOverwritten() {
+
+        //GIVEN
+        final Cookie cookie = new Cookie("foo", "bar");
+        httpMessage.cookie(cookie);
+
+        final Cookie expectedCookie = new Cookie("foo", "foobar");
+
+        //WHEN
+        httpMessage.cookie(expectedCookie);
+
+        //THEN
+        assertEquals(httpMessage.getCookies().size(), 1);
+        assertEquals(httpMessage.getCookies().get(0).getValue(), "foobar");
+    }
+
     @Test
     public void testSetCookiesOverwritesOldCookies() {
 
