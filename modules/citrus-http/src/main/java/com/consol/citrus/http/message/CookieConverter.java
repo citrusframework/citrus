@@ -19,12 +19,21 @@ package com.consol.citrus.http.message;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-class CookieParser {
+/**
+ * Class to convert Objects from or to Cookies
+ *
+ * This class should be replaced as soon as possible by a third party cookie parser
+ * The implementation of the Serializable interface is cause by the {@link HttpMessage} implementation of Serializable
+ * and the implications from that.
+ */
+class CookieConverter implements Serializable {
 
     private static final String NAME = "Name";
     private static final String VALUE = "Value";
@@ -34,6 +43,7 @@ class CookieParser {
     private static final String DOMAIN = "Domain";
     private static final String MAX_AGE = "Max-Age";
     private static final String VERSION = "Version";
+    private static final String HTTP_ONLY = "HttpOnly";
 
     /**
      * Converts cookies from a HttpEntity into Cookie objects
@@ -52,6 +62,49 @@ class CookieParser {
         }
 
         return cookies.toArray(new Cookie[0]);
+    }
+
+    /**
+     * Converts a given cookie into a HTTP conform cookie String
+     * @param cookie the cookie to convert
+     * @return The cookie string representation of the given cookie
+     */
+    String getCookieString(Cookie cookie) {
+        StringBuilder builder = new StringBuilder();
+
+        builder.append(cookie.getName());
+        builder.append("=");
+        builder.append(cookie.getValue());
+
+        if (cookie.getVersion() > 0) {
+            builder.append(";" + VERSION + "=").append(cookie.getVersion());
+        }
+
+        if (StringUtils.hasText(cookie.getPath())) {
+            builder.append(";" + PATH + "=").append(cookie.getPath());
+        }
+
+        if (StringUtils.hasText(cookie.getDomain())) {
+            builder.append(";" + DOMAIN + "=").append(cookie.getDomain());
+        }
+
+        if (cookie.getMaxAge() > 0) {
+            builder.append(";" + MAX_AGE + "=").append(cookie.getMaxAge());
+        }
+
+        if (StringUtils.hasText(cookie.getComment())) {
+            builder.append(";" + COMMENT + "=").append(cookie.getComment());
+        }
+
+        if (cookie.getSecure()) {
+            builder.append(";" + SECURE);
+        }
+
+        if (cookie.isHttpOnly()) {
+            builder.append(";" + HTTP_ONLY);
+        }
+
+        return builder.toString();
     }
 
     /**
@@ -86,6 +139,10 @@ class CookieParser {
             cookie.setVersion(Integer.valueOf(getCookieParam(VERSION, cookieString)));
         }
 
+        if (cookieString.contains(HTTP_ONLY)) {
+            cookie.setHttpOnly(Boolean.valueOf(getCookieParam(HTTP_ONLY, cookieString)));
+        }
+
         return cookie;
     }
 
@@ -108,7 +165,7 @@ class CookieParser {
             }
         }
 
-        if(SECURE.equals(param) && cookieString.contains(SECURE)) {
+        if(containsFlag(SECURE, param, cookieString) || containsFlag(HTTP_ONLY, param, cookieString)) {
             return String.valueOf(true);
         }
 
@@ -124,5 +181,9 @@ class CookieParser {
 
         throw new CitrusRuntimeException(String.format(
                 "Unable to get cookie argument '%s' from cookie String: %s", param, cookieString));
+    }
+
+    private boolean containsFlag(String flag, String param, String cookieString) {
+        return flag.equals(param) && cookieString.contains(flag);
     }
 }
