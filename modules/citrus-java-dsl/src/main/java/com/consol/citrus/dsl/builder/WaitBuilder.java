@@ -16,11 +16,7 @@
 
 package com.consol.citrus.dsl.builder;
 
-import com.consol.citrus.condition.ActionCondition;
-import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
-import com.consol.citrus.condition.HttpCondition;
-import com.consol.citrus.condition.MessageCondition;
+import com.consol.citrus.condition.*;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -89,6 +85,22 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
         HttpCondition condition = new HttpCondition();
         container.setCondition(condition);
         return new WaitHttpConditionBuilder(condition, this);
+    }
+
+    /**
+     * The message condition to wait for during execution.
+     *
+     * @param name the message to wait on
+     * @return
+     * @deprecated in favor of {@link #message()}
+     */
+    @Deprecated
+    public WaitConditionBuilder message(String name) {
+        MessageCondition condition = new MessageCondition();
+        condition.setMessageName(name);
+        container.setCondition(condition);
+        this.buildAndRun();
+        return new WaitMessageConditionBuilder(condition, this);
     }
 
     /**

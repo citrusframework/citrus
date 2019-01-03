@@ -23,12 +23,14 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.message.MessageType;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.util.Collections;
 
 
 @Test
@@ -39,10 +41,65 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     private HttpServer httpServer;
 
     @CitrusTest
+    public void waitMessage() {
+        //GIVEN
+        String messageName = "myTestMessage";
+
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .message()
+                                .name(messageName)
+                ),
+                sequential().actions(
+                        //THEN
+                        send("channelRequestSender")
+                                .name(messageName)
+                                .payload("Wait for me")
+                                .header("Operation", "waitForMe"),
+
+                        receive("channelResponseReceiver")
+                                .selector(Collections.singletonMap("Operation", "waitForMe"))
+                                .messageType(MessageType.PLAINTEXT)
+                                .name(messageName)
+                                .header("Operation", "waitForMe")
+                )
+        );
+    }
+
+    @CitrusTest
+    public void waitMessageDeprecated() {
+        //GIVEN
+        String messageName = "myTestMessage";
+
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .message(messageName).getBuilder().build()
+                ),
+                sequential().actions(
+                        //THEN
+                        send("channelRequestSender")
+                                .name(messageName)
+                                .payload("Wait for me")
+                                .header("Operation", "waitForMe"),
+
+                        receive("channelResponseReceiver")
+                                .selector(Collections.singletonMap("Operation", "waitForMe"))
+                                .messageType(MessageType.PLAINTEXT)
+                                .name(messageName)
+                                .header("Operation", "waitForMe")
+                )
+        );
+    }
+
+    @CitrusTest
     public void waitFile() throws IOException {
         waitFor()
-            .file()
-            .resource(new ClassPathResource("citrus.properties").getFile());
+                .file()
+                .resource(new ClassPathResource("citrus.properties").getFile());
     }
 
     @CitrusTest
@@ -121,10 +178,10 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void waitAction() {
         waitFor()
-            .execution()
-            .interval(300L)
-            .ms(500L)
-            .action(sleep(250L));
+                .execution()
+                .interval(300L)
+                .ms(500L)
+                .action(sleep(250L));
     }
 
     @CitrusTest
@@ -134,8 +191,8 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
             public void apply() {
                 try {
                     waitFor()
-                        .file()
-                        .resource(new ClassPathResource("citrus.properties").getFile());
+                            .file()
+                            .resource(new ClassPathResource("citrus.properties").getFile());
                 } catch (IOException e) {
                     throw new CitrusRuntimeException(e);
                 }
