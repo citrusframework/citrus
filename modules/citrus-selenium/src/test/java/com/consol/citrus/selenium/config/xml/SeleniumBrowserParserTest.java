@@ -31,12 +31,16 @@ import java.util.Map;
 public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testBrowserParser() {
+    public void parseBrowserConfig_multipleBrowsersConfigured_shouldDetectAllBrowsers() {
         Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
 
-        Assert.assertEquals(browsers.size(), 3);
+        Assert.assertEquals(browsers.size(), 4);
+    }
 
-        // 1st browser
+    @Test
+    public void parseBrowserConfig_htmlUnitBrowserConfigured_shouldParseConfigurationSuccessfully() {
+        Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
+
         SeleniumBrowser browser = browsers.get("htmlUnitBrowser");
         Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
         Assert.assertNull(browser.getEndpointConfiguration().getStartPageUrl());
@@ -46,9 +50,13 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertNotNull(browser.getEndpointConfiguration().getFirefoxProfile());
         Assert.assertNull(browser.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser.getEndpointConfiguration().getTimeout(), 5000L);
+    }
 
-        // 2nd browser
-        browser = browsers.get("firefoxBrowser");
+    @Test
+    public void parseBrowserConfig_firefoxBrowserConfigured_shouldParseConfigurationSuccessfully() {
+        Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
+
+        SeleniumBrowser browser = browsers.get("firefoxBrowser");
         Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.FIREFOX);
         Assert.assertEquals(browser.getEndpointConfiguration().getStartPageUrl(), "http://citrusframework.org");
         Assert.assertEquals(browser.getEndpointConfiguration().getEventListeners().size(), 1L);
@@ -58,11 +66,22 @@ public class SeleniumBrowserParserTest extends AbstractBeanDefinitionParserTest 
         Assert.assertEquals(browser.getEndpointConfiguration().isJavaScript(), false);
         Assert.assertNull(browser.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser.getEndpointConfiguration().getTimeout(), 10000L);
+    }
 
-        // 3rd browser
-        browser = browsers.get("remoteBrowser");
+    @Test
+    public void parseBrowserConfig_remoteBrowserConfigured_shouldParseConfigurationSuccessfully() {
+        Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
+
+        SeleniumBrowser browser = browsers.get("remoteBrowser");
         Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.IE);
         Assert.assertEquals(browser.getEndpointConfiguration().getRemoteServerUrl(), "http://localhost:9090/selenium");
+    }
 
+    @Test
+    public void parseBrowserConfig_browserUsingDeprecatedConfig_shouldParseConfigurationSuccessfully() {
+        Map<String, SeleniumBrowser> browsers = beanDefinitionContext.getBeansOfType(SeleniumBrowser.class);
+
+        SeleniumBrowser browser = browsers.get("browserUsingDeprecatedConfiguration");
+        Assert.assertEquals(browser.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
     }
 }

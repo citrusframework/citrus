@@ -62,6 +62,14 @@ public @interface SeleniumBrowserConfig {
     /**
      * Browser type
      * @return
+     * @deprecated in favor of {@link #type()}
+     */
+    @Deprecated
+    String browserType() default "";
+
+    /**
+     * Browser type
+     * @return
      */
     String type() default "";
 
