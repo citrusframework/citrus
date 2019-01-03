@@ -10,6 +10,7 @@ We have the following features included in the box.
 === Fixed bugs
 
 * https://github.com/citrusframework/citrus/issues/561[#561 - Lost cookie entries except the last one]
+* https://github.com/citrusframework/citrus/issues/535[#535 -  Inconsistent values of global variables]
 
 [[fixed-breaking-changes-2-7-9]]
 === Fixed breaking changes
