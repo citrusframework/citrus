@@ -25,8 +25,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.Cookie;
-import java.io.*;
-import java.util.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -37,10 +43,12 @@ import java.util.stream.Stream;
 public class HttpMessage extends DefaultMessage {
 
     /** Http cookies */
-    private List<Cookie> cookies = new ArrayList<>();
+    private Map<String, Cookie> cookies = new HashMap<>();
 
     /** Query params */
     private Map<String, String> queryParams = new HashMap<>();
+
+    private CookieConverter cookieConverter = new CookieConverter();
 
     /**
      * Empty constructor initializing with empty message payload.
@@ -51,7 +59,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Constructs copy of given message.
-     * @param message
+     * @param message The base message for the copy operation
      */
     public HttpMessage(Message message) {
         super(message);
@@ -60,7 +68,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Default message using message payload.
-     * @param payload
+     * @param payload The payload for the message to set
      */
     public HttpMessage(Object payload) {
         super(payload);
@@ -68,8 +76,8 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Default message using message payload and headers.
-     * @param payload
-     * @param headers
+     * @param payload The payload for the message to set
+     * @param headers A key value map containing the headers to set
      */
     public HttpMessage(Object payload, Map<String, Object> headers) {
         super(payload, headers);
@@ -81,13 +89,14 @@ public class HttpMessage extends DefaultMessage {
      */
     private void copyCookies(Message message) {
         if (message instanceof HttpMessage) {
-            this.cookies.addAll(((HttpMessage) message).getCookies());
+            this.cookies.putAll(((HttpMessage) message).getCookiesMap());
         }
     }
 
     /**
-     * Sets the Http request method.
-     * @param method
+     * Sets the Http request method header.
+     * @param method The Http method header to use
+     * @return The altered HttpMessage
      */
     public HttpMessage method(HttpMethod method) {
         setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
@@ -95,8 +104,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http version.
-     * @param version
+     * Sets the Http version header.
+     * @param version The http version header value to use
+     * @return The altered HttpMessage
      */
     public HttpMessage version(String version) {
         setHeader(HttpMessageHeaders.HTTP_VERSION, version);
@@ -105,7 +115,8 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets the Http response status code.
-     * @param statusCode
+     * @param statusCode The status code header to respond with
+     * @return The altered HttpMessage
      */
     public HttpMessage status(HttpStatus statusCode) {
         statusCode(statusCode.value());
@@ -114,8 +125,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http response status code.
-     * @param statusCode
+     * Sets the Http response status code header.
+     * @param statusCode The status code header value to respond with
+     * @return The altered HttpMessage
      */
     public HttpMessage statusCode(Integer statusCode) {
         setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, statusCode);
@@ -123,8 +135,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http response reason phrase.
-     * @param reasonPhrase
+     * Sets the Http response reason phrase header.
+     * @param reasonPhrase The reason phrase header value to use
+     * @return The altered HttpMessage
      */
     public HttpMessage reasonPhrase(String reasonPhrase) {
         setHeader(HttpMessageHeaders.HTTP_REASON_PHRASE, reasonPhrase);
@@ -132,8 +145,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http request request uri.
-     * @param requestUri
+     * Sets the Http request request uri header.
+     * @param requestUri The request uri header value to use
+     * @return The altered HttpMessage
      */
     public HttpMessage uri(String requestUri) {
         setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, requestUri);
@@ -142,8 +156,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http request content type.
-     * @param contentType
+     * Sets the Http request content type header.
+     * @param contentType The content type header value to use
+     * @return The altered HttpMessage
      */
     public HttpMessage contentType(String contentType) {
         setHeader("Content-Type", contentType);
@@ -151,8 +166,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http accepted content type for response.
-     * @param accept
+     * Sets the Http accepted content type header for response.
+     * @param accept The accept header value to set
+     * @return The altered HttpMessage
      */
     public HttpMessage accept(String accept) {
         setHeader("Accept", accept);
@@ -160,8 +176,9 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Sets the Http request context path.
-     * @param contextPath
+     * Sets the Http request context path header.
+     * @param contextPath The context path header value to use
+     * @return The altered HttpMessage
      */
     public HttpMessage contextPath(String contextPath) {
         setHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
@@ -171,7 +188,8 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Sets the Http request query params query String. Query String is a compilation of key-value pairs separated
      * by comma character e.g. key1=value1[","key2=value2]. Query String can be empty.
-     * @param queryParamString
+     * @param queryParamString The query parameter string to evaluate
+     * @return The altered HttpMessage
      */
     public HttpMessage queryParams(String queryParamString) {
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
@@ -185,7 +203,8 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets a new Http request query param.
-     * @param name
+     * @param name The name of the request query parameter
+     * @return The altered HttpMessage
      */
     public HttpMessage queryParam(String name) {
         return queryParam(name, null);
@@ -193,8 +212,9 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets a new Http request query param.
-     * @param name
-     * @param value
+     * @param name The name of the request query parameter
+     * @param value The value of the request query parameter
+     * @return The altered HttpMessage
      */
     public HttpMessage queryParam(String name, String value) {
         if (!StringUtils.hasText(name)) {
@@ -216,8 +236,8 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets request path that is dynamically added to base uri.
-     * @param path
-     * @return
+     * @param path The part of the path to add
+     * @return The altered HttpMessage
      */
     public HttpMessage path(String path) {
         header(HttpMessageHeaders.HTTP_REQUEST_URI, path);
@@ -227,8 +247,9 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets new header name value pair.
-     * @param headerName
-     * @param headerValue
+     * @param headerName The name of the header
+     * @param headerValue The value of the header
+     * @return The altered HttpMessage
      */
     public HttpMessage header(String headerName, Object headerValue) {
         return (HttpMessage) super.setHeader(headerName, headerValue);
@@ -246,7 +267,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request method.
-     * @return
+     * @return The used HttpMethod
      */
     public HttpMethod getRequestMethod() {
         Object method = getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
@@ -260,7 +281,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request request uri.
-     * @return
+     * @return The request uri
      */
     public String getUri() {
         Object requestUri = getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
@@ -274,7 +295,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request context path.
-     * @return
+     * @return the context path
      */
     public String getContextPath() {
         Object contextPath = getHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH);
@@ -288,7 +309,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http content type header.
-     * @return
+     * @return the content type header value
      */
     public String getContentType() {
         Object contentType = getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE);
@@ -301,8 +322,8 @@ public class HttpMessage extends DefaultMessage {
     }
 
     /**
-     * Gets the Http content type header.
-     * @return
+     * Gets the accept header.
+     * @return The accept header value
      */
     public String getAccept() {
         Object accept = getHeader("Accept");
@@ -316,7 +337,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request query params.
-     * @return
+     * @return The query parameters as a key value map
      */
     public Map<String, String> getQueryParams() {
         return queryParams;
@@ -324,7 +345,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request query param string.
-     * @return
+     * @return The query parameter as string
      */
     public String getQueryParamString() {
         return Optional.ofNullable(getHeader(HttpMessageHeaders.HTTP_QUERY_PARAMS)).map(Object::toString).orElse("");
@@ -332,7 +353,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http response status code.
-     * @return
+     * @return The status code of the message
      */
     public HttpStatus getStatusCode() {
         Object statusCode = getHeader(HttpMessageHeaders.HTTP_STATUS_CODE);
@@ -352,7 +373,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http response reason phrase.
-     * @return
+     * @return The reason phrase of the message
      */
     public String getReasonPhrase() {
         Object reasonPhrase = getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE);
@@ -366,7 +387,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http version.
-     * @return
+     * @return The http version of the message
      */
     public String getVersion() {
         Object version = getHeader(HttpMessageHeaders.HTTP_VERSION);
@@ -380,7 +401,7 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the request path after the context path.
-     * @return
+     * @return The request path of the message
      */
     public String getPath() {
         Object path = getHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME);
@@ -395,18 +416,28 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Gets the cookies.
      *
-     * @return
+     * @return The list of cookies for this message
      */
     public List<Cookie> getCookies() {
+        return new ArrayList<>(cookies.values());
+    }
+
+    /**
+     * Get the cookies represented as a map with the cookie name as key
+     *
+     * @return A map of Cookies identified by the cookie name
+     */
+    private Map<String, Cookie> getCookiesMap() {
         return cookies;
     }
 
     /**
      * Sets the cookies.
      *
-     * @param cookies
+     * @param cookies The cookies to set
      */
     public void setCookies(Cookie[] cookies) {
+        this.cookies.clear();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
                 cookie(cookie);
@@ -416,55 +447,23 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Adds new cookie to this http message.
-     * @param cookie
-     * @return
+     * @param cookie The Cookie to set
+     * @return The altered HttpMessage
      */
     public HttpMessage cookie(Cookie cookie) {
-        this.cookies.add(cookie);
+        this.cookies.put(cookie.getName(), cookie);
 
-        setHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + cookie.getName(), getCookieString(cookie));
+        setHeader(
+                HttpMessageHeaders.HTTP_COOKIE_PREFIX + cookie.getName(),
+                cookieConverter.getCookieString(cookie));
 
         return this;
     }
 
-    private String getCookieString(Cookie cookie) {
-        StringBuilder builder = new StringBuilder();
-
-        builder.append(cookie.getName());
-        builder.append("=");
-        builder.append(cookie.getValue());
-
-        if (cookie.getVersion() > 0) {
-            builder.append(";Version=").append(cookie.getVersion());
-        }
-
-        if (StringUtils.hasText(cookie.getPath())) {
-            builder.append(";Path=").append(cookie.getPath());
-        }
-
-        if (StringUtils.hasText(cookie.getDomain())) {
-            builder.append(";Domain=").append(cookie.getDomain());
-        }
-
-        if (cookie.getMaxAge() > 0) {
-            builder.append(";Max-Age=").append(cookie.getMaxAge());
-        }
-
-        if (StringUtils.hasText(cookie.getComment())) {
-            builder.append(";Comment=").append(cookie.getComment());
-        }
-
-        if (cookie.getSecure()) {
-            builder.append(";Secure=").append(cookie.getSecure());
-        }
-
-        return builder.toString();
-    }
-
     /**
      * Reads request from complete request dump.
-     * @param requestData
-     * @return
+     * @param requestData The request dump to parse
+     * @return The parsed dump as HttpMessage
      */
     public static HttpMessage fromRequestData(String requestData) {
         try (BufferedReader reader = new BufferedReader(new StringReader(requestData))) {
@@ -483,27 +482,7 @@ public class HttpMessage extends DefaultMessage {
                 request.version(requestLine[2]);
             }
 
-            String line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                if (!line.contains(":")) {
-                    throw new CitrusRuntimeException(String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
-                }
-
-                String[] keyValue = line.split(":");
-                request.setHeader(keyValue[0].trim(), keyValue[1].trim());
-                line = reader.readLine();
-            }
-
-            StringBuilder bodyBuilder = new StringBuilder();
-            line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                bodyBuilder.append(line).append(System.getProperty("line.separator"));
-                line = reader.readLine();
-            }
-
-            request.setPayload(bodyBuilder.toString().trim());
-
-            return request;
+            return parseHttpMessage(reader, request);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw request data", e);
         }
@@ -511,8 +490,8 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Reads response from complete response dump.
-     * @param responseData
-     * @return
+     * @param responseData The response dump to parse
+     * @return The parsed dump as HttpMessage
      */
     public static HttpMessage fromResponseData(String responseData) {
         try (BufferedReader reader = new BufferedReader(new StringReader(responseData))) {
@@ -527,29 +506,34 @@ public class HttpMessage extends DefaultMessage {
                 response.status(HttpStatus.valueOf(Integer.valueOf(statusLine[1])));
             }
 
-            String line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                if (!line.contains(":")) {
-                    throw new CitrusRuntimeException(String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
-                }
-
-                String[] keyValue = line.split(":");
-                response.setHeader(keyValue[0].trim(), keyValue[1].trim());
-                line = reader.readLine();
-            }
-
-            StringBuilder bodyBuilder = new StringBuilder();
-            line = reader.readLine();
-            while (StringUtils.hasText(line)) {
-                bodyBuilder.append(line).append(System.getProperty("line.separator"));
-                line = reader.readLine();
-            }
-
-            response.setPayload(bodyBuilder.toString().trim());
-
-            return response;
+            return parseHttpMessage(reader, response);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw response data", e);
         }
+    }
+
+    private static HttpMessage parseHttpMessage(BufferedReader reader, HttpMessage message) throws IOException {
+        String line = reader.readLine();
+        while (StringUtils.hasText(line)) {
+            if (!line.contains(":")) {
+                throw new CitrusRuntimeException(
+                        String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
+            }
+
+            String[] keyValue = line.split(":");
+            message.setHeader(keyValue[0].trim(), keyValue[1].trim());
+            line = reader.readLine();
+        }
+
+        StringBuilder bodyBuilder = new StringBuilder();
+        line = reader.readLine();
+        while (StringUtils.hasText(line)) {
+            bodyBuilder.append(line).append(System.getProperty("line.separator"));
+            line = reader.readLine();
+        }
+
+        message.setPayload(bodyBuilder.toString().trim());
+
+        return message;
     }
 }
