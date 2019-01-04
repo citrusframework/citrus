@@ -96,6 +96,22 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
     /**
      * The message condition to wait for during execution.
      *
+     * @param name the message to wait on
+     * @return
+     * @deprecated in favor of {@link #message()}
+     */
+    @Deprecated
+    public WaitConditionBuilder message(String name) {
+        MessageCondition condition = new MessageCondition();
+        condition.setMessageName(name);
+        container.setCondition(condition);
+        this.buildAndRun();
+        return new WaitMessageConditionBuilder(condition, this);
+    }
+
+    /**
+     * The message condition to wait for during execution.
+     *
      * @return
      */
     public WaitMessageConditionBuilder message() {
