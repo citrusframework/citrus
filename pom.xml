@@ -201,6 +201,7 @@
     <spring.integration.version>4.3.14.RELEASE</spring.integration.version>
     <spring.restdocs.version>1.2.3.RELEASE</spring.restdocs.version>
     <apache.camel.version>2.20.1</apache.camel.version>
+    <javatuples.version>1.2</javatuples.version>
     <activemq.version>5.15.2</activemq.version>
     <vertx.version>3.5.4</vertx.version>
     <groovy.version>2.4.13</groovy.version>
@@ -830,6 +831,12 @@
             <artifactId>log4j</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.javatuples</groupId>
+        <artifactId>javatuples</artifactId>
+        <version>${javatuples.version}</version>
       </dependency>
 
       <!-- Test scoped dependencies -->

@@ -35,6 +35,10 @@
       </echo>
 
       <echo>
+        <message>Value of global sum variables: ${globalSum1}, ${globalSum2}</message>
+      </echo>
+
+      <echo>
         <message>Verify variables support (replacement in properties)</message>
       </echo>
 
@@ -50,6 +54,7 @@
               public void execute(TestContext context) {
                   Assert.assertEquals("${globalWelcomingText}", "Hello Citrus!")
                   Assert.assertEquals("${globalDate}", "Today is ${checkDate}!")
+                  Assert.assertEquals("${globalSum1}", "${globalSum2}")
               }
           }
         ]]>
