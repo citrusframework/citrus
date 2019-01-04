@@ -201,6 +201,7 @@
     <spring.integration.version>4.3.14.RELEASE</spring.integration.version>
     <spring.restdocs.version>1.2.3.RELEASE</spring.restdocs.version>
     <apache.camel.version>2.20.1</apache.camel.version>
+    <javatuples.version>1.2</javatuples.version>
     <activemq.version>5.15.2</activemq.version>
     <vertx.version>3.5.4</vertx.version>
     <groovy.version>2.4.13</groovy.version>
@@ -832,6 +833,12 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>org.javatuples</groupId>
+        <artifactId>javatuples</artifactId>
+        <version>${javatuples.version}</version>
+      </dependency>
+
       <!-- Test scoped dependencies -->
       <dependency>
         <groupId>org.springframework.integration</groupId>
@@ -1171,16 +1178,6 @@
           <version>1.9.5</version>
         </plugin>
 
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.7.9</version>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -1502,80 +1499,5 @@
         </plugins>
       </build>
     </profile>
-
-    <!-- Enable JaCoCo Test-->
-    <profile>
-      <id>jacoco</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>jacoco-unit-init</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <configuration>
-                  <propertyName>surefireArgLine</propertyName>
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-unit-report</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-it-init</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-                <configuration>
-                  <propertyName>failsafeArgLine</propertyName>
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-it-report</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <argLine>${surefireArgLine}</argLine>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <configuration>
-              <argLine>${failsafeArgLine}</argLine>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
   </profiles>
 </project>
