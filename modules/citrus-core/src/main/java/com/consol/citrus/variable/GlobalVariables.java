@@ -21,16 +21,14 @@ import java.util.Map;
 
 /**
  * Global variables valid in each test case.
- * 
- * @author Christoph Deppisch
  */
 public class GlobalVariables {
     /** Bean name in Spring application context */
     public static final String BEAN_NAME = "globalVariables";
 
     /** Variables name value pair map */
-    private Map<String, Object> variables = new LinkedHashMap<String, Object>();
-	
+    private Map<String, Object> variables = new LinkedHashMap<>();
+
 	/**
 	 * Set the global variables.
 	 * @param variables the variables to set

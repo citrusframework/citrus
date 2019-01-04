@@ -71,6 +71,10 @@
   
     <citrus:global-variables>
         <citrus:variable name="project.name" value="Citrus Integration Testing"/>
+        <citrus:variable name="globalRandomNumber1" value="citrus:randomNumber(5)"/>
+        <citrus:variable name="globalRandomNumber2" value="citrus:randomNumber(5)"/>
+        <citrus:variable name="globalSum1" value="citrus:sum('${globalRandomNumber1}', '${globalRandomNumber2}')"/>
+        <citrus:variable name="globalSum2" value="citrus:sum('${globalRandomNumber1}', '${globalRandomNumber2}')"/>
         <citrus:file path="classpath:citrus-variable.properties"/>
     </citrus:global-variables>
 

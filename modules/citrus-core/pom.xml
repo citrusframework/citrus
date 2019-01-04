@@ -210,6 +210,11 @@
       <optional>true</optional>
     </dependency>
 
+    <dependency>
+      <groupId>org.javatuples</groupId>
+      <artifactId>javatuples</artifactId>
+    </dependency>
+
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.hsqldb</groupId>
