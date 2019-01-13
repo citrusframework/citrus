@@ -71,8 +71,11 @@ public class GlobalVariablesPropertyLoader implements InitializingBean {
 
                     // local context instance handling variable replacement in property values
                     TestContext context = new TestContext();
-                    context.setGlobalVariables(globalVariables);
+
+                    // Careful!! The function registry *must* be set before setting the global variables.
+                    // Variables can contain functions which are resolved when context.setGlobalVariables is invoked.
                     context.setFunctionRegistry(functionRegistry);
+                    context.setGlobalVariables(globalVariables);
 
                     String propertyExpression;
                     while ((propertyExpression = reader.readLine()) != null) {

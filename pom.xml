@@ -153,6 +153,7 @@
     <spring.restdocs.version>2.0.1.RELEASE</spring.restdocs.version>
     <kafka.version>2.0.0</kafka.version>
     <apache.camel.version>2.21.1</apache.camel.version>
+    <javatuples.version>1.2</javatuples.version>
     <activemq.version>5.15.4</activemq.version>
     <vertx.version>3.5.4</vertx.version>
     <groovy.version>2.5.0</groovy.version>
@@ -162,7 +163,7 @@
     <junit.jupiter.version>5.2.0</junit.jupiter.version>
     <slf4j.version>1.7.25</slf4j.version>
     <jaxb.version>2.3.0</jaxb.version>
-    <jackson.version>2.9.6</jackson.version>
+    <jackson.version>2.9.8</jackson.version>
     <arquillian.version>1.4.0.Final</arquillian.version>
     <cucumber.version>3.0.2</cucumber.version>
     <zookeeper.version>3.4.12</zookeeper.version>
@@ -818,6 +819,12 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>org.javatuples</groupId>
+        <artifactId>javatuples</artifactId>
+        <version>${javatuples.version}</version>
+      </dependency>
+
       <!-- Test scoped dependencies -->
       <dependency>
         <groupId>org.springframework.integration</groupId>
@@ -1157,16 +1164,6 @@
           <version>1.9.5</version>
         </plugin>
 
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.5.0.1254</version>
-        </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.7.9</version>
-        </plugin>
       </plugins>
     </pluginManagement>
 
