@@ -42,4 +42,36 @@ public class HttpCookieIT extends TestNGCitrusTestRunner{
                 .cookie(aCookie)
                 .cookie(bCookie));
     }
+
+    @Test
+    @CitrusTest
+    public void testClientProcessesReceivedCookiesCorrectly(){
+
+        //GIVEN
+        final Cookie loginCookie = new Cookie("JSESSIONID", "asd");
+
+        http(http -> http
+                .client(httpClient)
+                .send()
+                .get()
+                .fork(true));
+
+        http(http -> http
+                .server(httpServer)
+                .receive()
+                .get());
+
+
+        //WHEN
+        http(http -> http
+                .server(httpServer)
+                .respond()
+                .cookie(loginCookie));
+
+        //THEN
+        http(http -> http.client(httpClient)
+                .receive()
+                .response()
+                .cookie(loginCookie));
+    }
 }
