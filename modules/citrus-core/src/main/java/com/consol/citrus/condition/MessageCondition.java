@@ -18,6 +18,8 @@ package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
 
+import java.util.Objects;
+
 /**
  * Condition checks whether a message is present in test context message store. Messages are automatically
  * stored in that store when sending and receiving messages with respective test actions. So this condition
@@ -64,5 +66,18 @@ public class MessageCondition extends AbstractCondition {
      */
     public String getMessageName() {
         return messageName;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageCondition that = (MessageCondition) o;
+        return Objects.equals(messageName, that.messageName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageName);
     }
 }
