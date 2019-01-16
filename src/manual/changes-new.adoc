@@ -12,6 +12,7 @@ We have the following features included in the box.
 * https://github.com/citrusframework/citrus/issues/561[#561 - Lost cookie entries except the last one]
 * https://github.com/citrusframework/citrus/issues/535[#535 - Inconsistent values of global variables]
 * https://github.com/citrusframework/citrus/issues/569[#569 - duplicated cookie entries in http request]
+* https://github.com/citrusframework/citrus/issues/455[#455 - Cookies are not recognized by HTTP client]
 
 [[fixed-breaking-changes-2-7-9]]
 === Fixed breaking changes
@@ -27,6 +28,11 @@ downwards compatibility are marked as `@Deprecated` and will be removed with the
 * https://github.com/citrusframework/citrus/issues/558[#558 - Breaking change in waitFor().file(File) public API]
 * https://github.com/citrusframework/citrus/issues/551[#551 - Breaking change in selenium().browser().type() public API]
 * https://github.com/citrusframework/citrus/issues/556[#556 - Breaking change in waitFor().message() public API]
+* https://github.com/citrusframework/citrus/issues/553[#553 - Scp client builder does not offer autoReadFiles anymore]
+
+[[changes-security-2-7-9]]
+=== Security fixes
+* https://github.com/citrusframework/citrus/issues/584[#584 - Update com.fasterxml.jackson.core:jackson-databind to version 2.9.8 or later]
 
 [[changes-2-7-8]]
 == Since Citrus 2.7.8
