@@ -202,7 +202,9 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
      *
      * @param milliseconds The milliseconds to wait
      * @return The altered WaitBuilder
+     * @deprecated in favor of {@link #milliseconds(String)}
      */
+    @Deprecated
     public WaitBuilder ms(String milliseconds) {
         return milliseconds(milliseconds);
     }
@@ -212,7 +214,9 @@ public class WaitBuilder extends AbstractTestContainerBuilder<Wait> {
      *
      * @param milliseconds The milliseconds to wait
      * @return The altered WaitBuilder
+     * @deprecated in favor of {@link #milliseconds(Long)}
      */
+    @Deprecated
     public WaitBuilder ms(Long milliseconds) {
         return milliseconds(milliseconds);
     }
