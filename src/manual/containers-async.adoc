@@ -2,7 +2,7 @@
 == Async
 
 Now we deal with parallel execution of test actions. Nested actions inside an async container are executed in a separate
-thread. This has the effect that the test execution is not blocked until the nested actions have performed.
+thread. This allows to continue test execution without having to wait for actions inside the async container to complete.
 The test immediately continues with the next test actions in place the will be executed in parallel to those actions in
 the async container.
 
