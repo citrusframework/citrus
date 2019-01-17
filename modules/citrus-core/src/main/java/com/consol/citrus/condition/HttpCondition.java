@@ -22,7 +22,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Objects;
 
 /**
  * Tests if a HTTP Endpoint is reachable. The test is successful if the endpoint responds with the expected response
@@ -170,5 +173,21 @@ public class HttpCondition extends AbstractCondition {
 
     public void setHttpResponseCode(String httpResponseCode) {
         this.httpResponseCode = httpResponseCode;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        HttpCondition that = (HttpCondition) o;
+        return Objects.equals(url, that.url) &&
+                Objects.equals(timeout, that.timeout) &&
+                Objects.equals(httpResponseCode, that.httpResponseCode) &&
+                Objects.equals(method, that.method);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(url, timeout, httpResponseCode, method);
     }
 }

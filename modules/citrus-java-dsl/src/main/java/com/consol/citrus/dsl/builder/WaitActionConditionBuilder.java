@@ -57,4 +57,8 @@ public class WaitActionConditionBuilder extends WaitConditionBuilder<ActionCondi
 
         return getBuilder().build();
     }
+
+    Wait getAction() {
+        return action;
+    }
 }

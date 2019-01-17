@@ -21,6 +21,7 @@ import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -126,5 +127,19 @@ public class ActionCondition extends AbstractCondition {
      */
     public void setCaughtException(Exception caughtException) {
         this.caughtException = caughtException;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ActionCondition that = (ActionCondition) o;
+        return Objects.equals(action, that.action) &&
+                Objects.equals(caughtException, that.caughtException);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(action, caughtException);
     }
 }

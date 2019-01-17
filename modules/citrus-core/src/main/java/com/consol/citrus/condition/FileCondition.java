@@ -21,7 +21,9 @@ import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Tests for the presence of a file and returns true if the file exists
@@ -108,5 +110,19 @@ public class FileCondition extends AbstractCondition {
      */
     public void setFile(File file) {
         this.file = file;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        FileCondition that = (FileCondition) o;
+        return Objects.equals(filePath, that.filePath) &&
+                Objects.equals(file, that.file);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(filePath, file);
     }
 }
