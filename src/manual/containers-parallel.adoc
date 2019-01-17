@@ -118,6 +118,6 @@ public void paralletTest() {
 }
 ----
 
-NOTE: Note that containers can easily wrap other containers. The example shows a simple combination of sequential and
+NOTE: Containers can easily wrap other containers. The example shows a simple combination of sequential and
 parallel containers that will archive a complex execution logic. Actions inside the sequential container will execute
 one after another. But actions in parallel will be executed at the same time.
