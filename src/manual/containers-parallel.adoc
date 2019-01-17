@@ -61,7 +61,7 @@ public void paralletTest() {
 
 By default, test actions are processed and executed one action after another. Since the first action is a sleep of
 five seconds, the whole test would stop and wait for 5 seconds. Things are different inside the parallel
-container. Here the descending test actions will not wait but execute at the same time.
+container. Here, the descending test actions will not wait, but execute at the same time.
 
 If you are using this container to send or receive messages, you have to use the unique correlation id of the
 message to link the actions concerning this message. Otherwise the testcase might associate a send or receive action
