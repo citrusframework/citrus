@@ -3,7 +3,7 @@
 
 Now we deal with parallel execution of test actions. Nested actions inside an async container are executed in a separate
 thread. This allows to continue test execution without having to wait for actions inside the async container to complete.
-The test immediately continues with the next test actions in place the will be executed in parallel to those actions in
+The test immediately continues to execute the next test actions, which will be executed in parallel to those actions inside
 the async container.
 
 This mechanism comes in handy when a test action should be forked to the rest of the test. In send operations we were
