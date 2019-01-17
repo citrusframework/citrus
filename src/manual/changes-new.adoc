@@ -11,6 +11,7 @@
 * https://github.com/citrusframework/citrus/issues/535[#535 - Inconsistent values of global variables]
 * https://github.com/citrusframework/citrus/issues/569[#569 - duplicated cookie entries in http request]
 * https://github.com/citrusframework/citrus/issues/455[#455 - Cookies are not recognized by HTTP client]
+* https://github.com/citrusframework/citrus/issues/562[#562 - maven plugin creates invalid testNG Citrus tests]
 
 [[fixed-breaking-changes-2-7-9]]
 === Fixed breaking changes
