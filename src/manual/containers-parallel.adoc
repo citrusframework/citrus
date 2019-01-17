@@ -1,7 +1,7 @@
 [[containers-parallel]]
 == Parallel
 
-Parallel containers execute the embedded test actions concurrent to each other. Every action in this container will be
+Parallel containers execute embedded test actions concurrently to each other. Every action in this container will be
 executed in a separate Java thread. The following example should clarify the usage:
 
 .XML DSL

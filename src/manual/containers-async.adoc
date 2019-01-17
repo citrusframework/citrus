@@ -7,8 +7,8 @@ The test immediately continues to execute the next test actions, which will be e
 the async container.
 
 This mechanism comes in handy when a test action should be forked to the rest of the test. In send operations we were
-able to do this before with the `fork="true"` option set. Now we can also use the async test action container with all
-kind of test actions nested.
+already able to achieve this by setting `fork="true"`. With async containers, we're able to execute all 
+kinds of test actions asynchronous.
 
 See some example to find out how it works.
 
@@ -87,7 +87,7 @@ The async container also supports success and error callback actions.
 </testcase>
 ----
 
-So you can add test actions that get executed based on the async test action outcome `success` or `error`.
+So you can add test actions which are executed based on the async test actions outcome `success` or `error`.
 
 If you are using this container to send or receive messages, you have to use the unique correlation id of the
 message to link the actions concerning this message. Otherwise the testcase might associate a send or receive action
