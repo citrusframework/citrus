@@ -89,13 +89,13 @@ The async container also supports success and error callback actions.
 
 So you can add test actions which are executed based on the async test actions outcome `success` or `error`.
 
-If you are using this container to send or receive messages, you have to use the unique correlation id of the
+If you are using this container to send or receive messages, you have to use the unique correlation ID of the
 message to link the actions concerning this message. Otherwise the testcase might associate a send or receive action
-with the wrong message. Please note that it is **not** required to pass this id through your system under test. The
-assignment of the `MessageHeaders.ID` is done internally. Only the mapping between the request and response has to be
-done by the author of the test. As you can see in the following example, the value of the header `MessageHeaders.ID` is
-stored in the variable `request#1` respectively `request#2`. This variable is reused in the receive action to identify
-the correct response from the server.
+with the wrong message. Please note that this ID is **not** passed to your system under test. The
+management of correlation IDs as well as the assignment to messages is done internally. Only the mapping
+between the request and response has to be done by the author of the test. As you can see in the following example, the
+value of the header `MessageHeaders.ID` is stored in the variable `request#1` respectively `request#2`. This variable is
+reused in the receive action to identify the correct response from the server.
 
 .Java DSL
 [source,java]
@@ -131,6 +131,7 @@ public void testAsync() {
                 .payload("{ \"info\": \"boo\"}")),
 
         //SUT echoing the input
+
         http(b -> b.client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
