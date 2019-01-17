@@ -130,6 +130,7 @@ public void testAsync() {
                 .extractFromHeader(MessageHeaders.ID, "request#2")
                 .payload("{ \"info\": \"boo\"}")),
 
+        //SUT echoing the input
         http(b -> b.client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
