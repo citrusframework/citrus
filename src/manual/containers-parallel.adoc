@@ -59,7 +59,7 @@ public void paralletTest() {
 }
 ----
 
-The normal test action processing would be to execute one action after another. As the first action is a sleep of
+By default, test actions are processed and executed one action after another. Since the first action is a sleep of
 five seconds, the whole test processing would stop and wait for 5 seconds. Things are different inside the parallel
 container. Here the descending test actions will not wait but execute at the same time.
 
