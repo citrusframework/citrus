@@ -17,6 +17,7 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
+import com.google.errorprone.annotations.Immutable;
 
 import java.util.Objects;
 
@@ -30,6 +31,7 @@ import java.util.Objects;
  * @author Christoph Deppisch
  * @since 2.6.2
  */
+@Immutable
 public class MessageCondition extends AbstractCondition {
 
     /** Message that should be present in message store */
@@ -53,7 +55,7 @@ public class MessageCondition extends AbstractCondition {
     /**
      * Sets the messageName property.
      *
-     * @param messageName
+     * @param messageName the message name to set
      */
     public void setMessageName(String messageName) {
         this.messageName = messageName;
@@ -69,15 +71,24 @@ public class MessageCondition extends AbstractCondition {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof MessageCondition)) return false;
         MessageCondition that = (MessageCondition) o;
-        return Objects.equals(messageName, that.messageName);
+        return  Objects.equals(getMessageName(), that.getMessageName()) &&
+                Objects.equals(getName(), that.getName());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(messageName);
+    public final int hashCode() {
+        return Objects.hash(getMessageName(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return "MessageCondition{" +
+                "messageName='" + messageName + '\'' +
+                ", name='" + getName() + '\'' +
+                '}';
     }
 }

@@ -18,6 +18,7 @@ package com.consol.citrus.condition;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
+import com.google.errorprone.annotations.Immutable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,6 +29,7 @@ import java.util.Optional;
  * @author Christoph Deppisch
  * @since 2.7.6
  */
+@Immutable
 public class ActionCondition extends AbstractCondition {
 
     /** Logger */
@@ -48,7 +50,7 @@ public class ActionCondition extends AbstractCondition {
 
     /**
      * Default constructor using test action to execute.
-     * @param action
+     * @param action The test action to execute
      */
     public ActionCondition(TestAction action) {
         this.action = action;
@@ -94,18 +96,18 @@ public class ActionCondition extends AbstractCondition {
     }
 
     /**
-     * Gets the action.
+     * Gets the test action of this condition
      *
-     * @return
+     * @return The test action
      */
     public TestAction getAction() {
         return action;
     }
 
     /**
-     * Sets the action.
+     * Sets the Action to set for this condition
      *
-     * @param action
+     * @param action The test action to set
      */
     public void setAction(TestAction action) {
         this.action = action;
@@ -114,7 +116,7 @@ public class ActionCondition extends AbstractCondition {
     /**
      * Gets the caughtException.
      *
-     * @return
+     * @return The exception
      */
     public Exception getCaughtException() {
         return caughtException;
@@ -123,23 +125,32 @@ public class ActionCondition extends AbstractCondition {
     /**
      * Sets the caughtException.
      *
-     * @param caughtException
+     * @param caughtException the exception to set
      */
     public void setCaughtException(Exception caughtException) {
         this.caughtException = caughtException;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof ActionCondition)) return false;
         ActionCondition that = (ActionCondition) o;
-        return Objects.equals(action, that.action) &&
-                Objects.equals(caughtException, that.caughtException);
+        return Objects.equals(getAction(), that.getAction()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getCaughtException(), that.getCaughtException());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(action, caughtException);
+    public final int hashCode() {
+        return Objects.hash(getAction(), getCaughtException(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return "ActionCondition{" +
+                "action=" + action +
+                ", caughtException=" + caughtException +
+                ", name=" + getName() +'}';
     }
 }

@@ -894,6 +894,18 @@
         <version>2.13.0</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>3.1.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.jparams</groupId>
+        <artifactId>to-string-verifier</artifactId>
+        <version>1.4.5</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -927,9 +939,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <scope>test</scope>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   
