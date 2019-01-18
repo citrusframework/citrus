@@ -38,7 +38,22 @@ public final class BooleanExpressionParser {
     /** List of known boolean values */
     private static final List<String> BOOLEAN_VALUES = new ArrayList<String>(
             CollectionUtils.arrayToList(new String[]{"true", "false"}));
-    
+
+    /**
+     * SeparatorToken is an explicit type to identify different kinds of separators.
+     */
+    private enum SeparatorToken {
+        SPACE(' '),
+        OPEN_PARENTHESIS('('),
+        CLOSE_PARENTHESIS(')');
+
+        private final char value;
+
+        SeparatorToken(final char value) {
+            this.value = value;
+        }
+    }
+
     /**
      * Logger
      */
