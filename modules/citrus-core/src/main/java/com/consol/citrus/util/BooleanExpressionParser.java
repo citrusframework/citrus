@@ -25,17 +25,21 @@ import java.util.*;
 
 /**
  * Parses boolean expression strings and evaluates to boolean result.
- * 
+ *
  * @author Christoph Deppisch
  */
 @SuppressWarnings("unchecked")
 public final class BooleanExpressionParser {
-    
-    /** List of known operators */
+
+    /**
+     * List of known operators
+     */
     private static final List<String> OPERATORS = new ArrayList<String>(
             CollectionUtils.arrayToList(new String[]{"=", "and", "or", "lt", "lt=", "gt", "gt="}));
 
-    /** List of known boolean values */
+    /**
+     * List of known boolean values
+     */
     private static final List<String> BOOLEAN_VALUES = new ArrayList<String>(
             CollectionUtils.arrayToList(new String[]{"true", "false"}));
 
@@ -64,24 +68,25 @@ public final class BooleanExpressionParser {
      */
     private BooleanExpressionParser() {
     }
-    
+
     /**
      * Perform evaluation of boolean expression string.
-     * @param expression
+     *
+     * @param expression The expression to evaluate
+     * @return boolean result
      * @throws CitrusRuntimeException
-     * @return
      */
-    public static boolean evaluate(String expression) {
-        Stack<String> operators = new Stack<String>();
-        Stack<String> values = new Stack<String>();
-        boolean result = true;
+    public static boolean evaluate(final String expression) {
+        final Stack<String> operators = new Stack<>();
+        final Stack<String> values = new Stack<>();
+        boolean result;
 
         char currentCharacter;
 
         try {
             for (int currentCharacterIndex = 0; currentCharacterIndex < expression.length(); currentCharacterIndex++) {
                 currentCharacter = expression.charAt(currentCharacterIndex);
-    
+
                 if (SeparatorToken.OPEN_PARENTHESIS.value == currentCharacter) {
                     operators.push(SeparatorToken.OPEN_PARENTHESIS.value.toString());
                 } else if (SeparatorToken.SPACE.value == currentCharacter) {
@@ -93,18 +98,18 @@ public final class BooleanExpressionParser {
                         operator = operators.pop();
                     }
                 } else if (!Character.isDigit(currentCharacter)) {
-                    StringBuffer operatorBuffer = new StringBuffer();
-    
+                    final StringBuffer operatorBuffer = new StringBuffer();
+
                     int subExpressionIndex = currentCharacterIndex;
                     do {
                         operatorBuffer.append(currentCharacter);
                         subExpressionIndex++;
-                        
+
                         if (subExpressionIndex < expression.length()) {
                             currentCharacter = expression.charAt(subExpressionIndex);
                         }
                     } while (subExpressionIndex < expression.length() && !Character.isDigit(currentCharacter) && !isSeparatorToken(currentCharacter));
-    
+
                     currentCharacterIndex = subExpressionIndex - 1;
 
                     if (BOOLEAN_VALUES.contains(operatorBuffer.toString())) {
@@ -113,28 +118,28 @@ public final class BooleanExpressionParser {
                         operators.push(validateOperator(operatorBuffer.toString()));
                     }
                 } else if (Character.isDigit(currentCharacter)) {
-                    StringBuffer digitBuffer = new StringBuffer();
-    
+                    final StringBuffer digitBuffer = new StringBuffer();
+
                     int subExpressionIndex = currentCharacterIndex;
                     do {
                         digitBuffer.append(currentCharacter);
                         subExpressionIndex++;
-                        
+
                         if (subExpressionIndex < expression.length()) {
                             currentCharacter = expression.charAt(subExpressionIndex);
                         }
                     } while (subExpressionIndex < expression.length() && Character.isDigit(currentCharacter));
-    
+
                     currentCharacterIndex = subExpressionIndex - 1;
-    
+
                     values.push(digitBuffer.toString());
                 }
             }
-    
+
             while (!operators.isEmpty()) {
                 values.push(getBooleanResultAsString(operators.pop(), values.pop(), values.pop()));
             }
-    
+
             String value = values.pop();
 
             if (value.equals("0")) {
@@ -143,12 +148,12 @@ public final class BooleanExpressionParser {
                 value = "true";
             }
 
-            result = Boolean.valueOf(value).booleanValue();
-    
+            result = Boolean.valueOf(value);
+
             if (log.isDebugEnabled()) {
                 log.debug("Boolean expression " + expression + " evaluates to " + result);
             }
-        } catch(EmptyStackException e) {
+        } catch (final EmptyStackException e) {
             throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);
         }
 
@@ -157,6 +162,7 @@ public final class BooleanExpressionParser {
 
     /**
      * Checks whether a given character is a known separator token or no
+     *
      * @param possibleSeparatorChar The character to check
      * @return True in case its a separator, false otherwise
      */
@@ -168,14 +174,15 @@ public final class BooleanExpressionParser {
         }
         return false;
     }
-    
+
     /**
      * Check if operator is known to this class.
+     *
      * @param operator to validate
      * @return the operator itself.
      * @throws CitrusRuntimeException
      */
-    private static String validateOperator(String operator) {
+    private static String validateOperator(final String operator) {
         if (!OPERATORS.contains(operator)) {
             throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
@@ -185,9 +192,9 @@ public final class BooleanExpressionParser {
     /**
      * Evaluates a boolean expression to a String representation (true/false).
      *
-     * @param operator The operator to apply on operands
+     * @param operator     The operator to apply on operands
      * @param rightOperand The right hand side of the expression
-     * @param leftOperand The left hand side of the expression
+     * @param leftOperand  The left hand side of the expression
      * @return true/false as String
      */
     private static String getBooleanResultAsString(final String operator, final String rightOperand, final String leftOperand) {
