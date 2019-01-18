@@ -76,56 +76,56 @@ public final class BooleanExpressionParser {
         Stack<String> values = new Stack<String>();
         boolean result = true;
 
-        char actChar;
+        char currentCharacter;
 
         try {
-            for (int i = 0; i < expression.length(); i++) {
-                actChar = expression.charAt(i);
+            for (int currentCharacterIndex = 0; currentCharacterIndex < expression.length(); currentCharacterIndex++) {
+                currentCharacter = expression.charAt(currentCharacterIndex);
     
-                if (SeparatorToken.OPEN_PARENTHESIS.value == actChar) {
+                if (SeparatorToken.OPEN_PARENTHESIS.value == currentCharacter) {
                     operators.push(SeparatorToken.OPEN_PARENTHESIS.value.toString());
-                } else if (SeparatorToken.SPACE.value == actChar) {
+                } else if (SeparatorToken.SPACE.value == currentCharacter) {
                     continue; //ignore
-                } else if (SeparatorToken.CLOSE_PARENTHESIS.value == actChar) {
+                } else if (SeparatorToken.CLOSE_PARENTHESIS.value == currentCharacter) {
                     String operator = operators.pop();
                     while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
                         values.push(getBooleanResultAsString(operator, values.pop(), values.pop()));
                         operator = operators.pop();
                     }
-                } else if (!Character.isDigit(actChar)) {
+                } else if (!Character.isDigit(currentCharacter)) {
                     StringBuffer operatorBuffer = new StringBuffer();
     
-                    int m = i;
+                    int subExpressionIndex = currentCharacterIndex;
                     do {
-                        operatorBuffer.append(actChar);
-                        m++;
+                        operatorBuffer.append(currentCharacter);
+                        subExpressionIndex++;
                         
-                        if (m < expression.length()) {
-                            actChar = expression.charAt(m);
+                        if (subExpressionIndex < expression.length()) {
+                            currentCharacter = expression.charAt(subExpressionIndex);
                         }
-                    } while (m < expression.length() && !Character.isDigit(actChar) && !isSeparatorToken(actChar));
+                    } while (subExpressionIndex < expression.length() && !Character.isDigit(currentCharacter) && !isSeparatorToken(currentCharacter));
     
-                    i = m - 1;
+                    currentCharacterIndex = subExpressionIndex - 1;
 
                     if (BOOLEAN_VALUES.contains(operatorBuffer.toString())) {
                         values.push(Boolean.valueOf(operatorBuffer.toString()) ? "1" : "0");
                     } else {
                         operators.push(validateOperator(operatorBuffer.toString()));
                     }
-                } else if (Character.isDigit(actChar)) {
+                } else if (Character.isDigit(currentCharacter)) {
                     StringBuffer digitBuffer = new StringBuffer();
     
-                    int m = i;
+                    int subExpressionIndex = currentCharacterIndex;
                     do {
-                        digitBuffer.append(actChar);
-                        m++;
+                        digitBuffer.append(currentCharacter);
+                        subExpressionIndex++;
                         
-                        if (m < expression.length()) {
-                            actChar = expression.charAt(m);
+                        if (subExpressionIndex < expression.length()) {
+                            currentCharacter = expression.charAt(subExpressionIndex);
                         }
-                    } while (m < expression.length() && Character.isDigit(actChar));
+                    } while (subExpressionIndex < expression.length() && Character.isDigit(currentCharacter));
     
-                    i = m - 1;
+                    currentCharacterIndex = subExpressionIndex - 1;
     
                     values.push(digitBuffer.toString());
                 }
