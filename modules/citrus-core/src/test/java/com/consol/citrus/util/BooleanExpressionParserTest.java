@@ -48,6 +48,10 @@ public class BooleanExpressionParserTest {
         Assert.assertFalse(BooleanExpressionParser.evaluate("(1 lt 1) and (2 gt 2)"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 3)"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 lt 1)"));
+    }
+
+    @Test
+    public void testExpressionParserWithStringValues() {
         Assert.assertTrue(BooleanExpressionParser.evaluate("true"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("true = true"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("false = false"));
@@ -56,6 +60,14 @@ public class BooleanExpressionParserTest {
         Assert.assertFalse(BooleanExpressionParser.evaluate("false = true"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("( false = false ) and ( true = true )"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("( false = false ) and ( true = false )"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) and (true = true)"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("(false = false) and (true = false)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(   false = false) and (true = true    )"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("(false = false    ) and     (    true = false)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("( true = false ) or ( false = false )"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = true)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = false)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false    ) or (    true = false)"));
     }
     
     @Test
