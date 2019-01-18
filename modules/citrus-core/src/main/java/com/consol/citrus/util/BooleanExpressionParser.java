@@ -47,9 +47,9 @@ public final class BooleanExpressionParser {
         OPEN_PARENTHESIS('('),
         CLOSE_PARENTHESIS(')');
 
-        private final char value;
+        private final Character value;
 
-        SeparatorToken(final char value) {
+        SeparatorToken(final Character value) {
             this.value = value;
         }
     }
@@ -82,13 +82,13 @@ public final class BooleanExpressionParser {
             for (int i = 0; i < expression.length(); i++) {
                 actChar = expression.charAt(i);
     
-                if (actChar == '(') {
-                    operators.push("(");
-                } else if (actChar == ' ') {
+                if (SeparatorToken.OPEN_PARENTHESIS.value == actChar) {
+                    operators.push(SeparatorToken.OPEN_PARENTHESIS.value.toString());
+                } else if (SeparatorToken.SPACE.value == actChar) {
                     continue; //ignore
-                } else if (actChar == ')') {
+                } else if (SeparatorToken.CLOSE_PARENTHESIS.value == actChar) {
                     String operator = operators.pop();
-                    while (!(operator).equals("(")) {
+                    while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
                         values.push(getBooleanResultAsString(operator, values.pop(), values.pop()));
                         operator = operators.pop();
                     }
@@ -103,7 +103,7 @@ public final class BooleanExpressionParser {
                         if (m < expression.length()) {
                             actChar = expression.charAt(m);
                         }
-                    } while (m < expression.length() && !Character.isDigit(actChar) && !(actChar == ' ') && !(actChar == '('));
+                    } while (m < expression.length() && !Character.isDigit(actChar) && !isSeparatorToken(actChar));
     
                     i = m - 1;
 
@@ -153,6 +153,20 @@ public final class BooleanExpressionParser {
         }
 
         return result;
+    }
+
+    /**
+     * Checks whether a given character is a known separator token or no
+     * @param possibleSeparatorChar The character to check
+     * @return True in case its a separator, false otherwise
+     */
+    private static boolean isSeparatorToken(final char possibleSeparatorChar) {
+        for (final SeparatorToken token : SeparatorToken.values()) {
+            if (token.value == possibleSeparatorChar) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**
