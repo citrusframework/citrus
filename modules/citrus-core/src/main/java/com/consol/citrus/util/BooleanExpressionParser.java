@@ -184,28 +184,30 @@ public final class BooleanExpressionParser {
 
     /**
      * Evaluates a boolean expression to a String representation (true/false).
-     * @param operator
-     * @param value1
-     * @param value2
+     *
+     * @param operator The operator to apply on operands
+     * @param rightOperand The right hand side of the expression
+     * @param leftOperand The left hand side of the expression
      * @return true/false as String
      */
-    private static String getBooleanResultAsString(String operator, String value1, String value2) {
-        if (operator.equals("lt")) {
-            return Boolean.valueOf(Integer.valueOf(value2).intValue() < Integer.valueOf(value1).intValue()).toString();
-        } else if (operator.equals("lt=")) {
-            return Boolean.valueOf(Integer.valueOf(value2).intValue() <= Integer.valueOf(value1).intValue()).toString();
-        } else if (operator.equals("gt")) {
-            return Boolean.valueOf(Integer.valueOf(value2).intValue() > Integer.valueOf(value1).intValue()).toString();
-        } else if (operator.equals("gt=")) {
-            return Boolean.valueOf(Integer.valueOf(value2).intValue() >= Integer.valueOf(value1).intValue()).toString();
-        } else if (operator.equals("=")) {
-            return Boolean.valueOf(Integer.valueOf(value2).intValue() == Integer.valueOf(value1).intValue()).toString();
-        } else if (operator.equals("and")) {
-            return Boolean.valueOf(Boolean.valueOf(value2).booleanValue() && Boolean.valueOf(value1).booleanValue()).toString();
-        } else if (operator.equals("or")) {
-            return Boolean.valueOf(Boolean.valueOf(value2).booleanValue() || Boolean.valueOf(value1).booleanValue()).toString();
-        } else {
-            throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
+    private static String getBooleanResultAsString(final String operator, final String rightOperand, final String leftOperand) {
+        switch (operator) {
+            case "lt":
+                return Boolean.valueOf(Integer.valueOf(leftOperand) < Integer.valueOf(rightOperand)).toString();
+            case "lt=":
+                return Boolean.valueOf(Integer.valueOf(leftOperand) <= Integer.valueOf(rightOperand)).toString();
+            case "gt":
+                return Boolean.valueOf(Integer.valueOf(leftOperand) > Integer.valueOf(rightOperand)).toString();
+            case "gt=":
+                return Boolean.valueOf(Integer.valueOf(leftOperand) >= Integer.valueOf(rightOperand)).toString();
+            case "=":
+                return Boolean.valueOf(Integer.valueOf(leftOperand).intValue() == Integer.valueOf(rightOperand).intValue()).toString();
+            case "and":
+                return Boolean.valueOf(Boolean.valueOf(leftOperand) && Boolean.valueOf(rightOperand)).toString();
+            case "or":
+                return Boolean.valueOf(Boolean.valueOf(leftOperand) || Boolean.valueOf(rightOperand)).toString();
+            default:
+                throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
     }
 }
