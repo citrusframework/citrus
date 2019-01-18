@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
+       xmlns:citrus-kafka="http://www.citrusframework.org/schema/kafka/config"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                         http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                         http://www.citrusframework.org/schema/kafka/config http://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties"
+                                ignore-unresolvable="true"/>
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Kafka Integration Testing"/>
+  </citrus:global-variables>
+
+  <!-- Xsd schema resources and definitions -->
+  <citrus:schema id="helloSchema" location="classpath:schemas/HelloService.xsd" />
+
+  <citrus:schema-repository id="helloSchemaRepository">
+    <citrus:schemas>
+      <citrus:reference schema="helloSchema" />
+    </citrus:schemas>
+  </citrus:schema-repository>
+
+  <!-- Default namespace mappings used in XPath expression evaluations -->
+  <citrus:namespace-context>
+    <citrus:namespace prefix="hs" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+  </citrus:namespace-context>
+
+  <citrus:before-test id="purgeTopics">
+    <citrus:actions>
+      <citrus-test:purge-endpoint>
+        <citrus-test:endpoint name="helloKafkaEndpoint"/>
+      </citrus-test:purge-endpoint>
+    </citrus:actions>
+  </citrus:before-test>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <!-- Embedded Kafka server with embedded Zookeeper -->
+  <citrus-kafka:embedded-server id="embeddedKafkaServer"
+                                topics="hello,test"/>
+
+  <!-- Kafka endpoints -->
+  <citrus-kafka:endpoint id="helloKafkaEndpoint"
+                         topic="hello"
+                         server="localhost:9092"/>
+
+</beans>

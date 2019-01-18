@@ -117,6 +117,8 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
                                     try {
                                         return MediaType.valueOf(mediaType[0]);
                                     } catch (InvalidMediaTypeException e) {
+                                        log.warn(String.format("Failed to parse accept media type '%s' - using default media type '%s'",
+                                                mediaType[0], MediaType.ALL_VALUE), e);
                                         return MediaType.ALL;
                                     }
                                 })

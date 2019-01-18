@@ -59,7 +59,7 @@ public abstract class AbstractTestActionBuilder<T extends TestAction> implements
 
     /**
      * Gets the action.
-     * @return the action the action to get.
+     * @return the action to get.
      */
     public T build() {
         return action;

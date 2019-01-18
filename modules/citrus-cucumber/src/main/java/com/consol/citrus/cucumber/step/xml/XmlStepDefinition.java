@@ -18,10 +18,10 @@ package com.consol.citrus.cucumber.step.xml;
 
 import com.consol.citrus.cucumber.container.StepTemplate;
 import cucumber.api.java.ObjectFactory;
-import cucumber.runtime.*;
+import cucumber.runtime.StepDefinition;
 import gherkin.pickles.PickleStep;
+import io.cucumber.stepexpression.*;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 /**
@@ -31,24 +31,22 @@ import java.util.List;
  */
 public class XmlStepDefinition implements StepDefinition {
 
-    private final JdkPatternArgumentMatcher argumentMatcher;
-    private final List<ParameterInfo> parameters;
+    private final ExpressionArgumentMatcher argumentMatcher;
 
     private final ObjectFactory objectFactory;
 
     private final StepTemplate stepTemplate;
 
-    public XmlStepDefinition(StepTemplate stepTemplate, ObjectFactory objectFactory) {
+    public XmlStepDefinition(StepTemplate stepTemplate, ObjectFactory objectFactory, TypeRegistry typeRegistry) {
         this.objectFactory = objectFactory;
         this.stepTemplate = stepTemplate;
 
-        this.argumentMatcher = new JdkPatternArgumentMatcher(stepTemplate.getPattern());
-        this.parameters = ParameterInfo.fromTypes(stepTemplate.getParameterTypes());
+        this.argumentMatcher = new ExpressionArgumentMatcher(new StepExpressionFactory(typeRegistry).createExpression(stepTemplate.getPattern().pattern()));
     }
 
     @Override
     public List<Argument> matchedArguments(PickleStep step) {
-        return argumentMatcher.argumentsFrom(step.getText());
+        return argumentMatcher.argumentsFrom(step);
     }
 
     @Override
@@ -58,12 +56,7 @@ public class XmlStepDefinition implements StepDefinition {
 
     @Override
     public Integer getParameterCount() {
-        return parameters.size();
-    }
-
-    @Override
-    public ParameterInfo getParameterType(int n, Type argumentType) throws IndexOutOfBoundsException {
-        return parameters.get(n);
+        return stepTemplate.getParameterTypes().length;
     }
 
     @Override

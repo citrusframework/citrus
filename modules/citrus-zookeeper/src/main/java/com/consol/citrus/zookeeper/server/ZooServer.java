@@ -41,7 +41,7 @@ public class ZooServer extends AbstractServer {
         try {
             getServerFactory().startup(getZooKeeperServer());
         } catch (InterruptedException | IOException e) {
-            throw new CitrusRuntimeException("Failed to start zoo keeper server", e);
+            throw new CitrusRuntimeException("Failed to start zookeeper server", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class ZooServer extends AbstractServer {
                 serverFactory = new NIOServerCnxnFactory();
                 serverFactory.configure(new InetSocketAddress(port), 5000);
             } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to create default server factory", e);
+                throw new CitrusRuntimeException("Failed to create default zookeeper server factory", e);
             }
         }
 
@@ -89,7 +89,7 @@ public class ZooServer extends AbstractServer {
             try {
                 zooKeeperServer = new ZooKeeperServer(dir, dir, 2000);
             } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to create default zoo keepers server", e);
+                throw new CitrusRuntimeException("Failed to create default zookeeper server", e);
             }
         }
 

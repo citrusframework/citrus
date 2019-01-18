@@ -1,0 +1,496 @@
+[[kafka]]
+= Apache Kafka support
+
+Kafka is a distributed streaming platform that enables you to publish and subscribe to streams of records, similar to a message queue or enterprise messaging system. Citrus provides support for sending/receiving records to/from a Kafka topic. Citrus
+acts as producer or consumer where the Citrus Kafka endpoint can be used bidirectional. In the current version Citrus supports asynchronous communication. Synchronous communication is about to be added, too.
+
+NOTE: The Kafka components in Citrus are kept in a separate Maven module. If not already done so you have to include the module as Maven dependency to your project
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-kafka</artifactId>
+  <version>2.8.0-SNAPSHOT</version>
+</dependency>
+----
+
+Citrus provides a "citrus-kafka" configuration namespace and schema definition for Kafka related components and features. Include this namespace into your Spring XML configuration in order to use the Citrus Kafka configuration elements. The namespace URI and
+schema location are added to the Spring bean root element.
+
+[source,xml]
+----
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus-kafka="http://www.citrusframework.org/schema/kafka/config"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.citrusframework.org/schema/kafka/config
+       http://www.citrusframework.org/schema/kafka/config/citrus-kafka-config.xsd">
+       
+    [...]
+    
+</beans>
+----
+
+After that you are able to use customized Citrus XML elements in order to define the Spring beans. In case you are using the Spring Java configuration with `@Bean` annotations you do not need this at all.
+
+[[kafka-endpoint]]
+== Kafka endpoint
+
+By default Citrus Kafka endpoints are asynchronous. So let us first of all deal with asynchronous messaging which means that we will not wait for any response message after sending or receiving a message.
+
+The endpoint component configuration holds transport specific configuration details such as topic names and server connectivity settings. The endpoint uses the `citrus-kafka` XML configuation namespace and is added to the
+basic Spring configuration file in Citrus. So let us have a look at a simple Kafka message endpoint configuration in Citrus.
+
+.Java config
+[source,java]
+----
+@Bean
+public KafkaEndpoint helloKafkaEndpoint() {
+    return CitrusEndpoints.kafka()
+                          .topic("hello")
+                          .server("localhost:9092")
+                          .build();
+}
+----
+
+.XML config
+[source,xml]
+----
+<citrus-kafka:endpoint id="helloKafkaEndpoint"
+          topic="hello"
+          server="localhost:9092"/>
+----
+
+The endpoint component receives an unique id and a Kafka topic name. The server url that points to the Kafka message broker completes our first Kafka endpoint component definition. With this configuration you will be able to send and
+receive records on the given topic.
+
+By default the endpoint uses the topic partition `0`. The consumer on this endpoint is automatically added to a consumer group `citrus_kafka_group`. You can customize these settings on the endpoint.
+
+.Java config
+[source,java]
+----
+@Bean
+public KafkaEndpoint helloKafkaEndpoint() {
+    return CitrusEndpoints.kafka()
+                          .topic("hello")
+                          .server("localhost:9092")
+                          .partition(1)
+                          .consumerGroup("citrus_group")
+                          .build();
+}
+----
+
+.XML config
+[source,xml]
+----
+<citrus-kafka:endpoint id="helloKafkaEndpoint"
+          topic="hello"
+          server="localhost:9092"
+          partition="1"
+          consumer-group="citrus_group"/>
+----
+
+The endpoint is now ready to be used inside a test case. Inside a test case you can send or receive messages using this endpoint. The test actions can reference the Kafka endpoint using its identifier.
+
+When sending a message the message endpoint creates a Kafka producer and will simply publish the records to the defined Kafka topic. As the communication is asynchronous by default producer does not wait for a synchronous response.
+When receiving a messages the endpoint creates a Kafka consumer instance in the defined consumer group. The consumer starts a subscription on the given topic and acts as a polling listener. This means that the message consumer connects
+to the given topic and polls for records. Once a record is received it is ready to go through the validation process defined in the test case.
+
+NOTE: By default the consumer will poll for a single record per receive operation (`max.poll.records=1`). You can change this setting within the consumer properties on the Citrus Kafka endpoint. The property `max.poll.records` that sets the
+number of records in a single poll.
+
+[[kafka-endpoint-configuration]]
+=== Configuration
+
+The following table shows all available settings on a Kafka endpoint in Citrus:
+
+[cols="2,2,2,5a"]
+|===
+| Property | Mandatory | Default | Description
+
+| id
+| Yes
+| -
+| Identifying name of the endpoint. Only required for XML configuration.
+
+| topic
+| No
+| -
+| Default topic to use with this endpoint. Multiple topics are supported by using a comma delimited list of names (e.g. `topic1,topic2,topicN`).
+  If not specified the test case send operation needs to set the topic as message header information.
+
+| server
+| No
+| localhost:9092
+| A comma delimited list of host/port pairs to use for establishing the initial connection to the Kafka cluster. Usually it is only required to connect to one Kafka server instance in the cluster.
+  Kafka then makes sure that the endpoint is automatically introduced to all other servers in the cluster. This list only impacts the initial hosts used to discover the full set of servers.
+
+| timeout
+| No
+| 5000
+| Timeout in milliseconds. For producers the timeout is set as time to wait for the message to be accepted by the cluster. For consumers the timeout is used for polling records on a specific topic.
+
+| message-converter
+| No
+| `com.consol.citrus.kafka.message.KafkaMessageConverter`
+| Converter maps internal Citrus message objects to ProducerRecord/ConsumerRecord objects. The converter implementation takes care on message key, value, timestamp and special message headers.
+
+| header-mapper
+| No
+| `com.consol.citrus.kafka.message.KafkaMessageHeaderMapper`
+| Header mapper maps Kafka record information (e.g. topic name, timestamp, message key) to internal message headers (`com.consol.citrus.kafka.message.KafkaMessageHeaders`) and vice versa.
+
+| auto-commit
+| No
+| true
+| When this setting is enabled the consumer will automatically commit consumed records so the offset pointer on the Kafka topic is set to the next record.
+
+| auto-commit-interval
+| No
+| 1000
+| Interval in milliseconds the auto commit operation on consumed records is performed.
+
+| offset-reset
+| No
+| earliest
+| When consuming records from a topic partition and the current offset does not exist on that partition Kafka will automatically seek to a valid offset position on that partition.
+  The `offset-reset` setting where to find the new position (latest, earliest, none). If `none` is set the consumer will receive an exception instead of resetting the offset to a valid position.
+  
+| partition
+| No
+| 0
+| Partition id that the consumer will be assigned to.
+
+| consumer-group
+| No
+| citrus_kafka_group
+| Consumer group name. Please keep in mind that records are load balanced across consumer instances with the same consumer group name set. So you might run into message timeouts when using multiple
+  Kafka endpoints with the same consumer group name.
+
+| key-serializer
+| No
+| org.apache.kafka.common.serialization.StringSerializer
+| Serializer implementation that converts message key values. By default keys are serialized to String values.
+
+| key-deserializer
+| No
+| org.apache.kafka.common.serialization.StringDeserializer
+| Deserializer implementation that converts message key values. By default keys are deserialized as String values.
+
+| value-serializer
+| No
+| org.apache.kafka.common.serialization.StringSerializer
+| Serializer implementation that converts record values. By default values are serialized to String values.
+
+| value-deserializer
+| No
+| org.apache.kafka.common.serialization.StringDeserializer
+| Deserializer implementation that converts record values. By default values are deserialized as String values.
+
+| client-id
+| No
+| citrus_kafka_[producer/consumer]_{randomUUID}
+| An id string to pass to the server when producing/consuming records. Used as logical application name to be included in server-side request logging.
+
+| consumer-properties
+| No
+| -
+| Map of consumer property settings to apply to the Kafka consumer configuration. This enables you to overwrite any consumer setting with respective property key value pairs.
+
+| producer-properties
+| No
+| -
+| Map of producer property settings to apply to the Kafka producer configuration. This enables you to overwrite any producer setting with respective property key value pairs.
+
+|===
+
+[[kafka-endpoint-properties]]
+=== Custom producer/consumer properties
+
+Besides using the predefined endpoint properties in configuration the Citrus Kafka endpoint component is also able to receive a map of Kafka producer and consumer properties. These property settings overwrite
+any predefined setting on the producer/consumer instance created by the endpoint. You can use the Kafka property keys with respective values for producer and consumer config maps.
+
+.Java config
+[source,java]
+----
+@Bean
+public KafkaEndpoint helloKafkaEndpoint() {
+    return CitrusEndpoints.kafka()
+                          .consumerProperties(getConsumerProps())
+                          .producerProperties(getProducerProps())
+                          .build();
+}
+
+private Map<String, Object> getProducerProps() {
+    ...
+}
+
+private Map<String, Object> getConsumerProps() {
+    ...
+}
+----
+
+.XML config
+[source,xml]
+----
+<citrus-kafka:endpoint id="helloKafkaEndpoint"
+                               consumer-properties="consumerProps"
+                               producer-properties="producerProps"/>
+
+
+<util:map id="producerProps">
+  <entry key="bootstrap.servers" value="localhost:9093,localhost:9094"/>
+  <entry key="retries" value="10" value-type="java.lang.Integer"/>
+  <entry key="max.request.size" value="1024" value-type="java.lang.Integer"/>
+  <entry key="ssl.keystore.location" value="/path/to/keystore.jks"/>
+  <entry key="ssl.kestore.password" value="secr3t"/>
+</util:map>
+
+<util:map id="consumerProps">
+  <entry key="bootstrap.servers" value="localhost:9093,localhost:9094"/>
+  <entry key="session.timeout.ms" value="10000" value-type="java.lang.Integer"/>
+  <entry key="enable.auto.commit" value="true" value-type="java.lang.Boolean"/>
+  <entry key="ssl.truststore.location" value="/path/to/truststore.jks"/>
+  <entry key="ssl.truststore.password" value="secr3t"/>
+</util:map>
+
+----
+
+[[kafka-synchronous-endpoints]]
+== Kafka synchronous endpoints
+
+To be defined, soon.
+
+[[kafka-message-headers]]
+== Kafka message headers
+
+The Kafka Citrus integration defines a set of special message header entries that are either used to manipulate the endpoint behavior or as validation object.
+These Kafka specific headers are stored with a header key prefix `citrus_kafka_*`. You can set or verify those headers in send and receive actions as follows:
+
+.Java
+[source,java]
+----
+send(helloKafkaEndpoint)
+    .header("KafkaMessageHeaders.TOPIC", "my.very.special.topic")
+    .header("KafkaMessageHeaders.MESSAGE_KEY", "myKey")
+    .header("KafkaMessageHeaders.PARTITION", 1);
+----
+
+.XML
+[source,xml]
+----
+<header>
+    <element name="citrus_kafka_topic" value="my.very.special.topic"/>
+    <element name="citrus_kafka_messageKey" value="myKey"/>
+    <element name="citrus_kafka_partition" value="1" />
+</header>
+----
+
+The header entries above are used in a send operation in order to overwrite the topic destination, to set the record key and to specify the target partition of the producer record. These settings do only
+apply for the very specific send operation. Default values on the Kafka endpoint are overwritten respectively.
+
+TIP: Typing of message header entries may also be of interest in order to meet the Kafka standards. For instance the following message key is of type `java.lang.Integer` and is therefore transferred via Kafka's key-serializer as a integer value.
+You need to set the header type to `integer` and use a `org.apache.kafka.common.serialization.IntegerSerializer` as key-serializer on the Kafka endpoint configuration.
+
+[source,xml]
+----
+<header>
+    <element name="citrus_kafka_messageKey" value="1" type="integer"/>
+</header>
+----
+
+On a receive operation message headers are valuable validation objects that can be used to verify the message content with an expected behavior.
+
+.Java
+[source,java]
+----
+receive(helloKafkaEndpoint)
+    .header("KafkaMessageHeaders.TIMESTAMP", Matchers.greaterThan(0))
+    .header("KafkaMessageHeaders.TOPIC", "my.very.special.topic")
+    .header("KafkaMessageHeaders.MESSAGE_KEY", "myKey")
+    .header("KafkaMessageHeaders.PARTITION", 1)
+    .header("KafkaMessageHeaders.OFFSET", Matchers.greaterThanOrEqualTo(0));
+----
+
+.XML
+[source,xml]
+----
+<header>
+    <element name="citrus_kafka_timestamp" value="@assertThat(greaterThan(0))@"/>
+    <element name="citrus_kafka_topic" value="my.expected.topic"/>
+    <element name="citrus_kafka_messageKey" value="myExpectedKey"/>
+    <element name="citrus_kafka_partition" value="1"/>
+    <element name="citrus_kafka_offset" value="@assertThat(greaterThanOrEqualTo(0))@"/>
+</header>
+----
+
+These are the available Kafka message headers in Citrus:
+
+[cols="2,2,2,5a"]
+|===
+| Header | Name | Type | Description
+
+| KafkaMessageHeaders.TIMESTAMP
+| citrus_kafka_timestamp
+| java.lang.Long
+| Record timestamp value
+
+| KafkaMessageHeaders.TOPIC
+| citrus_kafka_topic
+| java.lang.String
+| Topic name
+
+| KafkaMessageHeaders.MESSAGE_KEY
+| citrus_kafka_messageKey
+| java.lang.Object
+| Record key
+
+| KafkaMessageHeaders.PARTITION
+| citrus_kafka_partition
+| java.lang.Integer
+| Topic partition id
+
+| KafkaMessageHeaders.OFFSET
+| citrus_kafka_offset
+| java.lang.Long
+| Record offset on partition
+
+|===
+
+[[kafka-message]]
+== Kafka message
+
+Citrus also provides a Kafka message implementation that you can use on any send and receive operation. This enables you to set special message headers in a more comfortable way when using the Java fluent API:
+
+.Java
+[source,java]
+----
+send(helloKafkaEndpoint)
+    .message(new KafkaMessage("sayHello")
+                    .topic("my.very.special.topic")
+                    .messageKey("myKey")
+                    .partition(1));
+----
+
+The message implementation provides fluent API builder methods for each Kafka specific header.
+
+[[dynamic-kafka-endpoints]]
+== Dynamic Kafka endpoints
+
+As we have seen before the topic name can be overwritten in each send and receive operation by specifying the `citrus_kafka_topic` message header. In addition to that you can make use of completely dynamic Kafka endpoints, too.
+
+The dynamic endpoint is created on the fly with respective settings. So you can use the `kafka` endpoint component in your test as follows:
+
+.Java
+[source,java]
+----
+send("kafka:hello")
+    .payload("foo")
+    .header("KafkaMessageHeaders.MESSAGE_KEY", 1);
+----
+
+.XML
+[source,xml]
+----
+<send endpoint="kafka:hello">
+    <message>
+        ...
+    </message>
+    <header>
+        <element name="citrus_kafka_messageKey" value="1"/>
+    </header>
+</send>
+----
+
+This action above will create a dynamic Kafka endpoint and publish the message to the `hello` topic. The dynamic endpoint url uses the `kafka:` scheme and gives the topic name as resource path. In addition to that the dynamic endpoint
+url is able to set multiple parameters such as `server`. Lets have a look at this in a small example.
+
+.Java
+[source,java]
+----
+send("kafka:hello?server=localhost:9091")
+    .message(new KafkaMessage("foo"));
+----
+
+.XML
+[source,xml]
+----
+<send endpoint="kafka:hello?server=localhost:9091">
+    <message>
+        ...
+    </message>
+</send>
+----
+
+You can add multiple parameters to the endpoint url in order to set properties on the dynamic endpoint. You can read more about dynamic endpoints in chapter link:#dynamic-endpoint-components[dynamic endpoints].
+
+[[embedded-kafka-server]]
+== Embedded Kafka server
+
+The Kafka message broker is composed of a Zookeeper server and a Kafka server. Citrus provides an embedded server (*for testing purpose only!*) that is able to be started within your integration test environment.
+The server cluster is configured with one single Zookeeper server and a single Kafka server. You can define server ports and broker properties such as topics, number of partitions and broker ids. Given topics are automatically
+added via admin client on the Kafka server with given amount of partitions.
+
+You can add the embedded server component to the Spring application context as normal Spring bean. The server will automatically start and stop within the application context lifecycle. The Zookeeper log directory is
+located in the Java temp directory and is automatically deleted on JVM exit.
+
+See the following configuration how to use the embedded server component:
+
+.Java
+[source,java]
+----
+@Bean
+public EmbeddedKafkaServer kafkaServer() {
+    return new EmbeddedKafkaServerBuilder()
+                    .topics("foo", "bar")
+                    .kafkaServerPort(9091)
+                    .build();
+}
+----
+
+.XML
+[source,xml]
+----
+<citrus-kafka:embedded-server id="kafkaServer"
+                                topics="foo,bar"
+                                kafka-server-port="9091"/>
+----
+
+The embedded server component provides following properties to set:
+
+[cols="2,2,5a"]
+|===
+| Name | Type | Description
+
+| topics
+| java.lang.String
+| Comma delimited list of topic names that automatically will be created on the server.
+
+| kafka-server-port
+| java.lang.Integer
+| Port of the embedded Kafka server
+
+| zookeeper-port
+| java.lang.Integer
+| Zookeeper server port. By default a random port is used.
+
+| broker-properties
+| java.util.Map
+| Map of broker property key-value pairs that overwrite the default broker properties. For a list of available properties please review the official Kafka documentation.
+
+| partitions
+| java.lang.Integer
+| Number of partitions to create for each topic
+
+| log-dir-path
+| java.lang.String
+| Path to Zookeeper log directory. The Zookeeper server will create its data directory in this directory. By default the Java temp directory is used.
+
+| auto-delete-logs
+| java.lang.Boolean
+| Auto delete Zookeeper log directories on exit. Default is true.
+
+|===

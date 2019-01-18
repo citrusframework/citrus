@@ -33,7 +33,8 @@ import java.nio.ByteBuffer;
  * @author Martin Maher
  * @since 2.3
  */
-public class WebSocketMessageConverter implements MessageConverter<org.springframework.web.socket.WebSocketMessage, WebSocketEndpointConfiguration> {
+public class WebSocketMessageConverter implements MessageConverter<org.springframework.web.socket.WebSocketMessage, org.springframework.web.socket.WebSocketMessage, WebSocketEndpointConfiguration> {
+
     @Override
     public org.springframework.web.socket.WebSocketMessage convertOutbound(Message message, WebSocketEndpointConfiguration endpointConfiguration, TestContext context) {
         WebSocketMessage internalMessage;

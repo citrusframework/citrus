@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.integration.xml;
+package com.consol.citrus.kafka.integration;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
-import org.junit.runner.RunWith;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
  */
-@RunWith(Cucumber.class)
-@CucumberOptions(
-        strict = true,
-        plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
-public class EchoXmlFeatureIT {
+@Test
+public class KafkaMessageHeadersIT extends AbstractTestNGCitrusTest {
+
+    @CitrusXmlTest(name = "KafkaMessageHeadersIT")
+    public void testKafkaMessageHeaders() {}
 }

@@ -30,7 +30,7 @@ import javax.xml.transform.Source;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocation, JmxEndpointConfiguration> {
+public class JmxMessageConverter implements MessageConverter<ManagedBeanInvocation, ManagedBeanInvocation, JmxEndpointConfiguration> {
 
     @Override
     public ManagedBeanInvocation convertOutbound(Message internalMessage, JmxEndpointConfiguration endpointConfiguration, TestContext context) {

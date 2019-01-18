@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd"
+           targetNamespace="http://citrusframework.org/schemas/samples/HelloService.xsd"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+
+  <xs:element name="HelloRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MessageId" type="xs:string"/>
+        <xs:element name="CorrelationId" type="xs:string"/>
+        <xs:element name="User" type="xs:string"/>
+        <xs:element name="Text">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="30"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="HelloResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MessageId" type="xs:string"/>
+        <xs:element name="CorrelationId" type="xs:string"/>
+        <xs:element name="User" type="xs:string"/>
+        <xs:element name="Text">
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:maxLength value="30"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="Fault" type="FaultType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="RequestHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Service" type="xs:string"/>
+        <xs:element name="Operation" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="ResponseHeader">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:sequence>
+          <xs:element name="Service" type="xs:string"/>
+          <xs:element name="Operation" type="xs:string"/>
+          <xs:element name="Acknowledge" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="FaultDetail">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="MessageId" type="xs:string"/>
+        <xs:element name="CorrelationId" type="xs:string"/>
+        <xs:element name="ErrorCode" type="xs:string"/>
+        <xs:element name="Text" type="xs:string"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="FaultType">
+    <xs:sequence>
+      <xs:element name="Code" type="xs:string"/>
+      <xs:element name="Message" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

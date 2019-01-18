@@ -41,7 +41,7 @@ import java.util.Map;
  *
  * @since 2.0
  */
-public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEndpointConfiguration> {
+public class HttpMessageConverter implements MessageConverter<HttpEntity<?>, HttpEntity<?>, HttpEndpointConfiguration> {
 
     private CookieConverter cookieConverter;
 

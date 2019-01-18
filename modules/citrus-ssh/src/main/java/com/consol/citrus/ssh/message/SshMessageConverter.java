@@ -29,7 +29,7 @@ import javax.xml.transform.Source;
  * @author Christoph Deppisch
  * @since 2.1
  */
-public class SshMessageConverter implements MessageConverter<SshMessage, SshEndpointConfiguration> {
+public class SshMessageConverter implements MessageConverter<SshMessage, SshMessage, SshEndpointConfiguration> {
 
     @Override
     public SshMessage convertOutbound(Message internalMessage, SshEndpointConfiguration endpointConfiguration, TestContext context) {

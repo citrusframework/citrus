@@ -18,6 +18,10 @@ package com.consol.citrus.http.servlet;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.InvalidMediaTypeException;
+import org.springframework.http.MediaType;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -33,17 +37,20 @@ import java.util.*;
 
 /**
  * Caching wrapper saves request body data to cache when read.
- * @author Christoph Deppisch
  */
 public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper {
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CachingHttpServletRequestWrapper.class);
+
     /** Cached request data initialized when first read from input stream */
     private byte[] body;
 
     /**
      * Default constructor using initial servlet request.
-     * @param request
+     * @param request The request to wrap
      */
-    public CachingHttpServletRequestWrapper(HttpServletRequest request) {
+    @SuppressWarnings("WeakerAccess")
+    public CachingHttpServletRequestWrapper(final HttpServletRequest request) {
         super(request);
     }
 
@@ -53,15 +60,31 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
             return super.getParameterMap();
         }
 
-        Map<String, String[]> params = new HashMap<>();
+        final Map<String, String[]> params = new HashMap<>();
+
+        MediaType contentType = Optional.ofNullable(getContentType())
+                .map(mediaType -> {
+                    try {
+                        return MediaType.valueOf(mediaType);
+                    } catch (InvalidMediaTypeException e) {
+                        log.warn(String.format("Failed to parse content type '%s' - using default media type '%s'",
+                                getContentType(), MediaType.ALL_VALUE), e);
+                        return MediaType.ALL;
+                    }
+                })
+                .orElse(MediaType.ALL);
+
+        Charset charset = Optional.ofNullable(contentType.getCharset())
+                                  .orElse(Charset.forName(Citrus.CITRUS_FILE_ENCODING));
+
         if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
-            if ("application/x-www-form-urlencoded".equals(getContentType())) {
-                fillParams(params, new String(body, Charset.forName(Citrus.CITRUS_FILE_ENCODING)));
+            if (new MediaType(contentType.getType(), contentType.getSubtype()).equals(MediaType.APPLICATION_FORM_URLENCODED)) {
+                fillParams(params, new String(body, charset), charset);
             } else {
                 return super.getParameterMap();
             }
         } else {
-            fillParams(params, getQueryString());
+            fillParams(params, getQueryString(), charset);
         }
 
         return params;
@@ -81,19 +104,24 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
     /**
      * Adds parameter name value paris extracted from given query string.
-     * @param params
-     * @param queryString
+     * @param params The parameter map to alter
+     * @param queryString The query string to extract the values from
+     * @param charset
      */
-    private void fillParams(Map<String, String[]> params, String queryString) {
+    private void fillParams(final Map<String, String[]> params, final String queryString, Charset charset) {
         if (StringUtils.hasText(queryString)) {
-            StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
+            final StringTokenizer tokenizer = new StringTokenizer(queryString, "&");
             while (tokenizer.hasMoreTokens()) {
-                String[] nameValuePair = tokenizer.nextToken().split("=");
+                final String[] nameValuePair = tokenizer.nextToken().split("=");
 
                 try {
-                    params.put(URLDecoder.decode(nameValuePair[0], Citrus.CITRUS_FILE_ENCODING), new String[] { URLDecoder.decode(nameValuePair[1], Citrus.CITRUS_FILE_ENCODING) });
-                } catch (UnsupportedEncodingException e) {
-                    throw new CitrusRuntimeException(String.format("Failed to decode query param value '%s=%s'", nameValuePair[0], nameValuePair[1]), e);
+                    params.put(URLDecoder.decode(nameValuePair[0], charset.name()),
+                            new String[] { URLDecoder.decode(nameValuePair[1], charset.name()) });
+                } catch (final UnsupportedEncodingException e) {
+                    throw new CitrusRuntimeException(String.format(
+                            "Failed to decode query param value '%s=%s'",
+                            nameValuePair[0],
+                            nameValuePair[1]), e);
                 }
             }
         }
@@ -118,12 +146,12 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
         }
 
         @Override
-        public void setReadListener(ReadListener readListener) {
+        public void setReadListener(final ReadListener readListener) {
             throw new CitrusRuntimeException("Unsupported operation");
         }
 
         @Override
-        public int read() throws IOException {
+        public int read() {
             return is.read();
         }
     }

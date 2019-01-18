@@ -16,33 +16,30 @@
 
 package com.consol.citrus.dsl.endpoint.selenium;
 
-import com.consol.citrus.endpoint.EndpointBuilder;
+import com.consol.citrus.dsl.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
 
 /**
  * Selenium browser endpoint builder wrapper.
  *
- * @param <T>
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumBrowserEndpointBuilder<T extends EndpointBuilder<SeleniumBrowser>> {
-
-    private final T builder;
+public class SeleniumBrowserEndpointBuilder extends AbstractEndpointBuilder<SeleniumBrowser, SeleniumBrowserBuilder> {
 
     /**
      * Default constructor using browser builder implementation.
-     * @param builder
      */
-    public SeleniumBrowserEndpointBuilder(T builder) {
-        this.builder = builder;
+    public SeleniumBrowserEndpointBuilder() {
+        super(new SeleniumBrowserBuilder());
     }
 
     /**
      * Returns browser builder for further fluent api calls.
      * @return
      */
-    public T browser() {
+    public SeleniumBrowserBuilder browser() {
         return builder;
     }
 }
