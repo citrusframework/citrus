@@ -33,7 +33,7 @@ public final class BooleanExpressionParser {
     
     /** List of known operators */
     private static final List<String> OPERATORS = new ArrayList<String>(
-            CollectionUtils.arrayToList(new String[]{"(", "=", "and", "or", "lt", "lt=", "gt", "gt=", ")"}));
+            CollectionUtils.arrayToList(new String[]{"=", "and", "or", "lt", "lt=", "gt", "gt="}));
 
     /** List of known boolean values */
     private static final List<String> BOOLEAN_VALUES = new ArrayList<String>(
