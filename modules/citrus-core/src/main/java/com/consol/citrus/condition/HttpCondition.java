@@ -18,6 +18,7 @@ package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import jdk.nashorn.internal.ir.annotations.Immutable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,6 +35,7 @@ import java.util.Objects;
  * @author Martin Maher
  * @since 2.4
  */
+@Immutable
 public class HttpCondition extends AbstractCondition {
 
     /** Http request URL to invoke for the condition check */
@@ -73,26 +75,26 @@ public class HttpCondition extends AbstractCondition {
 
     /**
      * Invokes Http request URL and returns response code.
-     * @param context
-     * @return
+     * @param context The context to use for the URL invocation
+     * @return The response code of the request
      */
     private int invokeUrl(TestContext context) {
-        URL url = getUrl(context);
+        URL contextUrl = getUrl(context);
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Probing Http request url '%s'", url.toExternalForm()));
+            log.debug(String.format("Probing Http request url '%s'", contextUrl.toExternalForm()));
         }
 
         int responseCode = -1;
 
         HttpURLConnection httpURLConnection = null;
         try {
-            httpURLConnection = openConnection(url);
+            httpURLConnection = openConnection(contextUrl);
             httpURLConnection.setConnectTimeout(getTimeout(context));
             httpURLConnection.setRequestMethod(context.resolveDynamicValue(method));
 
             responseCode = httpURLConnection.getResponseCode();
         } catch (IOException e) {
-            log.warn(String.format("Could not access Http url '%s' - %s", url.toExternalForm(), e.getMessage()));
+            log.warn(String.format("Could not access Http url '%s' - %s", contextUrl.toExternalForm(), e.getMessage()));
         } finally {
             if (httpURLConnection != null) {
                 httpURLConnection.disconnect();
@@ -104,8 +106,8 @@ public class HttpCondition extends AbstractCondition {
 
     /**
      * Open Http url connection.
-     * @param url
-     * @return
+     * @param url The url to open
+     * @return The opened connection
      */
     protected HttpURLConnection openConnection(URL url) throws IOException {
         return (HttpURLConnection) url.openConnection();
@@ -114,8 +116,8 @@ public class HttpCondition extends AbstractCondition {
 
     /**
      * Gets the request url with test variable support.
-     * @param context
-     * @return
+     * @param context The test context to get the url from
+     * @return The extracted url
      */
     private URL getUrl(TestContext context) {
         try {
@@ -127,8 +129,8 @@ public class HttpCondition extends AbstractCondition {
 
     /**
      * Gets the timeout in milliseconds.
-     * @param context
-     * @return
+     * @param context Test context to get the timeout from
+     * @return The extracted timeout
      */
     private int getTimeout(TestContext context) {
         return Integer.parseInt(context.resolveDynamicValue(timeout));
@@ -136,8 +138,8 @@ public class HttpCondition extends AbstractCondition {
 
     /**
      * Gets the expected Http response code.
-     * @param context
-     * @return
+     * @param context The test context to get the response code from
+     * @return The extracted response code
      */
     private int getHttpResponseCode(TestContext context) {
         return Integer.parseInt(context.resolveDynamicValue(httpResponseCode));
@@ -176,18 +178,30 @@ public class HttpCondition extends AbstractCondition {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof HttpCondition)) return false;
         HttpCondition that = (HttpCondition) o;
-        return Objects.equals(url, that.url) &&
-                Objects.equals(timeout, that.timeout) &&
-                Objects.equals(httpResponseCode, that.httpResponseCode) &&
-                Objects.equals(method, that.method);
+        return Objects.equals(getUrl(), that.getUrl()) &&
+                Objects.equals(getTimeout(), that.getTimeout()) &&
+                Objects.equals(getHttpResponseCode(), that.getHttpResponseCode()) &&
+                Objects.equals(getName(), that.getName()) &&
+                Objects.equals(getMethod(), that.getMethod());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(url, timeout, httpResponseCode, method);
+    public final int hashCode() {
+        return Objects.hash(getUrl(), getTimeout(), getHttpResponseCode(), getMethod(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return "HttpCondition{" +
+                "url='" + url + '\'' +
+                ", timeout='" + timeout + '\'' +
+                ", httpResponseCode='" + httpResponseCode + '\'' +
+                ", method='" + method + '\'' +
+                ", name='" + getName() + '\'' +
+                '}';
     }
 }

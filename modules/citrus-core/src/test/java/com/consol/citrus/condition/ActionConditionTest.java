@@ -19,6 +19,8 @@ package com.consol.citrus.condition;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.context.TestContext;
+import com.jparams.verifier.tostring.ToStringVerifier;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -49,4 +51,18 @@ public class ActionConditionTest {
         Assert.assertFalse(testling.isSatisfied(context));
     }
 
+    @Test
+    public void testEqualsContract(){
+        EqualsVerifier
+                .forClass(ActionCondition.class)
+                .withRedefinedSuperclass()
+                .verify();
+    }
+
+    @Test
+    public void testToString(){
+        ToStringVerifier
+                .forClass(ActionCondition.class)
+                .verify();
+    }
 }

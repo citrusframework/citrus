@@ -18,6 +18,7 @@ package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.FileUtils;
+import com.google.errorprone.annotations.Immutable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +32,7 @@ import java.util.Objects;
  * @author Martin Maher
  * @since 2.4
  */
+@Immutable
 public class FileCondition extends AbstractCondition {
 
     /** File path to check for existence */
@@ -79,7 +81,7 @@ public class FileCondition extends AbstractCondition {
     /**
      * Gets the filePath.
      *
-     * @return
+     * @return The path
      */
     public String getFilePath() {
         return filePath;
@@ -88,7 +90,7 @@ public class FileCondition extends AbstractCondition {
     /**
      * Sets the filePath.
      *
-     * @param filePath
+     * @param filePath The path to set
      */
     public void setFilePath(String filePath) {
         this.filePath = filePath;
@@ -97,7 +99,7 @@ public class FileCondition extends AbstractCondition {
     /**
      * Gets the file.
      *
-     * @return
+     * @return The file
      */
     public File getFile() {
         return file;
@@ -106,23 +108,33 @@ public class FileCondition extends AbstractCondition {
     /**
      * Sets the file.
      *
-     * @param file
+     * @param file The file to set
      */
     public void setFile(File file) {
         this.file = file;
     }
 
     @Override
-    public boolean equals(Object o) {
+    public final boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof FileCondition)) return false;
         FileCondition that = (FileCondition) o;
-        return Objects.equals(filePath, that.filePath) &&
-                Objects.equals(file, that.file);
+        return Objects.equals(getFilePath(), that.getFilePath()) &&
+                Objects.equals(getFile(), that.getFile()) &&
+                Objects.equals(getName(), that.getName());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(filePath, file);
+    public final int hashCode() {
+        return Objects.hash(getFilePath(), getFile(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return "FileCondition{" +
+                "filePath='" + filePath + '\'' +
+                ", file=" + file +
+                ", name=" + getName() +
+                '}';
     }
 }

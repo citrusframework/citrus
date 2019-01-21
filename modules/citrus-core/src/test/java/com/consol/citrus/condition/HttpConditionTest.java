@@ -17,6 +17,8 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.jparams.verifier.tostring.ToStringVerifier;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -24,7 +26,9 @@ import org.testng.annotations.Test;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -96,7 +100,7 @@ public class HttpConditionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testInvalidUrl() throws Exception {
+    public void testInvalidUrl() {
         String url = "http://127.0.0.1:13333/some/unknown/path";
         String httpResponseCode = "200";
         String timeout = "1000";
@@ -106,6 +110,21 @@ public class HttpConditionTest extends AbstractTestNGUnitTest {
         testling.setTimeout(timeout);
 
         Assert.assertFalse(testling.isSatisfied(context));
+    }
+
+    @Test
+    public void testEqualsContract(){
+        EqualsVerifier
+                .forClass(HttpCondition.class)
+                .withRedefinedSuperclass()
+                .verify();
+    }
+
+    @Test
+    public void testToString(){
+        ToStringVerifier
+                .forClass(HttpCondition.class)
+                .verify();
     }
 
 }
