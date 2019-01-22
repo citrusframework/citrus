@@ -73,66 +73,6 @@
       </roles>
     </developer>
     <developer>
-      <id>cwied</id>
-      <name>Christian Wied</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>philkom</id>
-      <name>Philipp Komninos</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jblipphaus</id>
-      <name>Jan Lipphaus</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jza</id>
-      <name>Jan Zahalka</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>maherma</id>
-      <name>Martin Maher</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>movchin</id>
-      <name>Michael Movchin</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Web Developer</role>
-      </roles>
-    </developer>
-    <developer>
       <id>svettwer</id>
       <name>Sven Hettwer</name>
       <email>citrus-dev-l@consol.de</email>
@@ -208,8 +148,7 @@
     <jetty.version>9.4.8.v20171121</jetty.version>
     <testng.version>6.11</testng.version>
     <junit.version>4.12</junit.version>
-    <junit.jupiter.version>5.0.3</junit.jupiter.version>
-    <junit.platform.version>1.0.3</junit.platform.version>
+    <junit.jupiter.version>5.3.2</junit.jupiter.version>
     <slf4j.version>1.7.25</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
     <jackson.version>2.9.8</jackson.version>
@@ -218,6 +157,7 @@
     <zookeeper.version>3.4.10</zookeeper.version>
     <json.schema.validator.version>2.2.8</json.schema.validator.version>
     <citrus.db.version>0.1.4</citrus.db.version>
+    <surefire.version>2.22.1</surefire.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
@@ -451,6 +391,7 @@
         <version>${testng.version}</version>
       </dependency>
       <dependency>
+        <!-- Required for the core module as the vintage engine does not provide a Junit4 compile scope -->
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
@@ -460,7 +401,16 @@
         <artifactId>junit-jupiter-api</artifactId>
         <version>${junit.jupiter.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
@@ -997,7 +947,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.20.1</version>
+          <version>${surefire.version}</version>
           <configuration>
             <systemProperties>
               <property>
@@ -1020,7 +970,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.20.1</version>
+          <version>${surefire.version}</version>
           <executions>
             <execution>
               <id>integration-tests</id>
