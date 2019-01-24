@@ -4,6 +4,7 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.utils.CleanupUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -16,15 +17,13 @@ import java.io.IOException;
 public class JavaDslTestGeneratorTest {
 
     private JavaDslTestGenerator generatorUnderTest = new JavaDslTestGenerator();
-
     private File testFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "/java/com/consol/citrus/FooTest.java");
+
+    private final CleanupUtils cleanupUtils = new CleanupUtils();
 
     @AfterMethod
     public void cleanUp(){
-        if(testFile.exists()){
-            //noinspection ResultOfMethodCallIgnored
-            testFile.delete();
-        }
+        cleanupUtils.deleteFile(testFile);
     }
 
     @Test

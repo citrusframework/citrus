@@ -19,18 +19,30 @@ package com.consol.citrus.generate.javadsl;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.utils.CleanupUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class WsdlJavaTestGeneratorTest {
+
+    private String testDir = Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/";
+
+    private final CleanupUtils cleanupUtils = new CleanupUtils();
+
+    @AfterMethod
+    public void cleanUp(){
+        cleanupUtils.deleteFiles(testDir, Collections.singleton("BookStore*"));
+    }
 
     @Test
     public void testCreateTest() throws IOException {
@@ -51,7 +63,7 @@ public class WsdlJavaTestGeneratorTest {
     }
 
     private void verifyTest(String name, String requestName, String responseName) throws IOException {
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/" + name + ".java");
+        File javaFile = new File(testDir + name + ".java");
         Assert.assertTrue(javaFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
