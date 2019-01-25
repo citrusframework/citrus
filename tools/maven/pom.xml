@@ -17,5 +17,6 @@
   
   <modules>
     <module>citrus-maven-plugin</module>
+    <module>citrus-maven-plugin-integration</module>
   </modules>
 </project>

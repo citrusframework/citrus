@@ -1,8 +1,6 @@
 [[changes-new]]
 = What's new in Citrus 2.7?!
 
-We have the following features included in the box.
-
 [[changes-2-7-9]]
 == Since Citrus 2.7.9
 
@@ -13,6 +11,7 @@ We have the following features included in the box.
 * https://github.com/citrusframework/citrus/issues/535[#535 - Inconsistent values of global variables]
 * https://github.com/citrusframework/citrus/issues/569[#569 - duplicated cookie entries in http request]
 * https://github.com/citrusframework/citrus/issues/455[#455 - Cookies are not recognized by HTTP client]
+* https://github.com/citrusframework/citrus/issues/562[#562 - maven plugin creates invalid testNG Citrus tests]
 
 [[fixed-breaking-changes-2-7-9]]
 === Fixed breaking changes
@@ -33,6 +32,12 @@ downwards compatibility are marked as `@Deprecated` and will be removed with the
 [[changes-security-2-7-9]]
 === Security fixes
 * https://github.com/citrusframework/citrus/issues/584[#584 - Update com.fasterxml.jackson.core:jackson-databind to version 2.9.8 or later]
+
+[[changes-enhancements-2-7-9]]
+=== Enhancements
+* https://github.com/citrusframework/citrus/issues/591[#591 - Improve documentation concerning parallel messages]
+
+=== Fixed bugs
 
 [[changes-2-7-8]]
 == Since Citrus 2.7.8
