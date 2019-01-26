@@ -35,10 +35,16 @@ import java.util.Stack;
 public final class BooleanExpressionParser {
 
     /**
-     * List of known operators
+     * List of known non-boolean operators
      */
     private static final List<String> OPERATORS = new ArrayList<String>(
-            CollectionUtils.arrayToList(new String[]{"=", "and", "or", "lt", "lt=", "gt", "gt="}));
+            CollectionUtils.arrayToList(new String[]{"lt", "lt=", "gt", "gt="}));
+
+    /**
+     * List of known boolean operators
+     */
+    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<String>(
+            CollectionUtils.arrayToList(new String[]{"=", "and", "or"}));
 
     /**
      * List of known boolean values
@@ -82,7 +88,7 @@ public final class BooleanExpressionParser {
     public static boolean evaluate(final String expression) {
         final Stack<String> operators = new Stack<>();
         final Stack<String> values = new Stack<>();
-        boolean result;
+        final boolean result;
 
         char currentCharacter;
 
@@ -95,63 +101,23 @@ public final class BooleanExpressionParser {
                 } else if (SeparatorToken.SPACE.value == currentCharacter) {
                     continue; //ignore
                 } else if (SeparatorToken.CLOSE_PARENTHESIS.value == currentCharacter) {
-                    String operator = operators.pop();
-                    while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
-                        values.push(getBooleanResultAsString(operator, values.pop(), values.pop()));
-                        operator = operators.pop();
-                    }
+                    evaluateSubexpression(operators, values);
                 } else if (!Character.isDigit(currentCharacter)) {
-                    final StringBuffer operatorBuffer = new StringBuffer();
-
-                    int subExpressionIndex = currentCharacterIndex;
-                    do {
-                        operatorBuffer.append(currentCharacter);
-                        subExpressionIndex++;
-
-                        if (subExpressionIndex < expression.length()) {
-                            currentCharacter = expression.charAt(subExpressionIndex);
-                        }
-                    } while (subExpressionIndex < expression.length() && !Character.isDigit(currentCharacter) && !isSeparatorToken(currentCharacter));
-
-                    currentCharacterIndex = subExpressionIndex - 1;
-
-                    if (BOOLEAN_VALUES.contains(operatorBuffer.toString())) {
-                        values.push(Boolean.valueOf(operatorBuffer.toString()) ? "1" : "0");
+                    final String parsedNonDigit = parseNonDigits(expression, currentCharacterIndex);
+                    if (isBoolean(parsedNonDigit)) {
+                        values.push(replaceBooleanStringByIntegerRepresentation(parsedNonDigit));
                     } else {
-                        operators.push(validateOperator(operatorBuffer.toString()));
+                        operators.push(validateOperator(parsedNonDigit));
                     }
+                    currentCharacterIndex += (parsedNonDigit.length() - 1);
                 } else if (Character.isDigit(currentCharacter)) {
-                    final StringBuffer digitBuffer = new StringBuffer();
-
-                    int subExpressionIndex = currentCharacterIndex;
-                    do {
-                        digitBuffer.append(currentCharacter);
-                        subExpressionIndex++;
-
-                        if (subExpressionIndex < expression.length()) {
-                            currentCharacter = expression.charAt(subExpressionIndex);
-                        }
-                    } while (subExpressionIndex < expression.length() && Character.isDigit(currentCharacter));
-
-                    currentCharacterIndex = subExpressionIndex - 1;
-
-                    values.push(digitBuffer.toString());
+                    final String parsedDigits = parseDigits(expression, currentCharacterIndex);
+                    values.push(parsedDigits);
+                    currentCharacterIndex += (parsedDigits.length() - 1);
                 }
             }
 
-            while (!operators.isEmpty()) {
-                values.push(getBooleanResultAsString(operators.pop(), values.pop(), values.pop()));
-            }
-
-            String value = values.pop();
-
-            if (value.equals("0")) {
-                value = "false";
-            } else if (value.equals("1")) {
-                value = "true";
-            }
-
-            result = Boolean.valueOf(value);
+            result = Boolean.valueOf(evaluateExpressionStack(operators, values));
 
             if (log.isDebugEnabled()) {
                 log.debug("Boolean expression " + expression + " evaluates to " + result);
@@ -166,8 +132,9 @@ public final class BooleanExpressionParser {
     /**
      * This method takes stacks of operators and values and evaluates possible expressions
      * This is done by popping one operator and two values, applying the operator to the values and pushing the result back onto the value stack
+     *
      * @param operators Operators to apply
-     * @param values Values
+     * @param values    Values
      * @return The final result popped of the values stack
      */
     private static String evaluateExpressionStack(final Stack<String> operators, final Stack<String> values) {
@@ -179,15 +146,16 @@ public final class BooleanExpressionParser {
 
     /**
      * Evaluates a sub expression within a pair of parentheses and pushes its result onto the stack of values
+     *
      * @param operators Stack of operators
-     * @param values Stack of values
+     * @param values    Stack of values
      */
     private static void evaluateSubexpression(final Stack<String> operators, final Stack<String> values) {
         String operator = operators.pop();
         while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
             values.push(getBooleanResultAsString(operator,
-                    replaceBooleanStringByIntegerRepresentation(values.pop()),
-                    replaceBooleanStringByIntegerRepresentation(values.pop())));
+                    values.pop(),
+                    values.pop()));
             operator = operators.pop();
         }
     }
@@ -221,7 +189,7 @@ public final class BooleanExpressionParser {
     /**
      * This method reads non-digit characters from a given string, starting at a given index.
      * It will read till the end of the string or up until it encounters
-     *
+     * <p>
      * - a digit
      * - a separator token
      *
@@ -248,6 +216,7 @@ public final class BooleanExpressionParser {
 
     /**
      * Checks whether a string can be interpreted as a boolean value.
+     *
      * @param possibleBoolean The possible boolean value as string
      * @return Either true or false
      */
@@ -314,7 +283,7 @@ public final class BooleanExpressionParser {
      * @throws CitrusRuntimeException
      */
     private static String validateOperator(final String operator) {
-        if (!OPERATORS.contains(operator)) {
+        if (!OPERATORS.contains(operator) && !BOOLEAN_OPERATORS.contains(operator)) {
             throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
         return operator;
