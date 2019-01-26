@@ -83,7 +83,7 @@ public final class BooleanExpressionParser {
      *
      * @param expression The expression to evaluate
      * @return boolean result
-     * @throws CitrusRuntimeException
+     * @throws CitrusRuntimeException When unable to parse expression
      */
     public static boolean evaluate(final String expression) {
         final Stack<String> operators = new Stack<>();
@@ -91,17 +91,20 @@ public final class BooleanExpressionParser {
         final boolean result;
 
         char currentCharacter;
+        int currentCharacterIndex = 0;
 
         try {
-            for (int currentCharacterIndex = 0; currentCharacterIndex < expression.length(); currentCharacterIndex++) {
+            while (currentCharacterIndex < expression.length()) {
                 currentCharacter = expression.charAt(currentCharacterIndex);
 
                 if (SeparatorToken.OPEN_PARENTHESIS.value == currentCharacter) {
                     operators.push(SeparatorToken.OPEN_PARENTHESIS.value.toString());
+                    currentCharacterIndex += moveCursor(SeparatorToken.OPEN_PARENTHESIS.value.toString());
                 } else if (SeparatorToken.SPACE.value == currentCharacter) {
-                    continue; //ignore
+                    currentCharacterIndex += moveCursor(SeparatorToken.SPACE.value.toString());
                 } else if (SeparatorToken.CLOSE_PARENTHESIS.value == currentCharacter) {
                     evaluateSubexpression(operators, values);
+                    currentCharacterIndex += moveCursor(SeparatorToken.CLOSE_PARENTHESIS.value.toString());
                 } else if (!Character.isDigit(currentCharacter)) {
                     final String parsedNonDigit = parseNonDigits(expression, currentCharacterIndex);
                     if (isBoolean(parsedNonDigit)) {
@@ -109,11 +112,11 @@ public final class BooleanExpressionParser {
                     } else {
                         operators.push(validateOperator(parsedNonDigit));
                     }
-                    currentCharacterIndex += (parsedNonDigit.length() - 1);
+                    currentCharacterIndex += moveCursor(parsedNonDigit);
                 } else if (Character.isDigit(currentCharacter)) {
                     final String parsedDigits = parseDigits(expression, currentCharacterIndex);
                     values.push(parsedDigits);
-                    currentCharacterIndex += (parsedDigits.length() - 1);
+                    currentCharacterIndex += moveCursor(parsedDigits);
                 }
             }
 
@@ -280,13 +283,23 @@ public final class BooleanExpressionParser {
      *
      * @param operator to validate
      * @return the operator itself.
-     * @throws CitrusRuntimeException
+     * @throws CitrusRuntimeException When encountering an unknown operator
      */
     private static String validateOperator(final String operator) {
         if (!OPERATORS.contains(operator) && !BOOLEAN_OPERATORS.contains(operator)) {
             throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }
         return operator;
+    }
+
+    /**
+     * Returns the amount of characters to move the cursor after parsing a token
+     *
+     * @param lastToken Last parsed token
+     * @return Amount of characters to move forward
+     */
+    private static int moveCursor(final String lastToken) {
+        return lastToken.length();
     }
 
     /**
