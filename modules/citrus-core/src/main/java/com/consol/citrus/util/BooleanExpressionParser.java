@@ -21,7 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EmptyStackException;
+import java.util.List;
+import java.util.Stack;
 
 /**
  * Parses boolean expression strings and evaluates to boolean result.
@@ -158,6 +161,35 @@ public final class BooleanExpressionParser {
         }
 
         return result;
+    }
+
+    /**
+     * This method takes stacks of operators and values and evaluates possible expressions
+     * This is done by popping one operator and two values, applying the operator to the values and pushing the result back onto the value stack
+     * @param operators Operators to apply
+     * @param values Values
+     * @return The final result popped of the values stack
+     */
+    private static String evaluateExpressionStack(final Stack<String> operators, final Stack<String> values) {
+        while (!operators.isEmpty()) {
+            values.push(getBooleanResultAsString(operators.pop(), values.pop(), values.pop()));
+        }
+        return replaceIntegerStringByBooleanRepresentation(values.pop());
+    }
+
+    /**
+     * Evaluates a sub expression within a pair of parentheses and pushes its result onto the stack of values
+     * @param operators Stack of operators
+     * @param values Stack of values
+     */
+    private static void evaluateSubexpression(final Stack<String> operators, final Stack<String> values) {
+        String operator = operators.pop();
+        while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
+            values.push(getBooleanResultAsString(operator,
+                    replaceBooleanStringByIntegerRepresentation(values.pop()),
+                    replaceBooleanStringByIntegerRepresentation(values.pop())));
+            operator = operators.pop();
+        }
     }
 
     /**
