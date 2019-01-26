@@ -161,6 +161,51 @@ public final class BooleanExpressionParser {
     }
 
     /**
+     * Checks whether a string can be interpreted as a boolean value.
+     * @param possibleBoolean The possible boolean value as string
+     * @return Either true or false
+     */
+    private static Boolean isBoolean(final String possibleBoolean) {
+        return BOOLEAN_VALUES.contains(possibleBoolean);
+    }
+
+    /**
+     * Checks whether a String is a Boolean value and replaces it with its Integer representation
+     * "true" -> "1"
+     * "false" -> "0"
+     *
+     * @param possibleBooleanString "true" or "false"
+     * @return "1" or "0"
+     */
+    private static String replaceBooleanStringByIntegerRepresentation(final String possibleBooleanString) {
+        if (possibleBooleanString.equals("true")) {
+            return "1";
+        } else if (possibleBooleanString.equals("false")) {
+            return "0";
+        }
+        return possibleBooleanString;
+    }
+
+    /**
+     * Counterpart of {@link #replaceBooleanStringByIntegerRepresentation}
+     * Checks whether a String is the Integer representation of a Boolean value and replaces it with its Boolean representation
+     * "1" -> "true"
+     * "0" -> "false"
+     * otherwise -> value
+     *
+     * @param value "1", "0" or other string
+     * @return "true", "false" or the input value
+     */
+    private static String replaceIntegerStringByBooleanRepresentation(final String value) {
+        if (value.equals("0")) {
+            return "false";
+        } else if (value.equals("1")) {
+            return "true";
+        }
+        return value;
+    }
+
+    /**
      * Checks whether a given character is a known separator token or no
      *
      * @param possibleSeparatorChar The character to check
