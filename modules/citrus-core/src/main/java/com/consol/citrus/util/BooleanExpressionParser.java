@@ -161,6 +161,60 @@ public final class BooleanExpressionParser {
     }
 
     /**
+     * This method reads digit characters from a given string, starting at a given index.
+     * It will read till the end of the string or up until it encounters a non-digit character
+     *
+     * @param expression The string to parse
+     * @param startIndex The start index from where to parse
+     * @return The parsed substring
+     */
+    private static String parseDigits(final String expression, final int startIndex) {
+        final StringBuffer digitBuffer = new StringBuffer();
+
+        char currentCharacter = expression.charAt(startIndex);
+        int subExpressionIndex = startIndex;
+
+        do {
+            digitBuffer.append(currentCharacter);
+            ++subExpressionIndex;
+
+            if (subExpressionIndex < expression.length()) {
+                currentCharacter = expression.charAt(subExpressionIndex);
+            }
+        } while (subExpressionIndex < expression.length() && Character.isDigit(currentCharacter));
+
+        return digitBuffer.toString();
+    }
+
+    /**
+     * This method reads non-digit characters from a given string, starting at a given index.
+     * It will read till the end of the string or up until it encounters
+     *
+     * - a digit
+     * - a separator token
+     *
+     * @param expression The string to parse
+     * @param startIndex The start index from where to parse
+     * @return The parsed substring
+     */
+    private static String parseNonDigits(final String expression, final int startIndex) {
+        final StringBuffer operatorBuffer = new StringBuffer();
+
+        char currentCharacter = expression.charAt(startIndex);
+        int subExpressionIndex = startIndex;
+        do {
+            operatorBuffer.append(currentCharacter);
+            subExpressionIndex++;
+
+            if (subExpressionIndex < expression.length()) {
+                currentCharacter = expression.charAt(subExpressionIndex);
+            }
+        } while (subExpressionIndex < expression.length() && !Character.isDigit(currentCharacter) && !isSeparatorToken(currentCharacter));
+
+        return operatorBuffer.toString();
+    }
+
+    /**
      * Checks whether a string can be interpreted as a boolean value.
      * @param possibleBoolean The possible boolean value as string
      * @return Either true or false
