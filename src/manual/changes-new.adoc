@@ -37,8 +37,6 @@ downwards compatibility are marked as `@Deprecated` and will be removed with the
 === Enhancements
 * https://github.com/citrusframework/citrus/issues/591[#591 - Improve documentation concerning parallel messages]
 
-=== Fixed bugs
-
 [[changes-2-7-8]]
 == Since Citrus 2.7.8
 
