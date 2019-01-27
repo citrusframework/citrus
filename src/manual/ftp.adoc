@@ -10,7 +10,7 @@ NOTE: The FTP components in Citrus are maintained in their own Maven module. So 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-ftp</artifactId>
-  <version>2.7.9-SNAPSHOT</version>
+  <version>2.7.9</version>
 </dependency>
 ----
 

@@ -10,7 +10,7 @@ The new WebSocket support is located in the module *citrus-websocket* . Therefor
 <dependency>
     <groupId>com.consol.citrus</groupId>
     <artifactId>citrus-websocket</artifactId>
-    <version>2.7.9-SNAPSHOT</version>
+    <version>2.7.9</version>
 </dependency>
 ----
 
