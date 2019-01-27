@@ -14,4 +14,5 @@ http\://www.citrusframework.org/schema/rmi/config/citrus-rmi-config-2.7.6.xsd=co
 http\://www.citrusframework.org/schema/rmi/config/citrus-rmi-config-2.7.7.xsd=com/consol/citrus/schema/citrus-rmi-config-2.7.7.xsd
 http\://www.citrusframework.org/schema/rmi/config/citrus-rmi-config-2.7.8.xsd=com/consol/citrus/schema/citrus-rmi-config-2.7.8.xsd
 http\://www.citrusframework.org/schema/rmi/config/citrus-rmi-config-2.7.9.xsd=com/consol/citrus/schema/citrus-rmi-config-2.7.9.xsd
+http\://www.citrusframework.org/schema/rmi/config/citrus-rmi-config-2.7.10.xsd=com/consol/citrus/schema/citrus-rmi-config-2.7.10.xsd
 http\://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd=com/consol/citrus/schema/citrus-rmi-config.xsd
