@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.builder;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Map;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -25,8 +29,15 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.*;
-import com.consol.citrus.validation.json.*;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.interceptor.BinaryMessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.GzipMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -41,14 +52,10 @@ import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.xml.transform.StringResult;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Map;
-
 /**
  * Action builder creates a send message action with several message payload and header
  * constructing build methods.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.3
  */
@@ -68,6 +75,8 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     /** Message constructing interceptor */
     private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
     private JsonPathMessageConstructionInterceptor jsonPathMessageConstructionInterceptor;
+    private final GzipMessageConstructionInterceptor gzipMessageConstructionInterceptor = new GzipMessageConstructionInterceptor();
+    private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor = new BinaryMessageConstructionInterceptor();
 
     /** Basic application context */
     private ApplicationContext applicationContext;
@@ -125,7 +134,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
         getAction().setForkMode(forkMode);
         return self;
     }
-    
+
     /**
      * Sets the message instance to send.
      * @param message
@@ -154,7 +163,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
             throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
         }
     }
-    
+
     /**
      * Sets the message name.
      * @param name
@@ -164,7 +173,7 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
         getMessageContentBuilder().setMessageName(name);
         return self;
     }
-    
+
     /**
      * Adds message payload data to this builder.
      * @param payload
@@ -208,15 +217,13 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
      */
     public T payload(Object payload, Marshaller marshaller) {
         StringResult result = new StringResult();
-        
+
         try {
             marshaller.marshal(payload, result);
-        } catch (XmlMappingException e) {
-            throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
-        } catch (IOException e) {
+        } catch (XmlMappingException | IOException e) {
             throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
         }
-        
+
         setPayload(result.toString());
         return self;
     }
@@ -432,6 +439,15 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
     public T messageType(String messageType) {
         this.messageType = messageType;
         getAction().setMessageType(messageType);
+
+        if (MessageType.BINARY.name().equals(messageType)) {
+            getMessageContentBuilder().add(binaryMessageConstructionInterceptor);
+        }
+
+        if (MessageType.GZIP.name().equals(messageType)) {
+            getMessageContentBuilder().add(gzipMessageConstructionInterceptor);
+        }
+
         return self;
     }
 
@@ -462,11 +478,11 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
 
             getAction().getVariableExtractors().add(headerExtractor);
         }
-        
+
         headerExtractor.getHeaderMappings().put(headerName, variable);
         return self;
     }
-    
+
     /**
      * Extract message element via XPath or JSONPath from payload before message is sent.
      * @param path
