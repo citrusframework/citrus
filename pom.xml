@@ -160,7 +160,7 @@
     <zookeeper.version>3.4.12</zookeeper.version>
     <sshd.version>2.0.0</sshd.version>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
-    <citrus.db.version>0.1.4</citrus.db.version>
+    <citrus.db.version>0.2.0-SNAPSHOT</citrus.db.version>
     <surefire.version>2.22.1</surefire.version>
 
     <skip.integration.tests>false</skip.integration.tests>
@@ -932,6 +932,17 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>consol-labs-snapshots</id>
+      <url>http://labs.consol.de/maven/snapshots-repository/</url>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>interval:10080</updatePolicy>
+      </snapshots>
+    </repository>
+  </repositories>
   
   <build>
     <pluginManagement>
