@@ -26,6 +26,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:attribute name="id" type="xs:ID" use="required"/>
+      <xs:attribute name="browser-type" type="xs:string"/>
       <xs:attribute name="type">
         <xs:simpleType>
           <xs:restriction base="xs:string">

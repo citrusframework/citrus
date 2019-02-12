@@ -1,11 +1,14 @@
 [[containers-async]]
 == Async
 
-Now we deal with parallel execution of test actions. Nested actions inside a async container are executed in a separate thread. This has the effect that the test execution is not blocked until the nested actions have performed.
-The test immediately continues with the next test actions in place the will be executed in parallel to those actions in the async container.
+Now we deal with parallel execution of test actions. Nested actions inside an async container are executed in a separate
+thread. This allows to continue test execution without having to wait for actions inside the async container to complete.
+The test immediately continues to execute the next test actions, which will be executed in parallel to those actions inside
+the async container.
 
-This mechanism comes in handy when a test action should be forked to the rest of the test. In send operations we were able to do this before with the `fork="true"` option set. Now we
-can also use the async test action container with all kind of test actions nested.
+This mechanism comes in handy when a test action should be forked to the rest of the test. In send operations we were
+already able to achieve this by setting `fork="true"`. With async containers, we're able to execute all 
+kinds of test actions asynchronous.
 
 See some example to find out how it works.
 
@@ -48,10 +51,12 @@ public void asyncTest() {
 }
 ----
 
-The nested `send` and `receive` actions get executed in parallel to the other test actions in that test case. So the test will not wait for these actions to finish before executing next actions. Of course possible errors inside the async container will also cause the whole test case
-to fail. And the test will definitely wait for all async actions to be finished before finishing the whole test case. This safely lets us execute test actions in parallel to each other.
+The nested `send` and `receive` actions get executed in parallel to the other test actions in that test case. So the
+test will not wait for these actions to finish before executing next actions. Of course possible errors inside the async
+container will also cause the whole test case to fail. And the test will definitely wait for all async actions to be
+finished before finishing the whole test case. This safely lets us execute test actions in parallel to each other.
 
-The async container also supports success and error callback actions. This is an experimental feature that is only available for XML test cases up to now.
+The async container also supports success and error callback actions.
 
 .XML DSL
 [source,xml]
@@ -82,4 +87,59 @@ The async container also supports success and error callback actions. This is an
 </testcase>
 ----
 
-So you can add test actions that get executed based on the async test action outcome `success` or `error`.
+So you can add test actions which are executed based on the async test actions outcome `success` or `error`.
+
+If you are using this container to send or receive messages, you have to use the unique correlation ID of the
+message to link the actions concerning this message. Otherwise the testcase might associate a send or receive action
+with the wrong message. Please note that this ID is **not** passed to your system under test. The
+management of correlation IDs as well as the assignment to messages is done internally. Only the mapping
+between the request and response has to be done by the author of the test. As you can see in the following example, the
+value of the header `MessageHeaders.ID` is stored in the variable `request#1` respectively `request#2`. This variable is
+reused in the receive action to identify the correct response from the server.
+
+.Java DSL
+[source,java]
+----
+@CitrusTest
+public void testAsync() {
+
+    async().actions(
+        http(b -> b.client(httpClient)
+                .send()
+                .post("/foo")
+                .extractFromHeader(MessageHeaders.ID, "request#1")
+                .payload("{ \"info\": \"foo\"}")),
+
+        //SUT echoing the input
+
+        http(b -> b.client(httpClient)
+                .receive()
+                .response(HttpStatus.OK)
+                .payload("{ \"info\": \"foo\"}")
+                .selector(
+                    Collections.singletonMap(
+                        MessageHeaders.ID,
+                        "${request#1}")))
+
+    );
+
+    async().actions(
+        http(b -> b.client(httpClient)
+                .send()
+                .post("/boo")
+                .extractFromHeader(MessageHeaders.ID, "request#2")
+                .payload("{ \"info\": \"boo\"}")),
+
+        //SUT echoing the input
+
+        http(b -> b.client(httpClient)
+                .receive()
+                .response(HttpStatus.OK)
+                .payload("{ \"info\": \"boo\"}")
+                .selector(
+                    Collections.singletonMap(
+                        MessageHeaders.ID,
+                        "${request#2}")))
+    );
+}
+----

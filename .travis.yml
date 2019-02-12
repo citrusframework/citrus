@@ -5,7 +5,21 @@ jdk:
 dist: trusty
 sudo: required
 
+# infinite depth for better sonar metrics
+git:
+  depth: false
+
+# Skip installation step
 install: true
 
-script:
-  - mvn --batch-mode -q install
+script: bash scripts/build.sh
+
+cache:
+  directories:
+  - '$HOME/.sonar/cache'
+
+addons:
+  sonarcloud:
+    organization: "citrusframework"
+    token:
+      secure: "oMBPXRrpWRfdQ3w/7wh0BNsHl+tHJXwv4oparZgUtsXtejaSGbEEql3SDAPPlY9jOOfVr96mAXu8d2X7MlSJOgCDMT535ukI3nX4aqhmnnotNAjVViMlBISjGVxTDfjb4gq6x/Y8XCj3h3ZOs+/1jTj2KcRi5jBVAp0PhGhHthvk/HqCw6STIl3an2aQdKCLGEPyWilJ/oycOThs2qQ76lDtX181Z3+2bIyEsR4DkAV/Ag6ZabMz6HAYIOoa2KxfCTpzNZlOCbdxv6iKWpt/K0k2p4PfyYw37JDyAS6VI6smIbow8L1OKtp4p98Vugp/jQvuobRBLZc96JPtph8WfUhPAjZksQizgbBERnWmiopclAOS1gSYUA+ubbIX2+qepCHTyr0bB055TK8OMEr6qFyrMNpKq5M3LiB3L8xdKy4vPsw6DadQsBai3NdcIaorHlfc2AUUYWKA0cdjF23evurhCd98alJAQRrdYjYZOEgsBLS8v+8cJAzUR3X6OjyvBZiY+jL0pk5XQ5UQ1UpLWLjRNmwxLG9+ErsTOA0xQIMKj1IXv5MWXccGiLBphe1142o16zKPgH5WYZcN2pnr78+UUJGxcdHNs2fE+tNt97CBF4gM2kXztsu/bK3DvCdQ2XnMChdMXEPFu6hZQNA2m3F5lxs7i0esyZOYACc7oXo="

@@ -24,7 +24,6 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 import javax.servlet.http.Cookie;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -32,20 +31,31 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
     private final HttpMessage template;
     private final AbstractMessageContentBuilder delegate;
+    private final CookieEnricher cookieEnricher;
 
     /**
      * Default constructor using fields.
      * @param httpMessage The template http message to use for message creation
      * @param delegate The message builder to use for message creation
      */
-    public HttpMessageContentBuilder(final HttpMessage httpMessage, final AbstractMessageContentBuilder delegate) {
-        this.template = httpMessage;
-        this.delegate = delegate;
+    public HttpMessageContentBuilder(final HttpMessage httpMessage,
+                                     final AbstractMessageContentBuilder delegate) {
+        this(httpMessage, delegate, new CookieEnricher());
     }
 
-    @Override
-    public Message buildMessageContent(final TestContext context, final String messageType) {
-        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
+    /**
+     * Constructor allowing the configuration of the cookie enricher.
+     * Currently for testing purposes only
+     * @param template The template http message to use for message creation
+     * @param delegate The message builder to use for message creation
+     * @param cookieEnricher The cookie enricher to use for message creation
+     */
+    HttpMessageContentBuilder(final HttpMessage template,
+                              final AbstractMessageContentBuilder delegate,
+                              final CookieEnricher cookieEnricher) {
+        this.template = template;
+        this.delegate = delegate;
+        this.cookieEnricher = cookieEnricher;
     }
 
     @Override
@@ -79,35 +89,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
      * @param context The context to replace the variables with
      */
     private Cookie[] constructCookies(final TestContext context) {
-        final List<Cookie> cookies = new ArrayList<>();
-
-        for (final Cookie cookie: template.getCookies()) {
-            final Cookie constructed = new Cookie(cookie.getName(), cookie.getValue());
-
-            if (cookie.getValue() != null) {
-                constructed.setValue(context.replaceDynamicContentInString(cookie.getValue()));
-            }
-
-            if (cookie.getComment() != null) {
-                constructed.setComment(context.replaceDynamicContentInString(cookie.getComment()));
-            }
-
-            if (cookie.getPath() != null) {
-                constructed.setPath(context.replaceDynamicContentInString(cookie.getPath()));
-            }
-
-            if (cookie.getDomain() != null) {
-                constructed.setDomain(context.replaceDynamicContentInString(cookie.getDomain()));
-            }
-            
-            constructed.setMaxAge(cookie.getMaxAge());
-            constructed.setVersion(cookie.getVersion());
-            constructed.setHttpOnly(cookie.isHttpOnly());
-            constructed.setSecure(cookie.getSecure());
-
-            cookies.add(constructed);
-        }
-
+        final List<Cookie> cookies = cookieEnricher.enrich(template.getCookies(), context);
         return cookies.toArray(new Cookie[0]);
     }
 

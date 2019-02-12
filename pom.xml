@@ -5,7 +5,7 @@
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
-  <version>2.7.9-SNAPSHOT</version>
+  <version>2.7.10-SNAPSHOT</version>
   <name>citrus</name>
   <description>Citrus Test Framework</description>
   <url>https://citrusframework.org</url>
@@ -70,66 +70,6 @@
       <organizationUrl>http://www.consol.de/</organizationUrl>
       <roles>
         <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>cwied</id>
-      <name>Christian Wied</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>philkom</id>
-      <name>Philipp Komninos</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jblipphaus</id>
-      <name>Jan Lipphaus</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>jza</id>
-      <name>Jan Zahalka</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>maherma</id>
-      <name>Martin Maher</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Developer</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>movchin</id>
-      <name>Michael Movchin</name>
-      <email>citrus-dev-l@consol.de</email>
-      <organization>ConSol Software GmbH</organization>
-      <organizationUrl>http://www.consol.de/</organizationUrl>
-      <roles>
-        <role>Web Developer</role>
       </roles>
     </developer>
     <developer>
@@ -201,22 +141,24 @@
     <spring.integration.version>4.3.14.RELEASE</spring.integration.version>
     <spring.restdocs.version>1.2.3.RELEASE</spring.restdocs.version>
     <apache.camel.version>2.20.1</apache.camel.version>
+    <javatuples.version>1.2</javatuples.version>
     <activemq.version>5.15.2</activemq.version>
     <vertx.version>3.5.4</vertx.version>
     <groovy.version>2.4.13</groovy.version>
     <jetty.version>9.4.8.v20171121</jetty.version>
     <testng.version>6.11</testng.version>
     <junit.version>4.12</junit.version>
-    <junit.jupiter.version>5.0.3</junit.jupiter.version>
+    <junit.jupiter.version>5.3.2</junit.jupiter.version>
     <junit.platform.version>1.0.3</junit.platform.version>
     <slf4j.version>1.7.25</slf4j.version>
     <jaxb.version>2.2.11</jaxb.version>
-    <jackson.version>2.9.4</jackson.version>
+    <jackson.version>2.9.8</jackson.version>
     <arquillian.version>1.1.15.Final</arquillian.version>
     <cucumber.version>2.3.1</cucumber.version>
     <zookeeper.version>3.4.10</zookeeper.version>
     <json.schema.validator.version>2.2.8</json.schema.validator.version>
     <citrus.db.version>0.1.4</citrus.db.version>
+    <surefire.version>2.22.1</surefire.version>
 
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
@@ -450,6 +392,7 @@
         <version>${testng.version}</version>
       </dependency>
       <dependency>
+        <!-- Required for the core module as the vintage engine does not provide a Junit4 compile scope -->
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
@@ -459,7 +402,16 @@
         <artifactId>junit-jupiter-api</artifactId>
         <version>${junit.jupiter.version}</version>
       </dependency>
-
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.junit.vintage</groupId>
+        <artifactId>junit-vintage-engine</artifactId>
+        <version>${junit.jupiter.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
@@ -832,6 +784,12 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>org.javatuples</groupId>
+        <artifactId>javatuples</artifactId>
+        <version>${javatuples.version}</version>
+      </dependency>
+
       <!-- Test scoped dependencies -->
       <dependency>
         <groupId>org.springframework.integration</groupId>
@@ -887,6 +845,18 @@
         <version>2.13.0</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>3.1.4</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.jparams</groupId>
+        <artifactId>to-string-verifier</artifactId>
+        <version>1.4.5</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -920,9 +890,9 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <scope>test</scope>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   
@@ -978,7 +948,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
-          <version>2.20.1</version>
+          <version>${surefire.version}</version>
           <configuration>
             <systemProperties>
               <property>
@@ -1001,7 +971,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
-          <version>2.20.1</version>
+          <version>${surefire.version}</version>
           <executions>
             <execution>
               <id>integration-tests</id>
@@ -1171,16 +1141,6 @@
           <version>1.9.5</version>
         </plugin>
 
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <version>3.0.2</version>
-        </plugin>
-        <plugin>
-          <groupId>org.jacoco</groupId>
-          <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.7.9</version>
-        </plugin>
       </plugins>
     </pluginManagement>
 
@@ -1502,80 +1462,5 @@
         </plugins>
       </build>
     </profile>
-
-    <!-- Enable JaCoCo Test-->
-    <profile>
-      <id>jacoco</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.jacoco</groupId>
-            <artifactId>jacoco-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>jacoco-unit-init</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <configuration>
-                  <propertyName>surefireArgLine</propertyName>
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-unit-report</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-unit.exec</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-unit</outputDirectory>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-it-init</id>
-                <goals>
-                  <goal>prepare-agent</goal>
-                </goals>
-                <phase>pre-integration-test</phase>
-                <configuration>
-                  <propertyName>failsafeArgLine</propertyName>
-                  <destFile>${project.build.directory}/coverage-reports/jacoco-it.exec</destFile>
-                </configuration>
-              </execution>
-              <execution>
-                <id>jacoco-it-report</id>
-                <phase>post-integration-test</phase>
-                <goals>
-                  <goal>report</goal>
-                </goals>
-                <configuration>
-                  <dataFile>${project.build.directory}/coverage-reports/jacoco-it.exec</dataFile>
-                  <outputDirectory>${project.reporting.outputDirectory}/jacoco-it</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-surefire-plugin</artifactId>
-            <configuration>
-              <argLine>${surefireArgLine}</argLine>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-failsafe-plugin</artifactId>
-            <configuration>
-              <argLine>${failsafeArgLine}</argLine>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
   </profiles>
 </project>

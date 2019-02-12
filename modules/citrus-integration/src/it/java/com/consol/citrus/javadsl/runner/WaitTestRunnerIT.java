@@ -18,26 +18,22 @@ package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.common.FileHelper;
 import com.consol.citrus.dsl.runner.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
-import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
 
-/**
- * @author Christoph Deppisch
- */
 @Test
 public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
-
-    /** Random http server port */
-    private final static int serverPort = SocketUtils.findAvailableTcpPort();
 
     @CitrusEndpoint(name = "waitHttpServer")
     @HttpServerConfig
@@ -46,24 +42,79 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void waitFile() throws IOException {
         waitFor()
-            .file()
-            .resource(new ClassPathResource("citrus.properties").getFile());
+                .file()
+                .resource(new ClassPathResource("citrus.properties").getFile());
+    }
+
+    @CitrusTest
+    public void waitHttpDeprecated() {
+
+        //GIVEN
+        String server = startHttpServerAndGetUrl();
+
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .http(server).getBuilder().build()
+                ),
+                sequential().actions(
+                        //THEN
+                        http(http -> http.server(httpServer).receive().head()),
+                        http(http -> http.server(httpServer).respond(HttpStatus.NOT_FOUND)),
+                        http(http -> http.server(httpServer).receive().head()),
+                        http(http -> http.server(httpServer).respond(HttpStatus.OK))
+                )
+        );
+
+        doFinally().actions(stop(httpServer));
+    }
+
+    @CitrusTest
+    public void waitHttpAsAction() {
+
+        //GIVEN
+        String server = startHttpServerAndGetUrl();
+
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .execution()
+                                .action(send(http -> http.endpoint(server)))
+                ),
+                sequential().actions(
+                        //THEN
+                        http(http -> http.server(httpServer).receive().post()),
+                        http(http -> http.server(httpServer).receive().post()),
+                        http(http -> http.server(httpServer).respond(HttpStatus.OK))
+                )
+        );
+
+        doFinally().actions(stop(httpServer));
     }
 
     @CitrusTest
     public void waitHttp() {
-        httpServer.setPort(serverPort);
-        httpServer.setEndpointAdapter(new EmptyResponseEndpointAdapter());
 
-        start(httpServer);
+        //GIVEN
+        String server = startHttpServerAndGetUrl();
 
-        waitFor()
-            .http()
-            .url(String.format("http://localhost:%s", serverPort));
-
-        waitFor()
-            .execution()
-            .action(send(action -> action.endpoint(String.format("http://localhost:%s", serverPort))));
+        parallel().actions(
+                sequential().actions(
+                        //WHEN
+                        waitFor()
+                                .http()
+                                .url(server)
+                ),
+                sequential().actions(
+                        //THEN
+                        http(http -> http.server(httpServer).receive().head()),
+                        http(http -> http.server(httpServer).respond(HttpStatus.NOT_FOUND)),
+                        http(http -> http.server(httpServer).receive().head()),
+                        http(http -> http.server(httpServer).respond(HttpStatus.OK))
+                )
+        );
 
         doFinally().actions(stop(httpServer));
     }
@@ -71,25 +122,73 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
     @CitrusTest
     public void waitAction() {
         waitFor()
-            .execution()
-            .interval(300L)
-            .ms(500L)
-            .action(sleep(250L));
+                .execution()
+                .interval(300L)
+                .ms(500L)
+                .action(sleep(250L));
     }
 
     @CitrusTest
-    public void waitBehavior() {
+    public void waitForFileUsingResource() {
         applyBehavior(new AbstractTestBehavior() {
             @Override
             public void apply() {
                 try {
                     waitFor()
-                        .file()
-                        .resource(new ClassPathResource("citrus.properties").getFile());
+                            .file()
+                            .resource(new ClassPathResource("citrus.properties").getFile());
                 } catch (IOException e) {
                     throw new CitrusRuntimeException(e);
                 }
             }
         });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingResourceDeprecated() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file(file);
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingPath() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file()
+                        .path(file.toURI().toString());
+            }
+        });
+    }
+
+    @CitrusTest
+    public void waitForFileUsingPathDeprecated() {
+        File file = FileHelper.createTmpFile();
+
+        applyBehavior(new AbstractTestBehavior() {
+            @Override
+            public void apply() {
+                waitFor()
+                        .file(file.toURI().toString());
+            }
+        });
+    }
+
+    private String startHttpServerAndGetUrl() {
+        final int serverPort = SocketUtils.findAvailableTcpPort();
+        String server = String.format("http://localhost:%s", serverPort);
+        httpServer.setPort(serverPort);
+        start(httpServer);
+        return server;
     }
 }
