@@ -25,19 +25,17 @@ public class GzipMessageConstructionInterceptor extends AbstractMessageConstruct
     protected Message interceptMessage(Message message, String messageType, TestContext context) {
         try {
             if (message.getPayload() instanceof String) {
-                try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
-                     GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
-                    StreamUtils.copy(context.replaceDynamicContentInString(message.getPayload(String.class)).getBytes(), gzipOutputStream);
-
-                    gzipOutputStream.close();
+                try (ByteArrayOutputStream zipped = new ByteArrayOutputStream()) {
+                    try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
+                        StreamUtils.copy(context.replaceDynamicContentInString(message.getPayload(String.class)).getBytes(), gzipOutputStream);
+                    }
                     message.setPayload(zipped.toByteArray());
                 }
             } else if (message.getPayload() instanceof Resource) {
-                try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
-                     GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
-                    StreamUtils.copy(FileCopyUtils.copyToByteArray(message.getPayload(Resource.class).getInputStream()), gzipOutputStream);
-
-                    gzipOutputStream.close();
+                try (ByteArrayOutputStream zipped = new ByteArrayOutputStream()) {
+                    try (GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
+                        StreamUtils.copy(FileCopyUtils.copyToByteArray(message.getPayload(Resource.class).getInputStream()), gzipOutputStream);
+                    }
                     message.setPayload(zipped.toByteArray());
                 }
             }
