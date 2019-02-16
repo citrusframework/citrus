@@ -28,16 +28,12 @@ public class GzipMessageConstructionInterceptor extends AbstractMessageConstruct
                 try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
                      GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
                     StreamUtils.copy(context.replaceDynamicContentInString(message.getPayload(String.class)).getBytes(), gzipOutputStream);
-
-                    gzipOutputStream.close();
                     message.setPayload(zipped.toByteArray());
                 }
             } else if (message.getPayload() instanceof Resource) {
                 try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
                      GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
                     StreamUtils.copy(FileCopyUtils.copyToByteArray(message.getPayload(Resource.class).getInputStream()), gzipOutputStream);
-
-                    gzipOutputStream.close();
                     message.setPayload(zipped.toByteArray());
                 }
             }
