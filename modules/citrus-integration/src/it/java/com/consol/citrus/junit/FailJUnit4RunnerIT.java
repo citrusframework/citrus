@@ -16,10 +16,12 @@
 
 package com.consol.citrus.junit;
 
+import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @author Christoph Deppisch
@@ -27,6 +29,7 @@ import org.junit.Test;
 public class FailJUnit4RunnerIT extends JUnit4CitrusTestRunner {
 
     @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     @CitrusTest
     public void failTest() {
         echo("This test should fail because of unknown variable ${foo}");

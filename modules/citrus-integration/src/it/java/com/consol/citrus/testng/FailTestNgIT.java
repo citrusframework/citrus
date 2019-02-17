@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  */
 public class FailTestNgIT extends AbstractTestNGCitrusTest {
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
     @CitrusXmlTest
     public void FailTestNgIT() {}
 }
