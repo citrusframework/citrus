@@ -151,7 +151,7 @@ public class CitrusDispatcherServlet extends DispatcherServlet {
                 } else if (interceptor instanceof WebRequestInterceptor) {
                     handlerInterceptors.add(new WebRequestHandlerInterceptorAdapter((WebRequestInterceptor) interceptor));
                 } else {
-                    log.warn(String.format("Unsupported interceptor type: %s", interceptor.getClass().getName()));
+                    log.warn("Unsupported interceptor type: {}", interceptor.getClass().getName());
                 }
             }
         }
