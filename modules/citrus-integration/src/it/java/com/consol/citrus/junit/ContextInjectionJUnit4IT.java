@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,30 +14,25 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.junit;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import com.consol.citrus.dsl.runner.TestRunner;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
+ * @since 2.5
  */
-@ExtendWith(CitrusExtension.class)
-public class TestContextInjectionJUnit5RunnerIT {
-
-    @CitrusResource
-    private TestRunner runner;
+public class ContextInjectionJUnit4IT extends JUnit4CitrusTestDesigner {
 
     @Test
     @CitrusTest
     public void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
-        runner.echo("${message}");
+        echo("${message}");
     }
 }

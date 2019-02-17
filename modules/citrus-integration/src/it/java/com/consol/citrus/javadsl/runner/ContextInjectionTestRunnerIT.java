@@ -26,7 +26,7 @@ import org.testng.annotations.*;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class TestContextInjectionTestRunnerIT extends TestNGCitrusTestRunner {
+public class ContextInjectionTestRunnerIT extends TestNGCitrusTestRunner {
 
     @Test
     @Parameters( { "context" })

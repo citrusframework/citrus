@@ -19,14 +19,14 @@ package com.consol.citrus.junit;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
 import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class TestContextInjectionJUnit4IT extends JUnit4CitrusTestDesigner {
+public class ContextInjectionJUnit4RunnerIT extends JUnit4CitrusTestRunner {
 
     @Test
     @CitrusTest
