@@ -19,15 +19,13 @@ package com.consol.citrus.validation.builder;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StreamUtils;
+import com.consol.citrus.validation.interceptor.BinaryMessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.GzipMessageConstructionInterceptor;
+import org.springframework.core.io.Resource;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * @author Christoph Deppisch
@@ -42,48 +40,25 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
 
     /** Direct string representation of message payload */
     private String payloadData;
+
+    /** Message construction interceptor for Gzip messages */
+    private final GzipMessageConstructionInterceptor gzipMessageConstructionInterceptor =
+            new GzipMessageConstructionInterceptor();
+
+    /** Message construction interceptor for binary messages */
+    private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor =
+            new BinaryMessageConstructionInterceptor();
     
     /**
      * Build the control message from payload file resource or String data.
      */
     public Object buildMessagePayload(TestContext context, String messageType) {
-        try {
-            if (payloadResourcePath != null) {
-                if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
-                    return FileCopyUtils.copyToByteArray(FileUtils.getFileResource(payloadResourcePath, context).getInputStream());
-                } else if (messageType.equalsIgnoreCase(MessageType.GZIP.name())) {
-                    try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
-                         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
-                        StreamUtils.copy(FileCopyUtils.copyToByteArray(FileUtils.getFileResource(payloadResourcePath, context).getInputStream()), gzipOutputStream);
-
-                        gzipOutputStream.close();
-                        return zipped.toByteArray();
-                    }
-                } else {
-                    return context.replaceDynamicContentInString(FileUtils.readToString(FileUtils.getFileResource(payloadResourcePath, context), Charset.forName(context.resolveDynamicValue(payloadResourceCharset))));
-                }
-            } else if (payloadData != null) {
-                if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
-                    return context.replaceDynamicContentInString(payloadData).getBytes();
-                } else if (messageType.equalsIgnoreCase(MessageType.GZIP.name())) {
-                    try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
-                         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(zipped)) {
-                        StreamUtils.copy(context.replaceDynamicContentInString(payloadData).getBytes(), gzipOutputStream);
-
-                        gzipOutputStream.close();
-                        return zipped.toByteArray();
-                    }
-                } else {
-                    return context.replaceDynamicContentInString(payloadData);
-                }
-            }
-
-            return "";
-        } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to build control message payload", e);
-        }
+        this.getMessageInterceptors().add(gzipMessageConstructionInterceptor);
+        this.getMessageInterceptors().add(binaryMessageConstructionInterceptor);
+        final String payloadContent = getPayloadContent(context);
+        return context.replaceDynamicContentInString(payloadContent);
     }
-    
+
     /**
      * Set message payload as direct string data.
      * @param payloadData the payloadData to set
@@ -132,5 +107,24 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
      */
     public void setPayloadResourceCharset(String payloadResourceCharset) {
         this.payloadResourceCharset = payloadResourceCharset;
+    }
+
+    private String getPayloadContent(TestContext context) {
+        if(payloadResourcePath != null){
+            return getContentFromResource(context);
+        }else if(payloadData != null){
+            return payloadData;
+        }
+        return "";
+    }
+
+    private String getContentFromResource(TestContext context) {
+        try {
+            final Resource fileResource = FileUtils.getFileResource(payloadResourcePath, context);
+            final Charset charset = Charset.forName(context.resolveDynamicValue(payloadResourceCharset));
+            return FileUtils.readToString(fileResource, charset);
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to build control message payload", e);
+        }
     }
 }

@@ -48,9 +48,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     private PayloadTemplateMessageBuilder messageBuilder;
 
     @BeforeMethod
-    public void prepareMessageBuilder() {
+    public void setUp() {
         messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("TestMessagePayload");
+
+        context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.emptyList());
     }
     
     @Test
