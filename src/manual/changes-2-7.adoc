@@ -1,3 +1,9 @@
+[[changes-2-7-10]]
+== Changes in Citrus 2.7.10
+
+=== Fixed bugs
+* https://github.com/citrusframework/citrus/issues/545[#545 - Missing HttpServer auto gzip decompression in request handling]
+
 [[changes-2-7-9]]
 == Changes in Citrus 2.7.9
 
