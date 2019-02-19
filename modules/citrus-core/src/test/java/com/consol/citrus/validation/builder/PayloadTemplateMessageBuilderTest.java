@@ -18,24 +18,35 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * @author Christoph Deppisch
- */
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
 public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
-    
+
+    private final String imagePayloadResource = "classpath:com/consol/citrus/validation/builder/button.png";
+    private final String variablePayloadResource = "classpath:com/consol/citrus/validation/builder/variable-data-resource.txt";
+    private final String initialDataDictionaryTestPayload = "{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }";
+    private final String resultingDataDictionaryTestPayload = "{\"person\":{\"name\":\"new_value\",\"age\":20}}";
+    private final String initialVariableTestPayload = "{ \"person\": { \"name\": \"${name}\", \"age\": 20} }";
+    private final String resultingVariableTestPayload = "{ \"person\": { \"name\": \"Frauke\", \"age\": 20} }";
+
     private PayloadTemplateMessageBuilder messageBuilder;
-    
+
     @BeforeMethod
     public void prepareMessageBuilder() {
         messageBuilder = new PayloadTemplateMessageBuilder();
@@ -46,7 +57,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilder() {
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
     }
     
     @Test
@@ -56,70 +67,71 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
+        assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
     }
     
     @Test
     public void testMessageBuilderWithPayloadResource() {
+        String textPayloadResource = "classpath:com/consol/citrus/validation/builder/payload-data-resource.txt";
+
         messageBuilder = new PayloadTemplateMessageBuilder();
-        
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/payload-data-resource.txt");
+        messageBuilder.setPayloadResourcePath(textPayloadResource);
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessageData");
+        assertEquals(resultingMessage.getPayload(), "TestMessageData");
     }
 
     @Test
     public void testMessageBuilderWithPayloadResourceVariableSupport() {
         messageBuilder = new PayloadTemplateMessageBuilder();
         
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
+        messageBuilder.setPayloadResourcePath(variablePayloadResource);
         context.setVariable("placeholder", "payload data");
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
+        assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
     }
 
     @Test
     public void testMessageBuilderWithPayloadResourceBinary() {
         messageBuilder = new PayloadTemplateMessageBuilder();
 
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/button.png");
+        messageBuilder.setPayloadResourcePath(imagePayloadResource);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.BINARY.name());
 
-        Assert.assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
+        assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
     }
 
     @Test
     public void testMessageBuilderWithPayloadResourceGzip() {
         messageBuilder = new PayloadTemplateMessageBuilder();
 
-        messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/validation/builder/button.png");
+        messageBuilder.setPayloadResourcePath(imagePayloadResource);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.GZIP.name());
 
-        Assert.assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
+        assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
     }
     
     @Test
     public void testMessageBuilderWithHeaders() {
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("operation", "unitTesting");
         messageBuilder.setMessageHeaders(headers);
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertNotNull(resultingMessage.getHeader("operation"));
-        Assert.assertEquals(resultingMessage.getHeader("operation"), "unitTesting");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertNotNull(resultingMessage.getHeader("operation"));
+        assertEquals(resultingMessage.getHeader("operation"), "unitTesting");
     }
     
     @Test
     public void testMessageBuilderWithHeaderTypes() {
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("intValue", "{integer}:5");
         headers.put("longValue", "{long}:5");
         headers.put("floatValue", "{float}:5.0");
@@ -132,28 +144,28 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertNotNull(resultingMessage.getHeader("intValue"));
-        Assert.assertEquals(resultingMessage.getHeader("intValue"), new Integer(5));
-        Assert.assertNotNull(resultingMessage.getHeader("longValue"));
-        Assert.assertEquals(resultingMessage.getHeader("longValue"), new Long(5));
-        Assert.assertNotNull(resultingMessage.getHeader("floatValue"));
-        Assert.assertEquals(resultingMessage.getHeader("floatValue"), new Float(5.0f));
-        Assert.assertNotNull(resultingMessage.getHeader("doubleValue"));
-        Assert.assertEquals(resultingMessage.getHeader("doubleValue"), new Double(5.0));
-        Assert.assertNotNull(resultingMessage.getHeader("boolValue"));
-        Assert.assertEquals(resultingMessage.getHeader("boolValue"), new Boolean(true));
-        Assert.assertNotNull(resultingMessage.getHeader("shortValue"));
-        Assert.assertEquals(resultingMessage.getHeader("shortValue"), new Short("5"));
-        Assert.assertNotNull(resultingMessage.getHeader("byteValue"));
-        Assert.assertEquals(resultingMessage.getHeader("byteValue"), new Byte("1"));
-        Assert.assertNotNull(resultingMessage.getHeader("stringValue"));
-        Assert.assertEquals(resultingMessage.getHeader("stringValue"), new String("5.0"));
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertNotNull(resultingMessage.getHeader("intValue"));
+        assertEquals(resultingMessage.getHeader("intValue"), 5);
+        assertNotNull(resultingMessage.getHeader("longValue"));
+        assertEquals(resultingMessage.getHeader("longValue"), 5L);
+        assertNotNull(resultingMessage.getHeader("floatValue"));
+        assertEquals(resultingMessage.getHeader("floatValue"), 5.0f);
+        assertNotNull(resultingMessage.getHeader("doubleValue"));
+        assertEquals(resultingMessage.getHeader("doubleValue"), 5.0);
+        assertNotNull(resultingMessage.getHeader("boolValue"));
+        assertEquals(resultingMessage.getHeader("boolValue"), Boolean.TRUE);
+        assertNotNull(resultingMessage.getHeader("shortValue"));
+        assertEquals(resultingMessage.getHeader("shortValue"), new Short("5"));
+        assertNotNull(resultingMessage.getHeader("byteValue"));
+        assertEquals(resultingMessage.getHeader("byteValue"), new Byte("1"));
+        assertNotNull(resultingMessage.getHeader("stringValue"));
+        assertEquals(resultingMessage.getHeader("stringValue"), "5.0");
     }
     
     @Test
     public void testMessageBuilderWithHeadersVariableSupport() {
-        Map<String, Object> headers = new HashMap<String, Object>();
+        Map<String, Object> headers = new HashMap<>();
         headers.put("operation", "${operation}");
         messageBuilder.setMessageHeaders(headers);
         
@@ -161,9 +173,9 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertNotNull(resultingMessage.getHeader("operation"));
-        Assert.assertEquals(resultingMessage.getHeader("operation"), "unitTesting");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertNotNull(resultingMessage.getHeader("operation"));
+        assertEquals(resultingMessage.getHeader("operation"), "unitTesting");
     }
     
     @Test
@@ -172,9 +184,9 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertEquals(resultingMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertEquals(resultingMessage.getHeaderData().size(), 1L);
+        assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData");
     }
 
     @Test
@@ -184,10 +196,10 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
 
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertEquals(resultingMessage.getHeaderData().size(), 2L);
-        Assert.assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData1");
-        Assert.assertEquals(resultingMessage.getHeaderData().get(1), "MessageHeaderData2");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertEquals(resultingMessage.getHeaderData().size(), 2L);
+        assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData1");
+        assertEquals(resultingMessage.getHeaderData().get(1), "MessageHeaderData2");
     }
     
     @Test
@@ -197,32 +209,33 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertEquals(resultingMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(resultingMessage.getHeaderData().get(0), "This header data contains variables!");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertEquals(resultingMessage.getHeaderData().size(), 1L);
+        assertEquals(resultingMessage.getHeaderData().get(0), "This header data contains variables!");
     }
     
     @Test
     public void testMessageBuilderWithHeaderResource() {
-        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/validation/builder/header-data-resource.txt");
+        String headerResource = "classpath:com/consol/citrus/validation/builder/header-data-resource.txt";
+        messageBuilder.getHeaderResources().add(headerResource);
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertEquals(resultingMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertEquals(resultingMessage.getHeaderData().size(), 1L);
+        assertEquals(resultingMessage.getHeaderData().get(0), "MessageHeaderData");
     }
     
     @Test
     public void testMessageBuilderWithHeaderResourceVariableSupport() {
-        messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/validation/builder/variable-data-resource.txt");
+        messageBuilder.getHeaderResources().add(variablePayloadResource);
         context.setVariable("placeholder", "header data");
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
-        Assert.assertEquals(resultingMessage.getHeaderData().size(), 1L);
-        Assert.assertEquals(resultingMessage.getHeaderData().get(0), "This header data contains variables!");
+        assertEquals(resultingMessage.getPayload(), "TestMessagePayload");
+        assertEquals(resultingMessage.getHeaderData().size(), 1L);
+        assertEquals(resultingMessage.getHeaderData().get(0), "This header data contains variables!");
     }
     
     @Test
@@ -246,8 +259,8 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         
         Message resultingMessage = messageBuilder.buildMessageContent(context, Citrus.DEFAULT_MESSAGE_TYPE);
         
-        Assert.assertEquals(resultingMessage.getPayload(), "InterceptedMessagePayload");
-        Assert.assertNotNull(resultingMessage.getHeader("NewHeader"));
+        assertEquals(resultingMessage.getPayload(), "InterceptedMessagePayload");
+        assertNotNull(resultingMessage.getHeader("NewHeader"));
     }
 
     @Test
@@ -256,11 +269,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
 
         context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
 
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":\"20\"}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
     }
 
     @Test
@@ -269,16 +282,16 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
         messageBuilder.setDataDictionary(dataDictionary);
 
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }");
+        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
     }
 
     @Test
@@ -292,16 +305,16 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(globalDataDictionary));
         messageBuilder.setDataDictionary(dataDictionary);
 
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }");
+        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":20}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
     }
 
     @Test
@@ -311,13 +324,13 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
 
         context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":\"20\"}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        assertEquals(resultingMessage.getPayload(), initialDataDictionaryTestPayload);
     }
 
     @Test
@@ -327,12 +340,66 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         dataDictionary.setMappings(Collections.singletonMap("person.name", "new_value"));
 
         context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
-        messageBuilder.setPayloadData("{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{\"person\":{\"name\":\"new_value\",\"age\":\"20\"}}");
+        assertEquals(resultingMessage.getPayload(), resultingDataDictionaryTestPayload);
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        Assert.assertEquals(resultingMessage.getPayload(), "{ \"person\": { \"name\": \"initial_value\", \"age\": \"20\"} }");
+        assertEquals(resultingMessage.getPayload(), initialDataDictionaryTestPayload);
+    }
+
+    @Test
+    public void testMessagePayloadWithBinaryTargetIsConverted(){
+
+        //GIVEN
+        context.setVariable("name", "Frauke");
+        messageBuilder.setPayloadData(initialVariableTestPayload);
+        final byte[] expectedPayload = resultingVariableTestPayload.getBytes();
+
+        //WHEN
+        final Message message = messageBuilder.buildMessageContent(
+                context, MessageType.BINARY.name(), MessageDirection.OUTBOUND);
+
+        //THEN
+        assertEquals(message.getPayload(), expectedPayload);
+    }
+
+    @Test
+    public void testVariablesInMessagePayloadsAreReplaced(){
+
+        //GIVEN
+        context.setVariable("name", "Frauke");
+        messageBuilder.setPayloadData(initialVariableTestPayload);
+
+        //WHEN
+        final Message message = messageBuilder.buildMessageContent(
+                context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
+
+        //THEN
+        assertEquals(message.getPayload(), resultingVariableTestPayload);
+    }
+
+    @Test
+    public void testMessagePayloadWithGzipTargetIsConverted(){
+
+        //GIVEN
+        context.setVariable("name", "Frauke");
+        messageBuilder.setPayloadData(initialVariableTestPayload);
+
+        //prepared GZIP value of resultingVariableTestPayload
+        byte[] expectedPayload = new byte[]{
+                31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -85, 86, 80, 42, 72, 45, 42, -50, -49, 83, -78, 82, -88, 86, 80, -54,
+                75, -52, 77, 5, -78, -108, -36, -118, 18, 75, -77, 83, -107, 116, 20, -108, 18, -45, 65, 2, 70, 6, -75,
+                10, -75, 0, 4, 70, 73, 96, 44, 0, 0, 0};
+
+        //WHEN
+        final Message message = messageBuilder.buildMessageContent(
+                context, MessageType.GZIP.name(), MessageDirection.OUTBOUND);
+
+        System.out.print(Arrays.toString((byte[])message.getPayload()));
+
+        //THEN
+        assertEquals(message.getPayload(), expectedPayload);
     }
 }
