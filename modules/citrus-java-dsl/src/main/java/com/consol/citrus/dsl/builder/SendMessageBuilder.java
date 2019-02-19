@@ -16,10 +16,6 @@
 
 package com.consol.citrus.dsl.builder;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.Map;
-
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -51,6 +47,10 @@ import org.springframework.oxm.XmlMappingException;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.xml.transform.StringResult;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.Map;
 
 /**
  * Action builder creates a send message action with several message payload and header
@@ -433,18 +433,18 @@ public class SendMessageBuilder<A extends SendMessageAction, T extends SendMessa
 
     /**
      * Sets a explicit message type for this send action.
-     * @param messageType
-     * @return
+     * @param messageType The message type to send the message in
+     * @return The modified send message
      */
     public T messageType(String messageType) {
         this.messageType = messageType;
         getAction().setMessageType(messageType);
 
-        if (MessageType.BINARY.name().equals(messageType)) {
+        if (binaryMessageConstructionInterceptor.supportsMessageType(messageType)) {
             getMessageContentBuilder().add(binaryMessageConstructionInterceptor);
         }
 
-        if (MessageType.GZIP.name().equals(messageType)) {
+        if (gzipMessageConstructionInterceptor.supportsMessageType(messageType)) {
             getMessageContentBuilder().add(gzipMessageConstructionInterceptor);
         }
 
