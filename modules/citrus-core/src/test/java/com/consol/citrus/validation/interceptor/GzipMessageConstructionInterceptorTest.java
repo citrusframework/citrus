@@ -1,12 +1,8 @@
 package com.consol.citrus.validation.interceptor;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPInputStream;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
@@ -17,6 +13,13 @@ import org.springframework.util.StreamUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
+
+import static org.testng.Assert.assertEquals;
+
 /**
  * @author Christoph Deppisch
  */
@@ -25,27 +28,77 @@ public class GzipMessageConstructionInterceptorTest extends AbstractTestNGUnitTe
     private GzipMessageConstructionInterceptor interceptor = new GzipMessageConstructionInterceptor();
 
     @Test
-    public void testInterceptMessage() throws IOException {
-        Assert.assertEquals(interceptor.interceptMessageConstruction(new DefaultMessage(), MessageType.PLAINTEXT.name(), context).getPayload(), "");
+    public void testTextMessageWithTypesOtherThanGzipStaysUntouched(){
 
+        //GIVEN
+        final DefaultMessage message = new DefaultMessage("foo");
+        MessageType messageType = MessageType.PLAINTEXT;
+
+
+        //WHEN
+        final Message interceptedMessage =
+                interceptor.interceptMessageConstruction(message, messageType.name(), context);
+
+        //THEN
+        assertEquals(interceptedMessage.getPayload(), "foo");
+    }
+
+    @Test
+    public void testTextMessageWithTypeGzipIsIntercepted() throws IOException {
+
+        //GIVEN
+        final DefaultMessage message = new DefaultMessage("foo");
+        MessageType messageType = MessageType.GZIP;
+
+
+        //WHEN
+        final Message interceptedMessage =
+                interceptor.interceptMessageConstruction(message, messageType.name(), context);
+
+        //THEN
         ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
-        GZIPInputStream gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(interceptor.interceptMessageConstruction(new DefaultMessage(), MessageType.GZIP.name(), context).getPayload(byte[].class)));
-        StreamUtils.copy(gzipInputStream, unzipped);
-        Assert.assertEquals(unzipped.toByteArray(), new byte[]{});
-
-        Assert.assertEquals(interceptor.interceptMessageConstruction(new DefaultMessage("foo"), MessageType.PLAINTEXT.name(), context).getPayload(), "foo");
-
-        unzipped = new ByteArrayOutputStream();
-        gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(interceptor.interceptMessageConstruction(new DefaultMessage("foo"), MessageType.GZIP.name(), context).getPayload(byte[].class)));
+        GZIPInputStream gzipInputStream = new GZIPInputStream(
+                new ByteArrayInputStream(interceptedMessage.getPayload(byte[].class)));
         StreamUtils.copy(gzipInputStream, unzipped);
         Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes());
+    }
+
+    @Test
+    public void testResourceMessageWithTypesOtherThanGzipStaysUntouched(){
 
         Assert.assertEquals(interceptor.interceptMessageConstruction(new DefaultMessage(getTestFile()), MessageType.PLAINTEXT.name(), context).getPayload(), getTestFile());
 
-        unzipped = new ByteArrayOutputStream();
-        gzipInputStream = new GZIPInputStream(new ByteArrayInputStream(interceptor.interceptMessageConstruction(new DefaultMessage(getTestFile()), MessageType.GZIP.name(), context).getPayload(byte[].class)));
+        //GIVEN
+        final DefaultMessage message = new DefaultMessage(getTestFile());
+        MessageType messageType = MessageType.PLAINTEXT;
+
+
+        //WHEN
+        final Message interceptedMessage =
+                interceptor.interceptMessageConstruction(message, messageType.name(), context);
+
+        //THEN
+        assertEquals(interceptedMessage.getPayload(), getTestFile());
+    }
+
+    @Test
+    public void testResourceMessageWithTypeGzipIsIntercepted() throws IOException {
+
+        //GIVEN
+        final DefaultMessage message = new DefaultMessage(getTestFile());
+        MessageType messageType = MessageType.GZIP;
+
+        //WHEN
+        final Message interceptedMessage =
+                interceptor.interceptMessageConstruction(message, messageType.name(), context);
+
+        //THEN
+        ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
+        GZIPInputStream gzipInputStream = new GZIPInputStream(
+                new ByteArrayInputStream(interceptedMessage.getPayload(byte[].class)));
         StreamUtils.copy(gzipInputStream, unzipped);
-        Assert.assertEquals(unzipped.toByteArray(), FileCopyUtils.copyToByteArray(getTestFile().getInputStream()));
+
+        Assert.assertEquals(unzipped.toByteArray(),  FileCopyUtils.copyToByteArray(getTestFile().getInputStream()));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
