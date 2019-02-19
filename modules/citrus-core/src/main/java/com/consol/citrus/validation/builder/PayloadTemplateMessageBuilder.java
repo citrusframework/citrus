@@ -55,8 +55,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
     public Object buildMessagePayload(TestContext context, String messageType) {
         this.getMessageInterceptors().add(gzipMessageConstructionInterceptor);
         this.getMessageInterceptors().add(binaryMessageConstructionInterceptor);
-        final String payloadContent = getPayloadContent(context);
-        return context.replaceDynamicContentInString(payloadContent);
+        return getPayloadContent(context, messageType);
     }
 
     /**
@@ -74,7 +73,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
     public void setPayloadResourcePath(String payloadResource) {
         this.payloadResourcePath = payloadResource;
     }
-    
+
     /**
      * Gets the payloadResource.
      * @return the payloadResource
@@ -109,13 +108,22 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
         this.payloadResourceCharset = payloadResourceCharset;
     }
 
-    private String getPayloadContent(TestContext context) {
+    private Object getPayloadContent(TestContext context, String messageType) {
         if(payloadResourcePath != null){
-            return getContentFromResource(context);
+            return handleResource(context, messageType);
         }else if(payloadData != null){
-            return payloadData;
+            return context.replaceDynamicContentInString(payloadData);
         }
         return "";
+    }
+
+    private Object handleResource(TestContext context, String messageType) {
+        if(notHandledByInterceptors(messageType)){
+            //If the message is not handled by interceptors,
+            //the value of the resource file including variable replacements is returned.
+            return context.replaceDynamicContentInString(getContentFromResource(context));
+        }
+        return FileUtils.getFileResource(payloadResourcePath, context);
     }
 
     private String getContentFromResource(TestContext context) {
@@ -126,5 +134,10 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
         }
+    }
+
+    private boolean notHandledByInterceptors(String messageType) {
+        return !gzipMessageConstructionInterceptor.supportsMessageType(messageType) &&
+                !binaryMessageConstructionInterceptor.supportsMessageType(messageType);
     }
 }
