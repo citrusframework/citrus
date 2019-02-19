@@ -16,14 +16,14 @@
 
 package com.consol.citrus.http.servlet;
 
+import org.springframework.http.HttpHeaders;
+import org.springframework.web.filter.OncePerRequestFilter;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-
-import org.springframework.http.HttpHeaders;
-import org.springframework.web.filter.OncePerRequestFilter;
 
 /**
  * Filter watches for gzip content and accept header in order to add automatic gzip decompression on request
@@ -41,13 +41,11 @@ public class GzipServletFilter extends OncePerRequestFilter {
         HttpServletRequest filteredRequest = request;
         HttpServletResponse filteredResponse = response;
 
-        String contentEncoding = request.getHeader(HttpHeaders.CONTENT_ENCODING);
-        if (contentEncoding != null && contentEncoding.contains("gzip")) {
+        if (isGzipEncoding(request.getHeader(HttpHeaders.CONTENT_ENCODING))) {
             filteredRequest = new GzipHttpServletRequestWrapper(request);
         }
 
-        String acceptEncoding = request.getHeader(HttpHeaders.ACCEPT_ENCODING);
-        if (acceptEncoding != null && acceptEncoding.contains("gzip")) {
+        if (isGzipEncoding(request.getHeader(HttpHeaders.ACCEPT_ENCODING))) {
             filteredResponse = new GzipHttpServletResponseWrapper(response);
         }
 
@@ -56,5 +54,9 @@ public class GzipServletFilter extends OncePerRequestFilter {
         if (filteredResponse instanceof GzipHttpServletResponseWrapper) {
             ((GzipHttpServletResponseWrapper) filteredResponse).finish();
         }
+    }
+
+    private boolean isGzipEncoding(String contentEncoding) {
+        return contentEncoding != null && contentEncoding.contains("gzip");
     }
 }

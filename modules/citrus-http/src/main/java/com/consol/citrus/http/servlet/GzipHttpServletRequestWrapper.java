@@ -16,6 +16,8 @@
 
 package com.consol.citrus.http.servlet;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.ServletRequest;
@@ -24,20 +26,19 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-
 /**
  * Request wrapper wraps gzip input stream with unzipped stream. Read operations on that stream are
  * automatically decompressed with gzip encoding.
  *
  * @author Christoph Deppisch
- * @since 2.8.0
+ * @since 2.7.10
  */
 public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {
+
     /**
      * Constructs a request adaptor wrapping the given request.
      *
-     * @param request
+     * @param request The request to wrap
      * @throws IllegalArgumentException if the request is null
      */
     public GzipHttpServletRequestWrapper(HttpServletRequest request) {
@@ -57,8 +58,8 @@ public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
         /**
          * Default constructor using wrapped input stream.
-         * @param request
-         * @throws IOException
+         * @param request The request to wrap
+         * @throws IOException if an I/O error has occurred
          */
         public GzipServletInputStream(ServletRequest request) throws IOException {
             super();
@@ -70,7 +71,7 @@ public class GzipHttpServletRequestWrapper extends HttpServletRequestWrapper {
             try {
                 return gzipStream.available() == 0;
             } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to check gzip intput stream availability", e);
+                throw new CitrusRuntimeException("Failed to check gzip input stream availability", e);
             }
         }
 
