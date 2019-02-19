@@ -80,7 +80,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                             try(final Statement statement = connection.createStatement();
                                 final ResultSet resultSet  = statement.executeQuery(sql)){
                                 assertTrue(resultSet.next());
-                                assertEquals(resultSet.getString(TEST_COLUMN_LABEL), TEST_COLUMN_VALUE);
+                                assertEquals(TEST_COLUMN_VALUE, resultSet.getString(TEST_COLUMN_LABEL));
                             }
                         } catch (final SQLException e) {
                             throw new CitrusRuntimeException(e);
@@ -114,7 +114,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         try(final ResultSet resultSet = statement.getResultSet()){
                             assertTrue(isResultSet);
                             assertTrue(resultSet.next());
-                            assertEquals(resultSet.getString(TEST_COLUMN_LABEL), TEST_COLUMN_VALUE);
+                            assertEquals(TEST_COLUMN_VALUE, resultSet.getString(TEST_COLUMN_LABEL));
                         }
                     }
                 } catch (final SQLException e) {
@@ -143,7 +143,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                     Assert.assertNotNull(connection);
                     try(final Statement statement = connection.createStatement()){
                         final int updatedRows = statement.executeUpdate(sql);
-                        assertEquals(updatedRows, ROWS_UPDATED);
+                        assertEquals(ROWS_UPDATED, updatedRows);
                     }
                 } catch (final SQLException e) {
                     throw new CitrusRuntimeException(e);
@@ -196,6 +196,6 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 .message(JdbcMessage.execute(sqlTwo));
 
         send(jdbcServer)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED * 2));
     }
 }
