@@ -16,23 +16,30 @@
 
 package com.consol.citrus.http.servlet;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.util.FileUtils;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.mock.web.*;
+import org.springframework.mock.web.MockFilterChain;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.mock.web.MockServletConfig;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.zip.GZIPInputStream;
 
 /**
  * @author Christoph Deppisch
@@ -52,6 +59,27 @@ public class GzipServletFilterTest {
 
         servlet.init(new MockServletConfig("citrus"));
         servlet.initStrategies(applicationContext);
+    }
+
+    @Test
+    public void testDoFilterGzipRequestCompression() throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.POST.name(), "http://localhost:8080/gzip");
+        request.addHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+        ByteArrayOutputStream contentStream = new ByteArrayOutputStream();
+        GZIPOutputStream zipped = new GZIPOutputStream(contentStream);
+        zipped.write("Should be decompressed".getBytes());
+        zipped.finish();
+
+        request.setContent(contentStream.toByteArray());
+
+        MockHttpServletResponse response = new MockHttpServletResponse();
+        MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
+            @Override
+            protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+                Assert.assertEquals(FileUtils.readToString(request.getInputStream()), "Should be decompressed");
+            }
+        });
+        filterChain.doFilter(request, response);
     }
 
     @Test
@@ -78,18 +106,20 @@ public class GzipServletFilterTest {
     @Test
     public void testDoFilterNoCompression() throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.POST.name(), "http://localhost:8080/gzip");
+        request.setContent("Should not be decompressed".getBytes());
 
         MockHttpServletResponse response = new MockHttpServletResponse();
         MockFilterChain filterChain = new MockFilterChain(servlet, new GzipServletFilter(), new OncePerRequestFilter() {
             @Override
             protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-                response.getOutputStream().write("Should be compressed".getBytes());
+                response.getOutputStream().write("Should not be compressed".getBytes());
             }
         });
         filterChain.doFilter(request, response);
 
+        Assert.assertEquals(FileUtils.readToString(request.getInputStream()), "Should not be decompressed");
         String unzipped = new String(response.getContentAsByteArray());
-        Assert.assertEquals(unzipped, "Should be compressed");
+        Assert.assertEquals(unzipped, "Should not be compressed");
     }
 
 }
