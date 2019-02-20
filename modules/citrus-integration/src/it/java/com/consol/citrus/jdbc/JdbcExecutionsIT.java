@@ -39,6 +39,7 @@ import java.sql.Statement;
 import java.util.Properties;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
@@ -48,6 +49,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     private static final int ROWS_UPDATED = 42;
     private static final String TEST_COLUMN_LABEL = "foo";
     private static final String TEST_COLUMN_VALUE = "bar";
+    private static final String SAMPLE_UPDATE_SQL = "UPDATE something WHERE condition";
     private final String testDataset = String.format("[ { \"%s\": \"%s\" } ]", TEST_COLUMN_LABEL, TEST_COLUMN_VALUE);
 
     @SuppressWarnings("unused")
@@ -133,7 +135,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
     @CitrusTest
     public void testExecuteUpdate() {
-        final String sql = "UPDATE something WHERE condition";
+        final String sql = SAMPLE_UPDATE_SQL;
 
         async().actions(new AbstractTestAction() {
             @Override
@@ -160,8 +162,37 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     }
 
     @CitrusTest
+    public void testUpdateCountHandlingOnExecute() {
+        final String sql = SAMPLE_UPDATE_SQL;
+
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+                                    try(final Statement statement = connection.createStatement()){
+                                        final boolean isResultSet = statement.execute(sql);
+                                        assertFalse(isResultSet);
+                                        assertEquals(ROWS_UPDATED, statement.getUpdateCount());
+                                    }
+                                } catch (final SQLException e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute(sql));
+
+        send(jdbcServer)
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+    }
+
+    @CitrusTest
     public void testBatchExecution() {
-        final String sqlOne = "UPDATE something WHERE condition";
+        final String sqlOne = SAMPLE_UPDATE_SQL;
         final String sqlTwo = "UPDATE somethingElse WHERE otherCondition";
         final int[] expectedUpdatedRows = new int[]{ROWS_UPDATED, ROWS_UPDATED * 2};
 
