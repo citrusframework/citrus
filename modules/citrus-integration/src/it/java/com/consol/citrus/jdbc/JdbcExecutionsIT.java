@@ -84,7 +84,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                                 assertTrue(resultSet.next());
                                 assertEquals(TEST_COLUMN_VALUE, resultSet.getString(TEST_COLUMN_LABEL));
                             }
-                        } catch (final SQLException e) {
+                        } catch (final SQLException | AssertionError e) {
                             throw new CitrusRuntimeException(e);
                         }
                     }
@@ -119,7 +119,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                             assertEquals(TEST_COLUMN_VALUE, resultSet.getString(TEST_COLUMN_LABEL));
                         }
                     }
-                } catch (final SQLException e) {
+                } catch (final SQLException | AssertionError e ) {
                     throw new CitrusRuntimeException(e);
                 }
             }
@@ -135,35 +135,6 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
     @CitrusTest
     public void testExecuteUpdate() {
-        final String sql = SAMPLE_UPDATE_SQL;
-
-        async().actions(new AbstractTestAction() {
-            @Override
-            public void doExecute(final TestContext context) {
-                try {
-                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
-                    Assert.assertNotNull(connection);
-                    try(final Statement statement = connection.createStatement()){
-                        final int updatedRows = statement.executeUpdate(sql);
-                        assertEquals(ROWS_UPDATED, updatedRows);
-                    }
-                } catch (final SQLException e) {
-                    throw new CitrusRuntimeException(e);
-                }
-            }
-                        }
-        );
-
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sql));
-
-        send(jdbcServer)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
-    }
-
-    @CitrusTest
-    public void testUpdateCountHandlingOnExecute() {
-        final String sql = SAMPLE_UPDATE_SQL;
 
         async().actions(new AbstractTestAction() {
                             @Override
@@ -172,11 +143,10 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                                     final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
                                     Assert.assertNotNull(connection);
                                     try(final Statement statement = connection.createStatement()){
-                                        final boolean isResultSet = statement.execute(sql);
-                                        assertFalse(isResultSet);
-                                        assertEquals(ROWS_UPDATED, statement.getUpdateCount());
+                                        final int updatedRows = statement.executeUpdate(SAMPLE_UPDATE_SQL);
+                                        assertEquals(ROWS_UPDATED, updatedRows);
                                     }
-                                } catch (final SQLException e) {
+                                } catch (final SQLException | AssertionError e) {
                                     throw new CitrusRuntimeException(e);
                                 }
                             }
@@ -184,7 +154,35 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
         );
 
         receive(jdbcServer)
-                .message(JdbcMessage.execute(sql));
+                .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL));
+
+        send(jdbcServer)
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+    }
+
+    @CitrusTest
+    public void testUpdateCountHandlingOnExecute() {
+
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+                                    try(final Statement statement = connection.createStatement()){
+                                        final boolean isResultSet = statement.execute(SAMPLE_UPDATE_SQL);
+                                        assertFalse(isResultSet);
+                                        assertEquals(ROWS_UPDATED, statement.getUpdateCount());
+                                    }
+                                } catch (final SQLException | AssertionError e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL));
 
         send(jdbcServer)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
@@ -210,7 +208,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                                         final int[] updatedRows = statement.executeBatch();
                                         assertEquals(updatedRows, expectedUpdatedRows);
                                     }
-                                } catch (final SQLException e) {
+                                } catch (final SQLException | AssertionError e) {
                                     throw new CitrusRuntimeException(e);
                                 }
                             }
