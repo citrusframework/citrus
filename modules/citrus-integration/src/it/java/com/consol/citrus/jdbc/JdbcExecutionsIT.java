@@ -157,6 +157,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL));
 
         send(jdbcServer)
+                .messageType(MessageType.JSON)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
     }
 
@@ -185,6 +186,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL));
 
         send(jdbcServer)
+                .messageType(MessageType.JSON)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
     }
 
@@ -219,12 +221,14 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 .message(JdbcMessage.execute(sqlOne));
 
         send(jdbcServer)
+                .messageType(MessageType.JSON)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
 
         receive(jdbcServer)
                 .message(JdbcMessage.execute(sqlTwo));
 
         send(jdbcServer)
+                .messageType(MessageType.JSON)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED * 2));
     }
 }
