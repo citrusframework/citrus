@@ -1,243 +1,34 @@
 [[changes-new]]
-= What's new in Citrus 2.7?!
+= What's new in Citrus 2.8.x?
+
+[[changes-2-8-0]]
+== Since Citrus 2.8.0
+Spring 5, Cucumber 3 and support for Apache Kafka. These are the big three of this release and together with bug fixes and
+some smaller features, we call it Citrus 2.8.0.
+
+[[changes-2-8-0-spring-5]]
+=== Spring 5
+From now on, Citrus is using Spring 5. This change improves the underlying infrastructure of the framework.
+In case your test suites depend on Spring 4, we will provide a Spring 4 version of the framework until mid 2019.
+The Spring 4 branch will continue the 2.7.x release family and receives bug fixes, but no new features.
+All bug fixes will be merged into the master branch, containing the Spring 5 version, as well. Those fixes will not
+be mentioned in the 2.8.x release notes explicitly but in the release notes of 2.7.x.
+
+[[changes-2-8-0-cucumber-3]]
+=== Cucumber 3
+We have updated our Cucumber integration, to support Version >= 3.0.0 of the framework. As version 4 of the framework is also
+available, we are going to update our integration again, soon.
+
+[[changes-2-8-0-kafka]]
+=== Apache Kafka support
+We are very proud to announce that Citrus now ships with an Apache Kafka module. Henceforward, you are able to test your
+communication with Kafka from a consumer or a producer perspective. Even if you do not have a Kafka instance available
+for testing in your network, Citrus provides the opportunity to start a local Kafka instance for testing. For more information,
+have a look at the link:#kafka[Apache Kafka] section.
+
+[[changes-2-8-0-others]]
+=== Other changes in 2.8.0
+
+* link:https://github.com/citrusframework/citrus/issues/511[#511 - Use charset from http headers to parse the payload]
+* link:https://github.com/citrusframework/citrus/issues/439[#439 - SAXParseException when sending SOAP request with empty payload or header]
 
-We have the following features included in the box.
-
-[[changes-2-7-9]]
-== Since Citrus 2.7.9
-
-[[changes-bugs-2-7-9]]
-=== Fixed bugs
-
-* https://github.com/citrusframework/citrus/issues/561[#561 - Lost cookie entries except the last one]
-* https://github.com/citrusframework/citrus/issues/535[#535 - Inconsistent values of global variables]
-* https://github.com/citrusframework/citrus/issues/569[#569 - duplicated cookie entries in http request]
-* https://github.com/citrusframework/citrus/issues/455[#455 - Cookies are not recognized by HTTP client]
-
-[[fixed-breaking-changes-2-7-9]]
-=== Fixed breaking changes
-
-We've received reports from Citrus users pointing out several breaking changes in the public API that have been introduced
-with minor versions. Because of that, we've reviewed the public API from release 2.7 until today and reconstructed the
-the removed/changed methods to ease the migration to newer Citrus versions. All methods that have been added back for
-downwards compatibility are marked as `@Deprecated` and will be removed with the next major release.
-
-* https://github.com/citrusframework/citrus/issues/552[#552 - Breaking change in MessageContentBuilder.buildMessageContent() public API]
-* https://github.com/citrusframework/citrus/issues/547[#547 - Breaking change in waitFor().http() public API]
-* https://github.com/citrusframework/citrus/issues/557[#557 - Breaking change in waitFor().file(String) public API]
-* https://github.com/citrusframework/citrus/issues/558[#558 - Breaking change in waitFor().file(File) public API]
-* https://github.com/citrusframework/citrus/issues/551[#551 - Breaking change in selenium().browser().type() public API]
-* https://github.com/citrusframework/citrus/issues/556[#556 - Breaking change in waitFor().message() public API]
-* https://github.com/citrusframework/citrus/issues/553[#553 - Scp client builder does not offer autoReadFiles anymore]
-
-[[changes-security-2-7-9]]
-=== Security fixes
-* https://github.com/citrusframework/citrus/issues/584[#584 - Update com.fasterxml.jackson.core:jackson-databind to version 2.9.8 or later]
-
-[[changes-2-7-8]]
-== Since Citrus 2.7.8
-
-[[changes-sftp]]
-=== STFP preferred authentication settings
-https://github.com/citrusframework/citrus/issues/483[#483 - Add SFTP client preferred authentications setting]
-
-We've change the default authentication order for the SFTP client, so that it prevents early keyboard interaction. To be
-able to change the order of authentication methods depending on the current use case, we've introduced configuration
-options for this.
-
-For more information, please have a look at the link:#sftp-client[SFTP Client] section.
-
-
-[[changes-maintenance]]
-=== Maintenance tasks
-
-* https://github.com/citrusframework/citrus/issues/520[#520 - update vertx-core because of vulnerabilities]
-* https://github.com/citrusframework/citrus/issues/509[#509 - Inconsistencies in Java doc for RepeatOnError]
-
-[[changes-bugs-2-7-8]]
-=== Fixed bugs
-
-* https://github.com/citrusframework/citrus/issues/451[#451 - Citrus-Maven-Plugin: 'Generate Docs'-Mojo fails due to broken path]
-* https://github.com/citrusframework/citrus/issues/418[#418 - Thread leak in TestCase.finish()]
-* https://github.com/citrusframework/citrus/issues/428[#428 - Citrus reports containing invalid XML]
-* https://github.com/citrusframework/citrus/issues/505[#505 - Maven Goal 'citrus:create-test' generate test class with compile error]
-* https://github.com/citrusframework/citrus/issues/516[#516 - Exception in async container is suppressed when used with TestNGCitrusTestRunner]
-* https://github.com/citrusframework/citrus/issues/524[#524 - Initial local build failing in citrus-arquillian]
-
-[[changes-2-7-7]]
-== Since Citrus 2.7.7
-
-[[changes-SshServer]]
-=== Read SshServer key from classpath
-
-It's now possible to load the host key from the classpath.
-
-[[changes-bugs]]
-=== Bugfix, bugfix, bugfix
-
-See the complete list of https://github.com/citrusframework/citrus/milestone/12?closed=1[v2.7.7 bugfixes].
-
-[[changes-2-7-6]]
-== Since Citrus 2.7.6
-
-[[changes-hamcrest-number-matchers]]
-=== Hamcrest matchers
-
-We have added new Hamcrest matcher support in XML. This is `isOneOf` and `isIn` as well as `closeTo`. All implementations are now available in XML when using `@assertThat()@` validation expressions.
-Read more about it in section link:#matcher-assert-that[matcher-assert-that].
-
-[[changes-wait-for-action]]
-=== Wait for test action
-
-The wait action is able to wait for a condition to pass during a test case. Up to now you were able to wait for Http URL to return a status code, a file to be present and a message to arrive. A new
-condition implementation enables you to wait for another test action to perform successfully. In case of error or time delay in the test action the condition will wait until the action is finished. This
-enables you to wait for Docker images to start, JMS messages to arrive and many more.
-
-Read more about it in sections link:#containers-wait[wait-for] and link:#containers-wait-action[wait-for-action].
-
-[[changes-sftp-scp]]
-=== SFTP/SCP support
-
-The FTP endpoints (client/server) in Citrus were enhanced to also handle SFTP and SCP secure file transfer. The new support results in new client and server components for SFTP and SCP so you can
-choose how the files should be sent/received to/from the server.
-
-Read more about it in sections link:#ftp[FTP] and link:#sftp[SFTP/SCP].
-
-[[changes-jms-durable-scubscribers]]
-=== JMS Topic durable subscribers
-
-The Citrus JMS topic client is now able to use durable subscriptions and/or to start and reuse the subscription throughout the whole test suite. The topic subscription is then started at the very beginning
-and incoming events are stored to a local in memory cache. This mechanism is used to not loose any events that are triggered before the test case is receiving the messages from that JMS topic.
-
-Read more about it in section link:#jms-topic-subscriber[JMS topics] and link:#jms-topic-durable-subscription[JMS durable subscriber].
-
-[[changes-http-query-params]]
-=== Improved Http query param handling
-
-Http clients and servers are able to add query parameter to a GET Http URL. The handling of those parameters has significantly changed in this release in order to simplify query parameter support in Citrus. You can now
-validate a sub set of query parameters and you are now able to use validation matchers and `@ignore@` expressions when validating query parameters on the server.
-
-Read more about it in section link:#http[Http support].
-
-[[changes-validation-matcher-new-line]]
-=== Validation matchers
-
-We have added some new validation matcher implementations `ignoreNewLine`, `trim` and `trimAllWhitespace`.
-
-Read more about it in section link:#matcher-ignore-new-line[ignore-new-line], link:#matcher-trim[trim] and link:#matcher-trim-all-whitespace[trim-all-whitespace].
-
-[[changes-2-7-5]]
-== Since Citrus 2.7.5
-
-[[changes-message-selector]]
-=== Message selector on non-XML payloads
-
-Citrus has always been able to select messages on a queue or channel in a receive test action in order to pick a message
-of matching headers and or payload contents from a list of inbound messages. This enabled us to perform parallel testing and in addition to that
-we are able to realize test scenarios where multiple messages arrive unordered at the same time.
-
-The message selector processing has been enhnaced with JsonPath support as well as validation matcher conditions. So you can filter messages of certain
-nature based on non XML payloads, too.
-
-Read more about message selectors in link:#message-selectors[message-selector] and link:#message-channel-selector[message-channel-selector].
-
-[[changes-zip-archives]]
-=== Send and receive zip archives
-
-Citrus provides a special message implementation that automatically adds the payload in form of one to many files and directories to a zip archive. The final zipped content is then
-provided as binary message payload. This makes it very easy to send and receive zipped files and directories within Citrus.
-
-[[changes-ftp-rewrite]]
-=== Support FTP store and retrieve file operations
-
-The FTP support has been rewritten to a certain extend in this release. This is because the former implementation has been too close to the FTP protocol. The new implementation is much
-more comfortable when it comes to store and retrieve files on a FTP server. Also you can now check on a server side that files are pushed or retrieved via client interaction.
-
-This new FTP API is backward compatible to former tests but you should definitely have a look at the new capabilities in FTP support. Check out the new stuff in chapter link:#ftp[ftp].
-
-[[changes-binary-message]]
-=== Binary messages
-
-Handling of binary message content has been possible in Citrus. We have had some issues though when using non standard binary Content-Type headers in Http communication. The binary content was then treated
-as String content obviously corrupting the binary content while processing. Also the Http client has not been able to retrieve binary message content from the server in order to validate the binary
-streams. All issues are fixed with this release and in combination with extended binary message content utilities we expand the framework to handle binary content on client and server side.
-
-To mention only one of these enhancements we now have a binary message stream validator that is able to compare two input streams of binary content. See chapter link:#binary-message-validation[binary-message-validation] for details.
-
-[[changes-2-7-4]]
-== Since Citrus 2.7.4
-
-[[changes-swagger]]
-=== Test generation from swagger definitions
-
-It's now possible to generate a basic Test setup from swagger.json files using the Citrus Maven plugin.
-
-[[changes-jdbc]]
-=== JDBC server
-
-Preparing databases for testing can be hard times. Creating all tables and preparing the test data with all constraints and data integrity is often a full time job and
-very exhausting. Instead of preparing a real database would'nt it be nice to just mock the database queries with proper result set generation just in time within the test? But at the same time
-we need to really use JDBC to connect and retrieve the data from a JDBC mock server.
-
-This is now possible with the new JDBC server integration in Citrus. You can receive incoming SQL statements (INSERT, UPDATE, SELECT, DELETE, ...) and respond with a proper data set and/or rows updated result.
-This enables us to test the data access in a database persistence layer without having to actually create the tables and data needed for the test scenario.
-
-Read about it in chapter link:#jdbc[JDBC server].
-
-[[changes-async]]
-=== Async container
-
-Sometimes it is good to execute test actions in parallel so you can do things simultaneously in a test case. In some cases it is just to execute a single test action in parallel to the rest of the test. When using send operations
-you already could have used `fork="true"` option on that test action. The async test action container provides such functionality for all other test actions, too. Just add a test action to the async container and
-the action is executed in a separate thread. The test case is not blocked with that action execution and immediately executes the next action in place.
-
-Read about it in chapter link:#containers-async[Async].
-
-[[changes-property-functions]]
-=== System/Env property functions
-
-There are new functions available to access System properties and environment settings. This enables you to resolve property values in test cases at runtime. See how to use this functions in chapter link:#functions[functions].
-
-[[changes-url-encode-functions]]
-=== URL encode/decode functions
-
-Two new functions enable you to URL encode/decode a String with proper URL escaping. See how to use this functions in chapter link:#functions[functions].
-
-[[changes-2-7-3]]
-== Since Citrus 2.7.3
-
-[[changes-plaintext-ignore]]
-=== Ignore sections in plain text
-
-Plain text message validation is usually based on a complete String equals comparison. With latest release we added the possibility to ignore some sections with
-well known `@ignore@` keyword placeholder. The message validator will automatically ignore words or character sections based on that. Read more about this in chapter
-link:#plain-text-message-validation[plain text message validation].
-
-Also possible is the extraction of sections as new test variables when using the `@variable()@` matcher in the plain text message content.
-
-[[changes-json-schema-validation]]
-=== Json schema validation
-
-When dealing with Json message content the latest release allows adding of schema validation. The Json structure is validated with proper schema as of Open API (Swagger) schema rules.
-As usual the available schema files are defined in a schema repository in the project configuration. Read more about this in chapter link:#json-schema-validation[json schema validation].
-
-[[changes-junit5]]
-=== JUnit5 support
-
-With this release you are able to integrate Citrus with JUnit5 the new generation of the famous unit testing framework. We provide a Citrus JUnit5 extension that can do the trick.
-Read more about this in chapter link:#run-with-junit5[run with JUnit5].
-
-[[changes-refactoring]]
-=== Refactoring
-
-Deprecated APIs and classes that coexisted a long time are now removed. If your project is using on of these deprecated
-classes you may run into compile time errors.
-Please have a look at the Citrus API JavaDocs and documentation in order to find out how to use the new APIs and classes
-that replaced the old deprecated stuff.
-
-[[changes-bugfixes]]
-== Bugfixes
-
-Bugs are part of our software developers world and fixing them is part of your daily business, too. Finding and solving issues
-makes Citrus better every day. For a detailed listing of all bugfixes please refer to the complete
-https://www.citrusframework.org/changes-report.html[changes log] of each release.

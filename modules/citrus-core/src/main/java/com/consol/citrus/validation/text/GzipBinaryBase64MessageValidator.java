@@ -16,6 +16,11 @@
 
 package com.consol.citrus.validation.text;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.zip.GZIPInputStream;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -24,13 +29,10 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.util.StreamUtils;
 
-import java.io.*;
-import java.util.zip.GZIPInputStream;
-
 /**
  * Message validator automatically converts received binary data message payload to base64 String. Assumes control
  * message payload is also base64 encoded String so we can compare the text data with normal plain text validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class GzipBinaryBase64MessageValidator extends BinaryBase64MessageValidator {
@@ -43,9 +45,6 @@ public class GzipBinaryBase64MessageValidator extends BinaryBase64MessageValidat
                  ByteArrayOutputStream unzipped = new ByteArrayOutputStream()) {
                 StreamUtils.copy(gzipInputStream, unzipped);
                 receivedMessage.setPayload(unzipped.toByteArray());
-
-                unzipped.close();
-                gzipInputStream.close();
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to validate gzipped message", e);
             }
@@ -53,7 +52,7 @@ public class GzipBinaryBase64MessageValidator extends BinaryBase64MessageValidat
 
         super.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
-    
+
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return messageType.equalsIgnoreCase(MessageType.GZIP_BASE64.toString());
