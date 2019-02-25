@@ -44,9 +44,7 @@ public class DataSetCreator {
     public DataSet createDataSet(final Message response, final MessageType messageType) {
         try {
             if (response.getPayload() instanceof DataSet) {
-                final DataSet payload = response.getPayload(DataSet.class);
-                payload.setAffectedRows(extractAffectedRows(response));
-                return payload;
+                return response.getPayload(DataSet.class);
             } else if (isReadyToMarshal(response, messageType)) {
                 return marshalResponse(response, messageType);
             } else {
@@ -71,10 +69,7 @@ public class DataSetCreator {
      */
     private DataSet marshalResponse(final Message response, final MessageType messageType) throws SQLException {
         final String responseData = extractResponseData(response, messageType);
-        final DataSet producedDataset = produceDataSet(messageType, responseData);
-
-        producedDataset.setAffectedRows(extractAffectedRows(response));
-        return producedDataset;
+        return produceDataSet(messageType, responseData);
     }
 
     private String extractResponseData(final Message response, final MessageType messageType) {

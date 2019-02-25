@@ -17,21 +17,34 @@
 package com.consol.citrus.jdbc.server;
 
 import com.consol.citrus.db.driver.dataset.DataSet;
+import com.consol.citrus.db.driver.exchange.DatabaseResult;
 import com.consol.citrus.db.server.JdbcServerException;
 import com.consol.citrus.db.server.controller.JdbcController;
-import com.consol.citrus.endpoint.*;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.*;
-import com.consol.citrus.message.*;
+import com.consol.citrus.jdbc.model.Execute;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.OperationResult;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.MessageType;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -191,10 +204,11 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the query was not successful
      */
     @Override
-    public DataSet executeQuery(String query) throws JdbcServerException {
+    public DatabaseResult executeQuery(String query) throws JdbcServerException {
         log.info("Received execute query request: " + query);
         Message response = handleMessageAndCheckResponse(JdbcMessage.execute(query));
-        return dataSetCreator.createDataSet(response, getMessageType(response));
+        final DataSet dataSet = dataSetCreator.createDataSet(response, getMessageType(response));
+        return new DatabaseResult(dataSet);
     }
 
     /**
@@ -203,10 +217,15 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @throws JdbcServerException In case that the execution was not successful
      */
     @Override
-    public DataSet executeStatement(String stmt) throws JdbcServerException {
+    public DatabaseResult executeStatement(String stmt) throws JdbcServerException {
         log.info("Received execute statement request: " + stmt);
         Message response = handleMessageAndCheckResponse(JdbcMessage.execute(stmt));
-        return dataSetCreator.createDataSet(response, getMessageType(response));
+        final DataSet dataSet = dataSetCreator.createDataSet(response, getMessageType(response));
+        final Object rowsUpdated = response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED);
+        if(rowsUpdated != null){
+            return new DatabaseResult((int) ConvertUtils.convert(rowsUpdated, int.class));
+        }
+        return new DatabaseResult(dataSet);
     }
 
     /**
