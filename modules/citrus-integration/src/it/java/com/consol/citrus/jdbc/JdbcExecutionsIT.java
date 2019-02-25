@@ -38,6 +38,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -208,7 +209,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                                         statement.addBatch(sqlOne);
                                         statement.addBatch(sqlTwo);
                                         final int[] updatedRows = statement.executeBatch();
-                                        assertEquals(updatedRows, expectedUpdatedRows);
+                                        assertArrayEquals(updatedRows, expectedUpdatedRows);
                                     }
                                 } catch (final SQLException | AssertionError e) {
                                     throw new CitrusRuntimeException(e);

@@ -21,16 +21,18 @@ import com.consol.citrus.db.driver.json.JsonDataSetProducer;
 import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.message.JdbcMessage;
+import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import joptsimple.internal.Strings;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
 
 import java.sql.SQLException;
 import java.util.Objects;
-import java.util.Optional;
 
 public class DataSetCreator {
 
@@ -42,7 +44,9 @@ public class DataSetCreator {
     public DataSet createDataSet(final Message response, final MessageType messageType) {
         try {
             if (response.getPayload() instanceof DataSet) {
-                return response.getPayload(DataSet.class);
+                final DataSet payload = response.getPayload(DataSet.class);
+                payload.setAffectedRows(extractAffectedRows(response));
+                return payload;
             } else if (isReadyToMarshal(response, messageType)) {
                 return marshalResponse(response, messageType);
             } else {
@@ -53,6 +57,11 @@ public class DataSetCreator {
         }
     }
 
+    private int extractAffectedRows(final Message response) {
+        final Object affectedRowsHeader = response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED);
+        return (int) ConvertUtils.convert(affectedRowsHeader, Integer.class);
+    }
+
     /**
      * Marshals the given message to the requested MessageType
      * @param response The response to marshal
@@ -61,30 +70,45 @@ public class DataSetCreator {
      * @throws SQLException In case the marshalling failed
      */
     private DataSet marshalResponse(final Message response, final MessageType messageType) throws SQLException {
-        String dataSet = null;
+        final String responseData = extractResponseData(response, messageType);
+        final DataSet producedDataset = produceDataSet(messageType, responseData);
 
+        producedDataset.setAffectedRows(extractAffectedRows(response));
+        return producedDataset;
+    }
+
+    private String extractResponseData(final Message response, final MessageType messageType) {
+        String responseData = "";
         if (response instanceof JdbcMessage || response.getPayload() instanceof OperationResult) {
-            dataSet = response.getPayload(OperationResult.class).getDataSet();
+            responseData = response.getPayload(OperationResult.class).getDataSet();
         } else {
             try {
-                JdbcMarshaller jdbcMarshaller = new JdbcMarshaller();
+                final JdbcMarshaller jdbcMarshaller = new JdbcMarshaller();
                 jdbcMarshaller.setType(messageType.name());
-                Object object = jdbcMarshaller.unmarshal(new StringSource(response.getPayload(String.class)));
+                final Object object = jdbcMarshaller.unmarshal(new StringSource(response.getPayload(String.class)));
                 if (object instanceof OperationResult && StringUtils.hasText(((OperationResult) object).getDataSet())) {
-                    dataSet = ((OperationResult) object).getDataSet();
+                    responseData = ((OperationResult) object).getDataSet();
                 }
-            } catch (CitrusRuntimeException e) {
-                dataSet = response.getPayload(String.class);
+            } catch (final CitrusRuntimeException e) {
+                responseData = response.getPayload(String.class);
             }
         }
-        
-        if (isJsonResponse(messageType)) {
-            return new JsonDataSetProducer(Optional.ofNullable(dataSet).orElse("[]")).produce();
-        } else if (isXmlResponse(messageType)) {
-            return new XmlDataSetProducer(Optional.ofNullable(dataSet).orElse("<dataset></dataset>")).produce();
-        } else {
-            throw new CitrusRuntimeException("Unable to create dataSet from data type " + messageType.name());
+        return responseData;
+    }
+
+    private DataSet produceDataSet(final MessageType messageType, final String responseData) throws SQLException {
+        DataSet producedDataset = new DataSet();
+        if(!Strings.isNullOrEmpty(responseData)){
+            if (isJsonResponse(messageType)) {
+                producedDataset = new JsonDataSetProducer(responseData).produce();
+            } else if (isXmlResponse(messageType)) {
+                producedDataset = new XmlDataSetProducer(responseData).produce();
+            } else {
+                throw new CitrusRuntimeException("Unable to create DataSet from data type " + messageType.name());
+            }
         }
+
+        return producedDataset;
     }
 
     private boolean isReadyToMarshal(final Message response, final MessageType messageType) {
