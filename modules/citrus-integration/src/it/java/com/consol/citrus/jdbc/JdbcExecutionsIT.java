@@ -232,4 +232,37 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 .messageType(MessageType.JSON)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED * 2));
     }
+
+    @CitrusTest
+    public void testLargeBatchExecution() {
+        final String sqlOne = SAMPLE_UPDATE_SQL;
+        final long[] expectedUpdatedRows = new long[]{ROWS_UPDATED};
+
+
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+
+                                    try(final Statement statement = connection.createStatement()){
+                                        statement.addBatch(sqlOne);
+                                        final long[] updatedRows = statement.executeLargeBatch();
+                                        assertArrayEquals(updatedRows, expectedUpdatedRows);
+                                    }
+                                } catch (final SQLException | AssertionError e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute(sqlOne));
+
+        send(jdbcServer)
+                .messageType(MessageType.JSON)
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+    }
 }
