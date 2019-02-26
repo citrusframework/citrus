@@ -21,13 +21,11 @@ import com.consol.citrus.db.driver.json.JsonDataSetProducer;
 import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.message.JdbcMessage;
-import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
 import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import joptsimple.internal.Strings;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
 
@@ -55,11 +53,6 @@ public class DataSetCreator {
         }
     }
 
-    private int extractAffectedRows(final Message response) {
-        final Object affectedRowsHeader = response.getHeader(JdbcMessageHeaders.JDBC_ROWS_UPDATED);
-        return (int) ConvertUtils.convert(affectedRowsHeader, Integer.class);
-    }
-
     /**
      * Marshals the given message to the requested MessageType
      * @param response The response to marshal
@@ -72,6 +65,12 @@ public class DataSetCreator {
         return produceDataSet(messageType, responseData);
     }
 
+    /**
+     * Extracts the response payload form the given message depending on its type and content
+     * @param response The response message to extract the payload from
+     * @param messageType The message type of the response payload
+     * @return The string representation of the message payload
+     */
     private String extractResponseData(final Message response, final MessageType messageType) {
         String responseData = "";
         if (response instanceof JdbcMessage || response.getPayload() instanceof OperationResult) {
@@ -91,8 +90,16 @@ public class DataSetCreator {
         return responseData;
     }
 
+    /**
+     * Creates a {@link DataSet} from the given response payload
+     * @param messageType The type of the response message payload
+     * @param responseData The response payload to convert to a DataSet
+     * @return The DataSet representation of the given payload
+     * @throws SQLException In case of a conversion issue
+     */
     private DataSet produceDataSet(final MessageType messageType, final String responseData) throws SQLException {
         DataSet producedDataset = new DataSet();
+
         if(!Strings.isNullOrEmpty(responseData)){
             if (isJsonResponse(messageType)) {
                 producedDataset = new JsonDataSetProducer(responseData).produce();
