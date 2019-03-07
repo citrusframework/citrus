@@ -32,7 +32,9 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
 import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -264,5 +266,54 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
         send(jdbcServer)
                 .messageType(MessageType.JSON)
                 .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+    }
+
+    @CitrusTest
+    public void testClobIntegration() {
+
+        //GIVEN
+        final String sql = "{? = CALL someClobFunction(?)}";
+        final String clobRequestValue = "clobloblobloblob";
+        final String clobReturnValue = "bolbolbolbolbolc";
+
+
+        //WHEN + THEN
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+                                    try(final PreparedStatement statement = connection.prepareStatement(sql)){
+
+                                        final Clob requestClob = connection.createClob();
+                                        requestClob.setString(1,clobRequestValue);
+                                        statement.setClob(1, requestClob);
+
+                                        statement.execute();
+
+                                        final Clob responseClob = statement.getResultSet().getClob(1);
+
+                                        assertEquals(clobReturnValue,
+                                                responseClob.getSubString(1, (int) requestClob.length()));
+                                    }
+                                } catch (final SQLException | AssertionError e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+clobRequestValue+")"));
+
+        send(jdbcServer)
+                .messageType(MessageType.XML)
+                .message(JdbcMessage.success().dataSet("" +
+                        "<dataset>" +
+                        "<row>" +
+                        "<RETURN_CLOB>"+clobReturnValue+"</RETURN_CLOB>"+
+                        "</row>" +
+                        "</dataset>"));
     }
 }
