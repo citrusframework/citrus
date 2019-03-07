@@ -25,12 +25,12 @@ import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import joptsimple.internal.Strings;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringSource;
 
 import java.sql.SQLException;
 import java.util.Objects;
-import java.util.Optional;
 
 public class DataSetCreator {
 
@@ -61,30 +61,56 @@ public class DataSetCreator {
      * @throws SQLException In case the marshalling failed
      */
     private DataSet marshalResponse(final Message response, final MessageType messageType) throws SQLException {
-        String dataSet = null;
+        final String responseData = extractResponseData(response, messageType);
+        return produceDataSet(messageType, responseData);
+    }
 
+    /**
+     * Extracts the response payload form the given message depending on its type and content
+     * @param response The response message to extract the payload from
+     * @param messageType The message type of the response payload
+     * @return The string representation of the message payload
+     */
+    private String extractResponseData(final Message response, final MessageType messageType) {
+        String responseData = "";
         if (response instanceof JdbcMessage || response.getPayload() instanceof OperationResult) {
-            dataSet = response.getPayload(OperationResult.class).getDataSet();
+            responseData = response.getPayload(OperationResult.class).getDataSet();
         } else {
             try {
-                JdbcMarshaller jdbcMarshaller = new JdbcMarshaller();
+                final JdbcMarshaller jdbcMarshaller = new JdbcMarshaller();
                 jdbcMarshaller.setType(messageType.name());
-                Object object = jdbcMarshaller.unmarshal(new StringSource(response.getPayload(String.class)));
+                final Object object = jdbcMarshaller.unmarshal(new StringSource(response.getPayload(String.class)));
                 if (object instanceof OperationResult && StringUtils.hasText(((OperationResult) object).getDataSet())) {
-                    dataSet = ((OperationResult) object).getDataSet();
+                    responseData = ((OperationResult) object).getDataSet();
                 }
-            } catch (CitrusRuntimeException e) {
-                dataSet = response.getPayload(String.class);
+            } catch (final CitrusRuntimeException e) {
+                responseData = response.getPayload(String.class);
             }
         }
-        
-        if (isJsonResponse(messageType)) {
-            return new JsonDataSetProducer(Optional.ofNullable(dataSet).orElse("[]")).produce();
-        } else if (isXmlResponse(messageType)) {
-            return new XmlDataSetProducer(Optional.ofNullable(dataSet).orElse("<dataset></dataset>")).produce();
-        } else {
-            throw new CitrusRuntimeException("Unable to create dataSet from data type " + messageType.name());
+        return responseData;
+    }
+
+    /**
+     * Creates a {@link DataSet} from the given response payload
+     * @param messageType The type of the response message payload
+     * @param responseData The response payload to convert to a DataSet
+     * @return The DataSet representation of the given payload
+     * @throws SQLException In case of a conversion issue
+     */
+    private DataSet produceDataSet(final MessageType messageType, final String responseData) throws SQLException {
+        DataSet producedDataset = new DataSet();
+
+        if(!Strings.isNullOrEmpty(responseData)){
+            if (isJsonResponse(messageType)) {
+                producedDataset = new JsonDataSetProducer(responseData).produce();
+            } else if (isXmlResponse(messageType)) {
+                producedDataset = new XmlDataSetProducer(responseData).produce();
+            } else {
+                throw new CitrusRuntimeException("Unable to create DataSet from data type " + messageType.name());
+            }
         }
+
+        return producedDataset;
     }
 
     private boolean isReadyToMarshal(final Message response, final MessageType messageType) {
