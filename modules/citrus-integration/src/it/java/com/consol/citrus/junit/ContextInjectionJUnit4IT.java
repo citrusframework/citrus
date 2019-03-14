@@ -30,6 +30,7 @@ public class ContextInjectionJUnit4IT extends JUnit4CitrusTestDesigner {
 
     @Test
     @CitrusTest
+    @SuppressWarnings("squid:S2699")
     public void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 

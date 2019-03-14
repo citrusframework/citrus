@@ -35,7 +35,8 @@ public class ContextInjectionJUnit5RunnerIT {
 
     @Test
     @CitrusTest
-    public void contextInjection(@CitrusResource TestContext context) {
+    @SuppressWarnings("squid:S2699")
+    void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
         runner.echo("${message}");

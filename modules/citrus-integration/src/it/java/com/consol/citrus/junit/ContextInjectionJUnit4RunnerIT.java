@@ -30,6 +30,7 @@ public class ContextInjectionJUnit4RunnerIT extends JUnit4CitrusTestRunner {
 
     @Test
     @CitrusTest
+    @SuppressWarnings("squid:S2699")
     public void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 

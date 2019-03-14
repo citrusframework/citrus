@@ -26,6 +26,7 @@ import org.junit.experimental.categories.Category;
  * @author Christoph Deppisch
  * @since 2.2
  */
+@SuppressWarnings("squid:S2699")
 public class JUnit4AnnotationIT extends AbstractJUnit4CitrusTest {
 
     @Test
