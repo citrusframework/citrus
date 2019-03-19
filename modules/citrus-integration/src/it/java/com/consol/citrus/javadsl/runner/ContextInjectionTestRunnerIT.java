@@ -14,25 +14,41 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.javadsl.runner;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
-import org.junit.Test;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import org.testng.annotations.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class TestContextInjectionJUnit4RunnerIT extends JUnit4CitrusTestRunner {
+public class ContextInjectionTestRunnerIT extends TestNGCitrusTestRunner {
 
     @Test
+    @Parameters( { "context" })
     @CitrusTest
-    public void contextInjection(@CitrusResource TestContext context) {
+    public void contextInjection(@Optional @CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
         echo("${message}");
+    }
+
+    @Test(dataProvider = "testData")
+    @Parameters({ "data", "context" })
+    @CitrusTest
+    public void contextInjectionCombinedWithParameters(String data, @CitrusResource TestContext context) {
+        context.setVariable("message", "Injection worked!");
+
+        echo("${message}");
+        echo("${data}");
+    }
+
+    @DataProvider
+    public Object[][] testData() {
+        return new Object[][] { { "hello", null }, { "bye", null } };
     }
 }
