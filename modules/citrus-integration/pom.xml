@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>2.9.0-SNAPSHOT</version>
     <relativePath>../../pom.xml</relativePath>
   </parent>
-  
+
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-integration</artifactId>
   <name>citrus-integration</name>
@@ -29,12 +29,26 @@
             <skip>true</skip>
           </configuration>
         </plugin>
-      
+
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-failsafe-plugin</artifactId>
           <version>${surefire.version}</version>
+          <executions>
+            <execution>
+              <id>failure-tests</id>
+              <phase>integration-test</phase>
+              <goals>
+                <goal>integration-test</goal>
+              </goals>
+              <configuration>
+                <groups>com.consol.citrus.ShouldFailGroup</groups>
+                <excludedGroups>NonExisting</excludedGroups>
+              </configuration>
+            </execution>
+          </executions>
           <configuration>
+            <excludedGroups>com.consol.citrus.ShouldFailGroup</excludedGroups>
             <properties>
               <property>
                 <name>junit</name>
@@ -208,7 +222,7 @@
       <version>${apache.camel.version}</version>
       <scope>test</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.ant</groupId>
       <artifactId>ant</artifactId>

@@ -42,7 +42,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusTestRunner {
     @HttpServerConfig(port = 7177, autoStart = true)
     private HttpServer wsServer;
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
     public void test() {
         http(action -> action.client(wsClient)

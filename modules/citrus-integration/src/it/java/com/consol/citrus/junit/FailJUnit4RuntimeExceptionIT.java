@@ -16,10 +16,12 @@
 
 package com.consol.citrus.junit;
 
+import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @author Christoph Deppisch
@@ -32,11 +34,13 @@ public class FailJUnit4RuntimeExceptionIT extends JUnit4CitrusTestDesigner {
     }
 
     @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     public void doExecute() {
         executeTest();
     }
 
     @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     @CitrusTest
     public void failTest() {
         throw new RuntimeException("This test should fail because of runtime exception");

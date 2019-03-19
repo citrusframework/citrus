@@ -19,8 +19,8 @@ package com.consol.citrus.junit.jupiter;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
+import com.consol.citrus.dsl.runner.TestRunner;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -28,16 +28,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
  * @author Christoph Deppisch
  */
 @ExtendWith(CitrusExtension.class)
-public class TestContextInjectionJUnit5IT {
+public class ContextInjectionJUnit5RunnerIT {
 
     @CitrusResource
-    private TestDesigner designer;
+    private TestRunner runner;
 
     @Test
     @CitrusTest
-    public void contextInjection(@CitrusResource TestContext context) {
+    @SuppressWarnings("squid:S2699")
+    void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
-        designer.echo("${message}");
+        runner.echo("${message}");
     }
 }

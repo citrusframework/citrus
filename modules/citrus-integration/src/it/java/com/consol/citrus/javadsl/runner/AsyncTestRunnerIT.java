@@ -61,7 +61,7 @@ public class AsyncTestRunnerIT extends TestNGCitrusTestRunner {
         traceVariables("anonymous");
     }
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
     public void asyncContainerError() {
         async().actions(
