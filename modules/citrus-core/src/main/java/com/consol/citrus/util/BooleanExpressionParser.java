@@ -64,6 +64,11 @@ public final class BooleanExpressionParser {
         SeparatorToken(final Character value) {
             this.value = value;
         }
+
+        @Override
+        public String toString(){
+            return value.toString();
+        }
     }
 
     /**
@@ -97,13 +102,13 @@ public final class BooleanExpressionParser {
                 currentCharacter = expression.charAt(currentCharacterIndex);
 
                 if (SeparatorToken.OPEN_PARENTHESIS.value == currentCharacter) {
-                    operators.push(SeparatorToken.OPEN_PARENTHESIS.value.toString());
-                    currentCharacterIndex += moveCursor(SeparatorToken.OPEN_PARENTHESIS.value.toString());
+                    operators.push(SeparatorToken.OPEN_PARENTHESIS.toString());
+                    currentCharacterIndex += moveCursor(SeparatorToken.OPEN_PARENTHESIS.toString());
                 } else if (SeparatorToken.SPACE.value == currentCharacter) {
-                    currentCharacterIndex += moveCursor(SeparatorToken.SPACE.value.toString());
+                    currentCharacterIndex += moveCursor(SeparatorToken.SPACE.toString());
                 } else if (SeparatorToken.CLOSE_PARENTHESIS.value == currentCharacter) {
                     evaluateSubexpression(operators, values);
-                    currentCharacterIndex += moveCursor(SeparatorToken.CLOSE_PARENTHESIS.value.toString());
+                    currentCharacterIndex += moveCursor(SeparatorToken.CLOSE_PARENTHESIS.toString());
                 } else if (!Character.isDigit(currentCharacter)) {
                     final String parsedNonDigit = parseNonDigits(expression, currentCharacterIndex);
                     if (isBoolean(parsedNonDigit)) {
@@ -154,7 +159,7 @@ public final class BooleanExpressionParser {
      */
     private static void evaluateSubexpression(final Deque<String> operators, final Deque<String> values) {
         String operator = operators.pop();
-        while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
+        while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.toString())) {
             values.push(getBooleanResultAsString(operator,
                     values.pop(),
                     values.pop()));
