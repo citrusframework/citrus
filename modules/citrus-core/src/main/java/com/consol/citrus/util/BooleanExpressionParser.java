@@ -19,10 +19,10 @@ package com.consol.citrus.util;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -33,26 +33,23 @@ import static java.lang.Boolean.TRUE;
 /**
  * Parses boolean expression strings and evaluates to boolean result.
  */
-@SuppressWarnings("unchecked")
 public final class BooleanExpressionParser {
 
     /**
      * List of known non-boolean operators
      */
-    private static final List<String> OPERATORS = new ArrayList<>(
-            CollectionUtils.arrayToList(new String[]{"lt", "lt=", "gt", "gt="}));
+    private static final List<String> OPERATORS = new ArrayList<>(Arrays.asList("lt", "lt=", "gt", "gt="));
 
     /**
      * List of known boolean operators
      */
-    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<>(
-            CollectionUtils.arrayToList(new String[]{"=", "and", "or"}));
+    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<>(Arrays.asList("=", "and", "or"));
 
     /**
      * List of known boolean values
      */
     private static final List<String> BOOLEAN_VALUES = new ArrayList<>(
-            CollectionUtils.arrayToList(new String[]{TRUE.toString(), FALSE.toString()}));
+            Arrays.asList(TRUE.toString(), FALSE.toString()));
 
     /**
      * SeparatorToken is an explicit type to identify different kinds of separators.
