@@ -3,6 +3,7 @@
 
 === Fixed bugs
 * https://github.com/citrusframework/citrus/issues/545[#545 - Missing HttpServer auto gzip decompression in request handling]
+* https://github.com/citrusframework/citrus/issues/588[#588 - BooleanExpressionParser parses expression groups containing boolean strings inconsistently]
 
 [[changes-2-7-9]]
 == Changes in Citrus 2.7.9
