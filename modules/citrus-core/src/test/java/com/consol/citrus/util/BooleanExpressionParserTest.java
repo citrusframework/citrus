@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,6 +48,10 @@ public class BooleanExpressionParserTest {
         Assert.assertFalse(BooleanExpressionParser.evaluate("(1 lt 1) and (2 gt 2)"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("(1 gt 2) or (2 = 3)"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("((1 = 5) and (2 = 6)) or (2 lt 1)"));
+    }
+
+    @Test
+    public void testExpressionParserWithStringValues() {
         Assert.assertTrue(BooleanExpressionParser.evaluate("true"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("true = true"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("false = false"));
@@ -56,13 +60,21 @@ public class BooleanExpressionParserTest {
         Assert.assertFalse(BooleanExpressionParser.evaluate("false = true"));
         Assert.assertTrue(BooleanExpressionParser.evaluate("( false = false ) and ( true = true )"));
         Assert.assertFalse(BooleanExpressionParser.evaluate("( false = false ) and ( true = false )"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) and (true = true)"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("(false = false) and (true = false)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(   false = false) and (true = true    )"));
+        Assert.assertFalse(BooleanExpressionParser.evaluate("(false = false    ) and     (    true = false)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("( true = false ) or ( false = false )"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = true)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false) or (true = false)"));
+        Assert.assertTrue(BooleanExpressionParser.evaluate("(false = false    ) or (    true = false)"));
     }
     
     @Test
     public void testExpressionParserWithUnknownOperator() {
         try {
             BooleanExpressionParser.evaluate("wahr");
-        } catch(CitrusRuntimeException e) {
+        } catch(final CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Unknown operator 'wahr'");
             return;
         }
@@ -74,7 +86,7 @@ public class BooleanExpressionParserTest {
     public void testExpressionParserWithBrokenExpression() {
         try {
             BooleanExpressionParser.evaluate("1 = ");
-        } catch(CitrusRuntimeException e) {
+        } catch(final CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Unable to parse boolean expression '1 = '. Maybe expression is incomplete!");
             return;
         }

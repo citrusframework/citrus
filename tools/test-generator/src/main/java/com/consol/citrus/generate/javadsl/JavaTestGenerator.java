@@ -31,7 +31,6 @@ import java.util.*;
 import java.util.stream.Stream;
 
 /**
- * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTestGenerator<T> {
@@ -55,8 +54,8 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
     /**
      * Create the Java test with type and method information.
      */
-    protected void createJavaTest() {
-        TypeSpec.Builder testTypeBuilder = TypeSpec.classBuilder(getName())
+    private void createJavaTest() {
+        final TypeSpec.Builder testTypeBuilder = TypeSpec.classBuilder(getName())
                 .addModifiers(Modifier.PUBLIC)
                 .addJavadoc(getJavaDoc())
                 .addMethod(getTestMethod(getMethodName()));
@@ -67,22 +66,22 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
             testTypeBuilder.superclass(getBaseType());
         }
 
-        JavaFile javaFile = JavaFile.builder(getTargetPackage(), testTypeBuilder.build())
+        final JavaFile javaFile = JavaFile.builder(getTargetPackage(), testTypeBuilder.build())
                 .indent("    ")
                 .build();
 
         try {
             javaFile.writeTo(new File(getSrcDirectory()));
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to write java class file", e);
         }
     }
 
     /**
      * Gets the class java doc.
-     * @return
+     * @return The javadoc CodeBlock
      */
-    protected CodeBlock getJavaDoc() {
+    private CodeBlock getJavaDoc() {
         return CodeBlock.builder()
                 .add("$L\n\n", Optional.ofNullable(getDescription()).orElse(getName()))
                 .add("@author $L\n", getAuthor())
@@ -92,7 +91,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
 
     /**
      * Gets the test class base type to extend from.
-     * @return
+     * @return TypeName of the base type
      */
     protected TypeName getBaseType() {
         if (getFramework().equals(UnitFramework.TESTNG)) {
@@ -107,23 +106,29 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
 
     /**
      * Gets the Junit5 base extension to use.
-     * @return
+     * @return The AnnotationSpec of the Junit5 extension
      */
     protected AnnotationSpec getBaseExtension() {
-        return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api.extension","ExtendWith"))
+        return createAnnotationBuilder("org.junit.jupiter.api.extension", "ExtendWith")
                 .addMember("value", "com.consol.citrus.junit.jupiter.CitrusBaseExtension")
                 .build();
     }
 
     /**
      * Gets the test method spec with test logic.
-     * @param name
-     * @return
+     * @param name The name of the test
+     * @return The method specification
      */
-    protected MethodSpec getTestMethod(String name) {
-        ParameterSpec.Builder methodParamBuilder = ParameterSpec.builder(TestRunner.class, "testRunner")
+    private MethodSpec getTestMethod(final String name) {
+        final ParameterSpec.Builder methodParamBuilder = ParameterSpec
+                .builder(TestRunner.class, "testRunner")
                 .addAnnotation(CitrusResource.class);
-        MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(name)
+
+        if(getFramework().equals(UnitFramework.TESTNG)){
+            methodParamBuilder.addAnnotation(createTestNgAnnotationBuilder("Optional").build());
+        }
+
+        final MethodSpec.Builder methodBuilder = MethodSpec.methodBuilder(name)
                 .addModifiers(Modifier.PUBLIC)
                 .addAnnotation(getCitrusAnnotation())
                 .addParameter(methodParamBuilder.build());
@@ -137,8 +142,8 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
     }
 
     /**
-     * Gets the Citrus test annotation to use.
-     * @return
+     * Gets the Citrus XML test annotation.
+     * @return The AnnotationSpec for XML tests
      */
     protected AnnotationSpec getCitrusAnnotation() {
         return AnnotationSpec.builder(CitrusXmlTest.class)
@@ -148,42 +153,20 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
 
     /**
      * Gets the unit framework annotation to use.
-     * @return
+     * @return The annotation spec for test cases
      */
-    protected AnnotationSpec[] getTestAnnotations() {
-        if (getFramework().equals(UnitFramework.TESTNG)) {
-            AnnotationSpec.Builder builder = AnnotationSpec.builder(ClassName.get("org.testng.annotations", "Test"));
-
-            if (isDisabled()) {
-                builder.addMember("enabled", "false");
-            }
-
-            return new AnnotationSpec[] { builder.build() };
-        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
-            AnnotationSpec.Builder builder = AnnotationSpec.builder(ClassName.get("org.junit", "Test"));
-
-            if (isDisabled()) {
-                return new AnnotationSpec[] {builder.build(), AnnotationSpec.builder(ClassName.get("org.junit", "Ignore")).build() };
-            }
-
-            return new AnnotationSpec[] { builder.build() };
-
-        } else if (getFramework().equals(UnitFramework.JUNIT5)) {
-            AnnotationSpec.Builder builder = AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api", "Test"));
-
-            if (isDisabled()) {
-                return new AnnotationSpec[] {builder.build(), AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api", "Disabled")).build() };
-            }
-
-            return new AnnotationSpec[] { builder.build() };
+    private AnnotationSpec[] getTestAnnotations() {
+        switch (getFramework()){
+            case JUNIT4: return createJunit4TestAnnotations();
+            case JUNIT5: return createJunit5Annotations();
+            case TESTNG: return createTestNgTestAnnotations();
+            default: throw new CitrusRuntimeException("Unsupported framework: " + getFramework());
         }
-
-        throw new CitrusRuntimeException("Unsupported framework: " + getFramework());
     }
 
     /**
      * List of test actions to be added as code to the method body section of the test.
-     * @return
+     * @return A list of actions to execute
      */
     protected List<CodeBlock> getActions() {
         return Collections.emptyList();
@@ -191,10 +174,10 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
 
     /**
      * Set the mode describing which part (client/server) to use.
-     * @param mode
-     * @return
+     * @param mode The mode to generate the test for
+     * @return The modified JavaTestGenerator
      */
-    public T withMode(GeneratorMode mode) {
+    public T withMode(final GeneratorMode mode) {
         this.mode = mode;
         return self;
     }
@@ -207,7 +190,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
     /**
      * Gets the mode.
      *
-     * @return
+     * @return The current mode
      */
     public GeneratorMode getMode() {
         return mode;
@@ -216,10 +199,54 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
     /**
      * Sets the mode.
      *
-     * @param mode
+     * @param mode The mode to set (client/server
      */
-    public void setMode(GeneratorMode mode) {
+    public void setMode(final GeneratorMode mode) {
         this.mode = mode;
     }
 
+    private AnnotationSpec[] createJunit5Annotations() {
+        return createHJunitTestAnnotations(
+                createAnnotationBuilder("org.junit.jupiter.api", "Test"),
+                createAnnotationBuilder("org.junit.jupiter.api", "Disabled"));
+    }
+
+    private AnnotationSpec[] createJunit4TestAnnotations() {
+        return createHJunitTestAnnotations(
+                createAnnotationBuilder("org.junit", "Test"),
+                createAnnotationBuilder("org.junit", "Ignore"));
+    }
+
+    private AnnotationSpec[] createTestNgTestAnnotations() {
+        final AnnotationSpec.Builder testAnnotationBuilder = createTestNgAnnotationBuilder("Test");
+
+        if (isDisabled()) {
+            testAnnotationBuilder.addMember("enabled", "false");
+        }
+
+        final AnnotationSpec.Builder parametersBuilder = createTestNgAnnotationBuilder("Parameters");
+        parametersBuilder.addMember("value","$S", "testRunner");
+
+        return new AnnotationSpec[] { testAnnotationBuilder.build(), parametersBuilder.build() };
+    }
+
+    private AnnotationSpec[] createHJunitTestAnnotations(final AnnotationSpec.Builder testAnnotation,
+                                                         final AnnotationSpec.Builder disabledAnnotation){
+        if (isDisabled()) {
+            return new AnnotationSpec[] {testAnnotation.build(), disabledAnnotation.build()};
+        }
+        return new AnnotationSpec[] {testAnnotation.build()};
+    }
+
+    private ClassName getTestNgAnnotation(final String annotationName) {
+        return ClassName.get("org.testng.annotations", annotationName);
+    }
+
+    private AnnotationSpec.Builder createTestNgAnnotationBuilder(final String parameters) {
+        return AnnotationSpec.builder(getTestNgAnnotation(parameters));
+    }
+
+    private AnnotationSpec.Builder createAnnotationBuilder(final String packageName, final String simpleName) {
+        return AnnotationSpec.builder(ClassName.get(packageName, simpleName));
+    }
 }

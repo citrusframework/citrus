@@ -3,17 +3,17 @@
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:http="http://www.citrusframework.org/schema/http/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
-    
+
   <testcase name="HttpGzipEncodedIT">
     <meta-info>
       <author>Citrus</author>
       <creationdate>2016-11-09</creationdate>
       <status>FINAL</status>
     </meta-info>
-    
+
     <description>This test sends a x-www-form-urlencoded HTML form data content to Http server for validation.
       The form data is validated using plain text validation</description>
 
@@ -85,7 +85,7 @@
           <http:headers content-type="text/html">
             <http:header name="Content-Encoding" value="gzip"/>
           </http:headers>
-          <http:body>
+          <http:body type="gzip">
             <http:data>${text}</http:data>
           </http:body>
         </http:POST>
@@ -125,6 +125,6 @@
         <http:headers status="200" reason-phrase="OK"/>
       </http:receive-response>
     </actions>
-    
+
   </testcase>
 </spring:beans>

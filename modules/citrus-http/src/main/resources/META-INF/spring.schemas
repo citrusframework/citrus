@@ -26,6 +26,7 @@ http\://www.citrusframework.org/schema/http/config/citrus-http-config-2.7.6.xsd=
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-2.7.7.xsd=com/consol/citrus/schema/citrus-http-config-2.7.7.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-2.7.8.xsd=com/consol/citrus/schema/citrus-http-config-2.7.8.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config-2.8.0.xsd=com/consol/citrus/schema/citrus-http-config-2.8.0.xsd
+http\://www.citrusframework.org/schema/http/config/citrus-http-config-2.9.0.xsd=com/consol/citrus/schema/citrus-http-config-2.9.0.xsd
 http\://www.citrusframework.org/schema/http/config/citrus-http-config.xsd=com/consol/citrus/schema/citrus-http-config.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.3.xsd=com/consol/citrus/schema/citrus-http-testcase-2.3.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.4.xsd=com/consol/citrus/schema/citrus-http-testcase-2.4.xsd
@@ -45,4 +46,5 @@ http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.7.6.
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.7.7.xsd=com/consol/citrus/schema/citrus-http-testcase-2.7.7.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.7.8.xsd=com/consol/citrus/schema/citrus-http-testcase-2.7.8.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.8.0.xsd=com/consol/citrus/schema/citrus-http-testcase-2.8.0.xsd
+http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase-2.9.0.xsd=com/consol/citrus/schema/citrus-http-testcase-2.9.0.xsd
 http\://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd=com/consol/citrus/schema/citrus-http-testcase.xsd

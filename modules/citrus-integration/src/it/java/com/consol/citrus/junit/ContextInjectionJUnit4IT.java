@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2015 the original author or authors.
+ * Copyright 2006-2016 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,22 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.javadsl.runner;
+package com.consol.citrus.junit;
 
+import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
-import org.testng.annotations.Test;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
+import org.junit.Test;
 
 /**
  * @author Christoph Deppisch
+ * @since 2.5
  */
-@Test
-public class GlobalPropertiesTestRunnerIT extends TestNGCitrusTestRunner {
-    
+public class ContextInjectionJUnit4IT extends JUnit4CitrusTestDesigner {
+
+    @Test
     @CitrusTest
-    public void globalProperties() {
-        echo("Project name is: ${project.name}");
-        
-        echo("Testing global variables from properties: ${globalWelcomingText}");
+    @SuppressWarnings("squid:S2699")
+    public void contextInjection(@CitrusResource TestContext context) {
+        context.setVariable("message", "Injection worked!");
+
+        echo("${message}");
     }
 }
