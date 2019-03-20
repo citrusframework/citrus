@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2019 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,15 +21,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.EmptyStackException;
+import java.util.Deque;
 import java.util.List;
-import java.util.Stack;
+import java.util.NoSuchElementException;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 /**
  * Parses boolean expression strings and evaluates to boolean result.
- *
- * @author Christoph Deppisch
  */
 @SuppressWarnings("unchecked")
 public final class BooleanExpressionParser {
@@ -37,20 +39,20 @@ public final class BooleanExpressionParser {
     /**
      * List of known non-boolean operators
      */
-    private static final List<String> OPERATORS = new ArrayList<String>(
+    private static final List<String> OPERATORS = new ArrayList<>(
             CollectionUtils.arrayToList(new String[]{"lt", "lt=", "gt", "gt="}));
 
     /**
      * List of known boolean operators
      */
-    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<String>(
+    private static final List<String> BOOLEAN_OPERATORS = new ArrayList<>(
             CollectionUtils.arrayToList(new String[]{"=", "and", "or"}));
 
     /**
      * List of known boolean values
      */
-    private static final List<String> BOOLEAN_VALUES = new ArrayList<String>(
-            CollectionUtils.arrayToList(new String[]{"true", "false"}));
+    private static final List<String> BOOLEAN_VALUES = new ArrayList<>(
+            CollectionUtils.arrayToList(new String[]{TRUE.toString(), FALSE.toString()}));
 
     /**
      * SeparatorToken is an explicit type to identify different kinds of separators.
@@ -70,7 +72,7 @@ public final class BooleanExpressionParser {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
+    private static final Logger log = LoggerFactory.getLogger(BooleanExpressionParser.class);
 
     /**
      * Prevent instantiation.
@@ -86,8 +88,8 @@ public final class BooleanExpressionParser {
      * @throws CitrusRuntimeException When unable to parse expression
      */
     public static boolean evaluate(final String expression) {
-        final Stack<String> operators = new Stack<>();
-        final Stack<String> values = new Stack<>();
+        final Deque<String> operators = new ArrayDeque<>();
+        final Deque<String> values = new ArrayDeque<>();
         final boolean result;
 
         char currentCharacter;
@@ -123,9 +125,9 @@ public final class BooleanExpressionParser {
             result = Boolean.valueOf(evaluateExpressionStack(operators, values));
 
             if (log.isDebugEnabled()) {
-                log.debug("Boolean expression " + expression + " evaluates to " + result);
+                log.debug("Boolean expression {} evaluates to {}", expression, result);
             }
-        } catch (final EmptyStackException e) {
+        } catch (final NoSuchElementException e) {
             throw new CitrusRuntimeException("Unable to parse boolean expression '" + expression + "'. Maybe expression is incomplete!", e);
         }
 
@@ -140,7 +142,7 @@ public final class BooleanExpressionParser {
      * @param values    Values
      * @return The final result popped of the values stack
      */
-    private static String evaluateExpressionStack(final Stack<String> operators, final Stack<String> values) {
+    private static String evaluateExpressionStack(final Deque<String> operators, final Deque<String> values) {
         while (!operators.isEmpty()) {
             values.push(getBooleanResultAsString(operators.pop(), values.pop(), values.pop()));
         }
@@ -153,7 +155,7 @@ public final class BooleanExpressionParser {
      * @param operators Stack of operators
      * @param values    Stack of values
      */
-    private static void evaluateSubexpression(final Stack<String> operators, final Stack<String> values) {
+    private static void evaluateSubexpression(final Deque<String> operators, final Deque<String> values) {
         String operator = operators.pop();
         while (!(operator).equals(SeparatorToken.OPEN_PARENTHESIS.value.toString())) {
             values.push(getBooleanResultAsString(operator,
@@ -172,7 +174,7 @@ public final class BooleanExpressionParser {
      * @return The parsed substring
      */
     private static String parseDigits(final String expression, final int startIndex) {
-        final StringBuffer digitBuffer = new StringBuffer();
+        final StringBuilder digitBuffer = new StringBuilder();
 
         char currentCharacter = expression.charAt(startIndex);
         int subExpressionIndex = startIndex;
@@ -201,7 +203,7 @@ public final class BooleanExpressionParser {
      * @return The parsed substring
      */
     private static String parseNonDigits(final String expression, final int startIndex) {
-        final StringBuffer operatorBuffer = new StringBuffer();
+        final StringBuilder operatorBuffer = new StringBuilder();
 
         char currentCharacter = expression.charAt(startIndex);
         int subExpressionIndex = startIndex;
@@ -236,9 +238,9 @@ public final class BooleanExpressionParser {
      * @return "1" or "0"
      */
     private static String replaceBooleanStringByIntegerRepresentation(final String possibleBooleanString) {
-        if (possibleBooleanString.equals("true")) {
+        if (possibleBooleanString.equals(TRUE.toString())) {
             return "1";
-        } else if (possibleBooleanString.equals("false")) {
+        } else if (possibleBooleanString.equals(FALSE.toString())) {
             return "0";
         }
         return possibleBooleanString;
@@ -256,9 +258,9 @@ public final class BooleanExpressionParser {
      */
     private static String replaceIntegerStringByBooleanRepresentation(final String value) {
         if (value.equals("0")) {
-            return "false";
+            return FALSE.toString();
         } else if (value.equals("1")) {
-            return "true";
+            return TRUE.toString();
         }
         return value;
     }
@@ -313,19 +315,19 @@ public final class BooleanExpressionParser {
     private static String getBooleanResultAsString(final String operator, final String rightOperand, final String leftOperand) {
         switch (operator) {
             case "lt":
-                return Boolean.valueOf(Integer.valueOf(leftOperand) < Integer.valueOf(rightOperand)).toString();
+                return Boolean.toString(Integer.valueOf(leftOperand) < Integer.valueOf(rightOperand));
             case "lt=":
-                return Boolean.valueOf(Integer.valueOf(leftOperand) <= Integer.valueOf(rightOperand)).toString();
+                return Boolean.toString(Integer.valueOf(leftOperand) <= Integer.valueOf(rightOperand));
             case "gt":
-                return Boolean.valueOf(Integer.valueOf(leftOperand) > Integer.valueOf(rightOperand)).toString();
+                return Boolean.toString(Integer.valueOf(leftOperand) > Integer.valueOf(rightOperand));
             case "gt=":
-                return Boolean.valueOf(Integer.valueOf(leftOperand) >= Integer.valueOf(rightOperand)).toString();
+                return Boolean.toString(Integer.valueOf(leftOperand) >= Integer.valueOf(rightOperand));
             case "=":
-                return Boolean.valueOf(Integer.valueOf(leftOperand).intValue() == Integer.valueOf(rightOperand).intValue()).toString();
+                return Boolean.toString(Integer.parseInt(leftOperand) == Integer.parseInt(rightOperand));
             case "and":
-                return Boolean.valueOf(Boolean.valueOf(leftOperand) && Boolean.valueOf(rightOperand)).toString();
+                return Boolean.toString(Boolean.valueOf(leftOperand) && Boolean.valueOf(rightOperand));
             case "or":
-                return Boolean.valueOf(Boolean.valueOf(leftOperand) || Boolean.valueOf(rightOperand)).toString();
+                return Boolean.toString(Boolean.valueOf(leftOperand) || Boolean.valueOf(rightOperand));
             default:
                 throw new CitrusRuntimeException("Unknown operator '" + operator + "'");
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2019 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,7 +74,7 @@ public class BooleanExpressionParserTest {
     public void testExpressionParserWithUnknownOperator() {
         try {
             BooleanExpressionParser.evaluate("wahr");
-        } catch(CitrusRuntimeException e) {
+        } catch(final CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Unknown operator 'wahr'");
             return;
         }
@@ -86,7 +86,7 @@ public class BooleanExpressionParserTest {
     public void testExpressionParserWithBrokenExpression() {
         try {
             BooleanExpressionParser.evaluate("1 = ");
-        } catch(CitrusRuntimeException e) {
+        } catch(final CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Unable to parse boolean expression '1 = '. Maybe expression is incomplete!");
             return;
         }
