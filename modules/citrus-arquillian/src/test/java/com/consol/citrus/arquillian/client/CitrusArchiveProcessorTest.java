@@ -21,19 +21,28 @@ import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.test.spi.TestClass;
-import org.jboss.shrinkwrap.api.*;
-import org.jboss.shrinkwrap.api.spec.*;
+import org.jboss.shrinkwrap.api.Archive;
+import org.jboss.shrinkwrap.api.ArchivePath;
+import org.jboss.shrinkwrap.api.ConfigurationBuilder;
+import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.impl.base.MemoryMapArchiveImpl;
-import org.jboss.shrinkwrap.impl.base.spec.*;
+import org.jboss.shrinkwrap.impl.base.spec.EnterpriseArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.spec.JavaArchiveImpl;
+import org.jboss.shrinkwrap.impl.base.spec.WebArchiveImpl;
 import org.mockito.Mockito;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.util.Properties;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class CitrusArchiveProcessorTest {
 
@@ -46,7 +55,7 @@ public class CitrusArchiveProcessorTest {
     public void setCitrusVersion() {
         Field version = ReflectionUtils.findField(Citrus.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "2.8.0-SNAPSHOT");
+        ReflectionUtils.setField(version, Citrus.class, "2.9.0-SNAPSHOT");
     }
 
     @BeforeMethod

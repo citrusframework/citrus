@@ -17,6 +17,9 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.context.TestContext;
+import com.google.errorprone.annotations.Immutable;
+
+import java.util.Objects;
 
 /**
  * Condition checks whether a message is present in test context message store. Messages are automatically
@@ -28,6 +31,7 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  * @since 2.6.2
  */
+@Immutable
 public class MessageCondition extends AbstractCondition {
 
     /** Message that should be present in message store */
@@ -51,7 +55,7 @@ public class MessageCondition extends AbstractCondition {
     /**
      * Sets the messageName property.
      *
-     * @param messageName
+     * @param messageName the message name to set
      */
     public void setMessageName(String messageName) {
         this.messageName = messageName;
@@ -64,5 +68,27 @@ public class MessageCondition extends AbstractCondition {
      */
     public String getMessageName() {
         return messageName;
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MessageCondition)) return false;
+        MessageCondition that = (MessageCondition) o;
+        return  Objects.equals(getMessageName(), that.getMessageName()) &&
+                Objects.equals(getName(), that.getName());
+    }
+
+    @Override
+    public final int hashCode() {
+        return Objects.hash(getMessageName(), getName());
+    }
+
+    @Override
+    public String toString() {
+        return "MessageCondition{" +
+                "messageName='" + messageName + '\'' +
+                ", name='" + getName() + '\'' +
+                '}';
     }
 }

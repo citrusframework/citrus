@@ -16,8 +16,10 @@
 
 package com.consol.citrus.junit;
 
+import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @author Christoph Deppisch
@@ -25,6 +27,7 @@ import org.junit.Test;
 public class FailJUnit4IT extends AbstractJUnit4CitrusTest {
 
     @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     public void doExecute() {
         executeTest();
     }

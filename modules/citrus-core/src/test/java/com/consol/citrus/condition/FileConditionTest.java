@@ -17,6 +17,8 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.jparams.verifier.tostring.ToStringVerifier;
+import nl.jqno.equalsverifier.EqualsVerifier;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
@@ -31,7 +33,7 @@ public class FileConditionTest extends AbstractTestNGUnitTest {
     private FileCondition condition = new FileCondition();
 
     @Test
-    public void testValidFilename() throws Exception {
+    public void testValidFilename() {
         String filePath = "classpath:citrus.variables";
         condition.setFilePath(filePath);
 
@@ -39,7 +41,7 @@ public class FileConditionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testValidFilenameWithVariables() throws Exception {
+    public void testValidFilenameWithVariables() {
         context.setVariable("file-name", "citrus.variables");
         String filePath = "classpath:${file-name}";
         condition.setFilePath(filePath);
@@ -48,10 +50,25 @@ public class FileConditionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testInvalidFilename() throws Exception {
+    public void testInvalidFilename() {
         String filePath = "SomeMissingFile.xyz";
         condition.setFilePath(filePath);
 
         assertFalse(condition.isSatisfied(context));
+    }
+
+    @Test
+    public void testEqualsContract(){
+        EqualsVerifier
+                .forClass(FileCondition.class)
+                .withRedefinedSuperclass()
+                .verify();
+    }
+
+    @Test
+    public void testToString(){
+        ToStringVerifier
+                .forClass(FileCondition.class)
+                .verify();
     }
 }
