@@ -68,7 +68,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 @ExtendWith(MockitoExtension.class)
 class ReceiveMessageBuilderTest {
 	
-	private ReceiveMessageBuilder builder;
+	private ReceiveMessageBuilder builder = new ReceiveMessageBuilder();
 	
 	@Mock
 	private Endpoint endpoint;
@@ -81,7 +81,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void constructor() {
-		this.builder = new ReceiveMessageBuilder();
 		assertNotNull(this.builder);
 		assertNotNull(this.builder.getAction());
 	}
@@ -104,7 +103,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void endpoint_fromEndpoint() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.endpoint(this.endpoint);
 		assertSame(copy, this.builder);
 		assertEquals(this.endpoint, this.builder.getAction().getEndpoint());
@@ -112,7 +110,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void endpoint_fromUri() {
-		this.builder = new ReceiveMessageBuilder();
 		final String uri = "http://localhost:8080/foo/bar";
 		final ReceiveMessageBuilder copy = this.builder.endpoint(uri);
 		assertSame(copy, this.builder);
@@ -121,7 +118,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void timeout() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.timeout(1000L);
 		assertSame(copy, this.builder);
 		assertEquals(1000L, this.builder.getAction().getReceiveTimeout());
@@ -129,7 +125,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void message() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.message(this.message);
 		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getMessageBuilder());
@@ -137,7 +132,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void name() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.name("foo");
 		assertSame(copy, this.builder);
 		assertEquals("foo", this.builder.getMessageContentBuilder().getMessageName());
@@ -145,7 +139,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payload_asString() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.payload("payload");
 		assertSame(copy, this.builder);
 		assertEquals("payload", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
@@ -153,7 +146,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payload_asResource() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.payload(this.resource);
 		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
@@ -161,7 +153,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payload_asResourceWithCharset() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.payload(this.resource, Charset.defaultCharset());
 		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
@@ -169,7 +160,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payload_asObjectWithMarshaller() {
-		this.builder = new ReceiveMessageBuilder();
 		final Object payload = "<hello/>";
 		final Marshaller marshaller = mock(Marshaller.class);
 		final ReceiveMessageBuilder copy = this.builder.payload(payload, marshaller);
@@ -179,7 +169,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payload_asObjectWithMapper() throws Exception {
-		this.builder = new ReceiveMessageBuilder();
 		final Object payload = "{hello}";
 		final ObjectMapper mapper = mock(ObjectMapper.class);
 		final ObjectWriter writer = mock(ObjectWriter.class);
@@ -195,7 +184,7 @@ class ReceiveMessageBuilderTest {
 	void payload_asObjectWithString_toObjectMarshaller() throws Exception {
 		final Object payload = "{hello}";
 		final String mapperName = "mapper";
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
@@ -212,7 +201,7 @@ class ReceiveMessageBuilderTest {
 	void payload_asObjectWithString_toObjectMapper() throws Exception {
 		final Object payload = "{hello}";
 		final String mapperName = "mapper";
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
@@ -230,7 +219,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payloadModel_withMarshaller() {
-		this.builder = new ReceiveMessageBuilder();
 		final Object payload = "<hello/>";
 		final Marshaller marshaller = mock(Marshaller.class);
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
@@ -248,7 +236,6 @@ class ReceiveMessageBuilderTest {
 	@Disabled
 	@Test
 	void payloadModel_withObjectMapper() {
-		this.builder = new ReceiveMessageBuilder();
 		final Object payload = "<hello/>";
 		final ObjectMapper mapper = mock(ObjectMapper.class);
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
@@ -266,7 +253,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void header_withStringObject() {
-		this.builder = new ReceiveMessageBuilder();
 		final String headerName = "header";
 		final Integer headerValue = 45;
 		final ReceiveMessageBuilder copy = this.builder.header(headerName, headerValue);
@@ -276,7 +262,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void headers() {
-		this.builder = new ReceiveMessageBuilder();
 		final Map<String, Object> headers = new HashMap<>();
 		headers.put("foo", 10);
 		headers.put("bar", "hello");
@@ -287,7 +272,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void header_withString() {
-		this.builder = new ReceiveMessageBuilder();
 		final String data = "hello";
 		final ReceiveMessageBuilder copy = this.builder.header(data);
 		assertSame(copy, this.builder);
@@ -302,7 +286,7 @@ class ReceiveMessageBuilderTest {
 		final Marshaller marshaller = mock(Marshaller.class);
 		final StringResult stringResult = mock(StringResult.class);
 		when(stringResult.toString()).thenReturn("hello");
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, marshaller, stringResult);
 		assertSame(copy, this.builder);
 		final List<String> expected = new ArrayList<>();
@@ -317,7 +301,7 @@ class ReceiveMessageBuilderTest {
 		final ObjectWriter writer = mock(ObjectWriter.class);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(model)).thenReturn("15");
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.headerFragment(model, mapper);
 		assertSame(copy, this.builder);
 		final List<String> expected = new ArrayList<>();
@@ -335,7 +319,7 @@ class ReceiveMessageBuilderTest {
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, mapperName, stringResult);
 		assertSame(copy, this.builder);
@@ -356,7 +340,7 @@ class ReceiveMessageBuilderTest {
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(objectMapper);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.headerFragment(model, mapperName);
 		assertSame(copy, this.builder);
@@ -378,7 +362,7 @@ class ReceiveMessageBuilderTest {
 		beans.put(mapperName, marshaller);
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(beans);
 		when(mockApplicationContext.getBean(Marshaller.class)).thenReturn(marshaller);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, stringResult);
 		assertSame(copy, this.builder);
@@ -401,7 +385,7 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(empty);
 		when(mockApplicationContext.getBeansOfType(ObjectMapper.class)).thenReturn(beans);
 		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.headerFragment(model);
 		assertSame(copy, this.builder);
@@ -414,7 +398,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void header_fromResource() {
 		final Resource resource = mock(Resource.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.header(resource);
 		assertSame(copy, this.builder);
 		final List<String> expected = new ArrayList<>();
@@ -425,7 +409,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void header_fromResourceAndCharset() {
 		final Resource resource = mock(Resource.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.header(resource, Charset.defaultCharset());
 		assertSame(copy, this.builder);
 		final List<String> expected = new ArrayList<>();
@@ -435,7 +419,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void headerNameIgnoreCase() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.headerNameIgnoreCase(false);
 		assertSame(copy, this.builder);
 		final HeaderValidationContext headerValidationContext = (HeaderValidationContext)ReflectionTestUtils.getField(this.builder, "headerValidationContext");
@@ -446,14 +429,14 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void validationScript_messageTypeNotInitialized() {
 		final String validationScript = "validation.txt";
-		this.builder = new ReceiveMessageBuilder();
+		
 		assertThrows(IllegalArgumentException.class, () -> this.builder.validateScript(validationScript));
 	}
 
 	@Test
 	void validationScript_fromString() {
 		final String validationScript = "validation.txt";
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(MessageType.JSON);
 		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript);
 		assertSame(copy, this.builder);
@@ -466,7 +449,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void validationScript_fromResource() {
 		final Resource validationScript = mock(Resource.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(MessageType.JSON);
 		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript);
 		assertSame(copy, this.builder);
@@ -479,7 +462,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void validationScript_fromResourceAndCharset() {
 		final Resource validationScript = mock(Resource.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(MessageType.JSON);
 		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript, Charset.defaultCharset());
 		assertSame(copy, this.builder);
@@ -492,7 +475,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void validateScriptResource() {
 		final String validationScript = "validation.txt";
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(MessageType.JSON);
 		final ReceiveMessageBuilder copy = this.builder.validateScriptResource(validationScript);
 		assertSame(copy, this.builder);
@@ -505,7 +488,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void validateScriptType() {
 		final String scriptType = "bash";
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(MessageType.JSON);
 		final ReceiveMessageBuilder copy = this.builder.validateScriptType(scriptType);
 		assertSame(copy, this.builder);
@@ -517,7 +500,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void messageType_fromEnum() {
-		this.builder = new ReceiveMessageBuilder();
 		final MessageType messageType = MessageType.JSON;
 		final ReceiveMessageBuilder copy = this.builder.messageType(messageType);
 		assertSame(copy, this.builder);
@@ -526,7 +508,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void messageType_fromName() {
-		this.builder = new ReceiveMessageBuilder();
 		final String messageType = "JSON";
 		final ReceiveMessageBuilder copy = this.builder.messageType(messageType);
 		assertSame(copy, this.builder);
@@ -537,7 +518,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void schemaValidation() {
-		this.builder = new ReceiveMessageBuilder();
 		final ReceiveMessageBuilder copy = this.builder.schemaValidation(true);
 		assertSame(copy, this.builder);
 
@@ -554,7 +534,7 @@ class ReceiveMessageBuilderTest {
 	void validateNamespace() {
 		final String prefix = "foo";
 		final String uri = "http://foo.com";
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.validateNamespace(prefix, uri);
 		assertSame(copy, this.builder);
 
@@ -568,7 +548,7 @@ class ReceiveMessageBuilderTest {
 		final String path = "$ResultCode";
 		final String controlValue = "Success";
 		final MessageType messageType = MessageType.JSON;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.validate(path, controlValue);
 		assertSame(copy, this.builder);
@@ -583,7 +563,7 @@ class ReceiveMessageBuilderTest {
 		final String path = "//ResultCode";
 		final String controlValue = "Success";
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.validate(path, controlValue);
 		assertSame(copy, this.builder);
@@ -609,7 +589,7 @@ class ReceiveMessageBuilderTest {
 		map.put(key2, value2);
 		map.put(key3, value3);
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.validateXpath(map);
 		assertSame(copy, this.builder);
@@ -637,7 +617,7 @@ class ReceiveMessageBuilderTest {
 		map.put(key2, value2);
 		map.put(key3, value3);
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.validateJsonPath(map);
 		assertSame(copy, this.builder);
@@ -653,7 +633,7 @@ class ReceiveMessageBuilderTest {
 	void ignore_json() {
 		final String path = "$ResultCode";
 		final MessageType messageType = MessageType.JSON;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.ignore(path);
 		assertSame(copy, this.builder);
@@ -667,7 +647,7 @@ class ReceiveMessageBuilderTest {
 	void ignore_xml() {
 		final String path = "//ResultCode";
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.ignore(path);
 		assertSame(copy, this.builder);
@@ -681,7 +661,7 @@ class ReceiveMessageBuilderTest {
 	void ignore_xhtml() {
 		final String path = "//ResultCode";
 		final MessageType messageType = MessageType.XHTML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.ignore(path);
 		assertSame(copy, this.builder);
@@ -696,7 +676,7 @@ class ReceiveMessageBuilderTest {
 		final String path = "//ResultCode";
 		final String controlValue = "Success";
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.xpath(path, controlValue);
 		assertSame(copy, this.builder);
@@ -711,7 +691,7 @@ class ReceiveMessageBuilderTest {
 		final String path = "$ResultCode";
 		final String controlValue = "Success";
 		final MessageType messageType = MessageType.JSON;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.jsonPath(path, controlValue);
 		assertSame(copy, this.builder);
@@ -725,7 +705,7 @@ class ReceiveMessageBuilderTest {
 	void xsd() {
 		final String schemaName = "foo.xsd";
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.xsd(schemaName);
 		assertSame(copy, this.builder);
@@ -739,7 +719,7 @@ class ReceiveMessageBuilderTest {
 	void jsonSchema() {
 		final String schemaName = "foo.json";
 		final MessageType messageType = MessageType.JSON;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.jsonSchema(schemaName);
 		assertSame(copy, this.builder);
@@ -753,7 +733,7 @@ class ReceiveMessageBuilderTest {
 	void xsdSchemaRepository() {
 		final String schemaRepository = "/schemas";
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.xsdSchemaRepository(schemaRepository);
 		assertSame(copy, this.builder);
@@ -767,7 +747,7 @@ class ReceiveMessageBuilderTest {
 	void jsonSchemaRepository() {
 		final String schemaRepository = "/schemas";
 		final MessageType messageType = MessageType.JSON;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.jsonSchemaRepository(schemaRepository);
 		assertSame(copy, this.builder);
@@ -781,7 +761,7 @@ class ReceiveMessageBuilderTest {
 	void namespace() {
 		final String prefix = "foo";
 		final String uri = "http://foo.com";
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.namespace(prefix, uri);
 		assertSame(copy, this.builder);
 
@@ -797,7 +777,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void selector_fromString() {
 		final String selector = "selector";
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.selector(selector);
 		assertSame(copy, this.builder);
 		assertEquals(selector, this.builder.getAction().getMessageSelector());
@@ -809,7 +789,7 @@ class ReceiveMessageBuilderTest {
 		final Object selectorValue = mock(Object.class);
 		final Map<String, Object> selectors = new HashMap<>();
 		selectors.put(selectorKey, selectorValue);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.selector(selectors);
 		assertSame(copy, this.builder);
 		assertEquals(selectors, this.builder.getAction().getMessageSelectorMap());
@@ -820,7 +800,7 @@ class ReceiveMessageBuilderTest {
 		final MessageValidator validator1 = mock(MessageValidator.class);
 		final MessageValidator validator2 = mock(MessageValidator.class);
 		final MessageValidator validator3 = mock(MessageValidator.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.validator(validator1, validator2, validator3);
 		assertSame(copy, this.builder);
 		assertEquals(3, this.builder.getAction().getValidators().size());
@@ -839,7 +819,7 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.getBean(name1, MessageValidator.class)).thenReturn(validator1);
 		when(mockApplicationContext.getBean(name2, MessageValidator.class)).thenReturn(validator2);
 		when(mockApplicationContext.getBean(name3, MessageValidator.class)).thenReturn(validator3);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.validator(name1, name2, name3);
 		assertSame(copy, this.builder);
@@ -852,7 +832,7 @@ class ReceiveMessageBuilderTest {
 		final HeaderValidator validator1 = mock(HeaderValidator.class);
 		final HeaderValidator validator2 = mock(HeaderValidator.class);
 		final HeaderValidator validator3 = mock(HeaderValidator.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.headerValidator(validator1, validator2, validator3);
 		assertSame(copy, this.builder);
 
@@ -874,7 +854,7 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.getBean(name1, HeaderValidator.class)).thenReturn(validator1);
 		when(mockApplicationContext.getBean(name2, HeaderValidator.class)).thenReturn(validator2);
 		when(mockApplicationContext.getBean(name3, HeaderValidator.class)).thenReturn(validator3);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.headerValidator(name1, name2, name3);
 		assertSame(copy, this.builder);
@@ -888,7 +868,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void dictionary() {
 		final DataDictionary dataDictionary = mock(DataDictionary.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.dictionary(dataDictionary);
 		assertSame(copy, this.builder);
 		assertEquals(dataDictionary, this.builder.getAction().getDataDictionary());
@@ -899,7 +879,7 @@ class ReceiveMessageBuilderTest {
 		final String name = "dictionary";
 		final DataDictionary dataDictionary = mock(DataDictionary.class);
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		when(mockApplicationContext.getBean(name, DataDictionary.class)).thenReturn(dataDictionary);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.dictionary(name);
@@ -912,7 +892,7 @@ class ReceiveMessageBuilderTest {
 	void extractFromHeader() {
 		final String name = "foo";
 		final String variable = "bar";
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.extractFromHeader(name, variable);
 		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getVariableExtractors());
@@ -928,7 +908,7 @@ class ReceiveMessageBuilderTest {
 		final String path = "//ResultCode";
 		final String controlValue = "Success";
 		final MessageType messageType = MessageType.XML;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.extractFromPayload(path, controlValue);
 		assertSame(copy, this.builder);
@@ -945,7 +925,7 @@ class ReceiveMessageBuilderTest {
 		final String path = "$ResultCode";
 		final String controlValue = "Success";
 		final MessageType messageType = MessageType.JSON;
-		this.builder = new ReceiveMessageBuilder();
+		
 		this.builder.messageType(messageType);
 		final ReceiveMessageBuilder copy = this.builder.extractFromPayload(path, controlValue);
 		assertSame(copy, this.builder);
@@ -960,7 +940,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void validationCallback() {
 		final ValidationCallback callback = mock(ValidationCallback.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		final ReceiveMessageBuilder copy = this.builder.validationCallback(callback);
 		assertSame(copy, this.builder);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
@@ -970,7 +950,7 @@ class ReceiveMessageBuilderTest {
 	@Test
 	void withApplicationContext() {
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		this.builder = new ReceiveMessageBuilder();
+		
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		final ReceiveMessageBuilder copy = this.builder.withApplicationContext(mockApplicationContext);
 		assertSame(copy, this.builder);
