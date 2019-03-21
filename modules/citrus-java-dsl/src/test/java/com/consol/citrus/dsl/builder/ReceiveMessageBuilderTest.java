@@ -71,12 +71,6 @@ class ReceiveMessageBuilderTest {
 	private ReceiveMessageBuilder builder = new ReceiveMessageBuilder();
 	
 	@Mock
-	private Endpoint endpoint;
-	
-	@Mock
-	private Message message;
-	
-	@Mock
 	private Resource resource;
 	
 	@Test
@@ -86,50 +80,90 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void constructor_withAction() {
-		final ReceiveMessageAction action = new ReceiveMessageAction();
-		this.builder = new ReceiveMessageBuilder<>(action);
+
+	    //GIVEN
+        final ReceiveMessageAction action = new ReceiveMessageAction();
+
+        //WHEN
+        this.builder = new ReceiveMessageBuilder<>(action);
+
+        //THEN
 		assertEquals(action, this.builder.getAction());
 	}
 
 	@Test
 	void constructor_withDelegatingTestAction() {
-		final DelegatingTestAction<ReceiveMessageAction> action = new DelegatingTestAction<>(new ReceiveMessageAction());
-		this.builder = new ReceiveMessageBuilder(action);
-		assertEquals(action.getDelegate(), this.builder.getAction());
+
+	    //GIVEN
+        final DelegatingTestAction<ReceiveMessageAction> action = new DelegatingTestAction<>(new ReceiveMessageAction());
+
+        //WHEN
+        this.builder = new ReceiveMessageBuilder(action);
+
+        //THEN
+        assertEquals(action.getDelegate(), this.builder.getAction());
 	}
 	
 	@Test
 	void endpoint_fromEndpoint() {
-		final ReceiveMessageBuilder copy = this.builder.endpoint(this.endpoint);
+
+	    //GIVEN
+        final Endpoint endpoint = mock(Endpoint.class);
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.endpoint(endpoint);
+
+        //THEN
 		assertSame(copy, this.builder);
-		assertEquals(this.endpoint, this.builder.getAction().getEndpoint());
+		assertEquals(endpoint, this.builder.getAction().getEndpoint());
 	}
 
 	@Test
 	void endpoint_fromUri() {
-		final String uri = "http://localhost:8080/foo/bar";
-		final ReceiveMessageBuilder copy = this.builder.endpoint(uri);
+
+	    //GIVEN
+        final String uri = "http://localhost:8080/foo/bar";
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.endpoint(uri);
+
+        //THEN
 		assertSame(copy, this.builder);
 		assertEquals(uri, this.builder.getAction().getEndpointUri());
 	}
 
 	@Test
 	void timeout() {
-		final ReceiveMessageBuilder copy = this.builder.timeout(1000L);
-		assertSame(copy, this.builder);
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.timeout(1000L);
+
+        //THEN
+        assertSame(copy, this.builder);
 		assertEquals(1000L, this.builder.getAction().getReceiveTimeout());
 	}
 
 	@Test
 	void message() {
-		final ReceiveMessageBuilder copy = this.builder.message(this.message);
+
+	    //GIVEN
+        final Message message = mock(Message.class);
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.message(message);
+
+        //THEN
 		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getMessageBuilder());
 	}
 
 	@Test
 	void name() {
-		final ReceiveMessageBuilder copy = this.builder.name("foo");
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.name("foo");
+
+        //THEN
 		assertSame(copy, this.builder);
 		assertEquals("foo", this.builder.getMessageContentBuilder().getMessageName());
 	}
@@ -394,8 +428,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void header_fromResource() {
-		final Resource resource = mock(Resource.class);
-		
 		final ReceiveMessageBuilder copy = this.builder.header(resource);
 		assertSame(copy, this.builder);
 		final List<String> expected = new ArrayList<>();
@@ -405,8 +437,6 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void header_fromResourceAndCharset() {
-		final Resource resource = mock(Resource.class);
-		
 		final ReceiveMessageBuilder copy = this.builder.header(resource, Charset.defaultCharset());
 		assertSame(copy, this.builder);
 		final List<String> expected = new ArrayList<>();
@@ -445,10 +475,9 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void validationScript_fromResource() {
-		final Resource validationScript = mock(Resource.class);
-		
+
 		this.builder.messageType(MessageType.JSON);
-		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript);
+		final ReceiveMessageBuilder copy = this.builder.validateScript(resource);
 		assertSame(copy, this.builder);
 
 		final ScriptValidationContext scriptValidationContext =
@@ -458,10 +487,8 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void validationScript_fromResourceAndCharset() {
-		final Resource validationScript = mock(Resource.class);
-		
 		this.builder.messageType(MessageType.JSON);
-		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript, Charset.defaultCharset());
+		final ReceiveMessageBuilder copy = this.builder.validateScript(resource, Charset.defaultCharset());
 		assertSame(copy, this.builder);
 
 		final ScriptValidationContext scriptValidationContext =
