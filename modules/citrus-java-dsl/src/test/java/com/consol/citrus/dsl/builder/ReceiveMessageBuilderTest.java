@@ -1,8 +1,25 @@
+/*
+ * Copyright 2006-2019 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package com.consol.citrus.dsl.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
@@ -49,7 +66,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 @ExtendWith(MockitoExtension.class)
-public class ReceiveMessageBuilderTest {
+class ReceiveMessageBuilderTest {
 	
 	private ReceiveMessageBuilder builder;
 	
@@ -63,309 +80,309 @@ public class ReceiveMessageBuilderTest {
 	private Resource resource;
 	
 	@Test
-	public void constructor() throws Exception {
+	void constructor() {
 		this.builder = new ReceiveMessageBuilder();
 		assertNotNull(this.builder);
 		assertNotNull(this.builder.getAction());
 	}
 	
 	@Test
-	public void constructor_withAction() throws Exception {
-		ReceiveMessageAction action = new ReceiveMessageAction();
-		this.builder = new ReceiveMessageBuilder(action);
+	void constructor_withAction() {
+		final ReceiveMessageAction action = new ReceiveMessageAction();
+		this.builder = new ReceiveMessageBuilder<>(action);
 		assertNotNull(this.builder);
 		assertEquals(action, this.builder.getAction());
 	}
 
 	@Test
-	public void constructor_withDelegatingTestAction() throws Exception {
-		DelegatingTestAction<ReceiveMessageAction> action = new DelegatingTestAction<ReceiveMessageAction>(new ReceiveMessageAction());
+	void constructor_withDelegatingTestAction() {
+		final DelegatingTestAction<ReceiveMessageAction> action = new DelegatingTestAction<>(new ReceiveMessageAction());
 		this.builder = new ReceiveMessageBuilder(action);
 		assertNotNull(this.builder);
 		assertEquals(action.getDelegate(), this.builder.getAction());
 	}
 	
 	@Test
-	public void endpoint_fromEndpoint() throws Exception {
+	void endpoint_fromEndpoint() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.endpoint(this.endpoint);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.endpoint(this.endpoint);
+		assertSame(copy, this.builder);
 		assertEquals(this.endpoint, this.builder.getAction().getEndpoint());
 	}
 
 	@Test
-	public void endpoint_fromUri() throws Exception {
+	void endpoint_fromUri() {
 		this.builder = new ReceiveMessageBuilder();
-		String uri = "http://localhost:8080/foo/bar";
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.endpoint(uri);
-		assertTrue(copy == this.builder);
+		final String uri = "http://localhost:8080/foo/bar";
+		final ReceiveMessageBuilder copy = this.builder.endpoint(uri);
+		assertSame(copy, this.builder);
 		assertEquals(uri, this.builder.getAction().getEndpointUri());
 	}
 
 	@Test
-	public void timeout() throws Exception {
+	void timeout() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.timeout(1000L);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.timeout(1000L);
+		assertSame(copy, this.builder);
 		assertEquals(1000L, this.builder.getAction().getReceiveTimeout());
 	}
 
 	@Test
-	public void message() throws Exception {
+	void message() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.message(this.message);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.message(this.message);
+		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getMessageBuilder());
 	}
 
 	@Test
-	public void name() throws Exception {
+	void name() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.name("foo");
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.name("foo");
+		assertSame(copy, this.builder);
 		assertEquals("foo", this.builder.getMessageContentBuilder().getMessageName());
 	}
 
 	@Test
-	public void payload_asString() throws Exception {
+	void payload_asString() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload("payload");
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payload("payload");
+		assertSame(copy, this.builder);
 		assertEquals("payload", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 	}
 
 	@Test
-	public void payload_asResource() throws Exception {
+	void payload_asResource() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload(this.resource);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payload(this.resource);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 	}
 
 	@Test
-	public void payload_asResourceWithCharset() throws Exception {
+	void payload_asResourceWithCharset() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload(this.resource, Charset.defaultCharset());
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payload(this.resource, Charset.defaultCharset());
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 	}
 
 	@Test
-	public void payload_asObjectWithMarshaller() throws Exception {
+	void payload_asObjectWithMarshaller() {
 		this.builder = new ReceiveMessageBuilder();
-		Object payload = "<hello/>";
-		Marshaller marshaller = mock(Marshaller.class);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload(payload, marshaller);
-		assertTrue(copy == this.builder);
+		final Object payload = "<hello/>";
+		final Marshaller marshaller = mock(Marshaller.class);
+		final ReceiveMessageBuilder copy = this.builder.payload(payload, marshaller);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 	}
 
 	@Test
-	public void payload_asObjectWithMapper() throws Exception {
+	void payload_asObjectWithMapper() throws Exception {
 		this.builder = new ReceiveMessageBuilder();
-		Object payload = "{hello}";
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		ObjectWriter writer = mock(ObjectWriter.class);
+		final Object payload = "{hello}";
+		final ObjectMapper mapper = mock(ObjectMapper.class);
+		final ObjectWriter writer = mock(ObjectWriter.class);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(payload)).thenReturn("hello");
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload(payload, mapper);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payload(payload, mapper);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 		assertEquals("hello", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 	}
 
 	@Test
-	public void payload_asObjectWithString_toObjectMarshaller() throws Exception {
-		Object payload = "{hello}";
-		String mapperName = "mapper";
+	void payload_asObjectWithString_toObjectMarshaller() throws Exception {
+		final Object payload = "{hello}";
+		final String mapperName = "mapper";
 		this.builder = new ReceiveMessageBuilder();
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
-		Marshaller marshaller = mock(Marshaller.class);
+		final Marshaller marshaller = mock(Marshaller.class);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
 		lenient().doNothing().when(marshaller).marshal(payload, new StringResult());
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload(payload, mapperName);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payload(payload, mapperName);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
-	public void payload_asObjectWithString_toObjectMapper() throws Exception {
-		Object payload = "{hello}";
-		String mapperName = "mapper";
+	void payload_asObjectWithString_toObjectMapper() throws Exception {
+		final Object payload = "{hello}";
+		final String mapperName = "mapper";
 		this.builder = new ReceiveMessageBuilder();
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		ObjectWriter writer = mock(ObjectWriter.class);
+		final ObjectMapper mapper = mock(ObjectMapper.class);
+		final ObjectWriter writer = mock(ObjectWriter.class);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(mapper);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(payload)).thenReturn("hello");
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payload(payload, mapperName);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payload(payload, mapperName);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 		assertEquals("hello", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
-	public void payloadModel_withMarshaller() throws Exception {
+	void payloadModel_withMarshaller() {
 		this.builder = new ReceiveMessageBuilder();
-		Object payload = "<hello/>";
-		Marshaller marshaller = mock(Marshaller.class);
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final Object payload = "<hello/>";
+		final Marshaller marshaller = mock(Marshaller.class);
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		Map<String, Marshaller> map = new HashMap<>();
+		final Map<String, Marshaller> map = new HashMap<>();
 		map.put("marshaller", marshaller);
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(map);
 		when(mockApplicationContext.getBean(Marshaller.class)).thenReturn(marshaller);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payloadModel(payload);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payloadModel(payload);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Disabled
 	@Test
-	public void payloadModel_withObjectMapper() throws Exception {
+	void payloadModel_withObjectMapper() {
 		this.builder = new ReceiveMessageBuilder();
-		Object payload = "<hello/>";
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final Object payload = "<hello/>";
+		final ObjectMapper mapper = mock(ObjectMapper.class);
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		Map<String, ObjectMapper> map = new HashMap<>();
+		final Map<String, ObjectMapper> map = new HashMap<>();
 		map.put("mapper", mapper);
-		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(new HashMap<String, Marshaller>());
+		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(new HashMap<>());
 		when(mockApplicationContext.getBeansOfType(ObjectMapper.class)).thenReturn(map);
 		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.payloadModel(payload);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.payloadModel(payload);
+		assertSame(copy, this.builder);
 		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
-	public void header_withStringObject() throws Exception {
+	void header_withStringObject() {
 		this.builder = new ReceiveMessageBuilder();
-		String headerName = "header";
-		Integer headerValue = 45;
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.header(headerName, headerValue);
-		assertTrue(copy == this.builder);
+		final String headerName = "header";
+		final Integer headerValue = 45;
+		final ReceiveMessageBuilder copy = this.builder.header(headerName, headerValue);
+		assertSame(copy, this.builder);
 		assertEquals(headerValue, this.builder.getMessageContentBuilder().getMessageHeaders().get(headerName));
 	}
 	
 	@Test
-	public void headers() throws Exception {
+	void headers() {
 		this.builder = new ReceiveMessageBuilder();
-		Map<String, Object> headers = new HashMap<>();
+		final Map<String, Object> headers = new HashMap<>();
 		headers.put("foo", 10);
 		headers.put("bar", "hello");
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headers(headers);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.headers(headers);
+		assertSame(copy, this.builder);
 		assertEquals(headers, this.builder.getMessageContentBuilder().getMessageHeaders());
 	}
 	
 	@Test
-	public void header_withString() throws Exception {
+	void header_withString() {
 		this.builder = new ReceiveMessageBuilder();
-		String data = "hello";
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.header(data);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final String data = "hello";
+		final ReceiveMessageBuilder copy = this.builder.header(data);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add(data);
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 	}
 	
 	@Test
-	public void doHeaderFragment_withObjectAndMarshaller() throws Exception {
-		Object model = "hello";
-		Marshaller marshaller = mock(Marshaller.class);
-		StringResult stringResult = mock(StringResult.class);
+	void doHeaderFragment_withObjectAndMarshaller() {
+		final Object model = "hello";
+		final Marshaller marshaller = mock(Marshaller.class);
+		final StringResult stringResult = mock(StringResult.class);
 		when(stringResult.toString()).thenReturn("hello");
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.doHeaderFragment(model, marshaller, stringResult);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, marshaller, stringResult);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("hello");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 	}
 	
 	@Test
-	public void headerFragment_withObjectAndObjectMapper() throws Exception {
-		Object model = "15";
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		ObjectWriter writer = mock(ObjectWriter.class);
+	void headerFragment_withObjectAndObjectMapper() throws Exception {
+		final Object model = "15";
+		final ObjectMapper mapper = mock(ObjectMapper.class);
+		final ObjectWriter writer = mock(ObjectWriter.class);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(model)).thenReturn("15");
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headerFragment(model, mapper);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.headerFragment(model, mapper);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("15");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 	}
 	
 	@Test
-	public void doHeaderFragment_withObjectAndMapperName_toMarshaller() throws Exception {
-		Object model = "hello";
-		Marshaller marshaller = mock(Marshaller.class);
-		StringResult stringResult = mock(StringResult.class);
+	void doHeaderFragment_withObjectAndMapperName_toMarshaller() {
+		final Object model = "hello";
+		final Marshaller marshaller = mock(Marshaller.class);
+		final StringResult stringResult = mock(StringResult.class);
 		when(stringResult.toString()).thenReturn("hello");
-		String mapperName = "marshaller";
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final String mapperName = "marshaller";
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.doHeaderFragment(model, mapperName, stringResult);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, mapperName, stringResult);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("hello");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
-	public void headerFragment_withObjectAndMapperName_toObjectMapper() throws Exception {
-		Object model = "hello";
-		ObjectMapper objectMapper = mock(ObjectMapper.class);
-		ObjectWriter objectWriter = mock(ObjectWriter.class);
+	void headerFragment_withObjectAndMapperName_toObjectMapper() throws Exception {
+		final Object model = "hello";
+		final ObjectMapper objectMapper = mock(ObjectMapper.class);
+		final ObjectWriter objectWriter = mock(ObjectWriter.class);
 		when(objectMapper.writer()).thenReturn(objectWriter);
 		when(objectWriter.writeValueAsString(model)).thenReturn("hello");
-		String mapperName = "object";
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final String mapperName = "object";
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(objectMapper);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headerFragment(model, mapperName);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.headerFragment(model, mapperName);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("hello");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 	
 	@Test
-	public void doHeaderFragment_withObjectOfMarshaller() throws Exception {
-		Object model = "hello";
-		Marshaller marshaller = mock(Marshaller.class);
-		StringResult stringResult = mock(StringResult.class);
+	void doHeaderFragment_withObjectOfMarshaller() {
+		final Object model = "hello";
+		final Marshaller marshaller = mock(Marshaller.class);
+		final StringResult stringResult = mock(StringResult.class);
 		when(stringResult.toString()).thenReturn("hello");
-		String mapperName = "marshaller";
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		Map<String, Marshaller> beans = new HashMap<>();
+		final String mapperName = "marshaller";
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final Map<String, Marshaller> beans = new HashMap<>();
 		beans.put(mapperName, marshaller);
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(beans);
 		when(mockApplicationContext.getBean(Marshaller.class)).thenReturn(marshaller);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.doHeaderFragment(model, stringResult);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, stringResult);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("hello");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
@@ -373,511 +390,599 @@ public class ReceiveMessageBuilderTest {
 	
 	@Disabled
 	@Test
-	public void headerFragment_withObjectOfObjectMapper() throws Exception {
-		Object model = "hello";
-		ObjectMapper mapper = mock(ObjectMapper.class);
-		String mapperName = "object";
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		Map<String, Marshaller> empty = new HashMap<>();
-		Map<String, ObjectMapper> beans = new HashMap<>();
+	void headerFragment_withObjectOfObjectMapper() {
+		final Object model = "hello";
+		final ObjectMapper mapper = mock(ObjectMapper.class);
+		final String mapperName = "object";
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final Map<String, Marshaller> empty = new HashMap<>();
+		final Map<String, ObjectMapper> beans = new HashMap<>();
 		beans.put(mapperName, mapper);
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(empty);
 		when(mockApplicationContext.getBeansOfType(ObjectMapper.class)).thenReturn(beans);
 		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headerFragment(model);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.headerFragment(model);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("hello");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 	
 	@Test
-	public void header_fromResource() throws Exception {
-		Resource resource = mock(Resource.class);
+	void header_fromResource() {
+		final Resource resource = mock(Resource.class);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.header(resource);
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.header(resource);
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 	}
 
 	@Test
-	public void header_fromResourceAndCharset() throws Exception {
-		Resource resource = mock(Resource.class);
+	void header_fromResourceAndCharset() {
+		final Resource resource = mock(Resource.class);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.header(resource, Charset.defaultCharset());
-		assertTrue(copy == this.builder);
-		List<String> expected = new ArrayList<>();
+		final ReceiveMessageBuilder copy = this.builder.header(resource, Charset.defaultCharset());
+		assertSame(copy, this.builder);
+		final List<String> expected = new ArrayList<>();
 		expected.add("");
 		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
 	}
 	
 	@Test
-	public void headerNameIgnoreCase() throws Exception {
+	void headerNameIgnoreCase() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headerNameIgnoreCase(false);
-		assertTrue(copy == this.builder);
-		HeaderValidationContext headerValidationContext = (HeaderValidationContext)ReflectionTestUtils.getField(this.builder, "headerValidationContext");
+		final ReceiveMessageBuilder copy = this.builder.headerNameIgnoreCase(false);
+		assertSame(copy, this.builder);
+		final HeaderValidationContext headerValidationContext = (HeaderValidationContext)ReflectionTestUtils.getField(this.builder, "headerValidationContext");
 		assertNotNull(headerValidationContext);
 		assertFalse((boolean)ReflectionTestUtils.getField(headerValidationContext, "headerNameIgnoreCase"));
 	}
 	
 	@Test
-	public void validationScript_messageTypeNotInitialized() throws Exception {
-		String validationScript = "validation.txt";
+	void validationScript_messageTypeNotInitialized() {
+		final String validationScript = "validation.txt";
 		this.builder = new ReceiveMessageBuilder();
 		assertThrows(IllegalArgumentException.class, () -> this.builder.validateScript(validationScript));
 	}
 
 	@Test
-	public void validationScript_fromString() throws Exception {
-		String validationScript = "validation.txt";
+	void validationScript_fromString() {
+		final String validationScript = "validation.txt";
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(MessageType.JSON);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateScript(validationScript);
-		assertTrue(copy == this.builder);
-		assertEquals("validation.txt", ((ScriptValidationContext)ReflectionTestUtils.getField(this.builder, "scriptValidationContext")).getValidationScript());
+		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript);
+		assertSame(copy, this.builder);
+
+		final ScriptValidationContext scriptValidationContext =
+				getFieldFromBuilder(ScriptValidationContext.class, "scriptValidationContext");
+		assertEquals("validation.txt", scriptValidationContext.getValidationScript());
 	}
 
 	@Test
-	public void validationScript_fromResource() throws Exception {
-		Resource validationScript = mock(Resource.class);
+	void validationScript_fromResource() {
+		final Resource validationScript = mock(Resource.class);
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(MessageType.JSON);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateScript(validationScript);
-		assertTrue(copy == this.builder);
-		assertEquals("", ((ScriptValidationContext)ReflectionTestUtils.getField(this.builder, "scriptValidationContext")).getValidationScript());
+		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript);
+		assertSame(copy, this.builder);
+
+		final ScriptValidationContext scriptValidationContext =
+				getFieldFromBuilder(ScriptValidationContext.class, "scriptValidationContext");
+		assertEquals("", scriptValidationContext.getValidationScript());
 	}
 
 	@Test
-	public void validationScript_fromResourceAndCharset() throws Exception {
-		Resource validationScript = mock(Resource.class);
+	void validationScript_fromResourceAndCharset() {
+		final Resource validationScript = mock(Resource.class);
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(MessageType.JSON);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateScript(validationScript, Charset.defaultCharset());
-		assertTrue(copy == this.builder);
-		assertEquals("", ((ScriptValidationContext)ReflectionTestUtils.getField(this.builder, "scriptValidationContext")).getValidationScript());
+		final ReceiveMessageBuilder copy = this.builder.validateScript(validationScript, Charset.defaultCharset());
+		assertSame(copy, this.builder);
+
+		final ScriptValidationContext scriptValidationContext =
+				getFieldFromBuilder(ScriptValidationContext.class, "scriptValidationContext");
+		assertEquals("", scriptValidationContext.getValidationScript());
 	}
 	
 	@Test
-	public void validateScriptResource() throws Exception {
-		String validationScript = "validation.txt";
+	void validateScriptResource() {
+		final String validationScript = "validation.txt";
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(MessageType.JSON);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateScriptResource(validationScript);
-		assertTrue(copy == this.builder);
-		assertEquals("validation.txt", ((ScriptValidationContext)ReflectionTestUtils.getField(this.builder, "scriptValidationContext")).getValidationScriptResourcePath());
+		final ReceiveMessageBuilder copy = this.builder.validateScriptResource(validationScript);
+		assertSame(copy, this.builder);
+
+		final ScriptValidationContext scriptValidationContext =
+				getFieldFromBuilder(ScriptValidationContext.class, "scriptValidationContext");
+		assertEquals("validation.txt", scriptValidationContext.getValidationScriptResourcePath());
 	}
 
 	@Test
-	public void validateScriptType() throws Exception {
-		String scriptType = "bash";
+	void validateScriptType() {
+		final String scriptType = "bash";
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(MessageType.JSON);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateScriptType(scriptType);
-		assertTrue(copy == this.builder);
-		assertEquals("bash", ((ScriptValidationContext)ReflectionTestUtils.getField(this.builder, "scriptValidationContext")).getScriptType());
+		final ReceiveMessageBuilder copy = this.builder.validateScriptType(scriptType);
+		assertSame(copy, this.builder);
+
+		final ScriptValidationContext scriptValidationContext =
+				getFieldFromBuilder(ScriptValidationContext.class, "scriptValidationContext");
+		assertEquals("bash", scriptValidationContext.getScriptType());
 	}
 	
 	@Test
-	public void messageType_fromEnum() throws Exception {
+	void messageType_fromEnum() {
 		this.builder = new ReceiveMessageBuilder();
-		MessageType messageType = MessageType.JSON;
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.messageType(messageType);
-		assertTrue(copy == this.builder);
-		assertEquals(messageType.name(), (String)ReflectionTestUtils.getField(this.builder, "messageType"));
+		final MessageType messageType = MessageType.JSON;
+		final ReceiveMessageBuilder copy = this.builder.messageType(messageType);
+		assertSame(copy, this.builder);
+		assertEquals(messageType.name(), ReflectionTestUtils.getField(this.builder, "messageType"));
 	}
 
 	@Test
-	public void messageType_fromName() throws Exception {
+	void messageType_fromName() {
 		this.builder = new ReceiveMessageBuilder();
-		String messageType = "JSON";
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.messageType(messageType);
-		assertTrue(copy == this.builder);
-		assertEquals(messageType, (String)ReflectionTestUtils.getField(this.builder, "messageType"));
+		final String messageType = "JSON";
+		final ReceiveMessageBuilder copy = this.builder.messageType(messageType);
+		assertSame(copy, this.builder);
+		assertEquals(messageType, ReflectionTestUtils.getField(this.builder, "messageType"));
 		assertEquals(messageType, this.builder.getAction().getMessageType());
-		assertEquals(3, ((ReceiveMessageAction)this.builder.getAction()).getValidationContexts().size());
+		assertEquals(3, this.builder.getAction().getValidationContexts().size());
 	}
 	
 	@Test
-	public void schemaValidation() throws Exception {
+	void schemaValidation() {
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.schemaValidation(true);
-		assertTrue(copy == this.builder);
-		assertTrue(((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).isSchemaValidationEnabled());
-		assertTrue(((JsonMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonMessageValidationContext")).isSchemaValidationEnabled());
+		final ReceiveMessageBuilder copy = this.builder.schemaValidation(true);
+		assertSame(copy, this.builder);
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertTrue(xmlMessageValidationContext.isSchemaValidationEnabled());
+
+		final JsonMessageValidationContext jsonMessageValidationContext =
+				getFieldFromBuilder(JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		assertTrue(jsonMessageValidationContext.isSchemaValidationEnabled());
 	}
 
 	@Test
-	public void validateNamespace() throws Exception {
-		String prefix = "foo";
-		String uri = "http://foo.com";
+	void validateNamespace() {
+		final String prefix = "foo";
+		final String uri = "http://foo.com";
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateNamespace(prefix, uri);
-		assertTrue(copy == this.builder);
-		assertEquals("http://foo.com", ((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getControlNamespaces().get("foo"));
+		final ReceiveMessageBuilder copy = this.builder.validateNamespace(prefix, uri);
+		assertSame(copy, this.builder);
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals("http://foo.com", xmlMessageValidationContext.getControlNamespaces().get("foo"));
 	}
 
 	@Test
-	public void validate_json() throws Exception {
-		String path = "$ResultCode";
-		String controlValue = "Success";
-		MessageType messageType = MessageType.JSON;
+	void validate_json() {
+		final String path = "$ResultCode";
+		final String controlValue = "Success";
+		final MessageType messageType = MessageType.JSON;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validate(path, controlValue);
-		assertTrue(copy == this.builder);
-		assertEquals("Success", ((JsonPathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonPathValidationContext")).getJsonPathExpressions().get("$ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.validate(path, controlValue);
+		assertSame(copy, this.builder);
+
+		final JsonPathMessageValidationContext jsonMessageValidationContext =
+				getFieldFromBuilder(JsonPathMessageValidationContext.class, "jsonPathValidationContext");
+		assertEquals("Success", jsonMessageValidationContext.getJsonPathExpressions().get("$ResultCode"));
 	}
 
 	@Test
-	public void validate_xml() throws Exception {
-		String path = "//ResultCode";
-		String controlValue = "Success";
-		MessageType messageType = MessageType.XML;
+	void validate_xml() {
+		final String path = "//ResultCode";
+		final String controlValue = "Success";
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validate(path, controlValue);
-		assertTrue(copy == this.builder);
-		assertEquals("Success", ((XpathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getXpathExpressions().get("//ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.validate(path, controlValue);
+		assertSame(copy, this.builder);
+
+		final XpathMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XpathMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
 	}
 
 	/**
 	 * New capability
-	 * @throws Exception
 	 */
 	@Test
-	public void validate_xmlMap() throws Exception {
-		Map<String, Object> map = new HashMap<>();
-		String key1 = "//ResultCode";
-		String value1 = "Success";
-		String key2 = "//Foo";
-		String value2 = "Bar";
-		String key3 = "//Hello";
-		String value3 = "Goodbye";
+	void validate_xmlMap() {
+		final Map<String, Object> map = new HashMap<>();
+		final String key1 = "//ResultCode";
+		final String value1 = "Success";
+		final String key2 = "//Foo";
+		final String value2 = "Bar";
+		final String key3 = "//Hello";
+		final String value3 = "Goodbye";
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
-		MessageType messageType = MessageType.XML;
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateXpath(map);
-		assertTrue(copy == this.builder);
-		assertEquals("Success", ((XpathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getXpathExpressions().get("//ResultCode"));
-		assertEquals("Bar", ((XpathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getXpathExpressions().get("//Foo"));
-		assertEquals("Goodbye", ((XpathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getXpathExpressions().get("//Hello"));
+		final ReceiveMessageBuilder copy = this.builder.validateXpath(map);
+		assertSame(copy, this.builder);
+
+		final XpathMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XpathMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
+		assertEquals("Bar", xmlMessageValidationContext.getXpathExpressions().get("//Foo"));
+		assertEquals("Goodbye", xmlMessageValidationContext.getXpathExpressions().get("//Hello"));
 	}
 
 	/**
 	 * New capability
-	 * @throws Exception
 	 */
 	@Test
-	public void validate_jsonMap() throws Exception {
-		Map<String, Object> map = new HashMap<>();
-		String key1 = "$ResultCode";
-		String value1 = "Success";
-		String key2 = "$Foo";
-		String value2 = "Bar";
-		String key3 = "$Hello";
-		String value3 = "Goodbye";
+	void validate_jsonMap() {
+		final Map<String, Object> map = new HashMap<>();
+		final String key1 = "$ResultCode";
+		final String value1 = "Success";
+		final String key2 = "$Foo";
+		final String value2 = "Bar";
+		final String key3 = "$Hello";
+		final String value3 = "Goodbye";
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
-		MessageType messageType = MessageType.XML;
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validateJsonPath(map);
-		assertTrue(copy == this.builder);
-		assertEquals("Success", ((JsonPathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonPathValidationContext")).getJsonPathExpressions().get("$ResultCode"));
-		assertEquals("Bar", ((JsonPathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonPathValidationContext")).getJsonPathExpressions().get("$Foo"));
-		assertEquals("Goodbye", ((JsonPathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonPathValidationContext")).getJsonPathExpressions().get("$Hello"));
+		final ReceiveMessageBuilder copy = this.builder.validateJsonPath(map);
+		assertSame(copy, this.builder);
+
+		final JsonPathMessageValidationContext jsonPathValidationContext =
+				getFieldFromBuilder(JsonPathMessageValidationContext.class, "jsonPathValidationContext");
+		assertEquals("Success", jsonPathValidationContext.getJsonPathExpressions().get("$ResultCode"));
+		assertEquals("Bar", jsonPathValidationContext.getJsonPathExpressions().get("$Foo"));
+		assertEquals("Goodbye", jsonPathValidationContext.getJsonPathExpressions().get("$Hello"));
 	}
 
 	@Test
-	public void ignore_json() throws Exception {
-		String path = "$ResultCode";
-		MessageType messageType = MessageType.JSON;
+	void ignore_json() {
+		final String path = "$ResultCode";
+		final MessageType messageType = MessageType.JSON;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.ignore(path);
-		assertTrue(copy == this.builder);
-		assertTrue(((JsonMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonMessageValidationContext")).getIgnoreExpressions().contains("$ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.ignore(path);
+		assertSame(copy, this.builder);
+
+		final JsonMessageValidationContext jsonMessageValidationContext =
+				getFieldFromBuilder(JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		assertTrue(jsonMessageValidationContext.getIgnoreExpressions().contains("$ResultCode"));
 	}
 
 	@Test
-	public void ignore_xml() throws Exception {
-		String path = "//ResultCode";
-		MessageType messageType = MessageType.XML;
+	void ignore_xml() {
+		final String path = "//ResultCode";
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.ignore(path);
-		assertTrue(copy == this.builder);
-		assertTrue(((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getIgnoreExpressions().contains("//ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.ignore(path);
+		assertSame(copy, this.builder);
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertTrue(xmlMessageValidationContext.getIgnoreExpressions().contains("//ResultCode"));
 	}
 
 	@Test
-	public void ignore_xhtml() throws Exception {
-		String path = "//ResultCode";
-		MessageType messageType = MessageType.XHTML;
+	void ignore_xhtml() {
+		final String path = "//ResultCode";
+		final MessageType messageType = MessageType.XHTML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.ignore(path);
-		assertTrue(copy == this.builder);
-		assertTrue(((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getIgnoreExpressions().contains("//ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.ignore(path);
+		assertSame(copy, this.builder);
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertTrue(xmlMessageValidationContext.getIgnoreExpressions().contains("//ResultCode"));
 	}
 
 	@Test
-	public void xpath() throws Exception {
-		String path = "//ResultCode";
-		String controlValue = "Success";
-		MessageType messageType = MessageType.XML;
+	void xpath() {
+		final String path = "//ResultCode";
+		final String controlValue = "Success";
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.xpath(path, controlValue);
-		assertTrue(copy == this.builder);
-		assertEquals("Success", ((XpathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getXpathExpressions().get("//ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.xpath(path, controlValue);
+		assertSame(copy, this.builder);
+
+		final XpathMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XpathMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
 	}
 
 	@Test
-	public void jsonPath() throws Exception {
-		String path = "$ResultCode";
-		String controlValue = "Success";
-		MessageType messageType = MessageType.JSON;
+	void jsonPath() {
+		final String path = "$ResultCode";
+		final String controlValue = "Success";
+		final MessageType messageType = MessageType.JSON;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.jsonPath(path, controlValue);
-		assertTrue(copy == this.builder);
-		assertEquals("Success", ((JsonPathMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonPathValidationContext")).getJsonPathExpressions().get("$ResultCode"));
+		final ReceiveMessageBuilder copy = this.builder.jsonPath(path, controlValue);
+		assertSame(copy, this.builder);
+
+		final JsonPathMessageValidationContext jsonPathValidationContext =
+				getFieldFromBuilder(JsonPathMessageValidationContext.class, "jsonPathValidationContext");
+		assertEquals("Success", jsonPathValidationContext.getJsonPathExpressions().get("$ResultCode"));
 	}
 
 	@Test
-	public void xsd() throws Exception {
-		String schemaName = "foo.xsd";
-		MessageType messageType = MessageType.XML;
+	void xsd() {
+		final String schemaName = "foo.xsd";
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.xsd(schemaName);
-		assertTrue(copy == this.builder);
-		assertEquals(schemaName, ((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getSchema());
+		final ReceiveMessageBuilder copy = this.builder.xsd(schemaName);
+		assertSame(copy, this.builder);
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals(schemaName,xmlMessageValidationContext.getSchema());
 	}
 
 	@Test
-	public void jsonSchema() throws Exception {
-		String schemaName = "foo.json";
-		MessageType messageType = MessageType.JSON;
+	void jsonSchema() {
+		final String schemaName = "foo.json";
+		final MessageType messageType = MessageType.JSON;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.jsonSchema(schemaName);
-		assertTrue(copy == this.builder);
-		assertEquals(schemaName, ((JsonMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonMessageValidationContext")).getSchema());
+		final ReceiveMessageBuilder copy = this.builder.jsonSchema(schemaName);
+		assertSame(copy, this.builder);
+
+		final JsonMessageValidationContext jsonMessageValidationContext =
+				getFieldFromBuilder(JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		assertEquals(schemaName, jsonMessageValidationContext.getSchema());
 	}
 
 	@Test
-	public void xsdSchemaRepository() throws Exception {
-		String schemaRepository = "/schemas";
-		MessageType messageType = MessageType.XML;
+	void xsdSchemaRepository() {
+		final String schemaRepository = "/schemas";
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.xsdSchemaRepository(schemaRepository);
-		assertTrue(copy == this.builder);
-		assertEquals(schemaRepository, ((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getSchemaRepository());
+		final ReceiveMessageBuilder copy = this.builder.xsdSchemaRepository(schemaRepository);
+		assertSame(copy, this.builder);
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals(schemaRepository, xmlMessageValidationContext.getSchemaRepository());
 	}
 
 	@Test
-	public void jsonSchemaRepository() throws Exception {
-		String schemaRepository = "/schemas";
-		MessageType messageType = MessageType.JSON;
+	void jsonSchemaRepository() {
+		final String schemaRepository = "/schemas";
+		final MessageType messageType = MessageType.JSON;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.jsonSchemaRepository(schemaRepository);
-		assertTrue(copy == this.builder);
-		assertEquals(schemaRepository, ((JsonMessageValidationContext)ReflectionTestUtils.getField(this.builder, "jsonMessageValidationContext")).getSchemaRepository());
+		final ReceiveMessageBuilder copy = this.builder.jsonSchemaRepository(schemaRepository);
+		assertSame(copy, this.builder);
+
+		final JsonMessageValidationContext jsonMessageValidationContext =
+				getFieldFromBuilder(JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		assertEquals(schemaRepository, jsonMessageValidationContext.getSchemaRepository());
 	}
 
 	@Test
-	public void namespace() throws Exception {
-		String prefix = "foo";
-		String uri = "http://foo.com";
+	void namespace() {
+		final String prefix = "foo";
+		final String uri = "http://foo.com";
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.namespace(prefix, uri);
-		assertTrue(copy == this.builder);
-		assertEquals("http://foo.com", ((XpathPayloadVariableExtractor)ReflectionTestUtils.getField(this.builder, "xpathExtractor")).getNamespaces().get("foo"));
-		assertEquals("http://foo.com", ((XmlMessageValidationContext)ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext")).getNamespaces().get("foo"));
+		final ReceiveMessageBuilder copy = this.builder.namespace(prefix, uri);
+		assertSame(copy, this.builder);
+
+		final XpathPayloadVariableExtractor xpathExtractor =
+				getFieldFromBuilder(XpathPayloadVariableExtractor.class, "xpathExtractor");
+		assertEquals("http://foo.com", xpathExtractor.getNamespaces().get("foo"));
+
+		final XmlMessageValidationContext xmlMessageValidationContext =
+				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		assertEquals("http://foo.com", xmlMessageValidationContext.getNamespaces().get("foo"));
 	}
 	
 	@Test
-	public void selector_fromString() throws Exception {
-		String selector = "selector";
+	void selector_fromString() {
+		final String selector = "selector";
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.selector(selector);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.selector(selector);
+		assertSame(copy, this.builder);
 		assertEquals(selector, this.builder.getAction().getMessageSelector());
 	}
 
 	@Test
-	public void selector_fromMap() throws Exception {
-		String selectorKey = "selector";
-		Object selectorValue = mock(Object.class);
-		Map<String, Object> selectors = new HashMap<>();
+	void selector_fromMap() {
+		final String selectorKey = "selector";
+		final Object selectorValue = mock(Object.class);
+		final Map<String, Object> selectors = new HashMap<>();
 		selectors.put(selectorKey, selectorValue);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.selector(selectors);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.selector(selectors);
+		assertSame(copy, this.builder);
 		assertEquals(selectors, this.builder.getAction().getMessageSelectorMap());
 	}
 	
 	@Test
-	public void validator_fromMessageValidators() throws Exception {
-		MessageValidator validator1 = mock(MessageValidator.class);
-		MessageValidator validator2 = mock(MessageValidator.class);
-		MessageValidator validator3 = mock(MessageValidator.class);
+	void validator_fromMessageValidators() {
+		final MessageValidator validator1 = mock(MessageValidator.class);
+		final MessageValidator validator2 = mock(MessageValidator.class);
+		final MessageValidator validator3 = mock(MessageValidator.class);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validator(validator1, validator2, validator3);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.validator(validator1, validator2, validator3);
+		assertSame(copy, this.builder);
 		assertEquals(3, this.builder.getAction().getValidators().size());
 	}
 
 	@Disabled
 	@Test
-	public void validator_fromNames() throws Exception {
-		MessageValidator validator1 = mock(MessageValidator.class);
-		MessageValidator validator2 = mock(MessageValidator.class);
-		MessageValidator validator3 = mock(MessageValidator.class);
-		String name1 = "validator1";
-		String name2 = "validator2";
-		String name3 = "validator3";
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+	void validator_fromNames() {
+		final MessageValidator validator1 = mock(MessageValidator.class);
+		final MessageValidator validator2 = mock(MessageValidator.class);
+		final MessageValidator validator3 = mock(MessageValidator.class);
+		final String name1 = "validator1";
+		final String name2 = "validator2";
+		final String name3 = "validator3";
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		when(mockApplicationContext.getBean(name1, MessageValidator.class)).thenReturn(validator1);
 		when(mockApplicationContext.getBean(name2, MessageValidator.class)).thenReturn(validator2);
 		when(mockApplicationContext.getBean(name3, MessageValidator.class)).thenReturn(validator3);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validator(name1, name2, name3);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.validator(name1, name2, name3);
+		assertSame(copy, this.builder);
 		assertEquals(3, this.builder.getAction().getValidators().size());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
-	public void headerValidator_fromHeaderValidators() throws Exception {
-		HeaderValidator validator1 = mock(HeaderValidator.class);
-		HeaderValidator validator2 = mock(HeaderValidator.class);
-		HeaderValidator validator3 = mock(HeaderValidator.class);
+	void headerValidator_fromHeaderValidators() {
+		final HeaderValidator validator1 = mock(HeaderValidator.class);
+		final HeaderValidator validator2 = mock(HeaderValidator.class);
+		final HeaderValidator validator3 = mock(HeaderValidator.class);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headerValidator(validator1, validator2, validator3);
-		assertTrue(copy == this.builder);
-		assertEquals(3, ((HeaderValidationContext)ReflectionTestUtils.getField(this.builder, "headerValidationContext")).getValidators().size());
+		final ReceiveMessageBuilder copy = this.builder.headerValidator(validator1, validator2, validator3);
+		assertSame(copy, this.builder);
+
+		final HeaderValidationContext headerValidationContext =
+				getFieldFromBuilder(HeaderValidationContext.class, "headerValidationContext");
+		assertEquals(3, headerValidationContext.getValidators().size());
 	}
 
 	@Disabled
 	@Test
-	public void headerValidator_fromNames() throws Exception {
-		HeaderValidator validator1 = mock(HeaderValidator.class);
-		HeaderValidator validator2 = mock(HeaderValidator.class);
-		HeaderValidator validator3 = mock(HeaderValidator.class);
-		String name1 = "validator1";
-		String name2 = "validator2";
-		String name3 = "validator3";
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+	void headerValidator_fromNames() {
+		final HeaderValidator validator1 = mock(HeaderValidator.class);
+		final HeaderValidator validator2 = mock(HeaderValidator.class);
+		final HeaderValidator validator3 = mock(HeaderValidator.class);
+		final String name1 = "validator1";
+		final String name2 = "validator2";
+		final String name3 = "validator3";
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		when(mockApplicationContext.getBean(name1, HeaderValidator.class)).thenReturn(validator1);
 		when(mockApplicationContext.getBean(name2, HeaderValidator.class)).thenReturn(validator2);
 		when(mockApplicationContext.getBean(name3, HeaderValidator.class)).thenReturn(validator3);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.headerValidator(name1, name2, name3);
-		assertTrue(copy == this.builder);
-		assertEquals(3, ((HeaderValidationContext)ReflectionTestUtils.getField(this.builder, "headerValidationContext")).getValidators().size());
+		final ReceiveMessageBuilder copy = this.builder.headerValidator(name1, name2, name3);
+		assertSame(copy, this.builder);
+
+		final HeaderValidationContext headerValidationContext =
+				getFieldFromBuilder(HeaderValidationContext.class, "headerValidationContext");
+		assertEquals(3, headerValidationContext.getValidators().size());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 	
 	@Test
-	public void dictionary() throws Exception {
-		DataDictionary<String> dataDictionary = mock(DataDictionary.class);
+	void dictionary() {
+		final DataDictionary dataDictionary = mock(DataDictionary.class);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.dictionary(dataDictionary);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.dictionary(dataDictionary);
+		assertSame(copy, this.builder);
 		assertEquals(dataDictionary, this.builder.getAction().getDataDictionary());
 	}
 
 	@Test
-	public void dictionary_byName() throws Exception {
-		String name = "dictionary";
-		DataDictionary<String> dataDictionary = mock(DataDictionary.class);
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+	void dictionary_byName() {
+		final String name = "dictionary";
+		final DataDictionary dataDictionary = mock(DataDictionary.class);
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		this.builder = new ReceiveMessageBuilder();
 		when(mockApplicationContext.getBean(name, DataDictionary.class)).thenReturn(dataDictionary);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.dictionary(name);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.dictionary(name);
+		assertSame(copy, this.builder);
 		assertEquals(dataDictionary, this.builder.getAction().getDataDictionary());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 	
 	@Test
-	public void extractFromHeader() throws Exception {
-		String name = "foo";
-		String variable = "bar";
+	void extractFromHeader() {
+		final String name = "foo";
+		final String variable = "bar";
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.extractFromHeader(name, variable);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.extractFromHeader(name, variable);
+		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getVariableExtractors());
 		assertEquals(1, this.builder.getAction().getVariableExtractors().size());
-		assertEquals("bar", ((MessageHeaderVariableExtractor)ReflectionTestUtils.getField(this.builder, "headerExtractor")).getHeaderMappings().get("foo"));
+
+		final MessageHeaderVariableExtractor headerExtractor =
+				getFieldFromBuilder(MessageHeaderVariableExtractor.class, "headerExtractor");
+		assertEquals("bar", headerExtractor.getHeaderMappings().get("foo"));
 	}
 
 	@Test
-	public void extractFromPayload_xpath() throws Exception {
-		String path = "//ResultCode";
-		String controlValue = "Success";
-		MessageType messageType = MessageType.XML;
+	void extractFromPayload_xpath() {
+		final String path = "//ResultCode";
+		final String controlValue = "Success";
+		final MessageType messageType = MessageType.XML;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.extractFromPayload(path, controlValue);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.extractFromPayload(path, controlValue);
+		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getVariableExtractors());
 		assertEquals(1, this.builder.getAction().getVariableExtractors().size());
-		assertEquals("Success", ((XpathPayloadVariableExtractor)ReflectionTestUtils.getField(this.builder, "xpathExtractor")).getXpathExpressions().get("//ResultCode"));
+
+		final XpathPayloadVariableExtractor xpathExtractor =
+				getFieldFromBuilder(XpathPayloadVariableExtractor.class, "xpathExtractor");
+		assertEquals("Success", xpathExtractor.getXpathExpressions().get("//ResultCode"));
 	}
 
 	@Test
-	public void extractFromPayload_json() throws Exception {
-		String path = "$ResultCode";
-		String controlValue = "Success";
-		MessageType messageType = MessageType.JSON;
+	void extractFromPayload_json() {
+		final String path = "$ResultCode";
+		final String controlValue = "Success";
+		final MessageType messageType = MessageType.JSON;
 		this.builder = new ReceiveMessageBuilder();
 		this.builder.messageType(messageType);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.extractFromPayload(path, controlValue);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.extractFromPayload(path, controlValue);
+		assertSame(copy, this.builder);
 		assertNotNull(this.builder.getAction().getVariableExtractors());
 		assertEquals(1, this.builder.getAction().getVariableExtractors().size());
-		assertEquals("Success", ((JsonPathVariableExtractor)ReflectionTestUtils.getField(this.builder, "jsonPathExtractor")).getJsonPathExpressions().get("$ResultCode"));
+
+		final JsonPathVariableExtractor jsonPathExtractor =
+				getFieldFromBuilder(JsonPathVariableExtractor.class, "jsonPathExtractor");
+		assertEquals("Success", jsonPathExtractor.getJsonPathExpressions().get("$ResultCode"));
 	}
 	
 	@Test
-	public void validationCallback() throws Exception {
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		ValidationCallback callback = mock(ValidationCallback.class);
+	void validationCallback() {
+		final ValidationCallback callback = mock(ValidationCallback.class);
 		this.builder = new ReceiveMessageBuilder();
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.validationCallback(callback);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.validationCallback(callback);
+		assertSame(copy, this.builder);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 		assertEquals(callback, this.builder.getAction().getValidationCallback());
 	}
 	
 	@Test
-	public void withApplicationContext() throws Exception {
-		ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+	void withApplicationContext() {
+		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		this.builder = new ReceiveMessageBuilder();
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		ReceiveMessageBuilder copy = (ReceiveMessageBuilder)this.builder.withApplicationContext(mockApplicationContext);
-		assertTrue(copy == this.builder);
+		final ReceiveMessageBuilder copy = this.builder.withApplicationContext(mockApplicationContext);
+		assertSame(copy, this.builder);
 		assertEquals(mockApplicationContext, ReflectionTestUtils.getField(this.builder, "applicationContext"));
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
+
+	private <T> T getFieldFromBuilder(final Class<T> targetClass, final String fieldName) {
+		final T scriptValidationContext = targetClass.cast(
+				ReflectionTestUtils.getField(this.builder, fieldName));
+		assertNotNull(scriptValidationContext);
+		return scriptValidationContext;
+	}
 }
