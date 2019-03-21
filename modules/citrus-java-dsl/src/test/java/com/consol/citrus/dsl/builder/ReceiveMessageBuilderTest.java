@@ -81,7 +81,6 @@ class ReceiveMessageBuilderTest {
 	
 	@Test
 	void constructor() {
-		assertNotNull(this.builder);
 		assertNotNull(this.builder.getAction());
 	}
 	
@@ -89,7 +88,6 @@ class ReceiveMessageBuilderTest {
 	void constructor_withAction() {
 		final ReceiveMessageAction action = new ReceiveMessageAction();
 		this.builder = new ReceiveMessageBuilder<>(action);
-		assertNotNull(this.builder);
 		assertEquals(action, this.builder.getAction());
 	}
 
@@ -97,7 +95,6 @@ class ReceiveMessageBuilderTest {
 	void constructor_withDelegatingTestAction() {
 		final DelegatingTestAction<ReceiveMessageAction> action = new DelegatingTestAction<>(new ReceiveMessageAction());
 		this.builder = new ReceiveMessageBuilder(action);
-		assertNotNull(this.builder);
 		assertEquals(action.getDelegate(), this.builder.getAction());
 	}
 	
