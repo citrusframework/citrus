@@ -292,7 +292,10 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
                                         statement.execute();
 
-                                        final Clob responseClob = statement.getResultSet().getClob(1);
+                                        final ResultSet resultSet = statement.getResultSet();
+                                        resultSet.next();
+
+                                        final Clob responseClob = resultSet.getClob(1);
 
                                         assertEquals(clobReturnValue,
                                                 responseClob.getSubString(1, (int) requestClob.length()));
