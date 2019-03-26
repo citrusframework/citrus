@@ -17,17 +17,15 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.google.common.collect.Multimap;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.Cookie;
-import java.util.Map;
 
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class HttpMessageTest {
 
@@ -116,9 +114,9 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParams(queryParamString);
 
         //THEN
-        final Map<String, String> queryParams = resultMessage.getQueryParams();
-        assertEquals(queryParams.get("foo"), "foobar");
-        assertEquals(queryParams.get("bar"), "barbar");
+        final Multimap<String, String> queryParams = resultMessage.getQueryParams();
+        assertTrue(queryParams.get("foo").contains("foobar"));
+        assertTrue(queryParams.get("bar").contains("barbar"));
     }
 
     @Test
@@ -157,7 +155,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam(queryParam);
 
         //THEN
-        assertNull(resultMessage.getQueryParams().get("foo"));
+        assertTrue(resultMessage.getQueryParams().get("foo").contains(null));
     }
 
     @Test
@@ -171,7 +169,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam(key, value);
 
         //THEN
-        assertEquals(resultMessage.getQueryParams().get(key), value);
+        assertTrue(resultMessage.getQueryParams().get(key).contains(value));
     }
 
     @Test
@@ -189,8 +187,8 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam(newKey, newValue);
 
         //THEN
-        assertEquals(resultMessage.getQueryParams().get(existingKey), existingValue);
-        assertEquals(resultMessage.getQueryParams().get(newKey), newValue);
+        assertTrue(resultMessage.getQueryParams().get(existingKey).contains(existingValue));
+        assertTrue(resultMessage.getQueryParams().get(newKey).contains(newValue));
     }
 
     @Test
@@ -273,5 +271,20 @@ public class HttpMessageTest {
 
         //THEN
         assertEquals(statusCode, HttpStatus.I_AM_A_TEAPOT);
+    }
+
+    @Test
+    public void testQueryParamWithMultipleParams() {
+
+        //GIVEN
+        httpMessage.queryParam("foo", "bar");
+
+        final String expectedHeaderValue = "foo=bar,foo=foobar";
+
+        //WHEN
+        final HttpMessage resultMessage= httpMessage.queryParam("foo", "foobar");
+
+        //THEN
+        assertEquals(resultMessage.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
     }
 }

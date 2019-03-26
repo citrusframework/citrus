@@ -20,6 +20,9 @@ import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -28,11 +31,7 @@ import javax.servlet.http.Cookie;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,7 +45,7 @@ public class HttpMessage extends DefaultMessage {
     private Map<String, Cookie> cookies = new HashMap<>();
 
     /** Query params */
-    private Map<String, String> queryParams = new HashMap<>();
+    private Multimap<String, String> queryParams = HashMultimap.create();
 
     private CookieConverter cookieConverter = new CookieConverter();
 
@@ -195,9 +194,11 @@ public class HttpMessage extends DefaultMessage {
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
-        this.queryParams = Stream.of(queryParamString.split(",")).map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
-                                                                        .filter(keyValue -> StringUtils.hasText(keyValue[0]))
-                                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
+        this.queryParams = Stream.of(queryParamString.split(","))
+                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
+                .filter(keyValue -> StringUtils.hasText(keyValue[0]))
+                .collect(Multimaps.toMultimap(keyValue -> keyValue[0], keyValue -> keyValue[1], HashMultimap::create));
+
         return this;
     }
 
@@ -223,10 +224,10 @@ public class HttpMessage extends DefaultMessage {
 
         this.queryParams.put(name, value);
 
-        String queryParamString = queryParams.entrySet()
-                                             .stream()
-                                             .map(entry -> entry.getKey() + (entry.getValue() != null ? "=" + entry.getValue() : ""))
-                                             .collect(Collectors.joining(","));
+        String queryParamString = queryParams.entries()
+                .stream()
+                .map(entry -> entry.getKey() + (entry.getValue() != null ? "=" + entry.getValue() : ""))
+                .collect(Collectors.joining(","));
 
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
@@ -339,7 +340,7 @@ public class HttpMessage extends DefaultMessage {
      * Gets the Http request query params.
      * @return The query parameters as a key value map
      */
-    public Map<String, String> getQueryParams() {
+    public Multimap<String, String> getQueryParams() {
         return queryParams;
     }
 

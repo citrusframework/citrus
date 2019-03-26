@@ -20,7 +20,6 @@ import com.consol.citrus.generate.provider.CodeProvider;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.MessageHeaders;
 import com.squareup.javapoet.CodeBlock;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -56,7 +55,7 @@ public class ReceiveHttpRequestCodeProvider implements CodeProvider<HttpMessage>
                     code.add(".header($S, $S)\n", entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
                 });
 
-        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
+        if (!message.getQueryParams().isEmpty()) {
             message.getQueryParams()
                     .forEach((key, value) -> {
                         code.add(".queryParam($S, $S)\n", key, value);

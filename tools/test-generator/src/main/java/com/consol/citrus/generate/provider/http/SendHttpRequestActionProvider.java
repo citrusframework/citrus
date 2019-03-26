@@ -19,8 +19,10 @@ package com.consol.citrus.generate.provider.http;
 import com.consol.citrus.generate.provider.MessageActionProvider;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.model.testcase.http.*;
-import org.springframework.util.CollectionUtils;
+import com.consol.citrus.model.testcase.http.ClientRequestType;
+import com.consol.citrus.model.testcase.http.ParamType;
+import com.consol.citrus.model.testcase.http.RequestHeadersType;
+import com.consol.citrus.model.testcase.http.SendRequestModel;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -60,7 +62,7 @@ public class SendHttpRequestActionProvider implements MessageActionProvider<Send
 
         requestType.setHeaders(requestHeaders);
 
-        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
+        if (!message.getQueryParams().isEmpty()) {
             message.getQueryParams()
                     .forEach((key, value) -> {
                         ParamType paramType = new ParamType();
