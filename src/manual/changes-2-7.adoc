@@ -4,6 +4,7 @@
 === Fixed bugs
 * https://github.com/citrusframework/citrus/issues/545[#545 - Missing HttpServer auto gzip decompression in request handling]
 * https://github.com/citrusframework/citrus/issues/588[#588 - BooleanExpressionParser parses expression groups containing boolean strings inconsistently]
+* https://github.com/citrusframework/citrus/issues/583[#583 - CitrusFramework 2.7.6 - Param list support with same param name not available]
 
 [[changes-security-2-7-10]]
 === Security fixes
