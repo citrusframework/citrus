@@ -137,7 +137,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <spring.version>4.3.14.RELEASE</spring.version>
-    <spring.ws.version>2.4.2.RELEASE</spring.ws.version>
+    <spring.ws.version>3.0.7.RELEASE</spring.ws.version>
     <spring.integration.version>4.3.14.RELEASE</spring.integration.version>
     <spring.restdocs.version>1.2.3.RELEASE</spring.restdocs.version>
     <apache.camel.version>2.20.1</apache.camel.version>
