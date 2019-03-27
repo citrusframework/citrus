@@ -17,12 +17,13 @@
 package com.consol.citrus.http.message;
 
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
-import com.google.common.collect.Multimap;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.servlet.http.Cookie;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
@@ -116,7 +117,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParams(queryParamString);
 
         //THEN
-        final Multimap<String, String> queryParams = resultMessage.getQueryParams();
+        final Map<String, Collection<String>> queryParams = resultMessage.getQueryParams();
         assertTrue(queryParams.get("foo").contains("foobar"));
         assertTrue(queryParams.get("bar").contains("barbar"));
     }

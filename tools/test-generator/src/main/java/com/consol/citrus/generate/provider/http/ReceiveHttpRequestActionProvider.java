@@ -22,6 +22,7 @@ import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.model.testcase.http.ParamType;
 import com.consol.citrus.model.testcase.http.ReceiveRequestModel;
 import com.consol.citrus.model.testcase.http.ServerRequestType;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -61,14 +62,16 @@ public class ReceiveHttpRequestActionProvider implements MessageActionProvider<R
 
         requestType.setHeaders(requestHeaders);
 
-        if (!message.getQueryParams().isEmpty()) {
+        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
             message.getQueryParams()
-                    .forEach((key, value) -> {
-                        ParamType paramType = new ParamType();
-                        paramType.setName(key);
-                        paramType.setValue(value);
-                        requestType.getParams().add(paramType);
-                    });
+                    .forEach((key, values) ->
+                        values.forEach(value -> {
+                            ParamType paramType = new ParamType();
+                            paramType.setName(key);
+                            paramType.setValue(value);
+                            requestType.getParams().add(paramType);
+                        })
+                    );
         } else if (StringUtils.hasText(message.getQueryParamString())) {
             Stream.of(message.getQueryParamString()
                     .split(","))

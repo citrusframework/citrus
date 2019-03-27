@@ -23,6 +23,7 @@ import com.consol.citrus.model.testcase.http.ClientRequestType;
 import com.consol.citrus.model.testcase.http.ParamType;
 import com.consol.citrus.model.testcase.http.RequestHeadersType;
 import com.consol.citrus.model.testcase.http.SendRequestModel;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -62,14 +63,16 @@ public class SendHttpRequestActionProvider implements MessageActionProvider<Send
 
         requestType.setHeaders(requestHeaders);
 
-        if (!message.getQueryParams().isEmpty()) {
+        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
             message.getQueryParams()
-                    .forEach((key, value) -> {
-                        ParamType paramType = new ParamType();
-                        paramType.setName(key);
-                        paramType.setValue(value);
-                        requestType.getParams().add(paramType);
-                    });
+                    .forEach((key, values) ->
+                            values.forEach(value -> {
+                                ParamType paramType = new ParamType();
+                                paramType.setName(key);
+                                paramType.setValue(value);
+                                requestType.getParams().add(paramType);
+                            })
+                    );
         } else if (StringUtils.hasText(message.getQueryParamString())) {
             Stream.of(message.getQueryParamString()
                     .split(","))

@@ -20,6 +20,7 @@ import com.consol.citrus.generate.provider.CodeProvider;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.MessageHeaders;
 import com.squareup.javapoet.CodeBlock;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -51,22 +52,23 @@ public class SendHttpRequestCodeProvider implements CodeProvider<HttpMessage> {
 
         message.getHeaders().entrySet().stream()
                 .filter(entry -> !entry.getKey().startsWith(MessageHeaders.PREFIX))
-                .forEach(entry -> {
-                    code.add(".header($S, $S)\n", entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
-                });
+                .forEach(entry ->
+                    code.add(".header($S, $S)\n", entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""))
+                );
 
-        if (!message.getQueryParams().isEmpty()) {
+        if (!CollectionUtils.isEmpty(message.getQueryParams())) {
             message.getQueryParams()
-                    .forEach((key, value) -> {
-                        code.add(".queryParam($S, $S)\n", key, value);
-                    });
+                    .forEach((key, values) ->
+                        values.forEach(value ->
+                                code.add(".queryParam($S, $S)\n", key, value))
+                    );
         } else if (StringUtils.hasText(message.getQueryParamString())) {
             Stream.of(message.getQueryParamString()
                     .split(","))
                     .map(nameValuePair -> nameValuePair.split("="))
-                    .forEach(param -> {
-                        code.add(".queryParam($S, $S)\n", param[0], param[1]);
-                    });
+                    .forEach(param ->
+                        code.add(".queryParam($S, $S)\n", param[0], param[1])
+                    );
         }
 
         code.unindent();
