@@ -40,6 +40,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch
@@ -180,7 +181,8 @@ public class CitrusBackend implements Backend {
 
         @Override
         public void process(Citrus instance) {
-            for (String gluePath : gluePaths) {
+            List<String> stringGluePaths = stringifyGluePaths(gluePaths);
+            for (String gluePath : stringGluePaths) {
                 String xmlStepConfigLocation = "classpath*:" + gluePath.replaceAll("\\.", "/").replaceAll("^classpath:", "") + "/**/*Steps.xml";
 
                 log.info(String.format("Loading XML step definitions %s", xmlStepConfigLocation));
@@ -196,6 +198,10 @@ public class CitrusBackend implements Backend {
                     glue.addStepDefinition(new XmlStepDefinition(stepTemplate, objectFactory, typeRegistry));
                 }
             }
+        }
+
+        private List<String> stringifyGluePaths(List<?> gluePaths){
+            return gluePaths.stream().map(Object::toString).collect(Collectors.toList());
         }
     }
 }
