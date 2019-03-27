@@ -27,10 +27,13 @@ import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageType;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.CallableStatement;
 import java.sql.Clob;
 import java.sql.Connection;
@@ -316,6 +319,54 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         "<dataset>" +
                         "<row>" +
                         "<RETURN_CLOB>"+clobReturnValue+"</RETURN_CLOB>"+
+                        "</row>" +
+                        "</dataset>"));
+    }
+
+    @CitrusTest
+    public void testBlobIntegration() throws IOException {
+
+        //GIVEN
+        final String sql = "{? = CALL someClobFunction(?)}";
+        final ClassPathResource blobRequestValue = new ClassPathResource("jdbc/RequestBlob.pdf");
+        final ClassPathResource blobReturnValue = new ClassPathResource("jdbc/ResponseBlob.pdf");
+
+
+        //WHEN + THEN
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+                                    try(final PreparedStatement statement = connection.prepareStatement(sql)){
+
+                                        statement.setBinaryStream(1, blobRequestValue.getInputStream());
+                                        statement.execute();
+
+                                        final ResultSet resultSet = statement.getResultSet();
+                                        resultSet.next();
+
+                                        final Blob responseBlob = resultSet.getBlob(1);
+
+                                        assertEquals(blobReturnValue.getInputStream(), responseBlob.getBinaryStream());
+                                    }
+                                } catch (final SQLException | AssertionError | IOException e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+blobRequestValue+")"));
+
+        send(jdbcServer)
+                .messageType(MessageType.XML)
+                .message(JdbcMessage.success().dataSet("" +
+                        "<dataset>" +
+                        "<row>" +
+                        "<RETURN_BLOB>"+blobReturnValue.getInputStream()+"</RETURN_BLOB>"+
                         "</row>" +
                         "</dataset>"));
     }
