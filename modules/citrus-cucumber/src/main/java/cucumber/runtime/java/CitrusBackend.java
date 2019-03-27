@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@ package cucumber.runtime.java;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.cucumber.CitrusLifecycleHooks;
-import com.consol.citrus.cucumber.CitrusReporter;
 import com.consol.citrus.cucumber.container.StepTemplate;
 import com.consol.citrus.cucumber.step.xml.XmlStepDefinition;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -38,12 +37,13 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusBackend implements Backend {
@@ -65,12 +65,10 @@ public class CitrusBackend implements Backend {
     public CitrusBackend(ResourceLoader resourceLoader, TypeRegistry typeRegistry) {
         this.resourceLoader = resourceLoader;
         this.typeRegistry = typeRegistry;
-
-        Citrus.CitrusInstanceManager.addInstanceProcessor(instance -> instance.beforeSuite(CitrusReporter.SUITE_NAME));
     }
 
     @Override
-    public void loadGlue(Glue glue, List<String> gluePaths) {
+    public void loadGlue(Glue glue, List<URI> gluePaths) {
         try {
             Citrus.CitrusInstanceManager.addInstanceProcessor(new XmlStepInstanceProcessor(glue, gluePaths, getObjectFactory(), typeRegistry));
         } catch (IllegalAccessException e) {
@@ -101,8 +99,8 @@ public class CitrusBackend implements Backend {
     }
 
     @Override
-    public String getSnippet(PickleStep step, String keyword, FunctionNameGenerator functionNameGenerator) {
-        return "";
+    public List<String> getSnippet(PickleStep step, String keyword, FunctionNameGenerator functionNameGenerator) {
+        return Collections.emptyList();
     }
 
     /**
@@ -168,11 +166,11 @@ public class CitrusBackend implements Backend {
     private static class XmlStepInstanceProcessor implements Citrus.InstanceProcessor {
 
         private final Glue glue;
-        private final List<String> gluePaths;
+        private final List<URI> gluePaths;
         private final ObjectFactory objectFactory;
         private TypeRegistry typeRegistry;
 
-        XmlStepInstanceProcessor(Glue glue, List<String> gluePaths, ObjectFactory objectFactory, TypeRegistry typeRegistry) {
+        XmlStepInstanceProcessor(Glue glue, List<URI> gluePaths, ObjectFactory objectFactory, TypeRegistry typeRegistry) {
             this.glue = glue;
             this.gluePaths = gluePaths;
             this.objectFactory = objectFactory;

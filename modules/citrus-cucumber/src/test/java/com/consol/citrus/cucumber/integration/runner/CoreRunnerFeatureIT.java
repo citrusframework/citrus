@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2017 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        glue = { "com.consol.citrus.cucumber.step.runner.core" },
-        plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+        glue = { "com.consol.citrus.cucumber.step.runner.core" } )
 public class CoreRunnerFeatureIT {
 }
