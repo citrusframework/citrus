@@ -42,7 +42,7 @@ class HttpCodeProvider {
         provideQueryParameter(code, message);
     }
 
-    void addResponseContent(final CodeBlock.Builder code, final HttpMessage message) {
+    void provideResponseConfiguration(final CodeBlock.Builder code, final HttpMessage message) {
         code.add(".response($T.$L)\n", HttpStatus.class, message.getStatusCode().name());
         messageCodeProvider.provideHeaderAndPayload(code, message);
     }

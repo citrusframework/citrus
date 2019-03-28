@@ -36,7 +36,7 @@ public class SendHttpResponseCodeProvider implements CodeProvider<HttpMessage> {
         code.indent();
         code.add(".send()\n");
 
-        httpCodeProvider.addResponseContent(code, message);
+        httpCodeProvider.provideResponseConfiguration(code, message);
         code.unindent();
         code.add(");");
 

@@ -36,7 +36,7 @@ public class ReceiveHttpResponseCodeProvider implements CodeProvider<HttpMessage
         code.indent();
         code.add(".receive()\n");
 
-        httpCodeProvider.addResponseContent(code, message);
+        httpCodeProvider.provideResponseConfiguration(code, message);
         code.unindent();
         code.add(");");
 
