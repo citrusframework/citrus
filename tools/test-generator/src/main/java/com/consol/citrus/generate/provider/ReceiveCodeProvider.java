@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,11 +17,7 @@
 package com.consol.citrus.generate.provider;
 
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
 import com.squareup.javapoet.CodeBlock;
-import org.springframework.util.CollectionUtils;
-
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -29,24 +25,20 @@ import java.util.Optional;
  */
 public class ReceiveCodeProvider implements CodeProvider<Message> {
 
+    private MessageCodeProvider messageCodeProvider = new MessageCodeProvider();
+
     @Override
-    public CodeBlock getCode(String endpoint, Message message) {
-        CodeBlock.Builder code = CodeBlock.builder();
+    public CodeBlock getCode(final String endpoint, final Message message) {
+        final CodeBlock.Builder code = CodeBlock.builder();
 
         code.add("receive(action -> action.endpoint($S)\n", endpoint);
         code.indent();
-        code.add(".payload($S)\n", message.getPayload(String.class));
-
-        if (!CollectionUtils.isEmpty(message.getHeaders())) {
-            message.getHeaders().entrySet().stream()
-                    .filter(entry -> !entry.getKey().startsWith(MessageHeaders.PREFIX))
-                    .forEach(entry -> {
-                        code.add(".header($S, $S)\n", entry.getKey(), Optional.ofNullable(entry.getValue()).map(Object::toString).orElse(""));
-                    });
-        }
+        messageCodeProvider.provideHeaderAndPayload(code, message);
         code.unindent();
         code.add(");");
 
         return code.build();
     }
+
+
 }
