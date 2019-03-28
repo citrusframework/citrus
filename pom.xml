@@ -976,6 +976,13 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
           <configuration>
+            <properties>
+              <property>
+                <name>junit</name>
+                <value>false</value>
+              </property>
+            </properties>
+            <threadCount>1</threadCount>
             <systemProperties>
               <property>
                 <name>javax.xml.parsers.SAXParserFactory</name>
@@ -992,6 +999,18 @@
             <skipTests>${skip.unit.tests}</skipTests>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${surefire.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-testng</artifactId>
+              <version>${surefire.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>
