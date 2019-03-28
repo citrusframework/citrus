@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -223,14 +223,6 @@ public class HttpMessage extends DefaultMessage {
         return this;
     }
 
-    private void addQueryParam(final String name, final String value) {
-        if (this.queryParams.containsKey(name)) {
-            this.queryParams.get(name).add(value);
-        } else {
-            this.queryParams.put(name, new ArrayList<>(Collections.singletonList(value)));
-        }
-    }
-
     /**
      * Sets a new Http request query param.
      *
@@ -266,11 +258,7 @@ public class HttpMessage extends DefaultMessage {
         return this;
     }
 
-    private String outputQueryParam(Map.Entry<String, Collection<String>> entry) {
-        return entry.getValue().stream()
-                .map(entryValue -> entry.getKey() + (entryValue != null ? "=" + entryValue : ""))
-                .collect(Collectors.joining(","));
-    }
+
 
     /**
      * Sets request path that is dynamically added to base uri.
@@ -490,7 +478,7 @@ public class HttpMessage extends DefaultMessage {
     public void setCookies(final Cookie[] cookies) {
         this.cookies.clear();
         if (cookies != null) {
-            for (Cookie cookie : cookies) {
+            for (final Cookie cookie : cookies) {
                 cookie(cookie);
             }
         }
@@ -519,7 +507,7 @@ public class HttpMessage extends DefaultMessage {
      * @return The parsed dump as HttpMessage
      */
     public static HttpMessage fromRequestData(final String requestData) {
-        try (BufferedReader reader = new BufferedReader(new StringReader(requestData))) {
+        try (final BufferedReader reader = new BufferedReader(new StringReader(requestData))) {
             final HttpMessage request = new HttpMessage();
 
             final String[] requestLine = reader.readLine().split("\\s");
@@ -536,7 +524,7 @@ public class HttpMessage extends DefaultMessage {
             }
 
             return parseHttpMessage(reader, request);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw request data", e);
         }
     }
@@ -548,7 +536,7 @@ public class HttpMessage extends DefaultMessage {
      * @return The parsed dump as HttpMessage
      */
     public static HttpMessage fromResponseData(final String responseData) {
-        try (BufferedReader reader = new BufferedReader(new StringReader(responseData))) {
+        try (final BufferedReader reader = new BufferedReader(new StringReader(responseData))) {
             final HttpMessage response = new HttpMessage();
 
             final String[] statusLine = reader.readLine().split("\\s");
@@ -561,9 +549,22 @@ public class HttpMessage extends DefaultMessage {
             }
 
             return parseHttpMessage(reader, response);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw response data", e);
         }
+    }
+
+    private void addQueryParam(final String name, final String value) {
+        if (!this.queryParams.containsKey(name)) {
+            this.queryParams.put(name, new LinkedList<>());
+        }
+        this.queryParams.get(name).add(value);
+    }
+
+    private String outputQueryParam(final Map.Entry<String, Collection<String>> entry) {
+        return entry.getValue().stream()
+                .map(entryValue -> entry.getKey() + (entryValue != null ? "=" + entryValue : ""))
+                .collect(Collectors.joining(","));
     }
 
     private static HttpMessage parseHttpMessage(final BufferedReader reader, final HttpMessage message) throws IOException {
