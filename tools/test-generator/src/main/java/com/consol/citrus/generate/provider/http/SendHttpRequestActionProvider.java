@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,10 @@ package com.consol.citrus.generate.provider.http;
 import com.consol.citrus.generate.provider.MessageActionProvider;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.model.testcase.http.*;
+import com.consol.citrus.model.testcase.http.ClientRequestType;
+import com.consol.citrus.model.testcase.http.ParamType;
+import com.consol.citrus.model.testcase.http.RequestHeadersType;
+import com.consol.citrus.model.testcase.http.SendRequestModel;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,6 +37,7 @@ import java.util.stream.Stream;
 public class SendHttpRequestActionProvider implements MessageActionProvider<SendRequestModel, HttpMessage> {
 
     @Override
+    @SuppressWarnings({"Duplicates", "common-java:DuplicatedBlocks"})
     public SendRequestModel getAction(String endpoint, HttpMessage message) {
         SendRequestModel request = new SendRequestModel();
 
@@ -62,12 +66,14 @@ public class SendHttpRequestActionProvider implements MessageActionProvider<Send
 
         if (!CollectionUtils.isEmpty(message.getQueryParams())) {
             message.getQueryParams()
-                    .forEach((key, value) -> {
-                        ParamType paramType = new ParamType();
-                        paramType.setName(key);
-                        paramType.setValue(value);
-                        requestType.getParams().add(paramType);
-                    });
+                    .forEach((key, values) ->
+                            values.forEach(value -> {
+                                ParamType paramType = new ParamType();
+                                paramType.setName(key);
+                                paramType.setValue(value);
+                                requestType.getParams().add(paramType);
+                            })
+                    );
         } else if (StringUtils.hasText(message.getQueryParamString())) {
             Stream.of(message.getQueryParamString()
                     .split(","))

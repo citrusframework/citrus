@@ -16,29 +16,29 @@
 
 package com.consol.citrus.generate.provider;
 
-import com.consol.citrus.message.Message;
+import com.consol.citrus.message.DefaultMessage;
 import com.squareup.javapoet.CodeBlock;
+import org.junit.jupiter.api.Test;
 
-/**
- * @author Christoph Deppisch
- * @since 2.7.4
- */
-public class ReceiveCodeProvider implements CodeProvider<Message> {
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    private MessageCodeProvider messageCodeProvider = new MessageCodeProvider();
+class SendCodeProviderTest {
 
-    @Override
-    public CodeBlock getCode(final String endpoint, final Message message) {
-        final CodeBlock.Builder code = CodeBlock.builder();
+    private final SendCodeProvider sendCodeProvider = new SendCodeProvider();
 
-        code.add("receive(action -> action.endpoint($S)\n", endpoint);
-        code.indent();
-        messageCodeProvider.provideHeaderAndPayload(code, message);
-        code.unindent();
-        code.add(");");
+    private final DefaultMessage message = new DefaultMessage();
 
-        return code.build();
+    @Test
+    void getCode() {
+
+        //GIVEN
+        final String endpoint = "foo";
+        final String expectedString = "send(action -> action.endpoint(\"foo\")\n);";
+
+        //WHEN
+        final CodeBlock code = sendCodeProvider.getCode(endpoint, message);
+
+        //THEN
+        assertEquals(expectedString, code.toString());
     }
-
-
 }
