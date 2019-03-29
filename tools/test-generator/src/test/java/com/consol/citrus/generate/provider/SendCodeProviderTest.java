@@ -22,25 +22,23 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+class SendCodeProviderTest {
 
-class ReceiveCodeProviderTest {
-
-    private final ReceiveCodeProvider receiveCodeProvider = new ReceiveCodeProvider();
+    private final SendCodeProvider sendCodeProvider = new SendCodeProvider();
 
     private final DefaultMessage message = new DefaultMessage();
 
     @Test
-    void testGetCode() {
+    void getCode() {
 
         //GIVEN
         final String endpoint = "foo";
-        final String expectedString = "receive(action -> action.endpoint(\"foo\")\n);";
+        final String expectedString = "send(action -> action.endpoint(\"foo\")\n);";
 
         //WHEN
-        final CodeBlock code = receiveCodeProvider.getCode(endpoint, message);
+        final CodeBlock code = sendCodeProvider.getCode(endpoint, message);
 
         //THEN
         assertEquals(expectedString, code.toString());
     }
-
 }
