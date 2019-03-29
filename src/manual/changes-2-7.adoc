@@ -19,6 +19,7 @@ https://github.com/citrusframework/citrus/issues/583[#583 - Param list support w
 [[changes-security-2-7-10]]
 === Security fixes
 * https://github.com/citrusframework/citrus/issues/612[#612 - Update org.springframework.ws.spring-xml to 3.0.6 or later]
+* https://github.com/citrusframework/citrus/issues/639[#639 - Update jetty-server to 9.4.12.v20180830 or later]
 
 [[changes-2-7-9]]
 == Changes in Citrus 2.7.9
