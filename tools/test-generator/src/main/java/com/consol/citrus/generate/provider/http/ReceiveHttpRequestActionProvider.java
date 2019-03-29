@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,9 +33,11 @@ import java.util.stream.Stream;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
+
 public class ReceiveHttpRequestActionProvider implements MessageActionProvider<ReceiveRequestModel, HttpMessage> {
 
     @Override
+    @SuppressWarnings({"Duplicates", "common-java:DuplicatedBlocks"})
     public ReceiveRequestModel getAction(String endpoint, HttpMessage message) {
         ReceiveRequestModel request = new ReceiveRequestModel();
 
