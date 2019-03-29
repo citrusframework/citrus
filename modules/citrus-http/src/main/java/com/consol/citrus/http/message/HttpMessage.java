@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2014 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,11 +44,15 @@ import java.util.stream.Stream;
  */
 public class HttpMessage extends DefaultMessage {
 
-    /** Http cookies */
+    /**
+     * Http cookies
+     */
     private Map<String, Cookie> cookies = new HashMap<>();
 
-    /** Query params */
-    private Map<String, String> queryParams = new HashMap<>();
+    /**
+     * Query params
+     */
+    private transient Map<String, Collection<String>> queryParams = new HashMap<>();
 
     private CookieConverter cookieConverter = new CookieConverter();
 
@@ -59,35 +65,39 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Constructs copy of given message.
+     *
      * @param message The base message for the copy operation
      */
-    public HttpMessage(Message message) {
+    public HttpMessage(final Message message) {
         super(message);
         copyCookies(message);
     }
 
     /**
      * Default message using message payload.
+     *
      * @param payload The payload for the message to set
      */
-    public HttpMessage(Object payload) {
+    public HttpMessage(final Object payload) {
         super(payload);
     }
 
     /**
      * Default message using message payload and headers.
+     *
      * @param payload The payload for the message to set
      * @param headers A key value map containing the headers to set
      */
-    public HttpMessage(Object payload, Map<String, Object> headers) {
+    public HttpMessage(final Object payload, final Map<String, Object> headers) {
         super(payload, headers);
     }
 
     /**
      * Sets the cookies extracted from the given message as far as it is a HttpMessage
+     *
      * @param message the message to extract the cookies from
      */
-    private void copyCookies(Message message) {
+    private void copyCookies(final Message message) {
         if (message instanceof HttpMessage) {
             this.cookies.putAll(((HttpMessage) message).getCookiesMap());
         }
@@ -95,30 +105,33 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets the Http request method header.
+     *
      * @param method The Http method header to use
      * @return The altered HttpMessage
      */
-    public HttpMessage method(HttpMethod method) {
+    public HttpMessage method(final HttpMethod method) {
         setHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD, method.name());
         return this;
     }
 
     /**
      * Sets the Http version header.
+     *
      * @param version The http version header value to use
      * @return The altered HttpMessage
      */
-    public HttpMessage version(String version) {
+    public HttpMessage version(final String version) {
         setHeader(HttpMessageHeaders.HTTP_VERSION, version);
         return this;
     }
 
     /**
      * Sets the Http response status code.
+     *
      * @param statusCode The status code header to respond with
      * @return The altered HttpMessage
      */
-    public HttpMessage status(HttpStatus statusCode) {
+    public HttpMessage status(final HttpStatus statusCode) {
         statusCode(statusCode.value());
         reasonPhrase(statusCode.name());
         return this;
@@ -126,30 +139,33 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets the Http response status code header.
+     *
      * @param statusCode The status code header value to respond with
      * @return The altered HttpMessage
      */
-    public HttpMessage statusCode(Integer statusCode) {
+    public HttpMessage statusCode(final Integer statusCode) {
         setHeader(HttpMessageHeaders.HTTP_STATUS_CODE, statusCode);
         return this;
     }
 
     /**
      * Sets the Http response reason phrase header.
+     *
      * @param reasonPhrase The reason phrase header value to use
      * @return The altered HttpMessage
      */
-    public HttpMessage reasonPhrase(String reasonPhrase) {
+    public HttpMessage reasonPhrase(final String reasonPhrase) {
         setHeader(HttpMessageHeaders.HTTP_REASON_PHRASE, reasonPhrase);
         return this;
     }
 
     /**
      * Sets the Http request request uri header.
+     *
      * @param requestUri The request uri header value to use
      * @return The altered HttpMessage
      */
-    public HttpMessage uri(String requestUri) {
+    public HttpMessage uri(final String requestUri) {
         setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, requestUri);
         setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, requestUri);
         return this;
@@ -157,30 +173,33 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets the Http request content type header.
+     *
      * @param contentType The content type header value to use
      * @return The altered HttpMessage
      */
-    public HttpMessage contentType(String contentType) {
+    public HttpMessage contentType(final String contentType) {
         setHeader("Content-Type", contentType);
         return this;
     }
 
     /**
      * Sets the Http accepted content type header for response.
+     *
      * @param accept The accept header value to set
      * @return The altered HttpMessage
      */
-    public HttpMessage accept(String accept) {
+    public HttpMessage accept(final String accept) {
         setHeader("Accept", accept);
         return this;
     }
 
     /**
      * Sets the Http request context path header.
+     *
      * @param contextPath The context path header value to use
      * @return The altered HttpMessage
      */
-    public HttpMessage contextPath(String contextPath) {
+    public HttpMessage contextPath(final String contextPath) {
         setHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH, contextPath);
         return this;
     }
@@ -188,45 +207,50 @@ public class HttpMessage extends DefaultMessage {
     /**
      * Sets the Http request query params query String. Query String is a compilation of key-value pairs separated
      * by comma character e.g. key1=value1[","key2=value2]. Query String can be empty.
+     *
      * @param queryParamString The query parameter string to evaluate
      * @return The altered HttpMessage
      */
-    public HttpMessage queryParams(String queryParamString) {
+    public HttpMessage queryParams(final String queryParamString) {
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
-        this.queryParams = Stream.of(queryParamString.split(",")).map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[] {keyValue, ""}))
-                                                                        .filter(keyValue -> StringUtils.hasText(keyValue[0]))
-                                                                        .collect(Collectors.toMap(keyValue -> keyValue[0], keyValue -> keyValue[1]));
+        Stream.of(queryParamString.split(","))
+                .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[]{keyValue, ""}))
+                .filter(keyValue -> StringUtils.hasText(keyValue[0]))
+                .forEach(keyValue -> this.addQueryParam(keyValue[0], keyValue[1]));
+
         return this;
     }
 
     /**
      * Sets a new Http request query param.
+     *
      * @param name The name of the request query parameter
      * @return The altered HttpMessage
      */
-    public HttpMessage queryParam(String name) {
+    public HttpMessage queryParam(final String name) {
         return queryParam(name, null);
     }
 
     /**
      * Sets a new Http request query param.
-     * @param name The name of the request query parameter
+     *
+     * @param name  The name of the request query parameter
      * @param value The value of the request query parameter
      * @return The altered HttpMessage
      */
-    public HttpMessage queryParam(String name, String value) {
+    public HttpMessage queryParam(final String name, final String value) {
         if (!StringUtils.hasText(name)) {
             throw new CitrusRuntimeException("Invalid query param name - must not be empty!");
         }
 
-        this.queryParams.put(name, value);
+        this.addQueryParam(name, value);
 
-        String queryParamString = queryParams.entrySet()
-                                             .stream()
-                                             .map(entry -> entry.getKey() + (entry.getValue() != null ? "=" + entry.getValue() : ""))
-                                             .collect(Collectors.joining(","));
+        final String queryParamString = queryParams.entrySet()
+                .stream()
+                .map(this::outputQueryParam)
+                .collect(Collectors.joining(","));
 
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
         header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
@@ -234,12 +258,15 @@ public class HttpMessage extends DefaultMessage {
         return this;
     }
 
+
+
     /**
      * Sets request path that is dynamically added to base uri.
+     *
      * @param path The part of the path to add
      * @return The altered HttpMessage
      */
-    public HttpMessage path(String path) {
+    public HttpMessage path(final String path) {
         header(HttpMessageHeaders.HTTP_REQUEST_URI, path);
         header(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
         return this;
@@ -247,30 +274,32 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Sets new header name value pair.
-     * @param headerName The name of the header
+     *
+     * @param headerName  The name of the header
      * @param headerValue The value of the header
      * @return The altered HttpMessage
      */
-    public HttpMessage header(String headerName, Object headerValue) {
+    public HttpMessage header(final String headerName, final Object headerValue) {
         return (HttpMessage) super.setHeader(headerName, headerValue);
     }
 
     @Override
-    public HttpMessage setHeader(String headerName, Object headerValue) {
+    public HttpMessage setHeader(final String headerName, final Object headerValue) {
         return (HttpMessage) super.setHeader(headerName, headerValue);
     }
 
     @Override
-    public HttpMessage addHeaderData(String headerData) {
+    public HttpMessage addHeaderData(final String headerData) {
         return (HttpMessage) super.addHeaderData(headerData);
     }
 
     /**
      * Gets the Http request method.
+     *
      * @return The used HttpMethod
      */
     public HttpMethod getRequestMethod() {
-        Object method = getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
+        final Object method = getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD);
 
         if (method != null) {
             return HttpMethod.valueOf(method.toString());
@@ -281,10 +310,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request request uri.
+     *
      * @return The request uri
      */
     public String getUri() {
-        Object requestUri = getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
+        final Object requestUri = getHeader(HttpMessageHeaders.HTTP_REQUEST_URI);
 
         if (requestUri != null) {
             return requestUri.toString();
@@ -295,10 +325,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request context path.
+     *
      * @return the context path
      */
     public String getContextPath() {
-        Object contextPath = getHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH);
+        final Object contextPath = getHeader(HttpMessageHeaders.HTTP_CONTEXT_PATH);
 
         if (contextPath != null) {
             return contextPath.toString();
@@ -309,10 +340,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http content type header.
+     *
      * @return the content type header value
      */
     public String getContentType() {
-        Object contentType = getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE);
+        final Object contentType = getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE);
 
         if (contentType != null) {
             return contentType.toString();
@@ -323,10 +355,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the accept header.
+     *
      * @return The accept header value
      */
     public String getAccept() {
-        Object accept = getHeader("Accept");
+        final Object accept = getHeader("Accept");
 
         if (accept != null) {
             return accept.toString();
@@ -337,14 +370,16 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http request query params.
+     *
      * @return The query parameters as a key value map
      */
-    public Map<String, String> getQueryParams() {
+    public Map<String, Collection<String>> getQueryParams() {
         return queryParams;
     }
 
     /**
      * Gets the Http request query param string.
+     *
      * @return The query parameter as string
      */
     public String getQueryParamString() {
@@ -353,10 +388,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http response status code.
+     *
      * @return The status code of the message
      */
     public HttpStatus getStatusCode() {
-        Object statusCode = getHeader(HttpMessageHeaders.HTTP_STATUS_CODE);
+        final Object statusCode = getHeader(HttpMessageHeaders.HTTP_STATUS_CODE);
 
         if (statusCode != null) {
             if (statusCode instanceof HttpStatus) {
@@ -373,10 +409,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http response reason phrase.
+     *
      * @return The reason phrase of the message
      */
     public String getReasonPhrase() {
-        Object reasonPhrase = getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE);
+        final Object reasonPhrase = getHeader(HttpMessageHeaders.HTTP_REASON_PHRASE);
 
         if (reasonPhrase != null) {
             return reasonPhrase.toString();
@@ -387,10 +424,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the Http version.
+     *
      * @return The http version of the message
      */
     public String getVersion() {
-        Object version = getHeader(HttpMessageHeaders.HTTP_VERSION);
+        final Object version = getHeader(HttpMessageHeaders.HTTP_VERSION);
 
         if (version != null) {
             return version.toString();
@@ -401,10 +439,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Gets the request path after the context path.
+     *
      * @return The request path of the message
      */
     public String getPath() {
-        Object path = getHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME);
+        final Object path = getHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME);
 
         if (path != null) {
             return path.toString();
@@ -436,10 +475,10 @@ public class HttpMessage extends DefaultMessage {
      *
      * @param cookies The cookies to set
      */
-    public void setCookies(Cookie[] cookies) {
+    public void setCookies(final Cookie[] cookies) {
         this.cookies.clear();
         if (cookies != null) {
-            for (Cookie cookie : cookies) {
+            for (final Cookie cookie : cookies) {
                 cookie(cookie);
             }
         }
@@ -447,10 +486,11 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Adds new cookie to this http message.
+     *
      * @param cookie The Cookie to set
      * @return The altered HttpMessage
      */
-    public HttpMessage cookie(Cookie cookie) {
+    public HttpMessage cookie(final Cookie cookie) {
         this.cookies.put(cookie.getName(), cookie);
 
         setHeader(
@@ -462,14 +502,15 @@ public class HttpMessage extends DefaultMessage {
 
     /**
      * Reads request from complete request dump.
+     *
      * @param requestData The request dump to parse
      * @return The parsed dump as HttpMessage
      */
-    public static HttpMessage fromRequestData(String requestData) {
-        try (BufferedReader reader = new BufferedReader(new StringReader(requestData))) {
-            HttpMessage request = new HttpMessage();
+    public static HttpMessage fromRequestData(final String requestData) {
+        try (final BufferedReader reader = new BufferedReader(new StringReader(requestData))) {
+            final HttpMessage request = new HttpMessage();
 
-            String[] requestLine = reader.readLine().split("\\s");
+            final String[] requestLine = reader.readLine().split("\\s");
             if (requestLine.length > 0) {
                 request.method(HttpMethod.valueOf(requestLine[0]));
             }
@@ -483,21 +524,22 @@ public class HttpMessage extends DefaultMessage {
             }
 
             return parseHttpMessage(reader, request);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw request data", e);
         }
     }
 
     /**
      * Reads response from complete response dump.
+     *
      * @param responseData The response dump to parse
      * @return The parsed dump as HttpMessage
      */
-    public static HttpMessage fromResponseData(String responseData) {
-        try (BufferedReader reader = new BufferedReader(new StringReader(responseData))) {
-            HttpMessage response = new HttpMessage();
+    public static HttpMessage fromResponseData(final String responseData) {
+        try (final BufferedReader reader = new BufferedReader(new StringReader(responseData))) {
+            final HttpMessage response = new HttpMessage();
 
-            String[] statusLine = reader.readLine().split("\\s");
+            final String[] statusLine = reader.readLine().split("\\s");
             if (statusLine.length > 0) {
                 response.version(statusLine[0]);
             }
@@ -507,12 +549,25 @@ public class HttpMessage extends DefaultMessage {
             }
 
             return parseHttpMessage(reader, response);
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to parse Http raw response data", e);
         }
     }
 
-    private static HttpMessage parseHttpMessage(BufferedReader reader, HttpMessage message) throws IOException {
+    private void addQueryParam(final String name, final String value) {
+        if (!this.queryParams.containsKey(name)) {
+            this.queryParams.put(name, new LinkedList<>());
+        }
+        this.queryParams.get(name).add(value);
+    }
+
+    private String outputQueryParam(final Map.Entry<String, Collection<String>> entry) {
+        return entry.getValue().stream()
+                .map(entryValue -> entry.getKey() + (entryValue != null ? "=" + entryValue : ""))
+                .collect(Collectors.joining(","));
+    }
+
+    private static HttpMessage parseHttpMessage(final BufferedReader reader, final HttpMessage message) throws IOException {
         String line = reader.readLine();
         while (StringUtils.hasText(line)) {
             if (!line.contains(":")) {
@@ -520,12 +575,12 @@ public class HttpMessage extends DefaultMessage {
                         String.format("Invalid header syntax in line - expected 'key:value' but was '%s'", line));
             }
 
-            String[] keyValue = line.split(":");
+            final String[] keyValue = line.split(":");
             message.setHeader(keyValue[0].trim(), keyValue[1].trim());
             line = reader.readLine();
         }
 
-        StringBuilder bodyBuilder = new StringBuilder();
+        final StringBuilder bodyBuilder = new StringBuilder();
         line = reader.readLine();
         while (StringUtils.hasText(line)) {
             bodyBuilder.append(line).append(System.getProperty("line.separator"));
