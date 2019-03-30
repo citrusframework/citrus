@@ -16,33 +16,6 @@
 
 package com.consol.citrus.dsl.builder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.oxm.Marshaller;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.xml.transform.StringResult;
-
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
@@ -64,6 +37,36 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.oxm.Marshaller;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.xml.transform.StringResult;
+
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReceiveMessageBuilderTest {
@@ -170,69 +173,102 @@ class ReceiveMessageBuilderTest {
 
 	@Test
 	void payload_asString() {
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload("payload");
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertEquals("payload", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertEquals("payload", getPayloadData());
 	}
 
 	@Test
 	void payload_asResource() {
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload(this.resource);
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
 	}
 
 	@Test
 	void payload_asResourceWithCharset() {
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload(this.resource, Charset.defaultCharset());
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
 	}
 
 	@Test
-	void payload_asObjectWithMarshaller() {
+	void payload_asObjectWithMarshaller() throws IOException {
+
+		//GIVEN
 		final Object payload = "<hello/>";
 		final Marshaller marshaller = mock(Marshaller.class);
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload(payload, marshaller);
+
+		//THEN
+		verify(marshaller).marshal(eq(payload), any(StringResult.class));
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
 	}
 
 	@Test
 	void payload_asObjectWithMapper() throws Exception {
+
+		//GIVEN
 		final Object payload = "{hello}";
 		final ObjectMapper mapper = mock(ObjectMapper.class);
 		final ObjectWriter writer = mock(ObjectWriter.class);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(payload)).thenReturn("hello");
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload(payload, mapper);
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
-		assertEquals("hello", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertEquals("hello", getPayloadData());
 	}
 
 	@Test
 	void payload_asObjectWithString_toObjectMarshaller() throws Exception {
+
+		//GIVEN
 		final Object payload = "{hello}";
 		final String mapperName = "mapper";
-		
+
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
 		final Marshaller marshaller = mock(Marshaller.class);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
 		lenient().doNothing().when(marshaller).marshal(payload, new StringResult());
+
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload(payload, mapperName);
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
 	void payload_asObjectWithString_toObjectMapper() throws Exception {
+
+		//GIVEN
 		final Object payload = "{hello}";
 		final String mapperName = "mapper";
-		
+
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
@@ -241,15 +277,21 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(mapper);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(payload)).thenReturn("hello");
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payload(payload, mapperName);
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
-		assertEquals("hello", ((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
+		assertEquals("hello", getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
 	void payloadModel_withMarshaller() {
+
+		//GIVEN
 		final Object payload = "<hello/>";
 		final Marshaller marshaller = mock(Marshaller.class);
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
@@ -258,9 +300,13 @@ class ReceiveMessageBuilderTest {
 		map.put("marshaller", marshaller);
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(map);
 		when(mockApplicationContext.getBean(Marshaller.class)).thenReturn(marshaller);
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payloadModel(payload);
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
@@ -278,7 +324,7 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
 		final ReceiveMessageBuilder copy = this.builder.payloadModel(payload);
 		assertSame(copy, this.builder);
-		assertNotNull(((PayloadTemplateMessageBuilder)this.builder.getMessageContentBuilder()).getPayloadData());
+		assertNotNull(getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
@@ -988,5 +1034,10 @@ class ReceiveMessageBuilderTest {
 				ReflectionTestUtils.getField(this.builder, fieldName));
 		assertNotNull(scriptValidationContext);
 		return scriptValidationContext;
+	}
+
+	private String getPayloadData() {
+		return ((PayloadTemplateMessageBuilder) this.builder.getMessageContentBuilder())
+				.getPayloadData();
 	}
 }
