@@ -154,7 +154,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <spring.version>5.0.8.RELEASE</spring.version>
-    <spring.ws.version>3.0.1.RELEASE</spring.ws.version>
+    <spring.ws.version>3.0.7.RELEASE</spring.ws.version>
     <spring.integration.version>5.0.6.RELEASE</spring.integration.version>
     <spring.restdocs.version>2.0.1.RELEASE</spring.restdocs.version>
     <kafka.version>2.0.0</kafka.version>
@@ -163,7 +163,7 @@
     <activemq.version>5.15.4</activemq.version>
     <vertx.version>3.5.4</vertx.version>
     <groovy.version>2.5.0</groovy.version>
-    <jetty.version>9.4.11.v20180605</jetty.version>
+    <jetty.version>9.4.15.v20190215</jetty.version>
     <testng.version>6.11</testng.version>
     <junit.version>4.12</junit.version>
     <junit.jupiter.version>5.3.2</junit.jupiter.version>
@@ -939,6 +939,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <scope>test</scope>
@@ -1014,6 +1024,13 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
           <configuration>
+            <properties>
+              <property>
+                <name>junit</name>
+                <value>false</value>
+              </property>
+            </properties>
+            <threadCount>1</threadCount>
             <systemProperties>
               <property>
                 <name>javax.xml.parsers.SAXParserFactory</name>
@@ -1030,6 +1047,18 @@
             <skipTests>${skip.unit.tests}</skipTests>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-junit-platform</artifactId>
+              <version>${surefire.version}</version>
+            </dependency>
+            <dependency>
+              <groupId>org.apache.maven.surefire</groupId>
+              <artifactId>surefire-testng</artifactId>
+              <version>${surefire.version}</version>
+            </dependency>
+          </dependencies>
         </plugin>
 
         <plugin>

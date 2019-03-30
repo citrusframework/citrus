@@ -16,7 +16,9 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -114,7 +116,7 @@ public class HttpMessageUtilsTest {
         HttpMessage message = new HttpMessage();
         message.queryParams(queryParamString);
         Assert.assertEquals(message.getQueryParams().size(), params.size());
-        params.forEach((key, value) -> Assert.assertEquals(message.getQueryParams().get(key), value));
+        params.forEach((key, value) -> Assert.assertTrue(message.getQueryParams().get(key).contains(value)));
     }
 
     @DataProvider
