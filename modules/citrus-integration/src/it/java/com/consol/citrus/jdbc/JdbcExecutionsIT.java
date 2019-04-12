@@ -27,6 +27,7 @@ import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageType;
+import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
@@ -328,9 +329,12 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
         //GIVEN
         final String sql = "{? = CALL someClobFunction(?)}";
-        final ClassPathResource blobRequestValue = new ClassPathResource("jdbc/RequestBlob.pdf");
-        final ClassPathResource blobReturnValue = new ClassPathResource("jdbc/ResponseBlob.pdf");
 
+        final ClassPathResource blobRequestValue = new ClassPathResource("jdbc/RequestBlob.pdf");
+        final String requestBlobContent = IOUtils.toString(blobRequestValue.getInputStream(), "UTF8");
+
+        final ClassPathResource blobReturnValue = new ClassPathResource("jdbc/ResponseBlob.pdf");
+        final String responseBlobContent = IOUtils.toString(blobReturnValue.getInputStream(), "UTF8");
 
         //WHEN + THEN
         async().actions(new AbstractTestAction() {
@@ -341,7 +345,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                                     Assert.assertNotNull(connection);
                                     try(final PreparedStatement statement = connection.prepareStatement(sql)){
 
-                                        statement.setBinaryStream(1, blobRequestValue.getInputStream());
+                                        statement.setBlob(1, blobRequestValue.getInputStream());
                                         statement.execute();
 
                                         final ResultSet resultSet = statement.getResultSet();
@@ -359,14 +363,14 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
         );
 
         receive(jdbcServer)
-                .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+blobRequestValue+")"));
+                .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+requestBlobContent+")"));
 
         send(jdbcServer)
                 .messageType(MessageType.XML)
                 .message(JdbcMessage.success().dataSet("" +
                         "<dataset>" +
                         "<row>" +
-                        "<RETURN_BLOB>"+blobReturnValue.getInputStream()+"</RETURN_BLOB>"+
+                        "<RETURN_BLOB>"+responseBlobContent+"</RETURN_BLOB>"+
                         "</row>" +
                         "</dataset>"));
     }
