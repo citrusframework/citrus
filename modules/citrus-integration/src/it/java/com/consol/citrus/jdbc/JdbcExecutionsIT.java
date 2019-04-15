@@ -27,6 +27,7 @@ import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageType;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -331,10 +332,10 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
         final String sql = "{? = CALL someClobFunction(?)}";
 
         final ClassPathResource blobRequestValue = new ClassPathResource("jdbc/RequestBlob.pdf");
-        final String requestBlobContent = IOUtils.toString(blobRequestValue.getInputStream(), "UTF8");
+        final String requestBlobContent = Base64.encodeBase64String(IOUtils.toByteArray(blobRequestValue.getInputStream()));
 
         final ClassPathResource blobReturnValue = new ClassPathResource("jdbc/ResponseBlob.pdf");
-        final String responseBlobContent = IOUtils.toString(blobReturnValue.getInputStream(), "UTF8");
+        final String responseBlobContent = Base64.encodeBase64String(IOUtils.toByteArray(blobReturnValue.getInputStream()));
 
         //WHEN + THEN
         async().actions(new AbstractTestAction() {
@@ -353,7 +354,9 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
                                         final Blob responseBlob = resultSet.getBlob(1);
 
-                                        assertEquals(blobReturnValue.getInputStream(), responseBlob.getBinaryStream());
+                                        assertEquals(
+                                                IOUtils.toString(blobReturnValue.getInputStream(), "UTF8"),
+                                                IOUtils.toString(responseBlob.getBinaryStream(),"UTF8"));
                                     }
                                 } catch (final SQLException | AssertionError | IOException e) {
                                     throw new CitrusRuntimeException(e);
