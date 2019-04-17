@@ -16,3 +16,9 @@ https://github.com/citrusframework/citrus/issues/490[#490 - not supported jdbc s
 We added the possibility to execute jdbc batch statements with the driver and validate them in a test case. For more
 information, please have a look at the section concerning link:#jdbc-server-execute-batch[JDBC batch statements].
 
+=== Support for BLOB and CLOB
+https://github.com/citrusframework/citrus-db/issues/28
+
+From this release on, it is possible to use BLOB und CLOB data in your requests and responses and even for validation.
+By now, there are some restrictions to keep in mind while using this feature. More information concerning those can
+be found in the section link:#jdbc-server-clob[CLOB support] and link:#jdbc-server-blob[BLOB support].
