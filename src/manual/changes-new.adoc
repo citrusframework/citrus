@@ -22,3 +22,8 @@ https://github.com/citrusframework/citrus-db/issues/28
 From this release on, it is possible to use BLOB und CLOB data in your requests and responses and even for validation.
 By now, there are some restrictions to keep in mind while using this feature. More information concerning those can
 be found in the section link:#jdbc-server-clob[CLOB support] and link:#jdbc-server-blob[BLOB support].
+
+=== Support outParameter on callable statement
+https://github.com/citrusframework/citrus-db/issues/29
+
+Citrus does now support out and in/out parameters on JDBC callable statements.
