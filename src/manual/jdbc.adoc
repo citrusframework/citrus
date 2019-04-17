@@ -280,6 +280,39 @@ difference is the creation of the statement itself. It is also the case that the
 `createCallableStatement` and `closeStatement` messages has to be activated via configuration. For more information,
 please have a look at the <<jdbc-server-configuration>> section.
 
+[[jdbc-server-execute-batch]]
+=== Execute batch statements
+The JDBC driver offers the possibility to create a batch of statements to be sent to the server. To validate those
+batches in a test case, no special notation is required. Citrus will handle every statement of the batch separately
+and expects a specified response definition for every request in the batch.
+
+Lets say, you prepare a batch with the following SQL statements in your application:
+[source,sql]
+----
+UPDATE something WHERE condition
+UPDATE somethingElse WHERE otherCondition
+----
+
+To verify the batch statements and specify corresponding responses, you would just handle them as single requests, just
+as if they would not have been send as part of a batch statement.
+
+[source,java]
+----
+receive(jdbcServer)
+        .message(JdbcMessage.execute("UPDATE something WHERE condition"));
+
+send(jdbcServer)
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.success().rowsUpdated(42));
+
+receive(jdbcServer)
+        .message(JdbcMessage.execute("UPDATE somethingElse WHERE otherCondition"));
+
+send(jdbcServer)
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.success().rowsUpdated(84));
+----
+
 [[jdbc-server-configuration]]
 === Configuration
 
