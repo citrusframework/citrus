@@ -269,7 +269,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     @CitrusTest
     public void testExecuteQueryWithIgnoreMatcher() {
         final String sqlToSend = "SELECT whatever FROM somewhere";
-        final String sqlForValidation = "SELECT whatever FROM %ignore%";
+        final String sqlForValidation = "SELECT whatever FROM @ignore@";
 
         async().actions(
                 new AbstractTestAction() {
