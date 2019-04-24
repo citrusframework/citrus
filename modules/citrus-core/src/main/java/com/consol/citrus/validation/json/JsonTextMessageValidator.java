@@ -34,7 +34,6 @@ import net.minidev.json.JSONArray;
 import net.minidev.json.JSONObject;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -75,9 +74,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     private JsonSchemaValidation jsonSchemaValidation = new JsonSchemaValidation();
 
     @Override
-    @SuppressWarnings("unchecked")
-    public void validateMessage(Message receivedMessage, Message controlMessage,
-                                TestContext context, JsonMessageValidationContext validationContext) {
+    public void validateMessage(final Message receivedMessage,
+                                final Message controlMessage,
+                                final TestContext context,
+                                final JsonMessageValidationContext validationContext) {
         if (controlMessage == null || controlMessage.getPayload() == null) {
             log.debug("Skip message payload validation as no control message was defined");
             return;
@@ -90,12 +90,12 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Received message:\n" + receivedMessage);
-            log.debug("Control message:\n" + controlMessage);
+            log.debug("Received message:\n{}", receivedMessage);
+            log.debug("Control message:\n{}", controlMessage);
         }
 
-        String receivedJsonText = receivedMessage.getPayload(String.class);
-        String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload(String.class));
+        final String receivedJsonText = receivedMessage.getPayload(String.class);
+        final String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload(String.class));
         
         try {
             if (!StringUtils.hasText(controlJsonText)) {
@@ -106,26 +106,26 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                 		"expected message contents, but received empty message!");
             }
             
-            JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
+            final JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
         
-            Object receivedJson = parser.parse(receivedJsonText);
-            ReadContext readContext = JsonPath.parse(receivedJson);
-            Object controlJson = parser.parse(controlJsonText);
+            final Object receivedJson = parser.parse(receivedJsonText);
+            final ReadContext readContext = JsonPath.parse(receivedJson);
+            final Object controlJson = parser.parse(controlJsonText);
             if (receivedJson instanceof JSONObject) {
                 validateJson("$.", (JSONObject) receivedJson, (JSONObject) controlJson, validationContext, context, readContext);
             } else if (receivedJson instanceof JSONArray) {
-                JSONObject tempReceived = new JSONObject();
+                final JSONObject tempReceived = new JSONObject();
                 tempReceived.put("array", receivedJson);
-                JSONObject tempControl = new JSONObject();
+                final JSONObject tempControl = new JSONObject();
                 tempControl.put("array", controlJson);
                 
                 validateJson("$.", tempReceived, tempControl, validationContext, context, readContext);
             } else {
                 throw new CitrusRuntimeException("Unsupported json type " + receivedJson.getClass());
             }
-        } catch (IllegalArgumentException e) {
+        } catch (final IllegalArgumentException e) {
             throw new ValidationException(String.format("Failed to validate JSON text:%n%s", receivedJsonText), e);
-        } catch (ParseException e) {
+        } catch (final ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
         
@@ -137,15 +137,15 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param receivedMessage The message to be validated
      * @param validationContext The validation context of the current test
      */
-    private void performSchemaValidation(Message receivedMessage, JsonMessageValidationContext validationContext) {
+    private void performSchemaValidation(final Message receivedMessage, final JsonMessageValidationContext validationContext) {
         log.debug("Starting Json schema validation ...");
 
-        ProcessingReport report = jsonSchemaValidation.validate(receivedMessage,
+        final ProcessingReport report = jsonSchemaValidation.validate(receivedMessage,
                                                                 schemaRepositories,
                                                                 validationContext,
                                                                 applicationContext);
         if (!report.isSuccess()) {
-            log.error("Failed to validate Json schema for message:\n" + receivedMessage.getPayload(String.class));
+            log.error("Failed to validate Json schema for message:\n{}", receivedMessage.getPayload(String.class));
 
             throw new ValidationException(constructErrorMessage(report));
         }
@@ -165,20 +165,25 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param readContext the JSONPath read context.
      */
     @SuppressWarnings("rawtypes")
-    public void validateJson(String elementName, JSONObject receivedJson, JSONObject controlJson, JsonMessageValidationContext validationContext, TestContext context, ReadContext readContext) {
+    public void validateJson(final String elementName,
+                             final JSONObject receivedJson,
+                             final JSONObject controlJson,
+                             final JsonMessageValidationContext validationContext,
+                             final TestContext context,
+                             final ReadContext readContext) {
         if (strict) {
             Assert.isTrue(controlJson.size() == receivedJson.size(),
                           ValidationUtils.buildValueMismatchErrorMessage("Number of JSON entries not equal for element: '" + elementName + "'", controlJson.size(), receivedJson.size()));
         }
 
-        for (Map.Entry<String, Object> controlJsonEntry : controlJson.entrySet()) {
-            String controlKey = controlJsonEntry.getKey();
+        for (final Map.Entry<String, Object> controlJsonEntry : controlJson.entrySet()) {
+            final String controlKey = controlJsonEntry.getKey();
 
             Assert.isTrue(receivedJson.containsKey(controlKey),
                     "Missing JSON entry: + '" + controlKey + "'");
 
-            Object controlValue = controlJsonEntry.getValue();
-            Object receivedValue = receivedJson.get(controlKey);
+            final Object controlValue = controlJsonEntry.getValue();
+            final Object receivedValue = receivedJson.get(controlKey);
 
             // check if entry is ignored by placeholder
             if (isIgnored(controlKey, controlValue, receivedValue, validationContext.getIgnoreExpressions(), readContext)) {
@@ -206,11 +211,11 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                             ValidationUtils.buildValueMismatchErrorMessage("Type mismatch for JSON entry '" + controlKey + "'",
                                     JSONArray.class.getSimpleName(), receivedValue.getClass().getSimpleName()));
 
-                    JSONArray jsonArrayControl = (JSONArray) controlValue;
-                    JSONArray jsonArrayReceived = (JSONArray) receivedValue;
+                    final JSONArray jsonArrayControl = (JSONArray) controlValue;
+                    final JSONArray jsonArrayReceived = (JSONArray) receivedValue;
 
                     if (log.isDebugEnabled()) {
-                        log.debug("Validating JSONArray containing " + jsonArrayControl.size() + " entries");
+                        log.debug("Validating JSONArray containing {} entries", jsonArrayControl.size());
                     }
 
                     if (strict) {
@@ -252,7 +257,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Validation successful for JSON entry '" + controlKey + "' (" + controlValue + ")");
+                log.debug("Validation successful for JSON entry '{}' ({})", controlKey, controlValue);
             }
         }
     }
@@ -267,28 +272,31 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param readContext
      * @return
      */
-    public boolean isIgnored(String controlKey, Object controlValue, Object receivedJson, Set<String> ignoreExpressions, ReadContext readContext) {
+    public boolean isIgnored(final String controlKey,
+                             final Object controlValue,
+                             final Object receivedJson,
+                             final Set<String> ignoreExpressions,
+                             final ReadContext readContext) {
         if (controlValue != null && controlValue.toString().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
-                log.debug("JSON entry: '" + controlKey + "' is ignored by placeholder '" +
-                        Citrus.IGNORE_PLACEHOLDER + "'");
+                log.debug("JSON entry: '{}' is ignored by placeholder '{}'", controlKey,Citrus.IGNORE_PLACEHOLDER );
             }
             return true;
         }
 
-        for (String jsonPathExpression : ignoreExpressions) {
-            Object foundEntry = readContext.read(jsonPathExpression);
+        for (final String jsonPathExpression : ignoreExpressions) {
+            final Object foundEntry = readContext.read(jsonPathExpression);
 
             if (foundEntry instanceof JSONArray && ((JSONArray) foundEntry).contains(receivedJson)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("JSON entry: '" + controlKey + "' is ignored - skip value validation");
+                    log.debug("JSON entry: '{}' is ignored - skip value validation", controlKey);
                 }
                 return true;
             }
 
             if (foundEntry != null && foundEntry.equals(receivedJson)) {
                 if (log.isDebugEnabled()) {
-                    log.debug("JSON entry: '" + controlKey + "' is ignored - skip value validation");
+                    log.debug("JSON entry: '{}' is ignored - skip value validation", controlKey);
                 }
                 return true;
             }
@@ -303,7 +311,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     }
 
     @Override
-    public boolean supportsMessageType(String messageType, Message message) {
+    public boolean supportsMessageType(final String messageType, final Message message) {
         if (!messageType.equalsIgnoreCase(MessageType.JSON.name())) {
             return false;
         }
@@ -325,7 +333,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * Set the validator strict mode.
      * @param strict
      */
-    public void setStrict(boolean strict) {
+    public void setStrict(final boolean strict) {
         this.strict = strict;
     }
 
@@ -334,12 +342,12 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param strict
      * @return this object for chaining
      */
-    public JsonTextMessageValidator strict(boolean strict) {
+    public JsonTextMessageValidator strict(final boolean strict) {
         setStrict(strict);
         return this;
     }
 
-    void setSchemaRepositories(List<JsonSchemaRepository> schemaRepositories) {
+    void setSchemaRepositories(final List<JsonSchemaRepository> schemaRepositories) {
         this.schemaRepositories = schemaRepositories;
     }
 
@@ -349,8 +357,8 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @param report The report containing the error message
      * @return A string representation of all messages contained in the report
      */
-    private String constructErrorMessage(ProcessingReport report) {
-        StringBuilder stringBuilder = new StringBuilder();
+    private String constructErrorMessage(final ProcessingReport report) {
+        final StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Json validation failed: ");
         report.forEach(processingMessage -> stringBuilder.append(processingMessage.getMessage()));
         return stringBuilder.toString();
@@ -360,11 +368,11 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * {@inheritDoc}
      */
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(final ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
-    void setJsonSchemaValidation(JsonSchemaValidation jsonSchemaValidation) {
+    void setJsonSchemaValidation(final JsonSchemaValidation jsonSchemaValidation) {
         this.jsonSchemaValidation = jsonSchemaValidation;
     }
 }
