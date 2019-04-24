@@ -44,6 +44,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -242,7 +243,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                                     controlValue.toString(),
                                     receivedValue.toString());
 
-                    Assert.isTrue(processedControlValue.equals(receivedValue),
+                    Assert.isTrue(Objects.equals(processedControlValue, receivedValue.toString()),
                             ValidationUtils.buildValueMismatchErrorMessage("Values not equal for entry: '" + controlKey + "'",
                                     processedControlValue, receivedValue));
                 }
