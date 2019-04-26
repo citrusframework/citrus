@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
             String resultValue = normalizeWhitespace(receivedMessage.getPayload(String.class).trim());
             String controlValue = normalizeWhitespace(context.replaceDynamicContentInString(controlMessage.getPayload(String.class).trim()));
 
-            controlValue = processIgnoreStatements(controlValue, resultValue);
+            controlValue = ValidationMatcherUtils.substituteIgnoreStatements(controlValue, resultValue);
             controlValue = processVariableStatements(controlValue, resultValue, context);
 
             if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
@@ -82,50 +82,6 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         log.info("Text validation successful: All values OK");
     }
 
-    /**
-     * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
-     * This way we can ignore words in a plaintext value.
-     * @param control
-     * @param result
-     * @return
-     */
-    private String processIgnoreStatements(String control, String result) {
-        if (control.equals(Citrus.IGNORE_PLACEHOLDER)) {
-            return control;
-        }
-
-        Pattern whitespacePattern = Pattern.compile("[\\W]");
-        Pattern ignorePattern = Pattern.compile("@ignore\\(?(\\d*)\\)?@");
-
-        Matcher ignoreMatcher = ignorePattern.matcher(control);
-        while (ignoreMatcher.find()) {
-            String actualValue;
-
-            if (ignoreMatcher.groupCount() > 0 && StringUtils.hasText(ignoreMatcher.group(1))) {
-                int end = ignoreMatcher.start() + Integer.valueOf(ignoreMatcher.group(1));
-                if (end > result.length()) {
-                    end = result.length();
-                }
-
-                if (ignoreMatcher.start() > result.length()) {
-                    actualValue = "";
-                } else {
-                    actualValue = result.substring(ignoreMatcher.start(), end);
-                }
-            } else {
-                actualValue = result.substring(ignoreMatcher.start());
-                Matcher whitespaceMatcher = whitespacePattern.matcher(actualValue);
-                if (whitespaceMatcher.find()) {
-                    actualValue = actualValue.substring(0, whitespaceMatcher.start());
-                }
-            }
-
-            control = ignoreMatcher.replaceFirst(actualValue);
-            ignoreMatcher = ignorePattern.matcher(control);
-        }
-
-        return control;
-    }
 
     /**
      * Processes nested ignore statements in control value and replaces that ignore placeholder with the actual value at this position.
