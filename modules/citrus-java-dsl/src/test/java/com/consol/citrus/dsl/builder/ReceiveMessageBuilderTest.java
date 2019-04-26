@@ -35,6 +35,7 @@ import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import org.junit.jupiter.api.Disabled;
@@ -51,6 +52,7 @@ import org.springframework.xml.transform.StringResult;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -310,10 +312,11 @@ class ReceiveMessageBuilderTest {
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
-	@Disabled
 	@Test
-	void payloadModel_withObjectMapper() {
-		final Object payload = "<hello/>";
+	void payloadModel_withObjectMapper() throws JsonProcessingException {
+
+		//GIVEN
+		final Object payload = "{hello}";
 		final ObjectMapper mapper = mock(ObjectMapper.class);
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
@@ -322,53 +325,82 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(new HashMap<>());
 		when(mockApplicationContext.getBeansOfType(ObjectMapper.class)).thenReturn(map);
 		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
+		final ObjectWriter writerMock = mock(ObjectWriter.class);
+		when(mapper.writer()).thenReturn(writerMock);
+		when(writerMock.writeValueAsString(payload)).thenReturn("hello");
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.payloadModel(payload);
+
+		//THEN
 		assertSame(copy, this.builder);
-		assertNotNull(getPayloadData());
+		assertEquals("hello", getPayloadData());
 		ReflectionTestUtils.setField(this.builder, "applicationContext", null);
 	}
 
 	@Test
 	void header_withStringObject() {
+
+		//GIVEN
 		final String headerName = "header";
 		final Integer headerValue = 45;
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.header(headerName, headerValue);
+
+		//THEN
 		assertSame(copy, this.builder);
 		assertEquals(headerValue, this.builder.getMessageContentBuilder().getMessageHeaders().get(headerName));
 	}
 	
 	@Test
 	void headers() {
+
+		//GIVEN
 		final Map<String, Object> headers = new HashMap<>();
 		headers.put("foo", 10);
 		headers.put("bar", "hello");
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.headers(headers);
+
+		//THEN
 		assertSame(copy, this.builder);
 		assertEquals(headers, this.builder.getMessageContentBuilder().getMessageHeaders());
 	}
 	
 	@Test
 	void header_withString() {
+
+		//GIVEN
 		final String data = "hello";
+
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.header(data);
+
+		//THEN
 		assertSame(copy, this.builder);
-		final List<String> expected = new ArrayList<>();
-		expected.add(data);
-		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
+		assertEquals(Collections.singletonList(data),
+					this.builder.getMessageContentBuilder().getHeaderData());
 	}
 	
 	@Test
 	void doHeaderFragment_withObjectAndMarshaller() {
+
+		//GIVEN
 		final Object model = "hello";
 		final Marshaller marshaller = mock(Marshaller.class);
 		final StringResult stringResult = mock(StringResult.class);
 		when(stringResult.toString()).thenReturn("hello");
-		
+
+		//WHEN
 		final ReceiveMessageBuilder copy = this.builder.doHeaderFragment(model, marshaller, stringResult);
+
+		//THEN
 		assertSame(copy, this.builder);
-		final List<String> expected = new ArrayList<>();
-		expected.add("hello");
-		assertEquals(expected, this.builder.getMessageContentBuilder().getHeaderData());
+		assertEquals(Collections.singletonList("hello"),
+					this.builder.getMessageContentBuilder().getHeaderData());
 	}
 	
 	@Test
