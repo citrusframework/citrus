@@ -26,6 +26,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 /**
  * @author Christoph Deppisch
@@ -78,7 +79,7 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSubstituteIgnoreStatementsWithPattern() {
+    public void testSubstituteIgnoreStatementsWithLengthLimit() {
 
         //GIVEN
         final String controlMessage = "(924,@ignore(23)@,txx,40)";
@@ -90,6 +91,21 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
 
         //THEN
         assertEquals(substitutedControlMessage, receivedMessage);
+    }
+
+    @Test
+    public void testSubstituteIgnoreStatementsWithLengthLimitFails() {
+
+        //GIVEN
+        final String controlMessage = "(924,@ignore(20)@,txx,40)";
+        final String receivedMessage = "(924,2018-10-01 16:53:38.561,txx,40)";
+
+        //WHEN
+        final String substitutedControlMessage =
+                ValidationMatcherUtils.substituteIgnoreStatements(controlMessage, receivedMessage);
+
+        //THEN
+        assertNotEquals(substitutedControlMessage, receivedMessage);
     }
 
 }
