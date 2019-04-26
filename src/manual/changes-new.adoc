@@ -27,3 +27,8 @@ be found in the section link:#jdbc-server-clob[CLOB support] and link:#jdbc-serv
 https://github.com/citrusframework/citrus-db/issues/29
 
 Citrus does now support out and in/out parameters on JDBC callable statements.
+
+=== Added @ignore@ statements to SQL validation
+https://github.com/citrusframework/citrus/issues/499
+
+Citrus does now support `@ignore@` statements during SQL statement validation.
