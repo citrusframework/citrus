@@ -117,14 +117,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     protected void executeStatements(List<Map<String, Object>> allResultRows, Map<String, List<String>> columnValuesMap, TestContext context) {
         for (String stmt : statements) {
-            validateSqlStatement(stmt);
             final String toExecute;
-
             if (stmt.trim().endsWith(";")) {
                 toExecute = context.replaceDynamicContentInString(stmt.trim().substring(0, stmt.trim().length()-1));
             } else {
                 toExecute = context.replaceDynamicContentInString(stmt.trim());
             }
+
+            validateSqlStatement(toExecute);
 
             if (log.isDebugEnabled()) {
                 log.debug("Executing SQL query: " + toExecute);
