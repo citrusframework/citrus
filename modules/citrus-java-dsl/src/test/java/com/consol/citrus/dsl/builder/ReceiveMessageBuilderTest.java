@@ -65,7 +65,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -252,7 +252,6 @@ class ReceiveMessageBuilderTest {
 		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
 		final Marshaller marshaller = mock(Marshaller.class);
 		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
-		lenient().doNothing().when(marshaller).marshal(payload, new StringResult());
 
 
 		//WHEN
@@ -320,10 +319,9 @@ class ReceiveMessageBuilderTest {
 		final ObjectMapper mapper = mock(ObjectMapper.class);
 		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
 		ReflectionTestUtils.setField(this.builder, "applicationContext", mockApplicationContext);
-		final Map<String, ObjectMapper> map = new HashMap<>();
-		map.put("mapper", mapper);
-		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(new HashMap<>());
-		when(mockApplicationContext.getBeansOfType(ObjectMapper.class)).thenReturn(map);
+		final Map<String, ObjectMapper> map = Collections.singletonMap("mapper", mapper);
+		doReturn(Collections.emptyMap()).when(mockApplicationContext).getBeansOfType(Marshaller.class);
+		doReturn(map).when(mockApplicationContext).getBeansOfType(ObjectMapper.class);
 		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
 		final ObjectWriter writerMock = mock(ObjectWriter.class);
 		when(mapper.writer()).thenReturn(writerMock);

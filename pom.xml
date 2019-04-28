@@ -178,7 +178,7 @@
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <surefire.version>2.22.1</surefire.version>
-    <mockito.version>2.25.1</mockito.version>
+    <mockito.version>2.19.0</mockito.version>
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
