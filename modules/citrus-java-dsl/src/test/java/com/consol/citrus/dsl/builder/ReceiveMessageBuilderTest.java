@@ -17,13 +17,18 @@
 package com.consol.citrus.dsl.builder;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -183,6 +188,61 @@ class ReceiveMessageBuilderTest {
 		assertEquals("payload", getPayloadData());
 	}
 
+    @Test
+    void testSetPayloadWithContentBuilderGeneration() {
+
+	    //GIVEN
+        final ReceiveMessageAction action = new ReceiveMessageAction();
+        action.setMessageBuilder(null);
+        this.builder = new ReceiveMessageBuilder<>(action);
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.payload("payload");
+
+        //THEN
+        assertSame(copy, this.builder);
+        assertEquals("payload", getPayloadData());
+        assertNotNull(copy.getAction().getMessageBuilder());
+    }
+
+    @Test
+    void testSetPayloadWithStaticMessageContentBuilder() {
+
+        //GIVEN
+        final ReceiveMessageAction action = new ReceiveMessageAction();
+        action.setMessageBuilder(new StaticMessageContentBuilder(new DefaultMessage()));
+        this.builder = new ReceiveMessageBuilder<>(action);
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.payload("payload");
+
+        //THEN
+        assertSame(copy, this.builder);
+        final Object payload = ((StaticMessageContentBuilder)
+                this.builder.getMessageContentBuilder()).getMessage().getPayload();
+        assertEquals("payload", payload);
+    }
+
+    @Test
+    void testErrorIsThrownOnUnknownMessageBuilder() {
+
+        //GIVEN
+        final ReceiveMessageAction action = new ReceiveMessageAction();
+        action.setMessageBuilder(new AbstractMessageContentBuilder() {
+            @Override
+            public Object buildMessagePayload(final TestContext context, final String messageType) {
+                return null;
+            }
+        });
+        this.builder = new ReceiveMessageBuilder<>(action);
+
+        //WHEN
+        final Executable setPayload = () -> this.builder.payload("payload");
+
+        //THEN
+        assertThrows(CitrusRuntimeException.class, setPayload);
+    }
+
 	@Test
 	void payload_asResource() {
 
@@ -204,6 +264,19 @@ class ReceiveMessageBuilderTest {
 		assertSame(copy, this.builder);
 		assertNotNull(getPayloadData());
 	}
+
+    @Test
+    void testSetPayloadWithResourceIoExceptionsIsWrapped() throws IOException {
+
+	    //GIVEN
+        when(resource.getInputStream()).thenThrow(IOException.class);
+
+        //WHEN
+        final Executable setPayload = () -> this.builder.payload(this.resource, Charset.defaultCharset());
+
+        //THEN
+        assertThrows(CitrusRuntimeException.class, setPayload, "Failed to read payload resource");
+    }
 
 	@Test
 	void payload_asObjectWithMarshaller() throws IOException {
@@ -988,12 +1061,35 @@ class ReceiveMessageBuilderTest {
 
 		final XpathPayloadVariableExtractor xpathExtractor =
 				getFieldFromBuilder(XpathPayloadVariableExtractor.class, "xpathExtractor");
-		assertEquals("http://foo.com", xpathExtractor.getNamespaces().get("foo"));
+		assertEquals(uri, xpathExtractor.getNamespaces().get(prefix));
 
 		final XmlMessageValidationContext xmlMessageValidationContext =
 				getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
-		assertEquals("http://foo.com", xmlMessageValidationContext.getNamespaces().get("foo"));
+		assertEquals(uri, xmlMessageValidationContext.getNamespaces().get(prefix));
 	}
+
+    @Test
+    void setNamespaceAsMap() {
+
+        //GIVEN
+        final String prefix = "foo";
+        final String uri = "http://foo.com";
+        final Map<String, String> namespaceMap = Collections.singletonMap(prefix, uri);
+
+        //WHEN
+        final ReceiveMessageBuilder copy = this.builder.namespaces(namespaceMap);
+
+        //THEN
+        assertSame(copy, this.builder);
+
+        final XpathPayloadVariableExtractor xpathExtractor =
+                getFieldFromBuilder(XpathPayloadVariableExtractor.class, "xpathExtractor");
+        assertEquals(uri, xpathExtractor.getNamespaces().get(prefix));
+
+        final XmlMessageValidationContext xmlMessageValidationContext =
+                getFieldFromBuilder(XmlMessageValidationContext.class, "xmlMessageValidationContext");
+        assertEquals(uri, xmlMessageValidationContext.getNamespaces().get(prefix));
+    }
 	
 	@Test
 	void selector_fromString() {
@@ -1235,6 +1331,138 @@ class ReceiveMessageBuilderTest {
 		assertSame(copy, this.builder);
 		assertEquals(mockApplicationContext, ReflectionTestUtils.getField(this.builder, "applicationContext"));
 	}
+
+	@Test
+    void testSetXpathExtractor(){
+
+	    //GIVEN
+        final XpathPayloadVariableExtractor extractor = mock(XpathPayloadVariableExtractor.class);
+
+        //WHEN
+        builder.setXpathExtractor(extractor);
+
+        //THEN
+        assertEquals(extractor, ReflectionTestUtils.getField(this.builder, "xpathExtractor"));
+    }
+
+    @Test
+    void testSetJsonPathExtractor(){
+
+        //GIVEN
+        final JsonPathVariableExtractor extractor = mock(JsonPathVariableExtractor.class);
+
+        //WHEN
+        builder.setJsonPathExtractor(extractor);
+
+        //THEN
+        assertEquals(extractor, ReflectionTestUtils.getField(this.builder, "jsonPathExtractor"));
+    }
+
+    @Test
+    void testSetMessageType(){
+
+        //GIVEN
+        final MessageType messageType = MessageType.BINARY_BASE64;
+
+        //WHEN
+        builder.setMessageType(messageType);
+
+        //THEN
+        final Object currentMessageType = ReflectionTestUtils.getField(this.builder, "messageType");
+        assertNotNull(currentMessageType);
+        assertEquals(messageType.toString(), currentMessageType.toString());
+    }
+
+    @Test
+    void testSetMessageTypeAsString(){
+
+        //GIVEN
+        final String messageType = "postalMessage";
+
+        //WHEN
+        builder.setMessageType(messageType);
+
+        //THEN
+        assertEquals(messageType, ReflectionTestUtils.getField(this.builder, "messageType"));
+    }
+
+    @Test
+    void testSetHeaderExtractor(){
+
+        //GIVEN
+        final MessageHeaderVariableExtractor extractor = mock(MessageHeaderVariableExtractor.class);
+
+        //WHEN
+        builder.setHeaderExtractor(extractor);
+
+        //THEN
+        assertEquals(extractor, ReflectionTestUtils.getField(this.builder, "headerExtractor"));
+    }
+
+    @Test
+    void testSetScriptValidationContext(){
+
+        //GIVEN
+        final ScriptValidationContext context = mock(ScriptValidationContext.class);
+
+        //WHEN
+        builder.setScriptValidationContext(context);
+
+        //THEN
+        assertEquals(context, ReflectionTestUtils.getField(this.builder, "scriptValidationContext"));
+    }
+
+    @Test
+    void testSetJsonPathValidationContext(){
+
+        //GIVEN
+        final JsonPathMessageValidationContext context = mock(JsonPathMessageValidationContext.class);
+
+        //WHEN
+        builder.setJsonPathValidationContext(context);
+
+        //THEN
+        assertEquals(context, ReflectionTestUtils.getField(this.builder, "jsonPathValidationContext"));
+    }
+
+    @Test
+    void testSetXmlMessageValidationContext(){
+
+        //GIVEN
+        final XmlMessageValidationContext context = mock(XmlMessageValidationContext.class);
+
+        //WHEN
+        builder.setXmlMessageValidationContext(context);
+
+        //THEN
+        assertEquals(context, ReflectionTestUtils.getField(this.builder, "xmlMessageValidationContext"));
+    }
+
+    @Test
+    void testSetJsonMessageValidationContext(){
+
+        //GIVEN
+        final JsonMessageValidationContext context = mock(JsonMessageValidationContext.class);
+
+        //WHEN
+        builder.setJsonMessageValidationContext(context);
+
+        //THEN
+        assertEquals(context, ReflectionTestUtils.getField(this.builder, "jsonMessageValidationContext"));
+    }
+
+    @Test
+    void testSetHeaderValidationContext(){
+
+        //GIVEN
+        final HeaderValidationContext context = mock(HeaderValidationContext.class);
+
+        //WHEN
+        builder.setHeaderValidationContext(context);
+
+        //THEN
+        assertEquals(context, ReflectionTestUtils.getField(this.builder, "headerValidationContext"));
+    }
 
 
 	private <T> T getFieldFromBuilder(final Class<T> targetClass, final String fieldName) {
