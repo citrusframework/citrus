@@ -26,13 +26,20 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.*;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.*;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -578,22 +585,14 @@ public class ReceiveMessageBuilder<A extends ReceiveMessageAction, T extends Rec
     }
     
     /**
-     * Adds message element validation.
-     * @param map Map of paths to control values
-     * @return
+     * Adds the given map of paths with their corresponding control values for validation.
+     * @param map Map of paths with control values
+     * @return The modified builder
      */
-    T validateXpath(final Map<String, Object> map) {
-        getXPathValidationContext().getXpathExpressions().putAll(map);
-        return self;
-    }
-    
-    /**
-     * Adds message element validation.
-     * @param map Map of paths to control values
-     * @return
-     */
-    T validateJsonPath(final Map<String, Object> map) {
-    	getJsonPathValidationContext().getJsonPathExpressions().putAll(map);
+    public T validate(final Map<String, Object> map) {
+        for(final Map.Entry<String, Object> validationMapping : map.entrySet()){
+            validate(validationMapping.getKey(), validationMapping.getValue());
+        }
         return self;
     }
     

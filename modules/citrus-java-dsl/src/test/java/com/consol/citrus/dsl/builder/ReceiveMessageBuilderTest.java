@@ -749,11 +749,10 @@ class ReceiveMessageBuilderTest {
 		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
 	}
 
-	/**
-	 * New capability
-	 */
 	@Test
 	void validate_xmlMap() {
+
+		//GIVEN
 		final Map<String, Object> map = new HashMap<>();
 		final String key1 = "//ResultCode";
 		final String value1 = "Success";
@@ -764,24 +763,26 @@ class ReceiveMessageBuilderTest {
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
-		final MessageType messageType = MessageType.XML;
-		
-		this.builder.messageType(messageType);
-		final ReceiveMessageBuilder copy = this.builder.validateXpath(map);
+		this.builder.messageType( MessageType.XML);
+
+		//WHEN
+		final ReceiveMessageBuilder copy = this.builder.validate(map);
+
+		//THEN
 		assertSame(copy, this.builder);
 
 		final XpathMessageValidationContext xmlMessageValidationContext =
 				getFieldFromBuilder(XpathMessageValidationContext.class, "xmlMessageValidationContext");
-		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
-		assertEquals("Bar", xmlMessageValidationContext.getXpathExpressions().get("//Foo"));
-		assertEquals("Goodbye", xmlMessageValidationContext.getXpathExpressions().get("//Hello"));
+		assertEquals(value1, xmlMessageValidationContext.getXpathExpressions().get(key1));
+		assertEquals(value2, xmlMessageValidationContext.getXpathExpressions().get(key2));
+		assertEquals(value3, xmlMessageValidationContext.getXpathExpressions().get(key3));
 	}
 
-	/**
-	 * New capability
-	 */
+
 	@Test
 	void validate_jsonMap() {
+
+		//GIVEN
 		final Map<String, Object> map = new HashMap<>();
 		final String key1 = "$ResultCode";
 		final String value1 = "Success";
@@ -792,17 +793,20 @@ class ReceiveMessageBuilderTest {
 		map.put(key1, value1);
 		map.put(key2, value2);
 		map.put(key3, value3);
-		final MessageType messageType = MessageType.XML;
-		
-		this.builder.messageType(messageType);
-		final ReceiveMessageBuilder copy = this.builder.validateJsonPath(map);
+		this.builder.messageType(MessageType.JSON);
+
+		//WHEN
+		final ReceiveMessageBuilder copy = this.builder.validate(map);
+
+		//THEN
 		assertSame(copy, this.builder);
 
 		final JsonPathMessageValidationContext jsonPathValidationContext =
 				getFieldFromBuilder(JsonPathMessageValidationContext.class, "jsonPathValidationContext");
-		assertEquals("Success", jsonPathValidationContext.getJsonPathExpressions().get("$ResultCode"));
-		assertEquals("Bar", jsonPathValidationContext.getJsonPathExpressions().get("$Foo"));
-		assertEquals("Goodbye", jsonPathValidationContext.getJsonPathExpressions().get("$Hello"));
+
+		assertEquals(value1, jsonPathValidationContext.getJsonPathExpressions().get(key1));
+		assertEquals(value2, jsonPathValidationContext.getJsonPathExpressions().get(key2));
+		assertEquals(value3, jsonPathValidationContext.getJsonPathExpressions().get(key3));
 	}
 
 	@Test
