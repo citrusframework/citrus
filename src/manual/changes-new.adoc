@@ -11,9 +11,8 @@ and documentation.
 == Enhancements
 
 === Validate received messages by map
-
 https://github.com/citrusframework/citrus/issues/571
 
 It is now possible to validate received messages based on a map containing xpath or json path expressions as keys with
-their corresponding values for validation as values. For an example of this enhancement, please have a look at the
+their corresponding values for validation. For an example of this enhancement, please have a look at the
 link:#validate-with-jsonpath[JSON path validation] or link:#xpath-validation[XPath validation] section.
