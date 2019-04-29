@@ -51,9 +51,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.xml.transform.StringResult;
 
+import javax.xml.transform.Result;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Collections;
@@ -70,6 +72,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -295,6 +298,40 @@ class ReceiveMessageBuilderTest {
 	}
 
 	@Test
+	void testSetPayloadWithIoExceptionIsWrapped() throws IOException {
+
+		//GIVEN
+		final Marshaller marshaller = mock(Marshaller.class);
+		doThrow(IOException.class).when(marshaller).marshal(any(), any(Result.class));
+
+		//WHEN
+		final Executable setPayload = () -> this.builder.payload("", marshaller);
+
+		//THEN
+		assertThrows(CitrusRuntimeException.class, setPayload, "Failed to marshal object graph for message payload");
+	}
+
+	@Test
+	void testSetPayloadWithXmlMappingExceptionIsWrapped() throws IOException {
+
+		//GIVEN
+		class myXmlMappingException extends XmlMappingException {
+			public myXmlMappingException(final String msg) {
+				super(msg);
+			}
+		}
+
+		final Marshaller marshaller = mock(Marshaller.class);
+		doThrow(myXmlMappingException.class).when(marshaller).marshal(any(), any(Result.class));
+
+		//WHEN
+		final Executable setPayload = () -> this.builder.payload("", marshaller);
+
+		//THEN
+		assertThrows(CitrusRuntimeException.class, setPayload, "Failed to marshal object graph for message payload");
+	}
+
+	@Test
 	void payload_asObjectWithMapper() throws Exception {
 
 		//GIVEN
@@ -310,6 +347,23 @@ class ReceiveMessageBuilderTest {
 		//THEN
 		assertSame(copy, this.builder);
 		assertEquals("hello", getPayloadData());
+	}
+
+	@Test
+	void testSetPayloadWithJsonProcessingExceptionIsWrapped() throws JsonProcessingException {
+
+		//GIVEN
+		final ObjectMapper mapper = mock(ObjectMapper.class);
+		final ObjectWriter writer = mock(ObjectWriter.class);
+		when(mapper.writer()).thenReturn(writer);
+		when(writer.writeValueAsString(any())).thenThrow(JsonProcessingException.class);
+
+		//THEN
+		//WHEN
+		final Executable setPayload = () -> this.builder.payload("", mapper);
+
+		//THEN
+		assertThrows(CitrusRuntimeException.class, setPayload, "Failed to map object graph for message payload");
 	}
 
 	@Test
