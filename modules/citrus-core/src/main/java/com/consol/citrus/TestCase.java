@@ -18,6 +18,7 @@ package com.consol.citrus;
 
 import com.consol.citrus.container.*;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.XpathAssertionResult;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestActionListeners;
@@ -81,6 +82,12 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
+
+    private static boolean suppressExceptionsOnXpathEvaluations;
+    
+    static {
+    	suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
+    }
 
     /**
      * Starts the test case.
@@ -273,6 +280,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
             if (contextException != null) {
                 throw new TestCaseFailedException(contextException);
             }
+            testResult = evaluateTestResult(testResult, context);
         } catch (final TestCaseFailedException e) {
             throw e;
         } catch (final Exception | AssertionError e) {
@@ -520,4 +528,24 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     public long getTimeout() {
         return timeout;
     }
+
+    /**
+     * Evaluate the test result.
+     * @param result TestResult to be evaluated
+     * @param context TestContext in which TestCase is executing
+     * @return The input TestResult if exceptions are not suppressed.
+     * Otherwise, if exceptions are suppressed, the TestResult is a success, and the TestContext contains failures,
+     * retrieve the first XpathAssertionResult in the list of failures, use it along with the names of the Test Action and Test Class
+     * to construct and return a TestResult of failed.
+     */
+    protected TestResult evaluateTestResult(TestResult result, TestContext context) {
+        if (suppressExceptionsOnXpathEvaluations && result.isSuccess() && context.hasFailures()) {
+        	XpathAssertionResult contextFailure = context.getFailures().get(0);
+        	return TestResult.failed(getName(), testClass.getName(), contextFailure.toString());
+        }
+        else {
+        	return result;
+        }
+    }
+
 }
