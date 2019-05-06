@@ -138,7 +138,7 @@ public class TestContext {
     /**
      * List of XPath assertion failures that actions found during execution of forked operations
      */
-    private List<XpathAssertionResult> failures = new ArrayList<>(); // TJV Added
+    private List<XpathAssertionResult> failures = new ArrayList<>();
 
     /**
      * Default constructor

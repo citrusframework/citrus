@@ -22,50 +22,50 @@ package com.consol.citrus.context;
  */
 public class XpathAssertionResult {
 
-	/** Actual result of the XPath evaluation. */
-	private String actualResult;
+    /** Actual result of the XPath evaluation. */
+    private String actualResult;
 
-	/** Expected result of the XPath evaluation. */
-	private String expectedResult;
+    /** Expected result of the XPath evaluation. */
+    private String expectedResult;
 
-	/** XPath expression that was evaluated. */
-	private String xpathExpression;
-	
-	/**
-	 * Construct an XpathAssertionResult from the XPath expression, expected and actual results.
-	 * @param xpathExpression XPath expression that was evaluated
-	 * @param expectedResult Expected result of evaluation
-	 * @param actualResult Actual result of evaluation
-	 */
-	public XpathAssertionResult(String xpathExpression, String expectedResult, String actualResult) {
-		this.xpathExpression = xpathExpression;
-		this.expectedResult = expectedResult;
-		this.actualResult = actualResult;
-	}
+    /** XPath expression that was evaluated. */
+    private String xpathExpression;
 
-	/*
-	 * Return the actual result of the XPath evaluation.
-	 */
-	public String getActualResult() {
-		return this.actualResult;
-	}
+    /**
+     * Construct an XpathAssertionResult from the XPath expression, expected and actual results.
+     * @param xpathExpression XPath expression that was evaluated
+     * @param expectedResult Expected result of evaluation
+     * @param actualResult Actual result of evaluation
+     */
+    public XpathAssertionResult(String xpathExpression, String expectedResult, String actualResult) {
+        this.xpathExpression = xpathExpression;
+        this.expectedResult = expectedResult;
+        this.actualResult = actualResult;
+    }
 
-	/*
-	 * Return the expected result of the XPath evaluation.
-	 */
-	public String getExpectedResult() {
-		return this.expectedResult;
-	}
+    /*
+     * Return the actual result of the XPath evaluation.
+     */
+    public String getActualResult() {
+        return this.actualResult;
+    }
 
-	/*
-	 * Return the XPath expression.
-	 */
-	public String getXpathExpression() {
-		return this.xpathExpression;
-	}
-	
-	public String toString() {
-		return "XPath assertion failure - " + this.xpathExpression + " : expected = " + this.expectedResult + ", actual = " + this.actualResult;
-	}
-	
+    /*
+     * Return the expected result of the XPath evaluation.
+     */
+    public String getExpectedResult() {
+        return this.expectedResult;
+    }
+
+    /*
+     * Return the XPath expression.
+     */
+    public String getXpathExpression() {
+        return this.xpathExpression;
+    }
+
+    public String toString() {
+        return "XPath assertion failure - " + this.xpathExpression + " : expected = " + this.expectedResult + ", actual = " + this.actualResult;
+    }
+
 }

@@ -45,19 +45,19 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines xpath expressions and target variable names */
     private Map<String, String> xPathExpressions = new HashMap<String, String>();
-    
+
     /** Namespace definitions used in xpath expressions */
     private Map<String, String> namespaces = new HashMap<String, String>();
-    
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
-    
+
     private static boolean suppressExceptionsOnXpathEvaluations;
-    
+
     static {
-       	suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
+        suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
     }
-    
+
     /**
      * Extract variables using Xpath expressions.
      */
@@ -67,7 +67,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
         if (log.isDebugEnabled()) {
             log.debug("Reading XML elements with XPath");
         }
-        
+
         NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
 
         for (Entry<String, String> entry : xPathExpressions.entrySet()) {
@@ -77,13 +77,13 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             if (log.isDebugEnabled()) {
                 log.debug("Evaluating XPath expression: " + pathExpression);
             }
-            
+
             Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
-            
+
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
                 pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
-                
+
                 Object value = evaluate(doc, pathExpression, nsContext, resultType);
 
                 if (value == null) {
@@ -93,7 +93,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                 if (value instanceof List) {
                     value = StringUtils.arrayToCommaDelimitedString(((List)value).toArray(new String[((List)value).size()]));
                 }
-                
+
                 context.setVariable(variableName, value);
             } else {
                 Node node = XMLUtils.findNodeByName(doc, pathExpression);
@@ -122,7 +122,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     public void setXpathExpressions(Map<String, String> xPathExpressions) {
         this.xPathExpressions = xPathExpressions;
     }
-    
+
     /**
      * List of expected namespaces.
      * @param namespaces the namespaces to set
@@ -160,17 +160,17 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
      * @return Value of the XPath evaluation
      */
     protected Object evaluate(Document doc, String pathExpression, NamespaceContext nsContext, XPathExpressionResult resultType) {
-    	try {
-        	return XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
-    	}
-    	catch (CitrusRuntimeException ex) {
-           	if (suppressExceptionsOnXpathEvaluations && ex.getMessage().startsWith("No result for XPath expression")) {
-           		return "";
-           	}
-           	else {
-           		throw ex;
-           	}
-    	}
+        try {
+            return XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
+        }
+        catch (CitrusRuntimeException ex) {
+           if (suppressExceptionsOnXpathEvaluations && ex.getMessage().startsWith("No result for XPath expression")) {
+               return "";
+           }
+           else {
+               throw ex;
+           }
+        }
     }
 
 }

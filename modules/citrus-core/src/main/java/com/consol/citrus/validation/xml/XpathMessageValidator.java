@@ -49,9 +49,9 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     private static Logger log = LoggerFactory.getLogger(XpathMessageValidator.class);
 
     private static boolean suppressExceptionsOnXpathEvaluations;
-    
+
     static {
-    	suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
+        suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
     }
 
     @Autowired(required = false)
@@ -141,23 +141,23 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
      * @param context Test Context in which the evaluation occurs
      */
     protected void validateValues(Object xPathResult, Object expectedValue, String xPathExpression, TestContext context) {
-    	try {
-    		ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
+        try {
+            ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
             if (log.isDebugEnabled()) {
                 log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
             }
-    	}
-    	catch (ValidationException ex) {
-    		if (suppressExceptionsOnXpathEvaluations) {
-    			context.addFailure(new XpathAssertionResult(xPathExpression, (String)expectedValue, (String)xPathResult));
+        }
+        catch (ValidationException ex) {
+            if (suppressExceptionsOnXpathEvaluations) {
+                context.addFailure(new XpathAssertionResult(xPathExpression, (String)expectedValue, (String)xPathResult));
                 if (log.isDebugEnabled()) {
                     log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': Failed.");
                 }
-    		}
-    		else {
-    			throw ex;
-    		}
-    	}
+            }
+            else {
+                throw ex;
+            }
+        }
     }
 
     /**

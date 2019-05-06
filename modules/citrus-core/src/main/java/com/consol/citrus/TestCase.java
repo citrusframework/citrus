@@ -84,7 +84,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     private static Logger log = LoggerFactory.getLogger(TestCase.class);
 
     private static boolean suppressExceptionsOnXpathEvaluations;
-    
+
     static {
     	suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
     }
@@ -353,7 +353,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
     public void addFinalAction(final TestAction testAction) {
         this.finalActions.add(testAction);
     }
-    
+
     /**
      * Get the test case meta information.
      * @return the metaInfo
@@ -540,7 +540,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      */
     protected TestResult evaluateTestResult(TestResult result, TestContext context) {
         if (suppressExceptionsOnXpathEvaluations && result.isSuccess() && context.hasFailures()) {
-        	XpathAssertionResult contextFailure = context.getFailures().get(0);
+        	XpathAssertionResult contextFailure = context.getFailures().remove(0);
         	return TestResult.failed(getName(), testClass.getName(), contextFailure.toString());
         }
         else {
