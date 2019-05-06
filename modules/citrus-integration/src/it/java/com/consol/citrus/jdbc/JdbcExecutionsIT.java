@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2018 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -378,5 +378,37 @@ public class JdbcExecutionsIT extends TestNGCitrusTestRunner {
                         "<RETURN_BLOB>"+responseBlobContent+"</RETURN_BLOB>"+
                         "</row>" +
                         "</dataset>")));
+    }
+
+    @CitrusTest
+    public void testExecuteQueryWithIgnoreMatcher() {
+        final String sqlToSend = "SELECT whatever FROM somewhere";
+        final String sqlForValidation = "SELECT whatever FROM @ignore@";
+
+        async().actions(
+                new AbstractTestAction() {
+                    @Override
+                    public void doExecute(final TestContext context) {
+                        try {
+                            final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                            Assert.assertNotNull(connection);
+                            try(final Statement statement = connection.createStatement();
+                                final ResultSet resultSet  = statement.executeQuery(sqlToSend)){
+                                assertTrue(resultSet.next());
+                                assertEquals(TEST_COLUMN_VALUE, resultSet.getString(TEST_COLUMN_LABEL));
+                            }
+                        } catch (final SQLException | AssertionError e) {
+                            throw new CitrusRuntimeException(e);
+                        }
+                    }
+                }
+        );
+
+        receive(jdbcServer)
+                .message(JdbcMessage.execute(sqlForValidation));
+
+        send(jdbcServer)
+                .messageType(MessageType.JSON)
+                .message(JdbcMessage.success().dataSet(testDataset));
     }
 }

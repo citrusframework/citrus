@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2019 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,11 @@ import org.testng.annotations.Test;
 
 import java.util.Arrays;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 /**
  * @author Christoph Deppisch
@@ -58,4 +62,50 @@ public class ValidationMatcherUtilsTest extends AbstractTestNGUnitTest {
         verify(validationMatcher, times(3)).validate("field", "value", Arrays.asList("value"), context);
         verify(validationMatcher).validate("field", "prefix:value", Arrays.asList("prefix:value"), context);
     }
+
+    @Test
+    public void testSubstituteIgnoreStatements() {
+
+        //GIVEN
+        final String controlMessage = "Something to @ignore@ for sure!";
+        final String receivedMessage = "Something to consider for sure!";
+
+        //WHEN
+        final String substitutedControlMessage =
+                ValidationMatcherUtils.substituteIgnoreStatements(controlMessage, receivedMessage);
+
+        //THEN
+        assertEquals(substitutedControlMessage, receivedMessage);
+    }
+
+    @Test
+    public void testSubstituteIgnoreStatementsWithLengthLimit() {
+
+        //GIVEN
+        final String controlMessage = "(924,@ignore(23)@,txx,40)";
+        final String receivedMessage = "(924,2018-10-01 16:53:38.561,txx,40)";
+
+        //WHEN
+        final String substitutedControlMessage =
+                ValidationMatcherUtils.substituteIgnoreStatements(controlMessage, receivedMessage);
+
+        //THEN
+        assertEquals(substitutedControlMessage, receivedMessage);
+    }
+
+    @Test
+    public void testSubstituteIgnoreStatementsWithLengthLimitFails() {
+
+        //GIVEN
+        final String controlMessage = "(924,@ignore(20)@,txx,40)";
+        final String receivedMessage = "(924,2018-10-01 16:53:38.561,txx,40)";
+
+        //WHEN
+        final String substitutedControlMessage =
+                ValidationMatcherUtils.substituteIgnoreStatements(controlMessage, receivedMessage);
+
+        //THEN
+        assertNotEquals(substitutedControlMessage, receivedMessage);
+    }
+
 }
