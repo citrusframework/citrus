@@ -404,11 +404,13 @@ public class JdbcExecutionsIT extends TestNGCitrusTestRunner {
                 }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sqlForValidation));
+        receive(jdbcMessage -> jdbcMessage
+                .endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sqlForValidation)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage
+                .endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet(testDataset));
+                .message(JdbcMessage.success().dataSet(testDataset)));
     }
 }
