@@ -17,6 +17,7 @@
 package com.consol.citrus.validation.xml;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.XpathAssertionResult;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
@@ -46,6 +47,12 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathMessageValidator.class);
+
+    private static boolean suppressExceptionsOnXpathEvaluations;
+    
+    static {
+    	suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
+    }
 
     @Autowired(required = false)
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
@@ -108,15 +115,9 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
                 expectedValue = context.replaceDynamicContentInString(String.valueOf(expectedValue));
             }
 
-            //do the validation of actual and expected value for element
-            ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
-
-            if (log.isDebugEnabled()) {
-                log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
-            }
+            validateValues(xPathResult, expectedValue, xPathExpression, context);
         }
 
-        log.info("XPath element validation successful: All elements OK");
     }
 
     @Override
@@ -127,6 +128,36 @@ public class XpathMessageValidator extends AbstractMessageValidator<XpathMessage
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         return new DomXmlMessageValidator().supportsMessageType(messageType, message);
+    }
+
+    /**
+     * Validate the values of an XPath expression.
+     * If a ValidationException is thrown, and exceptions are to be suppressed, then construct an XpathAssertionResult from
+     * the expected result, actual result, and XPath expression, and add this as a failure to the Test Context.
+     * Otherwise, re-throw the exception.
+     * @param xPathResult Actual result of the evaluation
+     * @param expectedValue Expected result of the evaluation
+     * @param xPathExpression XPath expression to evaluate
+     * @param context Test Context in which the evaluation occurs
+     */
+    protected void validateValues(Object xPathResult, Object expectedValue, String xPathExpression, TestContext context) {
+    	try {
+    		ValidationUtils.validateValues(xPathResult, expectedValue, xPathExpression, context);
+            if (log.isDebugEnabled()) {
+                log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': OK.");
+            }
+    	}
+    	catch (ValidationException ex) {
+    		if (suppressExceptionsOnXpathEvaluations) {
+    			context.addFailure(new XpathAssertionResult(xPathExpression, (String)expectedValue, (String)xPathResult));
+                if (log.isDebugEnabled()) {
+                    log.debug("Validating element: " + xPathExpression + "='" + expectedValue + "': Failed.");
+                }
+    		}
+    		else {
+    			throw ex;
+    		}
+    	}
     }
 
     /**
