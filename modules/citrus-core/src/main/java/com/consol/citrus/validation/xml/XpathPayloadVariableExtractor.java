@@ -52,6 +52,12 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
     
+    private static boolean suppressExceptionsOnXpathEvaluations;
+    
+    static {
+       	suppressExceptionsOnXpathEvaluations = Boolean.parseBoolean(System.getProperty("citrus.core.validation.xml.suppress_exceptions_on_xpath_evaluations", "false"));
+    }
+    
     /**
      * Extract variables using Xpath expressions.
      */
@@ -78,7 +84,7 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
                 pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
                 
-                Object value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
+                Object value = evaluate(doc, pathExpression, nsContext, resultType);
 
                 if (value == null) {
                     throw new CitrusRuntimeException("Not able to find value for expression: " + pathExpression);
@@ -140,4 +146,31 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     public Map<String, String> getNamespaces() {
         return namespaces;
     }
+
+    /**
+     * Evaluate the XPath expression.
+     * If the evaluation throws a CitrusRuntimeException, the exception message indicates there is no result, and exceptions are to be suppressed, then return empty string.
+     * Otherwise re-throw the exception.
+     * The result of calling this method will become the value of a Citrus variable.
+     * Since Citrus variables cannot have values of null, this method returns an empty string when exceptions are suppressed.
+     * @param doc XML Document on which to apply XPath expression
+     * @param pathExpression XPath expression to evaluate
+     * @param nsContext Namespace Context in which evaluation occurs
+     * @param resultType Type of XPath expression result (an enumeration)
+     * @return Value of the XPath evaluation
+     */
+    protected Object evaluate(Document doc, String pathExpression, NamespaceContext nsContext, XPathExpressionResult resultType) {
+    	try {
+        	return XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
+    	}
+    	catch (CitrusRuntimeException ex) {
+           	if (suppressExceptionsOnXpathEvaluations && ex.getMessage().startsWith("No result for XPath expression")) {
+           		return "";
+           	}
+           	else {
+           		throw ex;
+           	}
+    	}
+    }
+
 }
