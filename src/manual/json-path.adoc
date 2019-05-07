@@ -105,13 +105,30 @@ Lets continue to use JSONPath expressions when validating a receive message in C
 .Java DSL
 [source,xml]
 ----
-receive(someEndpoint)
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint(someEndpoint)
     .messageType(MessageType.JSON)
     .validate("$.user.name", "Penny")
     .validate("$['user']['name']", "${userName}")
-    .validate("$.user.aliases", "["penny","jenny","nanny"]")
+    .validate("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]")
     .validate("$.user[?(@.admin)].password", "@startsWith('$%00')@")
-    .validate("$.user.address[?(@.type='office')]", "{"city":"Munich","street":"Company Street","type":"office"}");
+    .validate("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"street\":\"Company Street\",\"type\":\"office\"}"));
+----
+
+.Java DSL
+[source,xml]
+----
+final Map<String, Object> validationMap = new HashMap<>();
+validationMap.put("$.user.name", "Penny");
+validationMap.put("$['user']['name']", "${userName}");
+validationMap.put("$.user.aliases", "[\"penny\",\"jenny\",\"nanny\"]");
+validationMap.put(""$.user[?(@.admin)].password", "@startsWith('$%00')@");
+validationMap.put("$.user.address[?(@.type='office')]", "{\"city\":\"Munich\",\"street\":\"Company Street\",\"type\":\"office\"}");
+
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint(someEndpoint)
+    .messageType(MessageType.JSON)
+    .validate(validationMap));
 ----
 
 The above JSONPath expressions will be evaluated when Citrus validates the received message. The expression result is compared to the expected value where expectations can be static values as well as test variables and validation matcher expressions. In case a JSONPath expression should not be able to find any elements the test case will also fail.

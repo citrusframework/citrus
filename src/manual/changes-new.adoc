@@ -32,3 +32,13 @@ Citrus does now support out and in/out parameters on JDBC callable statements.
 https://github.com/citrusframework/citrus/issues/499
 
 Citrus does now support `@ignore@` statements during SQL statement validation.
+
+[[changes-2-9-0-enhancements]]
+== Enhancements
+
+=== Validate received messages by map
+https://github.com/citrusframework/citrus/issues/571
+
+It is now possible to validate received messages based on a map containing xpath or json path expressions as keys with
+their corresponding values for validation. For an example of this enhancement, please have a look at the
+link:#validate-with-jsonpath[JSON path validation] or link:#xpath-validation[XPath validation] section.

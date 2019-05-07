@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  */
 public class FailTestNgRunnerIT extends TestNGCitrusTestRunner {
 
-    @Test(expectedExceptions = CitrusRuntimeException.class)
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
     @CitrusTest
     public void shouldFail() {
         echo("This test should fail because of unknown variable ${foo}");

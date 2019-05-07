@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  */
 public class FailTestNgRuntimeExceptionIT extends TestNGCitrusTestDesigner {
 
-    @Test(expectedExceptions = TestCaseFailedException.class)
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
     public void shouldFail() {
         throw new RuntimeException("This test should fail because of runtime exception");
