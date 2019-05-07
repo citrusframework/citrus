@@ -76,15 +76,28 @@ We have already seen how to validate whole XML structures with control message t
 </message>
 ----
 
-.Java DSL designer
+.Java DSL
 [source,java]
 ----
-@CitrusTest
-public void receiveMessageTest() {
-    receive("helloServiceServer")
-        .validate("/TestRequest/MessageId", "${messageId}")
-        .validate("//VersionId", "2")
-        .header("Operation", "sayHello");
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint("helloServiceServer")
+    .validate("/TestRequest/MessageId", "${messageId}")
+    .validate("//VersionId", "2")
+    .header("Operation", "sayHello"));
+}
+----
+
+.Java DSL
+[source,java]
+----
+final Map<String, Object> validationMap = new HashMap<>();
+validationMap.put("/TestRequest/MessageId", "${messageId}");
+validationMap.put("//VersionId", "2");
+
+receive(receiveMessageBuilder -> receiveMessageBuilder
+    .endpoint("helloServiceServer")
+    .validate(validationMap)
+    .header("Operation", "sayHello"));
 }
 ----
 

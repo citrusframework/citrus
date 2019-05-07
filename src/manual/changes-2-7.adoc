@@ -1,6 +1,17 @@
 [[changes-2-7-10]]
 == Changes in Citrus 2.7.10
 
+=== Fixed HTTP request parameter regression
+Due to a regression introduced during a refactoring of the HTTP request parameter management, it was not possible
+anymore to add two different values to a single key. To fix this regression, it was required to change the return type
+of the public method `getQueryParams` of the type `HttpMessage` from `Map<String, String>` to
+`Map<String, Collection<String>>`. If you used this method in your test suite, which should most likely not be the case,
+please consider this change during a version update of Citrus.
+
+For further details, please have a look into the concerning issue on Github :
+https://github.com/citrusframework/citrus/issues/583[#583 - Param list support with same param name not available]
+
+
 === Fixed bugs
 * https://github.com/citrusframework/citrus/issues/545[#545 - Missing HttpServer auto gzip decompression in request handling]
 * https://github.com/citrusframework/citrus/issues/588[#588 - BooleanExpressionParser parses expression groups containing boolean strings inconsistently]
@@ -8,6 +19,7 @@
 [[changes-security-2-7-10]]
 === Security fixes
 * https://github.com/citrusframework/citrus/issues/612[#612 - Update org.springframework.ws.spring-xml to 3.0.6 or later]
+* https://github.com/citrusframework/citrus/issues/639[#639 - Update jetty-server to 9.4.12.v20180830 or later]
 
 [[changes-2-7-9]]
 == Changes in Citrus 2.7.9
