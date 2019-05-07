@@ -1,0 +1,31 @@
+[[changes-2-8-0]]
+== Since Citrus 2.8.0
+Spring 5, Cucumber 3 and support for Apache Kafka. These are the big three of this release and together with bug fixes and
+some smaller features, we call it Citrus 2.8.0.
+
+[[changes-2-8-0-spring-5]]
+=== Spring 5
+From now on, Citrus is using Spring 5. This change improves the underlying infrastructure of the framework.
+In case your test suites depend on Spring 4, we will provide a Spring 4 version of the framework until mid 2019.
+The Spring 4 branch will continue the 2.7.x release family and receives bug fixes, but no new features.
+All bug fixes will be merged into the master branch, containing the Spring 5 version, as well. Those fixes will not
+be mentioned in the 2.8.x release notes explicitly but in the release notes of 2.7.x.
+
+[[changes-2-8-0-cucumber-3]]
+=== Cucumber 3
+We have updated our Cucumber integration, to support Version >= 3.0.0 of the framework. As version 4 of the framework is also
+available, we are going to update our integration again, soon.
+
+[[changes-2-8-0-kafka]]
+=== Apache Kafka support
+We are very proud to announce that Citrus now ships with an Apache Kafka module. Henceforward, you are able to test your
+communication with Kafka from a consumer or a producer perspective. Even if you do not have a Kafka instance available
+for testing in your network, Citrus provides the opportunity to start a local Kafka instance for testing. For more information,
+have a look at the link:#kafka[Apache Kafka] section.
+
+[[changes-2-8-0-others]]
+=== Other changes in 2.8.0
+
+* https://github.com/citrusframework/citrus/issues/511[#511 - Use charset from http headers to parse the payload]
+* https://github.com/citrusframework/citrus/issues/439[#439 - SAXParseException when sending SOAP request with empty payload or header]
+

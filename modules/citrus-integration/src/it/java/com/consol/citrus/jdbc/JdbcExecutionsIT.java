@@ -21,18 +21,25 @@ import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
+import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageType;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
+import java.io.IOException;
+import java.sql.Blob;
 import java.sql.CallableStatement;
+import java.sql.Clob;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -45,7 +52,7 @@ import static org.junit.Assert.assertTrue;
 
 @SuppressWarnings({"SqlDialectInspection", "SqlNoDataSourceInspection"})
 @Test
-public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
+public class JdbcExecutionsIT extends TestNGCitrusTestRunner {
 
     private static final int ROWS_UPDATED = 42;
     private static final String TEST_COLUMN_LABEL = "foo";
@@ -92,12 +99,14 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sql));
 
-        send(jdbcServer)
+
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sql)));
+
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet(testDataset));
+                .message(JdbcMessage.success().dataSet(testDataset)));
     }
 
     @CitrusTest
@@ -126,12 +135,12 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
             }
         });
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sql + " - (5)"));
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sql + " - (5)")));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet(testDataset));
+                .message(JdbcMessage.success().dataSet(testDataset)));
     }
 
     @CitrusTest
@@ -154,12 +163,12 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL));
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED)));
     }
 
     @CitrusTest
@@ -183,12 +192,12 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL));
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(SAMPLE_UPDATE_SQL)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED)));
     }
 
     @CitrusTest
@@ -218,19 +227,19 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sqlOne));
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sqlOne)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED)));
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sqlTwo));
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sqlTwo)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED * 2));
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED * 2)));
     }
 
     @CitrusTest
@@ -258,12 +267,117 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sqlOne));
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sqlOne)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED));
+                .message(JdbcMessage.success().rowsUpdated(ROWS_UPDATED)));
+    }
+
+    @CitrusTest
+    public void testClobIntegration() {
+
+        //GIVEN
+        final String sql = "{? = CALL someClobFunction(?)}";
+        final String clobRequestValue = "clobloblobloblob";
+        final String clobReturnValue = "bolbolbolbolbolc";
+
+
+        //WHEN + THEN
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+                                    try(final PreparedStatement statement = connection.prepareStatement(sql)){
+
+                                        final Clob requestClob = connection.createClob();
+                                        requestClob.setString(1,clobRequestValue);
+                                        statement.setClob(1, requestClob);
+
+                                        statement.execute();
+
+                                        final ResultSet resultSet = statement.getResultSet();
+                                        resultSet.next();
+
+                                        final Clob responseClob = resultSet.getClob(1);
+
+                                        assertEquals(clobReturnValue,
+                                                responseClob.getSubString(1, (int) requestClob.length()));
+                                    }
+                                } catch (final SQLException | AssertionError e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+clobRequestValue+")")));
+
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .messageType(MessageType.XML)
+                .message(JdbcMessage.success().dataSet("" +
+                        "<dataset>" +
+                        "<row>" +
+                        "<RETURN_CLOB>"+clobReturnValue+"</RETURN_CLOB>"+
+                        "</row>" +
+                        "</dataset>")));
+    }
+
+    @CitrusTest
+    public void testBlobIntegration() throws IOException {
+
+        //GIVEN
+        final String sql = "{? = CALL someClobFunction(?)}";
+
+        final ClassPathResource blobRequestValue = new ClassPathResource("jdbc/RequestBlob.pdf");
+        final String requestBlobContent = Base64.encodeBase64String(IOUtils.toByteArray(blobRequestValue.getInputStream()));
+
+        final ClassPathResource blobReturnValue = new ClassPathResource("jdbc/ResponseBlob.pdf");
+        final String responseBlobContent = Base64.encodeBase64String(IOUtils.toByteArray(blobReturnValue.getInputStream()));
+
+        //WHEN + THEN
+        async().actions(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(final TestContext context) {
+                                try {
+                                    final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                                    Assert.assertNotNull(connection);
+                                    try(final PreparedStatement statement = connection.prepareStatement(sql)){
+
+                                        statement.setBlob(1, blobRequestValue.getInputStream());
+                                        statement.execute();
+
+                                        final ResultSet resultSet = statement.getResultSet();
+                                        resultSet.next();
+
+                                        final Blob responseBlob = resultSet.getBlob(1);
+
+                                        assertEquals(
+                                                IOUtils.toString(blobReturnValue.getInputStream(), "UTF8"),
+                                                IOUtils.toString(responseBlob.getBinaryStream(),"UTF8"));
+                                    }
+                                } catch (final SQLException | AssertionError | IOException e) {
+                                    throw new CitrusRuntimeException(e);
+                                }
+                            }
+                        }
+        );
+
+        receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+requestBlobContent+")")));
+
+        send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+                .messageType(MessageType.XML)
+                .message(JdbcMessage.success().dataSet("" +
+                        "<dataset>" +
+                        "<row>" +
+                        "<RETURN_BLOB>"+responseBlobContent+"</RETURN_BLOB>"+
+                        "</row>" +
+                        "</dataset>")));
     }
 
     @CitrusTest
@@ -290,11 +404,13 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                 }
         );
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sqlForValidation));
+        receive(jdbcMessage -> jdbcMessage
+                .endpoint(jdbcServer)
+                .message(JdbcMessage.execute(sqlForValidation)));
 
-        send(jdbcServer)
+        send(jdbcMessage -> jdbcMessage
+                .endpoint(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet(testDataset));
+                .message(JdbcMessage.success().dataSet(testDataset)));
     }
 }

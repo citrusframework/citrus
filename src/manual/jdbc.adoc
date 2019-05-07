@@ -280,6 +280,101 @@ difference is the creation of the statement itself. It is also the case that the
 `createCallableStatement` and `closeStatement` messages has to be activated via configuration. For more information,
 please have a look at the <<jdbc-server-configuration>> section.
 
+[[jdbc-server-execute-batch]]
+=== Execute batch statements
+The JDBC driver offers the possibility to create a batch of statements to be sent to the server. To validate those
+batches in a test case, no special notation is required. Citrus will handle every statement of the batch separately
+and expects a specified response definition for every request in the batch.
+
+Lets say, you prepare a batch with the following SQL statements in your application:
+[source,sql]
+----
+UPDATE something WHERE condition
+UPDATE somethingElse WHERE otherCondition
+----
+
+To verify the batch statements and specify corresponding responses, you would just handle them as single requests, just
+as if they would not have been send as part of a batch statement.
+
+[source,java]
+----
+receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .message(JdbcMessage.execute("UPDATE something WHERE condition")));
+
+send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.success().rowsUpdated(42)));
+
+receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .message(JdbcMessage.execute("UPDATE somethingElse WHERE otherCondition")));
+
+send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .messageType(MessageType.JSON)
+        .message(JdbcMessage.success().rowsUpdated(84)));
+----
+
+[[jdbc-server-clob]]
+=== CLOB support
+Just as every other kind of test data, CLOB values can be used in requests and result set specification. If your
+application accesses the result set via the Citrus JDBC driver, in order to get the CLOB value from the database response,
+a JDBC conform CLOB value will be returned containing the specified data from the result set.
+
+[source,java]
+----
+String clobRequestValue = "clob request value";
+String clobReturnValue = "clob response value";
+
+receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+clobRequestValue+")")));
+
+send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .messageType(MessageType.XML)
+        .message(JdbcMessage.success().dataSet("" +
+                "<dataset>" +
+                "<row>" +
+                "<RETURN_CLOB>"+clobReturnValue+"</RETURN_CLOB>"+
+                "</row>" +
+                "</dataset>")));
+----
+
+NOTE: Please notice that the maximum capacity of a CLOB in a Citrus test case is 2,147,483,647 characters.
+This limitation is required to lower the memory footprint of the test case. It might be necessary to alter your test data
+to fulfill this limitation.
+
+[[jdbc-server-blob]]
+=== BLOB support
+Just as every other kind of test data, BLOB values can be used in requests and result set specification. To avoid issues
+with handling raw binary data, the test data used in your test case *has to be Base64 encoded*. If your
+application accesses the result set via the Citrus JDBC driver, in order to get the BLOB value from the database response,
+a JDBC conform BLOB value will be returned containing the specified data from the result set. The content of the CLOB
+value will *not* be Base64 encoded. It is just required to pass the encoded content within the test case. Your SUT
+will stay untouched from this restriction.
+
+[source,java]
+----
+final ClassPathResource blobRequestValue = new ClassPathResource("jdbc/RequestBlob.pdf");
+final String requestBlobContent = Base64.encodeBase64String(IOUtils.toByteArray(blobRequestValue.getInputStream()));
+
+final ClassPathResource blobReturnValue = new ClassPathResource("jdbc/ResponseBlob.pdf");
+final String responseBlobContent = Base64.encodeBase64String(IOUtils.toByteArray(blobReturnValue.getInputStream()));
+
+receive(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .message(JdbcMessage.execute("{? = CALL someClobFunction(?)} - ("+requestBlobContent+")")));
+
+send(jdbcMessage -> jdbcMessage.endpoint(jdbcServer)
+        .messageType(MessageType.XML)
+        .message(JdbcMessage.success().dataSet("" +
+                "<dataset>" +
+                "<row>" +
+                "<RETURN_BLOB>"+responseBlobContent+"</RETURN_BLOB>"+
+                "</row>" +
+                "</dataset>")));
+----
+
+NOTE: Please notice that the maximum capacity of a BLOB in a Citrus test case is 2,147,483,647 bytes.
+This limitation is required to lower the memory footprint of the test case. It might be necessary to alter your test data
+to fulfill this limitation.
+
 [[jdbc-server-configuration]]
 === Configuration
 

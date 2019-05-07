@@ -36,7 +36,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-@SuppressWarnings("SqlNoDataSourceInspection")
 @Test
 public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
 
@@ -64,12 +63,12 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
         async().actions(
             new AbstractTestAction() {
                 @Override
-                public void doExecute(TestContext context) {
+                public void doExecute(final TestContext context) {
                     try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
         //THEN
                         Assert.assertNotNull(connection);
-                    } catch (SQLException e) {
+                    } catch (final SQLException | AssertionError e ) {
                         throw new CitrusRuntimeException("Failed to connect");
                     }
                 }
@@ -80,7 +79,7 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void testConnectionWithWithVerification() {
         //GIVEN
-        OpenConnection.Property database = new OpenConnection.Property();
+        final OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
@@ -88,11 +87,11 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
         async().actions(
             new AbstractTestAction() {
                 @Override
-                public void doExecute(TestContext context) {
+                public void doExecute(final TestContext context) {
                     try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
                         Assert.assertNotNull(connection);
-                    } catch (SQLException e) {
+                    } catch (final SQLException | AssertionError e ) {
                         throw new CitrusRuntimeException("Failed to connect");
                     }
                 }
@@ -106,19 +105,19 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void testOpenConnectionWithWrongCredentials() {
         //GIVEN
-        Properties properties = new Properties();
+        final Properties properties = new Properties();
         properties.setProperty("username", "wrongUser");
         properties.setProperty("password", "wrongPassword");
 
-        OpenConnection.Property database = new OpenConnection.Property();
+        final OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
-        OpenConnection.Property username = new OpenConnection.Property();
+        final OpenConnection.Property username = new OpenConnection.Property();
         username.setName("username");
         username.setValue("user");
 
-        OpenConnection.Property password = new OpenConnection.Property();
+        final OpenConnection.Property password = new OpenConnection.Property();
         password.setName("password");
         password.setValue("password");
 
@@ -126,11 +125,11 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
         async().actions(
             new AbstractTestAction() {
                 @Override
-                public void doExecute(TestContext context) {
+                public void doExecute(final TestContext context) {
                     try {
-                        Connection connection = jdbcDriver.connect(serverUrl, properties);
+                        final Connection connection = jdbcDriver.connect(serverUrl, properties);
                         Assert.assertNotNull(connection);
-                    } catch (SQLException e) {
+                    } catch (final SQLException | AssertionError e ) {
                         throw new CitrusRuntimeException("Failed to connect");
                     }
                 }
@@ -147,20 +146,20 @@ public class JdbcConnectionIT extends TestNGCitrusTestDesigner {
     @CitrusTest
     public void testCloseConnection() {
         //GIVEN
-        OpenConnection.Property database = new OpenConnection.Property();
+        final OpenConnection.Property database = new OpenConnection.Property();
         database.setName("database");
         database.setValue("testdb");
 
         async().actions(
             new AbstractTestAction() {
                 @Override
-                public void doExecute(TestContext context) {
+                public void doExecute(final TestContext context) {
                     try {
-                        Connection connection = jdbcDriver.connect(serverUrl, new Properties());
+                        final Connection connection = jdbcDriver.connect(serverUrl, new Properties());
                         Assert.assertNotNull(connection);
         //WHEN
                         connection.close();
-                    } catch (SQLException e) {
+                    } catch (final SQLException | AssertionError e ) {
                         throw new CitrusRuntimeException("Failed to connect");
                     }
                 }

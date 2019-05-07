@@ -4,6 +4,7 @@
 
 This chapter gives a brief overview of all archived changes.
 
+include::changes-2-8.adoc[]
 include::changes-2-7.adoc[]
 include::changes-2-6.adoc[]
 include::changes-2-5.adoc[]
