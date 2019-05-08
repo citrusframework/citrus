@@ -123,11 +123,11 @@ public class RepeatOnErrorBuilder extends AbstractTestContainerBuilder<RepeatOnE
 
     /**
      * Sets the auto sleep time in between repeats in milliseconds.
-     * @param autoSleep
+     * @param autoSleepInMillis
      * @return
      */
-    public RepeatOnErrorBuilder autoSleep(long autoSleep) {
-        action.setAutoSleep(autoSleep);
+    public RepeatOnErrorBuilder autoSleep(long autoSleepInMillis) {
+        action.setAutoSleep(autoSleepInMillis);
         return this;
     }
 }
