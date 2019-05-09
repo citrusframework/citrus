@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-arquillian" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-bom" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-camel" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-cucumber" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-docker" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-ftp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-http" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-integration" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-java-dsl" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-jdbc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-jms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-jmx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-kafka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-kubernetes" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-mail" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-camel" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-cucumber" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-docker" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-ftp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-http" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-jdbc" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-jms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-jmx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-kafka" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-kubernetes" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-mail" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-rmi" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-selenium" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-ssh" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-vertx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-websocket" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-ws" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-model/model-zookeeper" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-restdocs" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-rmi" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-selenium" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-ssh" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-vertx" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-websocket" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-ws" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/modules/citrus-zookeeper" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/archetypes" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/archetypes/jms" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/archetypes/quickstart" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/archetypes/soap" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/docs-generator" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/maven" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/maven/citrus-maven-plugin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/maven/citrus-maven-plugin-integration" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/remote" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/remote/citrus-remote-maven-plugin" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/remote/citrus-remote-server" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/tools/test-generator" charset="UTF-8" />
+  </component>
+</project>

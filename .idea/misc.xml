@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptSettings">
+    <option name="languageLevel" value="ES6" />
+  </component>
+  <component name="MavenProjectsManager">
+    <option name="originalFiles">
+      <list>
+        <option value="$PROJECT_DIR$/pom.xml" />
+      </list>
+    </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/modules/citrus-arquillian/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-bom/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-camel/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-cucumber/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-docker/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-ftp/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-http/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-integration/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-java-dsl/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-jdbc/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-jms/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-jmx/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-kafka/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-kubernetes/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-mail/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-camel/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-core/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-cucumber/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-docker/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-ftp/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-http/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-jms/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-jmx/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-kafka/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-kubernetes/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-rmi/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-selenium/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-ssh/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-vertx/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-websocket/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-ws/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-model/model-zookeeper/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-restdocs/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-rmi/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-selenium/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-ssh/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-vertx/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-ws/pom.xml" />
+        <option value="$PROJECT_DIR$/modules/citrus-zookeeper/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/archetypes/jms/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/archetypes/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/archetypes/quickstart/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/archetypes/soap/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/docs-generator/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/maven/citrus-maven-plugin-integration/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/maven/citrus-maven-plugin/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/maven/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/remote/citrus-remote-maven-plugin/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/remote/citrus-remote-server/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/remote/pom.xml" />
+        <option value="$PROJECT_DIR$/tools/test-generator/pom.xml" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectInspectionProfilesVisibleTreeState">
+    <entry key="Project Default">
+      <profile-state>
+        <expanded-state>
+          <State>
+            <id />
+          </State>
+          <State>
+            <id>Class structureJava</id>
+          </State>
+          <State>
+            <id>Code maturity issuesJava</id>
+          </State>
+          <State>
+            <id>Code style issuesJava</id>
+          </State>
+          <State>
+            <id>Google Web Toolkit issues</id>
+          </State>
+          <State>
+            <id>JUnit issuesJava</id>
+          </State>
+          <State>
+            <id>Java</id>
+          </State>
+          <State>
+            <id>Java 5Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java 7Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java 8Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Java language level migration aidsJava</id>
+          </State>
+          <State>
+            <id>Javadoc issuesJava</id>
+          </State>
+          <State>
+            <id>Performance issuesJava</id>
+          </State>
+          <State>
+            <id>Spring</id>
+          </State>
+          <State>
+            <id>Spring AOPSpring</id>
+          </State>
+          <State>
+            <id>TestNGJava</id>
+          </State>
+          <State>
+            <id>Threading issuesJava</id>
+          </State>
+        </expanded-state>
+      </profile-state>
+    </entry>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK" />
+</project>

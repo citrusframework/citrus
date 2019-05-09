@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <excludeFromCompile>
+      <directory url="file://$PROJECT_DIR$/tools/archetypes/quickstart/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/tools/archetypes/jms/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/tools/archetypes/soap/src/main/resources/archetype-resources" includeSubdirectories="true" />
+    </excludeFromCompile>
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="citrus-model-mail" />
+        <module name="citrus-core" />
+        <module name="citrus-websocket" />
+        <module name="citrus-model-jdbc" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="citrus" target="1.5" />
+      <module name="citrus-core" target="1.8" />
+      <module name="citrus-model" target="1.5" />
+      <module name="citrus-model-jdbc" target="1.8" />
+      <module name="citrus-model-mail" target="1.8" />
+      <module name="citrus-websocket" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

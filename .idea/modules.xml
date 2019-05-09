@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/citrus.iml" filepath="$PROJECT_DIR$/citrus.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/citrus-core/citrus-core.iml" filepath="$PROJECT_DIR$/modules/citrus-core/citrus-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/citrus-model/citrus-model.iml" filepath="$PROJECT_DIR$/modules/citrus-model/citrus-model.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/citrus-model/model-jdbc/citrus-model-jdbc.iml" filepath="$PROJECT_DIR$/modules/citrus-model/model-jdbc/citrus-model-jdbc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/citrus-model/model-mail/citrus-model-mail.iml" filepath="$PROJECT_DIR$/modules/citrus-model/model-mail/citrus-model-mail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/citrus-websocket/citrus-websocket.iml" filepath="$PROJECT_DIR$/modules/citrus-websocket/citrus-websocket.iml" />
+    </modules>
+  </component>
+</project>
