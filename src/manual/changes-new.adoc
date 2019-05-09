@@ -16,3 +16,12 @@ https://github.com/citrusframework/citrus/issues/571
 It is now possible to validate received messages based on a map containing xpath or json path expressions as keys with
 their corresponding values for validation. For an example of this enhancement, please have a look at the
 link:#validate-with-jsonpath[JSON path validation] or link:#xpath-validation[XPath validation] section.
+
+[[changes-2-9-0-maintenance]]
+== Maintenance
+
+== Cucumber 4 support
+https://github.com/citrusframework/citrus/issues/539
+
+Citrus now uses Cucumber 4. To learn more about the changes in Cucumber 4, please have a look at the
+https://github.com/cucumber/cucumber-jvm/blob/master/CHANGELOG.md#400-2018-09-24---release-announcement[Cucumber-JVM 4.0.0 changelog].
