@@ -158,7 +158,7 @@
     <spring.integration.version>5.0.6.RELEASE</spring.integration.version>
     <spring.restdocs.version>2.0.1.RELEASE</spring.restdocs.version>
     <kafka.version>2.0.0</kafka.version>
-    <apache.camel.version>2.23.2</apache.camel.version>
+    <apache.camel.version>2.21.1</apache.camel.version>
     <javatuples.version>1.2</javatuples.version>
     <activemq.version>5.15.4</activemq.version>
     <vertx.version>3.5.4</vertx.version>
