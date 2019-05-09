@@ -172,7 +172,7 @@
     <jaxb.version>2.3.0</jaxb.version>
     <jackson.version>2.9.8</jackson.version>
     <arquillian.version>1.4.0.Final</arquillian.version>
-    <cucumber.version>4.2.5</cucumber.version>
+    <cucumber.version>4.2.6</cucumber.version>
     <zookeeper.version>3.4.12</zookeeper.version>
     <sshd.version>2.0.0</sshd.version>
     <json.schema.validator.version>2.2.10</json.schema.validator.version>
