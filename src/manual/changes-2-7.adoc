@@ -11,7 +11,11 @@ please consider this change during a version update of Citrus.
 For further details, please have a look into the concerning issue on Github :
 https://github.com/citrusframework/citrus/issues/583[#583 - Param list support with same param name not available]
 
+[[changes-maintenance-2-7-10]]
+== Maintenance tasks
+* https://github.com/citrusframework/citrus/issues/461[#461 - Rename argument for RepeatOnErrorBuilder#autoSleep to clarify expected unit]
 
+[[changes-bugs-2-7-10]]
 === Fixed bugs
 * https://github.com/citrusframework/citrus/issues/545[#545 - Missing HttpServer auto gzip decompression in request handling]
 * https://github.com/citrusframework/citrus/issues/588[#588 - BooleanExpressionParser parses expression groups containing boolean strings inconsistently]
@@ -20,6 +24,8 @@ https://github.com/citrusframework/citrus/issues/583[#583 - Param list support w
 === Security fixes
 * https://github.com/citrusframework/citrus/issues/612[#612 - Update org.springframework.ws.spring-xml to 3.0.6 or later]
 * https://github.com/citrusframework/citrus/issues/639[#639 - Update jetty-server to 9.4.12.v20180830 or later]
+* https://github.com/citrusframework/citrus/issues/642[#642 - Update jetty-server to 9.4.17.v20190418 or later]
+* https://github.com/citrusframework/citrus/issues/649[#649 - Update camel-core to version 2.21.5 or later]
 
 [[changes-2-7-9]]
 == Changes in Citrus 2.7.9
