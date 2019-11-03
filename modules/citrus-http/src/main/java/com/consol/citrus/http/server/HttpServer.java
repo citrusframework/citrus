@@ -28,6 +28,7 @@ import org.eclipse.jetty.servlet.*;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.*;
 import org.springframework.core.ResolvableType;
@@ -285,6 +286,7 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         public Resource[] getResources(String locationPattern) throws IOException {
             return applicationContext.getResources(locationPattern);
         }
+        @Override
         public void publishEvent(ApplicationEvent event) {
             applicationContext.publishEvent(event);
         }
@@ -330,6 +332,12 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         public String[] getBeanNamesForType(ResolvableType type) {
             return applicationContext.getBeanNamesForType(type);
         }
+
+        @Override
+        public String[] getBeanNamesForType(ResolvableType resolvableType, boolean b, boolean b1) {
+            return applicationContext.getBeanNamesForType(resolvableType, b, b1);
+        }
+
         public int getBeanDefinitionCount() {
             return applicationContext.getBeanDefinitionCount();
         }
@@ -397,6 +405,17 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
         public <T> T getBean(Class<T> requiredType, Object... args) throws BeansException {
             return applicationContext.getBean(requiredType, args);
         }
+
+        @Override
+        public <T> ObjectProvider<T> getBeanProvider(Class<T> aClass) {
+            return applicationContext.getBeanProvider(aClass);
+        }
+
+        @Override
+        public <T> ObjectProvider<T> getBeanProvider(ResolvableType resolvableType) {
+            return applicationContext.getBeanProvider(resolvableType);
+        }
+
         public boolean isTypeMatch(String name, Class<?> targetType)
                 throws NoSuchBeanDefinitionException {
             return applicationContext.isTypeMatch(name, targetType);
@@ -409,6 +428,12 @@ public class HttpServer extends AbstractServer implements ApplicationContextAwar
                 throws NoSuchBeanDefinitionException {
             return applicationContext.getType(name);
         }
+
+        @Override
+        public Class<?> getType(String s, boolean b) throws NoSuchBeanDefinitionException {
+            return applicationContext.getType(s,b);
+        }
+
         public ServletContext getServletContext() {
             return null;
         }
