@@ -9,9 +9,35 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-jdbc</artifactId>
   <name>citrus-jdbc</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-jdbc-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-jdbc-message.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
@@ -19,12 +45,6 @@
       <artifactId>citrus-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.consol.citrus.model</groupId>
-      <artifactId>citrus-model-jdbc</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-db-server</artifactId>

@@ -9,9 +9,34 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-vertx</artifactId>
   <name>citrus-vertx</name>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-vertx-config.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 
   <dependencies>
     <dependency>
@@ -19,11 +44,7 @@
       <artifactId>citrus-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.consol.citrus.model</groupId>
-      <artifactId>citrus-model-vertx</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+
     <dependency>
       <groupId>io.vertx</groupId>
       <artifactId>vertx-core</artifactId>

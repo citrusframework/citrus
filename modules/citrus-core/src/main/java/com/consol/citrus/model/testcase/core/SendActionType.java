@@ -16,6 +16,8 @@
 
 package com.consol.citrus.model.testcase.core;
 
+import com.consol.citrus.model.testcase.core.SendModel;
+
 /**
  * @author Christoph Deppisch
  * @since 2.6

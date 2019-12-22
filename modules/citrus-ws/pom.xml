@@ -1,7 +1,7 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>citrus</artifactId>
     <groupId>com.consol.citrus</groupId>
@@ -9,10 +9,60 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-ws</artifactId>
   <name>citrus-ws</name>
-  
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-ws-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-ws-testcase.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>remove-duplicate-code</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${project.build.directory}/generated-sources/jaxb/com/consol/citrus/model/testcase/core</directory>
+                  <includes>
+                    <include>*.java</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
   	<!-- Citrus Internal -->
     <dependency>
@@ -20,17 +70,7 @@
   		<artifactId>citrus-core</artifactId>
   		<version>${project.version}</version>
   	</dependency>
-    <dependency>
-        <groupId>com.consol.citrus.model</groupId>
-        <artifactId>citrus-model-core</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    <dependency>
-        <groupId>com.consol.citrus.model</groupId>
-        <artifactId>citrus-model-ws</artifactId>
-        <version>${project.version}</version>
-    </dependency>
-    
+
     <dependency>
         <groupId>com.sun.xml.messaging.saaj</groupId>
         <artifactId>saaj-impl</artifactId>
@@ -39,7 +79,7 @@
         <groupId>javax.activation</groupId>
         <artifactId>activation</artifactId>
     </dependency>
-      
+
     <dependency>
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-server</artifactId>
@@ -48,7 +88,7 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-servlet</artifactId>
     </dependency>
-    
+
     <dependency>
         <groupId>commons-codec</groupId>
         <artifactId>commons-codec</artifactId>
@@ -57,7 +97,7 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
     </dependency>
-    
+
     <!-- Spring Framework -->
     <dependency>
         <groupId>org.springframework</groupId>

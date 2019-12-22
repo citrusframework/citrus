@@ -17,7 +17,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
@@ -32,8 +32,8 @@
       <name>The Apache License, Version 2.0</name>
       <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
       <distribution>manual</distribution>
-      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software 
-      (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references 
+      <comments>Citrus is published free of charge under Apache License, Version 2.0. You are allowed to use Citrus to test any kind of software
+      (also commercial applications). If you do this, we kindly ask you to tell us about it so that we can add you to our references
       list. You may also use our "Tested using Citrus" logo in your online or printed documentation.</comments>
     </license>
   </licenses>
@@ -50,7 +50,6 @@
   </ciManagement>
 
   <modules>
-    <module>modules/citrus-model</module>
     <module>modules/citrus-core</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>
@@ -131,7 +130,7 @@
     <name>ConSol Software GmbH</name>
     <url>http://www.consol.com/</url>
   </organization>
-  
+
   <mailingLists>
     <mailingList>
       <name>Project Announcements</name>
@@ -149,7 +148,7 @@
       <post>citrus-dev-l@consol.de</post>
     </mailingList>
   </mailingLists>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -287,7 +286,7 @@
         <artifactId>jsch</artifactId>
         <version>0.1.54</version>
       </dependency>
-      
+
       <dependency>
         <groupId>net.sf.jtidy</groupId>
         <artifactId>jtidy</artifactId>
@@ -409,7 +408,7 @@
         <artifactId>wsdl4j</artifactId>
         <version>1.6.3</version>
       </dependency>
-      
+
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
@@ -919,14 +918,14 @@
     </dependencies>
   </dependencyManagement>
 
-  <!-- Global dependencies -->  
+  <!-- Global dependencies -->
   <dependencies>
     <!-- Compile scope -->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
-    
+
     <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.springframework</groupId>
@@ -969,7 +968,7 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  
+
   <build>
     <pluginManagement>
       <plugins>
@@ -1220,7 +1219,14 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jaxb2-maven-plugin</artifactId>
-          <version>2.4</version>
+          <version>2.5.0</version>
+          <dependencies>
+            <dependency>
+              <groupId>xerces</groupId>
+              <artifactId>xercesImpl</artifactId>
+              <version>2.12.0</version>
+            </dependency>
+          </dependencies>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -1256,7 +1262,7 @@
         <artifactId>apache-rat-plugin</artifactId>
       </plugin>
     </plugins>
-    
+
     <extensions>
       <extension>
         <groupId>org.apache.maven.wagon</groupId>
@@ -1292,7 +1298,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>release-labs</id>
       <distributionManagement>
@@ -1315,7 +1321,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>docs-html</id>
       <build>
@@ -1487,7 +1493,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>assembly</id>
       <build>
@@ -1520,7 +1526,7 @@
         </plugins>
       </build>
     </profile>
-    
+
     <profile>
       <id>assembly-bundle</id>
       <build>

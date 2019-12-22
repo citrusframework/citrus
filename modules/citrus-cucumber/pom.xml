@@ -9,12 +9,55 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-cucumber</artifactId>
   <name>citrus-cucumber</name>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-cucumber-testcase.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>remove-duplicate-code</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <phase>generate-sources</phase>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${project.build.directory}/generated-sources/jaxb/com/consol/citrus/model/testcase/core</directory>
+                  <includes>
+                    <include>*.java</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
@@ -44,11 +87,6 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus.model</groupId>
-      <artifactId>citrus-model-cucumber</artifactId>
       <version>${project.version}</version>
     </dependency>
 

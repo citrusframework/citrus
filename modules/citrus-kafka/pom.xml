@@ -12,15 +12,37 @@
   <artifactId>citrus-kafka</artifactId>
   <name>citrus-kafka</name>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <extension>true</extension>
+          <sourceType>xmlschema</sourceType>
+          <sources>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-kafka-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-kafka-testcase.xsd</source>
+          </sources>
+          <xjbSources>
+            <xjbSource>src/main/resources/binding.xjb</xjbSource>
+          </xjbSources>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus.model</groupId>
-      <artifactId>citrus-model-kafka</artifactId>
       <version>${project.version}</version>
     </dependency>
 
