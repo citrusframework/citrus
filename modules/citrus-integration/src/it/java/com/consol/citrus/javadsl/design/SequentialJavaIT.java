@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  */
 @Test
 public class SequentialJavaIT extends TestNGCitrusTestDesigner {
-    
+
     @CitrusTest
     public void sequentialContainer() {
         sequential().actions(
@@ -39,14 +39,14 @@ public class SequentialJavaIT extends TestNGCitrusTestDesigner {
 
         sequential().actions(
             echo("Hello Citrus"),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     context.setVariable("anonymous", "anonymous");
                 }
             },
             sleep(500),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     log.info(context.getVariable("anonymous"));
@@ -63,14 +63,14 @@ public class SequentialJavaIT extends TestNGCitrusTestDesigner {
 
         sequential().actions(
             echo("Hello Citrus"),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     context.setVariable("anonymous", "anonymous");
                 }
             },
             sleep(200),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     log.info(context.getVariable("anonymous"));

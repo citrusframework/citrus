@@ -16,49 +16,54 @@
 
 package com.consol.citrus.container;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ParallelContainerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
-
 /**
  * Test action will execute nested actions in parallel. Each action is executed in a
  * separate thread. Container joins all threads and waiting for them to end successfully.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class Parallel extends AbstractActionContainer {
 
     /** Store created threads in stack */
-    private Stack<Thread> threads = new Stack<Thread>();
+    private Stack<Thread> threads = new Stack<>();
 
     /** Collect exceptions in list */
-    private List<CitrusRuntimeException> exceptions = new ArrayList<CitrusRuntimeException>();
-    
+    private List<CitrusRuntimeException> exceptions = new ArrayList<>();
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Parallel.class);
 
     /**
      * Default constructor.
      */
-    public Parallel() {
-        setName("parallel");
+    public Parallel(Builder builder) {
+        super("parallel", builder);
     }
 
     @Override
     public void doExecute(TestContext context) {
-        for (final TestAction action : actions) {
+        for (TestActionBuilder<?> actionBuilder : actions) {
+            final TestAction action = actionBuilder.build();
             Thread t = new Thread(new ActionRunner(action, context) {
                 @Override
                 public void exceptionCallback(CitrusRuntimeException e) {
                     if (exceptions.isEmpty()) {
                         setActiveAction(action);
                     }
-                    
+
                     exceptions.add(e);
                 }
             });
@@ -74,7 +79,7 @@ public class Parallel extends AbstractActionContainer {
                 log.error("Unable to join thread", e);
             }
         }
-        
+
         if (!exceptions.isEmpty()) {
             if (exceptions.size() == 1) {
                 throw exceptions.get(0);
@@ -89,11 +94,11 @@ public class Parallel extends AbstractActionContainer {
      */
     private abstract static class ActionRunner implements Runnable {
         /** Test action to execute */
-        private TestAction action;
-        
+        private final TestAction action;
+
         /** Test context */
-        private TestContext context;
-        
+        private final TestContext context;
+
         public ActionRunner(TestAction action, TestContext context) {
             this.action = action;
             this.context = context;
@@ -108,22 +113,35 @@ public class Parallel extends AbstractActionContainer {
             } catch (CitrusRuntimeException e) {
                 log.error("Parallel test action raised error", e);
                 exceptionCallback(e);
-            } catch (RuntimeException e) {
-                log.error("Parallel test action raised error", e);
-                exceptionCallback(new CitrusRuntimeException(e));
-            } catch (Exception e) {
-                log.error("Parallel test action raised error", e);
-                exceptionCallback(new CitrusRuntimeException(e));
-            } catch (AssertionError e) {
+            } catch (Exception | AssertionError e) {
                 log.error("Parallel test action raised error", e);
                 exceptionCallback(new CitrusRuntimeException(e));
             }
         }
-        
+
         /**
          * Callback for exception tracking.
          * @param exception
          */
         public abstract void exceptionCallback(CitrusRuntimeException exception);
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractTestContainerBuilder<Parallel, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder parallel() {
+            return new Builder();
+        }
+
+        @Override
+        public Parallel build() {
+            return super.build(new Parallel(this));
+        }
     }
 }

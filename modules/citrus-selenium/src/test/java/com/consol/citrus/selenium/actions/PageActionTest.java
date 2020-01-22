@@ -24,15 +24,18 @@ import com.consol.citrus.selenium.model.WebPage;
 import com.consol.citrus.selenium.pages.UserFormPage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -45,16 +48,11 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     private WebElement formElement = Mockito.mock(WebElement.class);
     private WebElement inputElement = Mockito.mock(WebElement.class);
 
-    private PageAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, formElement, inputElement);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new PageAction();
-        action.setBrowser(seleniumBrowser);
 
         when(formElement.getTagName()).thenReturn("form");
         when(formElement.isEnabled()).thenReturn(true);
@@ -71,9 +69,11 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     public void testExecutePageValidation() throws Exception {
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
-        action.setAction("validate");
-        action.setPage(new UserFormPage());
-
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("validate")
+                .page(new UserFormPage())
+                .build();
         action.execute(context);
     }
 
@@ -81,9 +81,11 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     public void testExecutePageType() throws Exception {
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
-        action.setAction("validate");
-        action.setType(UserFormPage.class.getName());
-
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("validate")
+                .type(UserFormPage.class.getName())
+                .build();
         action.execute(context);
     }
 
@@ -94,10 +96,13 @@ public class PageActionTest extends AbstractTestNGUnitTest {
         when(inputElement.getAttribute("value")).thenReturn("TestUser");
 
         UserFormPage userForm = new UserFormPage();
-        action.setAction("validate");
-        action.setValidator(validator);
-        action.setPage(userForm);
 
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("validate")
+                .page(userForm)
+                .validator(validator)
+                .build();
         action.execute(context);
 
         verify(validator).validate(userForm, seleniumBrowser, context);
@@ -105,10 +110,12 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteAction() throws Exception {
-        action.setAction("setUserName");
-        action.setArguments(Collections.singletonList("Citrus"));
-        action.setPage(new UserFormPage());
-
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("setUserName")
+                .argument("Citrus")
+                .page(new UserFormPage())
+                .build();
         action.execute(context);
 
         verify(inputElement).clear();
@@ -119,20 +126,34 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     public void testExecuteActionWithArguments() throws Exception {
         when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
 
-        action.setPage(new TestPage());
-
-        action.setAction("submit");
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("submit")
+                .page(new TestPage())
+                .build();
         action.execute(context);
 
-        action.setAction("submitWithContext");
+        action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("submitWithContext")
+                .page(new TestPage())
+                .build();
         action.execute(context);
 
-        action.setAction("submitWithArgument");
-        action.setArguments(Collections.singletonList("ok"));
+        action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("submitWithArgument")
+                .argument("ok")
+                .page(new TestPage())
+                .build();
         action.execute(context);
 
-        action.setAction("submitWithArgumentAndContext");
-        action.setArguments(Collections.singletonList("ok"));
+        action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("submitWithArgumentAndContext")
+                .argument("ok")
+                .page(new TestPage())
+                .build();
         action.execute(context);
 
         verify(formElement, times(4)).submit();
@@ -142,10 +163,12 @@ public class PageActionTest extends AbstractTestNGUnitTest {
     public void testExecuteActionNotMatchingArguments() throws Exception {
         when(webDriver.findElement(By.id("form"))).thenReturn(formElement);
 
-        action.setPage(new TestPage());
-
-        action.setAction("submit");
-        action.setArguments(Collections.singletonList("Citrus"));
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("submit")
+                .page(new TestPage())
+                .argument("Citrus")
+                .build();
         action.execute(context);
 
         verify(inputElement).clear();
@@ -156,17 +179,22 @@ public class PageActionTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testExecuteValidationFailed() throws Exception {
-        action.setAction("validate");
-        action.setPage(new UserFormPage());
-
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("validate")
+                .page(new UserFormPage())
+                .build();
         action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access page type.*")
     public void testInvalidPageType() throws Exception {
-        action.setAction("validate");
-        action.setType(UserFormPage.class.getPackage().getName() + ".UnknownPage");
 
+        PageAction action = new PageAction.Builder()
+                .browser(seleniumBrowser)
+                .action("validate")
+                .type(UserFormPage.class.getPackage().getName() + ".UnknownPage")
+                .build();
         action.execute(context);
     }
 

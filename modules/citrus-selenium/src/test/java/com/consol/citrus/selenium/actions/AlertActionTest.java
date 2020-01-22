@@ -39,16 +39,11 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
 
     private Alert alert = Mockito.mock(Alert.class);
 
-    private AlertAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, alert, locator);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new AlertAction();
-        action.setBrowser(seleniumBrowser);
 
         when(webDriver.switchTo()).thenReturn(locator);
         when(alert.getText()).thenReturn("This is a warning!");
@@ -58,6 +53,9 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     public void testExecuteAccept() throws Exception {
         when(locator.alert()).thenReturn(alert);
 
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(context);
 
         verify(alert).accept();
@@ -69,8 +67,10 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         when(webDriver.switchTo()).thenReturn(locator);
         when(locator.alert()).thenReturn(alert);
 
-        action.setAccept(false);
-
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .dismiss()
+                .build();
         action.execute(context);
 
         verify(alert).dismiss();
@@ -80,7 +80,10 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     public void testExecuteTextValidation() throws Exception {
         when(locator.alert()).thenReturn(alert);
 
-        action.setText("This is a warning!");
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .text("This is a warning!")
+                .build();
         action.execute(context);
 
         verify(alert).accept();
@@ -91,7 +94,10 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         when(locator.alert()).thenReturn(alert);
 
         context.setVariable("alertText","This is a warning!");
-        action.setText("${alertText}");
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .text("${alertText}")
+                .build();
         action.execute(context);
 
         verify(alert).accept();
@@ -101,7 +107,10 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     public void testExecuteTextValidationMatcherSupport() throws Exception {
         when(locator.alert()).thenReturn(alert);
 
-        action.setText("@startsWith('This is')@");
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .text("@startsWith('This is')@")
+                .build();
         action.execute(context);
 
         verify(alert).accept();
@@ -111,7 +120,10 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     public void testExecuteTextValidationError() throws Exception {
         when(locator.alert()).thenReturn(alert);
 
-        action.setText("This is not a warning!");
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .text("This is not a warning!")
+                .build();
         action.execute(context);
 
         verify(alert).accept();
@@ -123,6 +135,9 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
         when(webDriver.switchTo()).thenReturn(locator);
         when(locator.alert()).thenReturn(null);
 
+        AlertAction action = new AlertAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(context);
     }
 

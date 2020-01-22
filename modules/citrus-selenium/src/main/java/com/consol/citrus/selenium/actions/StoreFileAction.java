@@ -26,13 +26,15 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 public class StoreFileAction extends AbstractSeleniumAction {
 
     /** File path */
-    private String filePath;
+    private final String filePath;
 
     /**
      * Default constructor.
      */
-    public StoreFileAction() {
-        super("store-file");
+    public StoreFileAction(Builder builder) {
+        super("store-file", builder);
+
+        this.filePath = builder.filePath;
     }
 
     @Override
@@ -42,7 +44,6 @@ public class StoreFileAction extends AbstractSeleniumAction {
 
     /**
      * Gets the filePath.
-     *
      * @return
      */
     public String getFilePath() {
@@ -50,11 +51,20 @@ public class StoreFileAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the filePath.
-     *
-     * @param filePath
+     * Action builder.
      */
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
+    public static class Builder extends AbstractSeleniumAction.Builder<StoreFileAction, Builder> {
+
+        private String filePath;
+
+        public Builder filePath(String filePath) {
+            this.filePath = filePath;
+            return this;
+        }
+
+        @Override
+        public StoreFileAction build() {
+            return new StoreFileAction(this);
+        }
     }
 }

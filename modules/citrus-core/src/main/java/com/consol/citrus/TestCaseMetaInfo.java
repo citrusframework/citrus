@@ -20,7 +20,7 @@ import java.util.Date;
 
 /**
  * Test case meta information.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class TestCaseMetaInfo {
@@ -32,7 +32,7 @@ public class TestCaseMetaInfo {
 
     /** Status of testcase */
     public enum Status {DRAFT, READY_FOR_REVIEW, FINAL, DISABLED}
-    
+
     private Status status = Status.DRAFT;
 
     /** Last updated by */
@@ -74,6 +74,10 @@ public class TestCaseMetaInfo {
      * @param creationDate the creationDate to set
      */
     public void setCreationDate(Date creationDate) {
+        if (creationDate == null) {
+            return;
+        }
+
         this.creationDate = new Date(creationDate.getTime());
     }
 

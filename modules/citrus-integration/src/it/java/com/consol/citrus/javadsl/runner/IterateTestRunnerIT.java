@@ -31,30 +31,30 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
  */
 @Test
 public class IterateTestRunnerIT extends TestNGCitrusTestRunner {
-    
+
     @CitrusTest
     public void iterateContainer() {
         variable("max", "3");
-        
+
         iterate().condition("i lt= citrus:randomNumber(1)").index("i")
                 .actions(echo("index is: ${i}"));
 
         iterate().condition(lessThanOrEqualTo(20)).actions(echo("index is: ${i}"));
 
         iterate().condition((index, context) -> index < 20).actions(echo("index is: ${i}"));
-        
+
         iterate().condition("i lt 20").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         iterate().condition("(i lt 5) or (i = 5)").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         iterate().condition("(i lt 5) and (i lt 3)").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         iterate().condition("i = 0").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         iterate().condition("${max} gt= i").index("i")
                 .actions(echo("index is: ${i}"));
 
@@ -76,7 +76,7 @@ public class IterateTestRunnerIT extends TestNGCitrusTestRunner {
         };
 
         iterate().condition("i lt 5").index("i")
-                .actions(createVariable("index", "${i}"), anonymous);
+                .actions(createVariable("index", "${i}"), () -> anonymous);
     }
 
     @CitrusTest

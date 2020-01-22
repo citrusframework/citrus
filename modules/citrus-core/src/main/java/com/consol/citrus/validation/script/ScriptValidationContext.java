@@ -16,6 +16,9 @@
 
 package com.consol.citrus.validation.script;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -23,13 +26,10 @@ import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 /**
- * Basic script validation context providing the validation code either from file resource or 
+ * Basic script validation context providing the validation code either from file resource or
  * from direct script string.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class ScriptValidationContext extends DefaultValidationContext {
@@ -39,23 +39,23 @@ public class ScriptValidationContext extends DefaultValidationContext {
 
     /** Charset applied to script resource */
     private String validationScriptResourceCharset = Citrus.CITRUS_FILE_ENCODING;
-    
+
     /** Validation script code */
     private String validationScript = "";
-    
+
     /** Type indicating which type of script we use (e.g. groovy, scala etc.) */
     private String scriptType = ScriptTypes.GROOVY;
 
     /** The message type this context was built for */
-    private final String messageType;
-    
+    private String messageType;
+
     /**
      * Default constructor.
      */
     public ScriptValidationContext(String messageType) {
         this.messageType = messageType;
     }
-    
+
     /**
      * Constructor using type field.
      * @param scriptType
@@ -141,6 +141,15 @@ public class ScriptValidationContext extends DefaultValidationContext {
      */
     public String getMessageType() {
         return messageType;
+    }
+
+
+    /**
+     * Specifies the messageType.
+     * @param messageType
+     */
+    public void setMessageType(String messageType) {
+        this.messageType = messageType;
     }
 
     /**

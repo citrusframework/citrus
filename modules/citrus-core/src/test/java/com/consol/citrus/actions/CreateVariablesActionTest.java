@@ -16,131 +16,124 @@
 
 package com.consol.citrus.actions;
 
-import java.util.*;
-
 import javax.script.ScriptException;
-
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 public class CreateVariablesActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
 	public void testCreateSingleVariable() {
-		CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-		Map<String, String> variables = Collections.singletonMap("myVariable", "value");
-		createVariablesAction.setVariables(variables);
-		
+		CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder().variable("myVariable", "value").build();
+
 		createVariablesAction.execute(context);
-		
+
 		Assert.assertNotNull(context.getVariable("${myVariable}"));
 		Assert.assertTrue(context.getVariable("${myVariable}").equals("value"));
 	}
-	
+
 	@Test
     public void testCreateVariables() {
-        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = new HashMap<String, String>();
-        variables.put("myVariable", "value1");
-        variables.put("anotherVariable", "value2");
-        
-        createVariablesAction.setVariables(variables);
-        
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "value1")
+                .variable("anotherVariable", "value2")
+                .build();
+
         createVariablesAction.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${myVariable}"));
         Assert.assertTrue(context.getVariable("${myVariable}").equals("value1"));
         Assert.assertNotNull(context.getVariable("${anotherVariable}"));
         Assert.assertTrue(context.getVariable("${anotherVariable}").equals("value2"));
     }
-	
+
 	@Test
     public void testOverwriteVariables() {
 	    context.setVariable("myVariable", "initialValue");
-	    
-	    CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = Collections.singletonMap("myVariable", "newValue");
-        createVariablesAction.setVariables(variables);
-        
+
+	    CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "newValue")
+                .build();
+
         createVariablesAction.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${myVariable}"));
         Assert.assertTrue(context.getVariable("${myVariable}").equals("newValue"));
     }
-	
+
 	@Test
     public void testCreateSingleVariableWithFunctionValue() {
-        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = Collections.singletonMap("myVariable", "citrus:concat('Hello ', 'Citrus')");
-        createVariablesAction.setVariables(variables);
-        
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "citrus:concat('Hello ', 'Citrus')")
+                .build();
+
         createVariablesAction.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${myVariable}"));
         Assert.assertTrue(context.getVariable("${myVariable}").equals("Hello Citrus"));
     }
-	
+
 	@Test
     public void testCreateVariableFromScript() {
-        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<groovy>5+5");
-        createVariablesAction.setVariables(variables);
-        
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "script:<groovy>5+5")
+                .build();
+
         createVariablesAction.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${myVariable}"));
         Assert.assertTrue(context.getVariable("${myVariable}").equals("10"));
     }
-	
+
 	@Test
     public void testCreateVariableFromScriptVariableSupport() {
-        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<groovy>${number}+${number}");
-        createVariablesAction.setVariables(variables);
-        
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "script:<groovy>${number}+${number}")
+                .build();
+
         context.setVariable("number", "5");
-        
+
         createVariablesAction.execute(context);
-        
+
         Assert.assertNotNull(context.getVariable("${myVariable}"));
         Assert.assertTrue(context.getVariable("${myVariable}").equals("10"));
     }
-	
+
 	@Test
     public void testCreateVariableFromScriptInvalidScriptEngine() {
-        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<invalidScriptEngine>5+5");
-        createVariablesAction.setVariables(variables);
-        
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "script:<invalidScriptEngine>5+5")
+                .build();
+
         try {
             createVariablesAction.execute(context);
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().contains("invalidScriptEngine"));
             return;
         }
-        
+
         Assert.fail("Missing CitrusRuntimeException because of invalid script engine");
     }
-	
+
     @Test
     public void testInvalidScript() {
-        CreateVariablesAction createVariablesAction = new CreateVariablesAction();
-        Map<String, String> variables = Collections.singletonMap("myVariable", "script:<groovy>a");
-        createVariablesAction.setVariables(variables);
-        
+        CreateVariablesAction createVariablesAction = new CreateVariablesAction.Builder()
+                .variable("myVariable", "script:<groovy>a")
+                .build();
+
         try {
             createVariablesAction.execute(context);
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof ScriptException);
             return;
         }
-        
+
         Assert.fail("Missing CitrusRuntimeException because of invalid groovy script");
     }
 }

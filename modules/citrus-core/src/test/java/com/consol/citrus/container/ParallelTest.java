@@ -16,17 +16,20 @@
 
 package com.consol.citrus.container;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.TestAction;
-import com.consol.citrus.actions.*;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -38,7 +41,7 @@ public class ParallelTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSingleAction() {
-        Parallel parallelAction = new Parallel();
+        Parallel parallelAction = new Parallel.Builder().build();
 
         reset(action);
 
@@ -51,17 +54,17 @@ public class ParallelTest extends AbstractTestNGUnitTest {
 
         verify(action).execute(context);
     }
-    
+
     @Test
     public void testParallelMultipleActions() {
-        Parallel parallelAction = new Parallel();
-        
+        Parallel parallelAction = new Parallel.Builder().build();
+
         reset(action);
 
         List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new EchoAction());
+        actionList.add(new EchoAction.Builder().build());
         actionList.add(action);
-        actionList.add(new EchoAction());
+        actionList.add(new EchoAction.Builder().build());
 
         parallelAction.setActions(actionList);
 
@@ -69,76 +72,77 @@ public class ParallelTest extends AbstractTestNGUnitTest {
 
         verify(action).execute(context);
     }
-    
+
     @Test
     public void testParallelActions() {
-        Parallel parallelAction = new Parallel();
-        
+        Parallel parallelAction = new Parallel.Builder().build();
+
         List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new EchoAction());
-        actionList.add(new EchoAction());
-        actionList.add(new EchoAction());
-        
-        SleepAction sleep = new SleepAction();
-        sleep.setMilliseconds("300");
+        actionList.add(new EchoAction.Builder().build());
+        actionList.add(new EchoAction.Builder().build());
+        actionList.add(new EchoAction.Builder().build());
+
+        SleepAction sleep = new SleepAction.Builder()
+                .milliseconds(300L)
+                .build();
         actionList.add(sleep);
-        
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testOneActionThatIsFailing() {
-        Parallel parallelAction = new Parallel();
-        
+        Parallel parallelAction = new Parallel.Builder().build();
+
         List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new FailAction());
-        
+        actionList.add(new FailAction.Builder().build());
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testOnlyActionFailingActions() {
-        Parallel parallelAction = new Parallel();
-        
+        Parallel parallelAction = new Parallel.Builder().build();
+
         List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new FailAction());
-        actionList.add(new FailAction());
-        actionList.add(new FailAction());
-        
+        actionList.add(new FailAction.Builder().build());
+        actionList.add(new FailAction.Builder().build());
+        actionList.add(new FailAction.Builder().build());
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testSingleFailingAction() {
-        Parallel parallelAction = new Parallel();
-        
+        Parallel parallelAction = new Parallel.Builder().build();
+
         List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new EchoAction());
-        actionList.add(new FailAction());
-        actionList.add(new EchoAction());
-        
+        actionList.add(new EchoAction.Builder().build());
+        actionList.add(new FailAction.Builder().build());
+        actionList.add(new EchoAction.Builder().build());
+
         parallelAction.setActions(actionList);
-        
+
         parallelAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testSomeFailingActions() {
-        Parallel parallelAction = new Parallel();
-        
+        Parallel parallelAction = new Parallel.Builder().build();
+
         reset(action);
 
         List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new EchoAction());
-        actionList.add(new FailAction());
+        actionList.add(new EchoAction.Builder().build());
+        actionList.add(new FailAction.Builder().build());
         actionList.add(action);
-        actionList.add(new FailAction());
+        actionList.add(new FailAction.Builder().build());
 
         parallelAction.setActions(actionList);
 

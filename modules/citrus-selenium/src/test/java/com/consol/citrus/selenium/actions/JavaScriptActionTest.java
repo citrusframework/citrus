@@ -16,6 +16,9 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
@@ -26,11 +29,10 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-import java.util.List;
-
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -41,23 +43,21 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
 
-    private JavaScriptAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new JavaScriptAction();
-        action.setBrowser(seleniumBrowser);
     }
 
     @Test
     public void testExecute() throws Exception {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
-        action.setScript("alert('Hello')");
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("alert('Hello')")
+                .build();
         action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
@@ -72,7 +72,10 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable("text", "Hello");
 
-        action.setScript("alert('${text}')");
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("alert('${text}')")
+                .build();
         action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
@@ -85,8 +88,11 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     public void testExecuteWithErrorValidation() throws Exception {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.singletonList("This went totally wrong!"));
 
-        action.setScript("alert('Hello')");
-        action.setExpectedErrors(Collections.singletonList("This went totally wrong!"));
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("alert('Hello')")
+                .errors("This went totally wrong!")
+                .build();
         action.execute(context);
 
         Assert.assertNotNull(context.getVariableObject(SeleniumHeaders.SELENIUM_JS_ERRORS));
@@ -99,8 +105,11 @@ public class JavaScriptActionTest extends AbstractTestNGUnitTest {
     public void testExecuteWithErrorValidationFailed() throws Exception {
         when(webDriver.executeScript(eq("return window._selenide_jsErrors"))).thenReturn(Collections.emptyList());
 
-        action.setScript("alert('Hello')");
-        action.setExpectedErrors(Collections.singletonList("This went totally wrong!"));
+        JavaScriptAction action =  new JavaScriptAction.Builder()
+                .browser(seleniumBrowser)
+                .script("alert('Hello')")
+                .errors("This went totally wrong!")
+                .build();
         action.execute(context);
     }
 

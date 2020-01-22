@@ -16,16 +16,18 @@
 
 package com.consol.citrus.container;
 
+import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.util.StringUtils;
-
-import java.util.TimerTask;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Martin Maher
@@ -39,18 +41,24 @@ public class Timer extends AbstractActionContainer implements StopTimer {
 
     protected static final String INDEX_SUFFIX = "-index";
 
-    private long interval = 1000L;
-    private long delay = 0L;
-    private int repeatCount = Integer.MAX_VALUE;
-    private boolean fork = false;
-    private String timerId;
+    private final long interval;
+    private final long delay;
+    private final int repeatCount;
+    private final boolean fork;
+    private final String timerId;
 
     protected boolean timerComplete = false;
     protected CitrusRuntimeException timerException = null;
     private java.util.Timer timer;
 
-    public Timer() {
-        setName("timer");
+    public Timer(Builder builder) {
+        super("timer", builder);
+
+        this.interval = builder.interval;
+        this.delay = builder.delay;
+        this.repeatCount = builder.repeatCount;
+        this.fork = builder.fork;
+        this.timerId = builder.timerId;
     }
 
     @Override
@@ -82,7 +90,8 @@ public class Timer extends AbstractActionContainer implements StopTimer {
                     updateIndexCountInTestContext(context);
                     log.debug(String.format("Timer event fired #%s - executing nested actions", indexCount));
 
-                    for (TestAction action : actions) {
+                    for (TestActionBuilder<?> actionBuilder : actions)  {
+                        TestAction action = actionBuilder.build();
                         setActiveAction(action);
                         action.execute(context);
                     }
@@ -129,9 +138,6 @@ public class Timer extends AbstractActionContainer implements StopTimer {
     }
 
     public String getTimerId() {
-        if (StringUtils.isEmpty(timerId)) {
-            timerId = "citrus-timer-" + serialNumber();
-        }
         return timerId;
     }
 
@@ -149,35 +155,95 @@ public class Timer extends AbstractActionContainer implements StopTimer {
         return interval;
     }
 
-    public void setInterval(long interval) {
-        this.interval = interval;
-    }
-
     public long getDelay() {
         return delay;
-    }
-
-    public void setDelay(long delay) {
-        this.delay = delay;
     }
 
     public int getRepeatCount() {
         return repeatCount;
     }
 
-    public void setRepeatCount(int repeatCount) {
-        this.repeatCount = repeatCount;
-    }
-
-    public void setTimerId(String timerId) {
-        this.timerId = timerId;
-    }
-
     public boolean isFork() {
         return fork;
     }
 
-    public void setFork(boolean fork) {
-        this.fork = fork;
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractTestContainerBuilder<Timer, Builder> {
+
+        private long interval = 1000L;
+        private long delay = 0L;
+        private int repeatCount = Integer.MAX_VALUE;
+        private boolean fork = false;
+        private String timerId;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder timer() {
+            return new Builder();
+        }
+
+        /**
+         * Initial delay in milliseconds before first timer event should fire.
+         *
+         * @param delay
+         */
+        public Builder delay(long delay) {
+            this.delay = delay;
+            return this;
+        }
+
+        /**
+         * Interval in milliseconds between each timer. As soon as the interval has elapsed the next timer event is fired.
+         *
+         * @param interval
+         */
+        public Builder interval(long interval) {
+            this.interval = interval;
+            return this;
+        }
+
+        /**
+         * The maximum number of times the timer event is fired. Once this maximum number has been reached the timer is
+         * stopped
+         *
+         * @param repeatCount
+         */
+        public Builder repeatCount(int repeatCount) {
+            this.repeatCount = repeatCount;
+            return this;
+        }
+
+        /**
+         * Fork the timer so that other actions can run in parallel to the nested timer actions
+         *
+         * @param fork
+         */
+        public Builder fork(boolean fork) {
+            this.fork = fork;
+            return this;
+        }
+
+        /**
+         * Set the timer's id. This is useful when referencing the timer from other test actions like stop-timer
+         *
+         * @param timerId a unique timer id within the test context
+         */
+        public Builder timerId(String timerId) {
+            this.timerId = timerId;
+            return this;
+        }
+
+        @Override
+        public Timer build() {
+            if (StringUtils.isEmpty(timerId)) {
+                timerId = "citrus-timer-" + serialNumber();
+            }
+
+            return super.build(new Timer(this));
+        }
     }
 }

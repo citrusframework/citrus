@@ -16,27 +16,24 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.StopTimeAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.StopTimeAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
  * Bean definition parser for time action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class StopTimeActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopTimeAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopTimeActionFactoryBean.class);
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("id"), "id");
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("suffix"), "suffix");
@@ -44,5 +41,48 @@ public class StopTimeActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, beanDefinition);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class StopTimeActionFactoryBean extends AbstractTestActionFactoryBean<StopTimeAction, StopTimeAction.Builder> {
+
+        private final StopTimeAction.Builder builder = new StopTimeAction.Builder();
+
+        /**
+         * Setter for timeline id.
+         * @param id
+         */
+        public void setId(String id) {
+            builder.id(id);
+        }
+
+        /**
+         * Sets the suffix.
+         * @param suffix
+         */
+        public void setSuffix(String suffix) {
+            builder.suffix(suffix);
+        }
+
+        @Override
+        public StopTimeAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StopTimeAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StopTimeAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

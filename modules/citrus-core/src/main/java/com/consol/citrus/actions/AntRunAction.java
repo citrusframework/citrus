@@ -16,81 +16,95 @@
 
 package com.consol.citrus.actions;
 
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Stack;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.apache.tools.ant.*;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.DefaultLogger;
+import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Stack;
-
 /**
  * Action calls Apache ANT with given build file and runs ANT targets
  * as separate build. User can set and overwrite properties for the build.
- * 
+ *
  * Build logging output is forwarded to test run logger.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.3
  */
 public class AntRunAction extends AbstractTestAction {
 
     /** The build.xml file path */
-    private String buildFilePath;
-    
+    private final String buildFilePath;
+
     /** Target to execute */
-    private String target;
-    
+    private final String target;
+
     /** Multiple targets to execute as comma separated list */
-    private String targets;
-    
+    private final String targets;
+
     /** Optional build file properties to set */
-    private Properties properties = new Properties();
-    
+    private final Properties properties;
+
     /** Optional build property file path */
-    private String propertyFilePath;
-    
+    private final String propertyFilePath;
+
     /** Custom build listener */
-    private BuildListener buildListener;
-    
+    private final BuildListener buildListener;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AntRunAction.class);
 
     /**
      * Default constructor.
+     * @param builder
      */
-    public AntRunAction() {
-        setName("antrun");
+    private AntRunAction(Builder builder) {
+        super("antrun", builder);
+
+        this.buildFilePath = builder.buildFilePath;
+        this.target = builder.target;
+        this.targets = builder.targets;
+        this.properties = builder.properties;
+        this.propertyFilePath = builder.propertyFilePath;
+        this.buildListener = builder.buildListener;
     }
 
     @Override
     public void doExecute(TestContext context) {
         Project project = new Project();
         project.init();
-        
+
         String buildFileResource = context.replaceDynamicContentInString(buildFilePath);
         try {
             ProjectHelper.configureProject(project, new PathMatchingResourcePatternResolver().getResource(buildFileResource).getFile());
-            
+
             for (Entry<Object, Object> entry : properties.entrySet()) {
                 String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
                 log.debug("Set build property: " + entry.getKey() + "=" + propertyValue);
                 project.setProperty(entry.getKey().toString(), propertyValue);
             }
-            
+
             loadBuildPropertyFile(project, context);
 
             if (buildListener != null) {
                 project.addBuildListener(buildListener);
             }
-            
+
             DefaultLogger consoleLogger = new DefaultLogger() {
                 @Override
                 protected void printMessage(String message, PrintStream stream, int priority) {
@@ -101,11 +115,11 @@ public class AntRunAction extends AbstractTestAction {
                     }
                 }
             };
-            
+
             consoleLogger.setErrorPrintStream(System.err);
             consoleLogger.setOutputPrintStream(System.out);
             consoleLogger.setMessageOutputLevel(Project.MSG_DEBUG);
-            
+
             project.addBuildListener(consoleLogger);
 
             log.info("Executing ANT build: " + buildFileResource);
@@ -122,7 +136,7 @@ public class AntRunAction extends AbstractTestAction {
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to read ANT build file", e);
         }
-        
+
         log.info("Executed ANT build: " + buildFileResource);
     }
 
@@ -133,11 +147,11 @@ public class AntRunAction extends AbstractTestAction {
     private Stack<String> parseTargets() {
         Stack<String> stack = new Stack<String>();
         String[] targetTokens = targets.split(",");
-        
+
         for (String targetToken : targetTokens) {
             stack.add(targetToken.trim());
         }
-        
+
         return stack;
     }
 
@@ -153,7 +167,7 @@ public class AntRunAction extends AbstractTestAction {
             Properties fileProperties;
             try {
                 fileProperties = PropertiesLoaderUtils.loadProperties(new PathMatchingResourcePatternResolver().getResource(propertyFileResource));
-                
+
                 for (Entry<Object, Object> entry : fileProperties.entrySet()) {
                     String propertyValue = entry.getValue() != null ? context.replaceDynamicContentInString(entry.getValue().toString()) : "";
 
@@ -167,22 +181,13 @@ public class AntRunAction extends AbstractTestAction {
             }
         }
     }
-    
+
     /**
      * Gets the buildFilePath.
      * @return the buildFilePath the buildFilePath to get.
      */
     public String getBuildFilePath() {
         return buildFilePath;
-    }
-
-    /**
-     * Sets the buildFilePath.
-     * @param buildFilePath the buildFilePath to set
-     */
-    public AntRunAction setBuildFilePath(String buildFilePath) {
-        this.buildFilePath = buildFilePath;
-        return this;
     }
 
     /**
@@ -194,29 +199,11 @@ public class AntRunAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the target.
-     * @param target the target to set
-     */
-    public AntRunAction setTarget(String target) {
-        this.target = target;
-        return this;
-    }
-
-    /**
      * Gets the targets.
      * @return the targets the targets to get.
      */
     public String getTargets() {
         return targets;
-    }
-
-    /**
-     * Sets the targets.
-     * @param targets the targets to set
-     */
-    public AntRunAction setTargets(String targets) {
-        this.targets = targets;
-        return this;
     }
 
     /**
@@ -228,29 +215,11 @@ public class AntRunAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the properties.
-     * @param properties the properties to set
-     */
-    public AntRunAction setProperties(Properties properties) {
-        this.properties = properties;
-        return this;
-    }
-
-    /**
      * Gets the propertyFilePath.
      * @return the propertyFilePath the propertyFilePath to get.
      */
     public String getPropertyFilePath() {
         return propertyFilePath;
-    }
-
-    /**
-     * Sets the propertyFilePath.
-     * @param propertyFilePath the propertyFilePath to set
-     */
-    public AntRunAction setPropertyFilePath(String propertyFilePath) {
-        this.propertyFilePath = propertyFilePath;
-        return this;
     }
 
     /**
@@ -262,12 +231,92 @@ public class AntRunAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the buildListener.
-     * @param buildListener the buildListener to set
+     * Action builder.
      */
-    public AntRunAction setBuildListener(BuildListener buildListener) {
-        this.buildListener = buildListener;
-        return this;
+    public static final class Builder extends AbstractTestActionBuilder<AntRunAction, Builder> {
+
+        private String buildFilePath;
+        private String target;
+        private String targets;
+        private Properties properties = new Properties();
+        private String propertyFilePath;
+        private BuildListener buildListener;
+
+        public static Builder antrun(String buildFilePath) {
+            Builder builder = new Builder();
+            builder.buildFilePath(buildFilePath);
+            return builder;
+        }
+
+        /**
+         * Sets the build file path.
+         * @param buildFilePath
+         * @return
+         */
+        public Builder buildFilePath(String buildFilePath) {
+            this.buildFilePath = buildFilePath;
+            return this;
+        }
+
+        /**
+         * Build target name to call.
+         * @param target
+         */
+        public Builder target(String target) {
+            this.target = target;
+            return this;
+        }
+
+        /**
+         * Multiple build target names to call.
+         * @param targets
+         */
+        public Builder targets(String ... targets) {
+            this.targets = StringUtils.collectionToCommaDelimitedString(Arrays.asList(targets));
+            return this;
+        }
+
+        /**
+         * Adds a build property by name and value.
+         * @param name
+         * @param value
+         */
+        public Builder property(String name, Object value) {
+            this.properties.put(name, value);
+            return this;
+        }
+
+        /**
+         * Adds build properties.
+         * @param properties
+         */
+        public Builder properties(Properties properties) {
+            this.properties.putAll(properties);
+            return this;
+        }
+
+        /**
+         * Adds a build property file reference by file path.
+         * @param filePath
+         */
+        public Builder propertyFile(String filePath) {
+            this.propertyFilePath = filePath;
+            return this;
+        }
+
+        /**
+         * Adds custom build listener implementation.
+         * @param buildListener
+         */
+        public Builder listener(BuildListener buildListener) {
+            this.buildListener = buildListener;
+            return this;
+        }
+
+        @Override
+        public AntRunAction build() {
+            return new AntRunAction(this);
+        }
     }
 
 }

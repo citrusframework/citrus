@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
@@ -27,13 +29,13 @@ import com.consol.citrus.actions.SleepAction;
  * @author Christoph Deppisch
  */
 public class SleepTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testSleepBuilder() {
         MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
             @Override
             public void configure() {
-                sleep(0.5);
+                sleep(0.25);
                 sleep(500);
             }
         };
@@ -44,15 +46,15 @@ public class SleepTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), SleepAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), SleepAction.class);
-        
+
         SleepAction action = (SleepAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sleep");
-        Assert.assertEquals(action.getSeconds(), "0.5");
-        Assert.assertEquals(action.getMilliseconds(), "5000");
+        Assert.assertEquals(action.getTime(), "250");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
 
         action = (SleepAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "sleep");
-        Assert.assertNull(action.getSeconds());
-        Assert.assertEquals(action.getMilliseconds(), "500");
+        Assert.assertEquals(action.getTime(), "500");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
     }
 }

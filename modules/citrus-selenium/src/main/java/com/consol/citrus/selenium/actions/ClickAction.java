@@ -31,8 +31,8 @@ public class ClickAction extends FindElementAction {
     /**
      * Default constructor.
      */
-    public ClickAction() {
-        super("click");
+    public ClickAction(Builder builder) {
+        super("click", builder);
     }
 
     @Override
@@ -40,5 +40,16 @@ public class ClickAction extends FindElementAction {
         super.execute(webElement, browser, context);
 
         webElement.click();
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends ElementActionBuilder<ClickAction, Builder> {
+
+        @Override
+        public ClickAction build() {
+            return new ClickAction(this);
+        }
     }
 }

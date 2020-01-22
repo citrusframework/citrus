@@ -16,27 +16,76 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.*;
-import com.consol.citrus.actions.*;
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.design.*;
-import com.consol.citrus.dsl.simulation.TestSimulator;
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.junit.CitrusJUnit4Runner;
-import com.consol.citrus.server.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.io.Resource;
-import org.springframework.util.ReflectionUtils;
-
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
+
+import com.consol.citrus.AbstractTestContainerBuilder;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.TestActionContainerBuilder;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.TestResult;
+import com.consol.citrus.actions.AntRunAction;
+import com.consol.citrus.actions.CreateVariablesAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.actions.InputAction;
+import com.consol.citrus.actions.JavaAction;
+import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.actions.PurgeEndpointAction;
+import com.consol.citrus.actions.PurgeMessageChannelAction;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.StartServerAction;
+import com.consol.citrus.actions.StopServerAction;
+import com.consol.citrus.actions.StopTimeAction;
+import com.consol.citrus.actions.StopTimerAction;
+import com.consol.citrus.actions.TraceVariablesAction;
+import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.Assert;
+import com.consol.citrus.container.Async;
+import com.consol.citrus.container.Catch;
+import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import com.consol.citrus.container.RepeatUntilTrue;
+import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.Template;
+import com.consol.citrus.container.Timer;
+import com.consol.citrus.container.Wait;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
+import com.consol.citrus.container.FinallySequence;
+import com.consol.citrus.dsl.design.ApplyTestBehaviorAction;
+import com.consol.citrus.dsl.design.DefaultTestDesigner;
+import com.consol.citrus.dsl.design.TestBehavior;
+import com.consol.citrus.dsl.design.TestDesigner;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.http.actions.HttpActionBuilder;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
+import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.actions.SoapActionBuilder;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * JUnit Citrus test provides Java DSL access to builder pattern methods in
@@ -45,19 +94,13 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDesigner, TestSimulator {
+public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDesigner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
     private TestDesigner testDesigner;
-
-    @Override
-    public void simulate(Method method, TestContext context, ApplicationContext applicationContext) {
-        setApplicationContext(applicationContext);
-        testDesigner = new TestDesignerSimulation(createTestDesigner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase(), applicationContext, context);
-    }
 
     @Override
     protected TestDesigner createTestDesigner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
@@ -158,282 +201,287 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public void variable(String name, Object value) {
-        testDesigner.variable(name, value);
+    public <T> T variable(String name, T value) {
+        return testDesigner.variable(name, value);
     }
 
     @Override
-    public CreateVariablesAction createVariable(String variableName, String value) {
+    public CreateVariablesAction.Builder createVariable(String variableName, String value) {
         return testDesigner.createVariable(variableName, value);
     }
 
     @Override
-    public void action(TestAction testAction) {
-        testDesigner.action(testAction);
+    public void action(TestActionBuilder<?> builder) {
+        testDesigner.action(builder);
     }
 
     @Override
-    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
+    public ApplyTestBehaviorAction.Builder applyBehavior(TestBehavior behavior) {
         return testDesigner.applyBehavior(behavior);
     }
 
     @Override
-    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+    public <T extends AbstractActionContainer, B extends AbstractTestContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
         return testDesigner.container(container);
     }
 
     @Override
-    public AntRunBuilder antrun(String buildFilePath) {
+    public <T extends TestActionContainerBuilder<? extends AbstractActionContainer, ?>> T container(T container) {
+        return testDesigner.container(container);
+    }
+
+    @Override
+    public AntRunAction.Builder antrun(String buildFilePath) {
         return testDesigner.antrun(buildFilePath);
     }
 
     @Override
-    public EchoAction echo(String message) {
+    public EchoAction.Builder echo(String message) {
         return testDesigner.echo(message);
     }
 
     @Override
-    public ExecutePLSQLBuilder plsql(DataSource dataSource) {
+    public ExecutePLSQLAction.Builder plsql(DataSource dataSource) {
         return testDesigner.plsql(dataSource);
     }
 
     @Override
-    public ExecuteSQLBuilder sql(DataSource dataSource) {
+    public ExecuteSQLAction.Builder sql(DataSource dataSource) {
         return testDesigner.sql(dataSource);
     }
 
     @Override
-    public ExecuteSQLQueryBuilder query(DataSource dataSource) {
+    public ExecuteSQLQueryAction.Builder query(DataSource dataSource) {
         return testDesigner.query(dataSource);
     }
 
     @Override
-    public ReceiveTimeoutBuilder receiveTimeout(Endpoint messageEndpoint) {
+    public ReceiveTimeoutAction.Builder receiveTimeout(Endpoint messageEndpoint) {
         return testDesigner.receiveTimeout(messageEndpoint);
     }
 
     @Override
-    public ReceiveTimeoutBuilder receiveTimeout(String messageEndpointName) {
+    public ReceiveTimeoutAction.Builder receiveTimeout(String messageEndpointName) {
         return testDesigner.receiveTimeout(messageEndpointName);
     }
 
     @Override
-    public FailAction fail(String message) {
+    public FailAction.Builder fail(String message) {
         return testDesigner.fail(message);
     }
 
     @Override
-    public InputActionBuilder input() {
+    public InputAction.Builder input() {
         return testDesigner.input();
     }
 
     @Override
-    public JavaActionBuilder java(String className) {
+    public JavaAction.Builder java(String className) {
         return testDesigner.java(className);
     }
 
     @Override
-    public JavaActionBuilder java(Class<?> clazz) {
+    public JavaAction.Builder java(Class<?> clazz) {
         return testDesigner.java(clazz);
     }
 
     @Override
-    public JavaActionBuilder java(Object instance) {
+    public JavaAction.Builder java(Object instance) {
         return testDesigner.java(instance);
     }
 
     @Override
-    public LoadPropertiesAction load(String filePath) {
+    public LoadPropertiesAction.Builder load(String filePath) {
         return testDesigner.load(filePath);
     }
 
     @Override
-    public PurgeJmsQueuesBuilder purgeQueues() {
+    public PurgeJmsQueuesAction.Builder purgeQueues() {
         return testDesigner.purgeQueues();
     }
 
     @Override
-    public PurgeChannelsBuilder purgeChannels() {
+    public PurgeMessageChannelAction.Builder purgeChannels() {
         return testDesigner.purgeChannels();
     }
 
     @Override
-    public PurgeEndpointsBuilder purgeEndpoints() {
+    public PurgeEndpointAction.Builder purgeEndpoints() {
         return testDesigner.purgeEndpoints();
     }
 
     @Override
-    public ReceiveMessageBuilder receive(Endpoint messageEndpoint) {
+    public ReceiveMessageAction.Builder receive(Endpoint messageEndpoint) {
         return testDesigner.receive(messageEndpoint);
     }
 
     @Override
-    public ReceiveMessageBuilder receive(String messageEndpointName) {
+    public ReceiveMessageAction.Builder receive(String messageEndpointName) {
         return testDesigner.receive(messageEndpointName);
     }
 
     @Override
-    public SendMessageBuilder send(Endpoint messageEndpoint) {
+    public SendMessageAction.Builder send(Endpoint messageEndpoint) {
         return testDesigner.send(messageEndpoint);
     }
 
     @Override
-    public SendMessageBuilder send(String messageEndpointName) {
+    public SendMessageAction.Builder send(String messageEndpointName) {
         return testDesigner.send(messageEndpointName);
     }
 
     @Override
-    public SleepAction sleep() {
+    public SleepAction.Builder sleep() {
         return testDesigner.sleep();
     }
 
     @Override
-    public SleepAction sleep(long milliseconds) {
+    public SleepAction.Builder sleep(long milliseconds) {
         return testDesigner.sleep(milliseconds);
     }
 
     @Override
-    public SleepAction sleep(double seconds) {
+    public SleepAction.Builder sleep(double seconds) {
         return testDesigner.sleep(seconds);
     }
 
     @Override
-    public WaitBuilder waitFor() {
+    public Wait.Builder waitFor() {
         return testDesigner.waitFor();
     }
 
     @Override
-    public StartServerAction start(Server... servers) {
+    public StartServerAction.Builder start(Server... servers) {
         return testDesigner.start(servers);
     }
 
     @Override
-    public StartServerAction start(Server server) {
+    public StartServerAction.Builder start(Server server) {
         return testDesigner.start(server);
     }
 
     @Override
-    public StopServerAction stop(Server... servers) {
+    public StopServerAction.Builder stop(Server... servers) {
         return testDesigner.stop(servers);
     }
 
     @Override
-    public StopServerAction stop(Server server) {
+    public StopServerAction.Builder stop(Server server) {
         return testDesigner.stop(server);
     }
 
     @Override
-    public StopTimeAction stopTime() {
+    public StopTimeAction.Builder stopTime() {
         return testDesigner.stopTime();
     }
 
     @Override
-    public StopTimeAction stopTime(String id) {
+    public StopTimeAction.Builder stopTime(String id) {
         return testDesigner.stopTime(id);
     }
 
     @Override
-    public StopTimeAction stopTime(String id, String suffix) {
+    public StopTimeAction.Builder stopTime(String id, String suffix) {
         return testDesigner.stopTime(id, suffix);
     }
 
     @Override
-    public TraceVariablesAction traceVariables() {
+    public TraceVariablesAction.Builder traceVariables() {
         return testDesigner.traceVariables();
     }
 
     @Override
-    public TraceVariablesAction traceVariables(String... variables) {
+    public TraceVariablesAction.Builder traceVariables(String... variables) {
         return testDesigner.traceVariables(variables);
     }
 
     @Override
-    public GroovyActionBuilder groovy(String script) {
+    public GroovyAction.Builder groovy(String script) {
         return testDesigner.groovy(script);
     }
 
     @Override
-    public GroovyActionBuilder groovy(Resource scriptResource) {
+    public GroovyAction.Builder groovy(Resource scriptResource) {
         return testDesigner.groovy(scriptResource);
     }
 
     @Override
-    public TransformActionBuilder transform() {
+    public TransformAction.Builder transform() {
         return testDesigner.transform();
     }
 
     @Override
-    public AssertExceptionBuilder assertException() {
+    public Assert.Builder assertException() {
         return testDesigner.assertException();
     }
 
     @Override
-    public CatchExceptionBuilder catchException() {
+    public Catch.Builder catchException() {
         return testDesigner.catchException();
     }
 
     @Override
-    public AssertSoapFaultBuilder assertSoapFault() {
+    public AssertSoapFault.Builder assertSoapFault() {
         return testDesigner.assertSoapFault();
     }
 
     @Override
-    public ConditionalBuilder conditional() {
+    public Conditional.Builder conditional() {
         return testDesigner.conditional();
     }
 
     @Override
-    public IterateBuilder iterate() {
+    public Iterate.Builder iterate() {
         return testDesigner.iterate();
     }
 
     @Override
-    public ParallelBuilder parallel() {
+    public Parallel.Builder parallel() {
         return testDesigner.parallel();
     }
 
     @Override
-    public RepeatOnErrorBuilder repeatOnError() {
+    public RepeatOnErrorUntilTrue.Builder repeatOnError() {
         return testDesigner.repeatOnError();
     }
 
     @Override
-    public RepeatBuilder repeat() {
+    public RepeatUntilTrue.Builder repeat() {
         return testDesigner.repeat();
     }
 
     @Override
-    public SequenceBuilder sequential() {
+    public Sequence.Builder sequential() {
         return testDesigner.sequential();
     }
 
     @Override
-    public AsyncBuilder async() {
+    public Async.Builder async() {
         return testDesigner.async();
     }
 
     @Override
-    public StopTimerAction stopTimer(String timerId) {
+    public StopTimerAction.Builder stopTimer(String timerId) {
         return testDesigner.stopTimer(timerId);
     }
 
     @Override
-    public StopTimerAction stopTimers() {
+    public StopTimerAction.Builder stopTimers() {
         return testDesigner.stopTimers();
     }
 
     @Override
-    public TimerBuilder timer() {
+    public Timer.Builder timer() {
         return testDesigner.timer();
     }
 
     @Override
-    public DockerActionBuilder docker() {
+    public DockerExecuteAction.Builder docker() {
         return testDesigner.docker();
     }
 
     @Override
-    public KubernetesActionBuilder kubernetes() {
+    public KubernetesExecuteAction.Builder kubernetes() {
         return testDesigner.kubernetes();
     }
 
@@ -458,17 +506,17 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public ZooActionBuilder zookeeper() {
+    public ZooExecuteAction.Builder zookeeper() {
         return testDesigner.zookeeper();
     }
 
     @Override
-    public TemplateBuilder applyTemplate(String name) {
+    public Template.Builder applyTemplate(String name) {
         return testDesigner.applyTemplate(name);
     }
 
     @Override
-    public FinallySequenceBuilder doFinally() {
+    public FinallySequence.Builder doFinally() {
         return testDesigner.doFinally();
     }
 

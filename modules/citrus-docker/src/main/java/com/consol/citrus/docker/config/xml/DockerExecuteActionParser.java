@@ -17,10 +17,16 @@
 package com.consol.citrus.docker.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.DockerCommand;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -31,23 +37,23 @@ import org.w3c.dom.Node;
 
 /**
  * Bean definition parser for docker client action in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
 public class DockerExecuteActionParser implements BeanDefinitionParser {
 
     /** Docker command to execute */
-    private Class<? extends DockerCommand> commandType;
-    private Class<? extends DockerCommand> imageCommandType;
-    private Class<? extends DockerCommand> containerCommandType;
+    private Class<? extends DockerCommand<?>> commandType;
+    private Class<? extends DockerCommand<?>> imageCommandType;
+    private Class<? extends DockerCommand<?>> containerCommandType;
 
     /**
      * Constructor using docker command variations for image and container.
      * @param imageCommandType
      * @param containerCommandType
      */
-    public DockerExecuteActionParser(Class<? extends DockerCommand> imageCommandType, Class<? extends DockerCommand> containerCommandType) {
+    public DockerExecuteActionParser(Class<? extends DockerCommand<?>> imageCommandType, Class<? extends DockerCommand<?>> containerCommandType) {
         this.imageCommandType = imageCommandType;
         this.containerCommandType = containerCommandType;
     }
@@ -56,14 +62,14 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
      * Constructor using docker command.
      * @param commandType
      */
-    public DockerExecuteActionParser(Class<? extends DockerCommand> commandType) {
+    public DockerExecuteActionParser(Class<? extends DockerCommand<?>> commandType) {
         this.commandType = commandType;
     }
 
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(DockerExecuteAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(DockerExecuteActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("docker-client"), "dockerClient");
@@ -107,11 +113,87 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
      * @param commandType
      * @return
      */
-    private DockerCommand createCommand(Class<? extends DockerCommand> commandType) {
+    private DockerCommand<?> createCommand(Class<? extends DockerCommand<?>> commandType) {
         try {
             return commandType.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BeanCreationException("Failed to create Docker command of type: " + commandType, e);
+        }
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class DockerExecuteActionFactoryBean extends AbstractTestActionFactoryBean<DockerExecuteAction, DockerExecuteAction.Builder> {
+
+        private final DockerExecuteAction.Builder builder = new DockerExecuteAction.Builder();
+
+        @Autowired(required = false)
+        @Qualifier("dockerClient")
+        private DockerClient dockerClient;
+
+        @Autowired(required = false)
+        @Qualifier("dockerCommandResultMapper")
+        private ObjectMapper jsonMapper;
+
+        @Autowired(required = false)
+        private JsonTextMessageValidator jsonTextMessageValidator;
+
+        /**
+         * Sets docker command to execute.
+         * @param command
+         * @return
+         */
+        public void setCommand(DockerCommand<?> command) {
+            builder.command(command);
+        }
+
+        /**
+         * Sets the docker client.
+         * @param dockerClient
+         */
+        public void setDockerClient(DockerClient dockerClient) {
+            this.dockerClient = dockerClient;
+            builder.client(dockerClient);
+        }
+
+        /**
+         * Sets the expected command result data.
+         * @param expectedCommandResult
+         */
+        public void setExpectedCommandResult(String expectedCommandResult) {
+            builder.result(expectedCommandResult);
+        }
+
+        @Override
+        public DockerExecuteAction getObject() throws Exception {
+            if (dockerClient != null) {
+                builder.client(dockerClient);
+            }
+
+            if (jsonTextMessageValidator != null) {
+                builder.validator(jsonTextMessageValidator);
+            }
+
+            if (jsonMapper != null) {
+                builder.mapper(jsonMapper);
+            }
+
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return DockerExecuteAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public DockerExecuteAction.Builder getBuilder() {
+            return builder;
         }
     }
 }

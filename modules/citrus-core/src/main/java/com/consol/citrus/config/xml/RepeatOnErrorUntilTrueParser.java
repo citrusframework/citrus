@@ -16,29 +16,60 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.container.RepeatOnErrorUntilTrue;
-
 /**
  * Bean definition parser for repeat-on-error-until-true container in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrueParser extends AbstractIterationTestActionParser {
 
-    /**
-     * @see com.consol.citrus.config.xml.AbstractIterationTestActionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
     @Override
 	public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(RepeatOnErrorUntilTrue.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(RepeatOnErrorUntilTrueFactoryBean.class);
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("auto-sleep"), "autoSleep");
 
         return builder;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class RepeatOnErrorUntilTrueFactoryBean extends AbstractIteratingTestContainerFactoryBean<RepeatOnErrorUntilTrue, RepeatOnErrorUntilTrue.Builder> {
+
+        private final RepeatOnErrorUntilTrue.Builder builder = new RepeatOnErrorUntilTrue.Builder();
+
+        /**
+         * Setter for auto sleep time (in milliseconds).
+         * @param autoSleep
+         */
+        public void setAutoSleep(Long autoSleep) {
+            this.builder.autoSleep(autoSleep);
+        }
+
+        @Override
+        public RepeatOnErrorUntilTrue getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return RepeatOnErrorUntilTrue.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public RepeatOnErrorUntilTrue.Builder getBuilder() {
+            return builder;
+        }
     }
 }

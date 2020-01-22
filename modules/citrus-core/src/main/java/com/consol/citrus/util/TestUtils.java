@@ -16,7 +16,20 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.*;
+import javax.xml.parsers.SAXParserFactory;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import com.consol.citrus.Completable;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -25,17 +38,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.xml.sax.*;
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.Locator;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.parsers.SAXParserFactory;
-import java.util.*;
-import java.util.concurrent.*;
-
 /**
- * Utility class for test cases providing several utility 
+ * Utility class for test cases providing several utility
  * methods regarding Citrus test cases.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class TestUtils {
@@ -45,7 +58,7 @@ public abstract class TestUtils {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestUtils.class);
-    
+
     /**
      * Prevent instantiation.
      */
@@ -109,15 +122,15 @@ public abstract class TestUtils {
         waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
         return waitThread;
     }
-    
+
     /**
-     * 
+     *
      * @param test
      * @return
      */
     public static List<FailureStackElement> getFailureStack(final TestCase test) {
         final List<FailureStackElement> failureStack = new ArrayList<>();
-        
+
         try {
             final String testFilePath = test.getPackageName().replace('.', '/') + "/" + test.getName();
 
@@ -125,29 +138,27 @@ public abstract class TestUtils {
             if (!testFileResource.exists()) {
                 return failureStack;
             }
-            
+
             // first check if test failed during setup
             if (test.getActiveAction() == null) {
                 failureStack.add(new FailureStackElement(testFilePath, "init", 0L));
                 // no actions were executed yet failure caused by test setup: abort
                 return failureStack;
             }
-            
+
             SAXParserFactory factory = SAXParserFactory.newInstance();
             XMLReader reader = factory.newSAXParser().getXMLReader();
-            
+
             reader.setContentHandler(new FailureStackContentHandler(failureStack, test, testFilePath));
-            
+
             reader.parse(new InputSource(testFileResource.getInputStream()));
-        } catch (RuntimeException e) {
-            log.warn("Failed to locate line numbers for failure stack trace", e);
         } catch (Exception e) {
             log.warn("Failed to locate line numbers for failure stack trace", e);
         }
-        
+
         return failureStack;
     }
-    
+
     /**
      * Special content handler responsible of filling the failure stack.
      */
@@ -173,7 +184,7 @@ public abstract class TestUtils {
          * @param test
          * @param testFilePath
          */
-        private FailureStackContentHandler(List<FailureStackElement> failureStack, 
+        private FailureStackContentHandler(List<FailureStackElement> failureStack,
                                            TestCase test,
                                            String testFilePath) {
             this.failureStack = failureStack;
@@ -185,30 +196,30 @@ public abstract class TestUtils {
         public void startElement(String uri, String localName,
                 String qName, Attributes attributes)
                 throws SAXException {
-            
+
             //start when actions element is reached
             if (qName.equals("actions")) {
                 stackFinder = new FailureStackFinder(test);
                 return;
             }
-            
+
             if (stackFinder != null && stackFinder.isFailureStackElement(qName)) {
-                failureStack.add(new FailureStackElement(testFilePath, qName, Long.valueOf(locator.getLineNumber())));
-                
-                if (stackFinder.getNestedActionContainer() != null && 
+                failureStack.add(new FailureStackElement(testFilePath, qName, (long) locator.getLineNumber()));
+
+                if (stackFinder.getNestedActionContainer() != null &&
                         stackFinder.getNestedActionContainer().getActiveAction() != null) {
                     //continue with nested action container, in order to find out which action caused the failure
                     stackFinder = new FailureStackFinder(stackFinder.getNestedActionContainer());
                 } else {
                     //stop failure stack evaluation as failure-causing action was found
                     stackFinder = null;
-                    
+
                     //now start to find ending line number
                     findLineEnding = true;
                     failedActionName = qName;
                 }
             }
-            
+
             super.startElement(uri, localName, qName, attributes);
         }
 
@@ -217,7 +228,7 @@ public abstract class TestUtils {
             if (findLineEnding && qName.equals(failedActionName)) {
                 // get last failure stack element
                 FailureStackElement failureStackElement = failureStack.get(failureStack.size()-1);
-                failureStackElement.setLineNumberEnd(Long.valueOf(locator.getLineNumber()));
+                failureStackElement.setLineNumberEnd((long) locator.getLineNumber());
                 findLineEnding = false;
             }
             super.endElement(uri, localName, qName);
@@ -230,22 +241,22 @@ public abstract class TestUtils {
     }
 
     /**
-     * Failure stack finder listens for actions in a testcase 
+     * Failure stack finder listens for actions in a testcase
      */
     private static class FailureStackFinder {
         /** Action list */
         private Stack<TestAction> actionStack = new Stack<>();
-        
+
         /** Test action we are currently working on */
         private TestAction action = null;
-        
+
         /**
          * Default constructor using fields.
          * @param container
          */
         public FailureStackFinder(TestActionContainer container) {
             int lastActionIndex = container.getActionIndex(container.getActiveAction());
-            
+
             for (int i = lastActionIndex; i >= 0; i--) {
                 actionStack.add(container.getActions().get(i));
             }
@@ -255,7 +266,7 @@ public abstract class TestUtils {
          * Checks whether the target action is reached within the action container.
          * Method counts the actions inside the action container and waits for the target index
          * to be reached.
-         * 
+         *
          * @param eventElement actual action name, can also be a nested element in the XML DOM tree so check name before evaluation
          * @return boolean flag to mark that target action is reached or not
          */
@@ -263,10 +274,10 @@ public abstract class TestUtils {
             if (action == null) {
                 action = actionStack.pop();
             }
-        
+
             /* filter method calls that actually are based on other elements within the DOM
              * tree. SAX content handler can not differ between action elements and other nested elements
-             * in startElement event. 
+             * in startElement event.
              */
             if (eventElement.equals(action.getName())) {
                 if (action instanceof TestActionContainer && !actionStack.isEmpty()) {
@@ -275,21 +286,21 @@ public abstract class TestUtils {
                         actionStack.add(container.getActions().get(i));
                     }
                 }
-                
+
                 if (!actionStack.isEmpty()) {
                     action = null;
                 }
             } else {
                 return false;
             }
-        
+
             return actionStack.isEmpty();
         }
-        
+
         /**
          * Is target action a container itself? If yes the stack evaluation should
          * continue with nested container, in order to get nested action that caused the failure.
-         * 
+         *
          * @return the nested container or null
          */
         public TestActionContainer getNestedActionContainer() {

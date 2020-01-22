@@ -16,16 +16,21 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -37,19 +42,11 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
-    private SetInputAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, element);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new SetInputAction();
-        action.setBrowser(seleniumBrowser);
-
-        action.setProperty("name");
-        action.setPropertyValue("textField");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
@@ -60,8 +57,11 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
     public void testExecute() throws Exception {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
-        action.setValue("new_value");
-
+        SetInputAction action =  new SetInputAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "textField")
+                .value("new_value")
+                .build();
         action.execute(context);
 
         verify(element).clear();
@@ -78,8 +78,11 @@ public class SetInputActionTest extends AbstractTestNGUnitTest {
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
         when(option.isSelected()).thenReturn(false);
 
-        action.setValue("option");
-
+        SetInputAction action =  new SetInputAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "textField")
+                .value("option")
+                .build();
         action.execute(context);
 
         verify(option).click();

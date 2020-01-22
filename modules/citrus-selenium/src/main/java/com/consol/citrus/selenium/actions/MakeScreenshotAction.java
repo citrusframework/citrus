@@ -16,6 +16,9 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -27,9 +30,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
@@ -37,13 +37,15 @@ import java.io.IOException;
 public class MakeScreenshotAction extends AbstractSeleniumAction {
 
     /** Storage to save screenshot to */
-    private String outputDir;
+    private final String outputDir;
 
     /**
      * Default constructor.
      */
-    public MakeScreenshotAction() {
-        super("screenshot");
+    public MakeScreenshotAction(Builder builder) {
+        super("screenshot", builder);
+
+        this.outputDir = builder.outputDir;
     }
 
     @Override
@@ -84,7 +86,6 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
 
     /**
      * Gets the outputDir.
-     *
      * @return
      */
     public String getOutputDir() {
@@ -92,11 +93,20 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the outputDir.
-     *
-     * @param outputDir
+     * Action builder.
      */
-    public void setOutputDir(String outputDir) {
-        this.outputDir = outputDir;
+    public static class Builder extends AbstractSeleniumAction.Builder<MakeScreenshotAction, Builder> {
+
+        private String outputDir;
+
+        public Builder outputDir(String outputDir) {
+            this.outputDir = outputDir;
+            return this;
+        }
+
+        @Override
+        public MakeScreenshotAction build() {
+            return new MakeScreenshotAction(this);
+        }
     }
 }

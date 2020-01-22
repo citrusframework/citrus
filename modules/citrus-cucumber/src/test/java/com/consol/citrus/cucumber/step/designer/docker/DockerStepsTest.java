@@ -17,6 +17,7 @@
 package com.consol.citrus.cucumber.step.designer.docker;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
@@ -63,9 +64,10 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("dockerClient");
         steps.createContainer("foo", "fooImage:latest");
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DockerExecuteAction);
-        DockerExecuteAction action = (DockerExecuteAction) designer.getTestCase().getTestAction(0);
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof DockerExecuteAction);
+        DockerExecuteAction action = (DockerExecuteAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getDockerClient(), dockerClient);
         Assert.assertTrue(action.getCommand() instanceof ContainerCreate);
@@ -78,9 +80,10 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("dockerClient");
         steps.buildImage("fooImage:latest", "classpath:docker/Dockerfile");
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DockerExecuteAction);
-        DockerExecuteAction action = (DockerExecuteAction) designer.getTestCase().getTestAction(0);
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof DockerExecuteAction);
+        DockerExecuteAction action = (DockerExecuteAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getDockerClient(), dockerClient);
         Assert.assertTrue(action.getCommand() instanceof ImageBuild);
@@ -93,9 +96,10 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("dockerClient");
         steps.startContainer("foo");
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DockerExecuteAction);
-        DockerExecuteAction action = (DockerExecuteAction) designer.getTestCase().getTestAction(0);
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof DockerExecuteAction);
+        DockerExecuteAction action = (DockerExecuteAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getDockerClient(), dockerClient);
         Assert.assertTrue(action.getCommand() instanceof ContainerStart);
@@ -107,9 +111,10 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("dockerClient");
         steps.stopContainer("foo");
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DockerExecuteAction);
-        DockerExecuteAction action = (DockerExecuteAction) designer.getTestCase().getTestAction(0);
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof DockerExecuteAction);
+        DockerExecuteAction action = (DockerExecuteAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getDockerClient(), dockerClient);
         Assert.assertTrue(action.getCommand() instanceof ContainerStop);
@@ -121,9 +126,10 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("dockerClient");
         steps.containerIsRunning("foo");
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DockerExecuteAction);
-        DockerExecuteAction action = (DockerExecuteAction) designer.getTestCase().getTestAction(0);
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof DockerExecuteAction);
+        DockerExecuteAction action = (DockerExecuteAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getDockerClient(), dockerClient);
         Assert.assertTrue(action.getCommand() instanceof ContainerInspect);
@@ -135,9 +141,10 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("dockerClient");
         steps.containerIsStopped("foo");
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DockerExecuteAction);
-        DockerExecuteAction action = (DockerExecuteAction) designer.getTestCase().getTestAction(0);
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof DockerExecuteAction);
+        DockerExecuteAction action = (DockerExecuteAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getDockerClient(), dockerClient);
         Assert.assertTrue(action.getCommand() instanceof ContainerInspect);

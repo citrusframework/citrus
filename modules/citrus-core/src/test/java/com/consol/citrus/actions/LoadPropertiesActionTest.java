@@ -29,14 +29,15 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Christoph Deppisch
  */
 public class LoadPropertiesActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
 	public void testLoadProperties() {
-		LoadPropertiesAction loadProperties = new LoadPropertiesAction();
-		
-		loadProperties.setFilePath("classpath:com/consol/citrus/actions/load.properties");
+		LoadPropertiesAction loadProperties = new LoadPropertiesAction.Builder()
+				.filePath("classpath:com/consol/citrus/actions/load.properties")
+				.build();
+
 		loadProperties.execute(context);
-		
+
 		Assert.assertNotNull(context.getVariable("${myVariable}"));
 		Assert.assertEquals(context.getVariable("${myVariable}"), "test");
 		Assert.assertNotNull(context.getVariable("${user}"));
@@ -44,22 +45,23 @@ public class LoadPropertiesActionTest extends AbstractTestNGUnitTest {
 		Assert.assertNotNull(context.getVariable("${welcomeText}"));
 		Assert.assertEquals(context.getVariable("${welcomeText}"), "Hello Citrus!");
 		Assert.assertNotNull(context.getVariable("${todayDate}"));
-        Assert.assertEquals(context.getVariable("${todayDate}"), 
+        Assert.assertEquals(context.getVariable("${todayDate}"),
                 "Today is " + new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "!");
 	}
-	
+
 	@Test
     public void testUnknownVariableInLoadProperties() {
-        LoadPropertiesAction loadProperties = new LoadPropertiesAction();
-        
-        loadProperties.setFilePath("classpath:com/consol/citrus/actions/load-error.properties");
+		LoadPropertiesAction loadProperties = new LoadPropertiesAction.Builder()
+				.filePath("classpath:com/consol/citrus/actions/load-error.properties")
+				.build();
+
         try {
             loadProperties.execute(context);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Unknown variable 'unknownVar'");
             return;
         }
-        
+
         Assert.fail("Missing exception for unkown variable in property file");
 	}
 }

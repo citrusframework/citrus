@@ -17,6 +17,7 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.AbstractActionContainer;
@@ -65,8 +66,8 @@ public class CustomContainerTestRunnerTest extends AbstractTestNGUnitTest {
             @Override
             public void execute() {
                 CustomActionContainer container = new CustomActionContainer();
-                container.getActions().add(new EchoAction().setMessage("This is a custom container action"));
-                run(container(container).build());
+                container.addTestAction(new EchoAction.Builder().message("This is a custom container action").build());
+                run(container(container));
             }
         };
 
@@ -83,7 +84,7 @@ public class CustomContainerTestRunnerTest extends AbstractTestNGUnitTest {
         assertEquals(context.getVariable("index"), "10");
     }
 
-    private class CustomActionContainer extends AbstractActionContainer {
+    private static class CustomActionContainer extends AbstractActionContainer {
 
         public CustomActionContainer() {
             setName("custom");
@@ -94,7 +95,8 @@ public class CustomContainerTestRunnerTest extends AbstractTestNGUnitTest {
             for (int i = 1; i <= 10; i++) {
                 context.setVariable("index", i);
 
-                for (TestAction action : actions) {
+                for (TestActionBuilder<?> actionBuilder : actions) {
+                    TestAction action = actionBuilder.build();
                     action.execute(context);
                 }
             }

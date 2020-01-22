@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.OpenWindowAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -35,7 +34,42 @@ public class OpenWindowActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return OpenWindowAction.class;
+    protected Class<OpenWindowActionFactoryBean> getBrowserActionClass() {
+        return OpenWindowActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class OpenWindowActionFactoryBean extends AbstractSeleniumActionFactoryBean<OpenWindowAction, OpenWindowAction.Builder> {
+
+        private final OpenWindowAction.Builder builder = new OpenWindowAction.Builder();
+
+        /**
+         * Sets the windowName.
+         * @param windowName
+         */
+        public void setWindowName(String windowName) {
+            builder.window(windowName);
+        }
+
+        @Override
+        public OpenWindowAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return OpenWindowAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public OpenWindowAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

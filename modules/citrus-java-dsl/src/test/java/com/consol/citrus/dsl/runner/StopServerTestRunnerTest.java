@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
  */
 public class StopServerTestRunnerTest extends AbstractTestNGUnitTest {
 	private Server testServer = Mockito.mock(Server.class);
-	
+
 	private Server server1 = Mockito.mock(Server.class);
 	private Server server2 = Mockito.mock(Server.class);
 	private Server server3 = Mockito.mock(Server.class);
@@ -59,12 +59,13 @@ public class StopServerTestRunnerTest extends AbstractTestNGUnitTest {
 
 		StopServerAction action = (StopServerAction)test.getActions().get(0);
 		Assert.assertEquals(action.getName(), "stop-server");
-		Assert.assertEquals(action.getServer(), testServer);
+		Assert.assertEquals(action.getServers().size(), 1);
+		Assert.assertEquals(action.getServers().get(0), testServer);
 
 		action = (StopServerAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "stop-server");
-		Assert.assertEquals(action.getServerList().size(), 3);
-		Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");
+		Assert.assertEquals(action.getServers().size(), 3);
+		Assert.assertEquals(action.getServers().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");
 
 		verify(testServer).stop();
 		verify(server1).stop();

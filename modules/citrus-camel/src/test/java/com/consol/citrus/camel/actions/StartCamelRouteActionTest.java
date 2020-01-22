@@ -16,6 +16,8 @@
 
 package com.consol.citrus.camel.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelContext;
@@ -23,10 +25,10 @@ import org.apache.camel.FailedToStartRouteException;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
@@ -39,15 +41,15 @@ public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.getName()).thenReturn("camel_context");
 
-        StartCamelRouteAction action = new StartCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Collections.singletonList("route_1"));
-
+        StartCamelRouteAction action = new StartCamelRouteAction.Builder()
+                .context(camelContext)
+                .routeIds(Collections.singletonList("route_1"))
+                .build();
         action.execute(context);
 
         verify(camelContext).startRoute("route_1");
     }
-    
+
     @Test
     public void testStartRouteVariableSupport() throws Exception {
         reset(camelContext);
@@ -56,10 +58,10 @@ public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.getName()).thenReturn("camel_context");
 
-        StartCamelRouteAction action = new StartCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Collections.singletonList("${routeId}"));
-
+        StartCamelRouteAction action = new StartCamelRouteAction.Builder()
+                .context(camelContext)
+                .routeIds(Collections.singletonList("${routeId}"))
+                .build();
         action.execute(context);
 
         verify(camelContext).startRoute("route_1");
@@ -73,10 +75,10 @@ public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         doThrow(new FailedToStartRouteException("route_2", "Failed to start route")).when(camelContext).startRoute("route_2");
 
-        StartCamelRouteAction action = new StartCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Arrays.asList("route_1", "route_2", "route_3"));
-
+        StartCamelRouteAction action = new StartCamelRouteAction.Builder()
+                .context(camelContext)
+                .routes("route_1", "route_2", "route_3")
+                .build();
         action.execute(context);
 
         verify(camelContext).startRoute("route_1");

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Set;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
@@ -23,22 +25,22 @@ import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.JavascriptExecutor;
 import org.springframework.util.StringUtils;
 
-import java.util.Set;
-
 /**
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class OpenWindowAction extends AbstractSeleniumAction implements SeleniumWindowAction {
+public class OpenWindowAction extends AbstractSeleniumAction {
 
     /** Window name to open */
-    private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
+    private final String windowName;
 
     /**
      * Default constructor.
      */
-    public OpenWindowAction() {
-        super("open-window");
+    public OpenWindowAction(Builder builder) {
+        super("open-window", builder);
+
+        this.windowName = builder.windowName;
     }
 
     @Override
@@ -73,7 +75,6 @@ public class OpenWindowAction extends AbstractSeleniumAction implements Selenium
 
     /**
      * Gets the windowName.
-     *
      * @return
      */
     public String getWindowName() {
@@ -81,11 +82,25 @@ public class OpenWindowAction extends AbstractSeleniumAction implements Selenium
     }
 
     /**
-     * Sets the windowName.
-     *
-     * @param windowName
+     * Action builder.
      */
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
+    public static class Builder extends AbstractSeleniumAction.Builder<OpenWindowAction, Builder> {
+
+        private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
+
+        /**
+         * Set window name.
+         * @param name
+         * @return
+         */
+        public Builder window(String name) {
+            this.windowName = name;
+            return this;
+        }
+
+        @Override
+        public OpenWindowAction build() {
+            return new OpenWindowAction(this);
+        }
     }
 }

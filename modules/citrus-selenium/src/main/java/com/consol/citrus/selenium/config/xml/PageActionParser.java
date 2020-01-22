@@ -16,15 +16,17 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.*;
+import com.consol.citrus.selenium.actions.PageAction;
+import com.consol.citrus.selenium.model.PageValidator;
+import com.consol.citrus.selenium.model.WebPage;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -52,7 +54,79 @@ public class PageActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return PageAction.class;
+    protected Class<PageActionFactoryBean> getBrowserActionClass() {
+        return PageActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class PageActionFactoryBean extends AbstractSeleniumActionFactoryBean<PageAction, PageAction.Builder> {
+
+        private final PageAction.Builder builder = new PageAction.Builder();
+
+        /**
+         * Sets the page.
+         *
+         * @param page
+         */
+        public void setPage(WebPage page) {
+            builder.page(page);
+        }
+
+        /**
+         * Sets the action.
+         *
+         * @param action
+         */
+        public void setAction(String action) {
+            builder.action(action);
+        }
+
+        /**
+         * Sets the validator.
+         *
+         * @param validator
+         */
+        public void setValidator(PageValidator validator) {
+            builder.validator(validator);
+        }
+
+        /**
+         * Sets the type.
+         *
+         * @param type
+         */
+        public void setType(String type) {
+            builder.type(type);
+        }
+
+        /**
+         * Sets the arguments.
+         *
+         * @param arguments
+         */
+        public void setArguments(List<String> arguments) {
+            builder.arguments(arguments);
+        }
+
+        @Override
+        public PageAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return PageAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public PageAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -16,8 +16,11 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.List;
+
 import com.consol.citrus.actions.StopServerAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.server.Server;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -27,9 +30,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.2
@@ -38,19 +38,18 @@ public class StopServerActionParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopServerAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(StopServerActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("server"), "server");
 
-        ManagedList<RuntimeBeanReference> servers = new ManagedList();
+        ManagedList<RuntimeBeanReference> servers = new ManagedList<>();
         Element serversElement = DomUtils.getChildElementByTagName(element, "servers");
         if (serversElement != null) {
-            List<?> serverElements = DomUtils.getChildElementsByTagName(serversElement, "server");
+            List<Element> serverElements = DomUtils.getChildElementsByTagName(serversElement, "server");
             if (serverElements.size() > 0) {
-                for (Iterator<?> iter = serverElements.iterator(); iter.hasNext();) {
-                    Element serverElement = (Element) iter.next();
+                for (Element serverElement : serverElements) {
                     servers.add(new RuntimeBeanReference(serverElement.getAttribute("name")));
                 }
 
@@ -59,5 +58,40 @@ public class StopServerActionParser implements BeanDefinitionParser {
         }
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class StopServerActionFactoryBean extends AbstractTestActionFactoryBean<StopServerAction, StopServerAction.Builder> {
+
+        private final StopServerAction.Builder builder = new StopServerAction.Builder();
+
+        public void setServerList(List<Server> serverList) {
+            serverList.forEach(builder::server);
+        }
+
+        public void setServer(Server server) {
+            builder.server(server);
+        }
+
+        @Override
+        public StopServerAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StopServerAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StopServerAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

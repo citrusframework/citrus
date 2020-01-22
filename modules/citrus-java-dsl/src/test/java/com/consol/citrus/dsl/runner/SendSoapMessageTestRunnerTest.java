@@ -16,12 +16,15 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -31,7 +34,9 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.*;
+import com.consol.citrus.ws.message.SoapAttachment;
+import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -39,24 +44,23 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     private WebServiceClient soapClient = Mockito.mock(WebServiceClient.class);
     private Producer messageProducer = Mockito.mock(Producer.class);
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
     private Resource resource = Mockito.mock(Resource.class);
-    
+
     private SoapAttachment testAttachment = new SoapAttachment();
-    
+
     /**
      * Setup test attachment.
      */
@@ -85,7 +89,7 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .send()
                         .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                             .header("additional", "additionalValue"));
-                
+
                 soap(builder -> builder.client(soapClient)
                         .send()
                         .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
@@ -95,12 +99,12 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendSoapMessageAction.class);
-        
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
@@ -111,13 +115,13 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "additionalValue");
 
         Assert.assertFalse(action.isForkMode());
-        
-        action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate());
+
+        action = ((SendSoapMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
-        
+
         Assert.assertTrue(action.isForkMode());
     }
 
@@ -144,9 +148,9 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
 
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapClient);
@@ -183,11 +187,11 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
-        
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
@@ -227,11 +231,11 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
-        
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
@@ -272,9 +276,9 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
 
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapClient);
@@ -320,9 +324,9 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
 
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapClient);
@@ -368,21 +372,21 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .attachment(testAttachment.getContentId(), testAttachment.getContentType(), resource));
             }
         };
-        
+
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
-        
-        SendSoapMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+
+        SendSoapMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), soapClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        
+
         Assert.assertEquals(action.getAttachments().get(0).getContent(), "someAttachmentData");
         Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
         Assert.assertEquals(action.getAttachments().get(0).getContentType(), testAttachment.getContentType());
@@ -434,19 +438,19 @@ public class SendSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapMessageAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendSoapMessageAction.class);
-        
-        SendMessageAction action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(0)).getDelegate());
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SendSoapMessageAction.class);
+
+        SendMessageAction action = ((SendSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpointUri(), "soapClient");
-        
+
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
         Assert.assertTrue(messageBuilder.getMessageHeaders().containsKey("operation"));
-        
-        action = ((SendSoapMessageAction)((DelegatingTestAction)test.getActions().get(1)).getDelegate());
+
+        action = ((SendSoapMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpointUri(), "otherClient");
     }

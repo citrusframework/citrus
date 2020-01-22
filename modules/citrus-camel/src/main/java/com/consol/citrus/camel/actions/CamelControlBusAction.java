@@ -24,6 +24,8 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.ValidationUtils;
 import com.consol.citrus.variable.VariableUtils;
+import org.apache.camel.ServiceStatus;
+import org.apache.camel.builder.SimpleBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -38,25 +40,31 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
     private static Logger log = LoggerFactory.getLogger(CamelControlBusAction.class);
 
     /** The control bus action */
-    private String action;
+    private final String action;
 
     /** The target Camel route */
-    private String routeId;
+    private final String routeId;
 
     /** Language type */
-    private String languageType = "simple";
+    private final String languageType;
 
     /** Language expression */
-    private String languageExpression = "";
+    private final String languageExpression;
 
     /** The expected control bus response */
-    private String result;
+    private final String result;
 
     /**
      * Default constructor.
      */
-    public CamelControlBusAction() {
-        setName("controlbus");
+    public CamelControlBusAction(Builder builder) {
+        super("controlbus", builder);
+
+        this.action = builder.action;
+        this.routeId = builder.routeId;
+        this.languageType = builder.languageType;
+        this.languageExpression = builder.languageExpression;
+        this.result = builder.result;
     }
 
     @Override
@@ -73,7 +81,7 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         endpointConfiguration.setCamelContext(camelContext);
 
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
-        
+
         String expression = context.replaceDynamicContentInString(VariableUtils.cutOffVariablesPrefix(languageExpression));
         camelEndpoint.createProducer().send(new DefaultMessage(VariableUtils.isVariableName(languageExpression) ? Citrus.VARIABLE_PREFIX + expression + Citrus.VARIABLE_SUFFIX : expression), context);
 
@@ -92,29 +100,11 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
     }
 
     /**
-     * Sets the Camel control bus action.
-     * @param action
-     */
-    public CamelControlBusAction setAction(String action) {
-        this.action = action;
-        return this;
-    }
-
-    /**
      * Gets the Camel control bus action.
      * @return
      */
     public String getAction() {
         return action;
-    }
-
-    /**
-     * Sets the target Camel route id.
-     * @param routeId
-     */
-    public CamelControlBusAction setRouteId(String routeId) {
-        this.routeId = routeId;
-        return this;
     }
 
     /**
@@ -126,28 +116,11 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
     }
 
     /**
-     * Sets the expected Camel control bus result.
-     * @param result
-     */
-    public CamelControlBusAction setResult(String result) {
-        this.result = result;
-        return this;
-    }
-
-    /**
      * Gets the expected Camel control bus result.
      * @return
      */
     public String getResult() {
         return result;
-    }
-
-    /**
-     * Sets the language type.
-     * @param languageType
-     */
-    public void setLanguageType(String languageType) {
-        this.languageType = languageType;
     }
 
     /**
@@ -159,18 +132,81 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
     }
 
     /**
-     * Sets the language expression.
-     * @param languageExpression
-     */
-    public void setLanguageExpression(String languageExpression) {
-        this.languageExpression = languageExpression;
-    }
-
-    /**
      * Gets the language expression.
      * @return
      */
     public String getLanguageExpression() {
         return languageExpression;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractCamelRouteAction.Builder<CamelControlBusAction, CamelControlBusAction.Builder> {
+
+        private String action;
+        private String routeId;
+        private String languageType = "simple";
+        private String languageExpression = "";
+        private String result;
+
+        /**
+         * Sets route action to execute.
+         * @param id
+         * @param action
+         */
+        public Builder route(String id, String action) {
+            this.routeId = id;
+            this.action = action;
+            return this;
+        }
+
+        /**
+         * Sets a simple language expression to execute.
+         * @param simpleExpression
+         * @return
+         */
+        public Builder language(SimpleBuilder simpleExpression) {
+            language("simple", simpleExpression.getText());
+            return this;
+        }
+
+        /**
+         * Sets a language expression to execute.
+         * @param language
+         * @param expression
+         * @return
+         */
+        public Builder language(String language, String expression) {
+            this.languageType = language;
+            this.languageExpression = expression;
+
+            return this;
+        }
+
+        /**
+         * Sets the expected result.
+         * @param status
+         * @return
+         */
+        public Builder result(ServiceStatus status) {
+            this.result = status.name();
+            return this;
+        }
+
+        /**
+         * Sets the expected result.
+         * @param result
+         * @return
+         */
+        public Builder result(String result) {
+            this.result = result;
+            return this;
+        }
+
+        @Override
+        public CamelControlBusAction build() {
+            return new CamelControlBusAction(this);
+        }
     }
 }

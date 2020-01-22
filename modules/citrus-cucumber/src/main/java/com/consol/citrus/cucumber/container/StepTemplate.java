@@ -16,12 +16,13 @@
 
 package com.consol.citrus.cucumber.container;
 
-import com.consol.citrus.container.Template;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import com.consol.citrus.container.Template;
 
 /**
  * Step template executes a sequence of nested test actions. Template is configured with Gherkin syntax matching pattern and
@@ -34,10 +35,22 @@ import java.util.regex.Pattern;
 public class StepTemplate extends Template {
 
     /** The parameter names for this step */
-    private List<String> parameterNames = new ArrayList<>();
+    private final List<String> parameterNames;
 
     /** Gherkin given, when, then matching pattern */
-    private Pattern pattern;
+    private final Pattern pattern;
+
+    /**
+     * Default constructor
+     *
+     * @param builder
+     */
+    public StepTemplate(Builder builder) {
+        super(builder);
+
+        this.parameterNames = builder.parameterNames;
+        this.pattern = builder.pattern;
+    }
 
     /**
      * Gets the value of the pattern property.
@@ -46,24 +59,6 @@ public class StepTemplate extends Template {
      */
     public Pattern getPattern() {
         return pattern;
-    }
-
-    /**
-     * Sets the pattern property.
-     *
-     * @param pattern
-     */
-    public void setPattern(Pattern pattern) {
-        this.pattern = pattern;
-    }
-
-    /**
-     * Sets the parameterNames property.
-     *
-     * @param parameterNames
-     */
-    public void setParameterNames(List<String> parameterNames) {
-        this.parameterNames = parameterNames;
     }
 
     /**
@@ -86,5 +81,35 @@ public class StepTemplate extends Template {
         }
 
         return types;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends Template.AbstractTemplateBuilder<StepTemplate, Builder> {
+
+        private List<String> parameterNames = new ArrayList<>();
+        private Pattern pattern;
+
+        public Builder parameterNames(String... parameterNames) {
+            this.parameterNames.addAll(Arrays.asList(parameterNames));
+            return this;
+        }
+
+        public Builder parameterNames(List<String> parameterNames) {
+            this.parameterNames.addAll(parameterNames);
+            return this;
+        }
+
+        public Builder pattern(Pattern pattern) {
+            this.pattern = pattern;
+            return this;
+        }
+
+        @Override
+        public StepTemplate build() {
+            onBuild();
+            return new StepTemplate(this);
+        }
     }
 }

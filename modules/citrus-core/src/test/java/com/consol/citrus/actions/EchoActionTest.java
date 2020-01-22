@@ -25,38 +25,30 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Christoph Deppisch
  */
 public class EchoActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
 	public void testEchoMessage() {
-		EchoAction echo = new EchoAction();
-		echo.setMessage("Hello Citrus!");
-		
+		EchoAction echo = new EchoAction.Builder().message("Hello Citrus!").build();
 		echo.execute(context);
 	}
-	
+
 	@Test
 	public void testEchoMessageWithVariables() {
-		EchoAction echo = new EchoAction();
+		EchoAction echo = new EchoAction.Builder().message("${greeting} Citrus!").build();
 		context.setVariable("greeting", "Hello");
-		
-		echo.setMessage("${greeting} Citrus!");
-		
+
 		echo.execute(context);
 	}
-	
+
 	@Test
 	public void testEchoMessageWithFunctions() {
-		EchoAction echo = new EchoAction();
-		echo.setMessage("Today is citrus:currentDate()");
-		
+		EchoAction echo = new EchoAction.Builder().message("Today is citrus:currentDate()").build();
 		echo.execute(context);
 	}
-	
+
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testEchoMessageWithUnknownVariables() {
-		EchoAction echo = new EchoAction();
-		echo.setMessage("${greeting} Citrus!");
-		
+		EchoAction echo = new EchoAction.Builder().message("${greeting} Citrus!").build();
 		echo.execute(context);
 	}
 }

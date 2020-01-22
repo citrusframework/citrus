@@ -16,25 +16,46 @@
 
 package com.consol.citrus.dsl.design;
 
-import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.actions.NoopTestAction;
 import com.consol.citrus.context.TestContext;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class ApplyTestBehaviorAction extends AbstractTestAction {
+public class ApplyTestBehaviorAction extends NoopTestAction {
 
     private final TestDesigner testDesigner;
     private final TestBehavior testBehavior;
 
-    public ApplyTestBehaviorAction(TestDesigner testDesigner, TestBehavior testBehavior) {
-        this.testDesigner = testDesigner;
-        this.testBehavior = testBehavior;
+    public ApplyTestBehaviorAction(Builder builder) {
+        this.testDesigner = builder.testDesigner;
+        this.testBehavior = builder.testBehavior;
     }
 
     @Override
-    public void doExecute(TestContext context) {
+    public void execute(TestContext context) {
         testBehavior.apply(testDesigner);
+    }
+
+    public static final class Builder extends AbstractTestActionBuilder<ApplyTestBehaviorAction, Builder> {
+        private TestDesigner testDesigner;
+        private TestBehavior testBehavior;
+
+        public Builder designer(TestDesigner designer) {
+            this.testDesigner = designer;
+            return this;
+        }
+
+        public Builder behavior(TestBehavior behavior) {
+            this.testBehavior = behavior;
+            return this;
+        }
+
+        @Override
+        public ApplyTestBehaviorAction build() {
+            return new ApplyTestBehaviorAction(this);
+        }
     }
 }

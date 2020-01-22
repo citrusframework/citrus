@@ -16,6 +16,9 @@
 
 package com.consol.citrus;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -27,16 +30,15 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -45,18 +47,7 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
-    private ReceiveMessageAction receiveMessageBean;
-    
-    @Override
-    @BeforeMethod
-    public void prepareTest() {
-        super.prepareTest();
-        
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-    }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testNamespaces() {
@@ -64,33 +55,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDifferentNamespacePrefix() {
@@ -98,33 +90,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns2:root xmlns:ns2='http://citrus'>"
                         + "<ns2:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns2:sub-element attribute='A'>text-value</ns2:sub-element>"
-                        + "</ns2:element>" 
+                        + "</ns2:element>"
                     + "</ns2:root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAdditionalNamespace() {
@@ -132,33 +125,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingNamespaceDeclaration() {
@@ -166,33 +160,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespaces() {
@@ -200,31 +195,32 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 
     @Test
@@ -234,33 +230,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testDefaultNamespacesInSourceMessage() {
@@ -268,33 +265,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                     + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                     + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                    + "</ns1:element>" 
+                    + "</ns1:element>"
                 + "</ns1:root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingNamespace() {
@@ -302,33 +300,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<sub-element attribute='A'>text-value</sub-element>"
-                            + "</element>" 
+                            + "</element>"
                         + "</root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testWrongNamespace() {
@@ -336,33 +335,34 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/wrong'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                            + "</ns1:element>" 
+                            + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespace() {
@@ -370,38 +370,39 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespace() {
@@ -409,38 +410,39 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://citrus/ns1");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMixedNamespaces() {
@@ -448,39 +450,40 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMultipleNamespaces() {
@@ -488,40 +491,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespaceError() {
@@ -529,38 +533,39 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/wrong");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceError() {
@@ -568,38 +573,39 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                     + "</ns1:root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMixedNamespacesError() {
@@ -607,39 +613,40 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default/wrong");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectMultipleNamespacesError() {
@@ -647,40 +654,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectWrongNamespacePrefix() {
@@ -688,40 +696,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("nswrong", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectDefaultNamespaceButNamespace() {
@@ -729,40 +738,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
-                        + "</ns0:element>" 
+                        + "</ns0:element>"
                     + "</ns0:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
-                        + "</ns0:element>" 
+                        + "</ns0:element>"
                     + "</ns0:root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceButDefaultNamespace() {
@@ -770,40 +780,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns0", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectAdditionalNamespace() {
@@ -811,41 +822,42 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
         expectedNamespaces.put("ns4", "http://citrus/ns4");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExpectNamespaceButNamespaceMissing() {
@@ -853,40 +865,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
-                        + "</element>" 
+                        + "</element>"
                     + "</root>");
-        
+
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
-        
+
         validationContext.setControlNamespaces(expectedNamespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWithAdditionalNamespacePrefix() {
@@ -894,40 +907,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root xmlns='http://citrus/default'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//ns1:root/ns1:element/ns1:sub-elementA", "text-value");
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
+
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://citrus/default");
-        
+
         validationContext.setNamespaces(namespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWithDifferentNamespacePrefix() {
@@ -935,40 +949,41 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
                             + "<ns1:sub-elementC attribute='C'>text-value</ns1:sub-elementC>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//pfx:root/pfx:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
+
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrus/default");
-        
+
         validationContext.setNamespaces(namespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testWrongNamespaceContext() {
@@ -976,37 +991,38 @@ public class NamespaceTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<ns1:root xmlns:ns1='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<ns1:sub-elementA attribute='A'>text-value</ns1:sub-elementA>"
                             + "<ns1:sub-elementB attribute='B'>text-value</ns1:sub-elementB>"
                             + "<ns1:sub-elementC attribute='C'>text-value</ns1:sub-elementC>"
-                        + "</ns1:element>" 
+                        + "</ns1:element>"
                         + "</ns1:root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//pfx:root/ns1:element/pfx:sub-elementA", "text-value");
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
+
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrus/wrong");
-        
+
         validationContext.setNamespaces(namespaces);
-        
+
         validationContext.setSchemaValidation(false);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 }

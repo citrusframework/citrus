@@ -16,6 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.actions.CreateVariablesAction;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -24,27 +28,22 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Bean definition parser for create-variables action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class CreateVariablesActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(CreateVariablesAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(CreateVariablesActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
         Map<String, String> variables = new LinkedHashMap<String, String>();
-        List<?> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
-        for (Iterator<?> iter = variableElements.iterator(); iter.hasNext();) {
-            Element variable = (Element) iter.next();
+        List<Element> variableElements = DomUtils.getChildElementsByTagName(element, "variable");
+        for (Element variable : variableElements) {
             Element variableValueElement = DomUtils.getChildElementByTagName(variable, "value");
             if (variableValueElement == null) {
                 variables.put(variable.getAttribute("name"), variable.getAttribute("value"));
@@ -52,7 +51,7 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
                 Element variableScript = DomUtils.getChildElementByTagName(variableValueElement, "script");
                 if (variableScript != null) {
                     String scriptEngine = variableScript.getAttribute("type");
-                    variables.put(variable.getAttribute("name"), "script:<" + scriptEngine + ">"  + variableScript.getTextContent());
+                    variables.put(variable.getAttribute("name"), "script:<" + scriptEngine + ">" + variableScript.getTextContent());
                 }
 
                 Element variableData = DomUtils.getChildElementByTagName(variableValueElement, "data");
@@ -64,5 +63,36 @@ public class CreateVariablesActionParser implements BeanDefinitionParser {
         beanDefinition.addPropertyValue("variables", variables);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class CreateVariablesActionFactoryBean extends AbstractTestActionFactoryBean<CreateVariablesAction, CreateVariablesAction.Builder> {
+
+        private final CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder();
+
+        @Override
+        public CreateVariablesAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        public void setVariables(Map<String, String> variables) {
+            variables.forEach(builder::variable);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return CreateVariablesAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public CreateVariablesAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

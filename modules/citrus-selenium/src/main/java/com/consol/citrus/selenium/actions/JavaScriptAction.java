@@ -16,6 +16,10 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -23,9 +27,6 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriverException;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Executes javascript code on current page and validates errors.
@@ -36,19 +37,23 @@ import java.util.List;
 public class JavaScriptAction extends AbstractSeleniumAction {
 
     /** JavaScript code */
-    private String script;
+    private final String script;
 
     /** Optional arguments */
-    private List<Object> arguments = new ArrayList<>();
+    private final List<Object> arguments;
 
     /** JavaScript errors to validate */
-    List<String> expectedErrors = new ArrayList<>();
+    private final List<String> expectedErrors;
 
     /**
      * Default constructor.
      */
-    public JavaScriptAction() {
-        super("javascript");
+    public JavaScriptAction(Builder builder) {
+        super("javascript", builder);
+
+        this.script = builder.script;
+        this.arguments = builder.arguments;
+        this.expectedErrors = builder.expectedErrors;
     }
 
     @Override
@@ -91,30 +96,12 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the script.
-     *
-     * @param script
-     */
-    public void setScript(String script) {
-        this.script = script;
-    }
-
-    /**
      * Gets the arguments.
      *
      * @return
      */
     public List<Object> getArguments() {
         return arguments;
-    }
-
-    /**
-     * Sets the arguments.
-     *
-     * @param arguments
-     */
-    public void setArguments(List<Object> arguments) {
-        this.arguments = arguments;
     }
 
     /**
@@ -127,11 +114,56 @@ public class JavaScriptAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the expectedErrors.
-     *
-     * @param expectedErrors
+     * Action builder.
      */
-    public void setExpectedErrors(List<String> expectedErrors) {
-        this.expectedErrors = expectedErrors;
+    public static class Builder extends AbstractSeleniumAction.Builder<JavaScriptAction, Builder> {
+
+        private String script;
+        private List<Object> arguments = new ArrayList<>();
+        private List<String> expectedErrors = new ArrayList<>();
+
+        /**
+         * Add script.
+         * @param script
+         * @return
+         */
+        public Builder script(String script) {
+            this.script = script;
+            return this;
+        }
+
+        /**
+         * Add script argument.
+         * @param arg
+         * @return
+         */
+        public Builder argument(Object arg) {
+            this.arguments.add(arg);
+            return this;
+        }
+
+        /**
+         * Add expected error.
+         * @param errors
+         * @return
+         */
+        public Builder errors(String ... errors) {
+            return errors(Arrays.asList(errors));
+        }
+
+        /**
+         * Add expected error.
+         * @param errors
+         * @return
+         */
+        public Builder errors(List<String> errors) {
+            this.expectedErrors.addAll(errors);
+            return this;
+        }
+
+        @Override
+        public JavaScriptAction build() {
+            return new JavaScriptAction(this);
+        }
     }
 }

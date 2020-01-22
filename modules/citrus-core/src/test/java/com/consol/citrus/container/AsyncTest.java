@@ -16,6 +16,12 @@
 
 package com.consol.citrus.container;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.context.TestContext;
@@ -25,10 +31,11 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-import java.util.concurrent.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -42,15 +49,13 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSingleAction() throws Exception {
-        Async container = new Async();
-
         reset(action, success, error);
 
-        container.setActions(Collections.singletonList(action));
-
-        container.addSuccessAction(success);
-        container.addErrorAction(error);
-        
+        Async container = new Async.Builder()
+                .actions(action)
+                .successAction(success)
+                .errorAction(error)
+                .build();
         container.execute(context);
 
         waitForDone(container, context, 2000);
@@ -62,24 +67,17 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleActions() throws Exception {
-        Async container = new Async();
-
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3, success, error);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-
-        container.setActions(actionList);
-
-        container.addSuccessAction(success);
-        container.addErrorAction(error);
-
+        Async container = new Async.Builder()
+                .actions(action1, action2, action3)
+                .successAction(success)
+                .errorAction(error)
+                .build();
         container.execute(context);
 
         waitForDone(container, context, 2000);
@@ -93,25 +91,17 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailingAction() throws Exception {
-        Async container = new Async();
-
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3, success, error);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action1);
-        actionList.add(new FailAction());
-        actionList.add(action2);
-        actionList.add(action3);
-
-        container.setActions(actionList);
-
-        container.addSuccessAction(success);
-        container.addErrorAction(error);
-
+        Async container = new Async.Builder()
+                .actions(action1, new FailAction.Builder().build(), action2, action3)
+                .successAction(success)
+                .errorAction(error)
+                .build();
         container.execute(context);
 
         waitForDone(container, context, 2000);
@@ -129,8 +119,6 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = TimeoutException.class)
     public void testWaitForFinishTimeout() throws Exception {
-        Async container = new Async();
-
         reset(action, success, error);
 
         doAnswer(invocation -> {
@@ -138,8 +126,9 @@ public class AsyncTest extends AbstractTestNGUnitTest {
             return null;
         }).when(action).execute(context);
 
-        container.setActions(Collections.singletonList(action));
-
+        Async container = new Async.Builder()
+                .actions(action)
+                .build();
         container.execute(context);
 
         waitForDone(container, context, 100);
@@ -147,14 +136,13 @@ public class AsyncTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWaitForFinishError() throws Exception {
-        Async container = new Async();
-
         reset(action, success, error);
 
         doThrow(new CitrusRuntimeException("FAILED!")).when(action).execute(context);
 
-        container.setActions(Collections.singletonList(action));
-
+        Async container = new Async.Builder()
+                .actions(action)
+                .build();
         container.execute(context);
 
         waitForDone(container, context, 2000);

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.actions;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -28,31 +32,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
- * Action expecting a timeout on a message destination, this means that no message 
+ * Action expecting a timeout on a message destination, this means that no message
  * should arrive on the destination.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
 public class ReceiveTimeoutAction extends AbstractTestAction {
     /** Time to wait until timeout */
-    private long timeout = 1000L;
+    private final long timeout;
 
     /** Message endpoint */
-    private Endpoint endpoint;
+    private final Endpoint endpoint;
 
     /** Message endpoint uri */
-    private String endpointUri;
+    private final String endpointUri;
 
     /** Build message selector with name value pairs */
-    private Map<String, Object> messageSelectorMap = new HashMap<>();
+    private final Map<String, Object> messageSelectorMap;
 
     /** Message selector string */
-    private String messageSelector;
+    private final String messageSelector;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(ReceiveTimeoutAction.class);
@@ -60,8 +61,14 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public ReceiveTimeoutAction() {
-        setName("receive-timeout");
+    public ReceiveTimeoutAction(Builder builder) {
+        super("receive-timeout", builder);
+
+        this.endpoint = builder.endpoint;
+        this.endpointUri = builder.endpointUri;
+        this.timeout = builder.timeout;
+        this.messageSelector = builder.messageSelector;
+        this.messageSelectorMap = builder.messageSelectorMap;
     }
 
     @Override
@@ -82,7 +89,7 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
                 if (log.isDebugEnabled()) {
                     log.debug("Received message: " + receivedMessage.getPayload());
                 }
-                
+
                 throw new CitrusRuntimeException("Message timeout validation failed! " +
                 		"Received message while waiting for timeout on destination");
             }
@@ -101,29 +108,10 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
         if (endpoint != null) {
             return endpoint;
         } else if (StringUtils.hasText(endpointUri)) {
-            endpoint = context.getEndpointFactory().create(endpointUri, context);
-            return endpoint;
+            return context.getEndpointFactory().create(endpointUri, context);
         } else {
             throw new CitrusRuntimeException("Neither endpoint nor endpoint uri is set properly!");
         }
-    }
-
-    /**
-     * Setter for receive timeout.
-     * @param timeout
-     */
-    public ReceiveTimeoutAction setTimeout(long timeout) {
-        this.timeout = timeout;
-        return this;
-    }
-
-    /**
-     * Set message selector string.
-     * @param messageSelector
-     */
-    public ReceiveTimeoutAction setMessageSelector(String messageSelector) {
-        this.messageSelector = messageSelector;
-        return this;
     }
 
     /**
@@ -136,30 +124,12 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     }
 
     /**
-     * Set message selector string.
-     * @param messageSelector
-     */
-    public ReceiveTimeoutAction setMessageSelectorMap(Map<String, Object> messageSelector) {
-        this.messageSelectorMap = messageSelector;
-        return this;
-    }
-
-    /**
      * Gets the messageSelectorMap.
      *
      * @return
      */
     public Map<String, Object> getMessageSelectorMap() {
         return messageSelectorMap;
-    }
-
-    /**
-     * Set message endpoint instance.
-     * @param endpoint the message endpoint
-     */
-    public ReceiveTimeoutAction setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
-        return this;
     }
 
     /**
@@ -187,11 +157,106 @@ public class ReceiveTimeoutAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the endpoint uri.
-     * @param endpointUri
+     * Action builder.
      */
-    public ReceiveTimeoutAction setEndpointUri(String endpointUri) {
-        this.endpointUri = endpointUri;
-        return this;
+    public static final class Builder extends AbstractTestActionBuilder<ReceiveTimeoutAction, Builder> {
+
+        private long timeout = 1000L;
+        private Endpoint endpoint;
+        private String endpointUri;
+        private Map<String, Object> messageSelectorMap = new HashMap<>();
+        private String messageSelector;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param endpointUri
+         * @return
+         */
+        public static Builder expectTimeout(String endpointUri) {
+            return receiveTimeout(endpointUri);
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param endpoint
+         * @return
+         */
+        public static Builder expectTimeout(Endpoint endpoint) {
+            return receiveTimeout(endpoint);
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param endpointUri
+         * @return
+         */
+        public static Builder receiveTimeout(String endpointUri) {
+            Builder builder = new Builder();
+            builder.endpoint(endpointUri);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param endpoint
+         * @return
+         */
+        public static Builder receiveTimeout(Endpoint endpoint) {
+            Builder builder = new Builder();
+            builder.endpoint(endpoint);
+            return builder;
+        }
+
+        /**
+         * Sets the message endpoint to receive a timeout with.
+         * @param messageEndpoint
+         * @return
+         */
+        public Builder endpoint(Endpoint messageEndpoint) {
+            this.endpoint = messageEndpoint;
+            return this;
+        }
+
+        /**
+         * Sets the message endpoint uri to receive a timeout with.
+         * @param messageEndpointUri
+         * @return
+         */
+        public Builder endpoint(String messageEndpointUri) {
+            this.endpointUri = messageEndpointUri;
+            return this;
+        }
+
+        /**
+         * Sets time to wait for messages on destination.
+         * @param timeout
+         */
+        public Builder timeout(long timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        /**
+         * Adds message selector string for selective consumer.
+         * @param messageSelector
+         */
+        public Builder selector(String messageSelector) {
+            this.messageSelector = messageSelector;
+            return this;
+        }
+
+        /**
+         * Sets the messageSelector.
+         * @param messageSelector the messageSelector to set
+         */
+        public Builder selector(Map<String, Object> messageSelector) {
+            this.messageSelectorMap = messageSelector;
+            return this;
+        }
+
+        @Override
+        public ReceiveTimeoutAction build() {
+            return new ReceiveTimeoutAction(this);
+        }
     }
 }

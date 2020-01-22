@@ -16,10 +16,21 @@
 
 package com.consol.citrus.docker.actions;
 
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
+import com.consol.citrus.docker.command.ContainerCreate;
+import com.consol.citrus.docker.command.ContainerInspect;
+import com.consol.citrus.docker.command.ContainerStart;
+import com.consol.citrus.docker.command.ContainerStop;
+import com.consol.citrus.docker.command.ContainerWait;
 import com.consol.citrus.docker.command.DockerCommand;
+import com.consol.citrus.docker.command.ImageBuild;
+import com.consol.citrus.docker.command.ImageInspect;
+import com.consol.citrus.docker.command.Info;
+import com.consol.citrus.docker.command.Ping;
+import com.consol.citrus.docker.command.Version;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
@@ -29,8 +40,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.util.StringUtils;
 
 /**
@@ -41,24 +50,20 @@ import org.springframework.util.StringUtils;
  */
 public class DockerExecuteAction extends AbstractTestAction {
 
-    @Autowired(required = false)
-    @Qualifier("dockerClient")
     /** Docker client instance  */
-    private DockerClient dockerClient = new DockerClient();
+    private final DockerClient dockerClient;
 
     /** Docker command to execute */
-    private DockerCommand command;
+    private final DockerCommand<?> command;
 
     /** Expected command result for validation */
-    private String expectedCommandResult;
+    private final String expectedCommandResult;
 
-    @Autowired(required = false)
-    @Qualifier("dockerCommandResultMapper")
     /** JSON data binding */
-    private ObjectMapper jsonMapper = new ObjectMapper();
+    private final ObjectMapper jsonMapper;
 
-    @Autowired
-    private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
+    /** Validator used to validate expected json results */
+    private final JsonTextMessageValidator jsonTextMessageValidator;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DockerExecuteAction.class);
@@ -66,8 +71,14 @@ public class DockerExecuteAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public DockerExecuteAction() {
-        setName("docker-execute");
+    public DockerExecuteAction(Builder builder) {
+        super("docker-execute", builder);
+
+        this.dockerClient = builder.dockerClient;
+        this.command = builder.command;
+        this.expectedCommandResult = builder.expectedCommandResult;
+        this.jsonMapper = builder.jsonMapper;
+        this.jsonTextMessageValidator = builder.validator;
     }
 
     @Override
@@ -122,18 +133,8 @@ public class DockerExecuteAction extends AbstractTestAction {
      * Gets the docker command to execute.
      * @return
      */
-    public DockerCommand getCommand() {
+    public DockerCommand<?> getCommand() {
         return command;
-    }
-
-    /**
-     * Sets docker command to execute.
-     * @param command
-     * @return
-     */
-    public DockerExecuteAction setCommand(DockerCommand command) {
-        this.command = command;
-        return this;
     }
 
     /**
@@ -145,15 +146,6 @@ public class DockerExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the docker client.
-     * @param dockerClient
-     */
-    public DockerExecuteAction setDockerClient(DockerClient dockerClient) {
-        this.dockerClient = dockerClient;
-        return this;
-    }
-
-    /**
      * Gets the expected command result data.
      * @return
      */
@@ -162,20 +154,159 @@ public class DockerExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the expected command result data.
-     * @param expectedCommandResult
+     * Action builder.
      */
-    public DockerExecuteAction setExpectedCommandResult(String expectedCommandResult) {
-        this.expectedCommandResult = expectedCommandResult;
-        return this;
-    }
+    public static final class Builder extends AbstractTestActionBuilder<DockerExecuteAction, Builder> {
 
-    /**
-     * Sets the JSON object mapper.
-     * @param jsonMapper
-     */
-    public DockerExecuteAction setJsonMapper(ObjectMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
-        return this;
+        private DockerClient dockerClient = new DockerClient();
+        private DockerCommand<?> command;
+        private String expectedCommandResult;
+        private ObjectMapper jsonMapper = new ObjectMapper();
+        private JsonTextMessageValidator validator = new JsonTextMessageValidator();
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder docker() {
+            return new Builder();
+        }
+
+        /**
+         * Use a custom docker client.
+         */
+        public Builder client(DockerClient dockerClient) {
+            this.dockerClient = dockerClient;
+            return this;
+        }
+
+        public Builder mapper(ObjectMapper jsonMapper) {
+            this.jsonMapper = jsonMapper;
+            return this;
+        }
+
+        public Builder validator(JsonTextMessageValidator validator) {
+            this.validator = validator;
+            return this;
+        }
+
+        /**
+         * Use a info command.
+         */
+        public Builder command(DockerCommand<?> command) {
+            this.command = command;
+            return this;
+        }
+
+        /**
+         * Use a info command.
+         */
+        public Info info() {
+            Info command = new Info();
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a ping command.
+         */
+        public Ping ping() {
+            Ping command = new Ping();
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a version command.
+         */
+        public Version version() {
+            Version command = new Version();
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a create command.
+         */
+        public ContainerCreate create(String imageId) {
+            ContainerCreate command = new ContainerCreate();
+            command.image(imageId);
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a start command.
+         */
+        public ContainerStart start(String containerId) {
+            ContainerStart command = new ContainerStart();
+            command.container(containerId);
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a stop command.
+         */
+        public ContainerStop stop(String containerId) {
+            ContainerStop command = new ContainerStop();
+            command.container(containerId);
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a wait command.
+         */
+        public ContainerWait wait(String containerId) {
+            ContainerWait command = new ContainerWait();
+            command.container(containerId);
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a inspect container command.
+         */
+        public ContainerInspect inspectContainer(String containerId) {
+            ContainerInspect command = new ContainerInspect();
+            command.container(containerId);
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a inspect container command.
+         */
+        public ImageInspect inspectImage(String imageId) {
+            ImageInspect command = new ImageInspect();
+            command.image(imageId);
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds a inspect container command.
+         */
+        public ImageBuild buildImage() {
+            ImageBuild command = new ImageBuild();
+            this.command = command;
+            return command;
+        }
+
+        /**
+         * Adds expected command result.
+         * @param result
+         * @return
+         */
+        public Builder result(String result) {
+            this.expectedCommandResult = result;
+            return this;
+        }
+
+        @Override
+        public DockerExecuteAction build() {
+            return new DockerExecuteAction(this);
+        }
     }
 }

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.consol.citrus.TestAction;
 import com.consol.citrus.container.Async;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -26,18 +30,18 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for sequential container in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class AsyncParser implements BeanDefinitionParser {
 
     @Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Async.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(AsyncFactoryBean.class);
 
         DescriptionElementParser.doParse(element, builder);
         builder.addPropertyValue("name", element.getLocalName());
-        
+
         ActionContainerParser.doParse(DomUtils.getChildElementByTagName(element, "actions"), parserContext, builder);
 
         Element successActions = DomUtils.getChildElementByTagName(element, "success");
@@ -51,5 +55,54 @@ public class AsyncParser implements BeanDefinitionParser {
         }
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class AsyncFactoryBean extends AbstractTestContainerFactoryBean<Async, Async.Builder> {
+
+        private final Async.Builder builder = new Async.Builder();
+
+        private List<TestAction> successActions = new ArrayList<>();
+        private List<TestAction> errorActions = new ArrayList<>();
+
+        /**
+         * Sets the success test actions.
+         * @param successActions
+         */
+        public void setSuccessActions(List<TestAction> successActions) {
+            this.successActions = successActions;
+        }
+
+        /**
+         * Sets the error test actions.
+         * @param errorActions
+         */
+        public void setErrorActions(List<TestAction> errorActions) {
+            this.errorActions = errorActions;
+        }
+
+        @Override
+        public Async getObject() throws Exception {
+            errorActions.forEach(builder::errorAction);
+            successActions.forEach(builder::successAction);
+
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Async.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Async.Builder getBuilder() {
+            return builder;
+        }
     }
 }

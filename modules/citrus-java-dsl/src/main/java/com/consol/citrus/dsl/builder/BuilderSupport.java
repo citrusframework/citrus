@@ -16,11 +16,13 @@
 
 package com.consol.citrus.dsl.builder;
 
+import com.consol.citrus.TestActionBuilder;
+
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
-public interface BuilderSupport<T extends AbstractTestActionBuilder> {
+public interface BuilderSupport<T extends TestActionBuilder<?>> {
 
     void configure(T builder);
 }

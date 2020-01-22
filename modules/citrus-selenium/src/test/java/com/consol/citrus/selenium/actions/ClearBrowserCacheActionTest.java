@@ -35,22 +35,20 @@ public class ClearBrowserCacheActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Options webDriverOptions = Mockito.mock(WebDriver.Options.class);
 
-    private ClearBrowserCacheAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver);
 
         seleniumBrowser.setWebDriver(webDriver);
 
-        action =  new ClearBrowserCacheAction();
-        action.setBrowser(seleniumBrowser);
-
         when(webDriver.manage()).thenReturn(webDriverOptions);
     }
 
     @Test
     public void testExecute() throws Exception {
+        ClearBrowserCacheAction action =  new ClearBrowserCacheAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(context);
 
         verify(webDriverOptions).deleteAllCookies();

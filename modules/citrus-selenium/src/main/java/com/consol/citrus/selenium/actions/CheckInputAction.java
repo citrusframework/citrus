@@ -29,13 +29,15 @@ import org.openqa.selenium.WebElement;
 public class CheckInputAction extends FindElementAction {
 
     /** Checkbox checked */
-    private boolean checked;
+    private final boolean checked;
 
     /**
      * Default constructor.
      */
-    public CheckInputAction() {
-        super("check-input");
+    public CheckInputAction(Builder builder) {
+        super("check-input", builder);
+
+        this.checked = builder.checked;
     }
 
     @Override
@@ -51,7 +53,6 @@ public class CheckInputAction extends FindElementAction {
 
     /**
      * Gets the checked.
-     *
      * @return
      */
     public boolean isChecked() {
@@ -59,11 +60,20 @@ public class CheckInputAction extends FindElementAction {
     }
 
     /**
-     * Sets the checked.
-     *
-     * @param checked
+     * Action builder.
      */
-    public void setChecked(boolean checked) {
-        this.checked = checked;
+    public static class Builder extends ElementActionBuilder<CheckInputAction, CheckInputAction.Builder> {
+
+        private boolean checked;
+
+        public CheckInputAction.Builder checked(boolean checked) {
+            this.checked = checked;
+            return this;
+        }
+
+        @Override
+        public CheckInputAction build() {
+            return new CheckInputAction(this);
+        }
     }
 }

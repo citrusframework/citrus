@@ -16,7 +16,12 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.*;
+import java.lang.reflect.Method;
+
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
@@ -31,8 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Method;
-
 /**
  * @author Christoph Deppisch
  * @since 2.5
@@ -46,28 +49,24 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
 
     @Override
     protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
-        TestDesigner testDesigner = null;
-        TestRunner testRunner = null;
-
         if (citrus == null) {
             citrus = Citrus.newInstance(applicationContext);
         }
 
         TestContext ctx = prepareTestContext(citrus.createTestContext());
 
+        TestCaseBuilder testBuilder;
         if (isDesignerMethod(frameworkMethod.getMethod())) {
-            testDesigner = createTestDesigner(frameworkMethod, ctx);
+            testBuilder = createTestDesigner(frameworkMethod, ctx);
         } else if (isRunnerMethod(frameworkMethod.getMethod())) {
-            testRunner = createTestRunner(frameworkMethod, ctx);
+            testBuilder = createTestRunner(frameworkMethod, ctx);
         } else {
             throw new CitrusRuntimeException("Missing designer or runner method parameter");
         }
 
-        TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
-
         CitrusAnnotations.injectAll(this, citrus, ctx);
 
-        invokeTestMethod(frameworkMethod, testCase, ctx);
+        invokeTestMethod(frameworkMethod, testBuilder.getTestCase(), ctx);
     }
 
     /**

@@ -37,19 +37,11 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
-    private WaitUntilAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, element);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new WaitUntilAction();
-        action.setBrowser(seleniumBrowser);
-
-        action.setProperty("class-name");
-        action.setPropertyValue("clickable");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
@@ -61,7 +53,11 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 
-        action.setCondition("hidden");
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("class-name", "clickable")
+                .condition("hidden")
+                .build();
         action.execute(context);
 
         verify(element).isDisplayed();
@@ -72,8 +68,12 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(true);
 
-        action.setTimeout(1000L);
-        action.setCondition("hidden");
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("class-name", "clickable")
+                .condition("hidden")
+                .timeout(1000L)
+                .build();
         action.execute(context);
     }
 
@@ -82,7 +82,11 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(true);
 
-        action.setCondition("visible");
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("class-name", "clickable")
+                .condition("visible")
+                .build();
         action.execute(context);
 
         verify(element).isDisplayed();
@@ -93,8 +97,12 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 
-        action.setTimeout(1000L);
-        action.setCondition("visible");
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("class-name", "clickable")
+                .condition("visible")
+                .timeout(1000L)
+                .build();
         action.execute(context);
     }
 
@@ -103,7 +111,11 @@ public class WaitUntilActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
         when(element.isDisplayed()).thenReturn(false);
 
-        action.setCondition("unknown");
+        WaitUntilAction action =  new WaitUntilAction.Builder()
+                .browser(seleniumBrowser)
+                .element("class-name", "clickable")
+                .condition("unknown")
+                .build();
         action.execute(context);
     }
 }

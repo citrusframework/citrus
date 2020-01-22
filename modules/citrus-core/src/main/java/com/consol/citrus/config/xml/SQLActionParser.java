@@ -16,6 +16,13 @@
 
 package com.consol.citrus.config.xml;
 
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
@@ -30,22 +37,18 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Bean definition parser for sql action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class SQLActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
-        
+
         String dataSource = element.getAttribute("datasource");
         if (!StringUtils.hasText(dataSource)) {
             throw new BeanCreationException("Missing proper data source reference");
@@ -54,7 +57,7 @@ public class SQLActionParser implements BeanDefinitionParser {
         List<Element> validateElements = DomUtils.getChildElementsByTagName(element, "validate");
         List<Element> extractElements = DomUtils.getChildElementsByTagName(element, "extract");
         Element scriptValidationElement = DomUtils.getChildElementByTagName(element, "validate-script");
-        
+
         if (CollectionUtils.isEmpty(validateElements) && CollectionUtils.isEmpty(extractElements) && scriptValidationElement == null) {
             beanDefinition = parseSqlAction(element);
             beanDefinition.addPropertyValue("name", "sqlUpdate:" + dataSource);
@@ -62,7 +65,7 @@ public class SQLActionParser implements BeanDefinitionParser {
             beanDefinition = parseSqlQueryAction(element, scriptValidationElement, validateElements, extractElements);
             beanDefinition.addPropertyValue("name", "sqlQuery:" + dataSource);
         }
-        
+
         beanDefinition.addPropertyReference("dataSource", dataSource);
 
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("transaction-manager"), "transactionManager");
@@ -72,9 +75,8 @@ public class SQLActionParser implements BeanDefinitionParser {
         DescriptionElementParser.doParse(element, beanDefinition);
 
         List<String> statements = new ArrayList<String>();
-        List<?> stmtElements = DomUtils.getChildElementsByTagName(element, "statement");
-        for (Iterator<?> iter = stmtElements.iterator(); iter.hasNext();) {
-            Element stmt = (Element) iter.next();
+        List<Element> stmtElements = DomUtils.getChildElementsByTagName(element, "statement");
+        for (Element stmt : stmtElements) {
             statements.add(DomUtils.getTextValue(stmt));
         }
         beanDefinition.addPropertyValue("statements", statements);
@@ -86,20 +88,20 @@ public class SQLActionParser implements BeanDefinitionParser {
 
         return beanDefinition.getBeanDefinition();
     }
-    
+
     /**
      * Parses SQL action just executing a set of statements.
      * @param element
      * @return
      */
     private BeanDefinitionBuilder parseSqlAction(Element element) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLAction.class);
-        
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLActionFactoryBean.class);
+
         String ignoreErrors = element.getAttribute("ignore-errors");
         if (ignoreErrors != null && ignoreErrors.equals("true")) {
             beanDefinition.addPropertyValue("ignoreErrors", true);
         }
-        
+
         return beanDefinition;
     }
 
@@ -111,46 +113,43 @@ public class SQLActionParser implements BeanDefinitionParser {
      * @param extractElements variable extraction elements.
      * @return
      */
-    private BeanDefinitionBuilder parseSqlQueryAction(Element element, Element scriptValidationElement, 
+    private BeanDefinitionBuilder parseSqlQueryAction(Element element, Element scriptValidationElement,
             List<Element> validateElements, List<Element> extractElements) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecuteSQLQueryActionFactoryBean.class);
 
         // check for script validation
         if (scriptValidationElement != null) {
             beanDefinition.addPropertyValue("scriptValidationContext", getScriptValidationContext(scriptValidationElement));
         }
-        
-        Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
-        for (Iterator<?> iter = validateElements.iterator(); iter.hasNext();) {
-            Element validateElement = (Element) iter.next();
+
+        Map<String, List<String>> controlResultSet = new HashMap<>();
+        for (Element validateElement : validateElements) {
             Element valueListElement = DomUtils.getChildElementByTagName(validateElement, "values");
-            
+
             if (valueListElement != null) {
-                List<String> valueList = new ArrayList<String>();
-                List<?> valueElements = DomUtils.getChildElementsByTagName(valueListElement, "value");
-                for (Iterator<?> valueElementsIt = valueElements.iterator(); valueElementsIt.hasNext();) {
-                    Element valueElement = (Element) valueElementsIt.next();
+                List<String> valueList = new ArrayList<>();
+                List<Element> valueElements = DomUtils.getChildElementsByTagName(valueListElement, "value");
+                for (Element valueElement : valueElements) {
                     valueList.add(DomUtils.getTextValue(valueElement));
                 }
                 controlResultSet.put(validateElement.getAttribute("column"), valueList);
             } else if (validateElement.hasAttribute("value")) {
                 controlResultSet.put(validateElement.getAttribute("column"), Collections.singletonList(validateElement.getAttribute("value")));
             } else {
-                throw new BeanCreationException(element.getLocalName(), 
+                throw new BeanCreationException(element.getLocalName(),
                         "Neither value attribute nor value list is set for column validation: " + validateElement.getAttribute("column"));
             }
         }
-        
+
         beanDefinition.addPropertyValue("controlResultSet", controlResultSet);
-        
-        Map<String, String> extractVariables = new HashMap<String, String>();
-        for (Iterator<?> iter = extractElements.iterator(); iter.hasNext();) {
-            Element validate = (Element) iter.next();
+
+        Map<String, String> extractVariables = new HashMap<>();
+        for (Element validate : extractElements) {
             extractVariables.put(validate.getAttribute("column"), validate.getAttribute("variable"));
         }
-        
+
         beanDefinition.addPropertyValue("extractVariables", extractVariables);
-        
+
         return beanDefinition;
     }
 
@@ -161,7 +160,7 @@ public class SQLActionParser implements BeanDefinitionParser {
      */
     private ScriptValidationContext getScriptValidationContext(Element scriptElement) {
         String type = scriptElement.getAttribute("type");
-        
+
         ScriptValidationContext validationContext = new ScriptValidationContext(type);
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {
@@ -169,7 +168,103 @@ public class SQLActionParser implements BeanDefinitionParser {
         } else {
             validationContext.setValidationScript(DomUtils.getTextValue(scriptElement));
         }
-        
+
         return validationContext;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ExecuteSQLActionFactoryBean extends AbstractDatabaseConnectingTestActionFactoryBean<ExecuteSQLAction, ExecuteSQLAction.Builder> {
+
+        private final ExecuteSQLAction.Builder builder = new ExecuteSQLAction.Builder();
+
+        @Override
+        public ExecuteSQLAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        /**
+         * Ignore errors during execution.
+         * @param ignoreErrors boolean flag to set
+         */
+        public void setIgnoreErrors(boolean ignoreErrors) {
+            builder.ignoreErrors(ignoreErrors);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ExecuteSQLAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ExecuteSQLAction.Builder getBuilder() {
+            return builder;
+        }
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ExecuteSQLQueryActionFactoryBean extends AbstractDatabaseConnectingTestActionFactoryBean<ExecuteSQLQueryAction, ExecuteSQLQueryAction.Builder> {
+
+        private final ExecuteSQLQueryAction.Builder builder = new ExecuteSQLQueryAction.Builder();
+
+        @Override
+        public ExecuteSQLQueryAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        /**
+         * Set expected control result set. Keys represent the column names, values
+         * the expected values.
+         * @param controlResultSet
+         */
+        public void setControlResultSet(Map<String, List<String>> controlResultSet) {
+            controlResultSet.forEach((key, value) -> builder.validate(key, value.toArray(new String[0])));
+        }
+
+        /**
+         * User can extract column values to test variables. Map holds column names (keys) and
+         * respective target variable names (values).
+         * @param variablesMap the variables to be created out of database values
+         */
+        public void setExtractVariables(Map<String, String> variablesMap) {
+            variablesMap.forEach(builder::extract);
+        }
+
+        /**
+         * Sets the script validation context.
+         * @param scriptValidationContext the scriptValidationContext to set
+         */
+        public void setScriptValidationContext(ScriptValidationContext scriptValidationContext) {
+            if (scriptValidationContext.getValidationScript() != null) {
+                builder.validateScript(scriptValidationContext.getValidationScript(), scriptValidationContext.getScriptType());
+            }
+
+            if (scriptValidationContext.getValidationScriptResourcePath() != null) {
+                builder.validateScriptResource(scriptValidationContext.getValidationScriptResourcePath(),
+                        scriptValidationContext.getMessageType(),
+                        Charset.forName(scriptValidationContext.getValidationScriptResourceCharset()));
+            }
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ExecuteSQLQueryAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ExecuteSQLQueryAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

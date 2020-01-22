@@ -50,7 +50,7 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Sequence.class);
         assertEquals(test.getActions().get(0).getName(), "sequential");
-        
+
         Sequence container = (Sequence)test.getActions().get(0);
         assertEquals(container.getActionCount(), 2);
         assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
@@ -66,14 +66,14 @@ public class SequentialTestRunnerTest extends AbstractTestNGUnitTest {
                 sequential()
                     .actions(
                         echo("${var}"),
-                        new AbstractTestAction() {
+                        () -> new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.setVariable("anonymous", "anonymous");
                             }
                         },
                         sleep(100L),
-                        new AbstractTestAction() {
+                        () -> new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.getVariable("anonymous");

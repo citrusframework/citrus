@@ -37,14 +37,14 @@ public class ActionConditionTest {
 
     @Test
     public void isSatisfiedShouldSucceed() {
-        ActionCondition testling = new ActionCondition(new EchoAction());
+        ActionCondition testling = new ActionCondition(new EchoAction.Builder().build());
 
         Assert.assertTrue(testling.isSatisfied(context));
     }
 
     @Test
     public void isSatisfiedShouldFail() {
-        ActionCondition testling = new ActionCondition(new FailAction().setMessage("Fail!"));
+        ActionCondition testling = new ActionCondition(new FailAction.Builder().message("Fail!").build());
 
         when(context.replaceDynamicContentInString("Fail!")).thenReturn("Fail!");
 

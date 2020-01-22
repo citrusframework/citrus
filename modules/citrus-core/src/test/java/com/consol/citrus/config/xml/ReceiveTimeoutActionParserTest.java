@@ -33,14 +33,13 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
     public void testReceiveTimeoutActionParser() {
         assertActionCount(4);
         assertActionClassAndName(ReceiveTimeoutAction.class, "expect-timeout:myMessageEndpoint");
-        
+
         ReceiveTimeoutAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getTimeout(), 1000L);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
         Assert.assertNull(action.getMessageSelector());
 
-        
         action = getNextTestActionFromTest();
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
@@ -60,7 +59,7 @@ public class ReceiveTimeoutActionParserTest extends AbstractActionParserTest<Rec
         Assert.assertEquals(action.getMessageSelectorMap().size(), 1L);
         Assert.assertEquals(action.getMessageSelectorMap().get("operation"), "Test");
     }
-    
+
     @Test
     public void testEmptyEndpointReferenceTemplate() {
         try {

@@ -16,15 +16,16 @@
 
 package com.consol.citrus.actions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -40,8 +41,10 @@ public class InputActionTest extends AbstractTestNGUnitTest {
 
         when(inputReader.readLine()).thenReturn("yes");
 
-        InputAction input = initializeInputAction();
-        input.setMessage("Is that correct?");
+        InputAction input = new InputAction.Builder()
+                .reader(inputReader)
+                .message("Is that correct?")
+                .build();
 
         input.execute(context);
 
@@ -54,16 +57,18 @@ public class InputActionTest extends AbstractTestNGUnitTest {
         reset(inputReader);
 
 	    context.setVariable("userinput", "yes");
-	    
-		InputAction input = initializeInputAction();
-		input.setMessage("Is that correct?");
-		
+
+		InputAction input = new InputAction.Builder()
+                .reader(inputReader)
+		        .message("Is that correct?")
+                .build();
+
 		input.execute(context);
 
         Assert.assertEquals(context.getVariable("userinput"), "yes");
 
 	}
-	
+
 	@Test
     public void testValidAnswers() throws IOException {
         reset(inputReader);
@@ -71,23 +76,15 @@ public class InputActionTest extends AbstractTestNGUnitTest {
         when(inputReader.readLine()).thenReturn("i dont know");
         when(inputReader.readLine()).thenReturn("no");
 
-        InputAction input = initializeInputAction();
-        input.setValidAnswers("yes/no");
-        input.setMessage("Is that correct?");
+        InputAction input = new InputAction.Builder()
+                .reader(inputReader)
+                .message("Is that correct?")
+                .answers("yes/no")
+                .build();
 
         input.execute(context);
 
         Assert.assertEquals(context.getVariable("userinput"), "no");
 
-    }
-
-    private InputAction initializeInputAction() {
-        return new InputAction() {
-            @Override
-            protected BufferedReader getInputReader() {
-                // returning reader mock instead of system input reader
-                return inputReader;
-            }
-        };
     }
 }

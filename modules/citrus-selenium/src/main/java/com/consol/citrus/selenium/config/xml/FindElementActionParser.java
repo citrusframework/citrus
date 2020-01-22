@@ -16,15 +16,17 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.FindElementAction;
+import org.openqa.selenium.By;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.*;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -95,7 +97,129 @@ public class FindElementActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return FindElementAction.class;
+    protected Class<? extends ElementActionFactoryBean<?, ?>> getBrowserActionClass() {
+        return FindElementActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class FindElementActionFactoryBean extends ElementActionFactoryBean<FindElementAction, FindElementAction.Builder> {
+
+        private final FindElementAction.Builder builder = new FindElementAction.Builder();
+
+        /**
+         * Sets the attributes.
+         *
+         * @param attributes
+         */
+        public void setAttributes(Map<String, String> attributes) {
+            attributes.forEach(builder::attribute);
+        }
+
+        /**
+         * Sets the styles.
+         *
+         * @param styles
+         */
+        public void setStyles(Map<String, String> styles) {
+            styles.forEach(builder::style);
+        }
+
+        /**
+         * Sets the displayed.
+         *
+         * @param displayed
+         */
+        public void setDisplayed(boolean displayed) {
+            builder.displayed(displayed);
+        }
+
+        /**
+         * Sets the enabled.
+         *
+         * @param enabled
+         */
+        public void setEnabled(boolean enabled) {
+            builder.enabled(enabled);
+        }
+
+        /**
+         * Sets the text.
+         *
+         * @param text
+         */
+        public void setText(String text) {
+            builder.text(text);
+        }
+
+        @Override
+        public FindElementAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return FindElementAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public FindElementAction.Builder getBuilder() {
+            return builder;
+        }
+    }
+
+    /**
+     * Abstract element action factory bean.
+     * @param <T>
+     * @param <B>
+     */
+    public static abstract class ElementActionFactoryBean<T extends FindElementAction, B extends FindElementAction.ElementActionBuilder<T, B>> extends AbstractSeleniumActionFactoryBean<T, B> {
+
+        protected String property;
+        protected String propertyValue;
+
+        /**
+         * Sets the property.
+         * @param property
+         */
+        public void setProperty(String property) {
+            this.property = property;
+        }
+
+        /**
+         * Sets the propertyValue.
+         * @param propertyValue
+         */
+        public void setPropertyValue(String propertyValue) {
+            this.propertyValue = propertyValue;
+        }
+
+
+        /**
+         * Sets the tagName.
+         *
+         * @param tagName
+         */
+        public void setTagName(String tagName) {
+            getBuilder().tagName(tagName);
+        }
+
+        /**
+         * Sets the by.
+         * @param by
+         */
+        public void setBy(By by) {
+            getBuilder().element(by);
+        }
+
+        public T getObject(B builder) throws Exception {
+            builder.element(property, propertyValue);
+            return builder.build();
+        }
     }
 }

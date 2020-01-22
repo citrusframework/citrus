@@ -16,39 +16,53 @@
 
 package com.consol.citrus;
 
+import java.util.Collections;
+
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.container.*;
+import com.consol.citrus.container.SequenceAfterSuite;
+import com.consol.citrus.container.SequenceBeforeSuite;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.*;
+import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.report.TestSuiteListener;
+import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class TestSuiteTest extends AbstractTestNGUnitTest {
 
-    private TestSuiteListeners testSuiteListeners = new TestSuiteListeners();
+    private TestSuiteListeners testSuiteListeners;
     private TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
     private Citrus citrus;
 
-    private SequenceBeforeSuite beforeActions = new SequenceBeforeSuite();
-    private SequenceAfterSuite afterActions = new SequenceAfterSuite();
+    private SequenceBeforeSuite beforeActions;
+    private SequenceAfterSuite afterActions;
 
-    @BeforeClass
-    public void setup() {
+    @BeforeMethod
+    public void resetMocks() {
+        reset(testSuiteListener);
+        reset(applicationContextMock);
+
+        testSuiteListeners = new TestSuiteListeners();
         testSuiteListeners.addTestSuiteListener(testSuiteListener);
+        beforeActions = new SequenceBeforeSuite();
+        afterActions = new SequenceAfterSuite();
 
         when(applicationContextMock.getBean(TestContextFactory.class)).thenReturn(testContextFactory);
         when(applicationContextMock.getBeansOfType(SequenceAfterSuite.class)).thenReturn(Collections.singletonMap("afterActions", afterActions));
@@ -59,15 +73,9 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
         citrus = Citrus.newInstance(applicationContextMock);
     }
 
-    @BeforeMethod
-    public void resetMocks() {
-        reset(testSuiteListener);
-    }
-
     @Test
     public void testBeforeSuite() {
-        beforeActions.getActions().clear();
-        beforeActions.addTestAction(new EchoAction());
+        beforeActions.addTestAction(new EchoAction.Builder().build());
 
         citrus.beforeSuite("sample-suite");
 
@@ -77,8 +85,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBeforeSuite() {
-        beforeActions.getActions().clear();
-        beforeActions.addTestAction(new FailAction());
+        beforeActions.addTestAction(new FailAction.Builder().build());
 
         try {
             citrus.beforeSuite("sample-suite");
@@ -94,11 +101,9 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
     @Test
     public void testFailBeforeSuiteWithAfterSuite() {
         TestAction afterSuiteAction = Mockito.mock(TestAction.class);
-        afterActions.getActions().clear();
         afterActions.addTestAction(afterSuiteAction);
-        
-        beforeActions.getActions().clear();
-        beforeActions.addTestAction(new FailAction());
+
+        beforeActions.addTestAction(new FailAction.Builder().build());
 
         try {
             citrus.beforeSuite("sample-suite");
@@ -110,25 +115,23 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
             verify(afterSuiteAction).execute(any(TestContext.class));
             return;
         }
-        
+
         Assert.fail("Missing CitrusRuntimeException due to failing before suite action");
     }
-    
+
     @Test
     public void testAfterSuite() {
-        afterActions.getActions().clear();
-        afterActions.addTestAction(new EchoAction());
+        afterActions.addTestAction(new EchoAction.Builder().build());
 
         citrus.afterSuite("sample-suite");
 
         verify(testSuiteListener).onFinish();
         verify(testSuiteListener).onFinishSuccess();
     }
-    
+
     @Test
     public void testFailAfterSuite() {
-        afterActions.getActions().clear();
-        afterActions.addTestAction(new FailAction());
+        afterActions.addTestAction(new FailAction.Builder().build());
 
         try {
             citrus.afterSuite("sample-suite");
@@ -140,20 +143,20 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
 
         Assert.fail("Missing CitrusRuntimeException due to failing after suite action");
     }
-    
+
     @Test
     public void testBeforeTest() {
         SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
-        
-        beforeTestActions.addTestAction(new EchoAction());
+
+        beforeTestActions.addTestAction(new EchoAction.Builder().build());
         beforeTestActions.execute(createTestContext());
     }
-    
+
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testBeforeTestFail() {
         SequenceBeforeTest beforeTestActions = new SequenceBeforeTest();
-        
-        beforeTestActions.addTestAction(new FailAction());
+
+        beforeTestActions.addTestAction(new FailAction.Builder().build());
         beforeTestActions.execute(createTestContext());
     }
 }

@@ -16,8 +16,13 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.consol.citrus.config.xml.AbstractSendMessageActionFactoryBean;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
+import com.consol.citrus.ws.message.SoapAttachment;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -25,12 +30,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Bean definition parser for send soap fault action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
@@ -72,7 +74,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
 
     /**
      * Parses the fault detail element.
-     * 
+     *
      * @param builder
      * @param faultElement the fault DOM element.
      */
@@ -83,7 +85,7 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
 
         for (Element faultDetailElement : faultDetailElements) {
             if (faultDetailElement.hasAttribute("file")) {
-                
+
                 if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
                     throw new BeanCreationException("You tried to set fault-detail by file resource attribute and inline text value at the same time! " +
                             "Please choose one of them.");
@@ -107,7 +109,93 @@ public class SendSoapFaultActionParser extends SendSoapMessageActionParser {
     }
 
     @Override
-    protected Class<?> getBeanDefinitionClass() {
-        return SendSoapFaultAction.class;
+    protected Class<SendSoapFaultActionFactoryBean> getBeanDefinitionClass() {
+        return SendSoapFaultActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class SendSoapFaultActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendSoapFaultAction, SendSoapFaultAction.Builder> {
+
+        private final SendSoapFaultAction.Builder builder = new SendSoapFaultAction.Builder();
+
+        /**
+         * Sets the control attachments.
+         * @param attachments the control attachments
+         */
+        public void setAttachments(List<SoapAttachment> attachments) {
+            attachments.forEach(builder::attachment);
+        }
+
+        /**
+         * Enable or disable mtom attachments
+         * @param mtomEnabled
+         */
+        public void setMtomEnabled(boolean mtomEnabled) {
+            builder.mtomEnabled(mtomEnabled);
+        }
+
+        /**
+         * Set the fault code QName string. This can be either
+         * a fault code in {@link org.springframework.ws.soap.server.endpoint.SoapFaultDefinition}
+         * or a custom QName like {http://www.consol.de/citrus}citrus:TEC-1000
+         *
+         * @param faultCode the faultCode to set
+         */
+        public void setFaultCode(String faultCode) {
+            builder.faultCode(faultCode);
+        }
+
+        /**
+         * Set the fault reason string describing the fault.
+         * @param faultString the faultString to set
+         */
+        public void setFaultString(String faultString) {
+            builder.faultString(faultString);
+        }
+
+        /**
+         * Sets the faultActor.
+         * @param faultActor the faultActor to set
+         */
+        public void setFaultActor(String faultActor) {
+            builder.faultActor(faultActor);
+        }
+
+        /**
+         * Sets the faultDetails.
+         * @param faultDetails the faultDetails to set
+         */
+        public void setFaultDetails(List<String> faultDetails) {
+            faultDetails.forEach(builder::faultDetail);
+        }
+
+        /**
+         * Sets the fault detail resource paths.
+         * @param faultDetailResourcePaths
+         */
+        public void setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
+            faultDetailResourcePaths.forEach(builder::faultDetailResource);
+        }
+
+        @Override
+        public SendSoapFaultAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return SendSoapFaultAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public SendSoapFaultAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

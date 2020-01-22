@@ -28,14 +28,12 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for call template action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class CallTemplateParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
@@ -60,7 +58,7 @@ public class CallTemplateParser implements BeanDefinitionParser {
                 } else {
                 	Element valueElement = DomUtils.getChildElementByTagName(parameterElement, "value");
                 	if (valueElement != null) {
-                		value = valueElement.getTextContent(); 
+                		value = valueElement.getTextContent();
                 	}
                 }
                 if (value != null) {

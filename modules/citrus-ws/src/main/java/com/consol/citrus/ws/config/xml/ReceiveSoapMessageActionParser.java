@@ -16,31 +16,33 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractReceiveMessageActionFactoryBean;
 import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.validation.SoapAttachmentValidator;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Parser for SOAP message receiver component in Citrus ws namespace.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
 
     @Override
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ReceiveSoapMessageAction.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ReceiveSoapMessageActionFactoryBean.class);
 
         List<Element> attachmentElements = DomUtils.getChildElementsByTagName(element, "attachment");
         List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
@@ -49,13 +51,13 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
         }
 
         builder.addPropertyValue("attachments", attachments);
-        
+
         if (!attachments.isEmpty()) {
             BeanDefinitionParserUtils.setPropertyReference(builder, attachmentElements.get(0).getAttribute("validator"),
                     "attachmentValidator", "soapAttachmentValidator");
         }
-        
-        return builder; 
+
+        return builder;
     }
 
     @Override
@@ -72,6 +74,49 @@ public class ReceiveSoapMessageActionParser extends ReceiveMessageActionParser {
 
         if (actionElement.hasAttribute("accept")) {
             messageBuilder.getMessageHeaders().put(SoapMessageHeaders.HTTP_ACCEPT, actionElement.getAttribute("accept"));
+        }
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ReceiveSoapMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveSoapMessageAction, ReceiveSoapMessageAction.Builder> {
+
+        private final ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder();
+
+        /**
+         * Sets the control attachments.
+         * @param attachments the control attachments
+         */
+        public void setAttachments(List<SoapAttachment> attachments) {
+            attachments.forEach(builder::attachment);
+        }
+
+        /**
+         * Set the attachment validator.
+         * @param attachmentValidator the attachmentValidator to set
+         */
+        public void setAttachmentValidator(SoapAttachmentValidator attachmentValidator) {
+            builder.attachmentValidator(attachmentValidator);
+        }
+
+        @Override
+        public ReceiveSoapMessageAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ReceiveSoapMessageAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ReceiveSoapMessageAction.Builder getBuilder() {
+            return builder;
         }
     }
 }

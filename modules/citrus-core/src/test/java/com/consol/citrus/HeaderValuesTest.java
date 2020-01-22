@@ -16,6 +16,8 @@
 
 package com.consol.citrus;
 
+import java.util.HashMap;
+
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -27,16 +29,16 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -45,9 +47,7 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
-    private ReceiveMessageAction receiveMessageBean;
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValues() {
@@ -55,13 +55,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
@@ -70,32 +70,30 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
-        
+
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesComplete() {
@@ -103,13 +101,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
@@ -118,34 +116,32 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "A");
         validateHeaderValues.put("header-valueB", "B");
         validateHeaderValues.put("header-valueC", "C");
-        
+
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesWrongExpectedValue() {
@@ -153,13 +149,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
@@ -168,32 +164,30 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "wrong");
-        
+
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesForWrongElement() {
@@ -201,13 +195,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
@@ -216,32 +210,30 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-        
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-wrong", "A");
-        
+
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyHeaderValues() {
@@ -249,13 +241,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "")
                         .setHeader("header-valueB", "")
@@ -264,34 +256,32 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "");
         validateHeaderValues.put("header-valueB", "");
         validateHeaderValues.put("header-valueC", "");
-        
+
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateHeaderValuesNullComparison() {
@@ -299,13 +289,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "")
                         .setHeader("header-valueB", "")
@@ -314,32 +304,30 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, Object> validateHeaderValues = new HashMap<String, Object>();
         validateHeaderValues.put("header-valueA", "null");
         validateHeaderValues.put("header-valueB", "null");
         validateHeaderValues.put("header-valueC", "null");
-        
+
         controlMessageBuilder.setMessageHeaders(validateHeaderValues);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 
     @Test
@@ -349,13 +337,13 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>")
                         .setHeader("header-valueA", "A")
                         .setHeader("header-valueB", "B")
@@ -364,35 +352,32 @@ public class HeaderValuesTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                                 + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                            + "</element>" 
+                            + "</element>"
                             + "</root>");
-        
+
         HashMap<String, String> extractHeaderValues = new HashMap<String, String>();
         extractHeaderValues.put("header-valueA", "${valueA}");
         extractHeaderValues.put("header-valueB", "${valueB}");
-        
+
         MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
         variableExtractor.setHeaderMappings(extractHeaderValues);
-        
-        receiveMessageBean.addVariableExtractors(variableExtractor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(new HeaderValidationContext());
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
-        
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .variableExtractor(variableExtractor)
+                .validationContext(new HeaderValidationContext())
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
+
         Assert.assertTrue(context.getVariables().containsKey("valueA"));
         Assert.assertEquals(context.getVariables().get("valueA"), "A");
         Assert.assertTrue(context.getVariables().containsKey("valueB"));

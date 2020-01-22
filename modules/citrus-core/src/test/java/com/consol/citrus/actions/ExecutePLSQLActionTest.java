@@ -30,43 +30,43 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  */
 public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
-	
-    private ExecutePLSQLAction executePLSQLAction;
-    
+
+    private ExecutePLSQLAction.Builder executePLSQLActionBuilder;
+
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
 
     @BeforeMethod
     public void setUp() {
-        executePLSQLAction  = new ExecutePLSQLAction();
-        executePLSQLAction.setJdbcTemplate(jdbcTemplate);
+        executePLSQLActionBuilder = new ExecutePLSQLAction.Builder()
+                .jdbcTemplate(jdbcTemplate);
     }
-    
+
 	@Test
 	public void testPLSQLExecutionWithInlineScript() {
-	    String stmt = "DECLARE " + 
+	    String stmt = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;/";
-	    
-	    executePLSQLAction.setScript(stmt);
-	    
-	    String controlStatement = "DECLARE " + 
+
+	    executePLSQLActionBuilder.sqlScript(stmt);
+
+	    String controlStatement = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;";
-	    
+
 	    reset(jdbcTemplate);
-	    executePLSQLAction.execute(context);
+	    executePLSQLActionBuilder.build().execute(context);
 	    verify(jdbcTemplate).execute(controlStatement);
 	}
-	
+
 	@Test
 	public void testPLSQLExecutionWithTransaction() {
 	    String stmt = "DECLARE " +
@@ -77,8 +77,8 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;/";
 
-	    executePLSQLAction.setTransactionManager(transactionManager);
-	    executePLSQLAction.setScript(stmt);
+	    executePLSQLActionBuilder.transactionManager(transactionManager);
+	    executePLSQLActionBuilder.sqlScript(stmt);
 
 	    String controlStatement = "DECLARE " +
                 "Zahl1 number(2);" +
@@ -89,50 +89,50 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
              "END;";
 
 	    reset(jdbcTemplate, transactionManager);
-	    executePLSQLAction.execute(context);
+	    executePLSQLActionBuilder.build().execute(context);
 	    verify(jdbcTemplate).execute(controlStatement);
 	}
-	
+
 	@Test
     public void testPLSQLExecutionWithInlineScriptNoEndingCharacter() {
-        String stmt = "DECLARE " + 
+        String stmt = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;";
-        
-        executePLSQLAction.setScript(stmt);
-        
-        String controlStatement = "DECLARE " + 
+
+        executePLSQLActionBuilder.sqlScript(stmt);
+
+        String controlStatement = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;";
-        
+
         reset(jdbcTemplate);
-        executePLSQLAction.execute(context);
+        executePLSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate).execute(controlStatement);
     }
-	
+
 	@Test
     public void testPLSQLExecutionWithFileResource() {
-        executePLSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-plsql.sql");
-        
-        String controlStatement = "DECLARE\n" + 
+        executePLSQLActionBuilder.sqlResource("classpath:com/consol/citrus/actions/test-plsql.sql");
+
+        String controlStatement = "DECLARE\n" +
                 "    Zahl1 number(2);\n" +
                 "    Text varchar(20) := 'Hello World!';\n" +
              "BEGIN\n" +
                 "    EXECUTE IMMEDIATE \"\n" +
                     "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
              "END;";
-        
+
         reset(jdbcTemplate);
 
-        executePLSQLAction.execute(context);
+        executePLSQLActionBuilder.build().execute(context);
 
         verify(jdbcTemplate).execute(controlStatement);
     }
@@ -141,53 +141,53 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
     public void testPLSQLExecutionWithInlineScriptVariableSupport() {
 	    context.setVariable("myText", "Hello World!");
 	    context.setVariable("tableName", "Greetings");
-	    
-        String stmt = "DECLARE " + 
+
+        String stmt = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := '${myText}';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from ${tableName} where text='${myText}';\"" +
              "END;/";
-        
-        executePLSQLAction.setScript(stmt);
-        
-        String controlStatement = "DECLARE " + 
+
+        executePLSQLActionBuilder.sqlScript(stmt);
+
+        String controlStatement = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;";
-        
+
         reset(jdbcTemplate);
-        executePLSQLAction.execute(context);
+        executePLSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate).execute(controlStatement);
     }
-	
+
 	@Test
     public void testPLSQLExecutionWithFileResourceVariableSupport() {
 	    context.setVariable("myText", "Hello World!");
         context.setVariable("tableName", "Greetings");
-        
-        executePLSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-plsql-with-variables.sql");
-        
-        String controlStatement = "DECLARE\n" + 
+
+        executePLSQLActionBuilder.sqlResource("classpath:com/consol/citrus/actions/test-plsql-with-variables.sql");
+
+        String controlStatement = "DECLARE\n" +
                 "    Zahl1 number(2);\n" +
                 "    Text varchar(20) := 'Hello World!';\n" +
              "BEGIN\n" +
                 "    EXECUTE IMMEDIATE \"\n" +
                     "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
              "END;";
-        
+
         reset(jdbcTemplate);
-        executePLSQLAction.execute(context);
+        executePLSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate).execute(controlStatement);
     }
-	
+
 	@Test
     public void testPLSQLExecutionWithMultipleInlineStatements() {
-        String stmt = "DECLARE " + 
+        String stmt = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
@@ -195,7 +195,7 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;" +
              "/" +
-             "DECLARE " + 
+             "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
@@ -203,36 +203,36 @@ public class ExecutePLSQLActionTest extends AbstractTestNGUnitTest {
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;" +
              "/";
-        
-        executePLSQLAction.setScript(stmt);
-        
-        String controlStatement = "DECLARE " + 
+
+        executePLSQLActionBuilder.sqlScript(stmt);
+
+        String controlStatement = "DECLARE " +
                 "Zahl1 number(2);" +
                 "Text varchar(20) := 'Hello World!';" +
              "BEGIN" +
                 "EXECUTE IMMEDIATE \"" +
                     "select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"" +
              "END;";
-        
+
         reset(jdbcTemplate);
-        executePLSQLAction.execute(context);
+        executePLSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate, times(2)).execute(controlStatement);
     }
-	
+
 	@Test
     public void testPLSQLExecutionWithFileResourceMultipleStmts() {
-        executePLSQLAction.setSqlResourcePath("classpath:com/consol/citrus/actions/test-plsql-multiple-stmts.sql");
-        
-        String controlStatement = "DECLARE\n" + 
+        executePLSQLActionBuilder.sqlResource("classpath:com/consol/citrus/actions/test-plsql-multiple-stmts.sql");
+
+        String controlStatement = "DECLARE\n" +
                 "    Zahl1 number(2);\n" +
                 "    Text varchar(20) := 'Hello World!';\n" +
              "BEGIN\n" +
                 "    EXECUTE IMMEDIATE \"\n" +
                     "        select number_of_greetings into Zahl1 from Greetings where text='Hello World!';\"\n" +
              "END;";
-        
+
         reset(jdbcTemplate);
-        executePLSQLAction.execute(context);
+        executePLSQLActionBuilder.build().execute(context);
         verify(jdbcTemplate, times(2)).execute(controlStatement);
     }
 }

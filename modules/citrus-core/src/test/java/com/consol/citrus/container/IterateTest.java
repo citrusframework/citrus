@@ -25,11 +25,10 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -40,15 +39,13 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
     @Test(dataProvider = "expressionProvider")
     public void testIteration(String expression) {
-        Iterate iterate = new Iterate();
-
         reset(action);
 
-        iterate.setActions(Collections.singletonList(action));
-
-        iterate.setCondition(expression);
-        iterate.setIndexName("i");
-
+        Iterate iterate = new Iterate.Builder()
+                .condition(expression)
+                .index("i")
+                .actions(() -> action)
+                .build();
         iterate.execute(context);
 
         Assert.assertNotNull(context.getVariable("${i}"));
@@ -68,16 +65,14 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testStep() {
-        Iterate iterate = new Iterate();
-        
         reset(action);
 
-        iterate.setActions(Collections.singletonList(action));
-
-        iterate.setCondition("i lt= 10");
-        iterate.setIndexName("i");
-        iterate.setStep(2);
-
+        Iterate iterate = new Iterate.Builder()
+                .condition("i lt= 10")
+                .index("i")
+                .step(2)
+                .actions(() -> action)
+                .build();
         iterate.execute(context);
 
         Assert.assertNotNull(context.getVariable("${i}"));
@@ -85,20 +80,18 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
         verify(action, times(5)).execute(context);
     }
-    
+
     @Test
     public void testStart() {
-        Iterate iterate = new Iterate();
-        
         reset(action);
 
-        iterate.setActions(Collections.singletonList(action));
-
-        iterate.setCondition("i lt= 10");
-        iterate.setIndexName("i");
-        iterate.setStep(2);
-        iterate.setStart(2);
-
+        Iterate iterate = new Iterate.Builder()
+                .condition("i lt= 10")
+                .index("i")
+                .step(2)
+                .startsWith(2)
+                .actions(() -> action)
+                .build();
         iterate.execute(context);
 
         Assert.assertNotNull(context.getVariable("${i}"));
@@ -106,49 +99,42 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
         verify(action, times(5)).execute(context);
     }
-    
+
     @Test
     public void testNoIterationBasedOnCondition() {
-        Iterate iterate = new Iterate();
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
         TestAction action = Mockito.mock(TestAction.class);
 
         reset(action);
-        actions.add(action);
-        iterate.setActions(actions);
-        
-        iterate.setCondition("i lt 0");
-        iterate.setIndexName("i");
-        
+
+        Iterate iterate = new Iterate.Builder()
+                .condition("i lt 0")
+                .index("i")
+                .actions(action)
+                .build();
         iterate.execute(context);
-        
+
         Assert.assertNull(context.getVariables().get("i"));
     }
 
     @Test
     public void testIterationWithIndexManipulation() {
-        Iterate iterate = new Iterate();
-
-        List<TestAction> actions = new ArrayList<TestAction>();
         TestAction incrementTestAction = new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
-                Long end = Long.valueOf(context.getVariable("end"));
+                long end = Long.parseLong(context.getVariable("end"));
                 context.setVariable("end", String.valueOf(end - 25));
             }
         };
 
         reset(action);
 
-        actions.add(action);
-        actions.add(incrementTestAction);
-        iterate.setActions(actions);
-
-        iterate.setCondition("i lt ${end}");
-        iterate.setIndexName("i");
-
         context.setVariable("end", 100);
+
+        Iterate iterate = new Iterate.Builder()
+                .condition("i lt ${end}")
+                .index("i")
+                .actions(action, incrementTestAction)
+                .build();
         iterate.execute(context);
 
         Assert.assertNotNull(context.getVariables().get("i"));
@@ -159,19 +145,13 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterationConditionExpression() {
-        Iterate iterate = new Iterate();
-
         reset(action);
 
-        iterate.setActions(Collections.singletonList(action));
-
-        iterate.setConditionExpression(new IteratingConditionExpression() {
-            @Override
-            public boolean evaluate(int index, TestContext context) {
-                return index <= 5;
-            }
-        });
-
+        Iterate iterate = new Iterate.Builder()
+                .condition((index, context) -> index <= 5)
+                .index("i")
+                .actions(() -> action)
+                .build();
         iterate.execute(context);
 
         Assert.assertNotNull(context.getVariable("${i}"));
@@ -182,14 +162,13 @@ public class IterateTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHamcrestIterationConditionExpression() {
-        Iterate iterate = new Iterate();
-
         reset(action);
 
-        iterate.setActions(Collections.singletonList(action));
-
-        iterate.setConditionExpression(new HamcrestConditionExpression(lessThanOrEqualTo(5)));
-
+        Iterate iterate = new Iterate.Builder()
+                .condition(new HamcrestConditionExpression(lessThanOrEqualTo(5)))
+                .index("i")
+                .actions(() -> action)
+                .build();
         iterate.execute(context);
 
         Assert.assertNotNull(context.getVariable("${i}"));

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.Collections;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -51,7 +53,7 @@ public class TraceVariablesTestRunnerTest extends AbstractTestNGUnitTest {
 
         TraceVariablesAction action = (TraceVariablesAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "trace");
-        Assert.assertNull(action.getVariableNames());
+        Assert.assertEquals(action.getVariableNames(), Collections.emptyList());
 
         action = (TraceVariablesAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "trace");

@@ -30,8 +30,8 @@ public class HoverAction extends FindElementAction {
     /**
      * Default constructor.
      */
-    public HoverAction() {
-        super("hover");
+    public HoverAction(Builder builder) {
+        super("hover", builder);
     }
 
     @Override
@@ -40,5 +40,16 @@ public class HoverAction extends FindElementAction {
 
         Actions builder = new Actions(browser.getWebDriver());
         builder.moveToElement(webElement).perform();
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends ElementActionBuilder<HoverAction, Builder> {
+
+        @Override
+        public HoverAction build() {
+            return new HoverAction(this);
+        }
     }
 }

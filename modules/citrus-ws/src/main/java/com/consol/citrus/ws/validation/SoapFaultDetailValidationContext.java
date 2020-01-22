@@ -16,17 +16,17 @@
 
 package com.consol.citrus.ws.validation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Special validation context holds 1-n {@link XmlMessageValidationContext} instances for
  * 1-n SOAP fault detail elements.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SoapFaultDetailValidationContext extends DefaultValidationContext {
@@ -54,7 +54,8 @@ public class SoapFaultDetailValidationContext extends DefaultValidationContext {
      * Adds new validation context to the list of contexts.
      * @param context
      */
-    public void addValidationContext(XmlMessageValidationContext context) {
+    public SoapFaultDetailValidationContext addValidationContext(XmlMessageValidationContext context) {
         this.validationContexts.add(context);
+        return this;
     }
 }

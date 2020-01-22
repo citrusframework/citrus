@@ -16,44 +16,46 @@
 
 package com.consol.citrus.script;
 
-import groovy.lang.GroovyClassLoader;
-import groovy.lang.GroovyObject;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.script.TemplateBasedScriptBuilder;
-
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import groovy.lang.GroovyClassLoader;
+import groovy.lang.GroovyObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 /**
  * Action executes groovy scripts either specified inline or from external file resource.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
 public class GroovyAction extends AbstractTestAction {
 
     /** Inline groovy script */
-    private String script;
+    private final String script;
 
     /** External script file resource path */
-    private String scriptResourcePath;
+    private final String scriptResourcePath;
 
     /** Script template code */
-    private String scriptTemplate;
-    
+    private final String scriptTemplate;
+
     /** Static code snippet for basic groovy action implementation */
-    private String scriptTemplatePath = "classpath:com/consol/citrus/script/script-template.groovy";
-    
+    private final String scriptTemplatePath;
+
     /** Manage automatic groovy template usage */
-    private boolean useScriptTemplate = true;
+    private final boolean useScriptTemplate;
 
     /** Executes a script using the TestContext */
     public interface ScriptExecutor {
@@ -66,8 +68,14 @@ public class GroovyAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public GroovyAction() {
-        setName("groovy");
+    public GroovyAction(Builder builder) {
+        super("groovy", builder);
+
+        this.script = builder.script;
+        this.scriptResourcePath = builder.scriptResourcePath;
+        this.scriptTemplate = builder.scriptTemplate;
+        this.scriptTemplatePath = builder.scriptTemplatePath;
+        this.useScriptTemplate = builder.useScriptTemplate;
     }
 
     @Override
@@ -135,59 +143,19 @@ public class GroovyAction extends AbstractTestAction {
     }
 
     /**
-     * Set the groovy script code.
-     * @param script the script to set
-     */
-    public void setScript(String script) {
-        this.script = script;
-    }
-
-    /**
      * Get the groovy script.
      * @return the script
      */
     public String getScript() {
         return script;
     }
-    
+
     /**
      * Get the file resource.
      * @return the fileResource
      */
     public String getScriptResourcePath() {
         return scriptResourcePath;
-    }
-
-    /**
-     * Set file resource.
-     * @param fileResource the fileResource to set
-     */
-    public void setScriptResourcePath(String fileResource) {
-        this.scriptResourcePath = fileResource;
-    }
-
-    /**
-     * Sets the script template.
-     * @param scriptTemplate
-     */
-    public void setScriptTemplate(String scriptTemplate) {
-        this.scriptTemplate = scriptTemplate;
-    }
-
-    /**
-     * Set the script template resource.
-     * @param scriptTemplate the scriptTemplate to set
-     */
-    public void setScriptTemplatePath(String scriptTemplate) {
-        this.scriptTemplatePath = scriptTemplate;
-    }
-
-    /**
-     * Prevent script template usage if false.
-     * @param useScriptTemplate the useScriptTemplate to set
-     */
-    public void setUseScriptTemplate(boolean useScriptTemplate) {
-        this.useScriptTemplate = useScriptTemplate;
     }
 
     /**
@@ -212,5 +180,131 @@ public class GroovyAction extends AbstractTestAction {
      */
     public String getScriptTemplate() {
         return scriptTemplate;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<GroovyAction, Builder> {
+
+        private String script;
+        private String scriptResourcePath;
+        private String scriptTemplate;
+        private String scriptTemplatePath = "classpath:com/consol/citrus/script/script-template.groovy";
+        private boolean useScriptTemplate = true;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param script
+         * @return
+         */
+        public static Builder groovy(String script) {
+            Builder builder = new Builder();
+            builder.script(script);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param scriptResource
+         * @return
+         */
+        public static Builder groovy(Resource scriptResource) {
+            Builder builder = new Builder();
+            builder.script(scriptResource);
+            return builder;
+        }
+
+        /**
+         * Sets the Groovy script to execute.
+         * @param script
+         * @return
+         */
+        public Builder script(String script) {
+            this.script = script;
+            return this;
+        }
+
+        /**
+         * Sets the Groovy script to execute.
+         * @param scriptResource
+         * @return
+         */
+        public Builder script(Resource scriptResource) {
+            return script(scriptResource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Sets the Groovy script to execute.
+         * @param scriptResource
+         * @param charset
+         * @return
+         */
+        public Builder script(Resource scriptResource, Charset charset) {
+            try {
+                this.script = FileUtils.readToString(scriptResource, charset);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read script resource file", e);
+            }
+            return this;
+        }
+
+        /**
+         * Sets the Groovy script to execute.
+         * @param scriptResourcePath
+         * @return
+         */
+        public Builder scriptResourcePath(String scriptResourcePath) {
+            this.scriptResourcePath = scriptResourcePath;
+            return this;
+        }
+
+        /**
+         * Use a script template from file path.
+         * @param scriptTemplatePath the scriptTemplate to set
+         */
+        public Builder template(String scriptTemplatePath) {
+            this.scriptTemplatePath = scriptTemplatePath;
+            return this;
+        }
+
+        /**
+         * Use a script template resource.
+         * @param scriptTemplate the scriptTemplate to set
+         */
+        public Builder template(Resource scriptTemplate) {
+            return template(scriptTemplate, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Use a script template resource.
+         * @param scriptTemplate the scriptTemplate to set
+         * @param charset
+         */
+        public Builder template(Resource scriptTemplate, Charset charset) {
+            try {
+                this.scriptTemplate = FileUtils.readToString(scriptTemplate, charset);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read script template file", e);
+            }
+            return this;
+        }
+
+        /**
+         * Prevent script template usage.
+         */
+        public Builder skipTemplate() {
+            return useScriptTemplate(false);
+        }
+
+        public Builder useScriptTemplate(boolean useScriptTemplate) {
+            this.useScriptTemplate = useScriptTemplate;
+            return this;
+        }
+
+        @Override
+        public GroovyAction build() {
+            return new GroovyAction(this);
+        }
     }
 }

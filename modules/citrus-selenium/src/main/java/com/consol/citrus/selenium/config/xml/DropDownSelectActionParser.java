@@ -16,17 +16,16 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.DropDownSelectAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -56,7 +55,52 @@ public class DropDownSelectActionParser extends FindElementActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return DropDownSelectAction.class;
+    protected Class<DropDownSelectActionFactoryBean> getBrowserActionClass() {
+        return DropDownSelectActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class DropDownSelectActionFactoryBean extends ElementActionFactoryBean<DropDownSelectAction, DropDownSelectAction.Builder> {
+
+        private final DropDownSelectAction.Builder builder = new DropDownSelectAction.Builder();
+
+        /**
+         * Sets the option.
+         *
+         * @param option
+         */
+        public void setOption(String option) {
+            builder.option(option);
+        }
+
+        /**
+         * Sets the options.
+         *
+         * @param options
+         */
+        public void setOptions(List<String> options) {
+            builder.options(options);
+        }
+
+        @Override
+        public DropDownSelectAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return DropDownSelectAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public DropDownSelectAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

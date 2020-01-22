@@ -16,6 +16,9 @@
 
 package com.consol.citrus.actions;
 
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
 import org.testng.annotations.Test;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -24,39 +27,52 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Christoph Deppisch
  */
 public class SleepActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
-	public void testSleep() {
-		SleepAction sleep = new SleepAction();
-		
-		sleep.setMilliseconds("100");
+	public void testSleepDuration() {
+		SleepAction sleep = new SleepAction.Builder()
+		        .time(Duration.ofMillis(200))
+                .build();
+
 		sleep.execute(context);
 	}
-	
+
+	@Test
+	public void testSleep() {
+		SleepAction sleep = new SleepAction.Builder()
+		        .milliseconds(100L)
+                .build();
+
+		sleep.execute(context);
+	}
+
 	@Test
     public void testSleepVariablesSupport() {
-        SleepAction sleep = new SleepAction();
-        
+        SleepAction sleep = new SleepAction.Builder()
+                .time("${time}")
+                .build();
+
         context.setVariable("time", "100");
-        sleep.setMilliseconds("${time}");
-        
+
         sleep.execute(context);
     }
 
     @Test
     public void testSleepLegacy() {
-        SleepAction sleep = new SleepAction();
+        SleepAction sleep = new SleepAction.Builder()
+                .seconds(0.1)
+                .build();
 
-        sleep.setSeconds("0.1");
         sleep.execute(context);
     }
 
     @Test
     public void testSleepLegacyVariablesSupport() {
-        SleepAction sleep = new SleepAction();
+        SleepAction sleep = new SleepAction.Builder()
+                .time("${time}", TimeUnit.SECONDS)
+                .build();
 
-        context.setVariable("time", "0.1");
-        sleep.setSeconds("${time}");
+        context.setVariable("time", "1");
 
         sleep.execute(context);
     }

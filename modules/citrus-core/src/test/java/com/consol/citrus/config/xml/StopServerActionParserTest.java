@@ -34,14 +34,12 @@ public class StopServerActionParserTest extends AbstractActionParserTest<StopSer
         assertActionClassAndName(StopServerAction.class, "stop-server");
 
         StopServerAction action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getServerList().size(), 0L);
-        Assert.assertNotNull(action.getServer());
-        Assert.assertEquals(action.getServer(), beanDefinitionContext.getBean("myServer", Server.class));
+        Assert.assertEquals(action.getServers().size(), 1L);
+        Assert.assertEquals(action.getServers().get(0), beanDefinitionContext.getBean("myServer", Server.class));
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getServerList().size(), 2L);
-        Assert.assertEquals(action.getServerList().get(0), beanDefinitionContext.getBean("myFooServer", Server.class));
-        Assert.assertEquals(action.getServerList().get(1), beanDefinitionContext.getBean("myBarServer", Server.class));
-        Assert.assertNull(action.getServer());
+        Assert.assertEquals(action.getServers().size(), 2L);
+        Assert.assertEquals(action.getServers().get(0), beanDefinitionContext.getBean("myFooServer", Server.class));
+        Assert.assertEquals(action.getServers().get(1), beanDefinitionContext.getBean("myBarServer", Server.class));
     }
 }

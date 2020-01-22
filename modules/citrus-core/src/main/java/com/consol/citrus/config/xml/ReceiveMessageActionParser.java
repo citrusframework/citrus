@@ -16,11 +16,24 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Stream;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.config.util.*;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.util.ValidateMessageParserUtil;
+import com.consol.citrus.config.util.VariableExtractorParserUtil;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.context.*;
+import com.consol.citrus.validation.context.HeaderValidationContext;
+import com.consol.citrus.validation.context.SchemaValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -38,12 +51,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-import java.util.stream.Stream;
-
 /**
  * Bean definition parser for receive action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -67,14 +77,14 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         }
 
         DescriptionElementParser.doParse(element, builder);
-        
+
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
 
         String receiveTimeout = element.getAttribute("timeout");
         if (StringUtils.hasText(receiveTimeout)) {
             builder.addPropertyValue("receiveTimeout", Long.valueOf(receiveTimeout));
         }
-        
+
         MessageSelectorParser.doParse(element, builder);
 
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
@@ -285,7 +295,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      */
     private XpathMessageValidationContext getXPathMessageValidationContext(Element messageElement, XmlMessageValidationContext parentContext) {
         XpathMessageValidationContext context = new XpathMessageValidationContext();
-        
+
         parseXPathValidationElements(messageElement, context);
 
         context.setControlNamespaces(parentContext.getControlNamespaces());
@@ -367,10 +377,10 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
 
         return context;
     }
-    
+
     /**
      * Parses validation elements and adds information to the message validation context.
-     * 
+     *
      * @param messageElement the message DOM element.
      * @param context the message validation context.
      */
@@ -480,6 +490,33 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
      * @return
      */
     protected BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(ReceiveMessageAction.class);
+        return BeanDefinitionBuilder.genericBeanDefinition(ReceiveMessageActionFactoryBean.class);
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ReceiveMessageActionFactoryBean extends AbstractReceiveMessageActionFactoryBean<ReceiveMessageAction, ReceiveMessageAction.Builder> {
+
+        private final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
+
+        @Override
+        public ReceiveMessageAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ReceiveMessageAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ReceiveMessageAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

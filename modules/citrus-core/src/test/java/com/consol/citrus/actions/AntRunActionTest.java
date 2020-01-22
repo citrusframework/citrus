@@ -29,171 +29,171 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Christoph Deppisch
  */
 public class AntRunActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
 	public void testRunTarget() {
-		AntRunAction ant = new AntRunAction();
-		ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-		ant.setTarget("sayHello");
-		
-		ant.setBuildListener(new AssertingBuildListener() {
-    		@Override
-    		public void taskStarted(BuildEvent event) {
-    		    Assert.assertEquals(event.getTarget().getName(), "sayHello");
-    		} 
-    		
-    		@Override
-    		public void messageLogged(BuildEvent event) {
-    		    if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-    		        Assert.assertEquals(event.getMessage(), "Welcome to Citrus!");
-    		    }
-    		}
-		});
-		
+		AntRunAction ant = new AntRunAction.Builder()
+		        .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+		        .target("sayHello")
+                .listener(new AssertingBuildListener() {
+                    @Override
+                    public void taskStarted(BuildEvent event) {
+                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                    }
+
+                    @Override
+                    public void messageLogged(BuildEvent event) {
+                        if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
+                            Assert.assertEquals(event.getMessage(), "Welcome to Citrus!");
+                        }
+                    }
+                })
+                .build();
+
+
 		ant.execute(context);
 	}
-	
+
 	@Test
     public void testRunTargets() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTargets("sayHello,sayGoodbye");
-        
         final List<String> executedTargets = new ArrayList<String>();
         final List<String> echoMessages = new ArrayList<String>();
-        
-        ant.setBuildListener(new AssertingBuildListener() {
-            @Override
-            public void taskStarted(BuildEvent event) {
-                executedTargets.add(event.getTarget().getName());
-            } 
-            
-            @Override
-            public void messageLogged(BuildEvent event) {
-                if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                    echoMessages.add(event.getMessage());
-                }
-            }
-        });
-        
+
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .targets("sayHello,sayGoodbye")
+                .listener(new AssertingBuildListener() {
+                    @Override
+                    public void taskStarted(BuildEvent event) {
+                        executedTargets.add(event.getTarget().getName());
+                    }
+
+                    @Override
+                    public void messageLogged(BuildEvent event) {
+                        if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
+                            echoMessages.add(event.getMessage());
+                        }
+                    }
+                })
+                .build();
+
         ant.execute(context);
 
         Assert.assertEquals(executedTargets.size(), 2L);
         Assert.assertEquals(executedTargets.get(0), "sayHello");
         Assert.assertEquals(executedTargets.get(1), "sayGoodbye");
-        
+
         Assert.assertEquals(echoMessages.size(), 2L);
         Assert.assertEquals(echoMessages.get(0), "Welcome to Citrus!");
         Assert.assertEquals(echoMessages.get(1), "Goodbye!");
     }
-	
+
 	@Test
     public void testWithProperties() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTarget("sayHello");
-        
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put("welcomeText", "Welcome!");
-        ant.setProperties(props);
-        
-        ant.setBuildListener(new AssertingBuildListener() {
-            @Override
-            public void taskStarted(BuildEvent event) {
-                Assert.assertEquals(event.getTarget().getName(), "sayHello");
-            } 
-            
-            @Override
-            public void messageLogged(BuildEvent event) {
-                if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                    Assert.assertEquals(event.getMessage(), "Welcome!");
-                }
-            }
-        });
-        
+
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello")
+                .properties(props)
+                .listener(new AssertingBuildListener() {
+                    @Override
+                    public void taskStarted(BuildEvent event) {
+                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                    }
+
+                    @Override
+                    public void messageLogged(BuildEvent event) {
+                        if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
+                            Assert.assertEquals(event.getMessage(), "Welcome!");
+                        }
+                    }
+                })
+                .build();
+
         ant.execute(context);
     }
-	
+
 	@Test
     public void testWithPropertyFile() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTarget("sayHello");
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello")
+                .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+                .listener(new AssertingBuildListener() {
+                    @Override
+                    public void taskStarted(BuildEvent event) {
+                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                    }
 
-        ant.setPropertyFilePath("classpath:com/consol/citrus/actions/build.properties");
-        
-        ant.setBuildListener(new AssertingBuildListener() {
-            @Override
-            public void taskStarted(BuildEvent event) {
-                Assert.assertEquals(event.getTarget().getName(), "sayHello");
-            } 
-            
-            @Override
-            public void messageLogged(BuildEvent event) {
-                if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                    Assert.assertEquals(event.getMessage(), "Welcome with property file!");
-                }
-            }
-        });
-        
+                    @Override
+                    public void messageLogged(BuildEvent event) {
+                        if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
+                            Assert.assertEquals(event.getMessage(), "Welcome with property file!");
+                        }
+                    }
+                })
+                .build();
+
         ant.execute(context);
     }
-	
+
 	@Test
     public void testWithPropertyOverwrite() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTarget("sayHello");
-        
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put("welcomeText", "Welcome!");
-        ant.setProperties(props);
-        
-        ant.setPropertyFilePath("classpath:com/consol/citrus/actions/build.properties");
-        
-        ant.setBuildListener(new AssertingBuildListener() {
-            @Override
-            public void taskStarted(BuildEvent event) {
-                Assert.assertEquals(event.getTarget().getName(), "sayHello");
-            } 
-            
-            @Override
-            public void messageLogged(BuildEvent event) {
-                if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
-                    Assert.assertEquals(event.getMessage(), "Welcome with property file!");
-                }
-            }
-        });
-        
+
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("sayHello")
+                .properties(props)
+                .propertyFile("classpath:com/consol/citrus/actions/build.properties")
+                .listener(new AssertingBuildListener() {
+                    @Override
+                    public void taskStarted(BuildEvent event) {
+                        Assert.assertEquals(event.getTarget().getName(), "sayHello");
+                    }
+
+                    @Override
+                    public void messageLogged(BuildEvent event) {
+                        if (event.getTask() != null && event.getTask().getTaskName().equals("echo")) {
+                            Assert.assertEquals(event.getMessage(), "Welcome with property file!");
+                        }
+                    }
+                })
+                .build();
+
         ant.execute(context);
     }
-	
+
 	@Test
     public void testWithNoPropertyDefault() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTarget("checkMe");
-        
-        Properties props = new Properties();
+        final Properties props = new Properties();
         props.put("checked", "true");
-        ant.setProperties(props);
-        
-        ant.setBuildListener(new AssertingBuildListener() {
-            @Override
-            public void taskStarted(BuildEvent event) {
-                Assert.assertEquals(event.getTarget().getName(), "checkMe");
-            } 
-        });
-        
+
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("checkMe")
+                .properties(props)
+                .listener(new AssertingBuildListener() {
+                    @Override
+                    public void taskStarted(BuildEvent event) {
+                        Assert.assertEquals(event.getTarget().getName(), "checkMe");
+                    }
+                })
+                .build();
+
         ant.execute(context);
     }
-	
+
 	@Test
     public void testWithMissingProperty() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTarget("checkMe");
-        
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("checkMe")
+                .build();
+
         try {
             ant.execute(context);
             Assert.fail("Missing build exception due to missing property");
@@ -203,13 +203,14 @@ public class AntRunActionTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getCause().getMessage().contains("Failed with missing property"));
         }
     }
-	
+
 	@Test
     public void testUnknownTarget() {
-        AntRunAction ant = new AntRunAction();
-        ant.setBuildFilePath("classpath:com/consol/citrus/actions/build.xml");
-        ant.setTarget("unknownTarget");
-        
+        AntRunAction ant = new AntRunAction.Builder()
+                .buildFilePath("classpath:com/consol/citrus/actions/build.xml")
+                .target("unknownTarget")
+                .build();
+
         try {
             ant.execute(context);
             Assert.fail("Missing build exception due to unknown target");
@@ -219,7 +220,7 @@ public class AntRunActionTest extends AbstractTestNGUnitTest {
             Assert.assertTrue(e.getCause().getMessage().contains("\"unknownTarget\" does not exist in the project"));
         }
     }
-	
+
 	/**
 	 * Build lsitener implements all interface methods, subclass may overwrite special
 	 * methods for testing purpose doing assertions on build event.
@@ -246,5 +247,5 @@ public class AntRunActionTest extends AbstractTestNGUnitTest {
         public void messageLogged(BuildEvent event) {
         }
 	}
-	
+
 }

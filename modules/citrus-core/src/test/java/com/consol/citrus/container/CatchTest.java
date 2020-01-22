@@ -24,9 +24,9 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -36,77 +36,56 @@ public class CatchTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testCatchDefaultException() {
-        Catch catchAction = new Catch();
-        
-        List actionList = Collections.singletonList(new FailAction());
-        catchAction.setActions(actionList);
-        
+        Catch catchAction = new Catch.Builder()
+                .actions(new FailAction.Builder())
+                .build();
         catchAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testCatchException() {
-        Catch catchAction = new Catch();
-        
-        List actionList = Collections.singletonList(new FailAction());
-        catchAction.setActions(actionList);
-        
-        catchAction.setException(CitrusRuntimeException.class.getName());
-        
+        Catch catchAction = new Catch.Builder()
+                .actions(new FailAction.Builder())
+                .exception(CitrusRuntimeException.class.getName())
+                .build();
         catchAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testNothingToCatch() {
-        Catch catchAction = new Catch();
-        
-        List actionList = Collections.singletonList(new EchoAction());
-        catchAction.setActions(actionList);
-        
-        catchAction.setException(CitrusRuntimeException.class.getName());
-        
+        Catch catchAction = new Catch.Builder()
+                .actions(new EchoAction.Builder())
+                .exception(CitrusRuntimeException.class.getName())
+                .build();
         catchAction.execute(context);
     }
-    
+
     @Test
     public void testCatchFirstActionFailing() {
-        Catch catchAction = new Catch();
-        
         TestAction action = Mockito.mock(TestAction.class);
 
         reset(action);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new FailAction());
-        actionList.add(action);
-
-        catchAction.setActions(actionList);
-
-        catchAction.setException(CitrusRuntimeException.class.getName());
-
+        Catch catchAction = new Catch.Builder()
+                .actions(new FailAction.Builder(), () -> action)
+                .exception(CitrusRuntimeException.class.getName())
+                .build();
         catchAction.execute(context);
         verify(action).execute(context);
     }
-    
+
     @Test
     public void testCatchSomeActionFailing() {
-        Catch catchAction = new Catch();
-        
         TestAction action = Mockito.mock(TestAction.class);
-        
+
         reset(action);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action);
-        actionList.add(new FailAction());
-        actionList.add(action);
-
-        catchAction.setActions(actionList);
-
-        catchAction.setException(CitrusRuntimeException.class.getName());
-
+        Catch catchAction = new Catch.Builder()
+                .actions(() -> action, new FailAction.Builder(), () -> action)
+                .exception(CitrusRuntimeException.class.getName())
+                .build();
         catchAction.execute(context);
         verify(action, times(2)).execute(context);
     }

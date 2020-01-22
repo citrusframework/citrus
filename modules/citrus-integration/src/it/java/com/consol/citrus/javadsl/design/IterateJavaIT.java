@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.lessThan;
  */
 @Test
 public class IterateJavaIT extends TestNGCitrusTestDesigner {
-    
+
     @CitrusTest
     public void iterateContainer() {
         variable("max", "3");
@@ -59,7 +59,7 @@ public class IterateJavaIT extends TestNGCitrusTestDesigner {
             }
         };
 
-        iterate().condition("i lt 5").index("i").actions(createVariable("index", "${i}"), anonymous);
+        iterate().condition("i lt 5").index("i").actions(createVariable("index", "${i}"), () -> anonymous);
     }
 
     @CitrusTest

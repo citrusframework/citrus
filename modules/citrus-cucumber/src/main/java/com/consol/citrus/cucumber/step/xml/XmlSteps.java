@@ -19,9 +19,7 @@ package com.consol.citrus.cucumber.step.xml;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.cucumber.container.StepTemplate;
-import com.consol.citrus.dsl.builder.TemplateBuilder;
 import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
@@ -34,20 +32,18 @@ public class XmlSteps {
     @CitrusResource
     private TestDesigner designer;
 
-    @CitrusResource
-    private TestRunner runner;
-
     /**
      * Run template within designer.
      * @param stepTemplate
      * @param args
      */
     public void execute(StepTemplate stepTemplate, Object[] args) {
-        Template steps = new Template();
-        steps.setActions(stepTemplate.getActions());
-        steps.setActor(stepTemplate.getActor());
+        Template steps = new Template.Builder()
+                .actions(stepTemplate.getActions())
+                .actor(stepTemplate.getActor())
+                .build();
 
-        TemplateBuilder templateBuilder = new TemplateBuilder(steps)
+        Template.Builder templateBuilder = new Template.Builder()
             .name(stepTemplate.getName())
             .globalContext(stepTemplate.isGlobalContext());
 
@@ -62,10 +58,6 @@ public class XmlSteps {
 
         if (designer != null) {
             designer.action(templateBuilder);
-        }
-
-        if (runner != null) {
-            runner.run(templateBuilder.build());
         }
     }
 }

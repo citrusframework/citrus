@@ -16,26 +16,26 @@
 
 package com.consol.citrus.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Action stopping {@link Server} instances.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
 public class StopServerAction extends AbstractTestAction {
     /** List of servers to stop */
-    private List<Server> serverList = new ArrayList<Server>();
-
-    /** Single server instance to stop */
-    private Server server;
+    private final List<Server> servers;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(StopServerAction.class);
@@ -43,50 +43,69 @@ public class StopServerAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public StopServerAction() {
-        setName("stop-server");
+    public StopServerAction(Builder builder) {
+        super("stop-server", builder);
+
+        this.servers = builder.servers;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        for (Server actServer : serverList) {
-            actServer.stop();
-            log.info("Stopped server: " + actServer.getName());
-        }
-
-        if (server != null) {
+        for (Server server : servers) {
             server.stop();
             log.info("Stopped server: " + server.getName());
         }
     }
 
     /**
-     * @param server the server to set
+     * Gets the list of servers to stop.
+     * @return the list of servers to stop.
      */
-    public StopServerAction setServer(Server server) {
-        this.server = server;
-        return this;
+    public List<Server> getServers() {
+        return servers;
     }
 
     /**
-     * @param serverList the servers to set
+     * Action builder.
      */
-    public StopServerAction setServerList(List<Server> serverList) {
-        this.serverList = serverList;
-        return this;
-    }
+    public static final class Builder extends AbstractTestActionBuilder<StopServerAction, Builder> {
 
-    /**
-     * @return the server
-     */
-    public Server getServer() {
-        return server;
-    }
+        private List<Server> servers = new ArrayList<>();
 
-    /**
-     * @return the serverList
-     */
-    public List<Server> getServerList() {
-        return serverList;
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param servers
+         * @return
+         */
+        public static Builder stop(Server... servers) {
+            Builder builder = new Builder();
+            Stream.of(servers).forEach(builder::server);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param server
+         * @return
+         */
+        public static Builder stop(Server server) {
+            Builder builder = new Builder();
+            builder.server(server);
+            return builder;
+        }
+
+        public Builder server(Server... server) {
+            return server(Arrays.asList(server));
+        }
+
+        public Builder server(List<Server> servers) {
+            this.servers.addAll(servers);
+            return this;
+        }
+
+        @Override
+        public StopServerAction build() {
+            return new StopServerAction(this);
+        }
     }
 }

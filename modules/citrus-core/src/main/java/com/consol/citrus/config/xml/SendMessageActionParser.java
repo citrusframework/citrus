@@ -16,6 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
@@ -29,18 +33,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Bean definition parser for send action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SendMessageActionParser extends AbstractMessageActionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String endpointUri = element.getAttribute("endpoint");
 
@@ -60,7 +60,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         DescriptionElementParser.doParse(element, builder);
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("actor"), "actor");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("fork"), "forkMode");
-        
+
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         if (messageElement != null) {
             String messageType = messageElement.getAttribute("type");
@@ -83,7 +83,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
 
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         parseExtractHeaderElements(element, variableExtractors);
-        
+
         if (!variableExtractors.isEmpty()) {
             builder.addPropertyValue("variableExtractors", variableExtractors);
         }
@@ -105,7 +105,34 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
      * Gets the bean definition builder class.
      * @return
      */
-    protected Class<?> getBeanDefinitionClass() {
-        return SendMessageAction.class;
+    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?>> getBeanDefinitionClass() {
+        return SendMessageActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class SendMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendMessageAction, SendMessageAction.Builder> {
+
+        private final SendMessageAction.Builder builder = new SendMessageAction.Builder();
+
+        @Override
+        public SendMessageAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return SendMessageAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public SendMessageAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

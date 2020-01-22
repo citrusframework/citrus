@@ -16,14 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.container.ConditionExpression;
+import com.consol.citrus.container.Conditional;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
-
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.container.Conditional;
 
 /**
  * Bean definition parser for selection container in test case.
@@ -33,19 +33,13 @@ import com.consol.citrus.container.Conditional;
  */
 public class ConditionalParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element,
-     *      org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(final Element element, final ParserContext parserContext) {
         // create new bean builder
-        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Conditional.class);
+        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(ConditionalFactoryBean.class);
 
         // see if there is a description
         DescriptionElementParser.doParse(element, builder);
-
-        // add the local name of this element as the name
-        builder.addPropertyValue("name", element.getLocalName());
 
         // set condition, which is mandatory
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("expression"), "condition");
@@ -55,6 +49,49 @@ public class ConditionalParser implements BeanDefinitionParser {
 
         // finally return the complete builder with its bean definition
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ConditionalFactoryBean extends AbstractTestContainerFactoryBean<Conditional, Conditional.Builder> {
+
+        private final Conditional.Builder builder = new Conditional.Builder();
+
+        /**
+         * Condition which allows execution if true.
+         * @param condition
+         */
+        public void setCondition(final String condition) {
+            this.builder.when(condition);
+        }
+
+        /**
+         * Condition expression allows container execution if evaluates to true.
+         * @param conditionExpression
+         */
+        public void setConditionExpression(ConditionExpression conditionExpression) {
+            this.builder.when(conditionExpression);
+        }
+
+        @Override
+        public Conditional getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Conditional.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Conditional.Builder getBuilder() {
+            return builder;
+        }
     }
 
 }

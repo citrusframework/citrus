@@ -27,28 +27,26 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 /**
  * Abstract parser implementation for all iterative container actions. Parser takes care of
  * index name, aborting condition, index start value and description
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractIterationTestActionParser  implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
-        
+
         DescriptionElementParser.doParse(element, builder);
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("index"), "indexName");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("condition"), "condition");
 
         builder.addPropertyValue("name", element.getLocalName());
-        
+
         ActionContainerParser.doParse(element, parserContext, builder);
-        
+
         return builder.getBeanDefinition();
     }
-    
+
     protected abstract BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext);
 }

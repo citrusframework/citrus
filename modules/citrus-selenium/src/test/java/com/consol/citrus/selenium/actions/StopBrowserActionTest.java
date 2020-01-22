@@ -36,23 +36,21 @@ public class StopBrowserActionTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
-    private StopBrowserAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver);
 
         seleniumBrowser.setWebDriver(webDriver);
         seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.CHROME);
-
-        action =  new StopBrowserAction();
-        action.setBrowser(seleniumBrowser);
     }
 
     @Test
     public void testStop() throws Exception {
         context.setVariable(SeleniumHeaders.SELENIUM_BROWSER, "ChromeBrowser");
 
+        StopBrowserAction action =  new StopBrowserAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(context);
 
         Assert.assertFalse(context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER));

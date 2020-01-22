@@ -16,6 +16,7 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,26 +26,22 @@ import org.slf4j.LoggerFactory;
  * @since 2.5
  */
 public class StopTimerAction extends AbstractTestAction {
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(StopTimerAction.class);
 
-    private String timerId;
+    private final String timerId;
 
     /**
      * Default constructor.
      */
-    public StopTimerAction() {
-        setName("stop-timer");
+    public StopTimerAction(Builder builder) {
+        super("stop-timer", builder);
+
+        this.timerId = builder.timerId;
     }
 
     public String getTimerId() {
         return timerId;
-    }
-
-    public void setTimerId(String timerId) {
-        this.timerId = timerId;
     }
 
     @Override
@@ -58,5 +55,40 @@ public class StopTimerAction extends AbstractTestAction {
         }
     }
 
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<StopTimerAction, Builder> {
 
+        private String timerId;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder stopTimers() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param timerId
+         * @return
+         */
+        public static Builder stopTimer(String timerId) {
+            Builder builder = new Builder();
+            builder.id(timerId);
+            return builder;
+        }
+
+        public Builder id(String timerId) {
+            this.timerId = timerId;
+            return this;
+        }
+
+        @Override
+        public StopTimerAction build() {
+            return new StopTimerAction(this);
+        }
+    }
 }

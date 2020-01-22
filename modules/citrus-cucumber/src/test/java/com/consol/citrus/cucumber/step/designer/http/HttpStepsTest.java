@@ -16,11 +16,13 @@
 
 package com.consol.citrus.cucumber.step.designer.http;
 
+import java.io.IOException;
+
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -32,9 +34,9 @@ import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.io.IOException;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -68,9 +70,10 @@ public class HttpStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("httpClient");
         steps.sendClientRequestFull(FileUtils.readToString(new ClassPathResource("data/request.txt")));
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DelegatingTestAction);
-        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction) designer.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SendMessageAction);
+        SendMessageAction action = (SendMessageAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertTrue(action.getMessageBuilder() instanceof HttpMessageContentBuilder);
@@ -87,9 +90,10 @@ public class HttpStepsTest extends AbstractTestNGUnitTest {
         steps.setClient("httpClient");
         steps.receiveClientResponseFull(FileUtils.readToString(new ClassPathResource("data/response.txt")));
 
-        Assert.assertEquals(designer.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(designer.getTestCase().getTestAction(0) instanceof DelegatingTestAction);
-        ReceiveMessageAction action = (ReceiveMessageAction) ((DelegatingTestAction) designer.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = designer.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof ReceiveMessageAction);
+        ReceiveMessageAction action = (ReceiveMessageAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertTrue(action.getMessageBuilder() instanceof HttpMessageContentBuilder);

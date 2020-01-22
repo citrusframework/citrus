@@ -16,6 +16,10 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
@@ -26,8 +30,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.reset;
@@ -44,16 +46,11 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
-    private OpenWindowAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, locator);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new OpenWindowAction();
-        action.setBrowser(seleniumBrowser);
 
         when(webDriver.switchTo()).thenReturn(locator);
     }
@@ -69,8 +66,10 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
         when(webDriver.executeScript(eq("window.open();"))).thenReturn(Collections.emptyList());
 
-        action.setWindowName("myNewWindow");
-
+        OpenWindowAction action = new OpenWindowAction.Builder()
+                .browser(seleniumBrowser)
+                .window("myNewWindow")
+                .build();
         action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
@@ -87,8 +86,10 @@ public class OpenWindowActionTest extends AbstractTestNGUnitTest {
 
         when(webDriver.executeScript(eq("window.open();"))).thenReturn(Collections.emptyList());
 
-        action.setWindowName("myNewWindow");
-
+        OpenWindowAction action = new OpenWindowAction.Builder()
+                .browser(seleniumBrowser)
+                .window("myNewWindow")
+                .build();
         action.execute(context);
     }
 

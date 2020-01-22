@@ -16,6 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.consol.citrus.actions.TraceVariablesAction;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -24,22 +28,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Bean definition parser for trace-variables action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class TraceVariablesActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(TraceVariablesAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(TraceVariablesActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -52,5 +50,40 @@ public class TraceVariablesActionParser implements BeanDefinitionParser {
         beanDefinition.addPropertyValue("variableNames", variableNames);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class TraceVariablesActionFactoryBean extends AbstractTestActionFactoryBean<TraceVariablesAction, TraceVariablesAction.Builder> {
+
+        private final TraceVariablesAction.Builder builder = new TraceVariablesAction.Builder();
+
+        /**
+         * Setter for info values list
+         * @param variableNames
+         */
+        public void setVariableNames(List<String> variableNames) {
+            variableNames.forEach(builder::variable);
+        }
+
+        @Override
+        public TraceVariablesAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return TraceVariablesAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public TraceVariablesAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

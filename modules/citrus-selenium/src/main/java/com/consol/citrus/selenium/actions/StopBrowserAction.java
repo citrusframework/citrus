@@ -29,8 +29,8 @@ public class StopBrowserAction extends AbstractSeleniumAction {
     /**
      * Default constructor.
      */
-    public StopBrowserAction() {
-        super("stop");
+    public StopBrowserAction(Builder builder) {
+        super("stop", builder);
     }
 
     @Override
@@ -39,5 +39,16 @@ public class StopBrowserAction extends AbstractSeleniumAction {
         browser.stop();
 
         context.getVariables().remove(SeleniumHeaders.SELENIUM_BROWSER);
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractSeleniumAction.Builder<StopBrowserAction, StopBrowserAction.Builder> {
+
+        @Override
+        public StopBrowserAction build() {
+            return new StopBrowserAction(this);
+        }
     }
 }

@@ -32,7 +32,7 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
     public void testSQLActionParser() {
         assertActionCount(2);
         assertActionClassAndName(ExecuteSQLAction.class, "sqlUpdate:testDataSource");
-        
+
         // 1st action
         ExecuteSQLAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
@@ -40,23 +40,23 @@ public class ExecuteSQLActionParserTest extends AbstractActionParserTest<Execute
         Assert.assertEquals(action.getStatements().size(), 2);
         Assert.assertEquals(action.getStatements().get(0), "insert into foo_table values (foo, foo)");
         Assert.assertEquals(action.getStatements().get(1), "update foo_table set foo=foo where foo=foo");
-        Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertFalse(action.isIgnoreErrors());
         Assert.assertNull(action.getTransactionManager());
         Assert.assertEquals(action.getTransactionTimeout(), "-1");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_DEFAULT");
-        
+
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getDataSource());
         Assert.assertNotNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/actions/test-sql-statements.sql");
         Assert.assertEquals(action.getStatements().size(), 0);
-        Assert.assertEquals(action.isIgnoreErrors(), true);
+        Assert.assertTrue(action.isIgnoreErrors());
         Assert.assertEquals(action.getTransactionManager(), beanDefinitionContext.getBean("testTransactionManager", PlatformTransactionManager.class));
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
-    
+
     @Test
     public void testMissingDataSourceBeanRef() {
         try {

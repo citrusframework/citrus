@@ -16,10 +16,13 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
+import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,16 +38,19 @@ public class Conditional extends AbstractActionContainer {
     private static Logger log = LoggerFactory.getLogger(Conditional.class);
 
     /** Boolean condition expression string */
-    protected String condition;
+    private final String condition;
 
     /** Optional condition expression evaluates to true or false */
-    private ConditionExpression conditionExpression;
+    private final ConditionExpression conditionExpression;
 
     /**
      * Default constructor.
      */
-    public Conditional() {
-        setName("conditional");
+    public Conditional(Builder builder) {
+        super("conditional", builder);
+
+        this.condition = builder.condition;
+        this.conditionExpression = builder.conditionExpression;
     }
 
     @Override
@@ -52,7 +58,8 @@ public class Conditional extends AbstractActionContainer {
         if (checkCondition(context)) {
             log.debug("Condition [ {} ] evaluates to true, executing nested actions", condition);
 
-            for (final TestAction action : actions) {
+            for (TestActionBuilder<?> actionBuilder : actions) {
+                TestAction action = actionBuilder.build();
                 setActiveAction(action);
                 action.execute(context);
             }
@@ -91,27 +98,11 @@ public class Conditional extends AbstractActionContainer {
     }
 
     /**
-     * Condition which allows execution if true.
-     * @param condition
-     */
-    public void setCondition(final String condition) {
-        this.condition = condition;
-    }
-
-    /**
      * Gets the condition expression.
      * @return the expression
      */
     public String getCondition() {
         return this.condition;
-    }
-
-    /**
-     * Condition expression allows container execution if evaluates to true.
-     * @param conditionExpression
-     */
-    public void setConditionExpression(ConditionExpression conditionExpression) {
-        this.conditionExpression = conditionExpression;
     }
 
     /**
@@ -122,4 +113,53 @@ public class Conditional extends AbstractActionContainer {
         return conditionExpression;
     }
 
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractTestContainerBuilder<Conditional, Builder> {
+
+        protected String condition;
+        private ConditionExpression conditionExpression;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder conditional() {
+            return new Builder();
+        }
+
+        /**
+         * Condition which allows execution if true.
+         * @param expression
+         */
+        public Builder when(String expression) {
+            this.condition = expression;
+            return this;
+        }
+
+        /**
+         * Condition which allows execution if evaluates to true.
+         * @param expression
+         */
+        public Builder when(ConditionExpression expression) {
+            this.conditionExpression = expression;
+            return this;
+        }
+
+        /**
+         * Condition which allows execution if evaluates to true.
+         * @param expression
+         */
+        public Builder when(Object value, Matcher expression) {
+            this.conditionExpression = new HamcrestConditionExpression(expression, value);
+            return this;
+        }
+
+        @Override
+        public Conditional build() {
+            return super.build(new Conditional(this));
+        }
+    }
 }

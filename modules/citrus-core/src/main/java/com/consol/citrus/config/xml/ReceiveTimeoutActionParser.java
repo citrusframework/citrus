@@ -16,8 +16,11 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -29,16 +32,14 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for receive-timeout action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ReceiveTimeoutActionFactoryBean.class);
 
         String endpointUri = element.getAttribute("endpoint");
         if (!StringUtils.hasText(endpointUri)) {
@@ -52,7 +53,7 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
         }
 
         beanDefinition.addPropertyValue("name", element.getLocalName()+ ":" + endpointUri);
-        
+
         DescriptionElementParser.doParse(element, beanDefinition);
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("wait"), "timeout");
@@ -65,5 +66,72 @@ public class ReceiveTimeoutActionParser implements BeanDefinitionParser {
         MessageSelectorParser.doParse(element, beanDefinition);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ReceiveTimeoutActionFactoryBean extends AbstractTestActionFactoryBean<ReceiveTimeoutAction, ReceiveTimeoutAction.Builder> {
+
+        private final ReceiveTimeoutAction.Builder builder = new ReceiveTimeoutAction.Builder();
+
+        /**
+         * Setter for receive timeout.
+         * @param timeout
+         */
+        public void setTimeout(long timeout) {
+            builder.timeout(timeout);
+        }
+
+        /**
+         * Set message selector string.
+         * @param messageSelector
+         */
+        public void setMessageSelector(String messageSelector) {
+            builder.selector(messageSelector);
+        }
+
+        /**
+         * Set message selector map.
+         * @param messageSelector
+         */
+        public void setMessageSelectorMap(Map<String, Object> messageSelector) {
+            builder.selector(messageSelector);
+        }
+
+        /**
+         * Set message endpoint instance.
+         * @param endpoint the message endpoint
+         */
+        public void setEndpoint(Endpoint endpoint) {
+            builder.endpoint(endpoint);
+        }
+
+        /**
+         * Sets the endpoint uri.
+         * @param endpointUri
+         */
+        public void setEndpointUri(String endpointUri) {
+            builder.endpoint(endpointUri);
+        }
+
+        @Override
+        public ReceiveTimeoutAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ReceiveTimeoutAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ReceiveTimeoutAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -16,14 +16,14 @@
 
 package com.consol.citrus.cucumber.config.xml;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.cucumber.container.StepTemplate;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -32,7 +32,7 @@ import java.util.Map;
 public class StepTemplateParserTest extends AbstractBeanDefinitionParserTest {
 
     @Test
-    public void testDockerClientParser() {
+    public void testStepTemplateParser() {
         Map<String, StepTemplate> templates = beanDefinitionContext.getBeansOfType(StepTemplate.class);
 
         Assert.assertEquals(templates.size(), 4);

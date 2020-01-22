@@ -32,21 +32,24 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class WaitUntilAction extends FindElementAction {
 
     /** Wait timeout */
-    private Long timeout = 5000L;
+    private final Long timeout;
 
     /** Wait condition on element */
-    private String condition;
+    private final String condition;
 
     /**
      * Default constructor.
      */
-    public WaitUntilAction() {
-        super("wait");
+    public WaitUntilAction(Builder builder) {
+        super("wait", builder);
+
+        this.timeout = builder.timeout;
+        this.condition = builder.condition;
     }
 
     @Override
     protected void execute(WebElement webElement, SeleniumBrowser browser, TestContext context) {
-        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Math.round(timeout / 1000));
+        WebDriverWait q = new WebDriverWait(browser.getWebDriver(), Math.round(timeout / 1000.0D));
 
         if (condition.equals("hidden")) {
             q.until(ExpectedConditions.invisibilityOf(webElement));
@@ -71,15 +74,6 @@ public class WaitUntilAction extends FindElementAction {
     }
 
     /**
-     * Sets the timeout.
-     *
-     * @param timeout
-     */
-    public void setTimeout(Long timeout) {
-        this.timeout = timeout;
-    }
-
-    /**
      * Gets the condition.
      *
      * @return
@@ -89,11 +83,52 @@ public class WaitUntilAction extends FindElementAction {
     }
 
     /**
-     * Sets the condition.
-     *
-     * @param condition
+     * Action builder.
      */
-    public void setCondition(String condition) {
-        this.condition = condition;
+    public static class Builder extends ElementActionBuilder<WaitUntilAction, Builder> {
+
+        private Long timeout = 5000L;
+        private String condition;
+
+        /**
+         * Add visible condition.
+         * @return
+         */
+        public Builder visible() {
+            condition("visible");
+            return this;
+        }
+
+        /**
+         * Add hidden condition.
+         * @return
+         */
+        public Builder hidden() {
+            condition("hidden");
+            return this;
+        }
+
+        /**
+         * Add hidden condition.
+         * @return
+         */
+        public Builder condition(String condition) {
+            this.condition = condition;
+            return this;
+        }
+
+        /**
+         * Add timeout condition.
+         * @return
+         */
+        public Builder timeout(Long timeout) {
+            this.timeout = timeout;
+            return this;
+        }
+
+        @Override
+        public WaitUntilAction build() {
+            return new WaitUntilAction(this);
+        }
     }
 }

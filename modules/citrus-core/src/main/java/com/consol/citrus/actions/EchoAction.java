@@ -16,31 +16,35 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Date;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
-
 /**
  * Prints messages to the console/logger during test execution.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
 public class EchoAction extends AbstractTestAction {
 
     /** Log message */
-    private String message;
+    private final String message;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(EchoAction.class);
 
     /**
-     * Default constructor.
+     * Default constructor using the builder.
+     * @param builder
      */
-    public EchoAction() {
-        setName("echo");
+    private EchoAction(EchoAction.Builder builder) {
+        super("echo", builder);
+
+        this.message = builder.message;
     }
 
     @Override
@@ -54,19 +58,39 @@ public class EchoAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for message
-     * @param message
-     */
-    public EchoAction setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    /**
      * Gets the message.
      * @return the message
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<EchoAction, Builder> {
+
+        private String message;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param message
+         * @return
+         */
+        public static Builder echo(String message) {
+            Builder builder = new Builder();
+            builder.message(message);
+            return builder;
+        }
+
+        public Builder message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        @Override
+        public EchoAction build() {
+            return new EchoAction(this);
+        }
     }
 }

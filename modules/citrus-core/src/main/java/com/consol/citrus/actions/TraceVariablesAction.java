@@ -16,23 +16,26 @@
 
 package com.consol.citrus.actions;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Stream;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Action that prints variable values to the console/logger. Action requires a list of variable
  * names. Tries to find the variables in the test context and print its values.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
 public class TraceVariablesAction extends AbstractTestAction {
     /** List of variable names */
-    private List<String> variableNames;
+    private final List<String> variableNames;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TraceVariablesAction.class);
@@ -40,8 +43,10 @@ public class TraceVariablesAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public TraceVariablesAction() {
-        setName("trace");
+    public TraceVariablesAction(Builder builder) {
+        super("trace", builder);
+
+        this.variableNames = builder.variableNames;
     }
 
     @Override
@@ -64,19 +69,63 @@ public class TraceVariablesAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for info values list
-     * @param variableNames
-     */
-    public TraceVariablesAction setVariableNames(List<String> variableNames) {
-        this.variableNames = variableNames;
-        return this;
-    }
-
-    /**
      * Gets the variableNames.
      * @return the variableNames
      */
     public List<String> getVariableNames() {
         return variableNames;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<TraceVariablesAction, Builder> {
+
+        private List<String> variableNames = new ArrayList<>();
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder traceVariables() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param variableNames
+         * @return
+         */
+        public static Builder traceVariables(String... variableNames) {
+            Builder builder = new Builder();
+            builder.variables(variableNames);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param variable
+         * @return
+         */
+        public static Builder traceVariables(String variable) {
+            Builder builder = new Builder();
+            builder.variable(variable);
+            return builder;
+        }
+
+        public Builder variable(String variable) {
+            this.variableNames.add(variable);
+            return this;
+        }
+
+        public Builder variables(String... variables) {
+            Stream.of(variables).forEach(this::variable);
+            return this;
+        }
+
+        @Override
+        public TraceVariablesAction build() {
+            return new TraceVariablesAction(this);
+        }
     }
 }

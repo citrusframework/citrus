@@ -16,18 +16,23 @@
 
 package com.consol.citrus.actions;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import javax.xml.transform.*;
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 
 /**
@@ -41,25 +46,25 @@ import java.nio.charset.Charset;
 public class TransformAction extends AbstractTestAction {
 
     /** Inline XML document */
-    private String xmlData;
+    private final String xmlData;
 
     /** External XML document resource path */
-    private String xmlResourcePath;
+    private final String xmlResourcePath;
 
     /** Charset applied to xml resource */
-    private String xmlResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+    private final String xmlResourceCharset;
 
     /** Inline XSLT document */
-    private String xsltData;
+    private final String xsltData;
 
     /** External XSLT document resource path */
-    private String xsltResourcePath;
+    private final String xsltResourcePath;
 
     /** Charset applied to xslt resource */
-    private String xsltResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+    private final String xsltResourceCharset;
 
     /** Target variable for the result */
-    private String targetVariable = "transform-result";
+    private final String targetVariable;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TransformAction.class);
@@ -67,8 +72,16 @@ public class TransformAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public TransformAction() {
-        setName("transform");
+    public TransformAction(Builder builder) {
+        super("transform", builder);
+
+        this.xmlData = builder.xmlData;
+        this.xmlResourcePath = builder.xmlResourcePath;
+        this.xmlResourceCharset = builder.xmlResourceCharset;
+        this.xsltData = builder.xsltData;
+        this.xsltResourcePath = builder.xsltResourcePath;
+        this.xsltResourceCharset = builder.xsltResourceCharset;
+        this.targetVariable = builder.targetVariable;
     }
 
     @Override
@@ -118,51 +131,6 @@ public class TransformAction extends AbstractTestAction {
     }
 
     /**
-     * Set the XML document
-     * @param xmlData the xmlData to set
-     */
-    public TransformAction setXmlData(String xmlData) {
-        this.xmlData = xmlData;
-        return this;
-    }
-
-    /**
-     * Set the XML document as resource
-     * @param xmlResource the xmlResource to set
-     */
-    public TransformAction setXmlResourcePath(String xmlResource) {
-        this.xmlResourcePath = xmlResource;
-        return this;
-    }
-
-    /**
-     * Set the XSLT document
-     * @param xsltData the xsltData to set
-     */
-    public TransformAction setXsltData(String xsltData) {
-        this.xsltData = xsltData;
-        return this;
-    }
-
-    /**
-     * Set the XSLT document as resource
-     * @param xsltResource the xsltResource to set
-     */
-    public TransformAction setXsltResourcePath(String xsltResource) {
-        this.xsltResourcePath = xsltResource;
-        return this;
-    }
-
-    /**
-     * Set the target variable for the result
-     * @param targetVariable the targetVariable to set
-     */
-    public TransformAction setTargetVariable(String targetVariable) {
-        this.targetVariable = targetVariable;
-        return this;
-    }
-
-    /**
      * Gets the xmlData.
      * @return the xmlData
      */
@@ -202,4 +170,120 @@ public class TransformAction extends AbstractTestAction {
         return targetVariable;
     }
 
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<TransformAction, Builder> {
+
+        private String xmlData;
+        private String xmlResourcePath;
+        private String xmlResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+        private String xsltData;
+        private String xsltResourcePath;
+        private String xsltResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+        private String targetVariable = "transform-result";
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder transform() {
+            return new Builder();
+        }
+
+        /**
+         * Set the target variable for the result
+         * @param variable
+         */
+        public Builder result(String variable) {
+            this.targetVariable = variable;
+            return this;
+        }
+
+        /**
+         * Set the XML document
+         * @param xmlData the xmlData to set
+         */
+        public Builder source(String xmlData) {
+            this.xmlData = xmlData;
+            return this;
+        }
+
+        /**
+         * Set the XML document as resource
+         * @param xmlResource the xmlResource to set
+         */
+        public Builder source(Resource xmlResource) {
+            return source(xmlResource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Set the XML document as resource file path
+         * @param xmlResourcePath the xmlResource to set
+         */
+        public Builder sourceFile(String xmlResourcePath) {
+            this.xmlResourcePath = xmlResourcePath;
+            return this;
+        }
+
+        /**
+         * Set the XML document as resource
+         * @param xmlResource the xmlResource to set
+         * @param charset
+         */
+        public Builder source(Resource xmlResource, Charset charset) {
+            try {
+                this.xmlData = FileUtils.readToString(xmlResource, charset);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read xml resource", e);
+            }
+            return this;
+        }
+
+        /**
+         * Set the XSLT document
+         * @param xsltData the xsltData to set
+         */
+        public Builder xslt(String xsltData) {
+            this.xsltData = xsltData;
+            return this;
+        }
+
+        /**
+         * Set the XSLT document as resource
+         * @param xsltResource the xsltResource to set
+         */
+        public Builder xslt(Resource xsltResource) {
+            return xslt(xsltResource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Set the XML document as resource file path
+         * @param xsltResourcePath the xmlResource to set
+         */
+        public Builder xsltFile(String xsltResourcePath) {
+            this.xsltResourcePath = xsltResourcePath;
+            return this;
+        }
+
+        /**
+         * Set the XSLT document as resource
+         * @param xsltResource the xsltResource to set
+         * @param charset
+         */
+        public Builder xslt(Resource xsltResource, Charset charset) {
+            try {
+                this.xsltData = FileUtils.readToString(xsltResource, charset);
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read xstl resource", e);
+            }
+
+            return this;
+        }
+
+        @Override
+        public TransformAction build() {
+            return new TransformAction(this);
+        }
+    }
 }

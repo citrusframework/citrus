@@ -30,106 +30,99 @@ public class AssertTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertDefaultException() {
-        Assert assertAction = new Assert();
-        
-        assertAction.setAction(new FailAction());
-        
+        Assert assertAction = new Assert.Builder()
+                .actions(new FailAction.Builder())
+                .build();
         assertAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertException() {
-        Assert assertAction = new Assert();
-        
-        assertAction.setAction(new FailAction());
-        
         Class exceptionClass = CitrusRuntimeException.class;
-        assertAction.setException(exceptionClass);
-        
+
+        Assert assertAction = new Assert.Builder()
+                .actions(new FailAction.Builder())
+                .exception(exceptionClass)
+                .build();
         assertAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertExceptionMessageCheck() {
-        Assert assertAction = new Assert();
-        
-        FailAction fail = new FailAction();
-        fail.setMessage("This went wrong!");
-        
-        assertAction.setAction(fail);
-        
+        FailAction.Builder fail = new FailAction.Builder()
+                .message("This went wrong!");
+
         Class exceptionClass = CitrusRuntimeException.class;
-        assertAction.setException(exceptionClass);
-        assertAction.setMessage("This went wrong!");
-        
+
+        Assert assertAction = new Assert.Builder()
+                .actions(fail)
+                .exception(exceptionClass)
+                .message("This went wrong!")
+                .build();
         assertAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testVariableSupport() {
-        Assert assertAction = new Assert();
-        
         context.setVariable("message", "This went wrong!");
-        
-        FailAction fail = new FailAction();
-        fail.setMessage("This went wrong!");
-        
-        assertAction.setAction(fail);
-        
+
+        FailAction.Builder fail = new FailAction.Builder()
+                .message("This went wrong!");
+
         Class exceptionClass = CitrusRuntimeException.class;
-        assertAction.setException(exceptionClass);
-        assertAction.setMessage("${message}");
-        
+
+        Assert assertAction = new Assert.Builder()
+                .actions(fail)
+                .exception(exceptionClass)
+                .message("${message}")
+                .build();
         assertAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidationMatcherSupport() {
-        Assert assertAction = new Assert();
-        
-        FailAction fail = new FailAction();
-        fail.setMessage("This went wrong!");
-        
-        assertAction.setAction(fail);
-        
+        FailAction.Builder fail = new FailAction.Builder()
+                .message("This went wrong!");
+
         Class exceptionClass = CitrusRuntimeException.class;
-        assertAction.setException(exceptionClass);
-        assertAction.setMessage("@contains('wrong')@");
-        
+
+        Assert assertAction = new Assert.Builder()
+                .actions(fail)
+                .exception(exceptionClass)
+                .message("@contains('wrong')@")
+                .build();
         assertAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testAssertExceptionWrongMessageCheck() {
-        Assert assertAction = new Assert();
-        
-        FailAction fail = new FailAction();
-        fail.setMessage("This went wrong!");
-        
-        assertAction.setAction(fail);
-        
+        FailAction.Builder fail = new FailAction.Builder()
+                .message("This went wrong!");
+
         Class exceptionClass = CitrusRuntimeException.class;
-        assertAction.setException(exceptionClass);
-        assertAction.setMessage("Excpected error is something else");
-        
+
+        Assert assertAction = new Assert.Builder()
+                .actions(fail)
+                .exception(exceptionClass)
+                .message("Excpected error is something else")
+                .build();
         assertAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testMissingException() {
-        Assert assertAction = new Assert();
-        
-        assertAction.setAction(new EchoAction());
-        
         Class exceptionClass = CitrusRuntimeException.class;
-        assertAction.setException(exceptionClass);
-        
+
+        Assert assertAction = new Assert.Builder()
+                .actions(new EchoAction.Builder())
+                .exception(exceptionClass)
+                .build();
         assertAction.execute(context);
     }
 }

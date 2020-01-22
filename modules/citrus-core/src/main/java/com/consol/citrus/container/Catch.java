@@ -16,21 +16,22 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractExceptionContainerBuilder;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-
 /**
  * Action catches possible exceptions in nested test actions.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class Catch extends AbstractActionContainer {
     /** Exception type caught */
-    private String exception = CitrusRuntimeException.class.getName();
+    private final String exception;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Catch.class);
@@ -38,8 +39,10 @@ public class Catch extends AbstractActionContainer {
     /**
      * Default constructor.
      */
-    public Catch() {
-        setName("catch");
+    public Catch(Builder builder) {
+        super("catch", builder);
+
+        this.exception = builder.exception;
     }
 
     @Override
@@ -48,8 +51,9 @@ public class Catch extends AbstractActionContainer {
             log.debug("Catch container catching exceptions of type " + exception);
         }
 
-        for (TestAction action: actions) {
+        for (TestActionBuilder<?> actionBuilder: actions) {
             try {
+                TestAction action = actionBuilder.build();
                 setActiveAction(action);
                 action.execute(context);
             } catch (Exception e) {
@@ -63,18 +67,50 @@ public class Catch extends AbstractActionContainer {
     }
 
     /**
-     * Set the exception that is caught.
-     * @param exception the exception to set
-     */
-    public void setException(String exception) {
-        this.exception = exception;
-    }
-
-    /**
      * Gets the exception.
      * @return the exception
      */
     public String getException() {
         return exception;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractExceptionContainerBuilder<Catch, Builder> {
+
+        private String exception = CitrusRuntimeException.class.getName();
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder catchException() {
+            return new Builder();
+        }
+
+        /**
+         * Catch exception type during execution.
+         * @param exception
+         * @return
+         */
+        public Builder exception(Class<? extends Throwable> exception) {
+            this.exception = exception.getName();
+            return this;
+        }
+
+        /**
+         * Catch exception type during execution.
+         * @param type
+         */
+        public Builder exception(String type) {
+            this.exception = type;
+            return this;
+        }
+
+        @Override
+        public Catch build() {
+            return super.build(new Catch(this));
+        }
     }
 }

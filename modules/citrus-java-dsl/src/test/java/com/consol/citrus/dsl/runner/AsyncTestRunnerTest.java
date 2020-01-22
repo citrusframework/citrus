@@ -16,8 +16,13 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.TestCase;
-import com.consol.citrus.actions.*;
+import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -25,9 +30,9 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.concurrent.*;
-
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
@@ -71,14 +76,14 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
                 async()
                     .actions(
                         echo("${var}"),
-                        new AbstractTestAction() {
+                        () -> new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.setVariable("anonymous", "anonymous");
                             }
                         },
                         sleep(100L),
-                        new AbstractTestAction() {
+                        () -> new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.getVariable("anonymous");
@@ -131,12 +136,12 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
                         .actions(
                             sleep(100),
                             fail("Something went wrong!")
-                        ).addSuccessAction(new AbstractTestAction() {
+                        ).successAction(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 successActionPerformed.complete(true);
                             }
-                        }).addErrorAction(new AbstractTestAction() {
+                        }).errorAction(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 errorActionPerformed.complete(true);
@@ -165,12 +170,12 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
                         .actions(
                             sleep(100),
                             echo("Do something!")
-                        ).addSuccessAction(new AbstractTestAction() {
+                        ).successAction(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 successActionPerformed.complete(true);
                             }
-                        }).addErrorAction(new AbstractTestAction() {
+                        }).errorAction(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 errorActionPerformed.complete(true);

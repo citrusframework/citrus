@@ -24,7 +24,7 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for starting Camel routes action in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
@@ -51,7 +51,82 @@ public class CamelControlBusActionParser extends AbstractCamelRouteActionParser 
     }
 
     @Override
-    protected Class<?> getBeanDefinitionClass() {
-        return CamelControlBusAction.class;
+    protected Class<CamelControlBusActionFactoryBean> getBeanDefinitionClass() {
+        return CamelControlBusActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class CamelControlBusActionFactoryBean extends AbstractCamelRouteActionFactoryBean<CamelControlBusAction, CamelControlBusAction.Builder> {
+
+        private final CamelControlBusAction.Builder builder = new CamelControlBusAction.Builder();
+
+        private String action;
+        private String routeId;
+        private String languageType = "simple";
+        private String languageExpression = "";
+
+        /**
+         * Sets the Camel control bus action.
+         * @param action
+         */
+        public void setAction(String action) {
+            this.action = action;
+        }
+
+        /**
+         * Sets the target Camel route id.
+         * @param routeId
+         */
+        public void setRouteId(String routeId) {
+            this.routeId = routeId;
+        }
+
+        /**
+         * Sets the expected Camel control bus result.
+         * @param result
+         */
+        public void setResult(String result) {
+            builder.result(result);
+        }
+
+        /**
+         * Sets the language type.
+         * @param languageType
+         */
+        public void setLanguageType(String languageType) {
+            this.languageType = languageType;
+        }
+
+        /**
+         * Sets the language expression.
+         * @param languageExpression
+         */
+        public void setLanguageExpression(String languageExpression) {
+            this.languageExpression = languageExpression;
+        }
+
+        @Override
+        public CamelControlBusAction getObject() throws Exception {
+            builder.route(routeId, action);
+            builder.language(languageType, languageExpression);
+
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return CamelControlBusAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public CamelControlBusAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

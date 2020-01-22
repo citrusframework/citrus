@@ -16,6 +16,8 @@
 
 package com.consol.citrus.ws.actions;
 
+import java.util.Locale;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
@@ -30,9 +32,10 @@ import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Locale;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -46,12 +49,12 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendSoapFault() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
-        sendSoapFaultAction.setEndpoint(endpoint);
-        
-        sendSoapFaultAction.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
-        sendSoapFaultAction.setFaultString("Internal server error");
-        
+        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
+                .endpoint(endpoint)
+                .faultCode("{http://citrusframework.org}ws:TEC-1000")
+                .faultString("Internal server error")
+                .build();
+
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -72,21 +75,21 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
-        
+
         sendSoapFaultAction.execute(context);
 
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendSoapFaultWithActor() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
-        sendSoapFaultAction.setEndpoint(endpoint);
-        
-        sendSoapFaultAction.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
-        sendSoapFaultAction.setFaultString("Internal server error");
-        sendSoapFaultAction.setFaultActor("SERVER");
-        
+        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
+                .endpoint(endpoint)
+                .faultCode("{http://citrusframework.org}ws:TEC-1000")
+                .faultString("Internal server error")
+                .faultActor("SERVER")
+                .build();
+
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -108,19 +111,19 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
-        
+
         sendSoapFaultAction.execute(context);
 
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendSoapFaultMissingFaultString() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
-        sendSoapFaultAction.setEndpoint(endpoint);
-        
-        sendSoapFaultAction.setFaultCode("{http://citrusframework.org}ws:TEC-1000");
-        
+        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
+                .endpoint(endpoint)
+                .faultCode("{http://citrusframework.org}ws:TEC-1000")
+                .build();
+
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -141,20 +144,20 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
-        
+
         sendSoapFaultAction.execute(context);
 
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendSoapFaultWithVariableSupport() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
-        sendSoapFaultAction.setEndpoint(endpoint);
-        
-        sendSoapFaultAction.setFaultCode("citrus:concat('{http://citrusframework.org}ws:', ${faultCode})");
-        sendSoapFaultAction.setFaultString("${faultString}");
-        
+        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
+                .endpoint(endpoint)
+                .faultCode("citrus:concat('{http://citrusframework.org}ws:', ${faultCode})")
+                .faultString("${faultString}")
+                .build();
+
         context.setVariable("faultCode", "TEC-1000");
         context.setVariable("faultString", "Internal server error");
 
@@ -178,30 +181,31 @@ public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
-        
+
         sendSoapFaultAction.execute(context);
 
     }
-    
+
     @Test
     public void testSendSoapFaultMissingFaultCode() {
-        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction();
-        sendSoapFaultAction.setEndpoint(endpoint);
-        
+        SendSoapFaultAction sendSoapFaultAction = new SendSoapFaultAction.Builder()
+                .endpoint(endpoint)
+                .build();
+
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
         when(endpoint.getActor()).thenReturn(null);
-        
+
         try {
             sendSoapFaultAction.execute(context);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getLocalizedMessage(), "Missing fault code definition for SOAP fault generation. Please specify a proper SOAP fault code!");
             return;
         }
-        
+
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of missing SOAP fault code");
     }
 }

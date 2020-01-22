@@ -16,6 +16,8 @@
 
 package com.consol.citrus;
 
+import java.util.HashMap;
+
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -27,16 +29,18 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -45,18 +49,7 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
-    private ReceiveMessageAction receiveMessageBean;
-    
-    @Override
-    @BeforeMethod
-    public void prepareTest() {
-        super.prepareTest();
-        
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-    }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElements() {
@@ -64,34 +57,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA", "text-value");
         validateMessageElements.put("//sub-elementB", "text-value");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyMessageElements() {
@@ -99,34 +92,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'></sub-elementA>"
                             + "<sub-elementB attribute='B'></sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA", "");
         validateMessageElements.put("//sub-elementB", "");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateEmptyMessageAttributes() {
@@ -134,35 +127,35 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute=''>text-value</sub-elementA>"
                             + "<sub-elementB attribute=''>text-value</sub-elementB>"
                             + "<sub-elementC attribute=''>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "");
         validateMessageElements.put("//root/element/sub-elementB/@attribute", "");
         validateMessageElements.put("//root/element/sub-elementC/@attribute", "");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateNullElements() {
@@ -170,34 +163,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'></sub-elementA>"
                             + "<sub-elementB attribute='B'></sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA", "null");
         validateMessageElements.put("//sub-elementB", "null");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributes() {
@@ -205,34 +198,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "A");
         validateMessageElements.put("//sub-elementB/@attribute", "B");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWrongExpectedElement() {
@@ -240,34 +233,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-element-wrong", "text-value");
         validateMessageElements.put("//sub-element-wrong", "text-value");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementsWrongExpectedValue() {
@@ -275,34 +268,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA", "text-value-wrong");
         validateMessageElements.put("//sub-elementB", "text-value-wrong");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributesWrongExpectedValue() {
@@ -310,34 +303,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "wrong-value");
         validateMessageElements.put("//sub-elementB/@attribute", "wrong-value");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateMessageElementAttributesWrongExpectedAttribute() {
@@ -345,34 +338,34 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
         HashMap<String, Object> validateMessageElements = new HashMap<>();
         validateMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
         validateMessageElements.put("//sub-elementB/@attribute-wrong", "B");
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         validationContext.setXpathExpressions(validateMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElements() {
@@ -380,43 +373,44 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-elementA", "text-value");
         messageElements.put("//sub-elementB", "text-value");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsUsingEmptyString() {
@@ -424,43 +418,44 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'></sub-elementA>"
                             + "<sub-elementB attribute='B'></sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-elementA", "");
         messageElements.put("//sub-elementB", "");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsAndValidate() {
@@ -468,49 +463,50 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-elementA", "text-value");
         messageElements.put("//sub-elementB", "text-value");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
+
         HashMap<String, Object> validateElements = new HashMap<>();
         validateElements.put("//root/element/sub-elementA", "text-value");
         validateElements.put("//sub-elementB", "text-value");
-        
+
         validationContext.setXpathExpressions(validateElements);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributes() {
@@ -518,43 +514,44 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-elementA/@attribute", "A");
         messageElements.put("//sub-elementB/@attribute", "B");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementsError() {
@@ -562,43 +559,44 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-element-wrong", "text-value");
         messageElements.put("//sub-element-wrong", "text-value");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributesError() {
@@ -606,43 +604,44 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
         messageElements.put("//sub-elementB/@attribute-wrong", "B");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSetMessageElementAttributesErrorWrongElement() {
@@ -650,41 +649,42 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         HashMap<String, String> messageElements = new HashMap<String, String>();
         messageElements.put("//root/element/sub-elementA-wrong/@attribute", "A");
         messageElements.put("//sub-elementB-wrong/@attribute", "B");
-        
+
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
         controlMessageBuilder.add(interceptor);
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 
     @Test
@@ -694,51 +694,50 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                + "</element>" 
+                + "</element>"
                 + "</root>");
-        
+
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB", "${valueB}");
-        
+
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
         variableExtractor.setXpathExpressions(extractMessageElements);
-        
-        receiveMessageBean.addVariableExtractors(variableExtractor);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
-        
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .variableExtractor(variableExtractor)
+                .build();
+        receiveAction.execute(context);
+
         Assert.assertTrue(context.getVariables().containsKey("valueA"));
         Assert.assertEquals(context.getVariables().get("valueA"), "text-value");
         Assert.assertTrue(context.getVariables().containsKey("valueB"));
         Assert.assertEquals(context.getVariables().get("valueB"), "text-value");
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageAttributes() {
@@ -746,51 +745,50 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                + "</element>" 
+                + "</element>"
                 + "</root>");
-        
+
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute", "${valueA}");
         extractMessageElements.put("//root/element/sub-elementB/@attribute", "${valueB}");
-        
+
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
         variableExtractor.setXpathExpressions(extractMessageElements);
-        
-        receiveMessageBean.addVariableExtractors(variableExtractor);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
-        
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .variableExtractor(variableExtractor)
+                .build();
+        receiveAction.execute(context);
+
         Assert.assertTrue(context.getVariables().containsKey("valueA"));
         Assert.assertEquals(context.getVariables().get("valueA"), "A");
         Assert.assertTrue(context.getVariables().containsKey("valueB"));
         Assert.assertEquals(context.getVariables().get("valueB"), "B");
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsForWrongElement() {
@@ -798,49 +796,48 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                + "</element>" 
+                + "</element>"
                 + "</root>");
-        
+
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-element-wrong", "${valueA}");
         extractMessageElements.put("//element/sub-element-wrong", "${valueB}");
-        
+
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
         variableExtractor.setXpathExpressions(extractMessageElements);
-        
-        receiveMessageBean.addVariableExtractors(variableExtractor);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
-        
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .variableExtractor(variableExtractor)
+                .build();
+        receiveAction.execute(context);
+
         Assert.assertFalse(context.getVariables().containsKey("valueA"));
         Assert.assertFalse(context.getVariables().containsKey("valueB"));
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testExtractMessageElementsForWrongAtribute() {
@@ -848,44 +845,43 @@ public class MessageElementsTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
-        
+
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                + "</element>" 
+                + "</element>"
                 + "</root>");
-        
+
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "${attributeA}");
-        
+
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
         variableExtractor.setXpathExpressions(extractMessageElements);
-        
-        receiveMessageBean.addVariableExtractors(variableExtractor);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
-        
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .variableExtractor(variableExtractor)
+                .build();
+        receiveAction.execute(context);
+
         Assert.assertFalse(context.getVariables().containsKey("attributeA"));
     }
 }

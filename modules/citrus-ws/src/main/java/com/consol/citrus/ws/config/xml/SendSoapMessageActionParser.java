@@ -16,6 +16,10 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.consol.citrus.config.xml.AbstractSendMessageActionFactoryBean;
 import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -27,12 +31,9 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Parser for SOAP message sender component in Citrus ws namespace.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SendSoapMessageActionParser extends SendMessageActionParser {
@@ -48,7 +49,7 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
         }
 
         builder.addPropertyValue("attachments", attachments);
-        
+
         if (element.hasAttribute("mtom-enabled")) {
             builder.addPropertyValue("mtomEnabled", element.getAttribute("mtom-enabled"));
         }
@@ -74,7 +75,50 @@ public class SendSoapMessageActionParser extends SendMessageActionParser {
     }
 
     @Override
-    protected Class<?> getBeanDefinitionClass() {
-        return SendSoapMessageAction.class;
+    protected Class<? extends AbstractSendMessageActionFactoryBean<?, ?>> getBeanDefinitionClass() {
+        return SendSoapMessageActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class SendSoapMessageActionFactoryBean extends AbstractSendMessageActionFactoryBean<SendSoapMessageAction, SendSoapMessageAction.Builder> {
+
+        private final SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder();
+
+        /**
+         * Sets the control attachments.
+         * @param attachments the control attachments
+         */
+        public void setAttachments(List<SoapAttachment> attachments) {
+            attachments.forEach(builder::attachment);
+        }
+
+        /**
+         * Enable or disable mtom attachments
+         * @param mtomEnabled
+         */
+        public void setMtomEnabled(boolean mtomEnabled) {
+            builder.mtomEnabled(mtomEnabled);
+        }
+
+        @Override
+        public SendSoapMessageAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return SendSoapMessageAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public SendSoapMessageAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

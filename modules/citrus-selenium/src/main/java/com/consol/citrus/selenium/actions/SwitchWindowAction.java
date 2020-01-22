@@ -16,27 +16,29 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Set;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 
-import java.util.Set;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SwitchWindowAction extends AbstractSeleniumAction implements SeleniumWindowAction {
+public class SwitchWindowAction extends AbstractSeleniumAction implements SeleniumAction {
 
     /** Window to select */
-    private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
+    private final String windowName;
 
     /**
      * Default constructor.
      */
-    public SwitchWindowAction() {
-        super("switch-window");
+    public SwitchWindowAction(Builder builder) {
+        super("switch-window", builder);
+
+        this.windowName = builder.windowName;
     }
 
     @Override
@@ -74,11 +76,25 @@ public class SwitchWindowAction extends AbstractSeleniumAction implements Seleni
     }
 
     /**
-     * Sets the windowName.
-     *
-     * @param windowName
+     * Action builder.
      */
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
+    public static class Builder extends AbstractSeleniumAction.Builder<SwitchWindowAction, Builder> {
+
+        private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
+
+        /**
+         * Set window name.
+         * @param name
+         * @return
+         */
+        public Builder window(String name) {
+            this.windowName = name;
+            return this;
+        }
+
+        @Override
+        public SwitchWindowAction build() {
+            return new SwitchWindowAction(this);
+        }
     }
 }

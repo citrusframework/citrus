@@ -16,43 +16,37 @@
 
 package com.consol.citrus.actions;
 
-import java.util.Collections;
-import java.util.List;
-
-import org.testng.annotations.Test;
-
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
 public class TraceVariablesActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
-	public void testTraceVariables() throws InterruptedException {
-		TraceVariablesAction trace = new TraceVariablesAction();
-		
+	public void testTraceVariables() {
+        TraceVariablesAction trace = new TraceVariablesAction.Builder()
+                .build();
 		trace.execute(context);
 	}
-	
+
 	@Test
-    public void testTraceSelectedVariables() throws InterruptedException {
-        TraceVariablesAction trace = new TraceVariablesAction();
-        
+    public void testTraceSelectedVariables() {
         context.setVariable("myVariable", "traceMe");
-        
-        List<String> variables = Collections.singletonList("myVariable");
-        trace.setVariableNames(variables);
+
+        TraceVariablesAction trace = new TraceVariablesAction.Builder()
+                .variable("myVariable")
+                .build();
         trace.execute(context);
     }
-	
+
 	@Test(expectedExceptions=CitrusRuntimeException.class)
-    public void testTraceUnknownVariable() throws InterruptedException {
-        TraceVariablesAction trace = new TraceVariablesAction();
-        
-        List<String> variables = Collections.singletonList("myVariable");
-        trace.setVariableNames(variables);
+    public void testTraceUnknownVariable() {
+        TraceVariablesAction trace = new TraceVariablesAction.Builder()
+                .variable("myVariable")
+                .build();
         trace.execute(context);
     }
 }

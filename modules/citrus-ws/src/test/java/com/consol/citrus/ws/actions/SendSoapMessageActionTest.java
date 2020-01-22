@@ -16,6 +16,9 @@
 
 package com.consol.citrus.ws.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -31,35 +34,30 @@ import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
-    
+
     private Endpoint webServiceEndpoint = Mockito.mock(Endpoint.class);
     private Producer producer = Mockito.mock(Producer.class);
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMtomAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        soapMessageAction.setMtomEnabled(true);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Text>cid:mtomText@citrusframework.org</Text></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("mtomText@citrusframework.org");
         attachment.setContentType("text/xml");
         attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -83,20 +81,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .mtomEnabled(true)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMtomInlineBase64BinaryAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        soapMessageAction.setMtomEnabled(true);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Image>cid:mtomImage</Image></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setMtomInline(true);
@@ -104,7 +102,6 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         attachment.setContentId("mtomImage");
         attachment.setContentType("image/png");
         attachment.setContent("IMAGE_DATA");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -123,20 +120,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .mtomEnabled(true)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMtomInlineHexBinaryAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        soapMessageAction.setMtomEnabled(true);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Image>cid:mtomImage</Image></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setMtomInline(true);
@@ -144,7 +141,6 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         attachment.setContentId("mtomImage");
         attachment.setContentType("image/png");
         attachment.setContent("IMAGE_DATA");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -163,26 +159,25 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .mtomEnabled(true)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMtomMissingCidAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        soapMessageAction.setMtomEnabled(true);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Text>mtomText</Text></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("mtomText");
         attachment.setContentType("text/xml");
         attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -206,20 +201,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .mtomEnabled(true)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMtomInlineMissingCidAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        soapMessageAction.setMtomEnabled(true);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Image>mtomImage</Image></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setMtomInline(true);
@@ -227,7 +222,6 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         attachment.setContentId("mtomImage");
         attachment.setContentType("image/png");
         attachment.setContent("IMAGE_DATA");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -251,20 +245,20 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .mtomEnabled(true)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMtomInlineInvalidEncodingTypeAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        soapMessageAction.setMtomEnabled(true);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Image>cid:mtomImage</Image></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setMtomInline(true);
@@ -272,10 +266,16 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         attachment.setContentId("mtomImage");
         attachment.setContentType("image/png");
         attachment.setContent("IMAGE_DATA");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
         when(webServiceEndpoint.getActor()).thenReturn(null);
+
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .mtomEnabled(true)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         try {
             soapMessageAction.execute(context);
             Assert.fail("Missing exception due to invalid attachment encoding type");
@@ -287,18 +287,12 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithDefaultAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
-        
+
         reset(webServiceEndpoint, producer);
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
@@ -317,26 +311,25 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("myAttachment");
         attachment.setContentType("text/xml");
         attachment.setContent("<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         attachment.setCharsetName("UTF-16");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
         reset(webServiceEndpoint, producer);
 
@@ -356,19 +349,19 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMultipleAttachmentDataTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         List<SoapAttachment> attachments = new ArrayList<SoapAttachment>();
         SoapAttachment attachment = new SoapAttachment();
@@ -384,8 +377,6 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         attachment2.setContent("<TestAttachment><Message>Hello World2!</Message></TestAttachment>");
         attachment2.setCharsetName("UTF-16");
         attachments.add(attachment2);
-
-        soapMessageAction.setAttachments(attachments);
 
         reset(webServiceEndpoint, producer);
 
@@ -411,45 +402,44 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .attachment(attachment2)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithEmptyAttachmentContentTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-        
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
-        
+
         reset(webServiceEndpoint, producer);
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .build();
         soapMessageAction.execute(context);
         verify(producer).send(any(Message.class), any(TestContext.class));
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentResourceTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
-        soapMessageAction.setMessageBuilder(messageBuilder);
-        
         reset(webServiceEndpoint, producer);
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
@@ -468,26 +458,25 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentDataVariableSupportTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         context.setVariable("myText", "Hello World!");
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContent("<TestAttachment><Message>${myText}</Message></TestAttachment>");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
-        soapMessageAction.setMessageBuilder(messageBuilder);
-        
         reset(webServiceEndpoint, producer);
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
@@ -506,26 +495,25 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithAttachmentResourceVariablesSupportTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         context.setVariable("myText", "Hello World!");
 
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment-with-variables.xml");
-        soapMessageAction.setAttachments(Collections.singletonList(attachment));
 
-        soapMessageAction.setMessageBuilder(messageBuilder);
-        
         reset(webServiceEndpoint, producer);
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
@@ -544,21 +532,21 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .attachment(attachment)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderContentTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         messageBuilder.getHeaderData().add("<TestHeader><operation>soapOperation</operation></TestHeader>");
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(webServiceEndpoint, producer);
 
@@ -577,22 +565,21 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .build();
         soapMessageAction.execute(context);
     }
 
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithMultipleHeaderContentTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         messageBuilder.getHeaderData().add("<TestHeader><operation>soapOperation1</operation></TestHeader>");
         messageBuilder.getHeaderData().add("<TestHeader><operation>soapOperation2</operation></TestHeader>");
-
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(webServiceEndpoint, producer);
 
@@ -613,22 +600,21 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderResourceTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/ws/actions/test-header-resource.xml");
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
-        
+
         reset(webServiceEndpoint, producer);
 
         when(webServiceEndpoint.createProducer()).thenReturn(producer);
@@ -646,23 +632,22 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderContentVariableSupportTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         context.setVariable("operation", "soapOperation");
-        
+
         messageBuilder.getHeaderData().add("<TestHeader><operation>${operation}</operation></TestHeader>");
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(webServiceEndpoint, producer);
 
@@ -681,23 +666,22 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .build();
         soapMessageAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings("rawtypes")
     public void testSoapMessageWithHeaderResourceVariableSupportTest() throws Exception {
-        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction();
-        soapMessageAction.setEndpoint(webServiceEndpoint);
-
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         context.setVariable("operation", "soapOperation");
-        
+
         messageBuilder.getHeaderResources().add("classpath:com/consol/citrus/ws/actions/test-header-resource-with-variables.xml");
-        
-        soapMessageAction.setMessageBuilder(messageBuilder);
 
         reset(webServiceEndpoint, producer);
 
@@ -716,6 +700,10 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         when(webServiceEndpoint.getActor()).thenReturn(null);
 
+        SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
+                .endpoint(webServiceEndpoint)
+                .messageBuilder(messageBuilder)
+                .build();
         soapMessageAction.execute(context);
     }
 

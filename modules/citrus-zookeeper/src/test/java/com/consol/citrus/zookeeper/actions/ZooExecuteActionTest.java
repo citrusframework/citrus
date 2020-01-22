@@ -36,10 +36,10 @@ public class ZooExecuteActionTest extends AbstractTestNGUnitTest {
 
         when(zookeeper.getState()).thenReturn(ZooKeeper.States.CONNECTED);
 
-        ZooExecuteAction action = new ZooExecuteAction();
-        action.setCommand(new Info());
-        action.setZookeeperClient(new ZooClient(zookeeper));
-
+        ZooExecuteAction action = new ZooExecuteAction.Builder()
+                .command(new Info())
+                .client(new ZooClient(zookeeper))
+                .build();
         action.execute(context);
 
         //Assert.assertEquals(action.getCommand().getCommandResult(), null);

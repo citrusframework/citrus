@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.CloseWindowAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -35,7 +34,42 @@ public class CloseWindowActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return CloseWindowAction.class;
+    protected Class<CloseWindowActionFactoryBean> getBrowserActionClass() {
+        return CloseWindowActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class CloseWindowActionFactoryBean extends AbstractSeleniumActionFactoryBean<CloseWindowAction, CloseWindowAction.Builder> {
+
+        private final CloseWindowAction.Builder builder = new CloseWindowAction.Builder();
+
+        /**
+         * Sets the windowName.
+         * @param windowName
+         */
+        public void setWindowName(String windowName) {
+            builder.window(windowName);
+        }
+
+        @Override
+        public CloseWindowAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return CloseWindowAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public CloseWindowAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

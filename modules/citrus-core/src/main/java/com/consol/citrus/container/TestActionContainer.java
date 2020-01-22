@@ -16,14 +16,14 @@
 
 package com.consol.citrus.container;
 
-import com.consol.citrus.TestAction;
-
 import java.util.List;
+
+import com.consol.citrus.TestAction;
 
 /**
  * Container interface describing all test action containers that hold several embedded test actions
  * to execute.
- * 
+ *
  * @author Christoph Deppisch
  */
 public interface TestActionContainer extends TestAction {
@@ -33,7 +33,7 @@ public interface TestActionContainer extends TestAction {
      * @param actions
      */
     TestActionContainer setActions(List<TestAction> actions);
-    
+
     /**
      * Get the embedded test actions within this container.
      */
@@ -44,13 +44,13 @@ public interface TestActionContainer extends TestAction {
      * @return
      */
     long getActionCount();
-    
+
     /**
      * Adds one to many test actions to the nested action list.
      * @param action
      */
     TestActionContainer addTestActions(TestAction ... action);
-    
+
     /**
      * Adds a test action to the nested action list.
      * @param action
@@ -62,13 +62,13 @@ public interface TestActionContainer extends TestAction {
      * @return the action index in the action list
      */
     int getActionIndex(TestAction action);
-    
+
     /**
      * Sets the current active action executed.
      * @param action
      */
     void setActiveAction(TestAction action);
-    
+
     /**
      * Get the action that was executed most recently.
      * @return
@@ -80,7 +80,7 @@ public interface TestActionContainer extends TestAction {
      * @return
      */
     List<TestAction> getExecutedActions();
-    
+
     /**
      * Get the test action with given index in list.
      * @param index

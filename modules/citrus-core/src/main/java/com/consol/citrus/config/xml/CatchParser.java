@@ -16,35 +16,65 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.container.Catch;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.container.Catch;
-
 /**
  * Bean definition parser for catch action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class CatchParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Catch.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(CatchFactoryBean.class);
 
-        builder.addPropertyValue("name", element.getLocalName());
-        
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("exception"), "exception");
 
         DescriptionElementParser.doParse(element, builder);
         ActionContainerParser.doParse(element, parserContext, builder);
-        
+
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class CatchFactoryBean extends AbstractTestContainerFactoryBean<Catch, Catch.Builder> {
+
+        private final Catch.Builder builder = new Catch.Builder();
+
+        /**
+         * Set the exception that is caught.
+         * @param exception the exception to set
+         */
+        public void setException(String exception) {
+            this.builder.exception(exception);
+        }
+
+        @Override
+        public Catch getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Catch.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Catch.Builder getBuilder() {
+            return builder;
+        }
     }
 }

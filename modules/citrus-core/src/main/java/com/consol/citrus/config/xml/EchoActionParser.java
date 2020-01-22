@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.EchoAction;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -23,20 +24,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.EchoAction;
-
 /**
  * Bean definition parser for echo action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class EchoActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(EchoAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(EchoActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -46,5 +43,36 @@ public class EchoActionParser implements BeanDefinitionParser {
         }
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class EchoActionFactoryBean extends AbstractTestActionFactoryBean<EchoAction, EchoAction.Builder> {
+
+        private final EchoAction.Builder builder = new EchoAction.Builder();
+
+        public void setMessage(String message) {
+            builder.message(message);
+        }
+
+        @Override
+        public EchoAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return EchoAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public EchoAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

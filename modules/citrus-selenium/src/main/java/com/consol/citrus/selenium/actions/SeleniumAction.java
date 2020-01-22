@@ -27,12 +27,6 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 public interface SeleniumAction extends TestAction {
 
     /**
-     * Sets the Selenium browser.
-     * @param browser
-     */
-    void setBrowser(SeleniumBrowser browser);
-
-    /**
      * Gets the Selenium browser.
      * @return
      */

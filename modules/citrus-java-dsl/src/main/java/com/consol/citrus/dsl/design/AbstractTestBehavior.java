@@ -16,11 +16,12 @@
 
 package com.consol.citrus.dsl.design;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.dsl.builder.FinallySequenceBuilder;
-
 import java.util.Stack;
+
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.TestActionContainerBuilder;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.FinallySequence;
 
 /**
  * Abstract Citrus test behavior provides interface method implementations for
@@ -43,9 +44,9 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
     @Override
     public void apply(TestDesigner target) {
         this.target = target;
-        containers = new Stack<AbstractActionContainer>() {
+        containers = new Stack<TestActionContainerBuilder<? extends AbstractActionContainer, ?>>() {
             @Override
-            public AbstractActionContainer push(AbstractActionContainer item) {
+            public TestActionContainerBuilder<? extends AbstractActionContainer, ?> push(TestActionContainerBuilder<? extends AbstractActionContainer, ?> item) {
                 target.container(item);
                 return item;
             }
@@ -54,17 +55,17 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
     }
 
     @Override
-    public void variable(String name, Object value) {
-        target.variable(name, value);
+    public <T> T variable(String name, T value) {
+        return target.variable(name, value);
     }
 
     @Override
-    public void action(TestAction testAction) {
-        target.action(testAction);
+    public void action(TestActionBuilder<?> builder) {
+        target.action(builder);
     }
 
     @Override
-    public FinallySequenceBuilder doFinally() {
+    public FinallySequence.Builder doFinally() {
         return target.doFinally();
     }
 

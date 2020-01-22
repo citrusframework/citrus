@@ -36,7 +36,50 @@ public class WaitUntilActionParser extends FindElementActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return WaitUntilAction.class;
+    protected Class<WaitUntilActionFactoryBean> getBrowserActionClass() {
+        return WaitUntilActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class WaitUntilActionFactoryBean extends ElementActionFactoryBean<WaitUntilAction, WaitUntilAction.Builder> {
+
+        private final WaitUntilAction.Builder builder = new WaitUntilAction.Builder();
+
+        /**
+         * Sets the timeout.
+         * @param timeout
+         */
+        public void setTimeout(Long timeout) {
+            builder.timeout(timeout);
+        }
+
+        /**
+         * Sets the condition.
+         * @param condition
+         */
+        public void setCondition(String condition) {
+            builder.condition(condition);
+        }
+
+        @Override
+        public WaitUntilAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return WaitUntilAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public WaitUntilAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

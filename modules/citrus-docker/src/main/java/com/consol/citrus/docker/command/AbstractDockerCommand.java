@@ -16,20 +16,20 @@
 
 package com.consol.citrus.docker.command;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.github.dockerjava.api.model.ResponseItem;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public abstract class AbstractDockerCommand<R> implements DockerCommand {
+public abstract class AbstractDockerCommand<R> implements DockerCommand<R> {
 
     public static final String IMAGE_ID = "image";
     public static final String CONTAINER_ID = "container";

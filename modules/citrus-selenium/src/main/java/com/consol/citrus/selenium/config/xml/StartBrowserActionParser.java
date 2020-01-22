@@ -16,7 +16,6 @@
 
 package com.consol.citrus.selenium.config.xml;
 
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.StartBrowserAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -33,7 +32,42 @@ public class StartBrowserActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return StartBrowserAction.class;
+    protected Class<StartBrowserActionFactoryBean> getBrowserActionClass() {
+        return StartBrowserActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class StartBrowserActionFactoryBean extends AbstractSeleniumActionFactoryBean<StartBrowserAction, StartBrowserAction.Builder> {
+
+        private final StartBrowserAction.Builder builder = new StartBrowserAction.Builder();
+
+        /**
+         * Sets the already started rules.
+         * @param allowAlreadyStarted
+         */
+        public void setAllowAlreadyStarted(boolean allowAlreadyStarted) {
+            builder.allowAlreadyStarted(allowAlreadyStarted);
+        }
+
+        @Override
+        public StartBrowserAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StartBrowserAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StartBrowserAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -16,12 +16,23 @@
 
 package com.consol.citrus.kubernetes.config.xml;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
+import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
+import com.consol.citrus.validation.json.JsonPathMessageValidator;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -30,11 +41,9 @@ import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import java.util.*;
-
 /**
  * Bean definition parser for kubernetes client action in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.7
  */
@@ -54,7 +63,7 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand> implemen
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(KubernetesExecuteAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(KubernetesExecuteActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("client"), "kubernetesClient");
@@ -111,6 +120,88 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand> implemen
             return commandType.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new BeanCreationException("Failed to create Kubernetes command of type: " + commandType, e);
+        }
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class KubernetesExecuteActionFactoryBean extends AbstractTestActionFactoryBean<KubernetesExecuteAction, KubernetesExecuteAction.Builder> {
+
+        @Autowired(required = false)
+        @Qualifier("k8sClient")
+        private KubernetesClient kubernetesClient;
+
+        @Autowired(required = false)
+        private JsonTextMessageValidator jsonTextMessageValidator;
+
+        @Autowired(required = false)
+        private JsonPathMessageValidator jsonPathMessageValidator;
+
+        private final KubernetesExecuteAction.Builder builder = new KubernetesExecuteAction.Builder();
+
+        /**
+         * Sets kubernetes command to execute.
+         * @param command
+         * @return
+         */
+        public void setCommand(KubernetesCommand<?> command) {
+            builder.command(command);
+        }
+
+        /**
+         * Sets the kubernetes client.
+         * @param kubernetesClient
+         */
+        public void setKubernetesClient(KubernetesClient kubernetesClient) {
+            builder.client(kubernetesClient);
+        }
+
+        /**
+         * Sets the expected control command result data.
+         * @param controlCommandResult
+         */
+        public void setCommandResult(String controlCommandResult) {
+            builder.result(controlCommandResult);
+        }
+
+        /**
+         * Sets the expected command result expressions for path validation.
+         * @param commandResultExpressions
+         */
+        public void setCommandResultExpressions(Map<String, Object> commandResultExpressions) {
+            commandResultExpressions.forEach(builder::validate);
+        }
+
+        @Override
+        public KubernetesExecuteAction getObject() throws Exception {
+            if (kubernetesClient != null) {
+                builder.client(kubernetesClient);
+            }
+
+            if (jsonTextMessageValidator != null) {
+                builder.validator(jsonTextMessageValidator);
+            }
+
+            if (jsonPathMessageValidator != null) {
+                builder.validator(jsonPathMessageValidator);
+            }
+
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return KubernetesExecuteAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public KubernetesExecuteAction.Builder getBuilder() {
+            return builder;
         }
     }
 }

@@ -16,7 +16,16 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.container.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.SequenceAfterTest;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -26,9 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -41,7 +47,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
-    private List<TestAction> finalActions = new ArrayList<>();
+    private List<TestActionBuilder<?>> finalActions = new ArrayList<>();
 
     /** Tests variables */
     private Map<String, Object> variableDefinitions = new LinkedHashMap<>();
@@ -148,7 +154,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
         if (!getMetaInfo().getStatus().equals(TestCaseMetaInfo.Status.DISABLED)) {
             try {
                 start(context);
-                for (final TestAction action: actions) {
+                for (final TestActionBuilder<?> actionBuilder: actions) {
+                    TestAction action = actionBuilder.build();
                     executeAction(action, context);
                 }
 
@@ -214,8 +221,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         try {
             if (!action.isDisabled(context)) {
-                testActionListeners.onTestActionStart(this, action);
                 setActiveAction(action);
+                testActionListeners.onTestActionStart(this, action);
 
                 action.execute(context);
                 testActionListeners.onTestActionFinish(this, action);
@@ -254,7 +261,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
                 log.debug("Entering finally block in test case");
 
                 /* walk through the finally chain and execute the actions in there */
-                for (final TestAction action : finalActions) {
+                for (final TestActionBuilder<?> actionBuilder : finalActions) {
+                    TestAction action = actionBuilder.build();
                     if (!action.isDisabled(context)) {
                         testActionListeners.onTestActionStart(this, action);
                         action.execute(context);
@@ -312,7 +320,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param finalActions
      */
     public void setFinalActions(final List<TestAction> finalActions) {
-        this.finalActions = finalActions;
+        this.finalActions = finalActions.stream().map(action -> (TestActionBuilder<?>) () -> action).collect(Collectors.toList());
     }
 
     @Override
@@ -329,7 +337,8 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
 
         stringBuilder.append("[testActions:");
 
-        for (final TestAction action: actions) {
+        for (final TestActionBuilder<?> actionBuilder: actions) {
+            TestAction action = actionBuilder.build();
             stringBuilder.append(action.getClass().getName()).append(";");
         }
 
@@ -343,9 +352,17 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @param testAction
      */
     public void addFinalAction(final TestAction testAction) {
+        this.finalActions.add(() -> testAction);
+    }
+
+    /**
+     * Adds action to finally action chain.
+     * @param testAction
+     */
+    public void addFinalAction(final TestActionBuilder<?> testAction) {
         this.finalActions.add(testAction);
     }
-    
+
     /**
      * Get the test case meta information.
      * @return the metaInfo
@@ -367,7 +384,7 @@ public class TestCase extends AbstractActionContainer implements BeanNameAware {
      * @return the finalActions
      */
     public List<TestAction> getFinalActions() {
-        return finalActions;
+        return finalActions.stream().map(TestActionBuilder::build).collect(Collectors.toList());
     }
 
     /**

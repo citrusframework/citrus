@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.AlertAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -42,7 +41,56 @@ public class AlertActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return AlertAction.class;
+    protected Class<AlertActionFactoryBean> getBrowserActionClass() {
+        return AlertActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class AlertActionFactoryBean extends AbstractSeleniumActionFactoryBean<AlertAction, AlertAction.Builder> {
+
+        private final AlertAction.Builder builder = new AlertAction.Builder();
+
+        /**
+         * Sets the accept.
+         *
+         * @param accept
+         */
+        public void setAccept(boolean accept) {
+            if (accept) {
+                builder.accept();
+            } else {
+                builder.dismiss();
+            }
+        }
+
+        /**
+         * Sets the text.
+         *
+         * @param text
+         */
+        public void setText(String text) {
+            builder.text(text);
+        }
+
+        @Override
+        public AlertAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return AlertAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public AlertAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -16,13 +16,14 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.PurgeChannelsBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -30,16 +31,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -49,7 +48,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
 
     private MessageSelector messageSelector = Mockito.mock(MessageSelector.class);
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
-    
+
     private QueueChannel channel1 = Mockito.mock(QueueChannel.class);
     private QueueChannel channel2 = Mockito.mock(QueueChannel.class);
     private QueueChannel channel3 = Mockito.mock(QueueChannel.class);
@@ -61,9 +60,9 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
     public void testPurgeChannelsBuilderWithChannels() {
         reset(channel1, channel2, channel3, channel4);
 
-        when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
-        when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
-        when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
+        when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
+        when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
+        when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
@@ -81,11 +80,10 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         PurgeMessageChannelAction action = (PurgeMessageChannelAction) test.getActions().get(0);
         Assert.assertEquals(action.getChannels().size(), 3);
         Assert.assertEquals(action.getChannels().toString(), "[" + channel1.toString() + ", " + channel2.toString() + ", " + channel3.toString() + "]");
-        Assert.assertNull(action.getMessageSelector());
-
-
+        Assert.assertNotNull(action.getMessageSelector());
+        Assert.assertEquals(action.getMessageSelector().getClass(), PurgeMessageChannelAction.AllAcceptingMessageSelector.class);
     }
-    
+
     @Test
     public void testPurgeChannelBuilderWithNames() {
         reset(applicationContextMock, channel1, channel2, channel3, channel4);
@@ -99,9 +97,9 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBean("ch3", MessageChannel.class)).thenReturn(channel3);
         when(applicationContextMock.getBean("ch4", MessageChannel.class)).thenReturn(channel4);
 
-        when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
-        when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
-        when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
+        when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
+        when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
+        when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
@@ -121,7 +119,6 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1, ch2, ch3, ch4]");
         Assert.assertTrue(action.getChannelResolver() instanceof BeanFactoryChannelResolver);
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
-
     }
 
     @Test
@@ -133,7 +130,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
         when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
         when(channelResolver.resolveDestination("ch1")).thenReturn(channel1);
-        when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<Message<?>>());
+        when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
@@ -151,6 +148,5 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1]");
         Assert.assertNotNull(action.getChannelResolver());
         Assert.assertEquals(action.getChannelResolver(), channelResolver);
-
     }
 }

@@ -16,10 +16,13 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -31,10 +34,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.HashMap;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -69,10 +68,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapFaultAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = (SendSoapFaultAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendSoapFaultAction action = (SendSoapFaultAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
@@ -107,10 +105,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapFaultAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = (SendSoapFaultAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendSoapFaultAction action = (SendSoapFaultAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
@@ -143,10 +140,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapFaultAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = (SendSoapFaultAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendSoapFaultAction action = (SendSoapFaultAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
@@ -178,10 +174,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapFaultAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = (SendSoapFaultAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendSoapFaultAction action = (SendSoapFaultAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
@@ -213,10 +208,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapFaultAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = (SendSoapFaultAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendSoapFaultAction action = (SendSoapFaultAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);
@@ -250,10 +244,9 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendSoapFaultAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendSoapFaultAction.class);
 
-        SendSoapFaultAction action = (SendSoapFaultAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendSoapFaultAction action = (SendSoapFaultAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), soapServer);

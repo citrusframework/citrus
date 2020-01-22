@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -24,21 +26,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.LoadPropertiesAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
  * Bean definition parser for load-properties action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class LoadPropertiesActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(LoadPropertiesAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(LoadPropertiesActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -50,5 +47,40 @@ public class LoadPropertiesActionParser implements BeanDefinitionParser {
         }
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class LoadPropertiesActionFactoryBean extends AbstractTestActionFactoryBean<LoadPropertiesAction, LoadPropertiesAction.Builder> {
+
+        private final LoadPropertiesAction.Builder builder = new LoadPropertiesAction.Builder();
+
+        /**
+         * File path setter.
+         * @param file the file to set
+         */
+        public void setFilePath(String file) {
+            builder.filePath(file);
+        }
+
+        @Override
+        public LoadPropertiesAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return LoadPropertiesAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public LoadPropertiesAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

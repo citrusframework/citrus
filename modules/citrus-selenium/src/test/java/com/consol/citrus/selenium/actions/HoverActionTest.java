@@ -41,19 +41,11 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private RemoteWebElement element = Mockito.mock(RemoteWebElement.class);
 
-    private HoverAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, element);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new HoverAction();
-        action.setBrowser(seleniumBrowser);
-
-        action.setProperty("id");
-        action.setPropertyValue("myButton");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
@@ -73,6 +65,10 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
 
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
+        HoverAction action =  new HoverAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .build();
         action.execute(context);
     }
 
@@ -80,6 +76,10 @@ public class HoverActionTest extends AbstractTestNGUnitTest {
     public void testElementNotFound() {
         when(webDriver.findElement(any(By.class))).thenReturn(null);
 
+        HoverAction action =  new HoverAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .build();
         action.execute(context);
     }
 

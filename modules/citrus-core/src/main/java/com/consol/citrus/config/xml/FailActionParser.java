@@ -16,31 +16,63 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
  * Bean definition parser for fail action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class FailActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(FailAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(FailActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("message"), "message");
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class FailActionFactoryBean extends AbstractTestActionFactoryBean<FailAction, FailAction.Builder> {
+
+        private final FailAction.Builder builder = new FailAction.Builder();
+
+        /**
+         * Setter for user defined cause message.
+         * @param message the failure cause message.
+         */
+        public void setMessage(String message) {
+            builder.message(message);
+        }
+
+        @Override
+        public FailAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return FailAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public FailAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

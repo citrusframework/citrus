@@ -16,6 +16,9 @@
 
 package com.consol.citrus.container;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -24,9 +27,8 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -38,93 +40,78 @@ public class TemplateTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testTemplateExecution() {
-        Template template = new Template();
-
         reset(action);
 
-        template.setActions(Collections.singletonList(action));
-
+        Template template = new Template.Builder()
+                .actions(action)
+                .build();
         template.execute(context);
 
         verify(action).execute(context);
     }
-    
+
     @Test
     public void testTemplateWithParams() {
-        Template template = new Template();
-        
         context.setVariable("text", "Hello Citrus!");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        EchoAction echo = new EchoAction();
-        echo.setMessage("${myText}");
-        
-        actions.add(echo);
-        template.setActions(actions);
-        
+
+        EchoAction echo = new EchoAction.Builder().message("${myText}").build();
+
         Map<String, String> parameters = new HashMap<String, String>();
         parameters.put("param", "Parameter was set");
         parameters.put("myText", "${text}");
-        
-        template.setParameter(parameters);
-        
+
         Assert.assertFalse(context.getVariables().containsKey("param"));
         Assert.assertFalse(context.getVariables().containsKey("myText"));
-        
+
+        Template template = new Template.Builder()
+                .actions(echo)
+                .parameters(parameters)
+                .build();
         template.execute(context);
-        
-        Assert.assertTrue(context.getVariables().containsKey("param"), 
+
+        Assert.assertTrue(context.getVariables().containsKey("param"),
         "Missing new variable 'param' in global test context");
         Assert.assertEquals(context.getVariable("param"), "Parameter was set");
-        
-        Assert.assertTrue(context.getVariables().containsKey("myText"), 
+
+        Assert.assertTrue(context.getVariables().containsKey("myText"),
                 "Missing new variable 'myText' in global test context");
         Assert.assertEquals(context.getVariable("myText"), "Hello Citrus!");
     }
-    
+
     @Test
     public void testTemplateWithParamsLocalContext() {
-        Template template = new Template();
-        
         context.setVariable("text", "Hello Citrus!");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        EchoAction echo = new EchoAction();
-        echo.setMessage("${myText}");
-        
-        actions.add(echo);
-        template.setActions(actions);
-        
-        template.setParameter(Collections.singletonMap("myText", "${text}"));
-        template.setGlobalContext(false);
-        
+
+        EchoAction echo = new EchoAction.Builder().message("${myText}").build();
+
         Assert.assertFalse(context.getVariables().containsKey("myText"));
-        
+
+        Template template = new Template.Builder()
+                .actions(echo)
+                .parameter("myText", "${text}")
+                .globalContext(false)
+                .build();
         template.execute(context);
-        
-        Assert.assertFalse(context.getVariables().containsKey("myText"), 
+
+        Assert.assertFalse(context.getVariables().containsKey("myText"),
                 "Variable 'myText' present in global test context, although global context was disabled before");
     }
-    
+
     @Test
     public void testTemplateMissingParams() {
-        Template template = new Template();
-        
         context.setVariable("text", "Hello Citrus!");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        EchoAction echo = new EchoAction();
-        echo.setMessage("${myText}");
-        
-        actions.add(echo);
-        template.setActions(actions);
-        
+
+        EchoAction echo = new EchoAction.Builder().message("${myText}").build();
+
+        Template template = new Template.Builder()
+                .actions(echo)
+                .build();
         try {
             template.execute(context);
         } catch (CitrusRuntimeException e) {
             return;
         }
-        
+
         Assert.fail("Missing CitrusRuntimeException due to unknown parameter");
     }
 }

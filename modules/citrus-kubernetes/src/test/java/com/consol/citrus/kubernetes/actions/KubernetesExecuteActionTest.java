@@ -16,6 +16,8 @@
 
 package com.consol.citrus.kubernetes.actions;
 
+import java.util.Map;
+
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.ListPods;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
@@ -30,9 +32,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Map;
-
-import static org.mockito.Matchers.anyMap;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,10 +60,10 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         when(clientOperation.inAnyNamespace()).thenReturn(clientOperation);
         when(clientOperation.list()).thenReturn(response);
 
-        KubernetesExecuteAction action = new KubernetesExecuteAction();
-        action.setCommand(new ListPods());
-        action.setKubernetesClient(client);
-
+        KubernetesExecuteAction action = new KubernetesExecuteAction.Builder()
+                .client(client)
+                .command(new ListPods())
+                .build();
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
@@ -85,10 +85,10 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         when(clientOperation.inNamespace("myNamespace")).thenReturn(clientOperation);
         when(clientOperation.list()).thenReturn(response);
 
-        KubernetesExecuteAction action = new KubernetesExecuteAction();
-        action.setCommand(new ListPods().namespace("myNamespace"));
-        action.setKubernetesClient(client);
-
+        KubernetesExecuteAction action = new KubernetesExecuteAction.Builder()
+                .client(client)
+                .command(new ListPods().namespace("myNamespace"))
+                .build();
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 1);
@@ -111,10 +111,10 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         when(clientOperation.inNamespace("myNamespace")).thenReturn(clientOperation);
         when(clientOperation.list()).thenReturn(response);
 
-        KubernetesExecuteAction action = new KubernetesExecuteAction();
-        action.setCommand(new ListPods());
-        action.setKubernetesClient(client);
-
+        KubernetesExecuteAction action = new KubernetesExecuteAction.Builder()
+                .client(client)
+                .command(new ListPods())
+                .build();
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().size(), 0);
@@ -147,12 +147,12 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         });
         when(clientOperation.list()).thenReturn(response);
 
-        KubernetesExecuteAction action = new KubernetesExecuteAction();
-        action.setCommand(new ListPods()
-            .label("app")
-            .label("pod_label", "active"));
-        action.setKubernetesClient(client);
-
+        KubernetesExecuteAction action = new KubernetesExecuteAction.Builder()
+                .client(client)
+                .command(new ListPods()
+                        .label("app")
+                        .label("pod_label", "active"))
+                .build();
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,pod_label=active");
@@ -183,12 +183,12 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         });
         when(clientOperation.list()).thenReturn(response);
 
-        KubernetesExecuteAction action = new KubernetesExecuteAction();
-        action.setCommand(new ListPods()
-                .withoutLabel("app")
-                .withoutLabel("pod_label", "inactive"));
-        action.setKubernetesClient(client);
-
+        KubernetesExecuteAction action = new KubernetesExecuteAction.Builder()
+                .client(client)
+                .command(new ListPods()
+                        .withoutLabel("app")
+                        .withoutLabel("pod_label", "inactive"))
+                .build();
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "!app,pod_label!=inactive");
@@ -230,14 +230,14 @@ public class KubernetesExecuteActionTest extends AbstractTestNGUnitTest {
         });
         when(clientOperation.list()).thenReturn(response);
 
-        KubernetesExecuteAction action = new KubernetesExecuteAction();
-        action.setCommand(new ListPods()
-                .label("app")
-                .withoutLabel("running")
-                .label("with", "active")
-                .withoutLabel("without", "inactive"));
-        action.setKubernetesClient(client);
-
+        KubernetesExecuteAction action = new KubernetesExecuteAction.Builder()
+                .client(client)
+                .command(new ListPods()
+                        .label("app")
+                        .withoutLabel("running")
+                        .label("with", "active")
+                        .withoutLabel("without", "inactive"))
+                .build();
         action.execute(context);
 
         Assert.assertEquals(action.getCommand().getParameters().get(KubernetesMessageHeaders.LABEL), "app,!running,with=active,without!=inactive");

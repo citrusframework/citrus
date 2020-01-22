@@ -16,18 +16,27 @@
 
 package com.consol.citrus.container;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.condition.Condition;
+import java.time.Duration;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.condition.ActionCondition;
+import com.consol.citrus.condition.Condition;
+import com.consol.citrus.condition.FileCondition;
+import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.condition.MessageCondition;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.*;
 
 /**
  * Pause the test execution until the condition is met or the wait time has been exceeded.
@@ -35,31 +44,29 @@ import java.util.concurrent.*;
  * @author Martin Maher
  * @since 2.4
  */
-public class Wait extends AbstractActionContainer {
+public class Wait extends AbstractTestAction {
 
     /** Logger */
     private static final Logger log = LoggerFactory.getLogger(Wait.class);
 
-    /** Nested test action */
-    private TestAction action;
-
     /** Condition to be met */
-    private Condition condition;
-
-    /** The total time to wait in seconds, for the condition to be met before failing */
-    private String seconds;
+    private final Condition condition;
 
     /** The total time to wait in milliseconds, for the condition to be met before failing */
-    private String milliseconds = "5000";
+    private final String time;
 
     /** The time interval in milliseconds between each test of the condition */
-    private String interval = "1000";
+    private final String interval;
 
     /**
      * Default constructor.
      */
-    public Wait() {
-        setName("wait");
+    public Wait(Builder builder) {
+        super("wait", builder);
+
+        this.condition = builder.condition;
+        this.time = builder.time;
+        this.interval = builder.interval;
     }
 
     @Override
@@ -70,10 +77,6 @@ public class Wait extends AbstractActionContainer {
 
         if (intervalMs > timeLeft) {
             intervalMs = timeLeft;
-        }
-
-        if (condition == null) {
-            condition = new ActionCondition(Optional.ofNullable(action).orElseThrow(() -> new CitrusRuntimeException("Invalid wait condition -  null")));
         }
 
         Callable<Boolean> callable = () -> condition.isSatisfied(context);
@@ -119,38 +122,7 @@ public class Wait extends AbstractActionContainer {
      * @return
      */
     private long getWaitTimeMs(TestContext context) {
-        if (StringUtils.hasText(seconds)) {
-            return Long.valueOf(context.replaceDynamicContentInString(seconds)) * 1000;
-        } else {
-            return Long.valueOf(context.replaceDynamicContentInString(milliseconds));
-        }
-    }
-
-    @Override
-    public Wait addTestAction(TestAction action) {
-        this.action = action;
-        super.addTestAction(action);
-        return this;
-    }
-
-    @Override
-    public TestAction getTestAction(int index) {
-        if (index == 0) {
-            return action;
-        } else {
-            throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
-        }
-    }
-
-    @Override
-    public Wait setActions(List<TestAction> actions) {
-        if (actions.size() > 1) {
-            throw new CitrusRuntimeException("Invalid number of nested test actions - only one single nested action is allowed");
-        }
-
-        action = actions.get(0);
-        super.setActions(actions);
-        return this;
+        return Long.parseLong(context.replaceDynamicContentInString(time));
     }
 
     /**
@@ -159,55 +131,157 @@ public class Wait extends AbstractActionContainer {
      * @return
      */
     private long getIntervalMs(TestContext context) {
-        return Long.valueOf(context.replaceDynamicContentInString(interval));
+        return Long.parseLong(context.replaceDynamicContentInString(interval));
     }
 
-    public String getSeconds() {
-        return seconds;
-    }
-
-    public void setSeconds(String seconds) {
-        this.seconds = seconds;
-    }
-
-    public String getMilliseconds() {
-        return milliseconds;
-    }
-
-    public void setMilliseconds(String milliseconds) {
-        this.milliseconds = milliseconds;
+    public String getTime() {
+        return time;
     }
 
     public Condition getCondition() {
         return condition;
     }
 
-    public void setCondition(Condition condition) {
-        this.condition = condition;
-    }
-
     public String getInterval() {
         return interval;
     }
 
-    public void setInterval(String interval) {
-        this.interval = interval;
-    }
-
     /**
-     * Set the nested test action.
-     * @param action the action to set
+     * Action builder.
      */
-    public void setAction(TestAction action) {
-        addTestAction(action);
-    }
+    public static class Builder extends AbstractTestActionBuilder<Wait, Builder> implements TestActionBuilder.DelegatingTestActionBuilder<Wait> {
 
-    /**
-     * Gets the action.
-     * @return the action
-     */
-    public TestAction getAction() {
-        return action;
-    }
+        protected Condition condition;
+        private String time = "5000";
+        private String interval = "1000";
 
+        private TestActionBuilder<?> delegate;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder waitFor() {
+            return new Builder();
+        }
+
+        /**
+         * Condition to wait for during execution.
+         * @param condition The condition to add to the wait action
+         * @return The wait action
+         */
+        public Builder condition(Condition condition) {
+            this.condition = condition;
+            this.delegate = this::build;
+            return this;
+        }
+
+        /**
+         * Sets custom condition builder.
+         * @param conditionBuilder
+         * @param <T>
+         * @return
+         */
+        public <T extends WaitConditionBuilder<? extends Condition, T>> T condition(T conditionBuilder) {
+            this.condition = conditionBuilder.getCondition();
+            this.delegate = conditionBuilder;
+            return conditionBuilder;
+        }
+
+        /**
+         * The message condition to wait for during execution.
+         * @return A WaitMessageConditionBuilder for further configuration
+         */
+        public WaitMessageConditionBuilder message() {
+            MessageCondition condition = new MessageCondition();
+            this.condition = condition;
+            WaitMessageConditionBuilder builder = new WaitMessageConditionBuilder(condition, this);
+            this.delegate = builder;
+            return builder;
+        }
+
+        /**
+         * The test action condition to wait for during execution.
+         * @return A WaitActionConditionBuilder for further configuration
+         */
+        public WaitActionConditionBuilder execution() {
+            ActionCondition condition = new ActionCondition();
+            this.condition = condition;
+            WaitActionConditionBuilder builder = new WaitActionConditionBuilder(condition, this);
+            this.delegate = builder;
+            return builder;
+        }
+
+        /**
+         * The HTTP condition to wait for during execution.
+         * @return A WaitHttpConditionBuilder for further configuration
+         */
+        public WaitHttpConditionBuilder http() {
+            HttpCondition condition = new HttpCondition();
+            this.condition = condition;
+            WaitHttpConditionBuilder builder = new WaitHttpConditionBuilder(condition, this);
+            this.delegate = builder;
+            return builder;
+        }
+
+        /**
+         * The file condition to wait for during execution.
+         * @return A WaitFileConditionBuilder for further configuration
+         */
+        public WaitFileConditionBuilder file() {
+            FileCondition condition = new FileCondition();
+            this.condition = condition;
+            WaitFileConditionBuilder builder = new WaitFileConditionBuilder(condition, this);
+            this.delegate = builder;
+            return builder;
+        }
+
+        /**
+         * The interval in milliseconds to use between each test of the condition
+         * @param interval The interval to use
+         * @return The altered WaitBuilder
+         */
+        public Builder interval(Long interval) {
+            return interval(String.valueOf(interval));
+        }
+
+        /**
+         * The interval in milliseconds to use between each test of the condition
+         * @param interval The interval to use
+         * @return The altered WaitBuilder
+         */
+        public Builder interval(String interval) {
+            this.interval = interval;
+            return this;
+        }
+
+        public Builder milliseconds(long milliseconds) {
+            return milliseconds(String.valueOf(milliseconds));
+        }
+
+        public Builder milliseconds(String milliseconds) {
+            this.time = milliseconds;
+            return this;
+        }
+
+        public Builder seconds(double seconds) {
+            milliseconds(Math.round(seconds * 1000));
+            return this;
+        }
+
+        public Builder time(Duration duration) {
+            milliseconds(duration.toMillis());
+            return this;
+        }
+
+        @Override
+        public Wait build() {
+            return new Wait(this);
+        }
+
+        @Override
+        public TestActionBuilder<?> getDelegate() {
+            return delegate;
+        }
+    }
 }

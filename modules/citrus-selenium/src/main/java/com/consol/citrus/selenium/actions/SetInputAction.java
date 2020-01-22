@@ -30,13 +30,15 @@ import org.openqa.selenium.support.ui.Select;
 public class SetInputAction extends FindElementAction {
 
     /** Value to set on input */
-    private String value;
+    private final String value;
 
     /**
      * Default constructor.
      */
-    public SetInputAction() {
-        super("set-input");
+    public SetInputAction(Builder builder) {
+        super("set-input", builder);
+
+        this.value = builder.value;
     }
 
     @Override
@@ -54,7 +56,6 @@ public class SetInputAction extends FindElementAction {
 
     /**
      * Gets the value.
-     *
      * @return
      */
     public String getValue() {
@@ -62,11 +63,20 @@ public class SetInputAction extends FindElementAction {
     }
 
     /**
-     * Sets the value.
-     *
-     * @param value
+     * Action builder.
      */
-    public void setValue(String value) {
-        this.value = value;
+    public static class Builder extends ElementActionBuilder<SetInputAction, SetInputAction.Builder> {
+
+        private String value;
+
+        public Builder value(String value) {
+            this.value = value;
+            return this;
+        }
+
+        @Override
+        public SetInputAction build() {
+            return new SetInputAction(this);
+        }
     }
 }

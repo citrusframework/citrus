@@ -16,9 +16,15 @@
 
 package com.consol.citrus.jms.config.xml;
 
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import javax.jms.ConnectionFactory;
+import javax.jms.Queue;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -29,13 +35,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 /**
  * Bean definition parser for purge-jms-queues action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
@@ -43,32 +45,31 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
     @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeJmsQueuesActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
         String connectionFactory = "connectionFactory"; //default value
-        
+
         if (element.hasAttribute("connection-factory")) {
             connectionFactory = element.getAttribute("connection-factory");
         }
-        
+
         if (!StringUtils.hasText(connectionFactory)) {
             parserContext.getReaderContext().error("Attribute 'connection-factory' must not be empty", element);
         }
-        
+
         beanDefinition.addPropertyReference("connectionFactory", connectionFactory);
-        
+
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("receive-timeout"), "receiveTimeout");
-        
+
         List<String> queueNames = new ArrayList<String>();
         ManagedList<BeanDefinition> queueRefs = new ManagedList<BeanDefinition>();
-        List<?> queueElements = DomUtils.getChildElementsByTagName(element, "queue");
-        for (Iterator<?> iter = queueElements.iterator(); iter.hasNext();) {
-            Element queue = (Element) iter.next();
+        List<Element> queueElements = DomUtils.getChildElementsByTagName(element, "queue");
+        for (Element queue : queueElements) {
             String queueName = queue.getAttribute("name");
             String queueRef = queue.getAttribute("ref");
-            
+
             if (StringUtils.hasText(queueName)) {
                 queueNames.add(queueName);
             } else if (StringUtils.hasText(queueRef)) {
@@ -77,10 +78,77 @@ public class PurgeJmsQueuesActionParser implements BeanDefinitionParser {
                 throw new BeanCreationException("Element 'queue' must set one of the attributes 'name' or 'ref'");
             }
         }
-        
+
         beanDefinition.addPropertyValue("queueNames", queueNames);
         beanDefinition.addPropertyValue("queues", queueRefs);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class PurgeJmsQueuesActionFactoryBean extends AbstractTestActionFactoryBean<PurgeJmsQueuesAction, PurgeJmsQueuesAction.Builder> {
+
+        private final PurgeJmsQueuesAction.Builder builder = new PurgeJmsQueuesAction.Builder();
+
+        /**
+         * List of queue names to purge.
+         * @param queueNames the queueNames to set
+         */
+        public void setQueueNames(List<String> queueNames) {
+            builder.queueNames(queueNames);
+        }
+
+        /**
+         * Connection factory.
+         * @param connectionFactory the connectionFactory to set
+         */
+        public void setConnectionFactory(ConnectionFactory connectionFactory) {
+            builder.connectionFactory(connectionFactory);
+        }
+
+        /**
+         * List of queues.
+         * @param queues The queues which are to be purged.
+         */
+        public void setQueues(List<Queue> queues) {
+            builder.queues(queues);
+        }
+
+        /**
+         * Receive timeout for reading message from a destination.
+         * @param receiveTimeout the receiveTimeout to set
+         */
+        public void setReceiveTimeout(long receiveTimeout) {
+            builder.timeout(receiveTimeout);
+        }
+
+        /**
+         * Sets the sleepTime.
+         * @param sleepTime the sleepTime to set
+         */
+        public void setSleepTime(long sleepTime) {
+            builder.sleep(sleepTime);
+        }
+
+        @Override
+        public PurgeJmsQueuesAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return PurgeJmsQueuesAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public PurgeJmsQueuesAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

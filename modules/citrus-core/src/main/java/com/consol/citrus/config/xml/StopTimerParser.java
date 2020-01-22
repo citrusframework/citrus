@@ -34,7 +34,7 @@ public class StopTimerParser implements BeanDefinitionParser {
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         // create new bean builder
-        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(StopTimerAction.class);
+        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(StopTimerActionFactoryBean.class);
 
         // see if there is a description
         DescriptionElementParser.doParse(element, builder);
@@ -47,5 +47,36 @@ public class StopTimerParser implements BeanDefinitionParser {
 
         // finally return the complete builder with its bean definition
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class StopTimerActionFactoryBean extends AbstractTestActionFactoryBean<StopTimerAction, StopTimerAction.Builder> {
+
+        private final StopTimerAction.Builder builder = new StopTimerAction.Builder();
+
+        public void setTimerId(String timerId) {
+            builder.id(timerId);
+        }
+
+        @Override
+        public StopTimerAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StopTimerAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StopTimerAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -17,8 +17,10 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -27,7 +29,7 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for selenium client action in test case.
- * 
+ *
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
@@ -48,5 +50,19 @@ public abstract class AbstractBrowserActionParser implements BeanDefinitionParse
 
     protected abstract void parseAction(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext);
 
-    protected abstract Class<? extends AbstractSeleniumAction> getBrowserActionClass();
+    protected abstract Class<? extends AbstractSeleniumActionFactoryBean<?, ?>> getBrowserActionClass();
+
+    /**
+     * Test action factory bean.
+     */
+    public static abstract class AbstractSeleniumActionFactoryBean<T extends AbstractSeleniumAction, B extends AbstractSeleniumAction.Builder<?, ?>> extends AbstractTestActionFactoryBean<T, B> {
+
+        /**
+         * Sets the Selenium browser.
+         * @param browser
+         */
+        public void setBrowser(SeleniumBrowser browser) {
+            getBuilder().browser(browser);
+        }
+    }
 }

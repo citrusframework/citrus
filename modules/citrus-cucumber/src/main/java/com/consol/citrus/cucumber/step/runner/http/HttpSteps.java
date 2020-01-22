@@ -16,24 +16,32 @@
 
 package com.consol.citrus.cucumber.step.runner.http;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.builder.*;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.actions.HttpActionBuilder;
+import com.consol.citrus.http.actions.HttpClientActionBuilder;
+import com.consol.citrus.http.actions.HttpClientRequestActionBuilder;
+import com.consol.citrus.http.actions.HttpClientResponseActionBuilder;
+import com.consol.citrus.http.actions.HttpServerActionBuilder;
+import com.consol.citrus.http.actions.HttpServerRequestActionBuilder;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.server.HttpServer;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.*;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch

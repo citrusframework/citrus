@@ -16,14 +16,18 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.TraceVariablesAction;
-import com.consol.citrus.container.*;
+import com.consol.citrus.container.SequenceAfterTest;
+import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.container.Template;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.TemplateBuilder;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -31,25 +35,24 @@ import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
-    
+
     @Test
     public void testTemplateBuilder() {
-        Template rootTemplate = new Template();
-        rootTemplate.setName("fooTemplate");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        actions.add(new EchoAction());
-        actions.add(new TraceVariablesAction());
-        rootTemplate.setActions(actions);
-        
+        List<TestAction> actions = new ArrayList<>();
+        actions.add(new EchoAction.Builder().build());
+        actions.add(new TraceVariablesAction.Builder().build());
+        Template rootTemplate = new Template.Builder()
+                .templateName("fooTemplate")
+                .actions(actions)
+                .build();
+
         reset(applicationContextMock);
 
         when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
@@ -61,7 +64,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                applyTemplate(builder -> builder.name("fooTemplate")
+                applyTemplate(builder -> builder.templateName("fooTemplate")
                         .parameter("param", "foo")
                         .parameter("text", "Citrus rocks!"));
             }
@@ -71,25 +74,22 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
-        
+
         Template container = (Template)test.getActions().get(0);
-        Assert.assertEquals(container.isGlobalContext(), true);
+        Assert.assertTrue(container.isGlobalContext());
         Assert.assertEquals(container.getParameter().toString(), "{param=foo, text=Citrus rocks!}");
         Assert.assertEquals(container.getActions().size(), 2);
         Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
         Assert.assertEquals(container.getActions().get(1).getClass(), TraceVariablesAction.class);
-
     }
-    
+
     @Test
     public void testTemplateBuilderGlobalContext() {
-        Template rootTemplate = new Template();
-        rootTemplate.setName("fooTemplate");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
-        actions.add(new EchoAction());
-        rootTemplate.setActions(actions);
-        
+        Template rootTemplate = new Template.Builder()
+                .templateName("fooTemplate")
+                .actions(new EchoAction.Builder().build())
+                .build();
+
         reset(applicationContextMock);
 
         when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
@@ -101,7 +101,7 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
             @Override
             public void execute() {
-                applyTemplate(builder -> builder.name("fooTemplate")
+                applyTemplate(builder -> builder.templateName("fooTemplate")
                         .globalContext(false));
             }
         };
@@ -110,12 +110,11 @@ public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().size(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), Template.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "fooTemplate");
-        
+
         Template container = (Template)test.getActions().get(0);
-        Assert.assertEquals(container.isGlobalContext(), false);
+        Assert.assertFalse(container.isGlobalContext());
         Assert.assertEquals(container.getParameter().size(), 0L);
         Assert.assertEquals(container.getActions().size(), 1);
         Assert.assertEquals(container.getActions().get(0).getClass(), EchoAction.class);
-
     }
 }

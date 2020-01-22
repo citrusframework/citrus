@@ -16,31 +16,39 @@
 
 package com.consol.citrus.zookeeper.actions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidator;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.zookeeper.client.ZooClient;
+import com.consol.citrus.zookeeper.command.Create;
+import com.consol.citrus.zookeeper.command.Delete;
+import com.consol.citrus.zookeeper.command.Exists;
+import com.consol.citrus.zookeeper.command.GetChildren;
+import com.consol.citrus.zookeeper.command.GetData;
+import com.consol.citrus.zookeeper.command.Info;
+import com.consol.citrus.zookeeper.command.SetData;
 import com.consol.citrus.zookeeper.command.ZooCommand;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.util.CollectionUtils;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Executes zookeeper command with given zookeeper client implementation. Possible command result is stored within command object.
@@ -50,52 +58,45 @@ import java.util.List;
  */
 public class ZooExecuteAction extends AbstractTestAction {
 
-    @Autowired(required = false)
-    @Qualifier("zookeeperClient")
-    /** Zookeeper client instance  */
-    private ZooClient zookeeperClient = new ZooClient();
-
-    /**
-     * Zookeeper command to execute
-     */
-    private ZooCommand command;
-
-    /**
-     * Expected command result for validation
-     */
-    private String expectedCommandResult;
-
-    @Autowired(required = false)
-    @Qualifier("zookeeperCommandResultMapper")
-    /** JSON data binding */
-    private ObjectMapper jsonMapper = new ObjectMapper();
-
-    @Autowired
-    private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
-
-    @Autowired
-    private JsonPathMessageValidator jsonPathMessageValidator = new JsonPathMessageValidator();
-
-    /**
-     * An optional validation contextst containing json path validators to validate the command result
-     */
-    private JsonPathMessageValidationContext jsonPathMessageValidationContext;
-
-    /**
-     * List of variable extractors responsible for creating variables from received message content
-     */
-    private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
-
-    /**
-     * Logger
-     */
+    /** Logger */
     private static Logger log = LoggerFactory.getLogger(ZooExecuteAction.class);
+
+    /** Zookeeper client instance  */
+    private final ZooClient zookeeperClient;
+
+    /** Zookeeper command to execute*/
+    private final ZooCommand<?> command;
+
+    /** Expected command result for validation*/
+    private final String expectedCommandResult;
+
+    /** JSON data binding */
+    private final ObjectMapper jsonMapper;
+
+    private final JsonTextMessageValidator jsonTextMessageValidator;
+
+    private final JsonPathMessageValidator jsonPathMessageValidator;
+
+    /** An optional validation contextst containing json path validators to validate the command result */
+    private final JsonPathMessageValidationContext jsonPathMessageValidationContext;
+
+    /** List of variable extractors responsible for creating variables from received message content */
+    private final List<VariableExtractor> variableExtractors;
 
     /**
      * Default constructor.
      */
-    public ZooExecuteAction() {
-        setName("zookeeper-execute");
+    public ZooExecuteAction(Builder builder) {
+        super("zookeeper-execute", builder);
+
+        this.zookeeperClient = builder.zookeeperClient;
+        this.command = builder.command;
+        this.expectedCommandResult = builder.expectedCommandResult;
+        this.jsonMapper = builder.jsonMapper;
+        this.jsonTextMessageValidator = builder.jsonTextMessageValidator;
+        this.jsonPathMessageValidator = builder.jsonPathMessageValidator;
+        this.jsonPathMessageValidationContext = builder.jsonPathMessageValidationContext;
+        this.variableExtractors = builder.variableExtractors;
     }
 
     @Override
@@ -155,7 +156,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         }
     }
 
-    private Message getCommandResult(ZooCommand command) {
+    private Message getCommandResult(ZooCommand<?> command) {
         if (command.getCommandResult() == null) {
             return null;
         }
@@ -184,19 +185,8 @@ public class ZooExecuteAction extends AbstractTestAction {
      *
      * @return
      */
-    public ZooCommand getCommand() {
+    public ZooCommand<?> getCommand() {
         return command;
-    }
-
-    /**
-     * Sets zookeeper command to execute.
-     *
-     * @param command
-     * @return
-     */
-    public ZooExecuteAction setCommand(ZooCommand command) {
-        this.command = command;
-        return this;
     }
 
     /**
@@ -209,42 +199,12 @@ public class ZooExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the zookeeper client.
-     *
-     * @param zookeeperClient
-     */
-    public ZooExecuteAction setZookeeperClient(ZooClient zookeeperClient) {
-        this.zookeeperClient = zookeeperClient;
-        return this;
-    }
-
-    /**
      * Gets the expected command result data.
      *
      * @return
      */
     public String getExpectedCommandResult() {
         return expectedCommandResult;
-    }
-
-    /**
-     * Sets the expected command result data.
-     *
-     * @param expectedCommandResult
-     */
-    public ZooExecuteAction setExpectedCommandResult(String expectedCommandResult) {
-        this.expectedCommandResult = expectedCommandResult;
-        return this;
-    }
-
-    /**
-     * Sets the JSON object mapper.
-     *
-     * @param jsonMapper
-     */
-    public ZooExecuteAction setJsonMapper(ObjectMapper jsonMapper) {
-        this.jsonMapper = jsonMapper;
-        return this;
     }
 
     /**
@@ -258,33 +218,12 @@ public class ZooExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Set the list of variable extractors.
-     *
-     * @param variableExtractors the variableExtractors to set
-     */
-    public ZooExecuteAction setVariableExtractors(List<VariableExtractor> variableExtractors) {
-        this.variableExtractors = variableExtractors;
-        return this;
-    }
-
-    /**
      * Gets the variable extractors.
      *
      * @return the variableExtractors
      */
     public List<VariableExtractor> getVariableExtractors() {
         return variableExtractors;
-    }
-
-
-    /**
-     * Sets the JsonPathMessageValidationContext for this action.
-     *
-     * @param jsonPathMessageValidationContext the json-path validation context
-     */
-    public ZooExecuteAction setJsonPathMessageValidationContext(JsonPathMessageValidationContext jsonPathMessageValidationContext) {
-        this.jsonPathMessageValidationContext = jsonPathMessageValidationContext;
-        return this;
     }
 
     /**
@@ -294,6 +233,216 @@ public class ZooExecuteAction extends AbstractTestAction {
      */
     public JsonPathMessageValidationContext getJsonPathMessageValidationContext() {
         return jsonPathMessageValidationContext;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<ZooExecuteAction, Builder> {
+
+        public static final String DEFAULT_MODE = "EPHEMERAL";
+        public static final String DEFAULT_ACL = Create.ACL_OPEN;
+        public static final int DEFAULT_VERSION = 0;
+
+        private ZooClient zookeeperClient = new ZooClient();
+        private ZooCommand<?> command;
+        private String expectedCommandResult;
+        private ObjectMapper jsonMapper = new ObjectMapper();
+        private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
+        private JsonPathMessageValidator jsonPathMessageValidator = new JsonPathMessageValidator();
+        private JsonPathMessageValidationContext jsonPathMessageValidationContext;
+        private List<VariableExtractor> variableExtractors = new ArrayList<>();
+
+        private ApplicationContext applicationContext;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder zookeeper() {
+            return new Builder();
+        }
+
+        /**
+         * Use a custom zoo client.
+         */
+        public Builder client(ZooClient zooClient) {
+            this.zookeeperClient = zooClient;
+            return this;
+        }
+
+        /**
+         * Sets the zookeeper command to execute.
+         */
+        public Builder command(ZooCommand<?> command) {
+            this.command = command;
+            return this;
+        }
+
+        /**
+         * Adds a create command.
+         */
+        public Create create(String path, String data) {
+            Create command = new Create();
+            command.path(path);
+            command.data(data);
+            command.mode(DEFAULT_MODE);
+            command.acl(DEFAULT_ACL);
+            command(command);
+            return command;
+        }
+
+        /**
+         * Adds a delete command.
+         */
+        public Delete delete(String path) {
+            Delete command = new Delete();
+            command.path(path);
+            command.version(DEFAULT_VERSION);
+            command(command);
+            return command;
+        }
+
+        /**
+         * Adds an exists command.
+         */
+        public Exists exists(String path) {
+            Exists command = new Exists();
+            command.path(path);
+            command(command);
+            return command;
+        }
+
+        /**
+         * Adds an exists command.
+         */
+        public GetChildren children(String path) {
+            GetChildren command = new GetChildren();
+            command.path(path);
+            command(command);
+            return command;
+        }
+
+        /**
+         * Adds a get-data command.
+         */
+        public GetData get(String path) {
+            GetData command = new GetData();
+            command.path(path);
+            command(command);
+            return command;
+        }
+
+        /**
+         * Use an info command.
+         */
+        public Info info() {
+            Info command = new Info();
+            command(command);
+            return command;
+        }
+
+        /**
+         * Adds a set-data command.
+         */
+        public SetData set(String path, String data) {
+            SetData command = new SetData();
+            command.path(path);
+            command.data(data);
+            command.version(0);
+            command(command);
+            return command;
+        }
+
+        /**
+         * Adds expected command result.
+         *
+         * @param result
+         * @return
+         */
+        public Builder result(String result) {
+            this.expectedCommandResult = result;
+            return this;
+        }
+
+        public Builder mapper(ObjectMapper jsonMapper) {
+            this.jsonMapper = jsonMapper;
+            return this;
+        }
+
+        public Builder validator(JsonTextMessageValidator validator) {
+            this.jsonTextMessageValidator = validator;
+            return this;
+        }
+
+        public Builder validator(JsonPathMessageValidator validator) {
+            this.jsonPathMessageValidator = validator;
+            return this;
+        }
+
+        /**
+         * Adds variable extractor for extracting variable from command response.
+         *
+         * @param jsonPath the json path to reference the value to be extracted
+         * @param variableName the name of the variable to store the extracted value in
+         * @return
+         */
+        public Builder extract(String jsonPath, String variableName) {
+            JsonPathVariableExtractor jsonPathVariableExtractor = new JsonPathVariableExtractor();
+            Map<String, String> pathVariableMap = new HashMap<>();
+            pathVariableMap.put(jsonPath, variableName);
+            jsonPathVariableExtractor.setJsonPathExpressions(pathVariableMap);
+            return extractor(jsonPathVariableExtractor);
+        }
+
+        public Builder extractor(VariableExtractor variableExtractor) {
+            this.variableExtractors.add(variableExtractor);
+            return this;
+        }
+
+        /**
+         * Adds variable extractor for extracting variable from command response.
+         *
+         * @param jsonPath the json path to reference the value to be extracted
+         * @param expectedValue the expected value (or variable to retrieve the expected value from)
+         * @return
+         */
+        public Builder validate(String jsonPath, String expectedValue) {
+            if (this.jsonPathMessageValidationContext == null) {
+                this.jsonPathMessageValidationContext = new JsonPathMessageValidationContext();
+            }
+
+            this.jsonPathMessageValidationContext.getJsonPathExpressions().put(jsonPath, expectedValue);
+            return this;
+        }
+
+        public Builder validationContext(JsonPathMessageValidationContext validationContext) {
+            this.jsonPathMessageValidationContext = validationContext;
+            return this;
+        }
+
+        /**
+         * Sets the Spring bean application context.
+         * @param ctx
+         */
+        public Builder withApplicationContext(ApplicationContext ctx) {
+            this.applicationContext = ctx;
+
+            if (applicationContext.containsBean("zookeeperClient")) {
+                this.zookeeperClient = applicationContext.getBean("zookeeperClient", ZooClient.class);
+            }
+
+            if (applicationContext.containsBean("zookeeperCommandResultMapper")) {
+                this.jsonMapper = applicationContext.getBean("zookeeperCommandResultMapper", ObjectMapper.class);
+            }
+
+            return this;
+        }
+
+        @Override
+        public ZooExecuteAction build() {
+            return new ZooExecuteAction(this);
+        }
     }
 
 }

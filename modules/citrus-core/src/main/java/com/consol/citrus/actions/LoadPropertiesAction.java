@@ -16,6 +16,12 @@
 
 package com.consol.citrus.actions;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -24,22 +30,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Map.Entry;
-import java.util.Properties;
-
 /**
  * Action reads property files and creates test variables for every property entry. File
  * resource path can define a {@link org.springframework.core.io.ClassPathResource} or
  * a {@link org.springframework.core.io.FileSystemResource}.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class LoadPropertiesAction extends AbstractTestAction {
 
     /** File resource path */
-    private String filePath = null;
+    private final String filePath;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoadPropertiesAction.class);
@@ -47,8 +48,10 @@ public class LoadPropertiesAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public LoadPropertiesAction() {
-        setName("load");
+    public LoadPropertiesAction(Builder builder) {
+        super("load", builder);
+
+        this.filePath = builder.filePath;
     }
 
     @Override
@@ -74,7 +77,7 @@ public class LoadPropertiesAction extends AbstractTestAction {
             }
 
             if (log.isDebugEnabled() && context.getVariables().containsKey(key)) {
-                log.debug("Overwriting property " + key + " old value:" + context.getVariable(key) 
+                log.debug("Overwriting property " + key + " old value:" + context.getVariable(key)
                         + " new value:" + props.getProperty(key));
             }
 
@@ -85,19 +88,39 @@ public class LoadPropertiesAction extends AbstractTestAction {
     }
 
     /**
-     * File path setter.
-     * @param file the file to set
-     */
-    public LoadPropertiesAction setFilePath(String file) {
-        this.filePath = file;
-        return this;
-    }
-
-    /**
      * Gets the file.
      * @return the file
      */
     public String getFilePath() {
         return filePath;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<LoadPropertiesAction, Builder> {
+
+        private String filePath;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param filePath
+         * @return
+         */
+        public static Builder load(String filePath) {
+            Builder builder = new Builder();
+            builder.filePath(filePath);
+            return builder;
+        }
+
+        public Builder filePath(String filePath) {
+            this.filePath = filePath;
+            return this;
+        }
+
+        @Override
+        public LoadPropertiesAction build() {
+            return new LoadPropertiesAction(this);
+        }
     }
 }

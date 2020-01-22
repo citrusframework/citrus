@@ -56,7 +56,7 @@ public class CustomMessageValidatorIT extends TestNGCitrusTestRunner {
                 .receive()
                 .post("/")
                 .contentType("application/xml")
-                .validator(new DomXmlMessageValidator(), new XpathMessageValidator())
+                .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
                 .validate("//doc/@text", "nothello"));
     }
 

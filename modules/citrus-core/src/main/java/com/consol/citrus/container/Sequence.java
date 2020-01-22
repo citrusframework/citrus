@@ -16,14 +16,15 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractTestContainerBuilder;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.TestAction;
-import com.consol.citrus.context.TestContext;
-
 /**
- * Sequence container executing a set of nested test actions in simple sequence. 
+ * Sequence container executing a set of nested test actions in simple sequence.
  *
  * @author Christoph Deppisch
  * @since 2007
@@ -36,17 +37,37 @@ public class Sequence extends AbstractActionContainer {
     /**
      * Default constructor.
      */
-    public Sequence() {
-        setName("sequential");
+    public Sequence(Builder builder) {
+        super("sequential", builder);
     }
 
     @Override
     public void doExecute(TestContext context) {
-        for (TestAction action: actions) {
+        for (TestActionBuilder<?> actionBuilder: actions) {
+            TestAction action = actionBuilder.build();
             setActiveAction(action);
             action.execute(context);
         }
 
         log.debug("Action sequence finished successfully");
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractTestContainerBuilder<Sequence, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder sequential() {
+            return new Builder();
+        }
+
+        @Override
+        public Sequence build() {
+            return super.build(new Sequence(this));
+        }
     }
 }

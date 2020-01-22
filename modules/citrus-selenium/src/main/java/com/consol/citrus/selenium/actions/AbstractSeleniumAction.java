@@ -16,6 +16,7 @@
 
 package com.consol.citrus.selenium.actions;
 
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -34,10 +35,12 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     /** Selenium browser instance  */
-    private SeleniumBrowser browser;
+    private final SeleniumBrowser browser;
 
-    public AbstractSeleniumAction(String name) {
-        setName("selenium:" + name);
+    public AbstractSeleniumAction(String name, Builder<?, ?> builder) {
+        super("selenium:" + name, builder);
+
+        this.browser = builder.browser;
     }
 
     @Override
@@ -46,16 +49,17 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
             log.debug(String.format("Executing Selenium browser command '%s'", getName()));
         }
 
-        if (browser == null) {
+        SeleniumBrowser browserToUse = browser;
+        if (browserToUse == null) {
             if (context.getVariables().containsKey(SeleniumHeaders.SELENIUM_BROWSER)) {
-                browser = context.getApplicationContext().getBean(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), SeleniumBrowser.class);
+                browserToUse = context.getApplicationContext().getBean(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), SeleniumBrowser.class);
             } else {
                 throw new CitrusRuntimeException("Failed to get active browser instance, " +
                         "either set explicit browser for action or start browser instance");
             }
         }
 
-        execute(browser, context);
+        execute(browserToUse, context);
 
         log.info(String.format("Selenium browser command execution successful: '%s'", getName()));
     }
@@ -71,10 +75,20 @@ public abstract class AbstractSeleniumAction extends AbstractTestAction implemen
     }
 
     /**
-     * Sets the Selenium browser.
-     * @param browser
+     * Action builder.
      */
-    public void setBrowser(SeleniumBrowser browser) {
-        this.browser = browser;
+    public static abstract class Builder<T extends SeleniumAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> {
+
+        private SeleniumBrowser browser;
+
+        /**
+         * Use a custom selenium browser.
+         */
+        public B browser(SeleniumBrowser seleniumBrowser) {
+            this.browser = seleniumBrowser;
+            return self;
+        }
+
     }
+
 }

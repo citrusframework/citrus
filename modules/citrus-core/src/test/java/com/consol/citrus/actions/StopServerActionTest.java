@@ -16,74 +16,78 @@
 
 package com.consol.citrus.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class StopServerActionTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testEmpty() {
-        StopServerAction stopServer = new StopServerAction();
-        
+        StopServerAction stopServer = new StopServerAction.Builder().build();
         stopServer.execute(context);
     }
-    
+
     @Test
     public void testSingleServer() {
         Server server = Mockito.mock(Server.class);
-        
+
         reset(server);
 
         when(server.getName()).thenReturn("MyServer");
 
-        StopServerAction stopServer = new StopServerAction();
-        stopServer.setServer(server);
+        StopServerAction stopServer = new StopServerAction.Builder()
+                .server(server)
+                .build();
 
         stopServer.execute(context);
         verify(server).stop();
     }
-    
+
     @Test
     public void testServerListSingleton() {
         Server server = Mockito.mock(Server.class);
-        
+
         reset(server);
 
         when(server.getName()).thenReturn("MyServer");
 
-        StopServerAction stopServer = new StopServerAction();
-        stopServer.setServerList(Collections.singletonList(server));
-
+        StopServerAction stopServer = new StopServerAction.Builder()
+                .server(Collections.singletonList(server))
+                .build();
         stopServer.execute(context);
         verify(server).stop();
     }
-    
+
     @Test
     public void testServerList() {
         Server server1 = Mockito.mock(Server.class);
         Server server2 = Mockito.mock(Server.class);
-        
+
         reset(server1, server2);
 
         when(server1.getName()).thenReturn("MyServer1");
         when(server2.getName()).thenReturn("MyServer2");
 
-        StopServerAction stopServer = new StopServerAction();
         List<Server> serverList = new ArrayList<Server>();
         serverList.add(server1);
         serverList.add(server2);
 
-        stopServer.setServerList(serverList);
-
+        StopServerAction stopServer = new StopServerAction.Builder()
+                .server(serverList)
+                .build();
         stopServer.execute(context);
 
         verify(server1).stop();

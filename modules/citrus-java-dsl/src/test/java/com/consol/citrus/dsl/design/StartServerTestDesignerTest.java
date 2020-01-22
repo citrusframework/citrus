@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  */
 public class StartServerTestDesignerTest extends AbstractTestNGUnitTest {
     private Server testServer = Mockito.mock(Server.class);
-    
+
     private Server server1 = Mockito.mock(Server.class);
     private Server server2 = Mockito.mock(Server.class);
     private Server server3 = Mockito.mock(Server.class);
@@ -51,14 +51,15 @@ public class StartServerTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), StartServerAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), StartServerAction.class);
-        
+
         StartServerAction action = (StartServerAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "start-server");
-        Assert.assertEquals(action.getServer(), testServer);
-        
+        Assert.assertEquals(action.getServers().size(), 1);
+        Assert.assertEquals(action.getServers().get(0), testServer);
+
         action = (StartServerAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "start-server");
-        Assert.assertEquals(action.getServerList().size(), 3);
-        Assert.assertEquals(action.getServerList().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");
+        Assert.assertEquals(action.getServers().size(), 3);
+        Assert.assertEquals(action.getServers().toString(), "[" + server1.toString() + ", " + server2.toString() + ", " + server3.toString() + "]");
     }
 }

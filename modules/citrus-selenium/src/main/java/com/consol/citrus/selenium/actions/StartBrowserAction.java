@@ -30,13 +30,15 @@ public class StartBrowserAction extends AbstractSeleniumAction {
     /**
      * Allow already started browser.
      */
-    private boolean allowAlreadyStarted = true;
+    private final boolean allowAlreadyStarted;
 
     /**
      * Default constructor.
      */
-    public StartBrowserAction() {
-        super("start");
+    public StartBrowserAction(Builder builder) {
+        super("start", builder);
+
+        this.allowAlreadyStarted = builder.allowAlreadyStarted;
     }
 
     @Override
@@ -54,20 +56,13 @@ public class StartBrowserAction extends AbstractSeleniumAction {
         browser.start();
 
         if (StringUtils.hasText(getBrowser().getEndpointConfiguration().getStartPageUrl())) {
-            NavigateAction openStartPage = new NavigateAction();
-            openStartPage.setPage(getBrowser().getEndpointConfiguration().getStartPageUrl());
+            NavigateAction openStartPage = new NavigateAction.Builder()
+                    .page(getBrowser().getEndpointConfiguration().getStartPageUrl())
+                    .build();
             openStartPage.execute(browser, context);
         }
 
         context.setVariable(SeleniumHeaders.SELENIUM_BROWSER, browser.getName());
-    }
-
-    /**
-     * Sets the already started rules.
-     * @param allowAlreadyStarted
-     */
-    public void setAllowAlreadyStarted(boolean allowAlreadyStarted) {
-        this.allowAlreadyStarted = allowAlreadyStarted;
     }
 
     /**
@@ -76,5 +71,23 @@ public class StartBrowserAction extends AbstractSeleniumAction {
      */
     public boolean isAllowAlreadyStarted() {
         return allowAlreadyStarted;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractSeleniumAction.Builder<StartBrowserAction, StartBrowserAction.Builder> {
+
+        private boolean allowAlreadyStarted = true;
+
+        public Builder allowAlreadyStarted(boolean permisson) {
+            this.allowAlreadyStarted = permisson;
+            return this;
+        }
+
+        @Override
+        public StartBrowserAction build() {
+            return new StartBrowserAction(this);
+        }
     }
 }

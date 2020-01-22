@@ -16,7 +16,6 @@
 
 package com.consol.citrus.dsl.design;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContextAware;
 
 /**
@@ -29,17 +28,12 @@ import org.springframework.context.ApplicationContextAware;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class TestDesignerComponent extends DefaultTestDesigner implements ApplicationContextAware, InitializingBean {
+public class TestDesignerComponent extends DefaultTestDesigner implements ApplicationContextAware {
 
     /**
      * Main entrance method for subclasses to call Java DSL builder methods in order to
      * add test actions and basic test case properties to this builder instance.
      */
     protected void configure() {
-    }
-
-    @Override
-    public final void afterPropertiesSet() throws Exception {
-        initialize();
     }
 }

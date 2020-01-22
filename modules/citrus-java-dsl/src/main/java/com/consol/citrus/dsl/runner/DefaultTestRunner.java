@@ -16,23 +16,77 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.*;
-import com.consol.citrus.actions.*;
-import com.consol.citrus.container.*;
+import java.io.File;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Stack;
+
+import com.consol.citrus.AbstractTestContainerBuilder;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.TestActionContainerBuilder;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.actions.AntRunAction;
+import com.consol.citrus.actions.CreateVariablesAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.actions.InputAction;
+import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.actions.PurgeEndpointAction;
+import com.consol.citrus.actions.PurgeMessageChannelAction;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.StartServerAction;
+import com.consol.citrus.actions.StopServerAction;
+import com.consol.citrus.actions.StopTimeAction;
+import com.consol.citrus.actions.StopTimerAction;
+import com.consol.citrus.actions.TraceVariablesAction;
+import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
+import com.consol.citrus.condition.ActionCondition;
+import com.consol.citrus.condition.Condition;
+import com.consol.citrus.condition.FileCondition;
+import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.Assert;
+import com.consol.citrus.container.Async;
+import com.consol.citrus.container.Catch;
+import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.FinallySequence;
+import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import com.consol.citrus.container.RepeatUntilTrue;
+import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.SequenceAfterTest;
+import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.container.Template;
+import com.consol.citrus.container.Timer;
+import com.consol.citrus.container.Wait;
+import com.consol.citrus.container.WaitActionConditionBuilder;
+import com.consol.citrus.container.WaitFileConditionBuilder;
+import com.consol.citrus.container.WaitHttpConditionBuilder;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.container.FinallySequence;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.actions.HttpActionBuilder;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.actions.SoapActionBuilder;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.springframework.context.ApplicationContext;
-import org.springframework.util.CollectionUtils;
-
-import java.util.*;
 
 /**
  * Default test runner implementation. Provides Java DSL methods for test actions. Immediately executes test actions as
@@ -44,10 +98,7 @@ import java.util.*;
  */
 public class DefaultTestRunner implements TestRunner {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultTestRunner.class);
-
-    /** This builders test case */
+    /** Test case */
     private final TestCase testCase;
 
     /** This runners test context */
@@ -57,11 +108,11 @@ public class DefaultTestRunner implements TestRunner {
     private ApplicationContext applicationContext;
 
     /** Optional stack of containers cached for execution */
-    protected Stack<AbstractActionContainer> containers = new Stack<>();
+    protected Stack<TestActionContainerBuilder<? extends AbstractActionContainer, ?>> containers = new Stack<>();
 
     /** Default constructor */
     public DefaultTestRunner() {
-        this(new TestCase());
+        testCase = new TestCase();
         testClass(this.getClass());
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
@@ -82,33 +133,29 @@ public class DefaultTestRunner implements TestRunner {
      */
     public DefaultTestRunner(ApplicationContext applicationContext, TestContext context) {
         this();
-
-        this.applicationContext = applicationContext;
         this.context = context;
+        this.applicationContext = applicationContext;
 
-        try {
-            initialize();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to setup test runner", e);
-        }
-    }
+        if (applicationContext != null) {
+            try {
+                testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
 
-    protected void initialize() {
-        testCase.setTestRunner(true);
-        testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
+                if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
+                    testCase.setBeforeTest(Arrays.asList(applicationContext.getBeansOfType(SequenceBeforeTest.class).values().toArray(new SequenceBeforeTest[]{})));
+                }
 
-        if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
-            testCase.setBeforeTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceBeforeTest.class).values().toArray()));
-        }
-
-        if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
-            testCase.setAfterTest(CollectionUtils.arrayToList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray()));
+                if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
+                    testCase.setAfterTest(Arrays.asList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray(new SequenceAfterTest[]{})));
+                }
+            } catch (Exception e) {
+                throw new CitrusRuntimeException("Failed to setup test designer", e);
+            }
         }
     }
 
     @Override
     public void testClass(Class<?> type) {
-        getTestCase().setTestClass(type);
+        testCase.setTestClass(type);
     }
 
     @Override
@@ -119,27 +166,27 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public void description(String description) {
-        getTestCase().setDescription(description);
+        testCase.setDescription(description);
     }
 
     @Override
     public void author(String author) {
-        getTestCase().getMetaInfo().setAuthor(author);
+        testCase.getMetaInfo().setAuthor(author);
     }
 
     @Override
     public void packageName(String packageName) {
-        getTestCase().setPackageName(packageName);
+        testCase.setPackageName(packageName);
     }
 
     @Override
     public void status(TestCaseMetaInfo.Status status) {
-        getTestCase().getMetaInfo().setStatus(status);
+        testCase.getMetaInfo().setStatus(status);
     }
 
     @Override
     public void creationDate(Date date) {
-        getTestCase().getMetaInfo().setCreationDate(date);
+        testCase.getMetaInfo().setCreationDate(date);
     }
 
     @Override
@@ -167,418 +214,517 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public <T extends TestAction> T run(T testAction) {
-        if (testAction instanceof TestActionContainer) {
-            if (containers.lastElement().equals(testAction)) {
+    public <T extends TestActionBuilder<?>> T run(T builder) {
+        if (builder instanceof TestActionContainerBuilder<?, ?>) {
+            if (containers.lastElement().equals(builder)) {
                 containers.pop();
             } else {
                 throw new CitrusRuntimeException("Invalid use of action containers - the container execution is not expected!");
             }
 
-            if (testAction instanceof FinallySequence) {
-                testCase.getFinalActions().addAll(((FinallySequence) testAction).getActions());
-                return testAction;
+            if (builder instanceof FinallySequence.Builder) {
+                ((FinallySequence.Builder) builder).getActions().forEach(testCase::addFinalAction);
+                return builder;
             }
         }
 
-        if (!containers.isEmpty()) {
-            containers.lastElement().addTestAction(testAction);
+        if (containers.isEmpty()) {
+            testCase.addTestAction(builder);
+            testCase.executeAction(builder.build(), context);
         } else {
-            testCase.addTestAction(testAction);
-            testCase.executeAction(testAction, context);
+            containers.lastElement().getActions().add(builder);
         }
 
-        return testAction;
+        return builder;
     }
 
     @Override
-    public ApplyTestBehaviorAction applyBehavior(TestBehavior behavior) {
-        ApplyTestBehaviorAction action = new ApplyTestBehaviorAction(this, behavior);
+    public ApplyTestBehaviorAction.Builder applyBehavior(TestBehavior behavior) {
+        ApplyTestBehaviorAction.Builder builder = new ApplyTestBehaviorAction.Builder()
+                .runner(this)
+                .behavior(behavior);
         behavior.setApplicationContext(applicationContext);
-        action.execute(context);
-        return action;
+        builder.build().execute(context);
+        return builder;
     }
 
     @Override
-    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
-        AbstractTestContainerBuilder<T> containerBuilder = new AbstractTestContainerBuilder<T>(this, container) {};
-        containers.push(containerBuilder.build());
-        return containerBuilder;
+    public <T extends AbstractActionContainer, B extends AbstractTestContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container)  {
+        TestActionContainerBuilder<T, B> builder = new AbstractTestContainerBuilder<T, B>() {
+            @Override
+            public B actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+
+            @Override
+            public T build() {
+                if (container.getActions().size() > 0) {
+                    return container;
+                }
+
+                return build(container);
+            }
+        };
+
+        return container(builder);
     }
 
     @Override
-    public CreateVariablesAction createVariable(String variableName, String value) {
-        CreateVariablesAction action = new CreateVariablesAction();
-        action.getVariables().put(variableName, value);
-        return run(action);
+    public <T extends TestActionContainerBuilder<? extends AbstractActionContainer, ?>> T container(T container) {
+        containers.push(container);
+        return container;
     }
 
     @Override
-    public AntRunAction antrun(BuilderSupport<AntRunBuilder> configurer) {
-        AntRunBuilder builder = new AntRunBuilder();
+    public CreateVariablesAction.Builder createVariable(String variableName, String value) {
+        CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder()
+                .variable(variableName, value);
+        return run(builder);
+    }
+
+    @Override
+    public AntRunAction.Builder antrun(BuilderSupport<AntRunAction.Builder> configurer) {
+        AntRunAction.Builder builder = new AntRunAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public EchoAction echo(String message) {
-        EchoAction action = new EchoAction();
-        action.setMessage(message);
-        return run(action);
+    public EchoAction.Builder echo(String message) {
+        return run(new EchoAction.Builder().message(message));
     }
 
     @Override
-    public ExecutePLSQLAction plsql(BuilderSupport<ExecutePLSQLBuilder> configurer) {
-        ExecutePLSQLBuilder builder = new ExecutePLSQLBuilder();
+    public ExecutePLSQLAction.Builder plsql(BuilderSupport<ExecutePLSQLAction.Builder> configurer) {
+        ExecutePLSQLAction.Builder builder = new ExecutePLSQLAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public ExecuteSQLAction sql(BuilderSupport<ExecuteSQLBuilder> configurer) {
-        ExecuteSQLBuilder builder = new ExecuteSQLBuilder();
+    public ExecuteSQLAction.Builder sql(BuilderSupport<ExecuteSQLAction.Builder> configurer) {
+        ExecuteSQLAction.Builder builder = new ExecuteSQLAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public ExecuteSQLQueryAction query(BuilderSupport<ExecuteSQLQueryBuilder> configurer) {
-        ExecuteSQLQueryBuilder builder = new ExecuteSQLQueryBuilder();
+    public ExecuteSQLQueryAction.Builder query(BuilderSupport<ExecuteSQLQueryAction.Builder> configurer) {
+        ExecuteSQLQueryAction.Builder builder = new ExecuteSQLQueryAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public FailAction fail(String message) {
-        FailAction action = new FailAction();
-        action.setMessage(message);
-        return run(action);
+    public FailAction.Builder fail(String message) {
+        return run(new FailAction.Builder().message(message));
     }
 
     @Override
-    public InputAction input(BuilderSupport<InputActionBuilder> configurer) {
-        InputActionBuilder builder = new InputActionBuilder();
+    public InputAction.Builder input(BuilderSupport<InputAction.Builder> configurer) {
+        InputAction.Builder builder = new InputAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public ReceiveTimeoutAction receiveTimeout(BuilderSupport<ReceiveTimeoutBuilder> configurer) {
-        ReceiveTimeoutBuilder builder = new ReceiveTimeoutBuilder();
+    public ReceiveTimeoutAction.Builder receiveTimeout(BuilderSupport<ReceiveTimeoutAction.Builder> configurer) {
+        ReceiveTimeoutAction.Builder builder = new ReceiveTimeoutAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public LoadPropertiesAction load(String filePath) {
-        LoadPropertiesAction action = new LoadPropertiesAction();
-        action.setFilePath(filePath);
-        return run(action);
+    public LoadPropertiesAction.Builder load(String filePath) {
+        LoadPropertiesAction.Builder builder = new LoadPropertiesAction.Builder()
+                .filePath(filePath);
+        return run(builder);
     }
 
     @Override
-    public TestAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
-        PurgeJmsQueuesBuilder builder = new PurgeJmsQueuesBuilder()
+    public PurgeJmsQueuesAction.Builder purgeQueues(BuilderSupport<PurgeJmsQueuesAction.Builder> configurer) {
+        PurgeJmsQueuesAction.Builder builder = new PurgeJmsQueuesAction.Builder()
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer) {
-        PurgeChannelsBuilder builder = new PurgeChannelsBuilder();
-        builder.channelResolver(applicationContext);
+    public PurgeMessageChannelAction.Builder purgeChannels(BuilderSupport<PurgeMessageChannelAction.Builder> configurer) {
+        PurgeMessageChannelAction.Builder builder = new PurgeMessageChannelAction.Builder()
+                .channelResolver(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer) {
-        PurgeEndpointsBuilder builder = new PurgeEndpointsBuilder()
+    public PurgeEndpointAction.Builder purgeEndpoints(BuilderSupport<PurgeEndpointAction.Builder> configurer) {
+        PurgeEndpointAction.Builder builder = new PurgeEndpointAction.Builder()
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
-        ReceiveMessageBuilder<ReceiveMessageAction, ReceiveMessageBuilder> builder = new ReceiveMessageBuilder()
+    public ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer) {
+        ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder()
                 .messageType(MessageType.XML)
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return (ReceiveMessageAction) run(builder.build().getDelegate());
+        return run(builder);
     }
 
     @Override
-    public SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer) {
-        SendMessageBuilder<SendMessageAction, SendMessageBuilder> builder = new SendMessageBuilder()
+    public SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer) {
+        SendMessageAction.Builder builder = new SendMessageAction.Builder()
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return (SendMessageAction) run(builder.build().getDelegate());
+        return run(builder);
     }
 
     @Override
-    public SleepAction sleep() {
-        return run(new SleepAction());
+    public SleepAction.Builder sleep() {
+        return run(new SleepAction.Builder());
     }
 
     @Override
-    public SleepAction sleep(long milliseconds) {
-        SleepAction action = new SleepAction();
-        action.setMilliseconds(String.valueOf(milliseconds));
-        return run(action);
+    public SleepAction.Builder sleep(long milliseconds) {
+        SleepAction.Builder builder = new SleepAction.Builder()
+                .milliseconds(milliseconds);
+        return run(builder);
     }
 
     @Override
-    @Deprecated
-    public Wait waitFor(BuilderSupport<WaitBuilder> configurer) {
-        WaitBuilder builder = new WaitBuilder(null, new Wait());
+    public Wait.Builder waitFor() {
+        return new Wait.Builder() {
+            @Override
+            public WaitActionConditionBuilder execution() {
+                final Sequence.Builder dummy = new Sequence.Builder();
+                ActionCondition condition = new ActionCondition();
+                this.condition = condition;
+                DefaultTestRunner.this.containers.push(dummy);
+                return new WaitActionConditionBuilder(condition, this) {
+                    @Override
+                    public WaitActionConditionBuilder action(TestActionBuilder<?> action) {
+                        super.action(action);
+                        DefaultTestRunner.this.containers.remove(dummy);
+                        return run(this);
+                    }
+                };
+            }
+
+            @Override
+            public WaitFileConditionBuilder file() {
+                FileCondition condition = new FileCondition();
+                this.condition = condition;
+                return new WaitFileConditionBuilder(condition, this) {
+                    @Override
+                    public WaitFileConditionBuilder resource(File file) {
+                        super.resource(file);
+                        return run(this);
+                    }
+                };
+            }
+
+            @Override
+            public WaitHttpConditionBuilder http() {
+                HttpCondition condition = new HttpCondition();
+                this.condition = condition;
+                return new WaitHttpConditionBuilder(condition, this) {
+                    @Override
+                    public WaitHttpConditionBuilder url(String requestUrl) {
+                        super.url(requestUrl);
+                        return run(this);
+                    }
+                };
+            }
+
+            @Override
+            public Wait.Builder condition(Condition condition) {
+                super.condition(condition);
+                return run(this);
+            }
+        };
+    }
+
+    @Override
+    public StartServerAction.Builder start(Server... servers) {
+        StartServerAction.Builder builder = new StartServerAction.Builder()
+                .server(servers);
+        return run(builder);
+    }
+
+    @Override
+    public StartServerAction.Builder start(Server server) {
+        StartServerAction.Builder builder = new StartServerAction.Builder()
+                .server(server);
+        return run(builder);
+    }
+
+    @Override
+    public StopServerAction.Builder stop(Server... servers) {
+        StopServerAction.Builder builder = new StopServerAction.Builder()
+                .server(servers);
+        return run(builder);
+    }
+
+    @Override
+    public StopServerAction.Builder stop(Server server) {
+        StopServerAction.Builder builder = new StopServerAction.Builder()
+                .server(server);
+        return run(builder);
+    }
+
+    @Override
+    public StopTimeAction.Builder stopTime() {
+        return run(new StopTimeAction.Builder());
+    }
+
+    @Override
+    public StopTimeAction.Builder stopTime(String id) {
+        StopTimeAction.Builder builder = new StopTimeAction.Builder()
+                .id(id);
+        return run(builder);
+    }
+
+    @Override
+    public StopTimeAction.Builder stopTime(String id, String suffix) {
+        StopTimeAction.Builder builder = new StopTimeAction.Builder()
+                .id(id)
+                .suffix(suffix);
+        return run(builder);
+    }
+
+    @Override
+    public TraceVariablesAction.Builder traceVariables() {
+        return run(new TraceVariablesAction.Builder());
+    }
+
+    @Override
+    public TraceVariablesAction.Builder traceVariables(String... variables) {
+        TraceVariablesAction.Builder builder = new TraceVariablesAction.Builder()
+                .variables(variables);
+        return run(builder);
+    }
+
+    @Override
+    public GroovyAction.Builder groovy(BuilderSupport<GroovyAction.Builder> configurer) {
+        GroovyAction.Builder builder = new GroovyAction.Builder();
         configurer.configure(builder);
-        containers.push(builder.build());
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public WaitBuilder waitFor() {
-        WaitBuilder builder = new WaitBuilder(this, new Wait());
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public StartServerAction start(Server... servers) {
-        StartServerAction action = new StartServerAction();
-        action.getServerList().addAll(Arrays.asList(servers));
-        return run(action);
-    }
-
-    @Override
-    public StartServerAction start(Server server) {
-        StartServerAction action = new StartServerAction();
-        action.setServer(server);
-        return run(action);
-    }
-
-    @Override
-    public StopServerAction stop(Server... servers) {
-        StopServerAction action = new StopServerAction();
-        action.getServerList().addAll(Arrays.asList(servers));
-        return run(action);
-    }
-
-    @Override
-    public StopServerAction stop(Server server) {
-        StopServerAction action = new StopServerAction();
-        action.setServer(server);
-        return run(action);
-    }
-
-    @Override
-    public StopTimeAction stopTime() {
-        return run(new StopTimeAction());
-    }
-
-    @Override
-    public StopTimeAction stopTime(String id) {
-        StopTimeAction action = new StopTimeAction();
-        action.setId(id);
-        return run(action);
-    }
-
-    @Override
-    public StopTimeAction stopTime(String id, String suffix) {
-        StopTimeAction action = new StopTimeAction();
-        action.setId(id);
-        action.setSuffix(suffix);
-        return run(action);
-    }
-
-    @Override
-    public TraceVariablesAction traceVariables() {
-        return run(new TraceVariablesAction());
-    }
-
-    @Override
-    public TraceVariablesAction traceVariables(String... variables) {
-        TraceVariablesAction action = new TraceVariablesAction();
-        action.setVariableNames(Arrays.asList(variables));
-        return run(action);
-    }
-
-    @Override
-    public GroovyAction groovy(BuilderSupport<GroovyActionBuilder> configurer) {
-        GroovyActionBuilder builder = new GroovyActionBuilder();
+    public TransformAction.Builder transform(BuilderSupport<TransformAction.Builder> configurer) {
+        TransformAction.Builder builder = new TransformAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public TransformAction transform(BuilderSupport<TransformActionBuilder> configurer) {
-        TransformActionBuilder builder = new TransformActionBuilder();
+    public Assert.Builder assertException() {
+        Assert.Builder builder = new Assert.Builder() {
+            @Override
+            public Assert.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public Catch.Builder catchException() {
+        Catch.Builder builder = new Catch.Builder() {
+            @Override
+            public Catch.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public AssertSoapFault.Builder assertSoapFault() {
+        AssertSoapFault.Builder builder = new AssertSoapFault.Builder() {
+            @Override
+            public AssertSoapFault.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        }.withApplicationContext(applicationContext);
+        return container(builder);
+    }
+
+    @Override
+    public Conditional.Builder conditional() {
+        Conditional.Builder builder = new Conditional.Builder() {
+            @Override
+            public Conditional.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public Iterate.Builder iterate() {
+        Iterate.Builder builder = new Iterate.Builder() {
+            @Override
+            public Iterate.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public Parallel.Builder parallel() {
+        Parallel.Builder builder = new Parallel.Builder() {
+            @Override
+            public Parallel.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public RepeatOnErrorUntilTrue.Builder repeatOnError() {
+        RepeatOnErrorUntilTrue.Builder builder = new RepeatOnErrorUntilTrue.Builder() {
+            @Override
+            public RepeatOnErrorUntilTrue.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public RepeatUntilTrue.Builder repeat() {
+        RepeatUntilTrue.Builder builder = new RepeatUntilTrue.Builder() {
+            @Override
+            public RepeatUntilTrue.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public Sequence.Builder sequential() {
+        Sequence.Builder builder = new Sequence.Builder() {
+            @Override
+            public Sequence.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public Async.Builder async() {
+        Async.Builder builder = new Async.Builder() {
+            @Override
+            public Async.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public Timer.Builder timer() {
+        Timer.Builder builder = new Timer.Builder() {
+            @Override
+            public Timer.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
+    }
+
+    @Override
+    public StopTimerAction.Builder stopTimer(String timerId) {
+        StopTimerAction.Builder builder = new StopTimerAction.Builder()
+                .id(timerId);
+        return run(builder);
+    }
+
+    @Override
+    public StopTimerAction.Builder stopTimers() {
+        return run(new StopTimerAction.Builder());
+    }
+
+    @Override
+    public DockerExecuteAction.Builder docker(BuilderSupport<DockerExecuteAction.Builder> configurer) {
+        DockerExecuteAction.Builder builder = new DockerExecuteAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public AssertExceptionBuilder assertException() {
-        AssertExceptionBuilder builder = new AssertExceptionBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public CatchExceptionBuilder catchException() {
-        CatchExceptionBuilder builder = new CatchExceptionBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public AssertSoapFaultBuilder assertSoapFault() {
-        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder(this)
-                .withApplicationContext(applicationContext);
-        containers.push(builder.build());
-
-        return builder;
-    }
-
-    @Override
-    public ConditionalBuilder conditional() {
-        ConditionalBuilder builder = new ConditionalBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public IterateBuilder iterate() {
-        IterateBuilder builder = new IterateBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public ParallelBuilder parallel() {
-        ParallelBuilder builder = new ParallelBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public RepeatOnErrorBuilder repeatOnError() {
-        RepeatOnErrorBuilder builder = new RepeatOnErrorBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public RepeatBuilder repeat() {
-        RepeatBuilder builder = new RepeatBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public SequenceBuilder sequential() {
-        SequenceBuilder builder = new SequenceBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public AsyncBuilder async() {
-        AsyncBuilder builder = new AsyncBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public TimerBuilder timer() {
-        TimerBuilder builder = new TimerBuilder(this);
-        containers.push(builder.build());
-        return builder;
-    }
-
-    @Override
-    public StopTimerAction stopTimer(String timerId) {
-        StopTimerAction action = new StopTimerAction();
-        action.setTimerId(timerId);
-        return run(action);
-    }
-
-    @Override
-    public StopTimerAction stopTimers() {
-        StopTimerAction action = new StopTimerAction();
-        return run(action);
-    }
-
-    @Override
-    public TestAction docker(BuilderSupport<DockerActionBuilder> configurer) {
-        DockerActionBuilder builder = new DockerActionBuilder();
+    public KubernetesExecuteAction.Builder kubernetes(BuilderSupport<KubernetesExecuteAction.Builder> configurer) {
+        KubernetesExecuteAction.Builder builder = new KubernetesExecuteAction.Builder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer) {
-        KubernetesActionBuilder builder = new KubernetesActionBuilder();
-        configurer.configure(builder);
-        return run(builder.build());
-    }
-
-    @Override
-    public TestAction selenium(BuilderSupport<SeleniumActionBuilder> configurer) {
+    public SeleniumActionBuilder selenium(BuilderSupport<SeleniumActionBuilder> configurer) {
         SeleniumActionBuilder builder = new SeleniumActionBuilder();
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
+    public HttpActionBuilder http(BuilderSupport<HttpActionBuilder> configurer) {
         HttpActionBuilder builder = new HttpActionBuilder()
                     .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build()).getDelegate();
+        return run(builder);
     }
 
     @Override
-    public TestAction soap(BuilderSupport<SoapActionBuilder> configurer) {
+    public SoapActionBuilder soap(BuilderSupport<SoapActionBuilder> configurer) {
         SoapActionBuilder builder = new SoapActionBuilder()
                     .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build()).getDelegate();
+        return run(builder);
     }
 
     @Override
-    public TestAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
+    public CamelRouteActionBuilder camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         CamelRouteActionBuilder builder = new CamelRouteActionBuilder()
                     .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build()).getDelegate();
+        return run(builder);
     }
 
     @Override
-    public TestAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
-        ZooActionBuilder builder = new ZooActionBuilder()
+    public ZooExecuteAction.Builder zookeeper(BuilderSupport<ZooExecuteAction.Builder> configurer) {
+        ZooExecuteAction.Builder builder = new ZooExecuteAction.Builder()
                 .withApplicationContext(applicationContext);
         configurer.configure(builder);
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public Template applyTemplate(BuilderSupport<TemplateBuilder> configurer) {
-        TemplateBuilder builder = new TemplateBuilder();
-        configurer.configure(builder);
-        builder.load(applicationContext);
+    public Template.Builder applyTemplate(BuilderSupport<Template.Builder> configurer) {
+        Template.Builder builder = new Template.Builder()
+                .withApplicationContext(applicationContext);
         configurer.configure(builder);
 
-        return run(builder.build());
+        return run(builder);
     }
 
     @Override
-    public FinallySequenceBuilder doFinally() {
-        FinallySequenceBuilder builder = new FinallySequenceBuilder(this);
-        containers.push(builder.build());
-        return builder;
+    public FinallySequence.Builder doFinally() {
+        FinallySequence.Builder builder = new FinallySequence.Builder() {
+            @Override
+            public FinallySequence.Builder actions(TestActionBuilder<?>... actions) {
+                return run(super.actions(actions));
+            }
+        };
+        return container(builder);
     }
 
     /**
@@ -616,6 +762,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public TestCase getTestCase() {
+        testCase.setTestRunner(true);
         return testCase;
     }
 

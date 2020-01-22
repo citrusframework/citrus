@@ -16,74 +16,72 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.server.Server;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class StartServerActionTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testEmpty() {
-        StartServerAction startServer = new StartServerAction();
-        
+        StartServerAction startServer = new StartServerAction.Builder()
+                .build();
         startServer.execute(context);
     }
-    
+
     @Test
     public void testSingleServer() {
         Server server = Mockito.mock(Server.class);
-        
+
         reset(server);
 
         when(server.getName()).thenReturn("MyServer");
 
-        StartServerAction startServer = new StartServerAction();
-        startServer.setServer(server);
-
+        StartServerAction startServer = new StartServerAction.Builder()
+                .server(server)
+                .build();
         startServer.execute(context);
         verify(server).start();
     }
-    
+
     @Test
     public void testServerListSingleton() {
         Server server = Mockito.mock(Server.class);
-        
+
         reset(server);
 
         when(server.getName()).thenReturn("MyServer");
 
-        StartServerAction startServer = new StartServerAction();
-        startServer.setServerList(Collections.singletonList(server));
-
+        StartServerAction startServer = new StartServerAction.Builder()
+                .server(Collections.singletonList(server))
+                .build();
         startServer.execute(context);
         verify(server).start();
     }
-    
+
     @Test
     public void testServerList() {
         Server server1 = Mockito.mock(Server.class);
         Server server2 = Mockito.mock(Server.class);
-        
+
         reset(server1, server2);
 
         when(server1.getName()).thenReturn("MyServer1");
         when(server2.getName()).thenReturn("MyServer2");
 
-        StartServerAction startServer = new StartServerAction();
-        List<Server> serverList = new ArrayList<Server>();
-        serverList.add(server1);
-        serverList.add(server2);
-
-        startServer.setServerList(serverList);
-
+        StartServerAction startServer = new StartServerAction.Builder()
+                .server(server1, server2)
+                .build();
         startServer.execute(context);
 
         verify(server1).start();

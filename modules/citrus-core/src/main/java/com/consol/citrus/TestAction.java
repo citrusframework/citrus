@@ -20,7 +20,7 @@ import com.consol.citrus.context.TestContext;
 
 /**
  * Interface for all test actions.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
@@ -48,13 +48,13 @@ public interface TestAction {
      * @return description as String
      */
     String getDescription();
-    
-    /** 
+
+    /**
      * Description setter.
      * @param description
      */
     TestAction setDescription(String description);
-    
+
     /**
      * Checks if this action is disabled.
      * @param context the current test context.
@@ -73,5 +73,5 @@ public interface TestAction {
      * @param actor
      */
     TestAction setActor(TestActor actor);
-    
+
 }

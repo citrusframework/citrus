@@ -26,16 +26,14 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -44,18 +42,7 @@ public class ValidationTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
-    private ReceiveMessageAction receiveMessageBean;
-    
-    @Override
-    @BeforeMethod
-    public void prepareTest() {
-        super.prepareTest();
-        
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-    }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTree() {
@@ -63,35 +50,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeDifferentAttributeOrder() {
@@ -99,35 +87,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeB='attribute-value' attributeA='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeMissingElement() {
@@ -135,34 +124,35 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeAdditionalElement() {
@@ -170,36 +160,37 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                             + "<sub-elementD attribute='D'>text-value</sub-elementD>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeMissingAttribute() {
@@ -207,35 +198,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeAdditionalAttribute() {
@@ -243,35 +235,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A' attribute-additional='additional'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongAttribute() {
@@ -279,35 +272,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute-wrong='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongElement() {
@@ -315,35 +309,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-element-wrong attribute='A'>text-value</sub-element-wrong>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongNodeValue() {
@@ -351,35 +346,36 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>wrong-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test(expectedExceptions = {ValidationException.class})
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testValidateXMLTreeWrongAttributeValue() {
@@ -387,32 +383,33 @@ public class ValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='wrong-value'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 }

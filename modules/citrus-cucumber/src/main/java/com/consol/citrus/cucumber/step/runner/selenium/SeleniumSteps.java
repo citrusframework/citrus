@@ -16,23 +16,28 @@
 
 package com.consol.citrus.cucumber.step.runner.selenium;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.selenium.actions.FindElementAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.model.PageValidator;
 import com.consol.citrus.selenium.model.WebPage;
 import com.consol.citrus.variable.VariableUtils;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.*;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import io.cucumber.datatable.DataTable;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -50,7 +55,7 @@ public class SeleniumSteps {
     private Map<String, WebPage> pages;
 
     /** Page validators defined by id */
-    private Map<String, PageValidator> validators;
+    private Map<String, PageValidator<?>> validators;
 
     /** Selenium browser */
     protected SeleniumBrowser browser;
@@ -102,7 +107,7 @@ public class SeleniumSteps {
     @Given("^page validator ([^\\s]+) ([^\\s]+)$")
     public void page_validator(String id, String type) {
         try {
-            validators.put(id, (PageValidator) Class.forName(type).newInstance());
+            validators.put(id, (PageValidator<?>) Class.forName(type).newInstance());
         } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
             throw new CitrusRuntimeException("Failed to laod page object", e);
         }
@@ -161,7 +166,7 @@ public class SeleniumSteps {
         Map<String, String> elementProperties = dataTable.asMap(String.class, String.class);
 
         runner.selenium(action -> {
-            SeleniumActionBuilder.FindElementActionBuilder elementBuilder = action.browser(browser)
+            FindElementAction.Builder elementBuilder = action.browser(browser)
                     .find()
                     .element(property, value);
 
@@ -175,11 +180,11 @@ public class SeleniumSteps {
                 }
 
                 if (propertyEntry.getKey().equals("enabled")) {
-                    elementBuilder.enabled(Boolean.valueOf(propertyEntry.getValue()));
+                    elementBuilder.enabled(Boolean.parseBoolean(propertyEntry.getValue()));
                 }
 
                 if (propertyEntry.getKey().equals("displayed")) {
-                    elementBuilder.displayed(Boolean.valueOf(propertyEntry.getValue()));
+                    elementBuilder.displayed(Boolean.parseBoolean(propertyEntry.getValue()));
                 }
 
                 if (propertyEntry.getKey().equals("styles") || propertyEntry.getKey().equals("style")) {
@@ -233,7 +238,7 @@ public class SeleniumSteps {
         verifyPage(pageId);
 
         runner.selenium(action -> {
-            PageValidator pageValidator = null;
+            PageValidator<?> pageValidator = null;
             if (validators.containsKey(validatorId)) {
                 pageValidator = validators.get(validatorId);
             }

@@ -16,6 +16,9 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
@@ -27,10 +30,11 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -42,16 +46,11 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
-    private SwitchWindowAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, locator);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new SwitchWindowAction();
-        action.setBrowser(seleniumBrowser);
 
         when(webDriver.switchTo()).thenReturn(locator);
     }
@@ -69,6 +68,9 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW, "last_window");
         context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, "active_window");
 
+        SwitchWindowAction action =  new SwitchWindowAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "last_window");
@@ -89,7 +91,10 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, "active_window");
         context.setVariable("myWindow", "other_window");
 
-        action.setWindowName("myWindow");
+        SwitchWindowAction action =  new SwitchWindowAction.Builder()
+                .browser(seleniumBrowser)
+                .window("myWindow")
+                .build();
         action.execute(context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_LAST_WINDOW), "active_window");
@@ -109,7 +114,10 @@ public class SwitchWindowActionTest extends AbstractTestNGUnitTest {
         context.setVariable(SeleniumHeaders.SELENIUM_ACTIVE_WINDOW, "active_window");
         context.setVariable("myWindow", "other_window");
 
-        action.setWindowName("myWindow");
+        SwitchWindowAction action =  new SwitchWindowAction.Builder()
+                .browser(seleniumBrowser)
+                .window("myWindow")
+                .build();
         action.execute(context);
     }
 

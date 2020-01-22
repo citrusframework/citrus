@@ -33,8 +33,8 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Default constructor.
      */
-    public StopCamelRouteAction() {
-        setName("stop-routes");
+    public StopCamelRouteAction(Builder builder) {
+        super("stop-routes", builder);
     }
 
     @Override
@@ -48,6 +48,16 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to stop Camel route: " + route, e);
             }
+        }
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractCamelRouteAction.Builder<StopCamelRouteAction, Builder> {
+        @Override
+        public StopCamelRouteAction build() {
+            return new StopCamelRouteAction(this);
         }
     }
 }

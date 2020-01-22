@@ -21,11 +21,10 @@ import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
-import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
-
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.fail;
 
 /**
@@ -39,14 +38,14 @@ public class WaitTest {
     private long endTime;
 
     @Test
-    public void shouldSatisfyWaitConditionOnFirstAttempt() throws Exception {
+    public void shouldSatisfyWaitConditionOnFirstAttempt() {
         String seconds = "10";
         String interval = "1000";
 
         Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(seconds, interval);
+        prepareContextMock("10000", interval);
         when(conditionMock.getName()).thenReturn("check");
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
         when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
@@ -58,14 +57,14 @@ public class WaitTest {
     }
 
     @Test
-    public void shouldSatisfyWaitConditionOnLastAttempt() throws Exception {
+    public void shouldSatisfyWaitConditionOnLastAttempt() {
         String seconds = "4";
         String interval = "1000";
 
         Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(seconds, interval);
+        prepareContextMock("4000", interval);
         when(conditionMock.getName()).thenReturn("check");
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.FALSE);
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
@@ -78,14 +77,14 @@ public class WaitTest {
     }
 
     @Test
-    public void shouldSatisfyWaitConditionWithBiggerIntervalThanTimeout() throws Exception {
+    public void shouldSatisfyWaitConditionWithBiggerIntervalThanTimeout() {
         String seconds = "1";
         String interval = "10000";
 
         Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(seconds, interval);
+        prepareContextMock("1000", interval);
         when(conditionMock.getName()).thenReturn("check");
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.TRUE);
         when(conditionMock.getSuccessMessage(contextMock)).thenReturn("Condition success!");
@@ -97,14 +96,14 @@ public class WaitTest {
     }
 
     @Test
-    public void shouldNotSatisfyWaitCondition() throws Exception {
+    public void shouldNotSatisfyWaitCondition() {
         String seconds = "3";
         String interval = "1000";
 
         Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(seconds, interval);
+        prepareContextMock("3000", interval);
         when(conditionMock.getName()).thenReturn("check");
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.FALSE);
         when(conditionMock.getErrorMessage(contextMock)).thenReturn("Condition failed!");
@@ -120,16 +119,15 @@ public class WaitTest {
         assertConditionExecutedWithinSeconds(seconds);
     }
 
-
     @Test
-    public void shouldNotSatisfyWaitConditionWithBiggerIntervalThanTimeout() throws Exception {
+    public void shouldNotSatisfyWaitConditionWithBiggerIntervalThanTimeout() {
         String seconds = "1";
         String interval = "10000";
 
         Wait testling = getWaitAction(seconds, interval);
 
         reset(contextMock, conditionMock);
-        prepareContextMock(seconds, interval);
+        prepareContextMock("1000", interval);
         when(conditionMock.getName()).thenReturn("check");
         when(conditionMock.isSatisfied(contextMock)).thenReturn(Boolean.FALSE);
         when(conditionMock.getErrorMessage(contextMock)).thenReturn("Condition failed!");
@@ -151,15 +149,11 @@ public class WaitTest {
     }
 
     private Wait getWaitAction(String waitTimeSeconds, String interval) {
-        Wait testling = new Wait();
-        testling.setCondition(conditionMock);
-
-        if (StringUtils.hasText(waitTimeSeconds)) {
-            testling.setSeconds(waitTimeSeconds);
-        }
-
-        testling.setInterval(interval);
-        return testling;
+        return new Wait.Builder()
+                .condition(conditionMock)
+                .interval(interval)
+                .seconds(Long.parseLong(waitTimeSeconds))
+                .build();
     }
 
     private void assertConditionExecutedWithinSeconds(String seconds) {

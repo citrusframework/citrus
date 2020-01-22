@@ -16,6 +16,10 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
@@ -24,9 +28,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Finds element in DOM tree on current page and validates its properties and settings.
@@ -38,16 +39,16 @@ import java.util.Map;
 public class FindElementAction extends AbstractSeleniumAction {
 
     /** Optional by used in Java DSL */
-    private By by;
+    private final By by;
 
     /** Element selector property */
-    private String property;
-    private String propertyValue;
+    private final String property;
+    private final String propertyValue;
 
     /** Optional validation expectations on element */
     private String tagName;
-    private Map<String, String> attributes = new HashMap<>();
-    private Map<String, String> styles = new HashMap<>();
+    private Map<String, String> attributes = Collections.emptyMap();
+    private Map<String, String> styles = Collections.emptyMap();
     private boolean displayed = true;
     private boolean enabled = true;
     private String text;
@@ -55,16 +56,27 @@ public class FindElementAction extends AbstractSeleniumAction {
     /**
      * Default constructor.
      */
-    public FindElementAction() {
-        super("find");
+    public FindElementAction(Builder builder) {
+        this("find", builder);
+
+        this.attributes = builder.attributes;
+        this.styles = builder.styles;
+        this.displayed = builder.displayed;
+        this.enabled = builder.enabled;
+        this.text = builder.text;
     }
 
     /**
      * Constructor with name.
      * @param name
      */
-    public FindElementAction(String name) {
-        super(name);
+    public FindElementAction(String name, ElementActionBuilder<?, ?> builder) {
+        super(name, builder);
+
+        this.by = builder.by;
+        this.property = builder.property;
+        this.propertyValue = builder.propertyValue;
+        this.tagName = builder.tagName;
     }
 
     @Override
@@ -174,30 +186,12 @@ public class FindElementAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the property.
-     *
-     * @param property
-     */
-    public void setProperty(String property) {
-        this.property = property;
-    }
-
-    /**
      * Gets the propertyValue.
      *
      * @return
      */
     public String getPropertyValue() {
         return propertyValue;
-    }
-
-    /**
-     * Sets the propertyValue.
-     *
-     * @param propertyValue
-     */
-    public void setPropertyValue(String propertyValue) {
-        this.propertyValue = propertyValue;
     }
 
     /**
@@ -210,30 +204,12 @@ public class FindElementAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the tagName.
-     *
-     * @param tagName
-     */
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
-    /**
      * Gets the attributes.
      *
      * @return
      */
     public Map<String, String> getAttributes() {
         return attributes;
-    }
-
-    /**
-     * Sets the attributes.
-     *
-     * @param attributes
-     */
-    public void setAttributes(Map<String, String> attributes) {
-        this.attributes = attributes;
     }
 
     /**
@@ -246,30 +222,12 @@ public class FindElementAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the styles.
-     *
-     * @param styles
-     */
-    public void setStyles(Map<String, String> styles) {
-        this.styles = styles;
-    }
-
-    /**
      * Gets the displayed.
      *
      * @return
      */
     public boolean isDisplayed() {
         return displayed;
-    }
-
-    /**
-     * Sets the displayed.
-     *
-     * @param displayed
-     */
-    public void setDisplayed(boolean displayed) {
-        this.displayed = displayed;
     }
 
     /**
@@ -282,30 +240,12 @@ public class FindElementAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the enabled.
-     *
-     * @param enabled
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    /**
      * Gets the text.
      *
      * @return
      */
     public String getText() {
         return text;
-    }
-
-    /**
-     * Sets the text.
-     *
-     * @param text
-     */
-    public void setText(String text) {
-        this.text = text;
     }
 
     /**
@@ -318,11 +258,105 @@ public class FindElementAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the by.
-     *
-     * @param by
+     * Action builder.
      */
-    public void setBy(By by) {
-        this.by = by;
+    public static class Builder extends ElementActionBuilder<FindElementAction, Builder> {
+
+        private Map<String, String> attributes = new HashMap<>();
+        private Map<String, String> styles = new HashMap<>();
+        private boolean displayed = true;
+        private boolean enabled = true;
+        private String text;
+
+        /**
+         * Add text validation.
+         * @param text
+         * @return
+         */
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        /**
+         * Add attribute validation.
+         * @param name
+         * @param value
+         * @return
+         */
+        public Builder attribute(String name, String value) {
+            this.attributes.put(name, value);
+            return this;
+        }
+
+        /**
+         * Add css style validation.
+         * @param name
+         * @param value
+         * @return
+         */
+        public Builder style(String name, String value) {
+            this.styles.put(name, value);
+            return this;
+        }
+
+        /**
+         * Add enabled validation.
+         * @param enabled
+         * @return
+         */
+        public Builder enabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
+        /**
+         * Add displayed validation.
+         * @param displayed
+         * @return
+         */
+        public Builder displayed(boolean displayed) {
+            this.displayed = displayed;
+            return this;
+        }
+
+        @Override
+        public FindElementAction build() {
+            return new FindElementAction(this);
+        }
+    }
+
+    /**
+     * Abstract element based action builder.
+     * @param <T>
+     * @param <B>
+     */
+    public static abstract class ElementActionBuilder<T extends FindElementAction, B extends ElementActionBuilder<T, B>> extends AbstractSeleniumAction.Builder<T, B> {
+
+        protected By by;
+        protected String property;
+        protected String propertyValue;
+        private String tagName;
+
+        public B element(By by) {
+            this.by = by;
+            return self;
+        }
+
+        public B element(String property, String propertyValue) {
+            this.property = property;
+            this.propertyValue = propertyValue;
+            return self;
+        }
+
+        /**
+         * Add tag name validation.
+         * @param tagName
+         * @return
+         */
+        public B tagName(String tagName) {
+            this.tagName = tagName;
+            return self;
+        }
     }
 }

@@ -16,14 +16,21 @@
 
 package com.consol.citrus.actions;
 
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.SqlUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * Class executes PLSQL statements either declared inline as PLSQL statements or given by an
@@ -34,10 +41,10 @@ import java.util.*;
  */
 public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /** In line script */
-    private String script = null;
+    private final String script;
 
     /** boolean flag marking that possible SQL errors will be ignored */
-    private boolean ignoreErrors = false;
+    private final boolean ignoreErrors;
 
     /** Special statement endoing character sequence */
     public static final String PLSQL_STMT_ENDING = "/";
@@ -45,16 +52,20 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
     /**
      * Default constructor.
      */
-    public ExecutePLSQLAction() {
-        setName("plsql");
+    public ExecutePLSQLAction(Builder builder) {
+        super("plsql", builder);
+
+        this.ignoreErrors = builder.ignoreErrors;
+        this.script = builder.script;
     }
 
     @Override
     public void doExecute(TestContext context) {
+        List<String> statementsToUse;
         if (StringUtils.hasText(script)) {
-            statements = createStatementsFromScript(context);
+            statementsToUse = createStatementsFromScript(context);
         } else if (StringUtils.hasText(sqlResourcePath)) {
-            statements = createStatementsFromFileResource(context, new SqlUtils.LastScriptLineDecorator() {
+            statementsToUse = createStatementsFromFileResource(context, new SqlUtils.LastScriptLineDecorator() {
                 @Override
                 public String getStatementEndingCharacter() {
                     return PLSQL_STMT_ENDING;
@@ -65,6 +76,8 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
                     return line.trim().substring(0, (line.trim().length() - 1));
                 }
             });
+        } else {
+            statementsToUse = statements;
         }
 
         if (getTransactionManager() != null) {
@@ -73,22 +86,23 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             }
 
             TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
-            transactionTemplate.setTimeout(Integer.valueOf(context.replaceDynamicContentInString(getTransactionTimeout())));
+            transactionTemplate.setTimeout(Integer.parseInt(context.replaceDynamicContentInString(getTransactionTimeout())));
             transactionTemplate.setIsolationLevelName(context.replaceDynamicContentInString(getTransactionIsolationLevel()));
             transactionTemplate.execute(status -> {
-                executeStatements(context);
+                executeStatements(statementsToUse, context);
                 return null;
             });
         } else {
-            executeStatements(context);
+            executeStatements(statementsToUse, context);
         }
     }
 
     /**
      * Run all PLSQL statements.
+     * @param statements
      * @param context
      */
-    protected void executeStatements(TestContext context) {
+    protected void executeStatements(List<String> statements, TestContext context) {
         for (String stmt : statements) {
             try {
                 final String toExecute = context.replaceDynamicContentInString(stmt.trim());
@@ -103,7 +117,6 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
             } catch (DataAccessException e) {
                 if (ignoreErrors) {
                     log.warn("Ignoring error while executing PLSQL statement: " + e.getMessage());
-                    continue;
                 } else {
                     throw new CitrusRuntimeException("Failed to execute PLSQL statement", e);
                 }
@@ -118,39 +131,21 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
      */
     private List<String> createStatementsFromScript(TestContext context) {
         List<String> stmts = new ArrayList<>();
-        
-        script = context.replaceDynamicContentInString(script);
+
+        String resolvedScript = context.replaceDynamicContentInString(script);
         if (log.isDebugEnabled()) {
-            log.debug("Found inline PLSQL script " + script);
+            log.debug("Found inline PLSQL script " + resolvedScript);
         }
 
-        StringTokenizer tok = new StringTokenizer(script, PLSQL_STMT_ENDING);
+        StringTokenizer tok = new StringTokenizer(resolvedScript, PLSQL_STMT_ENDING);
         while (tok.hasMoreTokens()) {
             String next = tok.nextToken().trim();
             if (StringUtils.hasText(next)) {
                 stmts.add(next);
             }
         }
-        
+
         return stmts;
-    }
-
-    /**
-     * Setter for inline script.
-     * @param script
-     */
-    public ExecutePLSQLAction setScript(String script) {
-        this.script = script;
-        return this;
-    }
-
-    /**
-     * Ignore errors during execution.
-     * @param ignoreErrors boolean flag to set
-     */
-    public ExecutePLSQLAction setIgnoreErrors(boolean ignoreErrors) {
-        this.ignoreErrors = ignoreErrors;
-        return this;
     }
 
     /**
@@ -167,5 +162,65 @@ public class ExecutePLSQLAction extends AbstractDatabaseConnectingTestAction {
      */
     public boolean isIgnoreErrors() {
         return ignoreErrors;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecutePLSQLAction, Builder> {
+
+        private boolean ignoreErrors = false;
+        private String script;
+
+        public static Builder plsql(DataSource dataSource) {
+            Builder builder = new Builder();
+            builder.dataSource(dataSource);
+            return builder;
+        }
+
+        /**
+         * Setter for inline script.
+         * @param script
+         */
+        public Builder sqlScript(String script) {
+            this.script = script;
+            return this;
+        }
+
+        /**
+         * Setter for external file resource containing the SQL statements to execute.
+         * @param sqlResource
+         */
+        public Builder sqlResource(Resource sqlResource) {
+            return sqlResource(sqlResource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Setter for external file resource containing the SQL statements to execute.
+         * @param sqlResource
+         * @param charset
+         */
+        public Builder sqlResource(Resource sqlResource, Charset charset) {
+            try {
+                sqlScript(FileUtils.readToString(sqlResource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read sql resource", e);
+            }
+            return this;
+        }
+
+        /**
+         * Ignore errors during execution.
+         * @param ignoreErrors boolean flag to set
+         */
+        public Builder ignoreErrors(boolean ignoreErrors) {
+            this.ignoreErrors = ignoreErrors;
+            return this;
+        }
+
+        @Override
+        public ExecutePLSQLAction build() {
+            return new ExecutePLSQLAction(this);
+        }
     }
 }

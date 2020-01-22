@@ -16,27 +16,24 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.SleepAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
  * Bean definition parser for sleep action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SleepActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(SleepAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(SleepActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -45,5 +42,44 @@ public class SleepActionParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("milliseconds"), "milliseconds");
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class SleepActionFactoryBean extends AbstractTestActionFactoryBean<SleepAction, SleepAction.Builder> {
+
+        private final SleepAction.Builder builder = new SleepAction.Builder();
+
+        public void setMilliseconds(Long milliseconds) {
+            builder.milliseconds(milliseconds);
+        }
+
+        public void setSeconds(Double seconds) {
+            builder.seconds(seconds);
+        }
+
+        public void setTime(Double time) {
+            builder.seconds(time);
+        }
+
+        @Override
+        public SleepAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return SleepAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public SleepAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

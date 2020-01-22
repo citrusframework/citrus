@@ -34,7 +34,7 @@ public class TimerParser implements BeanDefinitionParser {
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         // create new bean builder
-        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Timer.class);
+        final BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(TimerFactoryBean.class);
 
         // see if there is a description
         DescriptionElementParser.doParse(element, builder);
@@ -54,5 +54,52 @@ public class TimerParser implements BeanDefinitionParser {
 
         // finally return the complete builder with its bean definition
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class TimerFactoryBean extends AbstractTestContainerFactoryBean<Timer, Timer.Builder> {
+
+        private final Timer.Builder builder = new Timer.Builder();
+
+        public void setInterval(long interval) {
+            builder.interval(interval);
+        }
+
+        public void setDelay(long delay) {
+            builder.delay(delay);
+        }
+
+        public void setRepeatCount(int repeatCount) {
+            builder.repeatCount(repeatCount);
+        }
+
+        public void setTimerId(String timerId) {
+            builder.timerId(timerId);
+        }
+
+        public void setFork(boolean fork) {
+            builder.fork(fork);
+        }
+
+        @Override
+        public Timer getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Timer.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Timer.Builder getBuilder() {
+            return builder;
+        }
     }
 }

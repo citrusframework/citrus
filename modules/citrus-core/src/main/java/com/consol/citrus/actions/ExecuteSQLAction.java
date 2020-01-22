@@ -16,6 +16,9 @@
 
 package com.consol.citrus.actions;
 
+import javax.sql.DataSource;
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -24,27 +27,34 @@ import org.springframework.transaction.support.TransactionTemplate;
  * Test action execute SQL statements. Use this action when executing
  * database altering statements like UPDATE, INSERT, ALTER, DELETE. Statements are either
  * embedded inline in the test case description or given by an external file resource.
- * 
+ *
  * When executing SQL query statements (SELECT) see {@link ExecuteSQLQueryAction}.
- * 
+ *
  * @author Christoph Deppisch, Jan Szczepanski
  * @since 2006
  */
 public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
+
     /** boolean flag marking that possible SQL errors will be ignored */
-    private boolean ignoreErrors = false;
+    private final boolean ignoreErrors;
 
     /**
      * Default constructor.
+     * @param builder
      */
-    public ExecuteSQLAction() {
-        setName("sql");
+    private ExecuteSQLAction(Builder builder) {
+        super("sql", builder);
+
+        this.ignoreErrors = builder.ignoreErrors;
     }
 
     @Override
     public void doExecute(TestContext context) {
+        final List<String> statementsToUse;
         if (statements.isEmpty()) {
-            statements = createStatementsFromFileResource(context);
+            statementsToUse = createStatementsFromFileResource(context);
+        } else {
+            statementsToUse = statements;
         }
 
         if (getTransactionManager() != null) {
@@ -53,22 +63,23 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
             }
 
             TransactionTemplate transactionTemplate = new TransactionTemplate(getTransactionManager());
-            transactionTemplate.setTimeout(Integer.valueOf(context.replaceDynamicContentInString(getTransactionTimeout())));
+            transactionTemplate.setTimeout(Integer.parseInt(context.replaceDynamicContentInString(getTransactionTimeout())));
             transactionTemplate.setIsolationLevelName(context.replaceDynamicContentInString(getTransactionIsolationLevel()));
             transactionTemplate.execute(status -> {
-                executeStatements(context);
+                executeStatements(statementsToUse, context);
                 return null;
             });
         } else {
-            executeStatements(context);
+            executeStatements(statementsToUse, context);
         }
     }
 
     /**
      * Run all SQL statements.
+     * @param statements
      * @param context
      */
-    protected void executeStatements(TestContext context) {
+    protected void executeStatements(List<String> statements, TestContext context) {
         for (String stmt : statements)  {
             try {
                 final String toExecute;
@@ -98,19 +109,38 @@ public class ExecuteSQLAction extends AbstractDatabaseConnectingTestAction {
     }
 
     /**
-     * Ignore errors during execution.
-     * @param ignoreErrors boolean flag to set
-     */
-    public ExecuteSQLAction setIgnoreErrors(boolean ignoreErrors) {
-        this.ignoreErrors = ignoreErrors;
-        return this;
-    }
-
-    /**
      * Gets the ignoreErrors.
      * @return the ignoreErrors
      */
     public boolean isIgnoreErrors() {
         return ignoreErrors;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLAction, Builder> {
+
+        private boolean ignoreErrors = false;
+
+        public static Builder sql(DataSource dataSource) {
+            Builder builder = new Builder();
+            builder.dataSource(dataSource);
+            return builder;
+        }
+
+        /**
+         * Ignore errors during execution.
+         * @param ignoreErrors boolean flag to set
+         */
+        public Builder ignoreErrors(boolean ignoreErrors) {
+            this.ignoreErrors = ignoreErrors;
+            return this;
+        }
+
+        @Override
+        public ExecuteSQLAction build() {
+            return new ExecuteSQLAction(this);
+        }
     }
 }

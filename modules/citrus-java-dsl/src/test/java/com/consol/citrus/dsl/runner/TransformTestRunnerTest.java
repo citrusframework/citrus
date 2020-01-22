@@ -16,17 +16,15 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.builder.TransformActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
     @Test

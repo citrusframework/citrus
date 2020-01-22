@@ -16,7 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.condition.*;
+import java.util.Map;
+
+import com.consol.citrus.TestAction;
+import com.consol.citrus.condition.ActionCondition;
+import com.consol.citrus.condition.Condition;
+import com.consol.citrus.condition.FileCondition;
+import com.consol.citrus.condition.HttpCondition;
+import com.consol.citrus.condition.MessageCondition;
 import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.Wait;
@@ -30,8 +37,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import java.util.Map;
-
 /**
  * Bean definition parser for wait action in test case.
  *
@@ -42,7 +47,7 @@ public class WaitParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Wait.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(WaitFactoryBean.class);
 
         DescriptionElementParser.doParse(element, builder);
 
@@ -154,5 +159,52 @@ public class WaitParser implements BeanDefinitionParser {
         FileCondition condition = new FileCondition();
         condition.setFilePath(element.getAttribute("path"));
         return condition;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class WaitFactoryBean extends AbstractTestActionFactoryBean<Wait, Wait.Builder> {
+
+        private final Wait.Builder builder = new Wait.Builder();
+
+        public void setCondition(Condition condition) {
+            builder.condition(condition);
+        }
+
+        public void setInterval(Long interval) {
+            builder.interval(interval);
+        }
+
+        public void setMilliseconds(Long milliseconds) {
+            builder.milliseconds(milliseconds);
+        }
+
+        public void setSeconds(Double seconds) {
+            builder.seconds(seconds);
+        }
+
+        public void setAction(TestAction action) {
+            builder.condition(new ActionCondition(action));
+        }
+
+        @Override
+        public Wait getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Wait.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Wait.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -16,6 +16,9 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -26,10 +29,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -40,7 +42,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
     private Resource sqlResource = Mockito.mock(Resource.class);
-    
+
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
         reset(jdbcTemplate);
@@ -61,7 +63,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
-        Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertFalse(action.isIgnoreErrors());
         Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
         Assert.assertNull(action.getScript());
         Assert.assertNull(action.getSqlResourcePath());
@@ -95,7 +97,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
-        Assert.assertEquals(action.isIgnoreErrors(), false);
+        Assert.assertFalse(action.isIgnoreErrors());
         Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
         Assert.assertNull(action.getScript());
         Assert.assertNull(action.getSqlResourcePath());
@@ -134,9 +136,8 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
-        Assert.assertEquals(action.isIgnoreErrors(), false);
-        Assert.assertEquals(action.getStatements().size(), 3L);
-        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
+        Assert.assertFalse(action.isIgnoreErrors());
+        Assert.assertEquals(action.getStatements().size(), 0L);
         Assert.assertEquals(action.getScript(), ("TEST_STMT_1\n" +
                 "/\n" +
                 "TEST_STMT_2\n" +
@@ -168,9 +169,8 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
-        Assert.assertEquals(action.isIgnoreErrors(), false);
-        Assert.assertEquals(action.getStatements().size(), 3L);
-        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
+        Assert.assertFalse(action.isIgnoreErrors());
+        Assert.assertEquals(action.getStatements().size(), 0L);
         Assert.assertNull(action.getScript());
         Assert.assertEquals(action.getSqlResourcePath(), "classpath:com/consol/citrus/dsl/runner/plsql.sql");
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
@@ -202,9 +202,8 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
 
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
-        Assert.assertEquals(action.isIgnoreErrors(), true);
-        Assert.assertEquals(action.getStatements().size(), 2L);
-        Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2]");
+        Assert.assertTrue(action.isIgnoreErrors());
+        Assert.assertEquals(action.getStatements().size(), 0L);
         Assert.assertNull(action.getSqlResourcePath());
         Assert.assertEquals(action.getScript(), ("TEST_STMT_1\n" +
                 "/\n" +

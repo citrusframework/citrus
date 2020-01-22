@@ -23,9 +23,8 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 
 /**
@@ -37,104 +36,75 @@ public class SequenceTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSingleAction() {
-        Sequence sequenceAction = new Sequence();
-
         reset(action);
 
-        sequenceAction.setActions(Collections.singletonList(action));
-
+        Sequence sequenceAction = new Sequence.Builder()
+                .actions(() -> action)
+                .build();
         sequenceAction.execute(context);
 
         verify(action).execute(context);
     }
-    
+
     @Test
     public void testMultipleActions() {
-        Sequence sequenceAction = new Sequence();
-        
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-
-        sequenceAction.setActions(actionList);
-
+        Sequence sequenceAction = new Sequence.Builder()
+                .actions(action1, action2, action3)
+                .build();
         sequenceAction.execute(context);
         verify(action1).execute(context);
         verify(action2).execute(context);
         verify(action3).execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testFirstActionFailing() {
-        Sequence sequenceAction = new Sequence();
-        
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(new FailAction());
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-        
-        sequenceAction.setActions(actionList);
-        
+        Sequence sequenceAction = new Sequence.Builder()
+                .actions(new FailAction.Builder().build(), action1, action2, action3)
+                .build();
         sequenceAction.execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testLastActionFailing() {
-        Sequence sequenceAction = new Sequence();
-        
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-        actionList.add(new FailAction());
-
-        sequenceAction.setActions(actionList);
-
+        Sequence sequenceAction = new Sequence.Builder()
+                .actions(action1, action2, action3, new FailAction.Builder().build())
+                .build();
         sequenceAction.execute(context);
         verify(action1).execute(context);
         verify(action2).execute(context);
         verify(action3).execute(context);
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testFailingAction() {
-        Sequence sequenceAction = new Sequence();
-        
         TestAction action1 = Mockito.mock(TestAction.class);
         TestAction action2 = Mockito.mock(TestAction.class);
         TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        actionList.add(action1);
-        actionList.add(new FailAction());
-        actionList.add(action2);
-        actionList.add(action3);
-
-        sequenceAction.setActions(actionList);
-
+        Sequence sequenceAction = new Sequence.Builder()
+                .actions(action1, new FailAction.Builder().build(), action2, action3)
+                .build();
         sequenceAction.execute(context);
         verify(action1).execute(context);
     }

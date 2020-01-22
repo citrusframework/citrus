@@ -16,9 +16,17 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.actions.PurgeEndpointAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.endpoint.Endpoint;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
@@ -28,8 +36,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * @author Christoph Deppisch
  * @since 2.4
@@ -38,7 +44,7 @@ public class PurgeEndpointActionParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeEndpointAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeEndpointActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
         MessageSelectorParser.doParse(element, beanDefinition);
@@ -66,5 +72,85 @@ public class PurgeEndpointActionParser implements BeanDefinitionParser {
         beanDefinition.addPropertyValue("endpoints", endpointRefs);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class PurgeEndpointActionFactoryBean extends AbstractTestActionFactoryBean<PurgeEndpointAction, PurgeEndpointAction.Builder> implements BeanFactoryAware {
+
+        private final PurgeEndpointAction.Builder builder = new PurgeEndpointAction.Builder();
+
+        @Override
+        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+            builder.beanFactory(beanFactory);
+        }
+
+        /**
+         * Sets the endpointNames.
+         * @param endpointNames the endpointNames to set
+         */
+        public void setEndpointNames(List<String> endpointNames) {
+            builder.endpointNames(endpointNames);
+        }
+
+        /**
+         * Sets the endpoints.
+         * @param endpoints the endpoints to set
+         */
+        public void setEndpoints(List<Endpoint> endpoints) {
+            builder.endpoints(endpoints);
+        }
+
+        /**
+         * Setter for messageSelector.
+         * @param messageSelectorMap
+         */
+        public void setMessageSelectorMap(Map<String, Object> messageSelectorMap) {
+            builder.selector(messageSelectorMap);
+        }
+
+        /**
+         * Set message selector string.
+         * @param messageSelector
+         */
+        public void setMessageSelector(String messageSelector) {
+            builder.selector(messageSelector);
+        }
+
+        /**
+         * Set the receive timeout.
+         * @param receiveTimeout the receiveTimeout to set
+         */
+        public void setReceiveTimeout(long receiveTimeout) {
+            builder.timeout(receiveTimeout);
+        }
+
+        /**
+         * Sets the sleepTime.
+         * @param sleepTime the sleepTime to set
+         */
+        public void setSleepTime(long sleepTime) {
+            builder.sleep(sleepTime);
+        }
+
+        @Override
+        public PurgeEndpointAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return PurgeEndpointAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public PurgeEndpointAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

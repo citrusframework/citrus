@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
@@ -31,9 +33,8 @@ import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -42,13 +43,13 @@ import static org.mockito.Mockito.*;
  */
 public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest {
     private MessageSelector messageSelector = Mockito.mock(MessageSelector.class);
-    
+
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
-    
+
     private MessageChannel channel1 = Mockito.mock(MessageChannel.class);
     private MessageChannel channel2 = Mockito.mock(MessageChannel.class);
     private MessageChannel channel3 = Mockito.mock(MessageChannel.class);
-    
+
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
 
     @Test
@@ -72,9 +73,10 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         PurgeMessageChannelAction action = (PurgeMessageChannelAction) test.getActions().get(0);
         Assert.assertEquals(action.getChannels().size(), 3);
         Assert.assertEquals(action.getChannels().toString(), "[" + channel1.toString() + ", " + channel2.toString() + ", " + channel3.toString() + "]");
-        Assert.assertNull(action.getMessageSelector());
+        Assert.assertNotNull(action.getMessageSelector());
+        Assert.assertEquals(action.getMessageSelector().getClass(), PurgeMessageChannelAction.AllAcceptingMessageSelector.class);
     }
-    
+
     @Test
     public void testPurgeChannelBuilderWithNames() {
         reset(applicationContextMock);
@@ -105,7 +107,7 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
 
     }
-    
+
     @Test
     public void testMissingChannelResolver() {
         reset(applicationContextMock);

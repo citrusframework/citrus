@@ -44,27 +44,27 @@ public class WaitParserTest extends AbstractActionParserTest<Wait> {
 
         Wait action = getNextTestActionFromTest();
         Condition condition = getFileCondition(filePath);
-        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
+        validateWaitAction(action, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
         action = getNextTestActionFromTest();
-        validateWaitAction(action, "10", DEFAULT_WAIT_TIME, "2000", condition);
+        validateWaitAction(action, "10000", "2000", condition);
 
         action = getNextTestActionFromTest();
         condition = getHttpCondition(httpUrl, DEFAULT_RESPONSE_CODE, DEFAULT_TIMEOUT);
-        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
+        validateWaitAction(action, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
         action = getNextTestActionFromTest();
         condition = getHttpCondition(httpUrl, "503", "2000");
         ((HttpCondition)condition).setMethod("GET");
-        validateWaitAction(action, null, "3000", DEFAULT_INTERVAL, condition);
+        validateWaitAction(action, "3000", DEFAULT_INTERVAL, condition);
 
         action = getNextTestActionFromTest();
         condition = getMessageCondition("request");
-        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
+        validateWaitAction(action, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
 
         action = getNextTestActionFromTest();
         condition = getActionCondition();
-        validateWaitAction(action, null, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
+        validateWaitAction(action, DEFAULT_WAIT_TIME, DEFAULT_INTERVAL, condition);
     }
 
     private Condition getFileCondition(String path) {
@@ -80,7 +80,7 @@ public class WaitParserTest extends AbstractActionParserTest<Wait> {
     }
 
     private Condition getActionCondition() {
-        return new ActionCondition(new EchoAction().setMessage("Citrus rocks!"));
+        return new ActionCondition(new EchoAction.Builder().message("Citrus rocks!").build());
     }
 
     private Condition getHttpCondition(String url, String responseCode, String timeout) {
@@ -91,9 +91,8 @@ public class WaitParserTest extends AbstractActionParserTest<Wait> {
         return condition;
     }
 
-    private void validateWaitAction(Wait action, String expectedSeconds, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
-        Assert.assertEquals(action.getSeconds(), expectedSeconds);
-        Assert.assertEquals(action.getMilliseconds(), expectedMilliseconds);
+    private void validateWaitAction(Wait action, String expectedMilliseconds, String expectedInterval, Condition expectedCondition) {
+        Assert.assertEquals(action.getTime(), expectedMilliseconds);
         Assert.assertEquals(action.getInterval(), expectedInterval);
 
         if (!(expectedCondition instanceof ActionCondition)) {
@@ -119,9 +118,9 @@ public class WaitParserTest extends AbstractActionParserTest<Wait> {
             Assert.assertEquals(condition.getMessageName(), ((MessageCondition) expectedCondition).getMessageName());
         } else if (expectedCondition instanceof ActionCondition) {
             ActionCondition condition = (ActionCondition) action.getCondition();
-            Assert.assertNull(condition);
-            Assert.assertEquals(action.getTestAction(0).getName(), ((ActionCondition) expectedCondition).getAction().getName());
-            Assert.assertEquals(((EchoAction) action.getTestAction(0)).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
+            Assert.assertNotNull(condition);
+            Assert.assertEquals(condition.getAction().getName(), ((ActionCondition) expectedCondition).getAction().getName());
+            Assert.assertEquals(((EchoAction) condition.getAction()).getMessage(), ((EchoAction)((ActionCondition) expectedCondition).getAction()).getMessage());
         }
     }
 }

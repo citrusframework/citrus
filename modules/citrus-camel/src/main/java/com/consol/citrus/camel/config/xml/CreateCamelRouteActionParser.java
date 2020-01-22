@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for creating Camel routes action in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
@@ -38,7 +38,43 @@ public class CreateCamelRouteActionParser extends AbstractCamelRouteActionParser
     }
 
     @Override
-    protected Class<?> getBeanDefinitionClass() {
-        return CreateCamelRouteAction.class;
+    protected Class<CreateCamelRouteActionFactoryBean> getBeanDefinitionClass() {
+        return CreateCamelRouteActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class CreateCamelRouteActionFactoryBean extends AbstractCamelRouteActionFactoryBean<CreateCamelRouteAction, CreateCamelRouteAction.Builder> {
+
+        private final CreateCamelRouteAction.Builder builder = new CreateCamelRouteAction.Builder();
+
+        /**
+         * Sets the routeContext.
+         *
+         * @param routeContext
+         */
+        public void setRouteContext(String routeContext) {
+            builder.routeContext(routeContext);
+        }
+
+        @Override
+        public CreateCamelRouteAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return CreateCamelRouteAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public CreateCamelRouteAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

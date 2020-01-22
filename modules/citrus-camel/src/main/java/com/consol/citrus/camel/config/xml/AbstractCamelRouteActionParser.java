@@ -16,8 +16,13 @@
 
 package com.consol.citrus.camel.config.xml;
 
+import java.util.List;
+
+import com.consol.citrus.camel.actions.AbstractCamelRouteAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
+import org.apache.camel.CamelContext;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
@@ -48,7 +53,7 @@ public abstract class AbstractCamelRouteActionParser implements BeanDefinitionPa
      * Subclasses provide bean definition class.
      * @return
      */
-    protected abstract Class<?> getBeanDefinitionClass();
+    protected abstract Class<? extends AbstractCamelRouteActionFactoryBean<?, ?>> getBeanDefinitionClass();
 
     /**
      * Subclass parsing logic.
@@ -57,4 +62,26 @@ public abstract class AbstractCamelRouteActionParser implements BeanDefinitionPa
      * @param parserContext
      */
     protected abstract void parse(BeanDefinitionBuilder beanDefinition, Element element, ParserContext parserContext);
+
+    /**
+     * Test action factory bean.
+     */
+    public static abstract class AbstractCamelRouteActionFactoryBean<T extends AbstractCamelRouteAction, B extends AbstractCamelRouteAction.Builder<?, ?>> extends AbstractTestActionFactoryBean<T, B> {
+        /**
+         * Sets the target Camel context.
+         * @param camelContext
+         */
+        public void setCamelContext(CamelContext camelContext) {
+            getBuilder().context(camelContext);
+        }
+
+        /**
+         * Sets the Camel routes.
+         * @param routeIds
+         */
+        public void setRouteIds(List<String> routeIds) {
+            getBuilder().routeIds(routeIds);
+        }
+
+    }
 }

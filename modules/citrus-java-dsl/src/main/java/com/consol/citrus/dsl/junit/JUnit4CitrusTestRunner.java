@@ -16,22 +16,67 @@
 
 package com.consol.citrus.dsl.junit;
 
-import com.consol.citrus.*;
-import com.consol.citrus.actions.*;
-import com.consol.citrus.container.*;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.*;
-import com.consol.citrus.dsl.runner.*;
-import com.consol.citrus.dsl.simulation.TestSimulator;
-import com.consol.citrus.junit.CitrusJUnit4Runner;
-import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.server.Server;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-
 import java.lang.reflect.Method;
 import java.util.Date;
+
+import com.consol.citrus.AbstractTestContainerBuilder;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.TestActionContainerBuilder;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.actions.AntRunAction;
+import com.consol.citrus.actions.CreateVariablesAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.actions.InputAction;
+import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.actions.PurgeEndpointAction;
+import com.consol.citrus.actions.PurgeMessageChannelAction;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.StartServerAction;
+import com.consol.citrus.actions.StopServerAction;
+import com.consol.citrus.actions.StopTimeAction;
+import com.consol.citrus.actions.StopTimerAction;
+import com.consol.citrus.actions.TraceVariablesAction;
+import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
+import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.container.Assert;
+import com.consol.citrus.container.Async;
+import com.consol.citrus.container.Catch;
+import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import com.consol.citrus.container.RepeatUntilTrue;
+import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.Template;
+import com.consol.citrus.container.Timer;
+import com.consol.citrus.container.Wait;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.container.FinallySequence;
+import com.consol.citrus.dsl.runner.ApplyTestBehaviorAction;
+import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.http.actions.HttpActionBuilder;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.junit.CitrusJUnit4Runner;
+import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
+import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
+import com.consol.citrus.server.Server;
+import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.actions.SoapActionBuilder;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JUnit Citrus test provides Java DSL access to builder pattern methods in
@@ -40,19 +85,13 @@ import java.util.Date;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunner, TestSimulator {
+public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunner {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
     private TestRunner testRunner;
-
-    @Override
-    public void simulate(Method method, TestContext context, ApplicationContext applicationContext) {
-        setApplicationContext(applicationContext);
-        testRunner = new TestRunnerSimulation(createTestRunner(new CitrusJUnit4Runner.CitrusFrameworkMethod(method, method.getName(), method.getDeclaringClass().getPackage().getName()), context).getTestCase(), applicationContext, context);
-    }
 
     @Override
     protected TestRunner createTestRunner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
@@ -126,278 +165,277 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public <T extends TestAction> T run(T testAction) {
+    public <T extends TestActionBuilder<?>> T run(T testAction) {
         return testRunner.run(testAction);
     }
 
     @Override
-    public ApplyTestBehaviorAction applyBehavior(com.consol.citrus.dsl.runner.TestBehavior behavior) {
+    public ApplyTestBehaviorAction.Builder applyBehavior(com.consol.citrus.dsl.runner.TestBehavior behavior) {
         return testRunner.applyBehavior(behavior);
     }
 
     @Override
-    public <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container) {
+    public <T extends AbstractActionContainer, B extends AbstractTestContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
         return testRunner.container(container);
     }
 
     @Override
-    public CreateVariablesAction createVariable(String variableName, String value) {
+    public <T extends TestActionContainerBuilder<? extends AbstractActionContainer, ?>> T container(T container) {
+        return testRunner.container(container);
+    }
+
+    @Override
+    public CreateVariablesAction.Builder createVariable(String variableName, String value) {
         return testRunner.createVariable(variableName, value);
     }
 
     @Override
-    public AntRunAction antrun(BuilderSupport<AntRunBuilder> configurer) {
+    public AntRunAction.Builder antrun(BuilderSupport<AntRunAction.Builder> configurer) {
         return testRunner.antrun(configurer);
     }
 
     @Override
-    public EchoAction echo(String message) {
+    public EchoAction.Builder echo(String message) {
         return testRunner.echo(message);
     }
 
     @Override
-    public ExecutePLSQLAction plsql(BuilderSupport<ExecutePLSQLBuilder> configurer) {
+    public ExecutePLSQLAction.Builder plsql(BuilderSupport<ExecutePLSQLAction.Builder> configurer) {
         return testRunner.plsql(configurer);
     }
 
     @Override
-    public ExecuteSQLAction sql(BuilderSupport<ExecuteSQLBuilder> configurer) {
+    public ExecuteSQLAction.Builder sql(BuilderSupport<ExecuteSQLAction.Builder> configurer) {
         return testRunner.sql(configurer);
     }
 
     @Override
-    public ExecuteSQLQueryAction query(BuilderSupport<ExecuteSQLQueryBuilder> configurer) {
+    public ExecuteSQLQueryAction.Builder query(BuilderSupport<ExecuteSQLQueryAction.Builder> configurer) {
         return testRunner.query(configurer);
     }
 
     @Override
-    public ReceiveTimeoutAction receiveTimeout(BuilderSupport<ReceiveTimeoutBuilder> configurer) {
+    public ReceiveTimeoutAction.Builder receiveTimeout(BuilderSupport<ReceiveTimeoutAction.Builder> configurer) {
         return testRunner.receiveTimeout(configurer);
     }
 
     @Override
-    public FailAction fail(String message) {
+    public FailAction.Builder fail(String message) {
         return testRunner.fail(message);
     }
 
     @Override
-    public InputAction input(BuilderSupport<InputActionBuilder> configurer) {
+    public InputAction.Builder input(BuilderSupport<InputAction.Builder> configurer) {
         return testRunner.input(configurer);
     }
 
     @Override
-    public LoadPropertiesAction load(String filePath) {
+    public LoadPropertiesAction.Builder load(String filePath) {
         return testRunner.load(filePath);
     }
 
     @Override
-    public TestAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer) {
+    public PurgeJmsQueuesAction.Builder purgeQueues(BuilderSupport<PurgeJmsQueuesAction.Builder> configurer) {
         return testRunner.purgeQueues(configurer);
     }
 
     @Override
-    public PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer) {
+    public PurgeMessageChannelAction.Builder purgeChannels(BuilderSupport<PurgeMessageChannelAction.Builder> configurer) {
         return testRunner.purgeChannels(configurer);
     }
 
     @Override
-    public PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer) {
+    public PurgeEndpointAction.Builder purgeEndpoints(BuilderSupport<PurgeEndpointAction.Builder> configurer) {
         return testRunner.purgeEndpoints(configurer);
     }
 
     @Override
-    public ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer) {
+    public ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer) {
         return testRunner.receive(configurer);
     }
 
     @Override
-    public SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer) {
+    public SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer) {
         return testRunner.send(configurer);
     }
 
     @Override
-    public SleepAction sleep() {
+    public SleepAction.Builder sleep() {
         return testRunner.sleep();
     }
 
     @Override
-    public SleepAction sleep(long milliseconds) {
+    public SleepAction.Builder sleep(long milliseconds) {
         return testRunner.sleep(milliseconds);
     }
 
     @Override
-    @Deprecated
-    public Wait waitFor(BuilderSupport<WaitBuilder> configurer) {
-        return testRunner.waitFor(configurer);
-    }
-
-    @Override
-    public WaitBuilder waitFor() {
+    public Wait.Builder waitFor() {
         return testRunner.waitFor();
     }
 
     @Override
-    public StartServerAction start(Server... servers) {
+    public StartServerAction.Builder start(Server... servers) {
         return testRunner.start(servers);
     }
 
     @Override
-    public StartServerAction start(Server server) {
+    public StartServerAction.Builder start(Server server) {
         return testRunner.start(server);
     }
 
     @Override
-    public StopServerAction stop(Server... servers) {
+    public StopServerAction.Builder stop(Server... servers) {
         return testRunner.stop(servers);
     }
 
     @Override
-    public StopServerAction stop(Server server) {
+    public StopServerAction.Builder stop(Server server) {
         return testRunner.stop(server);
     }
 
     @Override
-    public StopTimeAction stopTime() {
+    public StopTimeAction.Builder stopTime() {
         return testRunner.stopTime();
     }
 
     @Override
-    public StopTimeAction stopTime(String id) {
+    public StopTimeAction.Builder stopTime(String id) {
         return testRunner.stopTime(id);
     }
 
     @Override
-    public StopTimeAction stopTime(String id, String suffix) {
+    public StopTimeAction.Builder stopTime(String id, String suffix) {
         return testRunner.stopTime(id, suffix);
     }
 
     @Override
-    public TraceVariablesAction traceVariables() {
+    public TraceVariablesAction.Builder traceVariables() {
         return testRunner.traceVariables();
     }
 
     @Override
-    public TraceVariablesAction traceVariables(String... variables) {
+    public TraceVariablesAction.Builder traceVariables(String... variables) {
         return testRunner.traceVariables(variables);
     }
 
     @Override
-    public GroovyAction groovy(BuilderSupport<GroovyActionBuilder> configurer) {
+    public GroovyAction.Builder groovy(BuilderSupport<GroovyAction.Builder> configurer) {
         return testRunner.groovy(configurer);
     }
 
     @Override
-    public TransformAction transform(BuilderSupport<TransformActionBuilder> configurer) {
+    public TransformAction.Builder transform(BuilderSupport<TransformAction.Builder> configurer) {
         return testRunner.transform(configurer);
     }
 
     @Override
-    public AssertExceptionBuilder assertException() {
+    public Assert.Builder assertException() {
         return testRunner.assertException();
     }
 
     @Override
-    public CatchExceptionBuilder catchException() {
+    public Catch.Builder catchException() {
         return testRunner.catchException();
     }
 
     @Override
-    public AssertSoapFaultBuilder assertSoapFault() {
+    public AssertSoapFault.Builder assertSoapFault() {
         return testRunner.assertSoapFault();
     }
 
     @Override
-    public ConditionalBuilder conditional() {
+    public Conditional.Builder conditional() {
         return testRunner.conditional();
     }
 
     @Override
-    public IterateBuilder iterate() {
+    public Iterate.Builder iterate() {
         return testRunner.iterate();
     }
 
     @Override
-    public ParallelBuilder parallel() {
+    public Parallel.Builder parallel() {
         return testRunner.parallel();
     }
 
     @Override
-    public RepeatOnErrorBuilder repeatOnError() {
+    public RepeatOnErrorUntilTrue.Builder repeatOnError() {
         return testRunner.repeatOnError();
     }
 
     @Override
-    public RepeatBuilder repeat() {
+    public RepeatUntilTrue.Builder repeat() {
         return testRunner.repeat();
     }
 
     @Override
-    public SequenceBuilder sequential() {
+    public Sequence.Builder sequential() {
         return testRunner.sequential();
     }
 
     @Override
-    public AsyncBuilder async() {
+    public Async.Builder async() {
         return testRunner.async();
     }
 
     @Override
-    public TimerBuilder timer() {
+    public Timer.Builder timer() {
         return testRunner.timer();
     }
 
     @Override
-    public StopTimerAction stopTimer(String timerId) {
+    public StopTimerAction.Builder stopTimer(String timerId) {
         return testRunner.stopTimer(timerId);
     }
 
     @Override
-    public StopTimerAction stopTimers() {
+    public StopTimerAction.Builder stopTimers() {
         return testRunner.stopTimers();
     }
 
     @Override
-    public TestAction docker(BuilderSupport<DockerActionBuilder> configurer) {
+    public DockerExecuteAction.Builder docker(BuilderSupport<DockerExecuteAction.Builder> configurer) {
         return testRunner.docker(configurer);
     }
 
     @Override
-    public TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer) {
+    public KubernetesExecuteAction.Builder kubernetes(BuilderSupport<KubernetesExecuteAction.Builder> configurer) {
         return testRunner.kubernetes(configurer);
     }
 
     @Override
-    public TestAction selenium(BuilderSupport<SeleniumActionBuilder> configurer) {
+    public SeleniumActionBuilder selenium(BuilderSupport<SeleniumActionBuilder> configurer) {
         return testRunner.selenium(configurer);
     }
 
     @Override
-    public TestAction http(BuilderSupport<HttpActionBuilder> configurer) {
+    public HttpActionBuilder http(BuilderSupport<HttpActionBuilder> configurer) {
         return testRunner.http(configurer);
     }
 
     @Override
-    public TestAction soap(BuilderSupport<SoapActionBuilder> configurer) {
+    public SoapActionBuilder soap(BuilderSupport<SoapActionBuilder> configurer) {
         return testRunner.soap(configurer);
     }
 
     @Override
-    public TestAction camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
+    public CamelRouteActionBuilder camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         return testRunner.camel(configurer);
     }
 
     @Override
-    public TestAction zookeeper(BuilderSupport<ZooActionBuilder> configurer) {
+    public ZooExecuteAction.Builder zookeeper(BuilderSupport<ZooExecuteAction.Builder> configurer) {
         return testRunner.zookeeper(configurer);
     }
 
     @Override
-    public Template applyTemplate(BuilderSupport<TemplateBuilder> configurer) {
+    public Template.Builder applyTemplate(BuilderSupport<Template.Builder> configurer) {
         return testRunner.applyTemplate(configurer);
     }
 
     @Override
-    public FinallySequenceBuilder doFinally() {
+    public FinallySequence.Builder doFinally() {
         return testRunner.doFinally();
     }
 }

@@ -16,37 +16,31 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Action fails the test explicitly. User can specify a cause message.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class FailAction extends AbstractTestAction {
     /** User defined cause message to explain the error */
-    private String message = "Generated error to interrupt test execution";
+    private final String message;
 
     /**
      * Default constructor.
      */
-    public FailAction() {
-        setName("fail");
+    public FailAction(Builder builder) {
+        super("fail", builder);
+
+        this.message = builder.message;
     }
 
     @Override
     public void doExecute(TestContext context) {
         throw new CitrusRuntimeException(context.replaceDynamicContentInString(message));
-    }
-    
-    /**
-     * Setter for user defined cause message.
-     * @param message
-     */
-    public FailAction setMessage(String message) {
-        this.message = message;
-        return this;
     }
 
     /**
@@ -55,5 +49,34 @@ public class FailAction extends AbstractTestAction {
      */
     public String getMessage() {
         return message;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<FailAction, FailAction.Builder> {
+
+        private String message = "Generated error to interrupt test execution";
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param message
+         * @return
+         */
+        public static FailAction.Builder fail(String message) {
+            FailAction.Builder builder = new FailAction.Builder();
+            builder.message(message);
+            return builder;
+        }
+
+        public FailAction.Builder message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        @Override
+        public FailAction build() {
+            return new FailAction(this);
+        }
     }
 }

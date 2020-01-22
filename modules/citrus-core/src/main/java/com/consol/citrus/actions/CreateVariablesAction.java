@@ -16,14 +16,15 @@
 
 package com.consol.citrus.actions;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  * Action creating new test variables during a test. Existing test variables are overwritten
@@ -35,7 +36,7 @@ import java.util.Map.Entry;
 public class CreateVariablesAction extends AbstractTestAction {
 
     /** New variables to set */
-    private Map<String, String> variables = new LinkedHashMap<String, String>();
+    private final Map<String, String> variables;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CreateVariablesAction.class);
@@ -43,8 +44,10 @@ public class CreateVariablesAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public CreateVariablesAction() {
-        setName("create-variables");
+    private CreateVariablesAction(Builder builder) {
+        super("create-variables", builder);
+
+        this.variables = builder.variables;
     }
 
     @Override
@@ -69,20 +72,39 @@ public class CreateVariablesAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for variables
-     * @param variables
-     */
-    public CreateVariablesAction setVariables(Map<String, String> variables) {
-        this.variables = variables;
-        return this;
-    }
-
-    /**
      * Gets the variables.
      * @return the variables
      */
     public Map<String, String> getVariables() {
         return variables;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<CreateVariablesAction, Builder> {
+
+        private Map<String, String> variables = new LinkedHashMap<>();
+
+        public static Builder createVariables(String variableName, String value) {
+            Builder builder = new Builder();
+            builder.variable(variableName, value);
+            return builder;
+        }
+
+        public static Builder createVariables() {
+            return new Builder();
+        }
+
+        public Builder variable(String variableName, String value) {
+            this.variables.put(variableName, value);
+            return this;
+        }
+
+        @Override
+        public CreateVariablesAction build() {
+            return new CreateVariablesAction(this);
+        }
     }
 
 }

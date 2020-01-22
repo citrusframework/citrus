@@ -16,7 +16,11 @@
 
 package com.consol.citrus.selenium.actions;
 
-import com.consol.citrus.selenium.endpoint.*;
+import java.net.URL;
+
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -27,9 +31,12 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.net.URL;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -42,14 +49,9 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Navigation navigation = Mockito.mock(WebDriver.Navigation.class);
 
-    private StartBrowserAction action;
-
     @BeforeMethod
     public void setup() {
         reset(seleniumBrowser, seleniumBrowserConfiguration, webDriver, navigation);
-
-        action =  new StartBrowserAction();
-        action.setBrowser(seleniumBrowser);
 
         when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
         when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
@@ -62,6 +64,9 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     public void testStart() throws Exception {
         when(seleniumBrowser.isStarted()).thenReturn(false);
 
+        StartBrowserAction action =  new StartBrowserAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(seleniumBrowser, context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
@@ -82,6 +87,9 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
             }
         }).when(navigation).to(any(URL.class));
 
+        StartBrowserAction action =  new StartBrowserAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(seleniumBrowser, context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
@@ -94,6 +102,9 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     public void testStartAlreadyStarted() throws Exception {
         when(seleniumBrowser.isStarted()).thenReturn(true);
 
+        StartBrowserAction action =  new StartBrowserAction.Builder()
+                .browser(seleniumBrowser)
+                .build();
         action.execute(seleniumBrowser, context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");
@@ -106,7 +117,10 @@ public class StartBrowserActionTest extends AbstractTestNGUnitTest {
     public void testStartAlreadyStartedNotAllowed() throws Exception {
         when(seleniumBrowser.isStarted()).thenReturn(true);
 
-        action.setAllowAlreadyStarted(false);
+        StartBrowserAction action =  new StartBrowserAction.Builder()
+                .browser(seleniumBrowser)
+                .allowAlreadyStarted(false)
+                .build();
         action.execute(seleniumBrowser, context);
 
         Assert.assertEquals(context.getVariable(SeleniumHeaders.SELENIUM_BROWSER), "ChromeBrowser");

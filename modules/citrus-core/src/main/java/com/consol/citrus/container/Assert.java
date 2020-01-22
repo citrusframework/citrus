@@ -16,7 +16,12 @@
 
 package com.consol.citrus.container;
 
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.AbstractExceptionContainerBuilder;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -24,33 +29,35 @@ import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * Assert exception to happen in nested test action.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2009
  */
 public class Assert extends AbstractActionContainer {
 
     /** Nested test action */
-    private TestAction action;
+    private final TestActionBuilder<?> action;
 
     /** Asserted exception */
-    private Class<? extends Throwable> exception = CitrusRuntimeException.class;
+    private final Class<? extends Throwable> exception;
 
     /** Localized exception message for control */
-    private String message = null;
-    
+    private final String message;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(Assert.class);
 
     /**
      * Default constructor.
      */
-    public Assert() {
-        setName("assert");
+    public Assert(Builder builder) {
+        super("assert", builder);
+
+        this.action = builder.action;
+        this.exception = builder.exception;
+        this.message = builder.message;
     }
 
     @Override
@@ -60,21 +67,22 @@ public class Assert extends AbstractActionContainer {
         }
 
         try {
+            TestAction action = this.action.build();
             setActiveAction(action);
             action.execute(context);
         } catch (Exception e) {
             log.debug("Validating caught exception ...");
-            
+
             if (!exception.isAssignableFrom(e.getClass())) {
-                throw new ValidationException("Validation failed for asserted exception type - expected: '" + 
+                throw new ValidationException("Validation failed for asserted exception type - expected: '" +
                         exception + "' but was: '" + e.getClass().getName() + "'", e);
-            }    
-            
+            }
+
             if (message != null) {
                 if (ValidationMatcherUtils.isValidationMatcherExpression(message)) {
                     ValidationMatcherUtils.resolveValidationMatcher("message", e.getLocalizedMessage(), message, context);
                 } else if (!context.replaceDynamicContentInString(message).equals(e.getLocalizedMessage())) {
-                    throw new ValidationException("Validation failed for asserted exception message - expected: '" + 
+                    throw new ValidationException("Validation failed for asserted exception message - expected: '" +
                         message + "' but was: '" + e.getLocalizedMessage() + "'", e);
                 }
             }
@@ -90,27 +98,11 @@ public class Assert extends AbstractActionContainer {
     }
 
     /**
-     * Set the nested test action.
-     * @param action the action to set
-     */
-    public void setAction(TestAction action) {
-        addTestAction(action);
-    }
-    
-    /**
      * Gets the action.
      * @return the action
      */
     public TestAction getAction() {
-        return action;
-    }
-
-    /**
-     * Set the message to send.
-     * @param message the message to set
-     */
-    public void setMessage(String message) {
-        this.message = message;
+        return action.build();
     }
 
     /**
@@ -120,7 +112,7 @@ public class Assert extends AbstractActionContainer {
     public String getMessage() {
         return message;
     }
-    
+
     /**
      * Gets the exception.
      * @return the exception
@@ -129,39 +121,77 @@ public class Assert extends AbstractActionContainer {
         return exception;
     }
 
-    /**
-     * Sets the exception.
-     * @param exception the exception to set
-     */
-    public void setException(Class<? extends Throwable> exception) {
-        this.exception = exception;
-    }
-
-    @Override
-    public Assert addTestAction(TestAction action) {
-        this.action = action;
-        super.addTestAction(action);
-        return this;
-    }
-
     @Override
     public TestAction getTestAction(int index) {
-        if (index == 0) {
-            return action;
-        } else {
-            throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
-        }
+        return getAction();
     }
 
     @Override
-    public Assert setActions(List<TestAction> actions) {
-        if (actions.size() > 1) {
-            throw new CitrusRuntimeException("Invalid number of nested test actions - only one single nested action is allowed");
+    public List<TestAction> getActions() {
+        return Collections.singletonList(getAction());
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractExceptionContainerBuilder<Assert, Builder> {
+
+        private TestActionBuilder<?> action;
+        private Class<? extends Throwable> exception = CitrusRuntimeException.class;
+        private String message;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder assertException() {
+            return new Builder();
         }
 
-        action = actions.get(0);
-        super.setActions(actions);
-        return this;
+        @Override
+        public Builder actions(TestActionBuilder<?>... actions) {
+            this.action = actions[0];
+            return super.actions(actions[0]);
+        }
+
+        /**
+         * Catch exception type during execution.
+         * @param exception
+         * @return
+         */
+        public Builder exception(Class<? extends Throwable> exception) {
+            this.exception = exception;
+            return this;
+        }
+
+        /**
+         * Expect error message in exception.
+         * @param message
+         */
+        public Builder message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        /**
+         * Sets the test action to execute during assert.
+         * @param action
+         */
+        public Builder action(TestAction action) {
+            return action(() -> action);
+        }
+
+        /**
+         * Sets the test action to execute during assert.
+         */
+        public Builder action(TestActionBuilder<?> builder) {
+            return actions(builder);
+        }
+
+        @Override
+        public Assert build() {
+            return super.build(new Assert(this));
+        }
     }
 
 }

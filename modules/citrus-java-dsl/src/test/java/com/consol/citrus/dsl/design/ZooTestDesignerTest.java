@@ -17,10 +17,15 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.dsl.builder.ZooActionBuilder;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
-import com.consol.citrus.zookeeper.command.*;
+import com.consol.citrus.zookeeper.command.AbstractZooCommand;
+import com.consol.citrus.zookeeper.command.Create;
+import com.consol.citrus.zookeeper.command.Delete;
+import com.consol.citrus.zookeeper.command.Exists;
+import com.consol.citrus.zookeeper.command.GetChildren;
+import com.consol.citrus.zookeeper.command.GetData;
+import com.consol.citrus.zookeeper.command.SetData;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -71,8 +76,8 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCommand().getClass(), Create.class);
         Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.PATH), path);
         Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.DATA), data);
-        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.ACL), ZooActionBuilder.DEFAULT_ACL);
-        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.MODE), ZooActionBuilder.DEFAULT_MODE);
+        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.ACL), ZooExecuteAction.Builder.DEFAULT_ACL);
+        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.MODE), ZooExecuteAction.Builder.DEFAULT_MODE);
 
         action = (ZooExecuteAction) test.getActions().get(2);
         Assert.assertEquals(action.getName(), actionName);
@@ -86,7 +91,7 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), actionName);
         Assert.assertEquals(action.getCommand().getClass(), Delete.class);
         Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.PATH), path);
-        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.VERSION), ZooActionBuilder.DEFAULT_VERSION);
+        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.VERSION), ZooExecuteAction.Builder.DEFAULT_VERSION);
 
         action = (ZooExecuteAction) test.getActions().get(4);
         Assert.assertEquals(action.getName(), actionName);
@@ -109,7 +114,7 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getCommand().getClass(), SetData.class);
         Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.PATH), path);
         Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.DATA), data);
-        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.VERSION), ZooActionBuilder.DEFAULT_VERSION);
+        Assert.assertEquals(action.getCommand().getParameters().get(AbstractZooCommand.VERSION), ZooExecuteAction.Builder.DEFAULT_VERSION);
 
         action = (ZooExecuteAction) test.getActions().get(8);
         Assert.assertEquals(action.getName(), actionName);

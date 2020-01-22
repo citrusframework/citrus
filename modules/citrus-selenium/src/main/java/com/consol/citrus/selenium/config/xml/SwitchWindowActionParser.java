@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.SwitchWindowAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -35,7 +34,42 @@ public class SwitchWindowActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return SwitchWindowAction.class;
+    protected Class<SwitchWindowActionFactoryBean> getBrowserActionClass() {
+        return SwitchWindowActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class SwitchWindowActionFactoryBean extends AbstractSeleniumActionFactoryBean<SwitchWindowAction, SwitchWindowAction.Builder> {
+
+        private final SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder();
+
+        /**
+         * Sets the windowName.
+         * @param windowName
+         */
+        public void setWindowName(String windowName) {
+            builder.window(windowName);
+        }
+
+        @Override
+        public SwitchWindowAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return SwitchWindowAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public SwitchWindowAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

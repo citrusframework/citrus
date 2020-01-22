@@ -35,16 +35,19 @@ import org.springframework.util.StringUtils;
 public class AlertAction extends AbstractSeleniumAction {
 
     /** Accept or dismiss dialog */
-    private boolean accept = true;
+    private final boolean accept;
 
     /** Optional dialog text validation */
-    private String text;
+    private final String text;
 
     /**
      * Default constructor.
      */
-    public AlertAction() {
-        super("alert");
+    public AlertAction(Builder builder) {
+        super("alert", builder);
+
+        this.accept = builder.accept;
+        this.text = builder.text;
     }
 
     @Override
@@ -89,15 +92,6 @@ public class AlertAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the accept.
-     *
-     * @param accept
-     */
-    public void setAccept(boolean accept) {
-        this.accept = accept;
-    }
-
-    /**
      * Gets the text.
      *
      * @return
@@ -107,11 +101,44 @@ public class AlertAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the text.
-     *
-     * @param text
+     * Action builder.
      */
-    public void setText(String text) {
-        this.text = text;
+    public static class Builder extends AbstractSeleniumAction.Builder<AlertAction, Builder> {
+
+        private boolean accept = true;
+        private String text;
+
+        /**
+         * Add alert text validation.
+         * @param text
+         * @return
+         */
+        public Builder text(String text) {
+            this.text = text;
+            return this;
+        }
+
+        /**
+         * Accept alert dialog.
+         * @return
+         */
+        public Builder accept() {
+            this.accept = true;
+            return this;
+        }
+
+        /**
+         * Dismiss alert dialog.
+         * @return
+         */
+        public Builder dismiss() {
+            this.accept = false;
+            return this;
+        }
+
+        @Override
+        public AlertAction build() {
+            return new AlertAction(this);
+        }
     }
 }

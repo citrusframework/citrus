@@ -33,8 +33,8 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Default constructor.
      */
-    public StartCamelRouteAction() {
-        setName("start-routes");
+    public StartCamelRouteAction(Builder builder) {
+        super("start-routes", builder);
     }
 
     @Override
@@ -48,6 +48,16 @@ public class StartCamelRouteAction extends AbstractCamelRouteAction {
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to start Camel route: " + route, e);
             }
+        }
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractCamelRouteAction.Builder<StartCamelRouteAction, Builder> {
+        @Override
+        public StartCamelRouteAction build() {
+            return new StartCamelRouteAction(this);
         }
     }
 }

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.javadsl.design;
 
+import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.builder.AbstractTestContainerBuilder;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import org.testng.annotations.Test;
 
@@ -39,11 +39,11 @@ public class CustomContainerJavaIT extends TestNGCitrusTestDesigner {
         );
     }
 
-    public AbstractTestContainerBuilder<ReverseActionContainer> reverse() {
+    public TestActionContainerBuilder<ReverseActionContainer, ?> reverse() {
         return container(new ReverseActionContainer());
     }
 
-    private class ReverseActionContainer extends AbstractActionContainer {
+    private static class ReverseActionContainer extends AbstractActionContainer {
         @Override
         public void doExecute(TestContext context) {
             for (int i = getActions().size(); i > 0; i--) {

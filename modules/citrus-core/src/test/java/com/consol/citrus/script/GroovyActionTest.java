@@ -26,39 +26,41 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Christoph Deppisch
  */
 public class GroovyActionTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testScript() {
-        GroovyAction bean = new GroovyAction();
-        bean.setScript("println 'Hello TestFramework!'");
+        GroovyAction bean = new GroovyAction.Builder()
+                .script("println 'Hello TestFramework!'")
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testScriptResource() {
-        GroovyAction bean = new GroovyAction();
-        bean.setScriptResourcePath("classpath:com/consol/citrus/script/example.groovy");
+        GroovyAction bean = new GroovyAction.Builder()
+                .scriptResourcePath("classpath:com/consol/citrus/script/example.groovy")
+                .build();
         bean.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testScriptFailure() {
-        GroovyAction bean = new GroovyAction();
-        bean.setScript("Some wrong script");
+        GroovyAction bean = new GroovyAction.Builder()
+                .script("Some wrong script")
+                .build();
         bean.execute(context);
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testScriptResourceNotFound() {
-        GroovyAction bean = new GroovyAction();
-        bean.setScriptResourcePath("file:some/wrong/path/test.groovy");
+        GroovyAction bean = new GroovyAction.Builder()
+                .scriptResourcePath("file:some/wrong/path/test.groovy")
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testCustomScriptExecutorImplementation() {
-        GroovyAction bean = new GroovyAction();
-        
         String script = "import com.consol.citrus.*\n" +
         		"import com.consol.citrus.variable.*\n" +
         		"import com.consol.citrus.context.TestContext\n" +
@@ -68,61 +70,61 @@ public class GroovyActionTest extends AbstractTestNGUnitTest {
         		    "context.setVariable('text', 'Script with class definition test successful.')\n" +
         		    "println context.getVariable('text')\n" +
         		"}}";
-        
-        bean.setScript(script);
+
+        GroovyAction bean = new GroovyAction.Builder()
+                .script(script)
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testCustomClassImplementation() {
-        GroovyAction bean = new GroovyAction();
-        
         String script = "public class CustomClass {\n" +
                 "public void run() {\n" +
                     "println 'Just executed custom class implementation'\n" +
                 "}}";
-        
-        bean.setScript(script);
+
+        GroovyAction bean = new GroovyAction.Builder()
+                .script(script)
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testNoScriptTemplate() {
-        GroovyAction bean = new GroovyAction();
-        
-        bean.setUseScriptTemplate(false);
-        
         String script = "println 'Just executed pure groovy code'";
-        
-        bean.setScript(script);
+        GroovyAction bean = new GroovyAction.Builder()
+                .useScriptTemplate(false)
+                .script(script)
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testAutomaticScriptExecutorWrapper() {
-        GroovyAction bean = new GroovyAction();
-        bean.setScript("context.setVariable('text', 'Automatic script wrapping works!')\n" +
-        		       "println context.getVariable('text')");
+        GroovyAction bean = new GroovyAction.Builder()
+                .script("context.setVariable('text', 'Automatic script wrapping works!')\n" +
+        		       "println context.getVariable('text')")
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testCustomScriptTemplate() {
-        GroovyAction bean = new GroovyAction();
-        
-        bean.setScriptTemplatePath("classpath:com/consol/citrus/script/custom-script-template.groovy");
-        
-        bean.setScript("Assert.assertEquals(context.getVariable('scriptTemplateVar'), 'It works!')");
+        GroovyAction bean = new GroovyAction.Builder()
+                .template("classpath:com/consol/citrus/script/custom-script-template.groovy")
+                .script("Assert.assertEquals(context.getVariable('scriptTemplateVar'), 'It works!')")
+                .build();
         bean.execute(context);
     }
-    
+
     @Test
     public void testInvalidScriptTemplate() {
-        GroovyAction bean = new GroovyAction();
-        
-        bean.setScriptTemplatePath("classpath:com/consol/citrus/script/invalid-script-template.groovy");
-        bean.setScript("println 'This should not work!'");
-        
+        GroovyAction bean = new GroovyAction.Builder()
+                .template("classpath:com/consol/citrus/script/invalid-script-template.groovy")
+                .script("println 'This should not work!'")
+                .build();
+
         try {
             bean.execute(context);
             Assert.fail("Missing exception because of invalid script template");

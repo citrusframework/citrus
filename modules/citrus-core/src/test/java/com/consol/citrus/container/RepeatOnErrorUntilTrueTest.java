@@ -18,17 +18,16 @@ package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.FailAction;
-import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
 import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Christoph Deppisch
@@ -39,15 +38,13 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
 
     @Test(dataProvider = "expressionProvider")
     public void testSuccessOnFirstIteration(String expression) {
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
-
         reset(action);
 
-        repeat.setActions(Collections.singletonList(action));
-
-        repeat.setIndexName("i");
-        repeat.setCondition(expression);
-
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
+                .condition(expression)
+                .index("i")
+                .actions(() -> action)
+                .build();
         repeat.execute(context);
         verify(action).execute(context);
     }
@@ -60,69 +57,45 @@ public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
                 new Object[] {"@assertThat('${i}', 'is(5)')@"}
         };
     }
-    
+
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testRepeatOnErrorNoSuccess() {
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
-        
-        List<TestAction> actions = new ArrayList<>();
-
         reset(action);
 
-        actions.add(action);
-        actions.add(new FailAction());
-
-        repeat.setActions(actions);
-
-        repeat.setIndexName("i");
-        repeat.setCondition("i = 5");
-        repeat.setAutoSleep(0L);
-
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
+                .condition("i = 5")
+                .index("i")
+                .autoSleep(0L)
+                .actions(() -> action, new FailAction.Builder())
+                .build();
         repeat.execute(context);
         verify(action, times(4)).execute(context);
     }
 
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testRepeatOnErrorNoSuccessConditionExpression() {
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
-
-        List<TestAction> actions = new ArrayList<>();
-
         reset(action);
 
-        actions.add(action);
-        actions.add(new FailAction());
-
-        repeat.setActions(actions);
-
-        repeat.setConditionExpression(new IteratingConditionExpression() {
-            @Override
-            public boolean evaluate(int index, TestContext context) {
-                return index == 5;
-            }
-        });
-        repeat.setAutoSleep(0L);
-
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
+                .condition((index, context) -> index == 5)
+                .index("i")
+                .autoSleep(0L)
+                .actions(() -> action, new FailAction.Builder())
+                .build();
         repeat.execute(context);
         verify(action, times(4)).execute(context);
     }
 
     @Test(expectedExceptions=CitrusRuntimeException.class)
     public void testRepeatOnErrorNoSuccessHamcrestConditionExpression() {
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue();
-
-        List<TestAction> actions = new ArrayList<>();
-
         reset(action);
 
-        actions.add(action);
-        actions.add(new FailAction());
-
-        repeat.setActions(actions);
-
-        repeat.setConditionExpression(new HamcrestConditionExpression(is(5)));
-        repeat.setAutoSleep(0L);
-
+        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
+                .condition(new HamcrestConditionExpression(is(5)))
+                .index("i")
+                .autoSleep(0L)
+                .actions(() -> action, new FailAction.Builder())
+                .build();
         repeat.execute(context);
         verify(action, times(4)).execute(context);
     }

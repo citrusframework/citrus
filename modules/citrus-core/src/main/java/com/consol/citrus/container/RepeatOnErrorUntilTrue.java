@@ -16,26 +16,27 @@
 
 package com.consol.citrus.container;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import com.consol.citrus.AbstractIteratingContainerBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.hamcrest.Matcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Looping test container iterating the nested test actions in case an error occurred in one
  * of them. Iteration continues until a aborting condition evaluates to true.
- * 
+ *
  * Number of iterations is kept in a index variable. The nested test actions can access this variable
  * as normal test variable.
- * 
+ *
  * Between the iterations container can sleep automatically a given amount of time.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     /** Auto sleep in milliseconds */
-    private Long autoSleep = 1000L;
+    private final Long autoSleep;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(RepeatOnErrorUntilTrue.class);
@@ -43,14 +44,12 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     /**
      * Default constructor.
      */
-    public RepeatOnErrorUntilTrue() {
-        setName("repeat-on-error");
+    public RepeatOnErrorUntilTrue(Builder builder) {
+        super("repeat-on-error", builder);
+
+        this.autoSleep = builder.autoSleep;
     }
 
-    /**
-     * @see AbstractIteratingActionContainer#executeIteration(com.consol.citrus.context.TestContext)
-     * @throws CitrusRuntimeException
-     */
     @Override
     public void executeIteration(TestContext context) {
         CitrusRuntimeException exception = null;
@@ -95,18 +94,71 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
     }
 
     /**
-     * Setter for auto sleep time (in milliseconds).
-     * @param autoSleep
-     */
-    public void setAutoSleep(Long autoSleep) {
-        this.autoSleep = autoSleep;
-    }
-
-    /**
      * Gets the autoSleep.
      * @return the autoSleep
      */
     public Long getAutoSleep() {
         return autoSleep;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractIteratingContainerBuilder<RepeatOnErrorUntilTrue, Builder> {
+
+        private Long autoSleep = 1000L;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder repeatOnError() {
+            return new Builder();
+        }
+
+        /**
+         * Adds a condition to this iterate container.
+         * @param condition
+         * @return
+         */
+        public Builder until(String condition) {
+            condition(condition);
+            return this;
+        }
+
+        /**
+         * Adds a condition expression to this iterate container.
+         * @param condition
+         * @return
+         */
+        public Builder until(IteratingConditionExpression condition) {
+            condition(condition);
+            return this;
+        }
+
+        /**
+         * Adds a Hamcrest condition expression to this iterate container.
+         * @param conditionMatcher
+         * @return
+         */
+        public Builder until(Matcher conditionMatcher) {
+            condition(new HamcrestConditionExpression(conditionMatcher));
+            return this;
+        }
+
+        /**
+         * Sets the auto sleep time in between repeats in milliseconds.
+         * @param autoSleepInMillis
+         * @return
+         */
+        public Builder autoSleep(long autoSleepInMillis) {
+            this.autoSleep = autoSleepInMillis;
+            return this;
+        }
+
+        @Override
+        public RepeatOnErrorUntilTrue build() {
+            return super.build(new RepeatOnErrorUntilTrue(this));
+        }
     }
 }

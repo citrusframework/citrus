@@ -16,7 +16,6 @@
 
 package com.consol.citrus.selenium.config.xml;
 
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.ClickAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -34,7 +33,34 @@ public class ClickActionParser extends FindElementActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return ClickAction.class;
+    protected Class<ClickActionFactoryBean> getBrowserActionClass() {
+        return ClickActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class ClickActionFactoryBean extends ElementActionFactoryBean<ClickAction, ClickAction.Builder> {
+
+        private final ClickAction.Builder builder = new ClickAction.Builder();
+
+        @Override
+        public ClickAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ClickAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ClickAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

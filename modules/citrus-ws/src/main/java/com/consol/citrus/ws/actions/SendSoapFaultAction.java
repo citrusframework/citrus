@@ -16,15 +16,24 @@
 
 package com.consol.citrus.ws.actions;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.message.*;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.ws.message.SoapAttachment;
+import com.consol.citrus.ws.message.SoapFault;
+import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -33,19 +42,29 @@ import java.util.*;
 public class SendSoapFaultAction extends SendSoapMessageAction {
 
     /** Fault code as QName string */
-    private String faultCode;
+    private final String faultCode;
 
     /** Fault reason string describing the fault */
-    private String faultString;
+    private final String faultString;
 
     /** Optional fault actor */
-    private String faultActor;
+    private final String faultActor;
 
     /** List of fault detail contents */
-    private List<String> faultDetails = new ArrayList<>();
+    private final List<String> faultDetails;
 
     /** List of fault detail resource paths */
-    private List<String> faultDetailResourcePaths = new ArrayList<>();
+    private final List<String> faultDetailResourcePaths;
+
+    public SendSoapFaultAction(Builder builder) {
+        super(builder);
+
+        this.faultCode = builder.faultCode;
+        this.faultString = builder.faultString;
+        this.faultActor = builder.faultActor;
+        this.faultDetails = builder.faultDetails;
+        this.faultDetailResourcePaths = builder.faultDetailResourcePaths;
+    }
 
     @Override
     protected SoapMessage createMessage(TestContext context, String messageType) {
@@ -98,36 +117,6 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
     }
 
     /**
-     * Set the fault code QName string. This can be either
-     * a fault code in {@link org.springframework.ws.soap.server.endpoint.SoapFaultDefinition}
-     * or a custom QName like {http://www.consol.de/citrus}citrus:TEC-1000
-     *
-     * @param faultCode the faultCode to set
-     */
-    public SendSoapFaultAction setFaultCode(String faultCode) {
-        this.faultCode = faultCode;
-        return this;
-    }
-
-    /**
-     * Set the fault reason string describing the fault.
-     * @param faultString the faultString to set
-     */
-    public SendSoapFaultAction setFaultString(String faultString) {
-        this.faultString = faultString;
-        return this;
-    }
-
-    /**
-     * Sets the faultActor.
-     * @param faultActor the faultActor to set
-     */
-    public SendSoapFaultAction setFaultActor(String faultActor) {
-        this.faultActor = faultActor;
-        return this;
-    }
-
-    /**
      * Gets the faultActor.
      * @return the faultActor the faultActor to get.
      */
@@ -160,15 +149,6 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
     }
 
     /**
-     * Sets the faultDetails.
-     * @param faultDetails the faultDetails to set
-     */
-    public SendSoapFaultAction setFaultDetails(List<String> faultDetails) {
-        this.faultDetails = faultDetails;
-        return this;
-    }
-
-    /**
      * Gets the fault detail resource paths.
      * @return
      */
@@ -177,11 +157,117 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
     }
 
     /**
-     * Sets the fault detail resource paths.
-     * @param faultDetailResourcePaths
+     * Action builder.
      */
-    public SendSoapFaultAction setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
-        this.faultDetailResourcePaths = faultDetailResourcePaths;
-        return this;
+    public static final class Builder extends SendSoapMessageBuilder<SendSoapFaultAction, Builder> {
+
+        private String faultCode;
+        private String faultString;
+        private String faultActor;
+        private List<String> faultDetails = new ArrayList<>();
+        private List<String> faultDetailResourcePaths = new ArrayList<>();
+
+        public Builder() {
+            messageBuilder(new StaticMessageContentBuilder(soapMessage));
+        }
+
+        /**
+         * Adds custom SOAP fault code.
+         * @param code
+         * @return
+         */
+        public Builder faultCode(String code) {
+            this.faultCode = code;
+            return this;
+        }
+
+        /**
+         * Add custom fault string to SOAP fault message.
+         * @param faultString
+         * @return
+         */
+        public Builder faultString(String faultString) {
+            this.faultString = faultString;
+            return this;
+        }
+
+        /**
+         * Add custom fault string to SOAP fault message.
+         * @param faultActor
+         * @return
+         */
+        public Builder faultActor(String faultActor) {
+            this.faultActor = faultActor;
+            return this;
+        }
+
+        /**
+         * Adds a fault detail to SOAP fault message.
+         * @param faultDetail
+         * @return
+         */
+        public Builder faultDetail(String faultDetail) {
+            this.faultDetails.add(faultDetail);
+            return this;
+        }
+
+        /**
+         * Adds a fault detail from file resource.
+         * @param resource
+         * @return
+         */
+        public Builder faultDetailResource(Resource resource) {
+            return faultDetailResource(resource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Adds a fault detail from file resource.
+         * @param resource
+         * @param charset
+         * @return
+         */
+        public Builder faultDetailResource(Resource resource, Charset charset) {
+            try {
+                this.faultDetails.add(FileUtils.readToString(resource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read fault detail resource", e);
+            }
+            return this;
+        }
+
+        /**
+         * Adds a fault detail from file resource path.
+         * @param filePath
+         * @return
+         */
+        public Builder faultDetailResource(String filePath) {
+            this.faultDetailResourcePaths.add(filePath);
+            return this;
+        }
+
+        /**
+         * Sets the response status.
+         * @param status
+         * @return
+         */
+        public Builder status(HttpStatus status) {
+            soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, status.value());
+            return this;
+        }
+
+        /**
+         * Sets the response status code.
+         * @param statusCode
+         * @return
+         */
+        public Builder statusCode(Integer statusCode) {
+            soapMessage.header(SoapMessageHeaders.HTTP_STATUS_CODE, statusCode);
+            return this;
+        }
+
+        @Override
+        public SendSoapFaultAction build() {
+            return new SendSoapFaultAction(this);
+        }
     }
 }

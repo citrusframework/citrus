@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.SetInputAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -37,7 +36,42 @@ public class SetInputActionParser extends FindElementActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return SetInputAction.class;
+    protected Class<SetInputActionFactoryBean> getBrowserActionClass() {
+        return SetInputActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class SetInputActionFactoryBean extends ElementActionFactoryBean<SetInputAction, SetInputAction.Builder> {
+
+        private final SetInputAction.Builder builder = new SetInputAction.Builder();
+
+        /**
+         * Sets the value.
+         * @param value
+         */
+        public void setValue(String value) {
+            builder.value(value);
+        }
+
+        @Override
+        public SetInputAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return SetInputAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public SetInputAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

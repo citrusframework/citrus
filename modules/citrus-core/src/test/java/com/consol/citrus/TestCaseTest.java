@@ -16,7 +16,15 @@
 
 package com.consol.citrus;
 
-import com.consol.citrus.actions.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.consol.citrus.actions.AbstractAsyncTestAction;
+import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -27,17 +35,15 @@ import com.consol.citrus.util.TestUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
 public class TestCaseTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testExecution() {
         final TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
-        
-        testcase.addTestAction(new EchoAction());
-        
+
+        testcase.addTestAction(new EchoAction.Builder().build());
+
         testcase.execute(context);
     }
 
@@ -46,7 +52,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         final TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
 
-        testcase.addTestAction(new EchoAction());
+        testcase.addTestAction(new EchoAction.Builder().build());
         testcase.addTestAction(new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(final TestContext context) {
@@ -68,7 +74,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.setTimeout(500L);
         testcase.setName("MyTestCase");
 
-        testcase.addTestAction(new EchoAction());
+        testcase.addTestAction(new EchoAction.Builder().build());
         testcase.addTestAction(new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(final TestContext context) {
@@ -88,7 +94,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         final TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
 
-        testcase.addTestAction(new Async().addTestAction(new AbstractAsyncTestAction() {
+        testcase.addTestAction(new Async.Builder().actions(() -> new AbstractAsyncTestAction() {
             @Override
             public void doExecuteAsync(final TestContext context) {
                 try {
@@ -97,16 +103,16 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
                     throw new CitrusRuntimeException(e);
                 }
             }
-        }));
+        }).build());
 
         testcase.execute(context);
     }
-    
+
     @Test
     public void testExecutionWithVariables() {
         final TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
-        
+
         final Map<String, Object> variables = new LinkedHashMap<>();
         variables.put("name", "Citrus");
         variables.put("framework", "${name}");
@@ -114,7 +120,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         variables.put("goodbye", "Goodbye ${name}!");
         variables.put("welcome", "Welcome ${name}, today is citrus:currentDate()!");
         testcase.setVariableDefinitions(variables);
-        
+
         testcase.addTestAction(new AbstractTestAction() {
             @Override
             public void doExecute(final TestContext context) {
@@ -127,25 +133,25 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(context.getVariable("${welcome}"), "Welcome Citrus, today is " + new CurrentDateFunction().execute(new ArrayList<>(), context) + "!");
             }
         });
-        
+
         testcase.execute(context);
     }
-    
+
     @Test(expectedExceptions = {TestCaseFailedException.class})
     public void testUnknownVariable() {
         final TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
-        
+
         final String message = "Hello TestFramework!";
         testcase.setVariableDefinitions(Collections.singletonMap("text", message));
-        
+
         testcase.addTestAction(new AbstractTestAction() {
             @Override
             public void doExecute(final TestContext context) {
                 Assert.assertEquals(context.getVariable("${unknown}"), message);
             }
         });
-        
+
         testcase.execute(context);
     }
 
@@ -161,7 +167,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
             }
         });
 
-        testcase.addTestAction(new EchoAction().setMessage("Everything is fine!"));
+        testcase.addTestAction(new EchoAction.Builder().message("Everything is fine!").build());
 
         testcase.execute(context);
     }
@@ -180,15 +186,15 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
         testcase.execute(context);
     }
-    
+
     @Test
     public void testFinalActions() {
         final TestCase testcase = new TestCase();
         testcase.setName("MyTestCase");
-        
-        testcase.addTestAction(new EchoAction());
-        testcase.addFinalAction(new EchoAction());
-        
+
+        testcase.addTestAction(new EchoAction.Builder().build());
+        testcase.addFinalAction(new EchoAction.Builder().build());
+
         testcase.execute(context);
     }
 
@@ -198,7 +204,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         //GIVEN
         final TestCase testcase = new TestCase();
         testcase.setName("ThreadLeakTestCase");
-        testcase.addTestAction(new EchoAction());
+        testcase.addTestAction(new EchoAction.Builder().build());
 
         //WHEN
         testcase.execute(context);

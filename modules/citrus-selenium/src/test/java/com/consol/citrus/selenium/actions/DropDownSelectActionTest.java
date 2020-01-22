@@ -16,18 +16,23 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.BrowserType;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -39,20 +44,12 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
-    private DropDownSelectAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, element);
 
         seleniumBrowser = new SeleniumBrowser();
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new DropDownSelectAction();
-        action.setBrowser(seleniumBrowser);
-
-        action.setProperty("name");
-        action.setPropertyValue("dropdown");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
@@ -68,8 +65,11 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
         when(option.isSelected()).thenReturn(false);
 
-        action.setOption("select_me");
-
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .option("select_me")
+                .build();
         action.execute(context);
 
         verify(option).click();
@@ -86,8 +86,11 @@ public class DropDownSelectActionTest extends AbstractTestNGUnitTest {
         when(element.findElements(any(By.class))).thenReturn(Collections.singletonList(option));
         when(option.isSelected()).thenReturn(false);
 
-        action.setOptions(Arrays.asList("option1", "option2"));
-
+        DropDownSelectAction action =  new DropDownSelectAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "dropdown")
+                .options("option1", "option2")
+                .build();
         action.execute(context);
 
         verify(option, times(2)).click();

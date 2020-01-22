@@ -16,6 +16,8 @@
 
 package com.consol.citrus.camel.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.camel.CamelContext;
@@ -23,10 +25,10 @@ import org.apache.camel.CamelException;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
@@ -38,15 +40,15 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.getName()).thenReturn("camel_context");
 
-        StopCamelRouteAction action = new StopCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Collections.singletonList("route_1"));
-
+        StopCamelRouteAction action = new StopCamelRouteAction.Builder()
+                .context(camelContext)
+                .routeIds(Collections.singletonList("route_1"))
+                .build();
         action.execute(context);
 
         verify(camelContext).stopRoute("route_1");
     }
-    
+
     @Test
     public void testStopRouteVariableSupport() throws Exception {
         reset(camelContext);
@@ -55,10 +57,10 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.getName()).thenReturn("camel_context");
 
-        StopCamelRouteAction action = new StopCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Collections.singletonList("${routeId}"));
-
+        StopCamelRouteAction action = new StopCamelRouteAction.Builder()
+                .context(camelContext)
+                .routeIds(Collections.singletonList("${routeId}"))
+                .build();
         action.execute(context);
 
         verify(camelContext).stopRoute("route_1");
@@ -72,10 +74,10 @@ public class StopCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         doThrow(new CamelException("Failed to stop route")).when(camelContext).stopRoute("route_2");
 
-        StopCamelRouteAction action = new StopCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Arrays.asList("route_1", "route_2", "route_3"));
-
+        StopCamelRouteAction action = new StopCamelRouteAction.Builder()
+                .context(camelContext)
+                .routes("route_1", "route_2", "route_3")
+                .build();
         action.execute(context);
 
         verify(camelContext).stopRoute("route_1");

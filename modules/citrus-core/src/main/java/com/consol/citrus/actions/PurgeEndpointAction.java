@@ -16,6 +16,13 @@
 
 package com.consol.citrus.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -28,39 +35,37 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * Action purges all messages from a message endpoint. Action receives
  * a list of endpoint objects or a list of endpoint names that are resolved dynamically at runtime.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class PurgeEndpointAction extends AbstractTestAction implements BeanFactoryAware {
+public class PurgeEndpointAction extends AbstractTestAction {
     /** List of endpoint names to be purged */
-    private List<String> endpointNames = new ArrayList<>();
+    private final List<String> endpointNames;
 
     /** List of endpoints to be purged */
-    private List<Endpoint> endpoints = new ArrayList<>();
+    private final List<Endpoint> endpoints;
 
     /** The parent bean factory used for endpoint name resolving */
-    private BeanFactory beanFactory;
+    private final BeanFactory beanFactory;
 
     /** Build message selector with name value pairs */
-    private Map<String, Object> messageSelectorMap = new HashMap<>();
+    private final Map<String, Object> messageSelectorMap;
 
     /** Select messages via message selector string */
-    private String messageSelector;
+    private final String messageSelector;
 
     /** Time to wait until timeout in ms */
-    private long receiveTimeout = 100;
+    private final long receiveTimeout;
 
     /** Wait some time between message consumption in ms */
-    private long sleepTime = 350;
+    private final long sleepTime;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(PurgeEndpointAction.class);
@@ -68,8 +73,16 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
     /**
      * Default constructor.
      */
-    public PurgeEndpointAction() {
-        setName("purge-endpoint");
+    public PurgeEndpointAction(Builder builder) {
+        super("purge-endpoint", builder);
+
+        this.endpointNames = builder.endpointNames;
+        this.endpoints = builder.endpoints;
+        this.beanFactory = builder.beanFactory;
+        this.messageSelector = builder.messageSelector;
+        this.messageSelectorMap = builder.messageSelectorMap;
+        this.receiveTimeout = builder.receiveTimeout;
+        this.sleepTime = builder.sleepTime;
     }
 
     @Override
@@ -92,7 +105,7 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
     /**
      * Purges all messages from a message endpoint. Prerequisite is that endpoint operates on a destination
      * that queues messages.
-     * 
+     *
      * @param endpoint
      * @param context
      */
@@ -149,11 +162,6 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
         }
     }
 
-    @Override
-    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.beanFactory = beanFactory;
-    }
-
     /**
      * Gets the bean factory for endpoint name resolving.
      * @return
@@ -171,47 +179,11 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
     }
 
     /**
-     * Sets the endpointNames.
-     * @param endpointNames the endpointNames to set
-     */
-    public PurgeEndpointAction setEndpointNames(List<String> endpointNames) {
-        this.endpointNames = endpointNames;
-        return this;
-    }
-
-    /**
      * Gets the endpoints.
      * @return the endpoints the endpoints to get.
      */
     public List<Endpoint> getEndpoints() {
         return endpoints;
-    }
-
-    /**
-     * Sets the endpoints.
-     * @param endpoints the endpoints to set
-     */
-    public PurgeEndpointAction setEndpoints(List<Endpoint> endpoints) {
-        this.endpoints = endpoints;
-        return this;
-    }
-
-    /**
-     * Setter for messageSelector.
-     * @param messageSelectorMap
-     */
-    public PurgeEndpointAction setMessageSelectorMap(Map<String, Object> messageSelectorMap) {
-        this.messageSelectorMap = messageSelectorMap;
-        return this;
-    }
-
-    /**
-     * Set message selector string.
-     * @param messageSelector
-     */
-    public PurgeEndpointAction setMessageSelector(String messageSelector) {
-        this.messageSelector = messageSelector;
-        return this;
     }
 
     /**
@@ -239,27 +211,143 @@ public class PurgeEndpointAction extends AbstractTestAction implements BeanFacto
     }
 
     /**
-     * Set the receive timeout.
-     * @param receiveTimeout the receiveTimeout to set
-     */
-    public PurgeEndpointAction setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
-        return this;
-    }
-
-    /**
-     * Sets the sleepTime.
-     * @param sleepTime the sleepTime to set
-     */
-    public void setSleepTime(long sleepTime) {
-        this.sleepTime = sleepTime;
-    }
-
-    /**
      * Gets the sleepTime.
      * @return the sleepTime the sleepTime to get.
      */
     public long getSleepTime() {
         return sleepTime;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<PurgeEndpointAction, Builder> {
+
+        private List<String> endpointNames = new ArrayList<>();
+        private List<Endpoint> endpoints = new ArrayList<>();
+        private BeanFactory beanFactory;
+        private Map<String, Object> messageSelectorMap = new HashMap<>();
+        private String messageSelector;
+        private long receiveTimeout = 100;
+        private long sleepTime = 350;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder purgeEndpoints() {
+            return new Builder();
+        }
+
+        /**
+         * Sets the messageSelector.
+         * @param messageSelector the messageSelector to set
+         */
+        public Builder selector(String messageSelector) {
+            this.messageSelector = messageSelector;
+            return this;
+        }
+
+        /**
+         * Sets the messageSelector.
+         * @param messageSelector the messageSelector to set
+         */
+        public Builder selector(Map<String, Object> messageSelector) {
+            this.messageSelectorMap = messageSelector;
+            return this;
+        }
+
+        /**
+         * Adds list of endpoint names to purge in this action.
+         * @param endpointNames the endpointNames to set
+         */
+        public Builder endpointNames(List<String> endpointNames) {
+            this.endpointNames.addAll(endpointNames);
+            return this;
+        }
+
+        /**
+         * Adds several endpoint names to the list of endpoints to purge in this action.
+         * @param endpointNames
+         * @return
+         */
+        public Builder endpointNames(String... endpointNames) {
+            return endpointNames(Arrays.asList(endpointNames));
+        }
+
+        /**
+         * Adds a endpoint name to the list of endpoints to purge in this action.
+         * @param name
+         * @return
+         */
+        public Builder endpoint(String name) {
+            this.endpointNames.add(name);
+            return this;
+        }
+
+        /**
+         * Adds list of endpoints to purge in this action.
+         * @param endpoints the endpoints to set
+         */
+        public Builder endpoints(List<Endpoint> endpoints) {
+            this.endpoints.addAll(endpoints);
+            return this;
+        }
+
+        /**
+         * Sets several endpoints to purge in this action.
+         * @param endpoints
+         * @return
+         */
+        public Builder endpoints(Endpoint... endpoints) {
+            return endpoints(Arrays.asList(endpoints));
+        }
+
+        /**
+         * Adds a endpoint to the list of endpoints to purge in this action.
+         * @param endpoint
+         * @return
+         */
+        public Builder endpoint(Endpoint endpoint) {
+            this.endpoints.add(endpoint);
+            return this;
+        }
+
+        /**
+         * Receive timeout for reading message from a destination.
+         * @param receiveTimeout the receiveTimeout to set
+         */
+        public Builder timeout(long receiveTimeout) {
+            this.receiveTimeout = receiveTimeout;
+            return this;
+        }
+
+        /**
+         * Sets the sleepTime.
+         * @param millis the sleepTime to set
+         */
+        public Builder sleep(long millis) {
+            this.sleepTime = millis;
+            return this;
+        }
+
+        /**
+         * Sets the Spring bean factory for using endpoint names.
+         * @param applicationContext
+         */
+        public Builder withApplicationContext(ApplicationContext applicationContext) {
+            this.beanFactory = applicationContext;
+            return this;
+        }
+
+        public Builder beanFactory(BeanFactory beanFactory) {
+            this.beanFactory = beanFactory;
+            return this;
+        }
+
+        @Override
+        public PurgeEndpointAction build() {
+            return new PurgeEndpointAction(this);
+        }
     }
 }

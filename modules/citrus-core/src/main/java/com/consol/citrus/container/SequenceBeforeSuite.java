@@ -17,6 +17,7 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceBeforeSuite.class);
-    
+
     @Override
     public void doExecute(TestContext context) {
         log.info("Entering before suite block");
@@ -41,8 +42,9 @@ public class SequenceBeforeSuite extends AbstractSuiteActionContainer {
             log.debug("Executing " + actions.size() + " actions before suite");
             log.debug("");
         }
-        
-        for (TestAction action: actions)  {
+
+        for (TestActionBuilder<?> actionBuilder : actions)  {
+            TestAction action = actionBuilder.build();
             try {
                 /* Executing test action and validate its success */
                 action.execute(context);

@@ -23,9 +23,9 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
 
 /**
  * @author Matthias Beil
@@ -37,44 +37,38 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionFalse() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("1 = 0");
-
         reset(action);
 
-        conditionalAction.setActions(Collections.singletonList(action));
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("1 = 0")
+                .actions(() -> action)
+                .build();
         conditionalAction.execute(this.context);
         verify(action, never()).execute(this.context);
     }
 
     @Test
     public void testConditionMatcherFalse() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("@assertThat('5', 'is(4)')@");
-
         reset(action);
 
-        conditionalAction.setActions(Collections.singletonList(action));
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("@assertThat('5', 'is(4)')@")
+                .actions(() -> action)
+                .build();
         conditionalAction.execute(this.context);
         verify(action, never()).execute(this.context);
     }
 
     @Test
     public void testSingleAction() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("1 = 1");
-
         final TestAction action = Mockito.mock(TestAction.class);
 
         reset(action);
 
-        final List<TestAction> actionList = new ArrayList<>();
-        actionList.add(action);
-
-        conditionalAction.setActions(actionList);
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("1 = 1")
+                .actions(() -> action)
+                .build();
         conditionalAction.execute(this.context);
 
         verify(action).execute(this.context);
@@ -82,18 +76,14 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMatcherSingleAction() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("@assertThat('5', 'is(5)')@");
-
         final TestAction action = Mockito.mock(TestAction.class);
 
         reset(action);
 
-        final List<TestAction> actionList = new ArrayList<>();
-        actionList.add(action);
-
-        conditionalAction.setActions(actionList);
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("@assertThat('5', 'is(5)')@")
+                .actions(() -> action)
+                .build();
         conditionalAction.execute(this.context);
 
         verify(action).execute(this.context);
@@ -101,22 +91,16 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleActions() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("1 = 1");
-
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
         final TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<>();
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-
-        conditionalAction.setActions(actionList);
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("1 = 1")
+                .actions(action1, action2, action3)
+                .build();
         conditionalAction.execute(this.context);
 
         verify(action1).execute(this.context);
@@ -126,46 +110,32 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFirstActionFailing() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("1 = 1");
-
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
         final TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<>();
-        actionList.add(new FailAction());
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-
-        conditionalAction.setActions(actionList);
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("1 = 1")
+                .actions(new FailAction.Builder().build(), action1, action2, action3)
+                .build();
         conditionalAction.execute(this.context);
 
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testLastActionFailing() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("1 = 1");
-
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
         final TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<>();
-        actionList.add(action1);
-        actionList.add(action2);
-        actionList.add(action3);
-        actionList.add(new FailAction());
-
-        conditionalAction.setActions(actionList);
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("1 = 1")
+                .actions(action1, action2, action3, new FailAction.Builder().build())
+                .build();
         conditionalAction.execute(this.context);
 
         verify(action1).execute(this.context);
@@ -175,23 +145,16 @@ public class ConditionalTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testFailingAction() {
-        final Conditional conditionalAction = new Conditional();
-        conditionalAction.setCondition("1 = 1");
-
         final TestAction action1 = Mockito.mock(TestAction.class);
         final TestAction action2 = Mockito.mock(TestAction.class);
         final TestAction action3 = Mockito.mock(TestAction.class);
 
         reset(action1, action2, action3);
 
-        final List<TestAction> actionList = new ArrayList<>();
-        actionList.add(action1);
-        actionList.add(new FailAction());
-        actionList.add(action2);
-        actionList.add(action3);
-
-        conditionalAction.setActions(actionList);
-
+        final Conditional conditionalAction = new Conditional.Builder()
+                .when("1 = 1")
+                .actions(action1, new FailAction.Builder().build(), action2, action3)
+                .build();
         conditionalAction.execute(this.context);
 
         verify(action1).execute(this.context);

@@ -28,13 +28,13 @@ import org.testng.annotations.Test;
  */
 @Test
 public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
-    
+
     @CitrusTest(name = "HttpMessageControllerJavaIT")
     public void httpMessageControllerIT() {
         variable("id", "123456789");
-        
+
         echo("First request without query parameter and context path variables.");
-        
+
         parallel().actions(
             http().client("httpClient")
                 .send()
@@ -44,7 +44,7 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                     .method(HttpMethod.GET)
                     .contentType("text/html")
                     .accept("application/xml;charset=UTF-8")),
-                
+
             sequential().actions(
                 http().server("httpServerRequestEndpoint")
                     .receive()
@@ -63,9 +63,8 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
             .timeout(2000L)
             .version("HTTP/1.1");
 
-        
         echo("Use context path variables.");
-        
+
         parallel().actions(
             http().client("httpClient")
                 .send()
@@ -87,15 +86,15 @@ public class HttpMessageControllerJavaIT extends TestNGCitrusTestDesigner {
                         .accept("application/xml;charset=UTF-8"))
             )
         );
-        
+
         http().client("httpClient")
             .receive()
             .response(HttpStatus.OK)
             .timeout(2000L)
             .version("HTTP/1.1");
-        
+
         echo("Use query parameter and context path variables.");
-        
+
         parallel().actions(
             http().client("httpClient")
                 .send()

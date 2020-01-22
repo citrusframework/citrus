@@ -16,13 +16,20 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.consol.citrus.TestAction;
 import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
+import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -33,30 +40,29 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Parser for SOAP fault assert action.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class AssertSoapFaultParser implements BeanDefinitionParser {
 
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder beanDefinition;
 
-        beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(AssertSoapFault.class);
+        beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(AssertSoapFaultActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-code"), "faultCode");
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-string"), "faultString");
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-actor"), "faultActor");
-        
+
         List<Element> faultDetails = DomUtils.getChildElementsByTagName(element, "fault-detail");
         SoapFaultDetailValidationContext validationContext = new SoapFaultDetailValidationContext();
-        List<String> soapFaultDetails = new ArrayList<String>();
-        List<String> soapFaultDetailPaths = new ArrayList<String>();
+        List<String> soapFaultDetails = new ArrayList<>();
+        List<String> soapFaultDetailPaths = new ArrayList<>();
         for (Element faultDetailElement : faultDetails) {
             if (faultDetailElement.hasAttribute("file")) {
                 if (StringUtils.hasText(DomUtils.getTextValue(faultDetailElement).trim())) {
@@ -75,36 +81,36 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                     throw new BeanCreationException("Not content for fault-detail is set! Either use file attribute or inline text value for fault-detail element.");
                 }
             }
-            
+
             XmlMessageValidationContext context = new XmlMessageValidationContext();
             String schemaValidation = faultDetailElement.getAttribute("schema-validation");
             if (StringUtils.hasText(schemaValidation)) {
                 context.setSchemaValidation(Boolean.valueOf(schemaValidation));
             }
-            
+
             String schema = faultDetailElement.getAttribute("schema");
             if (StringUtils.hasText(schema)) {
                 context.setSchema(schema);
             }
-            
+
             String schemaRepository = faultDetailElement.getAttribute("schema-repository");
             if (StringUtils.hasText(schemaRepository)) {
                 context.setSchemaRepository(schemaRepository);
             }
             validationContext.addValidationContext(context);
         }
-        
+
         if (!soapFaultDetails.isEmpty() || !soapFaultDetailPaths.isEmpty()) {
             beanDefinition.addPropertyValue("faultDetails", soapFaultDetails);
             beanDefinition.addPropertyValue("faultDetailResourcePaths", soapFaultDetailPaths);
             beanDefinition.addPropertyValue("validationContext", validationContext);
         }
-        
+
         Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
-            
+
             if (parser ==  null) {
             	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
             } else {
@@ -115,5 +121,95 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("fault-validator"), "validator", "soapFaultValidator");
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class AssertSoapFaultActionFactoryBean extends AbstractTestActionFactoryBean<AssertSoapFault, AssertSoapFault.Builder> {
+
+        private final AssertSoapFault.Builder builder = new AssertSoapFault.Builder();
+
+        /**
+         * Sets the nested test action.
+         * @param action
+         */
+        public void setAction(TestAction action) {
+            builder.when(action);
+        }
+
+        /**
+         * Set the fault code.
+         * @param faultCode the faultCode to set
+         */
+        public void setFaultCode(String faultCode) {
+            builder.faultCode(faultCode);
+        }
+
+        /**
+         * Set the fault string.
+         * @param faultString the faultString to set
+         */
+        public void setFaultString(String faultString) {
+            builder.faultString(faultString);
+        }
+
+        /**
+         * @param validator the validator to set
+         */
+        public void setValidator(SoapFaultValidator validator) {
+            builder.validator(validator);
+        }
+
+        /**
+         * Sets the faultDetails.
+         * @param faultDetails the faultDetails to set
+         */
+        public void setFaultDetails(List<String> faultDetails) {
+            faultDetails.forEach(builder::faultDetail);
+        }
+
+        /**
+         * Sets the fault detail resource paths.
+         * @param faultDetailResourcePaths
+         */
+        public void setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
+            faultDetailResourcePaths.forEach(builder::faultDetailResource);
+        }
+
+        /**
+         * Sets the faultActor.
+         * @param faultActor the faultActor to set
+         */
+        public void setFaultActor(String faultActor) {
+            builder.faultActor(faultActor);
+        }
+
+        /**
+         * Sets the validationContext.
+         * @param validationContext the validationContext to set
+         */
+        public void setValidationContext(SoapFaultDetailValidationContext validationContext) {
+            builder.validationContext(validationContext);
+        }
+
+        @Override
+        public AssertSoapFault getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return AssertSoapFault.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public AssertSoapFault.Builder getBuilder() {
+            return builder;
+        }
     }
 }

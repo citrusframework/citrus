@@ -16,8 +16,15 @@
 
 package com.consol.citrus.dsl.testng;
 
-import com.consol.citrus.*;
-import com.consol.citrus.annotations.*;
+import java.lang.reflect.Method;
+
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.TestResult;
+import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
@@ -29,11 +36,10 @@ import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
-
-import java.lang.reflect.Method;
 
 /**
  * @author Christoph Deppisch
@@ -81,8 +87,6 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
         if (method != null && method.getAnnotation(CitrusXmlTest.class) != null) {
             super.run(testResult, method, testLoader, invocationCount);
         } else {
-            TestDesigner testDesigner = null;
-            TestRunner testRunner = null;
 
             try {
                 if (citrus == null) {
@@ -91,23 +95,21 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
                 TestContext ctx = prepareTestContext(citrus.createTestContext());
 
+                TestCaseBuilder testBuilder;
                 if (isDesignerMethod(method)) {
-                    testDesigner = createTestDesigner(method, ctx);
+                    testBuilder = createTestDesigner(method, ctx);
+                    testResult.setAttribute(DESIGNER_ATTRIBUTE, testBuilder);
                 } else if (isRunnerMethod(method)) {
-                    testRunner = createTestRunner(method, ctx);
+                    testBuilder = createTestRunner(method, ctx);
+                    testResult.setAttribute(RUNNER_ATTRIBUTE, testBuilder);
                 } else {
                     throw new CitrusRuntimeException("Missing designer or runner method parameter");
                 }
 
-                testResult.setAttribute(DESIGNER_ATTRIBUTE, testDesigner);
-                testResult.setAttribute(RUNNER_ATTRIBUTE, testRunner);
-
-                TestCase testCase = testDesigner != null ? testDesigner.getTestCase() : testRunner.getTestCase();
-                testCase.setGroups(testResult.getMethod().getGroups());
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
 
-                invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
+                invokeTestMethod(testResult, method, testBuilder.getTestCase(), ctx, invocationCount);
             } finally {
                 testResult.removeAttribute(DESIGNER_ATTRIBUTE);
                 testResult.removeAttribute(RUNNER_ATTRIBUTE);
@@ -117,6 +119,8 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
     @Override
     protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
+        testCase.setGroups(testResult.getMethod().getGroups());
+
         if (testResult.getAttribute(DESIGNER_ATTRIBUTE) != null) {
             super.invokeTestMethod(testResult, method, testCase, context, invocationCount);
         } else if (testResult.getAttribute(RUNNER_ATTRIBUTE) != null) {
@@ -202,6 +206,10 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
      * @return
      */
     protected boolean isDesignerMethod(Method method) {
+        if (method == null) {
+            return false;
+        }
+
         Class<?>[] parameterTypes = method.getParameterTypes();
 
         for (Class<?> parameterType : parameterTypes) {
@@ -219,6 +227,10 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
      * @return
      */
     protected boolean isRunnerMethod(Method method) {
+        if (method == null) {
+            return false;
+        }
+
         Class<?>[] parameterTypes = method.getParameterTypes();
 
         for (Class<?> parameterType : parameterTypes) {

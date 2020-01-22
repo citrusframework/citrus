@@ -16,15 +16,17 @@
 
 package com.consol.citrus.container;
 
+import com.consol.citrus.AbstractIteratingContainerBuilder;
 import com.consol.citrus.context.TestContext;
+import org.hamcrest.Matcher;
 
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
  * aborting condition evaluates to true.
- * 
+ *
  * Index is incremented each iteration and stored as test variable accessible in the nested test actions
  * as normal variable. Index starts with 1 by default.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class RepeatUntilTrue extends AbstractIteratingActionContainer {
@@ -32,19 +34,64 @@ public class RepeatUntilTrue extends AbstractIteratingActionContainer {
     /**
      * Default constructor.
      */
-    public RepeatUntilTrue() {
-        setName("repeat");
+    public RepeatUntilTrue(Builder builder) {
+        super("repeat", builder);
     }
 
-    /**
-     * @see AbstractIteratingActionContainer#executeIteration(com.consol.citrus.context.TestContext)
-     * @throws com.consol.citrus.exceptions.CitrusRuntimeException
-     */
     @Override
     public void executeIteration(TestContext context) {
         do {
             executeActions(context);
             index++;
         } while (!checkCondition(context));
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractIteratingContainerBuilder<RepeatUntilTrue, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static RepeatUntilTrue.Builder repeat() {
+            return new RepeatUntilTrue.Builder();
+        }
+
+        /**
+         * Adds a condition to this iterate container.
+         * @param condition
+         * @return
+         */
+        public RepeatUntilTrue.Builder until(String condition) {
+            condition(condition);
+            return this;
+        }
+
+        /**
+         * Adds a condition expression to this iterate container.
+         * @param condition
+         * @return
+         */
+        public RepeatUntilTrue.Builder until(IteratingConditionExpression condition) {
+            condition(condition);
+            return this;
+        }
+
+        /**
+         * Adds a Hamcrest condition expression to this iterate container.
+         * @param conditionMatcher
+         * @return
+         */
+        public RepeatUntilTrue.Builder until(Matcher conditionMatcher) {
+            condition(new HamcrestConditionExpression(conditionMatcher));
+            return this;
+        }
+
+        @Override
+        public RepeatUntilTrue build() {
+            return super.build(new RepeatUntilTrue(this));
+        }
     }
 }

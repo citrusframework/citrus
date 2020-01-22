@@ -30,183 +30,175 @@ public class JavaActionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testJavaCallNoMethodParameter() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
 	public void testJavaCallSingleMethodParameter() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
 		args.add("Test");
-		action.setMethodArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.methodArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
 	public void testJavaCallMethodParameters() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
 		args.add(4);
 		args.add("Test");
 		args.add(true);
-		
-		action.setMethodArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.methodArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
 	public void testJavaCallConstructorNoArgs() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
-		action.setConstructorArgs(Collections.emptyList());
-		
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(Collections.emptyList())
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
 	public void testJavaCallSingleConstructorArg() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
         args.add("Test");
-		action.setConstructorArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
 	public void testJavaCallConstructorArgs() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
 		args.add(4);
 		args.add("Test");
 		args.add(true);
-		
-		action.setConstructorArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
     public void testJavaCallConstructorArgsVariableSupport() {
-        JavaAction action = new JavaAction();
-        action.setClassName("com.consol.citrus.util.InvocationDummy");
-        action.setMethodName("invoke");
-        
         context.setVariable("text", "Test");
-        
+
         List<Object> args = new ArrayList<Object>();
         args.add(4);
         args.add("${text}");
         args.add(true);
-        
-        action.setConstructorArgs(args);
-        
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(args)
+				.build();
         action.execute(context);
     }
-	
+
 	@Test
 	public void testJavaCall() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
 		args.add(4);
 		args.add("Test");
 		args.add(true);
-		
-		action.setConstructorArgs(args);
-		action.setMethodArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(args)
+				.methodArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test
     public void testJavaCallVariableSupport() {
-        JavaAction action = new JavaAction();
-        action.setClassName("com.consol.citrus.util.InvocationDummy");
-        action.setMethodName("invoke");
-        
         context.setVariable("text", "Test");
-        
+
         List<Object> args = new ArrayList<Object>();
         args.add(4);
         args.add("${text}");
         args.add(true);
-        
-        action.setConstructorArgs(args);
-        action.setMethodArgs(args);
-        
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(args)
+				.methodArgs(args)
+				.build();
         action.execute(context);
     }
-	
+
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testJavaCallWrongConstructorArgs() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
 		args.add("Wrong");
 		args.add(4);
 		args.add(true);
-		
-		action.setConstructorArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.constructorArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testJavaCallWrongMethodParameters() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("invoke");
-		
 		List<Object> args = new ArrayList<Object>();
 		args.add("Wrong");
 		args.add(4);
 		args.add(true);
-		
-		action.setMethodArgs(args);
-		
+
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("invoke")
+				.methodArgs(args)
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testJavaCallClassNotFound() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.DoesNotExist");
-		action.setMethodName("invoke");
-		
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.DoesNotExist")
+				.method("invoke")
+				.build();
 		action.execute(context);
 	}
-	
+
 	@Test(expectedExceptions = {CitrusRuntimeException.class})
 	public void testJavaCallNoSuchMethod() {
-		JavaAction action = new JavaAction();
-		action.setClassName("com.consol.citrus.util.InvocationDummy");
-		action.setMethodName("doesNotExist");
-		
+		JavaAction action = new JavaAction.Builder()
+				.className("com.consol.citrus.util.InvocationDummy")
+				.method("doesNotExist")
+				.build();
 		action.execute(context);
 	}
 }

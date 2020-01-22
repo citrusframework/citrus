@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
@@ -61,6 +63,7 @@ public class CatchTestDesignerTest extends AbstractTestNGUnitTest {
         assertEquals(container.getActionCount(), 2);
         assertEquals(container.getException(), CitrusRuntimeException.class.getName());
         assertEquals(((EchoAction)(container.getActions().get(0))).getMessage(), "${var}");
-        assertEquals(((SleepAction)(container.getActions().get(1))).getMilliseconds(), "100");
+        assertEquals(((SleepAction)(container.getActions().get(1))).getTime(), "100");
+        assertEquals(((SleepAction)(container.getActions().get(1))).getTimeUnit(), TimeUnit.MILLISECONDS);
     }
 }

@@ -16,24 +16,47 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.container.RepeatUntilTrue;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.container.RepeatUntilTrue;
-
 /**
  * Bean definition parser for repeat-until-true container in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class RepeatUntilTrueParser extends AbstractIterationTestActionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
     @Override
 	public BeanDefinitionBuilder parseComponent(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrue.class);
+        return BeanDefinitionBuilder.rootBeanDefinition(RepeatUntilTrueFactoryBean.class);
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class RepeatUntilTrueFactoryBean extends AbstractIteratingTestContainerFactoryBean<RepeatUntilTrue, RepeatUntilTrue.Builder> {
+
+        private final RepeatUntilTrue.Builder builder = new RepeatUntilTrue.Builder();
+
+        @Override
+        public RepeatUntilTrue getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return RepeatUntilTrue.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public RepeatUntilTrue.Builder getBuilder() {
+            return builder;
+        }
     }
 }

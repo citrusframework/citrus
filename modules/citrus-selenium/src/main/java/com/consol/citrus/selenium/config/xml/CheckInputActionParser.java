@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.CheckInputAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -37,7 +36,42 @@ public class CheckInputActionParser extends FindElementActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return CheckInputAction.class;
+    protected Class<CheckInputActionFactoryBean> getBrowserActionClass() {
+        return CheckInputActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class CheckInputActionFactoryBean extends ElementActionFactoryBean<CheckInputAction, CheckInputAction.Builder> {
+
+        private final CheckInputAction.Builder builder = new CheckInputAction.Builder();
+
+        /**
+         * Sets the checked.
+         * @param checked
+         */
+        public void setChecked(boolean checked) {
+            builder.checked(checked);
+        }
+
+        @Override
+        public CheckInputAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return CheckInputAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public CheckInputAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

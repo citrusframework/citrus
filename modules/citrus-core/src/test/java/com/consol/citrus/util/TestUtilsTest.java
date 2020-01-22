@@ -16,6 +16,9 @@
 
 package com.consol.citrus.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
@@ -27,9 +30,6 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.util.CollectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -43,38 +43,38 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedTestAction("sleep");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(failedAction);
-        
-        actions.add(new MockedActionContainer("parallel", 
+
+        actions.add(new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"))));
-        
+
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("sequential", 
+
+        actions.add(new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 new MockedActionContainer("iterate", new MockedTestAction("sleep"))));
-        
+
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
-        
+
         test.setActions(actions);
-        test.setActiveAction(failedAction);
-        
+        setActiveActions(test, failedAction);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 1);
-        
+        Assert.assertEquals(failureStack.size(), 1);
+
         FailureStackElement failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":13)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 13L);
     }
-    
+
     @Test
     public void testNestedContainerBeforeFailedAction() {
         TestCase test = new TestCase();
@@ -82,37 +82,37 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedTestAction("fail");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("parallel", 
+
+        actions.add(new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"))));
-        
+
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("sequential", 
+
+        actions.add(new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 new MockedActionContainer("iterate", new MockedTestAction("sleep"))));
-        
+
         actions.add(failedAction);
         actions.add(new MockedTestAction("echo"));
-        
+
         test.setActions(actions);
-        test.setActiveAction(failedAction);
-        
+        setActiveActions(test, failedAction);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 1);
+        Assert.assertEquals(failureStack.size(), 1);
         FailureStackElement failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":34)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 34L);
     }
-    
+
     @Test
     public void testMiddleActionFailing() {
         TestCase test = new TestCase();
@@ -120,37 +120,37 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedTestAction("sleep");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("parallel", 
+
+        actions.add(new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"))));
-        
+
         actions.add(failedAction);
-        
-        actions.add(new MockedActionContainer("sequential", 
+
+        actions.add(new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 new MockedActionContainer("iterate", new MockedTestAction("sleep"))));
-        
+
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
-        
+
         test.setActions(actions);
-        test.setActiveAction(failedAction);
-        
+        setActiveActions(test, failedAction);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 1);
+        Assert.assertEquals(failureStack.size(), 1);
         FailureStackElement failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":24)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 24L);
     }
-    
+
     @Test
     public void testActionFailingInContainer() {
         TestCase test = new TestCase();
@@ -158,93 +158,93 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedTestAction("sleep");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("parallel", 
+
+        actions.add(new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"))));
-        
+
         actions.add(new MockedTestAction("sleep"));
-        
-        TestAction failedContainer = new MockedActionContainer("sequential", 
+
+        TestActionContainer failedContainer = new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 failedAction,
                 new MockedActionContainer("iterate", new MockedTestAction("sleep")));
-        ((TestActionContainer)failedContainer).setActiveAction(failedAction);
+        setActiveActions(failedContainer, failedAction);
         actions.add(failedContainer);
-        
+
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
-        
+
         test.setActions(actions);
-        test.setActiveAction(failedContainer);
-        
+        setActiveActions(test, failedContainer);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 2);
+        Assert.assertEquals(failureStack.size(), 2);
         FailureStackElement failureStackElement = failureStack.get(1);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":29)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 29L);
-        
+
         failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(sequential:25)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 25L);
     }
-    
+
     public void testActionFailingInContainerHierarchy() {
         TestCase test = new TestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedTestAction("sleep");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("parallel", 
+
+        actions.add(new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"))));
-        
+
         actions.add(new MockedTestAction("sleep"));
-        
-        TestAction failedContainer = new MockedActionContainer("iterate", failedAction);
-        ((TestActionContainer)failedContainer).setActiveAction(failedAction);
-        
-        TestAction nestedContainer = new MockedActionContainer("sequential", 
+
+        TestActionContainer failedContainer = new MockedActionContainer("iterate", failedAction);
+        setActiveActions(failedContainer, failedAction);
+
+        TestActionContainer nestedContainer = new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 failedContainer);
-        ((TestActionContainer)nestedContainer).setActiveAction(failedContainer);
+        nestedContainer.setActiveAction(failedContainer);
         actions.add(nestedContainer);
-        
+
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
-        
+
         test.setActions(actions);
-        test.setActiveAction(nestedContainer);
-        
+        setActiveActions(test, nestedContainer);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 3);
+        Assert.assertEquals(failureStack.size(), 3);
         FailureStackElement failureStackElement = failureStack.get(2);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":31)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 31L);
-        
+
         failureStackElement = failureStack.get(1);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(iterate:30)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 30L);
-        
+
         failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(sequential:25)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 25L);
     }
-    
+
     @Test
     public void testContainerItselfFailing() {
         TestCase test = new TestCase();
@@ -252,39 +252,39 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"));
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new MockedTestAction("sleep"));
-        
-        TestAction failedContainer = new MockedActionContainer("parallel", 
+
+        TestActionContainer failedContainer = new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 failedAction);
-        ((TestActionContainer)failedContainer).setActiveAction(failedAction);
+        setActiveActions(failedContainer, failedAction);
         actions.add(failedContainer);
-        
+
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("sequential", 
+
+        actions.add(new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 new MockedActionContainer("iterate", new MockedTestAction("sleep"))));
-        
+
         actions.add(new MockedTestAction("fail"));
         actions.add(new MockedTestAction("echo"));
-        
+
         test.setActions(actions);
-        test.setActiveAction(failedContainer);
-        
+        setActiveActions(test, failedContainer);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 2);
+        Assert.assertEquals(failureStack.size(), 2);
         FailureStackElement failureStackElement = failureStack.get(1);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":17-22)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 17L);
         Assert.assertEquals(failureStackElement.getLineNumberEnd().longValue(), 22L);
-        
+
         failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(parallel:14)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 14L);
@@ -297,48 +297,57 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
         test.setName("FailureStackExampleTest");
 
         TestAction failedAction = new MockedTestAction("echo");
-        
-        List<TestAction> actions = new ArrayList<TestAction>();
+
+        List<TestAction> actions = new ArrayList<>();
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("parallel", 
+
+        actions.add(new MockedActionContainer("parallel",
                 new MockedTestAction("sleep"),
                 new MockedTestAction("fail"),
                 new MockedActionContainer("sequential", new MockedTestAction("sleep"), new MockedTestAction("echo"))));
-        
+
         actions.add(new MockedTestAction("sleep"));
-        
-        actions.add(new MockedActionContainer("sequential", 
+
+        actions.add(new MockedActionContainer("sequential",
                 new MockedTestAction("echo"),
                 new MockedTestAction("sleep"),
                 new MockedActionContainer("iterate", new MockedTestAction("sleep"))));
-        
+
         actions.add(new MockedTestAction("fail"));
         actions.add(failedAction);
-        
+
         test.setActions(actions);
-        test.setActiveAction(failedAction);
-        
+        setActiveActions(test, failedAction);
+
         List<FailureStackElement> failureStack = TestUtils.getFailureStack(test);
-        
+
         Assert.assertFalse(failureStack.isEmpty());
-        Assert.assertTrue(failureStack.size() == 1);
+        Assert.assertEquals(failureStack.size(), 1);
         FailureStackElement failureStackElement = failureStack.get(0);
         Assert.assertEquals(failureStackElement.getStackMessage(), "at com/consol/citrus/util/FailureStackExampleTest(" + failedAction.getName() + ":35-37)");
         Assert.assertEquals(failureStackElement.getLineNumberStart().longValue(), 35L);
         Assert.assertEquals(failureStackElement.getLineNumberEnd().longValue(), 37L);
     }
-    
+
+    private void setActiveActions(TestActionContainer container, TestAction failedAction) {
+        for (TestAction action : container.getActions()) {
+            container.setActiveAction(action);
+            if (action.equals(failedAction)) {
+                break;
+            }
+        }
+    }
+
     private static class MockedTestAction extends AbstractTestAction {
 
         public MockedTestAction(String name) {
             setName(name);
         }
-        
+
         @Override
         public void doExecute(TestContext context) {}
     }
-    
+
     private static class MockedActionContainer extends AbstractActionContainer {
 
         @SuppressWarnings("unchecked")
@@ -346,7 +355,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
             setName(name);
             setActions(CollectionUtils.arrayToList(actions));
         }
-        
+
         @Override
         public void doExecute(TestContext context) {}
     }

@@ -16,6 +16,11 @@
 
 package com.consol.citrus.cucumber.config.xml;
 
+import java.util.List;
+import java.util.regex.Pattern;
+
+import com.consol.citrus.TestAction;
+import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.ActionContainerParser;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.cucumber.container.StepTemplate;
@@ -26,8 +31,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Element;
 
-import java.util.regex.Pattern;
-
 /**
  * Parser configures a step template with pattern and parameter names.
  * @author Christoph Deppisch
@@ -35,8 +38,9 @@ import java.util.regex.Pattern;
  */
 public class StepTemplateParser implements BeanDefinitionParser {
 
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(StepTemplate.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(StepTemplateFactoryBean.class);
 
         DescriptionElementParser.doParse(element, builder);
 
@@ -65,5 +69,62 @@ public class StepTemplateParser implements BeanDefinitionParser {
         String beanName = parserContext.getReaderContext().generateBeanName(builder.getBeanDefinition());
         parserContext.getRegistry().registerBeanDefinition(beanName, builder.getBeanDefinition());
         return parserContext.getRegistry().getBeanDefinition(beanName);
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class StepTemplateFactoryBean extends AbstractTestActionFactoryBean<StepTemplate, StepTemplate.Builder> {
+
+        private final StepTemplate.Builder builder = new StepTemplate.Builder();
+
+        /**
+         * Sets the pattern property.
+         *
+         * @param pattern
+         */
+        public void setPattern(Pattern pattern) {
+            builder.pattern(pattern);
+        }
+
+        /**
+         * Sets the parameterNames property.
+         *
+         * @param parameterNames
+         */
+        public void setParameterNames(List<String> parameterNames) {
+            builder.parameterNames(parameterNames);
+        }
+
+        /**
+         * Sets the test actions.
+         * @param actions
+         */
+        public void setActions(List<TestAction> actions) {
+            builder.actions(actions);
+        }
+
+        /**
+         * Adds test actions to container when building object.
+         * @return
+         * @throws Exception
+         */
+        public StepTemplate getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StepTemplate.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StepTemplate.Builder getBuilder() {
+            return builder;
+        }
     }
 }

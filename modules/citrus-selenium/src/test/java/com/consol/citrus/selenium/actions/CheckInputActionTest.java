@@ -43,12 +43,6 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
 
         seleniumBrowser.setWebDriver(webDriver);
 
-        action =  new CheckInputAction();
-        action.setBrowser(seleniumBrowser);
-
-        action.setProperty("name");
-        action.setPropertyValue("checkbox");
-
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
         when(element.getTagName()).thenReturn("input");
@@ -59,7 +53,12 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.isSelected()).thenReturn(false);
-        action.setChecked(true);
+
+        CheckInputAction action =  new CheckInputAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "checkbox")
+                .checked(true)
+                .build();
 
         action.execute(context);
 
@@ -71,8 +70,12 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.isSelected()).thenReturn(true);
-        action.setChecked(false);
 
+        CheckInputAction action =  new CheckInputAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "checkbox")
+                .checked(false)
+                .build();
         action.execute(context);
 
         verify(element).click();
@@ -83,8 +86,12 @@ public class CheckInputActionTest extends AbstractTestNGUnitTest {
         when(webDriver.findElement(any(By.class))).thenReturn(element);
 
         when(element.isSelected()).thenReturn(true);
-        action.setChecked(true);
 
+        CheckInputAction action =  new CheckInputAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "checkbox")
+                .checked(true)
+                .build();
         action.execute(context);
 
         verify(element, times(0)).click();

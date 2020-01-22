@@ -16,46 +16,57 @@
 
 package com.consol.citrus.jms.actions;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.Session;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 
-import javax.jms.*;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Action to purge JMS queue destinations by simply consuming 
+ * Action to purge JMS queue destinations by simply consuming
  * all available messages. As queue purging is a broker implementation specific feature in
  * many cases this action clears all messages from a destination regardless of
  * JMS broker vendor implementations.
  *
  * Consumer will continue to receive messages until message receive timeout is reached,
  * so no messages are left.
- *  
+ *
  * @author Christoph Deppisch
  * @since 2007
  */
 public class PurgeJmsQueuesAction extends AbstractTestAction {
 
     /** List of queue names to be purged */
-    private List<String> queueNames = new ArrayList<>();
+    private final List<String> queueNames;
 
     /** List of queues to be purged */
-    private List<Queue> queues = new ArrayList<>();
-    
+    private final List<Queue> queues;
+
     /** ConnectionFactory */
-    private ConnectionFactory connectionFactory;
+    private final ConnectionFactory connectionFactory;
 
     /** Time to wait until timeout in ms */
-    private long receiveTimeout = 100;
-    
+    private final long receiveTimeout;
+
     /** Wait some time between message consumption in ms */
-    private long sleepTime = 350;
+    private final long sleepTime;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(PurgeJmsQueuesAction.class);
@@ -63,23 +74,29 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public PurgeJmsQueuesAction() {
-        setName("purge-queue");
+    public PurgeJmsQueuesAction(Builder builder) {
+        super("purge-queue", builder);
+
+        this.queueNames = builder.queueNames;
+        this.queues = builder.queues;
+        this.connectionFactory = builder.connectionFactory;
+        this.receiveTimeout = builder.receiveTimeout;
+        this.sleepTime = builder.sleepTime;
     }
 
     @SuppressWarnings("PMD.CloseResource") //suppress since session/connection closed via JmsUtils
     @Override
     public void doExecute(TestContext context) {
         log.debug("Purging JMS queues...");
-        
+
         Connection connection = null;
         Session session = null;
-        
+
         try {
         	connection = createConnection();
             session = createSession(connection);
             connection.start();
-            
+
             for (Queue queue : queues) {
                 purgeQueue(queue, session);
             }
@@ -109,7 +126,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
-     * Purges a queue destination. 
+     * Purges a queue destination.
      * @param queue
      * @param session
      * @throws JMSException
@@ -136,7 +153,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             javax.jms.Message message;
             do {
                 message = (receiveTimeout >= 0) ? messageConsumer.receive(receiveTimeout) : messageConsumer.receive();
-    
+
                 if (message != null) {
                     log.debug("Removed message from destination " + destinationName);
                     messagesPurged++;
@@ -156,7 +173,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
             JmsUtils.closeMessageConsumer(messageConsumer);
         }
     }
-    
+
     /**
      * Resolves destination by given name.
      * @param session
@@ -179,7 +196,7 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
         }
         return connectionFactory.createConnection();
     }
-    
+
     /**
      * Create queue session.
      * @param connection
@@ -194,42 +211,10 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
-     * List of queue names to purge. 
-     * @param queueNames the queueNames to set
-     */
-    public void setQueueNames(List<String> queueNames) {
-        this.queueNames = queueNames;
-    }
-
-    /**
-     * Connection factory.
-     * @param connectionFactory the connectionFactory to set
-     */
-    public void setConnectionFactory(ConnectionFactory connectionFactory) {
-        this.connectionFactory = connectionFactory;
-    }
-
-    /**
      * @return the queueNames
      */
     public List<String> getQueueNames() {
         return queueNames;
-    }
-
-    /**
-     * List of queues.
-     * @param queues The queues which are to be purged.
-     */
-    public void setQueues(List<Queue> queues) {
-		this.queues = queues;
-	}
-
-    /**
-     * Receive timeout for reading message from a destination.
-     * @param receiveTimeout the receiveTimeout to set
-     */
-    public void setReceiveTimeout(long receiveTimeout) {
-        this.receiveTimeout = receiveTimeout;
     }
 
     /**
@@ -257,19 +242,131 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the sleepTime.
-     * @param sleepTime the sleepTime to set
-     */
-    public void setSleepTime(long sleepTime) {
-        this.sleepTime = sleepTime;
-    }
-
-    /**
      * Gets the sleepTime.
      * @return the sleepTime the sleepTime to get.
      */
     public long getSleepTime() {
         return sleepTime;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<PurgeJmsQueuesAction, Builder> {
+
+        private List<String> queueNames = new ArrayList<>();
+        private List<Queue> queues = new ArrayList<>();
+        private ConnectionFactory connectionFactory;
+        private long receiveTimeout = 100;
+        private long sleepTime = 350;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder purgeQueues() {
+            return new Builder();
+        }
+
+        /**
+         * Sets the Connection factory.
+         * @param connectionFactory the queueConnectionFactory to set
+         */
+        public Builder connectionFactory(ConnectionFactory connectionFactory) {
+            this.connectionFactory = connectionFactory;
+            return this;
+        }
+
+        /**
+         * List of queues to purge in this action.
+         * @param queues The queues which are to be purged.
+         */
+        public Builder queues(List<Queue> queues) {
+            this.queues.addAll(queues);
+            return this;
+        }
+
+        /**
+         * List of queues to purge in this action.
+         * @param queues
+         * @return
+         */
+        public Builder queues(Queue... queues) {
+            return queues(Arrays.asList(queues));
+        }
+
+        /**
+         * Adds a new queue to the list of queues to purge in this action.
+         * @param queue
+         * @return
+         */
+        public Builder queue(Queue queue) {
+            this.queues.add(queue);
+            return this;
+        }
+
+        /**
+         * List of queue names to purge in this action.
+         * @param names the queueNames to set
+         */
+        public Builder queueNames(List<String> names) {
+            this.queueNames.addAll(names);
+            return this;
+        }
+
+        /**
+         * List of queue names to purge in this action.
+         * @param names
+         * @return
+         */
+        public Builder queueNames(String... names) {
+            return queueNames(Arrays.asList(names));
+        }
+
+        /**
+         * Adds a queue name to the list of queues to purge in this action.
+         * @param name
+         * @return
+         */
+        public Builder queue(String name) {
+            this.queueNames.add(name);
+            return this;
+        }
+
+        /**
+         * Receive timeout for reading message from a destination.
+         * @param receiveTimeout the receiveTimeout to set
+         */
+        public Builder timeout(long receiveTimeout) {
+            this.receiveTimeout = receiveTimeout;
+            return this;
+        }
+
+        /**
+         * Sets the sleepTime.
+         * @param millis the sleepTime to set
+         */
+        public Builder sleep(long millis) {
+            this.sleepTime = millis;
+            return this;
+        }
+
+        /**
+         * Sets the Spring bean factory for using endpoint names.
+         * @param applicationContext
+         */
+        public Builder withApplicationContext(ApplicationContext applicationContext) {
+            if (applicationContext.containsBean("connectionFactory")) {
+                connectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
+            }
+
+            return this;
+        }
+
+        @Override
+        public PurgeJmsQueuesAction build() {
+            return new PurgeJmsQueuesAction(this);
+        }
     }
 
 }

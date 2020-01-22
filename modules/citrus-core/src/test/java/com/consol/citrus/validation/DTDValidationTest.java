@@ -26,17 +26,15 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.junit.Assert;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -45,18 +43,7 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
-    private ReceiveMessageAction receiveMessageBean;
-    
-    @Override
-    @BeforeMethod
-    public void prepareTest() {
-        super.prepareTest();
-        
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-    }
-    
+
 	@Test
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     public void testInlineDTD() {
@@ -64,7 +51,7 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
@@ -75,13 +62,12 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
@@ -92,13 +78,15 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSystemId() {
@@ -106,33 +94,34 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testPublicId() {
@@ -140,33 +129,34 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testPublicIdError() {
@@ -174,39 +164,40 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"foo\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
+
+
         try {
-            receiveMessageBean.execute(context);
+            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                    .endpoint(endpoint)
+                    .messageBuilder(controlMessageBuilder)
+                    .validationContext(validationContext)
+                    .build();
+            receiveAction.execute(context);
             Assert.fail("Missing validation exception due to mismatch in public id");
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'foo' but was 'example'"));
         }
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSystemIdError() {
@@ -214,33 +205,34 @@ public class DTDValidationTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
+
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"org/w3/xhtml/xhtml1-transitional.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
                         + "</root>");
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
+
+
         try {
-            receiveMessageBean.execute(context);
+            ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                    .endpoint(endpoint)
+                    .messageBuilder(controlMessageBuilder)
+                    .validationContext(validationContext)
+                    .build();
+            receiveAction.execute(context);
             Assert.fail("Missing validation exception due to mismatch in public id");
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().contains("expected 'org/w3/xhtml/xhtml1-transitional.dtd' but was 'com/consol/citrus/validation/example.dtd'"));

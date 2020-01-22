@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  */
 @Test
 public class SequentialTestRunnerIT extends TestNGCitrusTestRunner {
-    
+
     @CitrusTest
     public void sequentialContainer() {
         sequential().actions(
@@ -39,14 +39,14 @@ public class SequentialTestRunnerIT extends TestNGCitrusTestRunner {
 
         sequential().actions(
             echo("Hello Citrus"),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     context.setVariable("anonymous", "anonymous");
                 }
             },
             sleep(1000),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     log.info(context.getVariable("anonymous"));

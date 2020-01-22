@@ -16,46 +16,58 @@
 
 package com.consol.citrus.container;
 
+import java.util.Properties;
+
+import com.consol.citrus.AbstractIteratingContainerBuilder;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.BooleanExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.PropertyPlaceholderHelper;
-
-import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  */
 public abstract class AbstractIteratingActionContainer extends AbstractActionContainer {
     /** Boolean expression string */
-    protected String condition;
+    protected final String condition;
 
     /** Optional condition expression evaluates to true or false */
-    protected IteratingConditionExpression conditionExpression;
+    protected final IteratingConditionExpression conditionExpression;
 
     /** Name of index variable */
-    protected String indexName = "i";
+    protected final String indexName;
+
+    /** Cache start index for further container executions - e.g. in loop */
+    protected final int start;
 
     /** Looping index */
     protected int index;
 
-    /** Cache start index for further container executions - e.g. in loop */
-    protected int start = 1;
-	
+    public AbstractIteratingActionContainer(String name, AbstractIteratingContainerBuilder<?, ?> builder) {
+        super(name, builder);
+
+        this.condition = builder.getCondition();
+        this.conditionExpression = builder.getConditionExpression();
+        this.indexName = builder.getIndexName();
+        this.index = builder.getIndex();
+        this.start = builder.getStart();
+    }
+
     @Override
     public final void doExecute(TestContext context) {
         index = start;
         executeIteration(context);
     }
-    
+
     /**
      * Execute embedded actions in loop.
      * @param context TestContext holding variable information.
      */
     protected abstract void executeIteration(TestContext context);
-    
+
     /**
      * Executes the nested test actions.
      * @param context
@@ -63,7 +75,8 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
     protected void executeActions(TestContext context) {
         context.setVariable(indexName, String.valueOf(index));
 
-        for (TestAction action: actions) {
+        for (TestActionBuilder<?> actionBuilder: actions) {
+            TestAction action = actionBuilder.build();
             setActiveAction(action);
             action.execute(context);
         }
@@ -107,46 +120,6 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
     @Override
     public boolean isDone(TestContext context) {
         return super.isDone(context) || !checkCondition(context);
-    }
-
-    /**
-     * Aborting condition.
-     * @param condition
-     */
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
-
-    /**
-     * Aborting condition expression.
-     * @param conditionExpression
-     */
-    public void setConditionExpression(IteratingConditionExpression conditionExpression) {
-        this.conditionExpression = conditionExpression;
-    }
-
-    /**
-     * Name of index variable.
-     * @param indexName
-     */
-    public void setIndexName(String indexName) {
-        this.indexName = indexName;
-    }
-    
-    /**
-     * Setter for looping index.
-     * @param index the index to set
-     */
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    /**
-     * Setter for index start.
-     * @param start the start index value.
-     */
-    public void setStart(int start) {
-        this.start = start;
     }
 
     /**

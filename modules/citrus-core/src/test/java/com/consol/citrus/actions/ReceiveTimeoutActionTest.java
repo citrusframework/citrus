@@ -40,9 +40,6 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 
 	@Test
 	public void testReceiveTimeout() {
-		ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-		receiveTimeout.setEndpoint(endpoint);
-
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -50,17 +47,15 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(context, 1000L)).thenReturn(null);
         when(endpoint.getActor()).thenReturn(null);
-        
+
+        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction.Builder()
+                .endpoint(endpoint)
+                .build();
 		receiveTimeout.execute(context);
 	}
-	
+
 	@Test
     public void testReceiveTimeoutCustomTimeout() {
-        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setEndpoint(endpoint);
-        
-        receiveTimeout.setTimeout(500L);
-
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -68,16 +63,17 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(context, 500L)).thenReturn(null);
         when(endpoint.getActor()).thenReturn(null);
-        
+
+        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction.Builder()
+                .endpoint(endpoint)
+                .timeout(500L)
+                .build();
         receiveTimeout.execute(context);
     }
-	
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveTimeoutFail() {
-        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setEndpoint(endpoint);
-        
         Message message = new DefaultMessage("<TestMessage>Hello World!</TestMessage>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -87,23 +83,22 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(context, 1000L)).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-        
+
+        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction.Builder()
+                .endpoint(endpoint)
+                .build();
         try {
             receiveTimeout.execute(context);
         } catch(CitrusRuntimeException e) {
             Assert.assertEquals(e.getMessage(), "Message timeout validation failed! Received message while waiting for timeout on destination");
             return;
         }
-        
+
         Assert.fail("Missing " + CitrusRuntimeException.class + " because action did receive a message");
     }
-    
+
     @Test
     public void testReceiveTimeoutWithMessageSelector() {
-        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setEndpoint(endpoint);
-        receiveTimeout.setMessageSelector("Operation = 'sayHello'");
-
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
@@ -111,16 +106,16 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive("Operation = 'sayHello'", context, 1000L)).thenReturn(null);
         when(endpoint.getActor()).thenReturn(null);
-        
+
+        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction.Builder()
+                .endpoint(endpoint)
+                .selector("Operation = 'sayHello'")
+                .build();
         receiveTimeout.execute(context);
     }
-    
+
     @Test
     public void testReceiveTimeoutWithMessageSelectorVariableSupport() {
-        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction();
-        receiveTimeout.setEndpoint(endpoint);
-        receiveTimeout.setMessageSelector("Operation = '${operation}'");
-
 	    context.setVariable("operation", "sayHello");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -131,6 +126,10 @@ public class ReceiveTimeoutActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive("Operation = 'sayHello'", context, 1000L)).thenReturn(null);
         when(endpoint.getActor()).thenReturn(null);
 
+        ReceiveTimeoutAction receiveTimeout = new ReceiveTimeoutAction.Builder()
+                .endpoint(endpoint)
+                .selector("Operation = '${operation}'")
+                .build();
         receiveTimeout.execute(context);
     }
 }

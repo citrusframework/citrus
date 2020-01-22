@@ -16,10 +16,13 @@
 
 package com.consol.citrus.camel.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import org.apache.camel.CamelContext;
-
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -28,18 +31,16 @@ import java.util.List;
 public abstract class AbstractCamelRouteAction extends AbstractTestAction {
 
     /** Target Camel context */
-    protected CamelContext camelContext;
+    protected final CamelContext camelContext;
 
     /** The Camel route to start */
-    protected List<String> routeIds;
+    protected final List<String> routeIds;
 
-    /**
-     * Sets the target Camel context.
-     * @param camelContext
-     */
-    public AbstractCamelRouteAction setCamelContext(CamelContext camelContext) {
-        this.camelContext = camelContext;
-        return this;
+    protected AbstractCamelRouteAction(String name, Builder<?, ?> builder) {
+        super(name, builder);
+
+        this.camelContext = builder.camelContext;
+        this.routeIds = builder.routeIds;
     }
 
     /**
@@ -51,19 +52,49 @@ public abstract class AbstractCamelRouteAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the Camel routes.
-     * @param routeIds
-     */
-    public AbstractCamelRouteAction setRouteIds(List<String> routeIds) {
-        this.routeIds = routeIds;
-        return this;
-    }
-
-    /**
      * Gets the Camel routes.
      * @return
      */
     public List<String> getRouteIds() {
         return routeIds;
     }
+
+    /**
+     * Action builder.
+     */
+    public static abstract class Builder<T extends AbstractCamelRouteAction, B extends Builder<T, B>> extends AbstractTestActionBuilder<T, B> {
+
+        protected CamelContext camelContext;
+        protected List<String> routeIds = new ArrayList<>();
+
+        /**
+         * Sets the Camel context.
+         * @param camelContext
+         * @return
+         */
+        public B context(CamelContext camelContext) {
+            this.camelContext = camelContext;
+            return self;
+        }
+
+        /**
+         * Adds route ids.
+         * @param routeIds
+         * @return
+         */
+        public B routes(String... routeIds) {
+            return routeIds(Arrays.asList(routeIds));
+        }
+
+        /**
+         * Add list of route ids.
+         * @param routeIds
+         * @return
+         */
+        public B routeIds(List<String> routeIds) {
+            this.routeIds.addAll(routeIds);
+            return self;
+        }
+    }
+
 }

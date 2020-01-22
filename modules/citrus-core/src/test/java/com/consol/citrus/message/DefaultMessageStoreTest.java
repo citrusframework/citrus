@@ -42,7 +42,7 @@ public class DefaultMessageStoreTest extends AbstractTestNGUnitTest {
     public void testConstructMessageName() throws Exception {
         Endpoint endpoint = new ChannelEndpoint();
         endpoint.setName("testEndpoint");
-        Assert.assertEquals(messageStore.constructMessageName(new SendMessageAction(), endpoint), "send(testEndpoint)");
+        Assert.assertEquals(messageStore.constructMessageName(new SendMessageAction.Builder().build(), endpoint), "send(testEndpoint)");
     }
 
 }

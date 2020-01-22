@@ -16,13 +16,17 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestRequest;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -49,11 +53,6 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -62,7 +61,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  */
 public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
 
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
@@ -90,15 +89,14 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
-        
+
         final StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
@@ -120,10 +118,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -159,10 +156,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -203,10 +199,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -232,10 +227,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -267,10 +261,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -281,7 +274,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderWithPayloadData() {
         final MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -296,12 +289,11 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -319,28 +311,27 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
                     .payload(resource);
             }
         };
-        
+
         reset(resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("somePayloadData".getBytes()));
         builder.configure();
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
-        
+
         final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "somePayloadData");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderWithEndpointName() {
         reset(applicationContextMock);
@@ -359,15 +350,14 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
 
     }
-    
+
     @Test
     public void testSendBuilderWithHeaders() {
         final MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -385,12 +375,11 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -401,7 +390,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("language"), "eng");
     }
-    
+
     @Test
     public void testSendBuilderWithHeaderData() {
         final MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -410,7 +399,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
                 send(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
-                
+
                 send(messageEndpoint)
                     .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>");
@@ -421,14 +410,12 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendMessageAction.class);
-        
-        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -439,7 +426,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
         Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
 
-        action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
+        action = (SendMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -474,12 +461,10 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
 
-        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -493,7 +478,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
         Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
 
-        action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
+        action = (SendMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -507,7 +492,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(staticMessageBuilder.getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
         Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
     }
-    
+
     @Test
     public void testSendBuilderWithHeaderDataResource() throws IOException {
         final MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -516,13 +501,13 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
                 send(messageEndpoint)
                     .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                     .header(resource);
-                
+
                 send(messageEndpoint)
                     .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header(resource);
             }
         };
-        
+
         reset(resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someHeaderData".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("otherHeaderData".getBytes()));
@@ -530,14 +515,12 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 2);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        Assert.assertEquals(test.getActions().get(1).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(1)).getDelegate().getClass(), SendMessageAction.class);
-        
-        SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
+
+        SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -548,7 +531,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getHeaderData().get(0), "someHeaderData");
         Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
 
-        action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(1)).getDelegate();
+        action = (SendMessageAction) test.getActions().get(1);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -562,7 +545,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderExtractFromPayload() {
         final MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -579,14 +562,13 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        
+
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
@@ -610,10 +592,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -623,7 +604,7 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
         Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
     }
-    
+
     @Test
     public void testSendBuilderExtractFromHeader() {
         final MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
@@ -640,14 +621,13 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
-        
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
+
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        
+
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
         Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
@@ -669,10 +649,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -698,10 +677,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -735,10 +713,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
@@ -770,10 +747,9 @@ public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
-        Assert.assertEquals(test.getActions().get(0).getClass(), DelegatingTestAction.class);
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(0)).getDelegate().getClass(), SendMessageAction.class);
+        Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
 
-        final SendMessageAction action = (SendMessageAction) ((DelegatingTestAction)test.getActions().get(0)).getDelegate();
+        final SendMessageAction action = (SendMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);

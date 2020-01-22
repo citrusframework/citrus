@@ -28,12 +28,23 @@ public class ClearBrowserCacheAction extends AbstractSeleniumAction {
     /**
      * Default constructor.
      */
-    public ClearBrowserCacheAction() {
-        super("clear-cache");
+    public ClearBrowserCacheAction(Builder builder) {
+        super("clear-cache", builder);
     }
 
     @Override
     protected void execute(SeleniumBrowser browser, TestContext context) {
         browser.getWebDriver().manage().deleteAllCookies();
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractSeleniumAction.Builder<ClearBrowserCacheAction, Builder> {
+
+        @Override
+        public ClearBrowserCacheAction build() {
+            return new ClearBrowserCacheAction(this);
+        }
     }
 }

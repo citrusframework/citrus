@@ -16,6 +16,10 @@
 
 package com.consol.citrus.actions;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,99 +28,77 @@ import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.springframework.messaging.MessageChannel;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class PurgeMessageChannelActionTest extends AbstractTestNGUnitTest {
-	
+
     @Autowired
     @Qualifier(value="mockChannel")
     private QueueChannel mockChannel;
-    
+
     private QueueChannel emptyChannel = Mockito.mock(QueueChannel.class);
-    
+
     @Test
     public void testPurgeWithChannelNames() throws Exception {
-        PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction();
-        purgeChannelAction.setBeanFactory(applicationContext);
-        purgeChannelAction.afterPropertiesSet();
-        
-        List<String> channelNames = new ArrayList<String>();
-        channelNames.add("mockChannel");
-        purgeChannelAction.setChannelNames(channelNames);
-        
         List<Message<?>> purgedMessages = new ArrayList<Message<?>>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
-        
+
         reset(mockChannel);
-        
+
         when(mockChannel.purge((MessageSelector)any())).thenReturn(purgedMessages);
 
-        
+        PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction.Builder()
+                .beanFactory(applicationContext)
+                .channelNames("mockChannel")
+                .build();
         purgeChannelAction.execute(context);
 
     }
-    
+
 	@SuppressWarnings("unchecked")
     @Test
     public void testPurgeWithChannelObjects() throws Exception {
-	    PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction();
-        purgeChannelAction.setBeanFactory(applicationContext);
-        purgeChannelAction.afterPropertiesSet();
-        
-        List<MessageChannel> channels = new ArrayList<MessageChannel>();
-        channels.add(mockChannel);
-        channels.add(emptyChannel);
-        purgeChannelAction.setChannels(channels);
-        
         List<Message<?>> purgedMessages = new ArrayList<Message<?>>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
-        
+
         reset(mockChannel, emptyChannel);
-        
+
         when(mockChannel.purge((MessageSelector)any())).thenReturn(purgedMessages);
         when(emptyChannel.purge((MessageSelector)any())).thenReturn(Collections.EMPTY_LIST);
 
-        
+        PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction.Builder()
+                .beanFactory(applicationContext)
+                .channels(mockChannel, emptyChannel)
+                .build();
         purgeChannelAction.execute(context);
 
     }
-	
+
 	@Test
     public void testPurgeWithMessageSelector() throws Exception {
-        PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction();
-        purgeChannelAction.setBeanFactory(applicationContext);
-        purgeChannelAction.afterPropertiesSet();
-        
-        MessageSelector messageSelector = new MessageSelector() {
-            public boolean accept(Message message) {
-                return false;
-            }
-        };
-        
-        purgeChannelAction.setMessageSelector(messageSelector);
-        
-        List<MessageChannel> channels = new ArrayList<MessageChannel>();
-        channels.add(mockChannel);
-        purgeChannelAction.setChannels(channels);
-        
+        MessageSelector messageSelector = message -> false;
+
         List<Message<?>> purgedMessages = new ArrayList<Message<?>>();
         purgedMessages.add(MessageBuilder.withPayload("<TestRequest>Hello World!</TestRequest>").build());
-        
+
         reset(mockChannel);
-        
+
         when(mockChannel.purge(messageSelector)).thenReturn(purgedMessages);
 
-        
+        PurgeMessageChannelAction purgeChannelAction = new PurgeMessageChannelAction.Builder()
+                .beanFactory(applicationContext)
+                .channel(mockChannel)
+                .selector(messageSelector)
+                .build();
         purgeChannelAction.execute(context);
 
     }
-	
+
 }

@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.NavigateAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -35,7 +34,42 @@ public class NavigateActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return NavigateAction.class;
+    protected Class<NavigateActionFactoryBean> getBrowserActionClass() {
+        return NavigateActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class NavigateActionFactoryBean extends AbstractSeleniumActionFactoryBean<NavigateAction, NavigateAction.Builder> {
+
+        private final NavigateAction.Builder builder = new NavigateAction.Builder();
+
+        /**
+         * Sets the page url.
+         * @param page
+         */
+        public void setPage(String page) {
+            builder.page(page);
+        }
+
+        @Override
+        public NavigateAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return NavigateAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public NavigateAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

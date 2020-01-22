@@ -17,7 +17,6 @@
 package com.consol.citrus.selenium.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.MakeScreenshotAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -35,7 +34,42 @@ public class MakeScreenshotActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return MakeScreenshotAction.class;
+    protected Class<MakeScreenshotActionFactoryBean> getBrowserActionClass() {
+        return MakeScreenshotActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class MakeScreenshotActionFactoryBean extends AbstractSeleniumActionFactoryBean<MakeScreenshotAction, MakeScreenshotAction.Builder> {
+
+        private final MakeScreenshotAction.Builder builder = new MakeScreenshotAction.Builder();
+
+        /**
+         * Sets the outputDir.
+         * @param outputDir
+         */
+        public void setOutputDir(String outputDir) {
+            builder.outputDir(outputDir);
+        }
+
+        @Override
+        public MakeScreenshotAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return MakeScreenshotAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public MakeScreenshotAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

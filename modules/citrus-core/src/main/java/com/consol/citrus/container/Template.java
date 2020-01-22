@@ -16,6 +16,15 @@
 
 package com.consol.citrus.container;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
@@ -24,22 +33,20 @@ import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.*;
-import java.util.Map.Entry;
+import org.springframework.context.ApplicationContext;
 
 /**
  * This class represents a previously defined block of test actions. Test cases can call
  * templates and reuse their functionality.
- * 
+ *
  * Templates operate on test variables. While calling, the template caller can set these
  * variables as parameters.
- * 
+ *
  * Nested test actions are executed in sequence.
- * 
+ *
  * The template execution may affect existing variable values in the calling test case. So
  * variables may have different values in the test case after template execution. Therefore
- * users can create a local test context by setting globalContext to false. Templates then will 
+ * users can create a local test context by setting globalContext to false. Templates then will
  * have no affect on the variables used in the test case.
  *
  * @author Christoph Deppisch
@@ -48,13 +55,25 @@ import java.util.Map.Entry;
 public class Template extends AbstractTestAction {
 
     /** List of actions to be executed */
-    private List<TestAction> actions = new ArrayList<TestAction>();
+    private final List<TestAction> actions;
 
     /** List of parameters to set before execution */
-    private Map<String, String> parameter = new LinkedHashMap<String, String>();
-    
+    private final Map<String, String> parameter;
+
     /** Should variables effect the global variables scope? */
-    private boolean globalContext = true;
+    private final boolean globalContext;
+
+    /**
+     * Default constructor
+     * @param builder
+     */
+    public Template(AbstractTemplateBuilder<? extends Template, ?> builder) {
+        super(Optional.ofNullable(builder.templateName).orElse("template"), builder);
+
+        this.actions = builder.actions;
+        this.parameter = builder.parameter;
+        this.globalContext = builder.globalContext;
+    }
 
     /**
      * Logger
@@ -68,7 +87,7 @@ public class Template extends AbstractTestAction {
         }
 
         TestContext innerContext;
-        
+
         //decide whether to use global test context or not
         if (globalContext) {
             innerContext = context;
@@ -91,7 +110,7 @@ public class Template extends AbstractTestAction {
             innerContext.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
             innerContext.setApplicationContext(context.getApplicationContext());
         }
-        
+
         for (Entry<String, String> entry : parameter.entrySet()) {
             String param = entry.getKey();
             String paramValue = entry.getValue();
@@ -116,31 +135,6 @@ public class Template extends AbstractTestAction {
     }
 
     /**
-     * Set nested test actions.
-     * @param actions
-     */
-    public void setActions(List<TestAction> actions) {
-        this.actions = actions;
-    }
-
-    /**
-     * Set parameter before execution.
-     * @param parameter the parameter to set
-     */
-    public void setParameter(Map<String, String> parameter) {
-        this.parameter = parameter;
-    }
-
-    /**
-     * Boolean flag marking the template variables should also affect
-     * variables in test case.
-     * @param globalContext the globalContext to set
-     */
-    public void setGlobalContext(boolean globalContext) {
-        this.globalContext = globalContext;
-    }
-
-    /**
      * Gets the parameter.
      * @return the parameter
      */
@@ -162,5 +156,114 @@ public class Template extends AbstractTestAction {
      */
     public List<TestAction> getActions() {
         return actions;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractTemplateBuilder<Template, Builder> {
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param name
+         * @return
+         */
+        public static Builder applyTemplate(String name) {
+            Builder builder = new Builder();
+            builder.templateName(name);
+            return builder;
+        }
+
+        @Override
+        public Template build() {
+            onBuild();
+            return new Template(this);
+        }
+    }
+
+    /**
+     * Action builder.
+     */
+    public static abstract class AbstractTemplateBuilder<T extends Template, B extends AbstractTemplateBuilder<T, B>> extends AbstractTestActionBuilder<T, B> {
+
+        private String templateName;
+        private List<TestAction> actions = new ArrayList<>();
+        private Map<String, String> parameter = new LinkedHashMap<>();
+        private boolean globalContext = true;
+        private ApplicationContext applicationContext;
+
+        public B templateName(String templateName) {
+            this.templateName = templateName;
+            return self;
+        }
+
+        /**
+         * Boolean flag marking the template variables should also affect
+         * variables in test case.
+         * @param globalContext the globalContext to set
+         */
+        public B globalContext(boolean globalContext) {
+            this.globalContext = globalContext;
+            return self;
+        }
+
+        /**
+         * Set parameter before execution.
+         * @param parameters the parameter to set
+         */
+        public B parameters(Map<String, String> parameters) {
+            this.parameter.putAll(parameters);
+            return self;
+        }
+
+        /**
+         * Set parameter before execution.
+         * @param name
+         * @param value
+         */
+        public B parameter(String name, String value) {
+            this.parameter.put(name, value);
+            return self;
+        }
+
+        /**
+         * Adds test actions to the template.
+         * @param actions
+         * @return
+         */
+        public B actions(TestAction... actions) {
+            return actions(Arrays.asList(actions));
+        }
+
+        /**
+         * Adds test actions to the template.
+         * @param actions
+         * @return
+         */
+        public B actions(List<TestAction> actions) {
+            this.actions = actions;
+            return self;
+        }
+
+        /**
+         * Sets the Spring bean factory for using endpoint names.
+         * @param applicationContext
+         */
+        public B withApplicationContext(ApplicationContext applicationContext) {
+            this.applicationContext = applicationContext;
+            return self;
+        }
+
+        protected void onBuild() {
+            if (applicationContext != null && templateName != null) {
+                Template rootTemplate = applicationContext.getBean(templateName, Template.class);
+                globalContext(rootTemplate.isGlobalContext() && globalContext);
+                actor(Optional.ofNullable(getActor()).orElse(rootTemplate.getActor()));
+                parameters(Optional.ofNullable(rootTemplate.getParameter()).map(rootParams -> {
+                    rootParams.putAll(parameter);
+                    return rootParams;
+                }).orElse(parameter));
+                actions(rootTemplate.getActions());
+            }
+        }
     }
 }

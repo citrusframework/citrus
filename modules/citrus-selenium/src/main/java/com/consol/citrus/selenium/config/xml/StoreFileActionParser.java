@@ -34,7 +34,42 @@ public class StoreFileActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return StoreFileAction.class;
+    protected Class<StoreFileActionFactoryBean> getBrowserActionClass() {
+        return StoreFileActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class StoreFileActionFactoryBean extends AbstractSeleniumActionFactoryBean<StoreFileAction, StoreFileAction.Builder> {
+
+        private final StoreFileAction.Builder builder = new StoreFileAction.Builder();
+
+        /**
+         * Sets the filePath.
+         * @param filePath
+         */
+        public void setFilePath(String filePath) {
+            builder.filePath(filePath);
+        }
+
+        @Override
+        public StoreFileAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StoreFileAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StoreFileAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

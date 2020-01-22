@@ -37,8 +37,9 @@ public class StopTimerActionTest extends AbstractTestNGUnitTest {
 
         StopTimer timer = createMockTimer(context, timerId);
 
-        StopTimerAction stopTimer = new StopTimerAction();
-        stopTimer.setTimerId(timerId);
+        StopTimerAction stopTimer = new StopTimerAction.Builder()
+                .id(timerId)
+                .build();
 
         Assert.assertEquals(stopTimer.getTimerId(), timerId);
 
@@ -52,7 +53,7 @@ public class StopTimerActionTest extends AbstractTestNGUnitTest {
         StopTimer timer1 = createMockTimer(context, "timer#1");
         StopTimer timer2 = createMockTimer(context, "timer#2");
 
-        StopTimerAction stopTimer = new StopTimerAction();
+        StopTimerAction stopTimer = new StopTimerAction.Builder().build();
         stopTimer.execute(context);
 
         verify(timer1).stopTimer();
@@ -61,8 +62,9 @@ public class StopTimerActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void shouldNotFailWhenStopingTimerWithUnknownId() {
-        StopTimerAction stopTimer = new StopTimerAction();
-        stopTimer.setTimerId("some-unknown-timer");
+        StopTimerAction stopTimer = new StopTimerAction.Builder()
+                .id("some-unknown-timer")
+                .build();
         stopTimer.execute(context);
     }
 

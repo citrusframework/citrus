@@ -16,27 +16,24 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.actions.InputAction;
+import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.actions.InputAction;
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-
 /**
  * Bean definition parser for input action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class InputActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(InputAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(InputActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
@@ -45,5 +42,56 @@ public class InputActionParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("valid-answers"), "validAnswers");
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class InputActionFactoryBean extends AbstractTestActionFactoryBean<InputAction, InputAction.Builder> {
+
+        private final InputAction.Builder builder = new InputAction.Builder();
+
+        /**
+         * Sets the message.
+         * @param message the message to set
+         */
+        public void setMessage(String message) {
+            builder.message(message);
+        }
+
+        /**
+         * Sets the variable.
+         * @param variable the variable to set
+         */
+        public void setVariable(String variable) {
+            builder.result(variable);
+        }
+
+        /**
+         * Sets the valid answers.
+         * @param validAnswers the validAnswers to set
+         */
+        public void setValidAnswers(String validAnswers) {
+            builder.answers(validAnswers);
+        }
+
+        @Override
+        public InputAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return InputAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public InputAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

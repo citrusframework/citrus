@@ -18,13 +18,23 @@ package com.consol.citrus.camel.actions;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.*;
-import org.apache.camel.impl.*;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.SimpleBuilder;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultHeadersMapFactory;
+import org.apache.camel.impl.DefaultMessage;
+import org.apache.camel.impl.JavaUuidGenerator;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
@@ -47,15 +57,14 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setRouteId("route_1");
-        action.setAction("status");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .route("route_1", "status")
+                .build();
         action.execute(context);
 
     }
-    
+
     @Test
     public void testControlBusRouteActionVariableSupport() throws Exception {
         String endpointUri = "controlbus:route?routeId=route_1&action=status";
@@ -75,11 +84,10 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setRouteId("${routeId}");
-        action.setAction("${action}");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .route("${routeId}", "${action}")
+                .build();
         action.execute(context);
 
     }
@@ -100,12 +108,11 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setRouteId("route_1");
-        action.setAction("status");
-        action.setResult("Started");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .route("route_1", "status")
+                .result("Started")
+                .build();
         action.execute(context);
 
     }
@@ -126,12 +133,11 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setRouteId("route_1");
-        action.setAction("status");
-        action.setResult("Stopped");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .route("route_1", "status")
+                .result("Stopped")
+                .build();
         action.execute(context);
 
     }
@@ -152,10 +158,10 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setLanguageExpression("${camelContext.getRouteStatus('myRoute')}");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .language("simple", "${camelContext.getRouteStatus('myRoute')}")
+                .build();
         action.execute(context);
 
     }
@@ -184,10 +190,10 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
             return exchange;
         });
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setLanguageExpression("${camelContext.getRouteStatus('${routeId}')}");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .language(SimpleBuilder.simple("${camelContext.getRouteStatus('${routeId}')}"))
+                .build();
         action.execute(context);
     }
 
@@ -213,11 +219,11 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
             return exchange;
         });
 
-        CamelControlBusAction action = new CamelControlBusAction();
-        action.setCamelContext(camelContext);
-        action.setLanguageExpression("${camelContext.getRouteStatus('myRoute')}");
-        action.setResult("Started");
-
+        CamelControlBusAction action = new CamelControlBusAction.Builder()
+                .context(camelContext)
+                .language(SimpleBuilder.simple("${camelContext.getRouteStatus('myRoute')}"))
+                .result("Started")
+                .build();
         action.execute(context);
     }
 }

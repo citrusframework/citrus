@@ -16,6 +16,9 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.Map;
+
+import com.consol.citrus.TestAction;
 import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.container.Assert;
@@ -27,20 +30,16 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.Map;
-
 /**
  * Bean definition parser for assert action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class AssertParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Assert.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(AssertFactoryBean.class);
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("exception"), "exception");
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("message"), "message");
@@ -52,7 +51,7 @@ public class AssertParser implements BeanDefinitionParser {
         Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
             BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
-            
+
             if (parser !=  null) {
                 builder.addPropertyValue("action", parser.parse(action, parserContext));
             } else {
@@ -63,5 +62,56 @@ public class AssertParser implements BeanDefinitionParser {
         builder.addPropertyValue("name", element.getLocalName());
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class AssertFactoryBean extends AbstractTestContainerFactoryBean<Assert, Assert.Builder> {
+
+        private final Assert.Builder builder = new Assert.Builder();
+
+        /**
+         * Sets the test action.
+         * @param action
+         */
+        public void setAction(TestAction action) {
+            builder.action(action);
+        }
+
+        /**
+         * Set the message to send.
+         * @param message the message to set
+         */
+        public void setMessage(String message) {
+            this.builder.message(message);
+        }
+
+        /**
+         * Sets the exception.
+         * @param exception the exception to set
+         */
+        public void setException(Class<? extends Throwable> exception) {
+            this.builder.exception(exception);
+        }
+
+        @Override
+        public Assert getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Assert.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Assert.Builder getBuilder() {
+            return builder;
+        }
     }
 }

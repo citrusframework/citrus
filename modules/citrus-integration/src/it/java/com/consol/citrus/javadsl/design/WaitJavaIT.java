@@ -16,6 +16,10 @@
 
 package com.consol.citrus.javadsl.design;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.common.FileHelper;
@@ -28,10 +32,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
 
 
 @Test
@@ -56,41 +56,14 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
                 sequential().actions(
                         //THEN
                         send("channelRequestSender")
-                                .name(messageName)
+                                .messageName(messageName)
                                 .payload("Wait for me")
                                 .header("Operation", "waitForMe"),
 
                         receive("channelResponseReceiver")
                                 .selector(Collections.singletonMap("Operation", "waitForMe"))
                                 .messageType(MessageType.PLAINTEXT)
-                                .name(messageName)
-                                .header("Operation", "waitForMe")
-                )
-        );
-    }
-
-    @CitrusTest
-    public void waitMessageDeprecated() {
-        //GIVEN
-        String messageName = "myTestMessage";
-
-        parallel().actions(
-                sequential().actions(
-                        //WHEN
-                        waitFor()
-                                .message(messageName).getBuilder().build()
-                ),
-                sequential().actions(
-                        //THEN
-                        send("channelRequestSender")
-                                .name(messageName)
-                                .payload("Wait for me")
-                                .header("Operation", "waitForMe"),
-
-                        receive("channelResponseReceiver")
-                                .selector(Collections.singletonMap("Operation", "waitForMe"))
-                                .messageType(MessageType.PLAINTEXT)
-                                .name(messageName)
+                                .messageName(messageName)
                                 .header("Operation", "waitForMe")
                 )
         );
@@ -101,30 +74,6 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
         waitFor()
                 .file()
                 .resource(new ClassPathResource("citrus.properties").getFile());
-    }
-
-    @CitrusTest
-    public void waitHttpDeprecated() {
-
-        //GIVEN
-        String server = startHttpServerAndGetUrl();
-
-        parallel().actions(
-                sequential().actions(
-                        //WHEN
-                        waitFor()
-                                .http(server).getBuilder().build()
-                ),
-                sequential().actions(
-                        //THEN
-                        http().server(httpServer).receive().head(),
-                        http().server(httpServer).respond(HttpStatus.NOT_FOUND),
-                        http().server(httpServer).receive().head(),
-                        http().server(httpServer).respond(HttpStatus.OK)
-                )
-        );
-
-        doFinally().actions(stop(httpServer));
     }
 
     @CitrusTest
@@ -181,7 +130,7 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
         waitFor()
                 .execution()
                 .interval(300L)
-                .ms(500L)
+                .milliseconds(500L)
                 .action(sleep(250L));
     }
 
@@ -200,19 +149,6 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     }
 
     @CitrusTest
-    public void waitForFileUsingResourceDeprecated() {
-        File file = FileHelper.createTmpFile();
-
-        applyBehavior(new AbstractTestBehavior() {
-            @Override
-            public void apply() {
-                waitFor()
-                        .file(file);
-            }
-        });
-    }
-
-    @CitrusTest
     public void waitForFileUsingPath() {
         File file = FileHelper.createTmpFile();
 
@@ -222,19 +158,6 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
                 waitFor()
                         .file()
                         .path(file.toURI().toString());
-            }
-        });
-    }
-
-    @CitrusTest
-    public void waitForFileUsingPathDeprecated() {
-        File file = FileHelper.createTmpFile();
-
-        applyBehavior(new AbstractTestBehavior() {
-            @Override
-            public void apply() {
-                waitFor()
-                        .file(file.toURI().toString());
             }
         });
     }

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.DefaultMessage;
@@ -27,15 +29,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
-	
+
     @Autowired
     @Qualifier(value="mockEndpoint")
     private Endpoint mockEndpoint;
@@ -46,14 +48,7 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
     private SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
 
     @Test
-    public void testPurgeWithEndpointNames() throws Exception {
-        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction();
-        purgeEndpointAction.setBeanFactory(applicationContext);
-
-        List<String> endpointNames = new ArrayList<>();
-        endpointNames.add("mockEndpoint");
-        purgeEndpointAction.setEndpointNames(endpointNames);
-
+    public void testPurgeWithEndpointNames() {
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");
@@ -61,20 +56,16 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(context, 100L)).thenReturn(new DefaultMessage());
         doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
 
+        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
+                .beanFactory(applicationContext)
+                .endpointNames("mockEndpoint")
+                .build();
         purgeEndpointAction.execute(context);
     }
 
 	@SuppressWarnings("unchecked")
     @Test
-    public void testPurgeWithEndpointObjects() throws Exception {
-	    PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction();
-        purgeEndpointAction.setBeanFactory(applicationContext);
-
-        List<Endpoint> endpoints = new ArrayList<>();
-        endpoints.add(mockEndpoint);
-        endpoints.add(emptyEndpoint);
-        purgeEndpointAction.setEndpoints(endpoints);
-        
+    public void testPurgeWithEndpointObjects() {
         reset(mockEndpoint, emptyEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");
@@ -86,21 +77,15 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
         doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
 
-        
+        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
+                .beanFactory(applicationContext)
+                .endpoints(mockEndpoint, emptyEndpoint)
+                .build();
         purgeEndpointAction.execute(context);
     }
-	
+
 	@Test
     public void testPurgeWithMessageSelector() throws Exception {
-        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction();
-        purgeEndpointAction.setBeanFactory(applicationContext);
-
-        purgeEndpointAction.setMessageSelector("operation = 'sayHello'");
-        
-        List<Endpoint> endpoints = new ArrayList<>();
-        endpoints.add(mockEndpoint);
-        purgeEndpointAction.setEndpoints(endpoints);
-        
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");
@@ -108,20 +93,16 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         when(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).thenReturn(new DefaultMessage());
         doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive("operation = 'sayHello'", context, 100L);
 
+        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
+                .beanFactory(applicationContext)
+                .endpoints(mockEndpoint)
+                .selector("operation = 'sayHello'")
+                .build();
         purgeEndpointAction.execute(context);
     }
 
     @Test
     public void testPurgeWithMessageSelectorMap() throws Exception {
-        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction();
-        purgeEndpointAction.setBeanFactory(applicationContext);
-
-        purgeEndpointAction.setMessageSelectorMap(Collections.singletonMap("operation", "sayHello"));
-
-        List<Endpoint> endpoints = new ArrayList<>();
-        endpoints.add(mockEndpoint);
-        purgeEndpointAction.setEndpoints(endpoints);
-
         reset(mockEndpoint, consumer, selectiveConsumer);
 
         when(mockEndpoint.getName()).thenReturn("mockEndpoint");
@@ -129,7 +110,12 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         when(selectiveConsumer.receive("operation = 'sayHello'", context, 100L)).thenReturn(new DefaultMessage());
         doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive("operation = 'sayHello'", context, 100L);
 
+        PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
+                .beanFactory(applicationContext)
+                .endpoints(mockEndpoint)
+                .selector(Collections.singletonMap("operation", "sayHello"))
+                .build();
         purgeEndpointAction.execute(context);
     }
-	
+
 }

@@ -60,14 +60,14 @@ public class AsyncTestDesignerTest extends AbstractTestNGUnitTest {
             public void configure() {
                 async().actions(
                         echo("${var}"),
-                        new AbstractTestAction() {
+                        () -> new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.setVariable("anonymous", "anonymous");
                             }
                         },
                         sleep(5000L),
-                        new AbstractTestAction() {
+                        () -> new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 context.getVariable("anonymous");

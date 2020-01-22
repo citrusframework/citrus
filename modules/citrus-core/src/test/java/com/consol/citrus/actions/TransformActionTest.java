@@ -25,11 +25,9 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
  * @author Philipp Komninos
  */
 public class TransformActionTest extends AbstractTestNGUnitTest {
-	
+
 	@Test
 	public void testTransform() {
-		TransformAction transformAction = new TransformAction();
-		transformAction.setXmlData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 		StringBuilder xsltDoc = new StringBuilder();
 		xsltDoc.append("<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n");
 		xsltDoc.append("<xsl:output method=\"text\"/>");
@@ -37,23 +35,26 @@ public class TransformActionTest extends AbstractTestNGUnitTest {
 		xsltDoc.append("Message: <xsl:value-of select=\"TestRequest/Message\"/>");
 		xsltDoc.append("</xsl:template>\n");
 		xsltDoc.append("</xsl:stylesheet>");
-		transformAction.setXsltData(xsltDoc.toString());
-		transformAction.setTargetVariable("var");
-		
+
+		TransformAction transformAction = new TransformAction.Builder()
+				.source("<TestRequest><Message>Hello World!</Message></TestRequest>")
+				.xslt(xsltDoc.toString())
+				.result("var")
+				.build();
 		transformAction.execute(context);
-		
+
 		Assert.assertEquals(context.getVariable("var").trim(), "Message: Hello World!");
 	}
-	
+
 	@Test
 	public void testTransformResource() {
-		TransformAction transformAction = new TransformAction();
-		transformAction.setXmlResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
-		transformAction.setXsltResourcePath("classpath:com/consol/citrus/actions/test-transform.xslt");
-		transformAction.setTargetVariable("var");
-		
+		TransformAction transformAction = new TransformAction.Builder()
+				.sourceFile("classpath:com/consol/citrus/actions/test-request-payload.xml")
+				.xsltFile("classpath:com/consol/citrus/actions/test-transform.xslt")
+				.result("var")
+				.build();
 		transformAction.execute(context);
-		
+
 		Assert.assertEquals(context.getVariable("var").trim(), "Message: Hello World!");
 	}
 }

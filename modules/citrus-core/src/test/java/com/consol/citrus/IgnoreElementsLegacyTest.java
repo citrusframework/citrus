@@ -16,6 +16,11 @@
 
 package com.consol.citrus;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -25,16 +30,16 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -43,9 +48,7 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
-    
-    private ReceiveMessageAction receiveMessageBean;
-    
+
     @Override
     @BeforeMethod
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -56,72 +59,69 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-                        + "</element>" 
+                        + "</element>"
                         + "</root>");
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
-
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
     }
 
     @Test
     public void testIgnoreElements() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>no validation</sub-elementA>"
                 + "<sub-elementB attribute='B'>no validation</sub-elementB>"
                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>" 
+            + "</element>"
             + "</root>");
-        
+
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root.element.sub-elementA");
         ignoreMessageElements.add("sub-elementB");
         validationContext.setIgnoreExpressions(ignoreMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     public void testIgnoreAttributes() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
                 + "<sub-elementB attribute='no validation'>text-value</sub-elementB>"
                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>" 
+            + "</element>"
             + "</root>");
-        
+
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root.element.sub-elementA.attribute");
         ignoreMessageElements.add("sub-elementB.attribute");
         validationContext.setIgnoreExpressions(ignoreMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testIgnoreRootElement() {
@@ -129,9 +129,9 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
         when(endpoint.createConsumer()).thenReturn(consumer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-        
+
         Message message = new DefaultMessage("<root>"
-                        + "<element>Text</element>" 
+                        + "<element>Text</element>"
                         + "</root>");
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
@@ -139,49 +139,49 @@ public class IgnoreElementsLegacyTest extends AbstractTestNGUnitTest {
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
-                        + "<element additonal-attribute='some'>Wrong text</element>" 
+                        + "<element additonal-attribute='some'>Wrong text</element>"
                         + "</root>");
-        
+
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root");
         validationContext.setIgnoreExpressions(ignoreMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
-    
+
     @Test
     public void testIgnoreElementsAndValidate() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>no validation</sub-elementA>"
                 + "<sub-elementB attribute='B'>no validation</sub-elementB>"
                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
-            + "</element>" 
+            + "</element>"
             + "</root>");
-        
+
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root.element.sub-elementA");
         ignoreMessageElements.add("sub-elementB");
         validationContext.setIgnoreExpressions(ignoreMessageElements);
-        
-        List<ValidationContext> validationContexts = new ArrayList<ValidationContext>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        
+
         Map<String, Object> validateElements = new HashMap<>();
         validateElements.put("root.element.sub-elementA", "wrong value");
         validateElements.put("sub-elementB", "wrong value");
         validationContext.setXpathExpressions(validateElements);
-        
-        receiveMessageBean.execute(context);
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 }

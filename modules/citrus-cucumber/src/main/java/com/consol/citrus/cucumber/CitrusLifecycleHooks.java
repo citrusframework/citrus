@@ -17,6 +17,7 @@
 package com.consol.citrus.cucumber;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -57,8 +58,11 @@ public class CitrusLifecycleHooks {
     @After
     public void after(Scenario scenario) {
         if (!scenario.isFailed()) {
-            if (designer != null && designer.getTestCase().getActionCount() > 0) {
-                citrus.run(designer.getTestCase());
+            if (designer != null) {
+                TestCase testCase = designer.getTestCase();
+                if (testCase.getActionCount() > 0) {
+                    citrus.run(testCase);
+                }
             }
         }
 

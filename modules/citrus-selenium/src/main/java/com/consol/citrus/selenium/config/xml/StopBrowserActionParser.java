@@ -16,7 +16,6 @@
 
 package com.consol.citrus.selenium.config.xml;
 
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.StopBrowserAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -33,7 +32,34 @@ public class StopBrowserActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return StopBrowserAction.class;
+    protected Class<StopBrowserActionFactoryBean> getBrowserActionClass() {
+        return StopBrowserActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class StopBrowserActionFactoryBean extends AbstractSeleniumActionFactoryBean<StopBrowserAction, StopBrowserAction.Builder> {
+
+        private final StopBrowserAction.Builder builder = new StopBrowserAction.Builder();
+
+        @Override
+        public StopBrowserAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StopBrowserAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StopBrowserAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

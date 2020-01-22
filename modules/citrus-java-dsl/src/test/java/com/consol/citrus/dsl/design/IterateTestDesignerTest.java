@@ -78,7 +78,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
                     .startsWith(0)
                     .step(1)
                     .condition("i lt 5")
-                    .actions(createVariable("index", "${i}"), anonymous);
+                    .actions(createVariable("index", "${i}"), () -> anonymous);
             }
         };
 

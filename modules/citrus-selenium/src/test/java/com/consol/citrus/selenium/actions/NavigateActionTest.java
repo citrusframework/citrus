@@ -16,6 +16,8 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.net.URL;
+
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
@@ -27,9 +29,11 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.net.URL;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -41,17 +45,12 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebDriver.Navigation navigation = Mockito.mock(WebDriver.Navigation.class);
 
-    private NavigateAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, navigation);
 
         seleniumBrowser = new SeleniumBrowser();
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new NavigateAction();
-        action.setBrowser(seleniumBrowser);
 
         when(webDriver.navigate()).thenReturn(navigation);
     }
@@ -67,7 +66,10 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
             }
         }).when(navigation).to(any(URL.class));
 
-        action.setPage("http://localhost:8080");
+        NavigateAction action =  new NavigateAction.Builder()
+                .browser(seleniumBrowser)
+                .page("http://localhost:8080")
+                .build();
         action.execute(context);
 
         verify(navigation).to(any(URL.class));
@@ -84,7 +86,10 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
             }
         }).when(navigation).to(any(URL.class));
 
-        action.setPage("http://localhost:8080");
+        NavigateAction action =  new NavigateAction.Builder()
+                .browser(seleniumBrowser)
+                .page("http://localhost:8080")
+                .build();
         action.execute(context);
 
         verify(navigation).to(any(URL.class));
@@ -95,7 +100,10 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
         seleniumBrowser.getEndpointConfiguration().setBrowserType(BrowserType.IE);
         seleniumBrowser.getEndpointConfiguration().setStartPageUrl("http://localhost:8080");
 
-        action.setPage("info");
+        NavigateAction action =  new NavigateAction.Builder()
+                .browser(seleniumBrowser)
+                .page("info")
+                .build();
         action.execute(context);
 
         verify(navigation).to("http://localhost:8080/info");
@@ -103,7 +111,10 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteBack() throws Exception {
-        action.setPage("back");
+        NavigateAction action =  new NavigateAction.Builder()
+                .browser(seleniumBrowser)
+                .page("back")
+                .build();
         action.execute(context);
 
         verify(navigation).back();
@@ -111,7 +122,10 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteForward() throws Exception {
-        action.setPage("forward");
+        NavigateAction action =  new NavigateAction.Builder()
+                .browser(seleniumBrowser)
+                .page("forward")
+                .build();
         action.execute(context);
 
         verify(navigation).forward();
@@ -119,7 +133,10 @@ public class NavigateActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteRefresh() throws Exception {
-        action.setPage("refresh");
+        NavigateAction action =  new NavigateAction.Builder()
+                .browser(seleniumBrowser)
+                .page("refresh")
+                .build();
         action.execute(context);
 
         verify(navigation).refresh();

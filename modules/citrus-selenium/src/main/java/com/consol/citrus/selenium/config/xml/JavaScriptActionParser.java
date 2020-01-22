@@ -16,17 +16,16 @@
 
 package com.consol.citrus.selenium.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.selenium.actions.AbstractSeleniumAction;
 import com.consol.citrus.selenium.actions.JavaScriptAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -54,7 +53,58 @@ public class JavaScriptActionParser extends AbstractBrowserActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return JavaScriptAction.class;
+    protected Class<JavaScriptActionFactoryBean> getBrowserActionClass() {
+        return JavaScriptActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class JavaScriptActionFactoryBean extends AbstractSeleniumActionFactoryBean<JavaScriptAction, JavaScriptAction.Builder> {
+
+        private final JavaScriptAction.Builder builder = new JavaScriptAction.Builder();
+
+        /**
+         * Sets the script.
+         * @param script
+         */
+        public void setScript(String script) {
+            builder.script(script);
+        }
+
+        /**
+         * Sets the arguments.
+         * @param arguments
+         */
+        public void setArguments(List<Object> arguments) {
+            arguments.forEach(builder::argument);
+        }
+
+        /**
+         * Sets the expectedErrors.
+         * @param expectedErrors
+         */
+        public void setExpectedErrors(List<String> expectedErrors) {
+            builder.errors(expectedErrors);
+        }
+
+        @Override
+        public JavaScriptAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return JavaScriptAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public JavaScriptAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

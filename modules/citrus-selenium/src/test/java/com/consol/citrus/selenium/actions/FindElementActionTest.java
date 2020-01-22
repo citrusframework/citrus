@@ -22,13 +22,17 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -40,16 +44,11 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
-    private FindElementAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, element);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new FindElementAction();
-        action.setBrowser(seleniumBrowser);
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
@@ -69,9 +68,10 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
             }
         });
 
-        action.setProperty(property);
-        action.setPropertyValue(value);
-
+        FindElementAction action =  new FindElementAction.Builder()
+                .browser(seleniumBrowser)
+                .element(property, value)
+                .build();
         action.execute(context);
 
         Assert.assertEquals(context.getVariableObject("button"), element);
@@ -105,9 +105,10 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable("myId", "clickMe");
 
-        action.setProperty("id");
-        action.setPropertyValue("${myId}");
-
+        FindElementAction action =  new FindElementAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "${myId}")
+                .build();
         action.execute(context);
 
         Assert.assertEquals(context.getVariableObject("button"), element);
@@ -130,14 +131,14 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
             }
         });
 
-        action.setTagName("button");
-        action.setText("Click Me!");
-        action.setAttributes(Collections.singletonMap("type", "submit"));
-        action.setStyles(Collections.singletonMap("color", "red"));
-
-        action.setProperty("name");
-        action.setPropertyValue("clickMe");
-
+        FindElementAction action =  new FindElementAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "clickMe")
+                .tagName("button")
+                .text("Click Me!")
+                .attribute("type", "submit")
+                .style("color", "red")
+                .build();
         action.execute(context);
 
         Assert.assertEquals(context.getVariableObject("button"), element);
@@ -161,16 +162,16 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
             }
         });
 
-        action.setTagName(tagName);
-        action.setText(text);
-        action.setAttributes(Collections.singletonMap("type", attribute));
-        action.setStyles(Collections.singletonMap("color", cssStyle));
-        action.setDisplayed(displayed);
-        action.setEnabled(enabled);
-
-        action.setProperty("name");
-        action.setPropertyValue("clickMe");
-
+        FindElementAction action =  new FindElementAction.Builder()
+                .browser(seleniumBrowser)
+                .element("name", "clickMe")
+                .tagName(tagName)
+                .text(text)
+                .attribute("type", attribute)
+                .style("color", cssStyle)
+                .displayed(displayed)
+                .enabled(enabled)
+                .build();
         try {
             action.execute(context);
             Assert.fail("Missing exception to to validation error");
@@ -195,17 +196,19 @@ public class FindElementActionTest extends AbstractTestNGUnitTest {
     public void testElementNotFound() {
         when(webDriver.findElement(any(By.class))).thenReturn(null);
 
-        action.setProperty("id");
-        action.setPropertyValue("myButton");
-
+        FindElementAction action =  new FindElementAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .build();
         action.execute(context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unknown selector type: unsupported")
     public void testElementUnsupportedProperty() {
-        action.setProperty("unsupported");
-        action.setPropertyValue("wrong");
-
+        FindElementAction action =  new FindElementAction.Builder()
+                .browser(seleniumBrowser)
+                .element("unsupported", "wrong")
+                .build();
         action.execute(context);
     }
 

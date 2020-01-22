@@ -29,7 +29,7 @@ public class LoggingReporterTest {
 
     private TestCase test = new TestCase();
 
-    private EchoAction echo = new EchoAction();
+    private EchoAction echo = new EchoAction.Builder().build();
 
     @BeforeClass
     public void setupSampleIT() {

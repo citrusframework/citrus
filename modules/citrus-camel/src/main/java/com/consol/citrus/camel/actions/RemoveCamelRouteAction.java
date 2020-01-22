@@ -33,8 +33,8 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
     /**
      * Default constructor.
      */
-    public RemoveCamelRouteAction() {
-        setName("remove-routes");
+    public RemoveCamelRouteAction(Builder builder) {
+        super("remove-routes", builder);
     }
 
     @Override
@@ -57,6 +57,16 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
             } catch (Exception e) {
                 throw new CitrusRuntimeException(String.format("Failed to remove Camel route '%s' from context '%s'", route, camelContext.getName()), e);
             }
+        }
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractCamelRouteAction.Builder<RemoveCamelRouteAction, Builder> {
+        @Override
+        public RemoveCamelRouteAction build() {
+            return new RemoveCamelRouteAction(this);
         }
     }
 }

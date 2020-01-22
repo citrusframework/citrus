@@ -16,22 +16,28 @@
 
 package com.consol.citrus.actions;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Optional;
+import java.util.StringJoiner;
+import java.util.StringTokenizer;
+import java.util.stream.Stream;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.io.*;
-import java.util.StringTokenizer;
-
 /**
  * Test action prompts user data from standard input stream. The input data is then stored as new
  * test variable. Test workflow stops until user input is complete.
- * 
- * Action can declare a set of valid answers, so user will be prompted until a valid 
+ *
+ * Action can declare a set of valid answers, so user will be prompted until a valid
  * answer was returned.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class InputAction extends AbstractTestAction {
@@ -40,28 +46,35 @@ public class InputAction extends AbstractTestAction {
     private static Logger log = LoggerFactory.getLogger(InputAction.class);
 
     /** Prompted message displayed to the user before input */
-    private String message = "Press return key to continue ...";
-    
+    private final String message;
+
     /** Destination variable name */
-    private String variable = "userinput";
+    private final String variable;
 
     /** Valid answers, tokenized by '/' character */
-    private String validAnswers;
-    
+    private final String validAnswers;
+
+    /** Reader providing the user input */
+    private final BufferedReader inputReader;
+
     /** Separates valid answer possibilities */
     public static final String ANSWER_SEPARATOR = "/";
 
     /**
      * Default constructor.
      */
-    public InputAction() {
-        setName("input");
+    public InputAction(Builder builder) {
+        super("input", builder);
+
+        this.message = builder.message;
+        this.variable = builder.variable;
+        this.validAnswers = builder.validAnswers;
+        this.inputReader = Optional.ofNullable(builder.inputReader).orElse(new BufferedReader(new InputStreamReader(System.in)));
     }
 
     @Override
     public void doExecute(TestContext context) {
-
-        String input = null;
+        String input;
 
         if (context.getVariables().containsKey(variable)) {
             input = context.getVariable(variable);
@@ -97,7 +110,7 @@ public class InputAction extends AbstractTestAction {
      * @return
      */
     protected BufferedReader getInputReader() {
-        return new BufferedReader(new InputStreamReader(System.in));
+        return inputReader;
     }
 
     /**
@@ -117,33 +130,6 @@ public class InputAction extends AbstractTestAction {
         log.info("User input is not valid - must be one of " + validAnswers);
 
         return false;
-    }
-
-    /**
-     * Sets the message.
-     * @param message the message to set
-     */
-    public InputAction setMessage(String message) {
-        this.message = message;
-        return this;
-    }
-
-    /**
-     * Sets the variable.
-     * @param variable the variable to set
-     */
-    public InputAction setVariable(String variable) {
-        this.variable = variable;
-        return this;
-    }
-
-    /**
-     * Sets the valid answers.
-     * @param validAnswers the validAnswers to set
-     */
-    public InputAction setValidAnswers(String validAnswers) {
-        this.validAnswers = validAnswers;
-        return this;
     }
 
     /**
@@ -170,4 +156,80 @@ public class InputAction extends AbstractTestAction {
         return validAnswers;
     }
 
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<InputAction, Builder> {
+
+        private String message = "Press return key to continue ...";
+        private String variable = "userinput";
+        private String validAnswers;
+        private BufferedReader inputReader;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder input() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param message
+         * @return
+         */
+        public static Builder input(String message) {
+            Builder builder = new Builder();
+            builder.message(message);
+            return builder;
+        }
+
+        /**
+         * Sets the message displayed to the user.
+         * @param message the message to set
+         */
+        public Builder message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        /**
+         * Stores the result to a test variable.
+         * @param variable the variable to set
+         */
+        public Builder result(String variable) {
+            this.variable = variable;
+            return this;
+        }
+
+        /**
+         * Sets the input reader.
+         * @param reader the input reader to set
+         */
+        public Builder reader(BufferedReader reader) {
+            this.inputReader = reader;
+            return this;
+        }
+
+        /**
+         * Sets the valid answers.
+         * @param answers the validAnswers to set
+         */
+        public Builder answers(String... answers) {
+            if (answers.length == 0) {
+                throw new CitrusRuntimeException("Please specify proper answer possibilities for input action");
+            }
+
+            StringJoiner joiner = new StringJoiner(InputAction.ANSWER_SEPARATOR);
+            Stream.of(answers).forEach(joiner::add);
+            this.validAnswers = joiner.toString();
+            return this;
+        }
+
+        @Override
+        public InputAction build() {
+            return new InputAction(this);
+        }
+    }
 }

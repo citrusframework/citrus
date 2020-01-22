@@ -35,21 +35,19 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
-    private StoreFileAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new StoreFileAction();
-        action.setBrowser(seleniumBrowser);
     }
 
     @Test
     public void testExecute() throws Exception {
-        action.setFilePath("classpath:download/file.txt");
+        StoreFileAction action =  new StoreFileAction.Builder()
+                .browser(seleniumBrowser)
+                .filePath("classpath:download/file.txt")
+                .build();
         action.execute(context);
 
         Assert.assertNotNull(seleniumBrowser.getStoredFile("file.txt"));
@@ -59,7 +57,10 @@ public class StoreFileActionTest extends AbstractTestNGUnitTest {
     public void testExecuteVariableSupport() throws Exception {
         context.setVariable("file", "classpath:download/file.xml");
 
-        action.setFilePath("${file}");
+        StoreFileAction action =  new StoreFileAction.Builder()
+                .browser(seleniumBrowser)
+                .filePath("${file}")
+                .build();
         action.execute(context);
 
         Assert.assertNotNull(seleniumBrowser.getStoredFile("file.xml"));

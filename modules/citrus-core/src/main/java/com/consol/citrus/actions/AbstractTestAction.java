@@ -16,12 +16,15 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Optional;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 
 /**
- * Abstract base class for test acions. Class provides a default name and description.
+ * Abstract base class for test actions. Class provides a default name and description.
  * @author Christoph Deppisch
  */
 public abstract class AbstractTestAction implements TestAction {
@@ -31,9 +34,19 @@ public abstract class AbstractTestAction implements TestAction {
 
     /** TestAction name injected as spring bean name */
     private String name = this.getClass().getSimpleName();
-    
+
     /** This actions explicit test actor */
     private TestActor actor;
+
+    protected AbstractTestAction() {
+        super();
+    }
+
+    public AbstractTestAction(String name, AbstractTestActionBuilder<?, ?> builder) {
+        this.name = Optional.ofNullable(builder.getName()).orElse(name);
+        this.description = builder.getDescription();
+        this.actor = builder.getActor();
+    }
 
     /**
      * Do basic logging and delegate execution to subclass.
@@ -41,11 +54,11 @@ public abstract class AbstractTestAction implements TestAction {
     public void execute(TestContext context) {
         doExecute(context);
     }
-    
+
     /**
      * Checks if this test action is disabled. Delegates to test actor defined
      * for this test action by default. Subclasses may add additional disabled logic here.
-     * 
+     *
      * @param context the current test context.
      * @return
      */
@@ -84,10 +97,7 @@ public abstract class AbstractTestAction implements TestAction {
         return name;
     }
 
-    /**
-     * (non-Javadoc)
-     * @see com.consol.citrus.TestAction#setName(java.lang.String)
-     */
+    @Override
     public AbstractTestAction setName(String name) {
         this.name = name;
         return this;

@@ -16,32 +16,54 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.container.Sequence;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.w3c.dom.Element;
 
-import com.consol.citrus.container.Sequence;
-
 /**
  * Bean definition parser for sequential container in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SequenceParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
 	public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(Sequence.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(SequenceFactoryBean.class);
 
         DescriptionElementParser.doParse(element, builder);
-        builder.addPropertyValue("name", element.getLocalName());
-        
         ActionContainerParser.doParse(element, parserContext, builder);
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class SequenceFactoryBean extends AbstractTestContainerFactoryBean<Sequence, Sequence.Builder> {
+
+        private final Sequence.Builder builder = new Sequence.Builder();
+
+        @Override
+        public Sequence getObject() throws Exception {
+            return getObject(builder.build());
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return Sequence.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public Sequence.Builder getBuilder() {
+            return builder;
+        }
     }
 }

@@ -39,19 +39,11 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
     private WebElement element = Mockito.mock(WebElement.class);
 
-    private ClickAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver, element);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new ClickAction();
-        action.setBrowser(seleniumBrowser);
-
-        action.setProperty("id");
-        action.setPropertyValue("myButton");
 
         when(element.isDisplayed()).thenReturn(true);
         when(element.isEnabled()).thenReturn(true);
@@ -71,6 +63,10 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
             }
         });
 
+        ClickAction action =  new ClickAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .build();
         action.execute(context);
 
         verify(element).click();
@@ -80,6 +76,10 @@ public class ClickActionTest extends AbstractTestNGUnitTest {
     public void testElementNotFound() {
         when(webDriver.findElement(any(By.class))).thenReturn(null);
 
+        ClickAction action =  new ClickAction.Builder()
+                .browser(seleniumBrowser)
+                .element("id", "myButton")
+                .build();
         action.execute(context);
     }
 

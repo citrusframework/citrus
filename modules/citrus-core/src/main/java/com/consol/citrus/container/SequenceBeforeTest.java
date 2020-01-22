@@ -17,6 +17,7 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,8 @@ public class SequenceBeforeTest extends AbstractTestBoundaryActionContainer {
             log.debug("");
         }
 
-        for (TestAction action: actions)  {
+        for (TestActionBuilder<?> actionBuilder : actions)  {
+            TestAction action = actionBuilder.build();
             action.execute(context);
         }
     }

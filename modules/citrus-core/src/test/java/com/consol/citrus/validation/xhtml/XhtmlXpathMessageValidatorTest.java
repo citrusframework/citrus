@@ -21,20 +21,20 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.mockito.Mockito;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -44,17 +44,6 @@ public class XhtmlXpathMessageValidatorTest extends AbstractTestNGUnitTest {
     private Consumer consumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
-    private ReceiveMessageAction receiveMessageBean;
-
-    @Override
-    @BeforeMethod
-    public void prepareTest() {
-        super.prepareTest();
-        
-        receiveMessageBean = new ReceiveMessageAction();
-        receiveMessageBean.setEndpoint(endpoint);
-    }
-    
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testXhtmlXpathValidation() throws Exception {
@@ -84,7 +73,6 @@ public class XhtmlXpathMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContext.getXpathExpressions().put("/xh:html/xh:head/xh:title", "Sample XHTML content");
         validationContext.getXpathExpressions().put("//xh:p", "Hello TestFramework!");
         validationContext.getNamespaces().put("xh", "http://www.w3.org/1999/xhtml");
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
@@ -98,11 +86,13 @@ public class XhtmlXpathMessageValidatorTest extends AbstractTestNGUnitTest {
                             + "</body>"
                         + "</html>");
 
-        List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.setMessageType(MessageType.XHTML.name());
-        receiveMessageBean.execute(context);
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .messageType(MessageType.XHTML)
+                .build();
+        receiveAction.execute(context);
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -130,7 +120,6 @@ public class XhtmlXpathMessageValidatorTest extends AbstractTestNGUnitTest {
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.getXpathExpressions().put("//xh:h1", "Failed!");
         validationContext.getNamespaces().put("xh", "http://www.w3.org/1999/xhtml");
-        receiveMessageBean.setMessageBuilder(controlMessageBuilder);
         controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
@@ -141,11 +130,13 @@ public class XhtmlXpathMessageValidatorTest extends AbstractTestNGUnitTest {
                             + "</body>"
                         + "</html>");
 
-        List<ValidationContext> validationContexts = new ArrayList<>();
-        validationContexts.add(validationContext);
-        receiveMessageBean.setValidationContexts(validationContexts);
-        receiveMessageBean.setMessageType(MessageType.XHTML.name());
-        receiveMessageBean.execute(context);
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .messageType(MessageType.XHTML)
+                .build();
+        receiveAction.execute(context);
     }
 
 }

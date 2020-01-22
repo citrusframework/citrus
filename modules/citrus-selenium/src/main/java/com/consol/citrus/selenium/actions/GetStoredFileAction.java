@@ -27,13 +27,15 @@ import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 public class GetStoredFileAction extends AbstractSeleniumAction {
 
     /** File name to look for */
-    private String fileName;
+    private final String fileName;
 
     /**
      * Default constructor.
      */
-    public GetStoredFileAction() {
-        super("get-stored-file");
+    public GetStoredFileAction(Builder builder) {
+        super("get-stored-file", builder);
+
+        this.fileName = builder.fileName;
     }
 
     @Override
@@ -44,7 +46,6 @@ public class GetStoredFileAction extends AbstractSeleniumAction {
 
     /**
      * Gets the fileName.
-     *
      * @return
      */
     public String getFileName() {
@@ -52,11 +53,20 @@ public class GetStoredFileAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the fileName.
-     *
-     * @param fileName
+     * Action builder.
      */
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public static class Builder extends AbstractSeleniumAction.Builder<GetStoredFileAction, Builder> {
+
+        private String fileName;
+
+        public Builder fileName(String fileName) {
+            this.fileName = fileName;
+            return this;
+        }
+
+        @Override
+        public GetStoredFileAction build() {
+            return new GetStoredFileAction(this);
+        }
     }
 }

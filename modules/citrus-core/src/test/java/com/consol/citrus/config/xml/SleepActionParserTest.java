@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.concurrent.TimeUnit;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -33,19 +35,19 @@ public class SleepActionParserTest extends AbstractActionParserTest<SleepAction>
         assertActionClassAndName(SleepAction.class, "sleep");
 
         SleepAction action = getNextTestActionFromTest();
-        Assert.assertNull(action.getSeconds());
-        Assert.assertEquals(action.getMilliseconds(), "5000");
+        Assert.assertEquals(action.getTime(), "5000");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getSeconds(), "1.5");
-        Assert.assertEquals(action.getMilliseconds(), "5000");
+        Assert.assertEquals(action.getTime(), "1500");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
 
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getSeconds(), "1.5");
-        Assert.assertEquals(action.getMilliseconds(), "5000");
+        Assert.assertEquals(action.getTime(), "1500");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
 
         action = getNextTestActionFromTest();
-        Assert.assertNull(action.getSeconds());
-        Assert.assertEquals(action.getMilliseconds(), "1500");
+        Assert.assertEquals(action.getTime(), "1500");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
     }
 }

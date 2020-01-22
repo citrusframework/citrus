@@ -41,14 +41,14 @@ public class AsyncTestRunnerIT extends TestNGCitrusTestRunner {
 
         async().actions(
             echo("Hello Citrus"),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     context.setVariable("anonymous", "anonymous");
                 }
             },
             sleep(1000),
-            new AbstractTestAction() {
+            () -> new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     log.info(context.getVariable("anonymous"));

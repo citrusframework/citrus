@@ -33,7 +33,34 @@ public class HoverActionParser extends FindElementActionParser {
     }
 
     @Override
-    protected Class<? extends AbstractSeleniumAction> getBrowserActionClass() {
-        return HoverAction.class;
+    protected Class<HoverActionFactoryBean> getBrowserActionClass() {
+        return HoverActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static final class HoverActionFactoryBean extends ElementActionFactoryBean<HoverAction, HoverAction.Builder> {
+
+        private final HoverAction.Builder builder = new HoverAction.Builder();
+
+        @Override
+        public HoverAction getObject() throws Exception {
+            return getObject(builder);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return HoverAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public HoverAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

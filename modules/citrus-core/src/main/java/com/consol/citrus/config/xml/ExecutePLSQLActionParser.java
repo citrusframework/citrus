@@ -27,17 +27,15 @@ import org.w3c.dom.Element;
 
 /**
  * Bean definition parser for plsql action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class ExecutePLSQLActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLAction.class);
-        
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(ExecutePLSQLActionFactoryBean.class);
+
         String dataSource = element.getAttribute("datasource");
         beanDefinition.addPropertyValue("name", element.getLocalName() + ":" + dataSource);
         beanDefinition.addPropertyReference("dataSource", dataSource);
@@ -64,5 +62,48 @@ public class ExecutePLSQLActionParser implements BeanDefinitionParser {
         }
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class ExecutePLSQLActionFactoryBean extends AbstractDatabaseConnectingTestActionFactoryBean<ExecutePLSQLAction, ExecutePLSQLAction.Builder> {
+
+        private final ExecutePLSQLAction.Builder builder = new ExecutePLSQLAction.Builder();
+
+        @Override
+        public ExecutePLSQLAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        /**
+         * Ignore errors during execution.
+         * @param ignoreErrors boolean flag to set
+         */
+        public void setIgnoreErrors(boolean ignoreErrors) {
+            builder.ignoreErrors(ignoreErrors);
+        }
+
+        /**
+         * The PLSQL script.
+         * @param script the plsql script.
+         */
+        public void setScript(String script) {
+            builder.sqlScript(script);
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ExecutePLSQLAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public ExecutePLSQLAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

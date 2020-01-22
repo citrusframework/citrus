@@ -16,17 +16,19 @@
 
 package com.consol.citrus.camel.config.xml;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.consol.citrus.camel.actions.StartCamelRouteAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Bean definition parser for starting Camel routes action in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
@@ -47,7 +49,34 @@ public class StartCamelRouteActionParser extends AbstractCamelRouteActionParser 
     }
 
     @Override
-    protected Class<?> getBeanDefinitionClass() {
-        return StartCamelRouteAction.class;
+    protected Class<StartCamelRouteActionFactoryBean> getBeanDefinitionClass() {
+        return StartCamelRouteActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class StartCamelRouteActionFactoryBean extends AbstractCamelRouteActionFactoryBean<StartCamelRouteAction, StartCamelRouteAction.Builder> {
+
+        private final StartCamelRouteAction.Builder builder = new StartCamelRouteAction.Builder();
+
+        @Override
+        public StartCamelRouteAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return StartCamelRouteAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public StartCamelRouteAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

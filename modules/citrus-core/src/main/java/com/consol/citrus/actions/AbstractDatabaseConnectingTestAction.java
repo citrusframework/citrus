@@ -16,51 +16,69 @@
 
 package com.consol.citrus.actions;
 
+import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.SqlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.support.JdbcDaoSupport;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Abstract base class for database connection test actions. Extends {@link JdbcDaoSupport} providing
  * access to a {@link javax.sql.DataSource}.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSupport implements TestAction {
-    /**
-     * Logger
-     */
+    /** Logger */
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
-    
+
     /** Text describing the test action */
     private String description;
 
     /** TestAction name injected as spring bean name */
-    private String name = this.getClass().getSimpleName();
-    
-    /** SQL file resource path */
-    protected String sqlResourcePath;
-    
-    /** List of SQL statements */
-    protected List<String> statements = new ArrayList<>();
-    
+    private String name;
+
     /** This actions explicit test actor */
     private TestActor actor;
 
+    /** SQL file resource path */
+    protected final String sqlResourcePath;
+
+    /** List of SQL statements */
+    protected final List<String> statements;
+
     /** Optional transaction manager */
-    private PlatformTransactionManager transactionManager;
-    private String transactionTimeout = String.valueOf(TransactionDefinition.TIMEOUT_DEFAULT);
-    private String transactionIsolationLevel = "ISOLATION_DEFAULT";
+    private final PlatformTransactionManager transactionManager;
+    private final String transactionTimeout;
+    private final String transactionIsolationLevel;
+
+    protected AbstractDatabaseConnectingTestAction(String name, Builder<?, ?> builder) {
+        this.name = Optional.ofNullable(builder.getName()).orElse(name);
+        this.description = builder.getDescription();
+        this.actor = builder.getActor();
+
+        Optional.ofNullable(builder.jdbcTemplate).ifPresent(super::setJdbcTemplate);
+        Optional.ofNullable(builder.dataSource).ifPresent(super::setDataSource);
+
+        this.sqlResourcePath = builder.sqlResourcePath;
+        this.transactionIsolationLevel = builder.transactionIsolationLevel;
+        this.transactionManager = builder.transactionManager;
+        this.transactionTimeout = builder.transactionTimeout;
+        this.statements = builder.statements;
+    }
 
     /**
      * Do basic logging and delegate execution to subclass.
@@ -68,7 +86,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     public void execute(TestContext context) {
         doExecute(context);
     }
-    
+
     /**
      * Subclasses may add custom execution logic here.
      */
@@ -77,7 +95,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     /**
      * Checks if this test action is disabled. Delegates to test actor defined
      * for this test action by default. Subclasses may add additional disabled logic here.
-     * 
+     *
      * @param context the current test context.
      * @return
      */
@@ -112,7 +130,7 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         return SqlUtils.createStatementsFromFileResource(new PathMatchingResourcePatternResolver()
                 .getResource(context.replaceDynamicContentInString(sqlResourcePath)), lineDecorator);
     }
-    
+
     /**
      * Gets this action's description.
      * @return the description
@@ -145,24 +163,6 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
         this.name = name;
         return this;
     }
-    
-    /**
-     * List of statements to execute. Declared inline in the test case. 
-     * @param statements
-     */
-    public AbstractDatabaseConnectingTestAction setStatements(List<String> statements) {
-        this.statements = statements;
-        return this;
-    }
-    
-    /**
-     * Setter for external file resource containing the SQL statements to execute.
-     * @param sqlResource
-     */
-    public AbstractDatabaseConnectingTestAction setSqlResourcePath(String sqlResource) {
-        this.sqlResourcePath = sqlResource;
-        return this;
-    }
 
     /**
      * Gets the sqlResource.
@@ -190,15 +190,6 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     }
 
     /**
-     * Sets the transactionManager.
-     *
-     * @param transactionManager
-     */
-    public void setTransactionManager(PlatformTransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
-
-    /**
      * Gets the transactionTimeout.
      *
      * @return
@@ -208,30 +199,12 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     }
 
     /**
-     * Sets the transactionTimeout.
-     *
-     * @param transactionTimeout
-     */
-    public void setTransactionTimeout(String transactionTimeout) {
-        this.transactionTimeout = transactionTimeout;
-    }
-
-    /**
      * Gets the transactionIsolationLevel.
      *
      * @return
      */
     public String getTransactionIsolationLevel() {
         return transactionIsolationLevel;
-    }
-
-    /**
-     * Sets the transactionIsolationLevel.
-     *
-     * @param transactionIsolationLevel
-     */
-    public void setTransactionIsolationLevel(String transactionIsolationLevel) {
-        this.transactionIsolationLevel = transactionIsolationLevel;
     }
 
     /**
@@ -249,5 +222,116 @@ public abstract class AbstractDatabaseConnectingTestAction extends JdbcDaoSuppor
     public AbstractDatabaseConnectingTestAction setActor(TestActor actor) {
         this.actor = actor;
         return this;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static abstract class Builder<T extends AbstractDatabaseConnectingTestAction, S extends Builder<T, S>> extends AbstractTestActionBuilder<T, S> {
+
+        protected JdbcTemplate jdbcTemplate;
+        protected DataSource dataSource;
+        protected String sqlResourcePath;
+        protected List<String> statements = new ArrayList<>();
+        protected PlatformTransactionManager transactionManager;
+        protected String transactionTimeout = String.valueOf(TransactionDefinition.TIMEOUT_DEFAULT);
+        protected String transactionIsolationLevel = "ISOLATION_DEFAULT";
+
+        /**
+         * Sets the Spring JDBC template to use.
+         * @param jdbcTemplate
+         * @return
+         */
+        public S jdbcTemplate(JdbcTemplate jdbcTemplate) {
+            this.jdbcTemplate = jdbcTemplate;
+            return self;
+        }
+
+        /**
+         * Sets the transaction manager to use.
+         * @param transactionManager
+         * @return
+         */
+        public S transactionManager(PlatformTransactionManager transactionManager) {
+            this.transactionManager = transactionManager;
+            return self;
+        }
+
+        /**
+         * Sets the transaction timeout to use.
+         * @param transactionTimeout
+         * @return
+         */
+        public S transactionTimeout(int transactionTimeout) {
+            this.transactionTimeout = String.valueOf(transactionTimeout);
+            return self;
+        }
+
+        /**
+         * Sets the transaction timeout to use.
+         * @param transactionTimeout
+         * @return
+         */
+        public S transactionTimeout(String transactionTimeout) {
+            this.transactionTimeout = transactionTimeout;
+            return self;
+        }
+
+        /**
+         * Sets the transaction isolation level to use.
+         * @param isolationLevel
+         * @return
+         */
+        public S transactionIsolationLevel(String isolationLevel) {
+            this.transactionIsolationLevel = isolationLevel;
+            return self;
+        }
+
+        /**
+         * Sets the SQL data source.
+         * @param dataSource
+         * @return
+         */
+        public S dataSource(DataSource dataSource) {
+            this.dataSource = dataSource;
+            return self;
+        }
+
+        /**
+         * List of statements to execute. Declared inline in the test case.
+         * @param statements
+         */
+        public S statements(List<String> statements) {
+            this.statements.addAll(statements);
+            return self;
+        }
+
+        /**
+         * Adds a new statement to the list of SQL executions.
+         * @param sql
+         * @return
+         */
+        public S statement(String sql) {
+            this.statements.add(sql);
+            return self;
+        }
+
+        /**
+         * Setter for external file resource containing the SQL statements to execute.
+         * @param sqlResource
+         */
+        public S sqlResource(Resource sqlResource) {
+            statements(SqlUtils.createStatementsFromFileResource(sqlResource));
+            return self;
+        }
+
+        /**
+         * Setter for external file resource containing the SQL statements to execute.
+         * @param filePath
+         */
+        public S sqlResource(String filePath) {
+            this.sqlResourcePath = filePath;
+            return self;
+        }
     }
 }

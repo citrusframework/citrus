@@ -16,25 +16,36 @@
 
 package com.consol.citrus.cucumber.step.runner.selenium;
 
+import java.net.URL;
+
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.selenium.actions.*;
+import com.consol.citrus.selenium.actions.CheckInputAction;
+import com.consol.citrus.selenium.actions.ClickAction;
+import com.consol.citrus.selenium.actions.FindElementAction;
+import com.consol.citrus.selenium.actions.NavigateAction;
+import com.consol.citrus.selenium.actions.SeleniumAction;
+import com.consol.citrus.selenium.actions.SetInputAction;
+import com.consol.citrus.selenium.actions.StartBrowserAction;
+import com.consol.citrus.selenium.actions.StopBrowserAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import cucumber.api.Scenario;
 import org.mockito.Mockito;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.net.URL;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -79,9 +90,10 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.start();
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof StartBrowserAction);
@@ -99,9 +111,10 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.stop();
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof StopBrowserAction);
@@ -122,9 +135,10 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.navigate("http://localhost:8080/test");
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof NavigateAction);
@@ -156,9 +170,10 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.click("id", "foo");
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof ClickAction);
@@ -185,9 +200,10 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.setInput("Hello","id", "foo");
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof SetInputAction);
@@ -216,13 +232,14 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.checkInput("check","id", "foo");
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof CheckInputAction);
-        Assert.assertEquals(((CheckInputAction)action).isChecked(), true);
+        Assert.assertTrue(((CheckInputAction) action).isChecked());
         Assert.assertEquals(((CheckInputAction)action).getProperty(), "id");
         Assert.assertEquals(((CheckInputAction)action).getPropertyValue(), "foo");
 
@@ -252,16 +269,17 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
         steps.setBrowser("seleniumBrowser");
         steps.should_display("name", "foo");
 
-        Assert.assertEquals(runner.getTestCase().getActionCount(), 1L);
-        Assert.assertTrue(((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate() instanceof SeleniumAction);
-        SeleniumAction action = (SeleniumAction) ((DelegatingTestAction) runner.getTestCase().getTestAction(0)).getDelegate();
+        TestCase testCase = runner.getTestCase();
+        Assert.assertEquals(testCase.getActionCount(), 1L);
+        Assert.assertTrue(testCase.getTestAction(0) instanceof SeleniumAction);
+        SeleniumAction action = (SeleniumAction) testCase.getTestAction(0);
 
         Assert.assertEquals(action.getBrowser(), seleniumBrowser);
         Assert.assertTrue(action instanceof FindElementAction);
         Assert.assertEquals(((FindElementAction)action).getProperty(), "name");
         Assert.assertEquals(((FindElementAction)action).getPropertyValue(), "foo");
     }
-    
+
     @Test
     public void testDefaultBrowserInitialization() {
         Assert.assertNull(steps.browser);

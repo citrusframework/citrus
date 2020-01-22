@@ -16,67 +16,85 @@
 
 package com.consol.citrus.ws.actions;
 
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
+import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.client.SoapFaultClientException;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Asserting SOAP fault exception in embedded test action.
- * 
+ *
  * Class constructs a control soap fault detail with given expeceted information (faultCode, faultString and faultDetail)
  * and delegates validation to {@link SoapFaultValidator} instance.
- * 
- * @author Christoph Deppisch 
+ *
+ * @author Christoph Deppisch
  * @since 2009
  */
 public class AssertSoapFault extends AbstractActionContainer {
     /** TestAction to be executed */
-    private TestAction action;
+    private final TestAction action;
 
     /** Localized fault string */
-    private String faultString = null;
-    
+    private final String faultString;
+
     /** OName representing fault code */
-    private String faultCode = null;
-    
+    private final String faultCode;
+
     /** Fault actor */
-    private String faultActor = null;
-    
+    private final String faultActor;
+
     /** List of fault details, either inline data or file resource path */
-    private List<String> faultDetails = new ArrayList<String>();
+    private final List<String> faultDetails;
 
     /** List of fault detail resource paths */
-    private List<String> faultDetailResourcePaths = new ArrayList<String>();
-    
+    private final List<String> faultDetailResourcePaths;
+
     /** Soap fault validator implementation */
-    private SoapFaultValidator validator = new SimpleSoapFaultValidator();
-    
+    private final SoapFaultValidator validator;
+
     /** Validation context */
-    private ValidationContext validationContext;
-    
+    private final ValidationContext validationContext;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
 
     /**
      * Default constructor.
      */
-    public AssertSoapFault() {
-        setName("soap-fault");
+    public AssertSoapFault(Builder builder) {
+        super("soap-fault", builder);
+
+        this.action = builder.action.build();
+        this.faultString = builder.faultString;
+        this.faultCode = builder.faultCode;
+        this.faultActor = builder.faultActor;
+        this.faultDetails = builder.faultDetails;
+        this.faultDetailResourcePaths = builder.faultDetailResourcePaths;
+        this.validator = builder.validator;
+
+        this.validationContext = builder.validationContext;
     }
 
     @Override
@@ -87,30 +105,27 @@ public class AssertSoapFault extends AbstractActionContainer {
             action.execute(context);
         } catch (SoapFaultClientException soapFaultException) {
             log.debug("Validating SOAP fault ...");
-            
+
             SoapFault controlFault = constructControlFault(context);
-            
+
             validator.validateSoapFault(SoapFault.from(soapFaultException.getSoapFault()), controlFault, context, validationContext);
-            
+
             log.debug("Asserted SOAP fault as expected: " + soapFaultException.getFaultCode() + ": " + soapFaultException.getFaultStringOrReason());
             log.info("Assert SOAP fault validation successful");
-            
+
             return;
-        } catch (RuntimeException e) {
-            throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
-                    SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
         } catch (Exception e) {
-            throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" + 
+            throw new ValidationException("SOAP fault validation failed for asserted exception type - expected: '" +
                     SoapFaultClientException.class + "' but was: '" + e.getClass().getName() + "'", e);
         }
-        
+
         throw new ValidationException("SOAP fault validation failed! Missing asserted SOAP fault exception");
     }
 
     /**
      * Constructs the control soap fault holding all expected fault information
      * like faultCode, faultString and faultDetail.
-     * 
+     *
      * @return the constructed SoapFault instance.
      */
     private SoapFault constructControlFault(TestContext context) {
@@ -140,73 +155,21 @@ public class AssertSoapFault extends AbstractActionContainer {
     }
 
     /**
-     * Set the nested test action.
-     * @param action the action to set
-     */
-    public AssertSoapFault setAction(TestAction action) {
-        addTestAction(action);
-        return this;
-    }
-
-	/**
-	 * Set the fault code.
-	 * @param faultCode the faultCode to set
-	 */
-	public AssertSoapFault setFaultCode(String faultCode) {
-		this.faultCode = faultCode;
-        return this;
-	}
-
-	/**
-	 * Set the fault string.
-	 * @param faultString the faultString to set
-	 */
-	public AssertSoapFault setFaultString(String faultString) {
-		this.faultString = faultString;
-        return this;
-	}
-
-    /**
-     * @param validator the validator to set
-     */
-    public AssertSoapFault setValidator(SoapFaultValidator validator) {
-        this.validator = validator;
-        return this;
-    }
-
-    @Override
-    public AssertSoapFault addTestAction(TestAction action) {
-        this.action = action;
-        super.addTestAction(action);
-        return this;
-    }
-
-    @Override
-    public TestAction getTestAction(int index) {
-        if (index == 0) {
-            return action;
-        } else {
-            throw new IndexOutOfBoundsException("Illegal index in action list:" + index);
-        }
-    }
-
-    @Override
-    public AssertSoapFault setActions(List<TestAction> actions) {
-        if (actions.size() > 1) {
-            throw new CitrusRuntimeException("Invalid number of nested test actions - only one single nested action is allowed");
-        }
-
-        action = actions.get(0);
-        super.setActions(actions);
-        return this;
-    }
-
-    /**
      * Gets the action.
      * @return the action
      */
     public TestAction getAction() {
         return action;
+    }
+
+    @Override
+    public TestAction getTestAction(int index) {
+        return action;
+    }
+
+    @Override
+    public List<TestAction> getActions() {
+        return Collections.singletonList(action);
     }
 
     /**
@@ -232,15 +195,6 @@ public class AssertSoapFault extends AbstractActionContainer {
     public List<String> getFaultDetails() {
         return faultDetails;
     }
-    
-    /**
-     * Sets the faultDetails.
-     * @param faultDetails the faultDetails to set
-     */
-    public AssertSoapFault setFaultDetails(List<String> faultDetails) {
-        this.faultDetails = faultDetails;
-        return this;
-    }
 
     /**
      * Gets the fault detail resource paths.
@@ -248,15 +202,6 @@ public class AssertSoapFault extends AbstractActionContainer {
      */
     public List<String> getFaultDetailResourcePaths() {
         return faultDetailResourcePaths;
-    }
-
-    /**
-     * Sets the fault detail resource paths.
-     * @param faultDetailResourcePaths
-     */
-    public AssertSoapFault setFaultDetailResourcePaths(List<String> faultDetailResourcePaths) {
-        this.faultDetailResourcePaths = faultDetailResourcePaths;
-        return this;
     }
 
     /**
@@ -276,15 +221,6 @@ public class AssertSoapFault extends AbstractActionContainer {
     }
 
     /**
-     * Sets the faultActor.
-     * @param faultActor the faultActor to set
-     */
-    public AssertSoapFault setFaultActor(String faultActor) {
-        this.faultActor = faultActor;
-        return this;
-    }
-
-    /**
      * Gets the validationContext.
      * @return the validationContext the validationContext to get.
      */
@@ -293,12 +229,202 @@ public class AssertSoapFault extends AbstractActionContainer {
     }
 
     /**
-     * Sets the validationContext.
-     * @param validationContext the validationContext to set
+     * Action builder.
      */
-    public AssertSoapFault setValidationContext(ValidationContext validationContext) {
-        this.validationContext = validationContext;
-        return this;
+    public static class Builder extends AbstractTestContainerBuilder<AssertSoapFault, Builder> {
+
+        private TestActionBuilder<?> action;
+        private String faultString;
+        private String faultCode;
+        private String faultActor;
+        private List<String> faultDetails = new ArrayList<>();
+        private List<String> faultDetailResourcePaths = new ArrayList<>();
+        private SoapFaultValidator validator = new SimpleSoapFaultValidator();
+        private XmlMessageValidationContext xmlValidationContext = new XmlMessageValidationContext();
+        private SoapFaultDetailValidationContext validationContext = new SoapFaultDetailValidationContext()
+                .addValidationContext(xmlValidationContext);
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder assertSoapFault() {
+            return new Builder();
+        }
+
+        /**
+         * Action producing the SOAP fault.
+         * @param action
+         * @return
+         */
+        public Builder when(TestAction action) {
+            return when(() -> action);
+        }
+
+        /**
+         * Action producing the SOAP fault.
+         * @param action
+         * @return
+         */
+        public Builder when(TestActionBuilder<?> action) {
+            return actions(action);
+        }
+
+        @Override
+        public Builder actions(TestActionBuilder<?>... actions) {
+            this.action = actions[0];
+            return super.actions(actions[0]);
+        }
+        /**
+         * Expect fault code in SOAP fault message.
+         * @param code
+         * @return
+         */
+        public Builder faultCode(String code) {
+            this.faultCode = code;
+            return this;
+        }
+
+        /**
+         * Expect fault string in SOAP fault message.
+         * @param faultString
+         * @return
+         */
+        public Builder faultString(String faultString) {
+            this.faultString = faultString;
+            return this;
+        }
+
+        /**
+         * Expect fault actor in SOAP fault message.
+         * @param faultActor
+         * @return
+         */
+        public Builder faultActor(String faultActor) {
+            this.faultActor = faultActor;
+            return this;
+        }
+
+        /**
+         * Expect fault detail in SOAP fault message.
+         * @param faultDetail
+         * @return
+         */
+        public Builder faultDetail(String faultDetail) {
+            this.faultDetails.add(faultDetail);
+            return this;
+        }
+
+        /**
+         * Expect fault detail from file resource.
+         * @param resource
+         * @return
+         */
+        public Builder faultDetailResource(Resource resource) {
+            return faultDetailResource(resource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Expect fault detail from file resource.
+         * @param resource
+         * @param charset
+         * @return
+         */
+        public Builder faultDetailResource(Resource resource, Charset charset) {
+            try {
+                this.faultDetails.add(FileUtils.readToString(resource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read fault detail resource", e);
+            }
+            return this;
+        }
+
+        /**
+         * Expect fault detail from file resource.
+         * @param filePath
+         * @return
+         */
+        public Builder faultDetailResource(String filePath) {
+            this.faultDetailResourcePaths.add(filePath);
+            return this;
+        }
+
+        /**
+         * Set explicit SOAP fault validator implementation.
+         * @param validator
+         * @return
+         */
+        public Builder validator(SoapFaultValidator validator) {
+            this.validator = validator;
+            return this;
+        }
+
+        /**
+         * Set explicit SOAP fault validator implementation by bean name.
+         * @param validatorName
+         * @param applicationContext
+         * @return
+         */
+        public Builder validator(String validatorName, ApplicationContext applicationContext) {
+            this.validator = applicationContext.getBean(validatorName, SoapFaultValidator.class);
+            return this;
+        }
+
+        /**
+         * Sets schema validation enabled/disabled for this SOAP fault assertion.
+         * @param enabled
+         * @return
+         */
+        public Builder schemaValidation(boolean enabled) {
+            xmlValidationContext.setSchemaValidation(enabled);
+            return this;
+        }
+
+        /**
+         * Sets explicit schema instance name to use for schema validation.
+         * @param schemaName
+         * @return
+         */
+        public Builder xsd(String schemaName) {
+            xmlValidationContext.setSchema(schemaName);
+            return this;
+        }
+
+        /**
+         * Sets explicit xsd schema repository instance to use for validation.
+         * @param schemaRepository
+         * @return
+         */
+        public Builder xsdSchemaRepository(String schemaRepository) {
+            xmlValidationContext.setSchemaRepository(schemaRepository);
+            return this;
+        }
+
+        /**
+         * Specifies the validationContext.
+         * @param validationContext
+         */
+        public Builder validationContext(SoapFaultDetailValidationContext validationContext) {
+            this.validationContext = validationContext;
+            return this;
+        }
+
+        /**
+         * Sets the Spring bean application context.
+         * @param applicationContext
+         */
+        public Builder withApplicationContext(ApplicationContext applicationContext) {
+            if (applicationContext.containsBean("soapFaultValidator")) {
+                validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+            }
+
+            return this;
+        }
+
+        @Override
+        public AssertSoapFault build() {
+            return new AssertSoapFault(this);
+        }
     }
-    
+
 }

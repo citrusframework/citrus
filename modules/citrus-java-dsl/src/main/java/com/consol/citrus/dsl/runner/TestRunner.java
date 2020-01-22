@@ -16,73 +16,63 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.*;
-import com.consol.citrus.actions.*;
-import com.consol.citrus.container.*;
-import com.consol.citrus.dsl.builder.*;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.actions.AntRunAction;
+import com.consol.citrus.actions.CreateVariablesAction;
+import com.consol.citrus.actions.EchoAction;
+import com.consol.citrus.actions.ExecutePLSQLAction;
+import com.consol.citrus.actions.ExecuteSQLAction;
+import com.consol.citrus.actions.ExecuteSQLQueryAction;
+import com.consol.citrus.actions.FailAction;
+import com.consol.citrus.actions.InputAction;
+import com.consol.citrus.actions.LoadPropertiesAction;
+import com.consol.citrus.actions.PurgeEndpointAction;
+import com.consol.citrus.actions.PurgeMessageChannelAction;
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.ReceiveTimeoutAction;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.actions.SleepAction;
+import com.consol.citrus.actions.StartServerAction;
+import com.consol.citrus.actions.StopServerAction;
+import com.consol.citrus.actions.StopTimeAction;
+import com.consol.citrus.actions.StopTimerAction;
+import com.consol.citrus.actions.TraceVariablesAction;
+import com.consol.citrus.actions.TransformAction;
+import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
+import com.consol.citrus.container.Assert;
+import com.consol.citrus.container.Async;
+import com.consol.citrus.container.Catch;
+import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.Iterate;
+import com.consol.citrus.container.Parallel;
+import com.consol.citrus.container.RepeatOnErrorUntilTrue;
+import com.consol.citrus.container.RepeatUntilTrue;
+import com.consol.citrus.container.Sequence;
+import com.consol.citrus.container.Template;
+import com.consol.citrus.container.Timer;
+import com.consol.citrus.container.Wait;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.http.actions.HttpActionBuilder;
+import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
+import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
-import org.springframework.context.ApplicationContextAware;
-
-import java.util.Date;
+import com.consol.citrus.ws.actions.AssertSoapFault;
+import com.consol.citrus.ws.actions.SoapActionBuilder;
+import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 
 /**
+ * Test builder interface defines builder pattern methods for creating a new
+ * Citrus test case.
+ *
  * @author Christoph Deppisch
  * @since 2.3
  */
-public interface TestRunner extends ApplicationContextAware {
-
-    /**
-     * Builds the test case.
-     * @return
-     */
-    TestCase getTestCase();
-
-    /**
-     * Set test class.
-     * @param type
-     */
-    void testClass(Class<?> type);
-
-    /**
-     * Set custom test case name.
-     * @param name
-     */
-    void name(String name);
-
-    /**
-     * Adds description to the test case.
-     *
-     * @param description
-     */
-    void description(String description);
-
-    /**
-     * Adds author to the test case.
-     *
-     * @param author
-     */
-    void author(String author);
-
-    /**
-     * Sets custom package name for this test case.
-     * @param packageName
-     */
-    void packageName(String packageName);
-
-    /**
-     * Sets test case status.
-     *
-     * @param status
-     */
-    void status(TestCaseMetaInfo.Status status);
-
-    /**
-     * Sets the creation date.
-     *
-     * @param date
-     */
-    void creationDate(Date date);
+public interface TestRunner extends TestCaseBuilder {
 
     /**
      * Starts the test case execution.
@@ -95,21 +85,20 @@ public interface TestRunner extends ApplicationContextAware {
     void stop();
 
     /**
-     * Adds a new variable definition to the set of test variables
-     * for this test case and return its value.
-     *
-     * @param name
-     * @param value
-     * @return
-     */
-    <T> T variable(String name, T value);
-
-    /**
      * Runs test action and returns same action after execution.
      * @param testAction
      * @return
      */
-    <T extends TestAction> T run(T testAction);
+    default <A extends TestAction> TestActionBuilder<A> run(A testAction) {
+        return run((TestActionBuilder<A>)() -> testAction);
+    }
+
+    /**
+     * Runs test action and returns same action after execution.
+     * @param builder
+     * @return
+     */
+    <T extends TestActionBuilder<?>> T run(T builder);
 
     /**
      * Apply test apply with all test actions, finally actions and test
@@ -117,14 +106,7 @@ public interface TestRunner extends ApplicationContextAware {
      *
      * @param behavior
      */
-    ApplyTestBehaviorAction applyBehavior(TestBehavior behavior);
-
-    /**
-     * Prepare and add a custom container implementation.
-     * @param container
-     * @return
-     */
-    <T extends AbstractActionContainer> AbstractTestContainerBuilder<T> container(T container);
+    ApplyTestBehaviorAction.Builder applyBehavior(TestBehavior behavior);
 
     /**
      * Action creating a new test variable during a test.
@@ -133,22 +115,22 @@ public interface TestRunner extends ApplicationContextAware {
      * @param value
      * @return
      */
-    CreateVariablesAction createVariable(String variableName, String value);
+    CreateVariablesAction.Builder createVariable(String variableName, String value);
 
     /**
-     * Creates and executes a new ANT run action definition
+     * Creates a new ANT run action definition
      * for further configuration.
      * @param configurer
      * @return
      */
-    AntRunAction antrun(BuilderSupport<AntRunBuilder> configurer);
+    AntRunAction.Builder antrun(BuilderSupport<AntRunAction.Builder> configurer);
 
     /**
      * Creates and executes a new echo action.
      * @param message
      * @return
      */
-    EchoAction echo(String message);
+    EchoAction.Builder echo(String message);
 
     /**
      * Creates a new executePLSQL action definition
@@ -157,7 +139,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExecutePLSQLAction plsql(BuilderSupport<ExecutePLSQLBuilder> configurer);
+    ExecutePLSQLAction.Builder plsql(BuilderSupport<ExecutePLSQLAction.Builder> configurer);
 
     /**
      * Creates a new executeSQL action definition
@@ -166,7 +148,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExecuteSQLAction sql(BuilderSupport<ExecuteSQLBuilder> configurer);
+    ExecuteSQLAction.Builder sql(BuilderSupport<ExecuteSQLAction.Builder> configurer);
 
     /**
      * Creates a new executesqlquery action definition
@@ -175,7 +157,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ExecuteSQLQueryAction query(BuilderSupport<ExecuteSQLQueryBuilder> configurer);
+    ExecuteSQLQueryAction.Builder query(BuilderSupport<ExecuteSQLQueryAction.Builder> configurer);
 
     /**
      * Creates a new receive timeout action definition
@@ -184,7 +166,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ReceiveTimeoutAction receiveTimeout(BuilderSupport<ReceiveTimeoutBuilder> configurer);
+    ReceiveTimeoutAction.Builder receiveTimeout(BuilderSupport<ReceiveTimeoutAction.Builder> configurer);
 
     /**
      * Creates a new fail action.
@@ -192,7 +174,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param message
      * @return
      */
-    FailAction fail(String message);
+    FailAction.Builder fail(String message);
 
     /**
      * Creates a new input action.
@@ -200,14 +182,14 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    InputAction input(BuilderSupport<InputActionBuilder> configurer);
+    InputAction.Builder input(BuilderSupport<InputAction.Builder> configurer);
 
     /**
      * Creates a new load properties action.
      * @param filePath path to properties file.
      * @return
      */
-    LoadPropertiesAction load(String filePath);
+    LoadPropertiesAction.Builder load(String filePath);
 
     /**
      * Creates a new purge jms queues action definition
@@ -216,7 +198,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    TestAction purgeQueues(BuilderSupport<PurgeJmsQueuesBuilder> configurer);
+    PurgeJmsQueuesAction.Builder purgeQueues(BuilderSupport<PurgeJmsQueuesAction.Builder> configurer);
 
     /**
      * Creates a new purge message channel action definition
@@ -225,7 +207,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    PurgeMessageChannelAction purgeChannels(BuilderSupport<PurgeChannelsBuilder> configurer);
+    PurgeMessageChannelAction.Builder purgeChannels(BuilderSupport<PurgeMessageChannelAction.Builder> configurer);
 
     /**
      * Creates a new purge message endpoint action definition
@@ -234,7 +216,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    PurgeEndpointAction purgeEndpoints(BuilderSupport<PurgeEndpointsBuilder> configurer);
+    PurgeEndpointAction.Builder purgeEndpoints(BuilderSupport<PurgeEndpointAction.Builder> configurer);
 
     /**
      * Creates receive message action definition with message endpoint instance.
@@ -242,7 +224,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    ReceiveMessageAction receive(BuilderSupport<ReceiveMessageBuilder> configurer);
+    ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer);
 
     /**
      * Create send message action definition with message endpoint instance.
@@ -250,13 +232,13 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    SendMessageAction send(BuilderSupport<SendMessageBuilder> configurer);
+    SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer);
 
     /**
      * Add sleep action with default delay time.
      * @return
      */
-    SleepAction sleep();
+    SleepAction.Builder sleep();
 
     /**
      * Add sleep action with time in milliseconds.
@@ -264,23 +246,13 @@ public interface TestRunner extends ApplicationContextAware {
      * @param milliseconds
      * @return
      */
-    SleepAction sleep(long milliseconds);
-
-    /**
-     * Creates a wait action that waits for a condition to be satisfied before continuing.
-     *
-     * @param configurer
-     * @return
-     * @deprecated in favor of {@link TestRunner#waitFor()}
-     */
-    @Deprecated
-    Wait waitFor(BuilderSupport<WaitBuilder> configurer);
+    SleepAction.Builder sleep(long milliseconds);
 
     /**
      * Creates a wait action that waits for a condition to be satisfied before continuing.
      * @return
      */
-    WaitBuilder waitFor();
+    Wait.Builder waitFor();
 
     /**
      * Creates a new start server action definition
@@ -289,7 +261,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param servers
      * @return
      */
-    StartServerAction start(Server... servers);
+    StartServerAction.Builder start(Server... servers);
 
     /**
      * Creates a new start server action definition
@@ -298,7 +270,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param server
      * @return
      */
-    StartServerAction start(Server server);
+    StartServerAction.Builder start(Server server);
 
     /**
      * Creates a new stop server action definition
@@ -307,7 +279,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param servers
      * @return
      */
-    StopServerAction stop(Server... servers);
+    StopServerAction.Builder stop(Server... servers);
 
     /**
      * Creates a new stop server action definition
@@ -316,13 +288,13 @@ public interface TestRunner extends ApplicationContextAware {
      * @param server
      * @return
      */
-    StopServerAction stop(Server server);
+    StopServerAction.Builder stop(Server server);
 
     /**
      * Creates a new stop time action.
      * @return
      */
-    StopTimeAction stopTime();
+    StopTimeAction.Builder stopTime();
 
     /**
      * Creates a new stop time action.
@@ -330,7 +302,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param id
      * @return
      */
-    StopTimeAction stopTime(String id);
+    StopTimeAction.Builder stopTime(String id);
 
     /**
      * Creates a new stop time action.
@@ -339,7 +311,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param suffix
      * @return
      */
-    StopTimeAction stopTime(String id, String suffix);
+    StopTimeAction.Builder stopTime(String id, String suffix);
 
     /**
      * Creates a new trace variables action definition
@@ -347,7 +319,7 @@ public interface TestRunner extends ApplicationContextAware {
      *
      * @return
      */
-    TraceVariablesAction traceVariables();
+    TraceVariablesAction.Builder traceVariables();
 
     /**
      * Creates a new trace variables action definition
@@ -356,7 +328,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param variables
      * @return
      */
-    TraceVariablesAction traceVariables(String... variables);
+    TraceVariablesAction.Builder traceVariables(String... variables);
 
     /**
      * Creates a new groovy action definition
@@ -365,7 +337,7 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    GroovyAction groovy(BuilderSupport<GroovyActionBuilder> configurer);
+    GroovyAction.Builder groovy(BuilderSupport<GroovyAction.Builder> configurer);
 
     /**
      * Creates a new transform action definition
@@ -374,128 +346,128 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    TransformAction transform(BuilderSupport<TransformActionBuilder> configurer);
+    TransformAction.Builder transform(BuilderSupport<TransformAction.Builder> configurer);
 
     /**
      * Assert exception to happen in nested test action.
      * @return
      */
-    AssertExceptionBuilder assertException();
+    Assert.Builder assertException();
 
     /**
-     * Catch exception when thrown in nested test action.
+     * Action catches possible exceptions in nested test actions.
      * @return
      */
-    CatchExceptionBuilder catchException();
+    Catch.Builder catchException();
 
     /**
      * Assert SOAP fault during action execution.
      * @return
      */
-    AssertSoapFaultBuilder assertSoapFault();
+    AssertSoapFault.Builder assertSoapFault();
 
     /**
      * Adds conditional container with nested test actions.
      * @return
      */
-    ConditionalBuilder conditional();
+    Conditional.Builder conditional();
 
     /**
-     * Run nested test actions in iteration.
+     * Adds iterate container with nested test actions.
      * @return
      */
-    IterateBuilder iterate();
+    Iterate.Builder iterate();
 
     /**
      * Run nested test actions in parallel to each other using multiple threads.
      * @return
      */
-    ParallelBuilder parallel();
+    Parallel.Builder parallel();
 
     /**
      * Adds repeat on error until true container with nested test actions.
      * @return
      */
-    RepeatOnErrorBuilder repeatOnError();
+    RepeatOnErrorUntilTrue.Builder repeatOnError();
 
     /**
      * Adds repeat until true container with nested test actions.
      * @return
      */
-    RepeatBuilder repeat();
+    RepeatUntilTrue.Builder repeat();
 
     /**
-     * Run nested test actions in sequence.
+     * Adds sequential container with nested test actions.
      * @return
      */
-    SequenceBuilder sequential();
+    Sequence.Builder sequential();
 
     /**
      * Adds async container with nested test actions.
      * @return
      */
-    AsyncBuilder async();
+    Async.Builder async();
 
     /**
      * Repeat nested test actions based on a timer interval.
      * @return
      */
-    TimerBuilder timer();
+    Timer.Builder timer();
 
     /**
-     * Stops timer matching the supplied timerId
+     * Stops the timer matching the supplied timerId
      * @param timerId
      * @return
      */
-    StopTimerAction stopTimer(String timerId);
+    StopTimerAction.Builder stopTimer(String timerId);
 
     /**
-     * Stops all timers
+     * Stops all timers within the current test context
      * @return
      */
-    StopTimerAction stopTimers();
+    StopTimerAction.Builder stopTimers();
 
     /**
      * Run docker command action.
      * @return
      */
-    TestAction docker(BuilderSupport<DockerActionBuilder> configurer);
+    DockerExecuteAction.Builder docker(BuilderSupport<DockerExecuteAction.Builder> configurer);
 
     /**
      * Run kubernetes command action.
      * @return
      */
-    TestAction kubernetes(BuilderSupport<KubernetesActionBuilder> configurer);
+    KubernetesExecuteAction.Builder kubernetes(BuilderSupport<KubernetesExecuteAction.Builder> configurer);
 
     /**
      * Run selenium command action.
      * @return
      */
-    TestAction selenium(BuilderSupport<SeleniumActionBuilder> configurer);
+    SeleniumActionBuilder selenium(BuilderSupport<SeleniumActionBuilder> configurer);
 
     /**
      * Run http command action.
      * @return
      */
-    TestAction http(BuilderSupport<HttpActionBuilder> configurer);
+    HttpActionBuilder http(BuilderSupport<HttpActionBuilder> configurer);
 
     /**
      * Run soap command action.
      * @return
      */
-    TestAction soap(BuilderSupport<SoapActionBuilder> configurer);
+    SoapActionBuilder soap(BuilderSupport<SoapActionBuilder> configurer);
 
     /**
      * Run Camel route actions.
      * @return
      */
-    TestAction camel(BuilderSupport<CamelRouteActionBuilder> configurer);
+    CamelRouteActionBuilder camel(BuilderSupport<CamelRouteActionBuilder> configurer);
 
     /**
      * Run zookeeper command action.
      * @return
      */
-    TestAction zookeeper(BuilderSupport<ZooActionBuilder> configurer);
+    ZooExecuteAction.Builder zookeeper(BuilderSupport<ZooExecuteAction.Builder> configurer);
 
     /**
      * Adds template container with nested test actions.
@@ -503,11 +475,5 @@ public interface TestRunner extends ApplicationContextAware {
      * @param configurer
      * @return
      */
-    Template applyTemplate(BuilderSupport<TemplateBuilder> configurer);
-
-    /**
-     * Adds sequence of test actions to finally block.
-     * @return
-     */
-    FinallySequenceBuilder doFinally();
+    Template.Builder applyTemplate(BuilderSupport<Template.Builder> configurer);
 }

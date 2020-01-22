@@ -16,28 +16,41 @@
 
 package com.consol.citrus.cucumber.step.runner.docker;
 
+import java.io.File;
+import java.util.UUID;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.client.DockerEndpointConfiguration;
-import com.consol.citrus.docker.command.*;
+import com.consol.citrus.docker.command.AbstractDockerCommand;
+import com.consol.citrus.docker.command.ContainerCreate;
+import com.consol.citrus.docker.command.ContainerInspect;
+import com.consol.citrus.docker.command.ContainerStart;
+import com.consol.citrus.docker.command.ContainerStop;
+import com.consol.citrus.docker.command.ImageBuild;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.github.dockerjava.api.command.*;
+import com.github.dockerjava.api.command.BuildImageCmd;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerCmd;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.StartContainerCmd;
+import com.github.dockerjava.api.command.StopContainerCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import cucumber.api.Scenario;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.io.File;
-import java.util.UUID;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -122,7 +135,7 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
         when(buildCmd.exec(any(BuildImageResultCallback.class))).thenAnswer(invocation -> {
             ((BuildImageResultCallback) invocation.getArguments()[0]).onNext(response);
             ((BuildImageResultCallback) invocation.getArguments()[0]).close();
-            
+
             return invocation.getArguments()[0];
         });
 

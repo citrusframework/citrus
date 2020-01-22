@@ -16,16 +16,19 @@
 
 package com.consol.citrus.camel.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.*;
+import org.apache.camel.CamelContext;
+import org.apache.camel.CamelException;
+import org.apache.camel.ServiceStatus;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
@@ -41,14 +44,14 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
         when(camelContext.removeRoute("route_1")).thenReturn(true);
 
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Collections.singletonList("route_1"));
-
+        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                .context(camelContext)
+                .routeIds(Collections.singletonList("route_1"))
+                .build();
         action.execute(context);
 
     }
-    
+
     @Test
     public void testRemoveRouteVariableSupport() throws Exception {
         reset(camelContext);
@@ -60,10 +63,10 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getRouteStatus("route_1")).thenReturn(ServiceStatus.Stopped);
         when(camelContext.removeRoute("route_1")).thenReturn(true);
 
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Collections.singletonList("${routeId}"));
-
+        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                .context(camelContext)
+                .routeIds(Collections.singletonList("${routeId}"))
+                .build();
         action.execute(context);
 
     }
@@ -78,10 +81,10 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.removeRoute("route_1")).thenReturn(true);
         when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Started);
 
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Arrays.asList("route_1", "route_2", "route_3"));
-
+        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                .context(camelContext)
+                .routes("route_1", "route_2", "route_3")
+                .build();
         action.execute(context);
 
     }
@@ -97,11 +100,10 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
         when(camelContext.removeRoute("route_2")).thenReturn(false);
 
-
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Arrays.asList("route_1", "route_2", "route_3"));
-
+        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                .context(camelContext)
+                .routes("route_1", "route_2", "route_3")
+                .build();
         action.execute(context);
 
     }
@@ -117,11 +119,10 @@ public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getRouteStatus("route_2")).thenReturn(ServiceStatus.Stopped);
         doThrow(new CamelException("Failed to stop route")).when(camelContext).removeRoute("route_2");
 
-
-        RemoveCamelRouteAction action = new RemoveCamelRouteAction();
-        action.setCamelContext(camelContext);
-        action.setRouteIds(Arrays.asList("route_1", "route_2", "route_3"));
-
+        RemoveCamelRouteAction action = new RemoveCamelRouteAction.Builder()
+                .context(camelContext)
+                .routes("route_1", "route_2", "route_3")
+                .build();
         action.execute(context);
 
     }

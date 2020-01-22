@@ -24,10 +24,9 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -58,7 +57,7 @@ public class TimerTest extends AbstractTestNGUnitTest {
     public void shouldSuccessfullyRunTimerWithNestedActionThatTakesLongerThanTimerInterval() {
         reset(action);
 
-        Timer timer = createDefaultTimerWithNestedAction(false, action, getSleepAction("200"));
+        Timer timer = createDefaultTimerWithNestedAction(false, action, getSleepAction());
 
         timer.execute(context);
 
@@ -108,29 +107,22 @@ public class TimerTest extends AbstractTestNGUnitTest {
     }
 
     private FailAction getFailAction() {
-        return new FailAction().setMessage("Something nasty happened");
+        return new FailAction.Builder().message("Something nasty happened").build();
     }
 
-    private SleepAction getSleepAction(String milliseconds) {
-        SleepAction sleep = new SleepAction();
-        sleep.setMilliseconds(milliseconds);
-        return sleep;
+    private SleepAction getSleepAction() {
+        return new SleepAction.Builder()
+                .milliseconds(200L)
+                .build();
     }
 
-    private Timer createTimerWithNestedAction(int repeatCount, long interval, boolean forked, TestAction... action) {
-        Timer timer = new Timer();
-        timer.setInterval(interval);
-        timer.setRepeatCount(repeatCount);
-        timer.setFork(forked);
-
-        List<TestAction> actionList = new ArrayList<TestAction>();
-        for (TestAction testAction : action) {
-            actionList.add(testAction);
-        }
-
-        timer.setActions(actionList);
-
-        return timer;
+    private Timer createTimerWithNestedAction(int repeatCount, long interval, boolean forked, TestAction... actions) {
+        return new Timer.Builder()
+                .interval(interval)
+                .repeatCount(repeatCount)
+                .fork(forked)
+                .actions(actions)
+                .build();
     }
 
     private void allowForkedTimerToComplete(long sleepTime) {

@@ -29,7 +29,7 @@ import static org.testng.Assert.assertEquals;
 
 public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
-    public void testIterateBuilder() {      
+    public void testIterateBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
             @Override
             public void execute() {
@@ -49,7 +49,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Iterate.class);
         assertEquals(test.getActions().get(0).getName(), "iterate");
-        
+
         Iterate container = (Iterate)test.getActions().get(0);
         assertEquals(container.getActionCount(), 1);
         assertEquals(container.getIndexName(), "i");
@@ -67,7 +67,8 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
                             .startsWith(1)
                             .step(1)
                             .condition("i lt= 3")
-                    .actions(createVariable("index", "${i}"), new AbstractTestAction() {
+                    .actions(createVariable("index", "${i}"),
+                        () -> new AbstractTestAction() {
                         @Override
                         public void doExecute(TestContext context) {
                             Assert.assertTrue(Integer.valueOf(context.getVariable("index")) > 0);

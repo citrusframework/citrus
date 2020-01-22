@@ -16,16 +16,16 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Date;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.util.BrowserUtils;
 import org.openqa.selenium.remote.BrowserType;
 import org.springframework.util.StringUtils;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Date;
 
 /**
  * Navigates to new page either by using new absolute page URL or relative page path.
@@ -37,13 +37,15 @@ import java.util.Date;
 public class NavigateAction extends AbstractSeleniumAction {
 
     /** Page URL to navigate to */
-    private String page;
+    private final String page;
 
     /**
      * Default constructor.
      */
-    public NavigateAction() {
-        super("navigate");
+    public NavigateAction(Builder builder) {
+        super("navigate", builder);
+
+        this.page = builder.page;
     }
 
     @Override
@@ -84,18 +86,28 @@ public class NavigateAction extends AbstractSeleniumAction {
     }
 
     /**
-     * Sets the page url.
-     * @param page
-     */
-    public void setPage(String page) {
-        this.page = page;
-    }
-
-    /**
      * Gets the page url.
      * @return
      */
     public String getPage() {
         return page;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static class Builder extends AbstractSeleniumAction.Builder<NavigateAction, NavigateAction.Builder> {
+
+        private String page;
+
+        public Builder page(String page) {
+            this.page = page;
+            return this;
+        }
+
+        @Override
+        public NavigateAction build() {
+            return new NavigateAction(this);
+        }
     }
 }

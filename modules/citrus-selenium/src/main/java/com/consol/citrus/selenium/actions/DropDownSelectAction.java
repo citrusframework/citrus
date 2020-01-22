@@ -16,6 +16,10 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import org.openqa.selenium.Keys;
@@ -27,8 +31,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-
 /**
  * Selects dropdown option(s) on form input.
  *
@@ -38,16 +40,19 @@ import java.util.List;
 public class DropDownSelectAction extends FindElementAction {
 
     /** Option to select */
-    private String option;
+    private final String option;
 
     /** Multiple options to select */
-    private List<String> options;
+    private final List<String> options;
 
     /**
      * Default constructor.
      */
-    public DropDownSelectAction() {
-        super("dropdown-select");
+    public DropDownSelectAction(Builder builder) {
+        super("dropdown-select", builder);
+
+        this.option = builder.option;
+        this.options = builder.options;
     }
 
     @Override
@@ -101,15 +106,6 @@ public class DropDownSelectAction extends FindElementAction {
     }
 
     /**
-     * Sets the option.
-     *
-     * @param option
-     */
-    public void setOption(String option) {
-        this.option = option;
-    }
-
-    /**
      * Gets the options.
      *
      * @return
@@ -119,11 +115,30 @@ public class DropDownSelectAction extends FindElementAction {
     }
 
     /**
-     * Sets the options.
-     *
-     * @param options
+     * Action builder.
      */
-    public void setOptions(List<String> options) {
-        this.options = options;
+    public static class Builder extends ElementActionBuilder<DropDownSelectAction, Builder> {
+
+        private String option;
+        private List<String> options = new ArrayList<>();
+
+        public Builder option(String option) {
+            this.option = option;
+            return this;
+        }
+
+        public Builder options(String... options) {
+            return options(Arrays.asList(options));
+        }
+
+        public Builder options(List<String> options) {
+            this.options.addAll(options);
+            return this;
+        }
+
+        @Override
+        public DropDownSelectAction build() {
+            return new DropDownSelectAction(this);
+        }
     }
 }

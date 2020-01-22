@@ -16,6 +16,13 @@
 
 package com.consol.citrus.dsl.runner;
 
+import javax.xml.transform.Source;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
@@ -26,7 +33,9 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
@@ -37,12 +46,16 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.AbstractValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
-import com.consol.citrus.validation.json.*;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.text.PlainTextMessageValidator;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
@@ -62,20 +75,22 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
-import javax.xml.transform.Source;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.*;
-
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Consumer messageConsumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
@@ -139,10 +154,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
@@ -282,7 +297,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithPayloadString() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -304,22 +319,22 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        
+
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithPayloadResource() throws IOException {
         reset(resource, messageEndpoint, messageConsumer, configuration);
@@ -343,22 +358,22 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        
+
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithEndpointName() {
         TestContext context = applicationContext.getBean(TestContext.class);
@@ -396,7 +411,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithTimeout() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -425,7 +440,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getReceiveTimeout(), 1000L);
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithHeaders() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -732,7 +747,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithHeaderResource() throws IOException {
         reset(resource, messageEndpoint, messageConsumer, configuration);
@@ -768,24 +783,24 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        
+
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        
+
         action = ((ReceiveMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
-        
+
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
@@ -860,7 +875,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getHeaderData().get(2), "<Header><Name>operation</Name><Value>bar</Value></Header>");
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithValidator() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -899,7 +914,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithValidatorName() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
@@ -1069,7 +1084,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageSelectorMap(), messageSelector);
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithSelectorExpression() {
         SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
@@ -1094,18 +1109,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        
+
         Assert.assertTrue(action.getMessageSelectorMap().isEmpty());
         Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
 
     }
-    
+
     @Test
     public void testReceiveBuilderExtractFromPayload() {
         reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
@@ -1207,7 +1222,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
     }
-    
+
     @Test
     public void testReceiveBuilderExtractFromHeader() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -1252,7 +1267,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
 
     }
-    
+
     @Test
     public void testReceiveBuilderExtractCombined() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -1308,7 +1323,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithValidationCallback() {
         final AbstractValidationCallback callback = Mockito.mock(AbstractValidationCallback.class);
@@ -1380,10 +1395,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidators().size(), 1L);
@@ -1396,13 +1411,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
         ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
-        
+
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithValidatonScriptResourcePath() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
@@ -1433,10 +1448,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidators().size(), 1L);
@@ -1449,7 +1464,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
         ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
-        
+
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
         Assert.assertEquals(validationContext.getValidationScriptResourcePath(), "classpath:com/consol/citrus/dsl/runner/validation.groovy");
@@ -1506,7 +1521,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
     }
-    
+
     @Test
     public void testReceiveBuilderWithValidatonScriptAndHeader() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
@@ -1538,10 +1553,10 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getValidators().size(), 1L);
@@ -1554,18 +1569,18 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
 
         ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
-        
+
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
-        
+
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData());
         Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadResourcePath());
         Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithNamespaceValidation() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -1748,7 +1763,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
             }
         };
     }
-    
+
     @Test
     public void testReceiveBuilderWithIgnoreElementsXpath() {
         reset(messageEndpoint, messageConsumer, configuration);
@@ -1892,7 +1907,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getSchema(), "testSchema");
 
     }
-    
+
     @Test
     public void testReceiveBuilderWithSchemaRepository() throws IOException {
         XsdSchema schema = applicationContext.getBean("testSchema", XsdSchema.class);
@@ -1931,19 +1946,19 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
-        
+
         ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        
+
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        
+
         XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
-        
+
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(validationContext.getSchemaRepository(), "customSchemaRepository");

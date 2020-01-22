@@ -37,23 +37,21 @@ public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser seleniumBrowser = new SeleniumBrowser();
     private WebDriver webDriver = Mockito.mock(WebDriver.class);
 
-    private GetStoredFileAction action;
-
     @BeforeMethod
     public void setup() {
         reset(webDriver);
 
         seleniumBrowser.setWebDriver(webDriver);
-
-        action =  new GetStoredFileAction();
-        action.setBrowser(seleniumBrowser);
     }
 
     @Test
     public void testExecute() throws Exception {
         seleniumBrowser.storeFile("classpath:download/file.txt");
 
-        action.setFileName("file.txt");
+        GetStoredFileAction action =  new GetStoredFileAction.Builder()
+                .browser(seleniumBrowser)
+                .fileName("file.txt")
+                .build();
         action.execute(context);
 
         Assert.assertNotNull(context.getVariable(SeleniumHeaders.SELENIUM_DOWNLOAD_FILE));
@@ -61,7 +59,10 @@ public class GetStoredFileActionTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Failed to access stored file.*")
     public void testExecuteError() throws Exception {
-        action.setFileName("unknown.txt");
+        GetStoredFileAction action =  new GetStoredFileAction.Builder()
+                .browser(seleniumBrowser)
+                .fileName("unknown.txt")
+                .build();
         action.execute(context);
     }
 

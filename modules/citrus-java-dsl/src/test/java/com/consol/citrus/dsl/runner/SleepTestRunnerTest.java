@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -26,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 public class SleepTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testSleepBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
@@ -41,13 +43,15 @@ public class SleepTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), SleepAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), SleepAction.class);
-        
+
         SleepAction action = (SleepAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sleep");
-        Assert.assertEquals(action.getMilliseconds(), "200");
+        Assert.assertEquals(action.getTime(), "200");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
 
         action = (SleepAction)test.getActions().get(1);
         Assert.assertEquals(action.getName(), "sleep");
-        Assert.assertEquals(action.getMilliseconds(), "150");
+        Assert.assertEquals(action.getTime(), "150");
+        Assert.assertEquals(action.getTimeUnit(), TimeUnit.MILLISECONDS);
     }
 }

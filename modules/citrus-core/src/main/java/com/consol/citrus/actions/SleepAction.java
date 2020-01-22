@@ -16,89 +16,115 @@
 
 package com.consol.citrus.actions;
 
+import java.time.Duration;
+import java.util.concurrent.TimeUnit;
+
+import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.util.StringUtils;
-
 /**
  * Stop the test execution for a given amount of time.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
 public class SleepAction extends AbstractTestAction {
-    /** Delay time in seconds */
-    private String seconds;
 
-    /** Delay time in milliseconds */
-    private String milliseconds = "5000";
+    /** Delay time */
+    private final String time;
+    private final TimeUnit timeUnit;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SleepAction.class);
 
     /**
      * Default constructor.
+     * @param builder
      */
-    public SleepAction() {
-        setName("sleep");
+    private SleepAction(Builder builder) {
+        super("sleep", builder);
+
+        this.time = builder.time;
+        this.timeUnit = builder.timeUnit;
     }
 
     @Override
     public void doExecute(TestContext context) {
-        String value;
-
-        if (StringUtils.hasText(seconds)) {
-            value = String.valueOf((long) (Double.valueOf(context.resolveDynamicValue(seconds)) * 1000L));
-        } else {
-            //check if given delay value is a variable or function
-            value = context.resolveDynamicValue(milliseconds);
-        }
+        String duration = context.resolveDynamicValue(time);
 
         try {
-            log.info(String.format("Sleeping %s ms", value));
+            log.info(String.format("Sleeping %s %s", duration, timeUnit.toString()));
 
-            Thread.sleep(Long.valueOf(value));
+            timeUnit.sleep(Long.parseLong(duration));
 
-            log.info(String.format("Returning after %s ms", value));
+            log.info(String.format("Returning after %s %s", duration, timeUnit.toString()));
         } catch (InterruptedException e) {
             throw new CitrusRuntimeException(e);
         }
     }
 
     /**
-     * Setter for milliseconds
-     * @param milliseconds
+     * Gets the time expression.
+     * @return the time expression
      */
-    public SleepAction setMilliseconds(String milliseconds) {
-        this.milliseconds = milliseconds;
-        return this;
+    public String getTime() {
+        return time;
     }
 
     /**
-     * Gets the milliseconds.
-     * @return the milliseconds
+     * Obtains the timeUnit.
+     * @return the time unit.
      */
-    public String getMilliseconds() {
-        return milliseconds;
+    public TimeUnit getTimeUnit() {
+        return timeUnit;
     }
 
     /**
-     * Setter for seconds
-     * @param seconds
+     * Action builder.
      */
-    public SleepAction setSeconds(String seconds) {
-        this.seconds = seconds;
-        return this;
-    }
+    public static final class Builder extends AbstractTestActionBuilder<SleepAction, Builder> {
 
-    /**
-     * Gets the seconds.
-     * @return the seconds
-     */
-    public String getSeconds() {
-        return seconds;
+        private String time = "5000";
+        private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
+
+        public static Builder sleep() {
+            return new Builder();
+        }
+
+        public Builder milliseconds(long milliseconds) {
+            this.time = String.valueOf(milliseconds);
+            this.timeUnit = TimeUnit.MILLISECONDS;
+            return this;
+        }
+
+        public Builder seconds(double seconds) {
+            milliseconds(Math.round(seconds * 1000));
+            return this;
+        }
+
+        public Builder time(Duration duration) {
+            milliseconds(duration.toMillis());
+            return this;
+        }
+
+        public Builder time(String expression) {
+            time(expression, TimeUnit.MILLISECONDS);
+            return this;
+        }
+
+        public Builder time(String expression, TimeUnit timeUnit) {
+            time = expression;
+            this.timeUnit = timeUnit;
+            return this;
+        }
+
+        @Override
+        public SleepAction build() {
+            return new SleepAction(this);
+        }
+
     }
 }

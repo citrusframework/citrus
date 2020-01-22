@@ -16,12 +16,12 @@
 
 package com.consol.citrus.selenium.actions;
 
+import java.util.Set;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
-
-import java.util.Set;
 
 /**
  * Close opened window by name.
@@ -29,16 +29,18 @@ import java.util.Set;
  * @author Tamer Erdogan, Christoph Deppisch
  * @since 2.7
  */
-public class CloseWindowAction extends AbstractSeleniumAction implements SeleniumWindowAction {
+public class CloseWindowAction extends AbstractSeleniumAction implements SeleniumAction {
 
     /** Window name */
-    private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
+    private final String windowName;
 
     /**
      * Default constructor.
      */
-    public CloseWindowAction() {
-        super("close-window");
+    public CloseWindowAction(Builder builder) {
+        super("close-window", builder);
+
+        this.windowName = builder.windowName;
     }
 
     @Override
@@ -83,7 +85,6 @@ public class CloseWindowAction extends AbstractSeleniumAction implements Seleniu
 
     /**
      * Gets the windowName.
-     *
      * @return
      */
     public String getWindowName() {
@@ -91,11 +92,25 @@ public class CloseWindowAction extends AbstractSeleniumAction implements Seleniu
     }
 
     /**
-     * Sets the windowName.
-     *
-     * @param windowName
+     * Action builder.
      */
-    public void setWindowName(String windowName) {
-        this.windowName = windowName;
+    public static class Builder extends AbstractSeleniumAction.Builder<CloseWindowAction, Builder> {
+
+        private String windowName = SeleniumHeaders.SELENIUM_ACTIVE_WINDOW;
+
+        /**
+         * Set window name.
+         * @param name
+         * @return
+         */
+        public Builder window(String name) {
+            this.windowName = name;
+            return this;
+        }
+
+        @Override
+        public CloseWindowAction build() {
+            return new CloseWindowAction(this);
+        }
     }
 }

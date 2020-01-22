@@ -16,24 +16,51 @@
 
 package com.consol.citrus.actions;
 
-import com.consol.citrus.Completable;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.Citrus;
+import com.consol.citrus.Completable;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
+import com.consol.citrus.validation.interceptor.BinaryMessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.GzipMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathVariableExtractor;
+import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
+import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.XmlMappingException;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
+import org.springframework.xml.transform.StringResult;
 
 
 /**
@@ -41,35 +68,35 @@ import java.util.concurrent.CompletableFuture;
  * a {@link com.consol.citrus.endpoint.Endpoint}, which is capable of the message transport implementation. So action is
  * independent of the message transport configuration.
  *
- * @author Christoph Deppisch 
+ * @author Christoph Deppisch
  * @since 2008
  */
 public class SendMessageAction extends AbstractTestAction implements Completable {
     /** Message endpoint instance */
-    private Endpoint endpoint;
+    private final Endpoint endpoint;
 
     /** Message endpoint uri - either bean name or dynamic uri */
-    private String endpointUri;
+    private final String endpointUri;
 
     /** List of variable extractors responsible for creating variables from received message content */
-    private List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
-    
+    private final List<VariableExtractor> variableExtractors;
+
     /** Builder constructing a control message */
-    private MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-    
+    private final MessageContentBuilder messageBuilder;
+
     /** Forks the message sending action so other actions can take place while this
      * message sender is waiting for the synchronous response */
-    private boolean forkMode = false;
-
-    /** Finished indicator either called when forked send action is finished or immediately when this action has finished */
-    private CompletableFuture<Void> finished;
+    private final boolean forkMode;
 
     /** The message type to send in this action - this information is needed to find proper
      * message construction interceptors for this message */
-    private String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
+    private final String messageType;
 
     /** Optional data dictionary that explicitly modifies message content before sending */
-    private DataDictionary dataDictionary;
+    private final DataDictionary<?> dataDictionary;
+
+    /** Finished indicator either called when forked send action is finished or immediately when this action has finished */
+    private CompletableFuture<Void> finished;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SendMessageAction.class);
@@ -77,8 +104,16 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Default constructor.
      */
-    public SendMessageAction() {
-        setName("send");
+    public SendMessageAction(SendMessageActionBuilder<?, ?> builder) {
+        super("send", builder);
+
+        this.endpoint = builder.endpoint;
+        this.endpointUri = builder.endpointUri;
+        this.variableExtractors = builder.variableExtractors;
+        this.messageBuilder = builder.messageBuilder;
+        this.forkMode = builder.forkMode;
+        this.messageType = builder.messageType;
+        this.dataDictionary = builder.dataDictionary;
     }
 
     /**
@@ -128,7 +163,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             }
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -138,7 +173,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         if (getActor() == null && messageEndpoint.getActor() != null) {
             return messageEndpoint.getActor().isDisabled();
         }
-        
+
         return super.isDisabled(context);
     }
 
@@ -186,33 +221,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
-     * Sets the message endpoint.
-     * @param endpoint
-     */
-    public SendMessageAction setEndpoint(Endpoint endpoint) {
-        this.endpoint = endpoint;
-        return this;
-    }
-
-    /**
-     * Sets the message builder implementation.
-     * @param messageBuilder the messageBuilder to set
-     */
-    public SendMessageAction setMessageBuilder(MessageContentBuilder messageBuilder) {
-        this.messageBuilder = messageBuilder;
-        return this;
-    }
-
-    /**
-     * The variable extractors for this message sending action.
-     * @param variableExtractors the variableExtractors to set
-     */
-    public SendMessageAction setVariableExtractors(List<VariableExtractor> variableExtractors) {
-        this.variableExtractors = variableExtractors;
-        return this;
-    }
-
-    /**
      * Get the variable extractors.
      * @return the variableExtractors
      */
@@ -229,29 +237,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
-     * Enables fork mode for this message sender.
-     * @param fork the fork to set.
-     */
-    public SendMessageAction setForkMode(boolean fork) {
-        this.forkMode = fork;
-        return this;
-    }
-
-    /**
      * Gets the forkMode.
      * @return the forkMode the forkMode to get.
      */
     public boolean isForkMode() {
         return forkMode;
-    }
-
-    /**
-     * Sets the expected message type for this receive action.
-     * @param messageType the messageType to set
-     */
-    public SendMessageAction setMessageType(String messageType) {
-        this.messageType = messageType;
-        return this;
     }
 
     /**
@@ -266,17 +256,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * Gets the data dictionary.
      * @return
      */
-    public DataDictionary getDataDictionary() {
+    public DataDictionary<?> getDataDictionary() {
         return dataDictionary;
-    }
-
-    /**
-     * Sets the data dictionary.
-     * @param dataDictionary
-     */
-    public SendMessageAction setDataDictionary(DataDictionary dataDictionary) {
-        this.dataDictionary = dataDictionary;
-        return this;
     }
 
     /**
@@ -288,11 +269,580 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
-     * Sets the endpoint uri.
-     * @param endpointUri
+     * Action builder.
      */
-    public SendMessageAction setEndpointUri(String endpointUri) {
-        this.endpointUri = endpointUri;
-        return this;
+    public static final class Builder extends SendMessageActionBuilder<SendMessageAction, Builder> {
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param messageEndpoint
+         * @return
+         */
+        public static Builder send(Endpoint messageEndpoint) {
+            Builder builder = new Builder();
+            builder.endpoint(messageEndpoint);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param messageEndpointUri
+         * @return
+         */
+        public static Builder send(String messageEndpointUri) {
+            Builder builder = new Builder();
+            builder.endpoint(messageEndpointUri);
+            return builder;
+        }
+
+        @Override
+        public SendMessageAction build() {
+            return new SendMessageAction(this);
+        }
+
+    }
+
+    /**
+     * Base send message action builder also used by subclasses of base send message action.
+     */
+    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, B extends SendMessageActionBuilder<T, B>> extends AbstractTestActionBuilder<T, B> {
+
+        protected Endpoint endpoint;
+        protected String endpointUri;
+        protected List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        protected MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        protected boolean forkMode = false;
+        protected CompletableFuture<Void> finished;
+        protected String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
+        protected DataDictionary<?> dataDictionary;
+
+        /** Variable extractors filled within this builder */
+        private MessageHeaderVariableExtractor headerExtractor;
+        private XpathPayloadVariableExtractor xpathExtractor;
+        private JsonPathVariableExtractor jsonPathExtractor;
+
+        /** Message constructing interceptor */
+        private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
+        private JsonPathMessageConstructionInterceptor jsonPathMessageConstructionInterceptor;
+        private final GzipMessageConstructionInterceptor gzipMessageConstructionInterceptor = new GzipMessageConstructionInterceptor();
+        private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor = new BinaryMessageConstructionInterceptor();
+
+        /** Basic application context */
+        private ApplicationContext applicationContext;
+
+        /**
+         * Sets the message endpoint to send messages to.
+         * @param messageEndpoint
+         * @return
+         */
+        public B endpoint(Endpoint messageEndpoint) {
+            this.endpoint = messageEndpoint;
+            return self;
+        }
+
+        /**
+         * Sets the message endpoint uri to send messages to.
+         * @param messageEndpointUri
+         * @return
+         */
+        public B endpoint(String messageEndpointUri) {
+            this.endpointUri = messageEndpointUri;
+            return self;
+        }
+
+        /**
+         * Sets the fork mode for this send action builder.
+         * @param forkMode
+         * @return
+         */
+        public B fork(boolean forkMode) {
+            this.forkMode = forkMode;
+            return self;
+        }
+
+        /**
+         * Sets the message builder to use.
+         * @param messageBuilder
+         * @return
+         */
+        public B messageBuilder(MessageContentBuilder messageBuilder) {
+            this.messageBuilder = messageBuilder;
+            return self;
+        }
+
+        /**
+         * Sets the message instance to send.
+         * @param message
+         * @return
+         */
+        public B message(Message message) {
+            StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
+            staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
+            messageBuilder(staticMessageContentBuilder);
+            return self;
+        }
+
+        /**
+         * Sets the payload data on the message builder implementation.
+         * @param payload
+         * @return
+         */
+        protected void setPayload(String payload) {
+            MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+
+            if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+                ((PayloadTemplateMessageBuilder) messageContentBuilder).setPayloadData(payload);
+            } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
+                ((StaticMessageContentBuilder) messageContentBuilder).getMessage().setPayload(payload);
+            } else {
+                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
+            }
+        }
+
+        /**
+         * Sets the message name.
+         * @param name
+         * @return
+         */
+        public B messageName(String name) {
+            getMessageContentBuilder().setMessageName(name);
+            return self;
+        }
+
+        /**
+         * Adds message payload data to this builder.
+         * @param payload
+         * @return
+         */
+        public B payload(String payload) {
+            setPayload(payload);
+            return self;
+        }
+
+        /**
+         * Adds message payload resource to this builder.
+         * @param payloadResource
+         * @return
+         */
+        public B payload(Resource payloadResource) {
+            return payload(payloadResource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Adds message payload resource to this builder.
+         * @param payloadResource
+         * @param charset
+         * @return
+         */
+        public B payload(Resource payloadResource, Charset charset) {
+            try {
+                setPayload(FileUtils.readToString(payloadResource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read payload resource", e);
+            }
+
+            return self;
+        }
+
+        /**
+         * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper.
+         * @param payload
+         * @param marshaller
+         * @return
+         */
+        public B payload(Object payload, Marshaller marshaller) {
+            StringResult result = new StringResult();
+
+            try {
+                marshaller.marshal(payload, result);
+            } catch (XmlMappingException | IOException e) {
+                throw new CitrusRuntimeException("Failed to marshal object graph for message payload", e);
+            }
+
+            setPayload(result.toString());
+            return self;
+        }
+
+        /**
+         * Sets payload POJO object which is mapped to a character sequence using the given object to json mapper.
+         * @param payload
+         * @param objectMapper
+         * @return
+         */
+        public B payload(Object payload, ObjectMapper objectMapper) {
+            try {
+                setPayload(objectMapper.writer().writeValueAsString(payload));
+            } catch (JsonProcessingException e) {
+                throw new CitrusRuntimeException("Failed to map object graph for message payload", e);
+            }
+
+            return self;
+        }
+
+        /**
+         * Sets payload POJO object which is marshalled to a character sequence using the default object to xml or object
+         * to json mapper that is available in Spring bean application context.
+         *
+         * @param payload
+         * @return
+         */
+        public B payloadModel(Object payload) {
+            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+            if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
+                return payload(payload, applicationContext.getBean(Marshaller.class));
+            } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
+                return payload(payload, applicationContext.getBean(ObjectMapper.class));
+            }
+
+            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+        }
+
+        /**
+         * Sets payload POJO object which is marshalled to a character sequence using the given object to xml mapper that
+         * is accessed by its bean name in Spring bean application context.
+         *
+         * @param payload
+         * @param mapperName
+         * @return
+         */
+        public B payload(Object payload, String mapperName) {
+            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+            if (applicationContext.containsBean(mapperName)) {
+                Object mapper = applicationContext.getBean(mapperName);
+
+                if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
+                    return payload(payload, (Marshaller) mapper);
+                } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
+                    return payload(payload, (ObjectMapper) mapper);
+                } else {
+                    throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
+                }
+            }
+
+            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+        }
+
+        /**
+         * Adds message header name value pair to this builder's message sending action.
+         * @param name
+         * @param value
+         */
+        public B header(String name, Object value) {
+            getMessageContentBuilder().getMessageHeaders().put(name, value);
+            return self;
+        }
+
+        /**
+         * Adds message headers to this builder's message sending action.
+         * @param headers
+         */
+        public B headers(Map<String, Object> headers) {
+            getMessageContentBuilder().getMessageHeaders().putAll(headers);
+            return self;
+        }
+
+        /**
+         * Adds message header data to this builder's message sending action. Message header data is used in SOAP
+         * messages for instance as header XML fragment.
+         * @param data
+         */
+        public B header(String data) {
+            getMessageContentBuilder().getHeaderData().add(data);
+            return self;
+        }
+
+        /**
+         * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
+         * messages for instance as header XML fragment.
+         * @param resource
+         */
+        public B header(Resource resource) {
+            return header(resource, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Adds message header data as file resource to this builder's message sending action. Message header data is used in SOAP
+         * messages for instance as header XML fragment.
+         * @param resource
+         * @param charset
+         */
+        public B header(Resource resource, Charset charset) {
+            try {
+                getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read header resource", e);
+            }
+            return self;
+        }
+
+        /**
+         * Sets header data POJO object which is marshalled to a character sequence using the given object to xml mapper.
+         * @param model
+         * @param marshaller
+         * @return
+         */
+        public B headerFragment(Object model, Marshaller marshaller) {
+            StringResult result = new StringResult();
+
+            try {
+                marshaller.marshal(model, result);
+            } catch (XmlMappingException | IOException e) {
+                throw new CitrusRuntimeException("Failed to marshal object graph for message header data", e);
+            }
+
+            return header(result.toString());
+        }
+
+        /**
+         * Sets header data POJO object which is mapped to a character sequence using the given object to json mapper.
+         * @param model
+         * @param objectMapper
+         * @return
+         */
+        public B headerFragment(Object model, ObjectMapper objectMapper) {
+            try {
+                return header(objectMapper.writer().writeValueAsString(model));
+            } catch (JsonProcessingException e) {
+                throw new CitrusRuntimeException("Failed to map object graph for message header data", e);
+            }
+        }
+
+        /**
+         * Sets header data POJO object which is marshalled to a character sequence using the default object to xml or object
+         * to json mapper that is available in Spring bean application context.
+         *
+         * @param model
+         * @return
+         */
+        public B headerFragment(Object model) {
+            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+            if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
+                return headerFragment(model, applicationContext.getBean(Marshaller.class));
+            } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
+                return headerFragment(model, applicationContext.getBean(ObjectMapper.class));
+            }
+
+            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+        }
+
+        /**
+         * Sets header data POJO object which is marshalled to a character sequence using the given object to xml mapper that
+         * is accessed by its bean name in Spring bean application context.
+         *
+         * @param model
+         * @param mapperName
+         * @return
+         */
+        public B headerFragment(Object model, String mapperName) {
+            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+
+            if (applicationContext.containsBean(mapperName)) {
+                Object mapper = applicationContext.getBean(mapperName);
+
+                if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
+                    return headerFragment(model, (Marshaller) mapper);
+                } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
+                    return headerFragment(model, (ObjectMapper) mapper);
+                } else {
+                    throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
+                }
+            }
+
+            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+        }
+
+        /**
+         * Sets a explicit message type for this send action.
+         * @param messageType
+         * @return
+         */
+        public B messageType(MessageType messageType) {
+            messageType(messageType.name());
+            return self;
+        }
+
+        /**
+         * Sets a explicit message type for this send action.
+         * @param messageType The message type to send the message in
+         * @return The modified send message
+         */
+        public B messageType(String messageType) {
+            this.messageType = messageType;
+
+            if (binaryMessageConstructionInterceptor.supportsMessageType(messageType)) {
+                getMessageContentBuilder().add(binaryMessageConstructionInterceptor);
+            }
+
+            if (gzipMessageConstructionInterceptor.supportsMessageType(messageType)) {
+                getMessageContentBuilder().add(gzipMessageConstructionInterceptor);
+            }
+
+            return self;
+        }
+
+        /**
+         * Get message builder, if already registered or create a new message builder and register it
+         *
+         * @return the message builder in use
+         */
+        protected AbstractMessageContentBuilder getMessageContentBuilder() {
+            if (this.messageBuilder != null && this.messageBuilder instanceof AbstractMessageContentBuilder) {
+                return (AbstractMessageContentBuilder) this.messageBuilder;
+            } else {
+                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                messageBuilder(messageBuilder);
+                return messageBuilder;
+            }
+        }
+
+        /**
+         * Extract message header entry as variable before message is sent.
+         * @param headerName
+         * @param variable
+         * @return
+         */
+        public B extractFromHeader(String headerName, String variable) {
+            if (headerExtractor == null) {
+                headerExtractor = new MessageHeaderVariableExtractor();
+
+                variableExtractor(headerExtractor);
+            }
+
+            headerExtractor.getHeaderMappings().put(headerName, variable);
+            return self;
+        }
+
+        /**
+         * Extract message element via XPath or JSONPath from payload before message is sent.
+         * @param path
+         * @param variable
+         * @return
+         */
+        public B extractFromPayload(String path, String variable) {
+            if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
+                getJsonPathVariableExtractor().getJsonPathExpressions().put(path, variable);
+            } else {
+                getXpathVariableExtractor().getXpathExpressions().put(path, variable);
+            }
+            return self;
+        }
+
+        /**
+         * Adds variable extractor.
+         * @param extractor
+         * @return
+         */
+        public B variableExtractor(VariableExtractor extractor) {
+            this.variableExtractors.add(extractor);
+            return self;
+        }
+
+        /**
+         * Adds XPath manipulating expression that evaluates to message payload before sending.
+         * @param expression
+         * @param value
+         * @return
+         */
+        public B xpath(String expression, String value) {
+            if (xpathMessageConstructionInterceptor == null) {
+                xpathMessageConstructionInterceptor = new XpathMessageConstructionInterceptor();
+
+                if (this.messageBuilder != null) {
+                    this.messageBuilder.add(xpathMessageConstructionInterceptor);
+                } else {
+                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                    messageBuilder.getMessageInterceptors().add(xpathMessageConstructionInterceptor);
+                    messageBuilder(messageBuilder);
+                }
+            }
+
+            xpathMessageConstructionInterceptor.getXPathExpressions().put(expression, value);
+            return self;
+        }
+
+        /**
+         * Adds JSONPath manipulating expression that evaluates to message payload before sending.
+         * @param expression
+         * @param value
+         * @return
+         */
+        public B jsonPath(String expression, String value) {
+            if (jsonPathMessageConstructionInterceptor == null) {
+                jsonPathMessageConstructionInterceptor = new JsonPathMessageConstructionInterceptor();
+
+                if (this.messageBuilder != null) {
+                    this.messageBuilder.add(jsonPathMessageConstructionInterceptor);
+                } else {
+                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+                    messageBuilder.getMessageInterceptors().add(jsonPathMessageConstructionInterceptor);
+                    messageBuilder(messageBuilder);
+                }
+            }
+
+            jsonPathMessageConstructionInterceptor.getJsonPathExpressions().put(expression, value);
+            return self;
+        }
+
+        /**
+         * Creates new variable extractor and adds it to test action.
+         */
+        private XpathPayloadVariableExtractor getXpathVariableExtractor() {
+            if (xpathExtractor == null) {
+                xpathExtractor = new XpathPayloadVariableExtractor();
+
+                variableExtractor(xpathExtractor);
+            }
+
+            return xpathExtractor;
+        }
+
+        /**
+         * Creates new variable extractor and adds it to test action.
+         */
+        private JsonPathVariableExtractor getJsonPathVariableExtractor() {
+            if (jsonPathExtractor == null) {
+                jsonPathExtractor = new JsonPathVariableExtractor();
+
+                variableExtractor(jsonPathExtractor);
+            }
+
+            return jsonPathExtractor;
+        }
+
+        /**
+         * Sets the Spring bean application context.
+         * @param applicationContext
+         */
+        public B withApplicationContext(ApplicationContext applicationContext) {
+            this.applicationContext = applicationContext;
+            return self;
+        }
+
+        /**
+         * Sets explicit data dictionary for this receive action.
+         * @param dictionary
+         * @return
+         */
+        public B dictionary(DataDictionary dictionary) {
+            this.dataDictionary = dictionary;
+            return self;
+        }
+
+        /**
+         * Sets explicit data dictionary by name.
+         * @param dictionaryName
+         * @return
+         */
+        @SuppressWarnings("unchecked")
+        public B dictionary(String dictionaryName) {
+            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            DataDictionary dictionary = applicationContext.getBean(dictionaryName, DataDictionary.class);
+
+            this.dataDictionary = dictionary;
+            return self;
+        }
     }
 }

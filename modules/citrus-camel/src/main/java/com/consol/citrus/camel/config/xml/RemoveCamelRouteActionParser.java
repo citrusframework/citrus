@@ -16,17 +16,19 @@
 
 package com.consol.citrus.camel.config.xml;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import com.consol.citrus.camel.actions.RemoveCamelRouteAction;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Bean definition parser for starting Camel routes action in test case.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.4
  */
@@ -47,7 +49,34 @@ public class RemoveCamelRouteActionParser extends AbstractCamelRouteActionParser
     }
 
     @Override
-    protected Class<?> getBeanDefinitionClass() {
-        return RemoveCamelRouteAction.class;
+    protected Class<RemoveCamelRouteActionFactoryBean> getBeanDefinitionClass() {
+        return RemoveCamelRouteActionFactoryBean.class;
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class RemoveCamelRouteActionFactoryBean extends AbstractCamelRouteActionFactoryBean<RemoveCamelRouteAction, RemoveCamelRouteAction.Builder> {
+
+        private final RemoveCamelRouteAction.Builder builder = new RemoveCamelRouteAction.Builder();
+
+        @Override
+        public RemoveCamelRouteAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return RemoveCamelRouteAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public RemoveCamelRouteAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

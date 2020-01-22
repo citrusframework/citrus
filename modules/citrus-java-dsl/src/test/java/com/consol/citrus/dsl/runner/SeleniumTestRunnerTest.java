@@ -16,17 +16,43 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.actions.DelegatingTestAction;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.selenium.actions.*;
-import com.consol.citrus.selenium.endpoint.*;
+import com.consol.citrus.selenium.actions.AlertAction;
+import com.consol.citrus.selenium.actions.CheckInputAction;
+import com.consol.citrus.selenium.actions.ClearBrowserCacheAction;
+import com.consol.citrus.selenium.actions.ClickAction;
+import com.consol.citrus.selenium.actions.CloseWindowAction;
+import com.consol.citrus.selenium.actions.FindElementAction;
+import com.consol.citrus.selenium.actions.GetStoredFileAction;
+import com.consol.citrus.selenium.actions.HoverAction;
+import com.consol.citrus.selenium.actions.JavaScriptAction;
+import com.consol.citrus.selenium.actions.NavigateAction;
+import com.consol.citrus.selenium.actions.OpenWindowAction;
+import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
+import com.consol.citrus.selenium.actions.SetInputAction;
+import com.consol.citrus.selenium.actions.StartBrowserAction;
+import com.consol.citrus.selenium.actions.StopBrowserAction;
+import com.consol.citrus.selenium.actions.StoreFileAction;
+import com.consol.citrus.selenium.actions.SwitchWindowAction;
+import com.consol.citrus.selenium.actions.WaitUntilAction;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
+import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.openqa.selenium.*;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Keyboard;
 import org.openqa.selenium.interactions.Mouse;
@@ -36,8 +62,6 @@ import org.openqa.selenium.remote.RemoteWebElement;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
@@ -167,7 +191,7 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
 
                 selenium(action -> action.alert().text("Hello!").accept());
 
-                selenium(action -> action.clearCache());
+                selenium(SeleniumActionBuilder::clearCache);
 
                 selenium(action -> action.store("classpath:download/file.txt"));
                 selenium(action -> action.getStored("file.txt"));
@@ -178,7 +202,7 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
 
                 selenium(action -> action.waitUntil().hidden().element(By.name("hiddenButton")));
 
-                selenium(action -> action.stop());
+                selenium(action -> action.stop(seleniumBrowser));
             }
         };
 
@@ -186,25 +210,23 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         int actionIndex = 0;
         Assert.assertEquals(test.getActionCount(), 18);
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), StartBrowserAction.class);
-        StartBrowserAction startBrowserAction = (StartBrowserAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), StartBrowserAction.class);
+        StartBrowserAction startBrowserAction = (StartBrowserAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(startBrowserAction.getName(), "selenium:start");
         Assert.assertNotNull(startBrowserAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), NavigateAction.class);
-        NavigateAction navigateAction = (NavigateAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), NavigateAction.class);
+        NavigateAction navigateAction = (NavigateAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(navigateAction.getName(), "selenium:navigate");
         Assert.assertEquals(navigateAction.getPage(), "http://localhost:9090");
-        Assert.assertNotNull(navigateAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), FindElementAction.class);
-        FindElementAction findElementAction = (FindElementAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), FindElementAction.class);
+        FindElementAction findElementAction = (FindElementAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(findElementAction.getName(), "selenium:find");
         Assert.assertEquals(findElementAction.getBy(), By.id("header"));
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), FindElementAction.class);
-        findElementAction = (FindElementAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), FindElementAction.class);
+        findElementAction = (FindElementAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(findElementAction.getName(), "selenium:find");
         Assert.assertEquals(findElementAction.getProperty(), "class-name");
         Assert.assertEquals(findElementAction.getPropertyValue(), "${cssClass}");
@@ -216,92 +238,78 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(findElementAction.getStyles().get("color"), "red");
         Assert.assertEquals(findElementAction.getAttributes().size(), 1L);
         Assert.assertEquals(findElementAction.getAttributes().get("type"), "submit");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), ClickAction.class);
-        ClickAction clickAction = (ClickAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), ClickAction.class);
+        ClickAction clickAction = (ClickAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(clickAction.getName(), "selenium:click");
         Assert.assertEquals(clickAction.getBy(), By.linkText("Click Me!"));
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), HoverAction.class);
-        HoverAction hoverAction = (HoverAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), HoverAction.class);
+        HoverAction hoverAction = (HoverAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(hoverAction.getName(), "selenium:hover");
         Assert.assertEquals(hoverAction.getBy(), By.linkText("Hover Me!"));
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), SetInputAction.class);
-        SetInputAction setInputAction = (SetInputAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), SetInputAction.class);
+        SetInputAction setInputAction = (SetInputAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(setInputAction.getName(), "selenium:set-input");
         Assert.assertEquals(setInputAction.getBy(), By.name("username"));
         Assert.assertEquals(setInputAction.getValue(), "Citrus");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), CheckInputAction.class);
-        CheckInputAction checkInputAction = (CheckInputAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), CheckInputAction.class);
+        CheckInputAction checkInputAction = (CheckInputAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(checkInputAction.getName(), "selenium:check-input");
         Assert.assertEquals(checkInputAction.getBy(), By.xpath("//input[@type='checkbox']"));
         Assert.assertFalse(checkInputAction.isChecked());
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), JavaScriptAction.class);
-        JavaScriptAction javaScriptAction = (JavaScriptAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), JavaScriptAction.class);
+        JavaScriptAction javaScriptAction = (JavaScriptAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(javaScriptAction.getName(), "selenium:javascript");
         Assert.assertEquals(javaScriptAction.getScript(), "alert('Hello!')");
         Assert.assertEquals(javaScriptAction.getExpectedErrors().size(), 1L);
         Assert.assertEquals(javaScriptAction.getExpectedErrors().get(0), "This went wrong!");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), AlertAction.class);
-        AlertAction alertAction = (AlertAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), AlertAction.class);
+        AlertAction alertAction = (AlertAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(alertAction.getName(), "selenium:alert");
         Assert.assertEquals(alertAction.getText(), "Hello!");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), ClearBrowserCacheAction.class);
-        ClearBrowserCacheAction clearBrowserCacheAction = (ClearBrowserCacheAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), ClearBrowserCacheAction.class);
+        ClearBrowserCacheAction clearBrowserCacheAction = (ClearBrowserCacheAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(clearBrowserCacheAction.getName(), "selenium:clear-cache");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), StoreFileAction.class);
-        StoreFileAction storeFileAction = (StoreFileAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), StoreFileAction.class);
+        StoreFileAction storeFileAction = (StoreFileAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(storeFileAction.getName(), "selenium:store-file");
         Assert.assertEquals(storeFileAction.getFilePath(), "classpath:download/file.txt");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), GetStoredFileAction.class);
-        GetStoredFileAction getStoredFileAction = (GetStoredFileAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), GetStoredFileAction.class);
+        GetStoredFileAction getStoredFileAction = (GetStoredFileAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(getStoredFileAction.getName(), "selenium:get-stored-file");
         Assert.assertEquals(getStoredFileAction.getFileName(), "file.txt");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), OpenWindowAction.class);
-        OpenWindowAction openWindowAction = (OpenWindowAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), OpenWindowAction.class);
+        OpenWindowAction openWindowAction = (OpenWindowAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(openWindowAction.getName(), "selenium:open-window");
         Assert.assertEquals(openWindowAction.getWindowName(), "my_window");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), SwitchWindowAction.class);
-        SwitchWindowAction switchWindowAction = (SwitchWindowAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), SwitchWindowAction.class);
+        SwitchWindowAction switchWindowAction = (SwitchWindowAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(switchWindowAction.getName(), "selenium:switch-window");
         Assert.assertEquals(switchWindowAction.getWindowName(), "my_window");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), CloseWindowAction.class);
-        CloseWindowAction closeWindowAction = (CloseWindowAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), CloseWindowAction.class);
+        CloseWindowAction closeWindowAction = (CloseWindowAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(closeWindowAction.getName(), "selenium:close-window");
         Assert.assertEquals(closeWindowAction.getWindowName(), "my_window");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), WaitUntilAction.class);
-        WaitUntilAction waitUntilAction = (WaitUntilAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), WaitUntilAction.class);
+        WaitUntilAction waitUntilAction = (WaitUntilAction) test.getActions().get(actionIndex++);
         Assert.assertEquals(waitUntilAction.getName(), "selenium:wait");
         Assert.assertEquals(waitUntilAction.getBy(), By.name("hiddenButton"));
         Assert.assertEquals(waitUntilAction.getCondition(), "hidden");
-        Assert.assertNotNull(findElementAction.getBrowser());
 
-        Assert.assertEquals(((DelegatingTestAction)test.getActions().get(actionIndex)).getDelegate().getClass(), StopBrowserAction.class);
-        StopBrowserAction stopBrowserAction = (StopBrowserAction) ((DelegatingTestAction)test.getActions().get(actionIndex++)).getDelegate();
+        Assert.assertEquals(test.getActions().get(actionIndex).getClass(), StopBrowserAction.class);
+        StopBrowserAction stopBrowserAction = (StopBrowserAction) test.getActions().get(actionIndex);
         Assert.assertEquals(stopBrowserAction.getName(), "selenium:stop");
         Assert.assertNotNull(stopBrowserAction.getBrowser());
 

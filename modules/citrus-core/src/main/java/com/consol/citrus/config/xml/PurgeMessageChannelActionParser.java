@@ -16,48 +16,52 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.integration.core.MessageSelector;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.*;
-
 /**
  * Bean definition parser for purge-channel action in test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class PurgeMessageChannelActionParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeMessageChannelAction.class);
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(PurgeMessageChannelActionFactoryBean.class);
 
         DescriptionElementParser.doParse(element, beanDefinition);
 
         if (element.hasAttribute("message-selector")) {
             BeanDefinitionParserUtils.setPropertyReference(beanDefinition, element.getAttribute("message-selector"), "messageSelector");
         }
-        
+
         List<String> channelNames = new ArrayList<String>();
         ManagedList<BeanDefinition> channelRefs = new ManagedList<BeanDefinition>();
-        List<?> channelElements = DomUtils.getChildElementsByTagName(element, "channel");
-        for (Iterator<?> iter = channelElements.iterator(); iter.hasNext();) {
-            Element channel = (Element) iter.next();
+        List<Element> channelElements = DomUtils.getChildElementsByTagName(element, "channel");
+        for (Element channel : channelElements) {
             String channelName = channel.getAttribute("name");
             String channelRef = channel.getAttribute("ref");
-            
+
             if (StringUtils.hasText(channelName)) {
                 channelNames.add(channelName);
             } else if (StringUtils.hasText(channelRef)) {
@@ -66,10 +70,74 @@ public class PurgeMessageChannelActionParser implements BeanDefinitionParser {
                 throw new BeanCreationException("Element 'channel' must set one of the attributes 'name' or 'ref'");
             }
         }
-        
+
         beanDefinition.addPropertyValue("channelNames", channelNames);
         beanDefinition.addPropertyValue("channels", channelRefs);
 
         return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class PurgeMessageChannelActionFactoryBean extends AbstractTestActionFactoryBean<PurgeMessageChannelAction, PurgeMessageChannelAction.Builder> implements BeanFactoryAware {
+
+        private final PurgeMessageChannelAction.Builder builder = new PurgeMessageChannelAction.Builder();
+
+        @Override
+        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+            builder.beanFactory(beanFactory);
+        }
+
+        /**
+         * Sets the channelNames.
+         * @param channelNames the channelNames to set
+         */
+        public void setChannelNames(List<String> channelNames) {
+            builder.channelNames(channelNames);
+        }
+
+        /**
+         * Sets the channels.
+         * @param channels the channels to set
+         */
+        public void setChannels(List<MessageChannel> channels) {
+            builder.channels(channels);
+        }
+
+        /**
+         * Sets the messageSelector.
+         * @param messageSelector the messageSelector to set
+         */
+        public void setMessageSelector(MessageSelector messageSelector) {
+            builder.selector(messageSelector);
+        }
+
+        /**
+         * Sets the channelResolver.
+         * @param channelResolver the channelResolver to set
+         */
+        public void setChannelResolver(DestinationResolver<MessageChannel> channelResolver) {
+            builder.channelResolver(channelResolver);
+        }
+
+        @Override
+        public PurgeMessageChannelAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return PurgeMessageChannelAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public PurgeMessageChannelAction.Builder getBuilder() {
+            return builder;
+        }
     }
 }

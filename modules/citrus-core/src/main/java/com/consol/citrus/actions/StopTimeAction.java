@@ -16,6 +16,7 @@
 
 package com.consol.citrus.actions;
 
+import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
@@ -24,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Action used for time measurement during test. User can define a time line that is followed
  * during the test case. Action can print out the watched time to the console/logger.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2006
  */
@@ -34,8 +35,8 @@ public class StopTimeAction extends AbstractTestAction {
     public static final String DEFAULT_TIMELINE_VALUE_SUFFIX = "_VALUE";
 
     /** Current time line id */
-    private String id = DEFAULT_TIMELINE_ID;
-    private String suffix = DEFAULT_TIMELINE_VALUE_SUFFIX;
+    private final String id;
+    private final String suffix;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(StopTimeAction.class);
@@ -43,8 +44,11 @@ public class StopTimeAction extends AbstractTestAction {
     /**
      * Default constructor.
      */
-    public StopTimeAction() {
-        setName("stop-time");
+    public StopTimeAction(Builder builder) {
+        super("stop-time", builder);
+
+        this.id = builder.id;
+        this.suffix = builder.suffix;
     }
 
     @Override
@@ -73,15 +77,6 @@ public class StopTimeAction extends AbstractTestAction {
     }
 
     /**
-     * Setter for timeline id.
-     * @param period
-     */
-    public StopTimeAction setId(String period) {
-        this.id = period;
-        return this;
-    }
-
-    /**
      * Gets the id.
      * @return the id
      */
@@ -90,21 +85,66 @@ public class StopTimeAction extends AbstractTestAction {
     }
 
     /**
-     * Sets the suffix.
-     *
-     * @param suffix
-     */
-    public StopTimeAction setSuffix(String suffix) {
-        this.suffix = suffix;
-        return this;
-    }
-
-    /**
      * Gets the suffix.
-     *
      * @return
      */
     public String getSuffix() {
         return suffix;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<StopTimeAction, Builder> {
+
+        private String id = DEFAULT_TIMELINE_ID;
+        private String suffix = DEFAULT_TIMELINE_VALUE_SUFFIX;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder stopTime() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param id
+         * @return
+         */
+        public static Builder stopTime(String id) {
+            Builder builder = new Builder();
+            builder.id(id);
+            return builder;
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param id
+         * @param suffix
+         * @return
+         */
+        public static Builder stopTime(String id, String suffix) {
+            Builder builder = new Builder();
+            builder.id(id);
+            builder.suffix(id);
+            return builder;
+        }
+
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder suffix(String suffix) {
+            this.suffix = suffix;
+            return this;
+        }
+
+        @Override
+        public StopTimeAction build() {
+            return new StopTimeAction(this);
+        }
     }
 }

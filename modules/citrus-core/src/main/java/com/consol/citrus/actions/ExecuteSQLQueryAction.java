@@ -16,9 +16,24 @@
 
 package com.consol.citrus.actions;
 
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.*;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.script.ScriptTypes;
+import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
@@ -26,13 +41,10 @@ import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
-
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Action executes SQL queries and offers result set validation.
@@ -45,17 +57,16 @@ import java.util.Map.Entry;
  */
 public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction {
     /** Map holding all column values to be validated, keys represent the column names */
-    protected Map<String, List<String>> controlResultSet = new HashMap<String, List<String>>();
+    protected final Map<String, List<String>> controlResultSet;
 
     /** Map of test variables to be created from database values, keys are column names, values are variable names */
-    private Map<String, String> extractVariables = new HashMap<String, String>();
+    private final Map<String, String> extractVariables;
 
     /** Script validation context */
-    private ScriptValidationContext scriptValidationContext;
+    private final ScriptValidationContext scriptValidationContext;
 
     /** SQL result set script validator */
-    @Autowired(required = false)
-    private SqlResultSetScriptValidator validator;
+    private final SqlResultSetScriptValidator validator;
 
     /** NULL value representation in SQL */
     private static final String NULL_VALUE = "NULL";
@@ -66,14 +77,22 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     /**
      * Default constructor.
      */
-    public ExecuteSQLQueryAction() {
-        setName("sql-query");
+    public ExecuteSQLQueryAction(Builder builder) {
+        super("sql-query", builder);
+
+        this.controlResultSet = builder.controlResultSet;
+        this.extractVariables = builder.extractVariables;
+        this.scriptValidationContext = builder.scriptValidationContext;
+        this.validator = builder.validator;
     }
 
     @Override
     public void doExecute(TestContext context) {
+        final List<String> statementsToUse;
         if (statements.isEmpty()) {
-            statements = createStatementsFromFileResource(context);
+            statementsToUse = createStatementsFromFileResource(context);
+        } else {
+            statementsToUse = statements;
         }
 
         try {
@@ -91,11 +110,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                 transactionTemplate.setTimeout(Integer.valueOf(context.replaceDynamicContentInString(getTransactionTimeout())));
                 transactionTemplate.setIsolationLevelName(context.replaceDynamicContentInString(getTransactionIsolationLevel()));
                 transactionTemplate.execute(status -> {
-                    executeStatements(allResultRows, columnValuesMap, context);
+                    executeStatements(statementsToUse, allResultRows, columnValuesMap, context);
                     return null;
                 });
             } else {
-                executeStatements(allResultRows, columnValuesMap, context);
+                executeStatements(statementsToUse, allResultRows, columnValuesMap, context);
             }
 
             // perform validation
@@ -115,7 +134,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
     }
 
-    protected void executeStatements(List<Map<String, Object>> allResultRows, Map<String, List<String>> columnValuesMap, TestContext context) {
+    /**
+     * Run statements and validate result set.
+     * @param statements
+     * @param allResultRows
+     * @param columnValuesMap
+     * @param context
+     */
+    protected void executeStatements(List<String> statements, List<Map<String, Object>> allResultRows, Map<String, List<String>> columnValuesMap, TestContext context) {
         for (String stmt : statements) {
             validateSqlStatement(stmt);
             final String toExecute;
@@ -302,12 +328,12 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             }
             return;
         }
-        
+
         if (ValidationMatcherUtils.isValidationMatcherExpression(controlValue)) {
             ValidationMatcherUtils.resolveValidationMatcher(columnName, resultValue, controlValue, context);
             return;
         }
-        
+
         if (resultValue == null) {
             if (isCitrusNullValue(controlValue)) {
                 if (log.isDebugEnabled()) {
@@ -334,7 +360,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
                     + ((controlValue.length()==0) ? NULL_VALUE : controlValue));
         }
     }
-    
+
     /**
      * Checks on special null values.
      * @param controlValue
@@ -345,52 +371,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
     }
 
     /**
-     * Set expected control result set. Keys represent the column names, values
-     * the expected values.
-     *
-     * @param controlResultSet
-     */
-    public ExecuteSQLQueryAction setControlResultSet(Map<String, List<String>> controlResultSet) {
-        this.controlResultSet = controlResultSet;
-        return this;
-    }
-
-    /**
-     * User can extract column values to test variables. Map holds column names (keys) and
-     * respective target variable names (values).
-     *
-     * @param variablesMap the variables to be created out of database values
-     */
-    public ExecuteSQLQueryAction setExtractVariables(Map<String, String> variablesMap) {
-        this.extractVariables = variablesMap;
-        return this;
-    }
-
-    /**
-     * Sets the script validation context.
-     * @param scriptValidationContext the scriptValidationContext to set
-     */
-    public ExecuteSQLQueryAction setScriptValidationContext(
-            ScriptValidationContext scriptValidationContext) {
-        this.scriptValidationContext = scriptValidationContext;
-        return this;
-    }
-
-    /**
      * Gets the validator.
      * @return the validator
      */
     public SqlResultSetScriptValidator getValidator() {
         return validator;
-    }
-
-    /**
-     * Sets the validator.
-     * @param validator the validator to set
-     */
-    public ExecuteSQLQueryAction setValidator(SqlResultSetScriptValidator validator) {
-        this.validator = validator;
-        return this;
     }
 
     /**
@@ -415,5 +400,127 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      */
     public ScriptValidationContext getScriptValidationContext() {
         return scriptValidationContext;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractDatabaseConnectingTestAction.Builder<ExecuteSQLQueryAction, Builder> {
+
+        private Map<String, List<String>> controlResultSet = new HashMap<>();
+        private Map<String, String> extractVariables = new HashMap<>();
+        private ScriptValidationContext scriptValidationContext;
+        private SqlResultSetScriptValidator validator;
+
+        public static Builder query(DataSource dataSource) {
+            Builder builder = new Builder();
+            builder.dataSource(dataSource);
+            return builder;
+        }
+
+        /**
+         * Set expected control result set. Keys represent the column names, values
+         * the expected values.
+         * @param column
+         * @param values
+         */
+        public Builder validate(String column, String ... values) {
+            this.controlResultSet.put(column, Arrays.asList(values));
+            return this;
+        }
+
+        /**
+         * Validate SQL result set via validation script, for instance Groovy.
+         * @param script
+         * @param type
+         */
+        public Builder validateScript(String script, String type) {
+            ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
+            scriptValidationContext.setValidationScript(script);
+            this.scriptValidationContext = scriptValidationContext;
+            return this;
+        }
+
+        /**
+         * Validate SQL result set via validation script, for instance Groovy.
+         * @param scriptResource
+         * @param type
+         */
+        public Builder validateScript(Resource scriptResource, String type) {
+            return validateScript(scriptResource, type, FileUtils.getDefaultCharset());
+        }
+
+        /**
+         * Validate SQL result set via validation script, for instance Groovy.
+         * @param scriptResource
+         * @param type
+         * @param charset
+         */
+        public Builder validateScript(Resource scriptResource, String type, Charset charset) {
+            ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
+            try {
+                scriptValidationContext.setValidationScript(FileUtils.readToString(scriptResource, charset));
+            } catch (IOException e) {
+                throw new CitrusRuntimeException("Failed to read script resource", e);
+            }
+            this.scriptValidationContext = scriptValidationContext;
+            return this;
+        }
+
+        /**
+         * Validate SQL result set via validation script resource.
+         * @param scriptResourcePath
+         * @param type
+         * @param charset
+         */
+        public Builder validateScriptResource(String scriptResourcePath, String type, Charset charset) {
+            ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
+            scriptValidationContext.setValidationScriptResourcePath(scriptResourcePath);
+            scriptValidationContext.setValidationScriptResourceCharset(charset.toString());
+            this.scriptValidationContext = scriptValidationContext;
+            return this;
+        }
+
+        /**
+         * Validate SQL result set via validation script, for instance Groovy.
+         * @param script
+         */
+        public Builder groovy(String script) {
+            return validateScript(script, ScriptTypes.GROOVY);
+        }
+
+        /**
+         * Validate SQL result set via validation script, for instance Groovy.
+         * @param scriptResource
+         */
+        public Builder groovy(Resource scriptResource) {
+            return validateScript(scriptResource, ScriptTypes.GROOVY);
+        }
+
+        /**
+         * User can extract column values to test variables. Map holds column names (keys) and
+         * respective target variable names (values).
+         *
+         * @param columnName
+         * @param variableName
+         */
+        public Builder extract(String columnName, String variableName) {
+            this.extractVariables.put(columnName, variableName);
+            return this;
+        }
+
+        /**
+         * Sets an explicit validator implementation for this action.
+         * @param validator the validator to set
+         */
+        public Builder validator(SqlResultSetScriptValidator validator) {
+            this.validator = validator;
+            return this;
+        }
+
+        @Override
+        public ExecuteSQLQueryAction build() {
+            return new ExecuteSQLQueryAction(this);
+        }
     }
 }
