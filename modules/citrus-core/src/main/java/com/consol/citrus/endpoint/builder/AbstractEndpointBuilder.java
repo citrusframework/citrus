@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint;
+package com.consol.citrus.endpoint.builder;
 
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointBuilder;
@@ -23,7 +23,7 @@ import com.consol.citrus.endpoint.EndpointBuilder;
  * @author Christoph Deppisch
  * @since 2.8
  */
-public abstract class AbstractEndpointBuilder<E extends Endpoint, B extends EndpointBuilder<E>> {
+public abstract class AbstractEndpointBuilder<B extends EndpointBuilder<? extends Endpoint>> {
 
     protected final B builder;
 

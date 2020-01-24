@@ -21,7 +21,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.*;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.functions.Functions;
+import com.consol.citrus.functions.Functions;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.testng.TestNGCitrusTest;
 import com.consol.citrus.endpoint.Endpoint;

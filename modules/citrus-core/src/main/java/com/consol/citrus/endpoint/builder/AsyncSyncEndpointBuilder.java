@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint;
+package com.consol.citrus.endpoint.builder;
 
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointBuilder;
@@ -23,34 +23,34 @@ import com.consol.citrus.endpoint.EndpointBuilder;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class ClientServerEndpointBuilder<C extends EndpointBuilder<? extends Endpoint>, S extends EndpointBuilder<? extends Endpoint>> {
+public class AsyncSyncEndpointBuilder<A extends EndpointBuilder<? extends Endpoint>, S extends EndpointBuilder<? extends Endpoint>> {
 
-    private final C clientBuilder;
-    private final S serverBuilder;
+    private final A asyncEndpointBuilder;
+    private final S syncEndpointBuilder;
 
     /**
-     * Default constructor setting the client and server builder implementation.
-     * @param clientBuilder
-     * @param serverBuilder
+     * Default constructor setting the sync and async builder implementation.
+     * @param asyncEndpointBuilder
+     * @param syncEndpointBuilder
      */
-    public ClientServerEndpointBuilder(C clientBuilder, S serverBuilder) {
-        this.clientBuilder = clientBuilder;
-        this.serverBuilder = serverBuilder;
+    public AsyncSyncEndpointBuilder(A asyncEndpointBuilder, S syncEndpointBuilder) {
+        this.asyncEndpointBuilder = asyncEndpointBuilder;
+        this.syncEndpointBuilder = syncEndpointBuilder;
     }
 
     /**
-     * Gets the client builder.
+     * Gets the async endpoint builder.
      * @return
      */
-    public C client() {
-        return clientBuilder;
+    public A asynchronous() {
+        return asyncEndpointBuilder;
     }
 
     /**
-     * Gets the client builder.
+     * Gets the sync endpoint builder.
      * @return
      */
-    public S server() {
-        return serverBuilder;
+    public S synchronous() {
+        return syncEndpointBuilder;
     }
 }

@@ -14,32 +14,39 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.endpoint.jdbc;
+package com.consol.citrus.selenium.endpoint.builder;
 
-import com.consol.citrus.dsl.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.jdbc.server.JdbcServer;
-import com.consol.citrus.jdbc.server.JdbcServerBuilder;
+import com.consol.citrus.endpoint.builder.AbstractEndpointBuilder;
+import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
 
 /**
- * Jdbc database server endpoint builder wrapper.
+ * Selenium browser endpoint builder wrapper.
  *
  * @author Christoph Deppisch
- * @since 2.7.3
+ * @since 2.7
  */
-public class JdbcDbServerEndpointBuilder extends AbstractEndpointBuilder<JdbcServer, JdbcServerBuilder> {
+public final class SeleniumEndpoints extends AbstractEndpointBuilder<SeleniumBrowserBuilder> {
 
     /**
-     * Default constructor using server builder implementation.
+     * Private constructor using browser builder implementation.
      */
-    public JdbcDbServerEndpointBuilder() {
-        super(new JdbcServerBuilder());
+    private SeleniumEndpoints() {
+        super(new SeleniumBrowserBuilder());
+    }
+
+    /**
+     * Static entry method for Selenium endpoints.
+     * @return
+     */
+    public static SeleniumEndpoints selenium() {
+        return new SeleniumEndpoints();
     }
 
     /**
      * Returns browser builder for further fluent api calls.
      * @return
      */
-    public JdbcServerBuilder server() {
+    public SeleniumBrowserBuilder browser() {
         return builder;
     }
 }

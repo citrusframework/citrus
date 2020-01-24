@@ -14,17 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.functions;
+package com.consol.citrus.functions;
+
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
 
 import com.consol.citrus.functions.core.RandomStringFunction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-
-import static com.consol.citrus.dsl.functions.Functions.*;
+import static com.consol.citrus.functions.Functions.changeDate;
+import static com.consol.citrus.functions.Functions.createCDataSection;
+import static com.consol.citrus.functions.Functions.currentDate;
+import static com.consol.citrus.functions.Functions.decodeBase64;
+import static com.consol.citrus.functions.Functions.digestAuthHeader;
+import static com.consol.citrus.functions.Functions.encodeBase64;
+import static com.consol.citrus.functions.Functions.escapeXml;
+import static com.consol.citrus.functions.Functions.randomNumber;
+import static com.consol.citrus.functions.Functions.randomString;
+import static com.consol.citrus.functions.Functions.randomUUID;
 
 public class FunctionsTest extends AbstractTestNGUnitTest {
 

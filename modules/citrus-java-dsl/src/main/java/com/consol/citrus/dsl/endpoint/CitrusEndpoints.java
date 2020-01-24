@@ -16,36 +16,23 @@
 
 package com.consol.citrus.dsl.endpoint;
 
-import com.consol.citrus.channel.ChannelEndpointBuilder;
-import com.consol.citrus.channel.ChannelSyncEndpointBuilder;
-import com.consol.citrus.docker.client.DockerClientBuilder;
-import com.consol.citrus.dsl.endpoint.jdbc.JdbcDbServerEndpointBuilder;
-import com.consol.citrus.dsl.endpoint.selenium.SeleniumBrowserEndpointBuilder;
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.endpoint.EndpointBuilder;
-import com.consol.citrus.ftp.client.*;
-import com.consol.citrus.ftp.server.FtpServerBuilder;
-import com.consol.citrus.ftp.server.SftpServerBuilder;
-import com.consol.citrus.http.client.HttpClientBuilder;
-import com.consol.citrus.http.server.HttpServerBuilder;
-import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
-import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
-import com.consol.citrus.jmx.client.JmxClientBuilder;
-import com.consol.citrus.jmx.server.JmxServerBuilder;
-import com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder;
-import com.consol.citrus.kubernetes.client.KubernetesClientBuilder;
-import com.consol.citrus.mail.client.MailClientBuilder;
-import com.consol.citrus.mail.server.MailServerBuilder;
-import com.consol.citrus.rmi.client.RmiClientBuilder;
-import com.consol.citrus.rmi.server.RmiServerBuilder;
-import com.consol.citrus.ssh.client.SshClientBuilder;
-import com.consol.citrus.ssh.server.SshServerBuilder;
-import com.consol.citrus.vertx.endpoint.VertxEndpointBuilder;
-import com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder;
-import com.consol.citrus.websocket.client.WebSocketClientBuilder;
-import com.consol.citrus.websocket.server.WebSocketServerBuilder;
-import com.consol.citrus.ws.client.WebServiceClientBuilder;
-import com.consol.citrus.ws.server.WebServiceServerBuilder;
+import com.consol.citrus.channel.endpoint.builder.MessageChannelEndpoints;
+import com.consol.citrus.docker.endpoint.builder.DockerEndpoints;
+import com.consol.citrus.jdbc.endpoint.builder.JdbcEndpoints;
+import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
+import com.consol.citrus.ftp.endpoint.builder.FtpEndpoints;
+import com.consol.citrus.ftp.endpoint.builder.SftpEndpoints;
+import com.consol.citrus.http.endpoint.builder.HttpEndpoints;
+import com.consol.citrus.jms.endpoint.JmsEndpoints;
+import com.consol.citrus.jmx.endpoint.builder.JmxEndpoints;
+import com.consol.citrus.kafka.endpoint.builder.KafkaEndpoints;
+import com.consol.citrus.kubernetes.endpoint.builder.KubernetesEndpoints;
+import com.consol.citrus.mail.endpoint.builder.MailEndpoints;
+import com.consol.citrus.rmi.endpoint.builder.RmiEndpoints;
+import com.consol.citrus.ssh.endpoint.builder.SshEndpoints;
+import com.consol.citrus.vertx.endpoint.builder.VertxEndpoints;
+import com.consol.citrus.websocket.endpoint.builder.WebSocketEndpoints;
+import com.consol.citrus.ws.endpoint.builder.WebServiceEndpoints;
 
 /**
  * @author Christoph Deppisch
@@ -64,156 +51,144 @@ public abstract class CitrusEndpoints {
      * Creates new ChannelEndpoint sync or async builder.
      * @return
      */
-    public static AsyncSyncEndpointBuilder<ChannelEndpointBuilder, ChannelSyncEndpointBuilder> channel() {
-        return new AsyncSyncEndpointBuilder<>(new ChannelEndpointBuilder(), new ChannelSyncEndpointBuilder());
+    public static MessageChannelEndpoints channel() {
+        return MessageChannelEndpoints.channel();
     }
 
     /**
      * Creates new JmsEndpoint sync or async builder.
      * @return
      */
-    public static AsyncSyncEndpointBuilder<JmsEndpointBuilder, JmsSyncEndpointBuilder> jms() {
-        return new AsyncSyncEndpointBuilder<>(new JmsEndpointBuilder(), new JmsSyncEndpointBuilder());
+    public static JmsEndpoints jms() {
+        return JmsEndpoints.jms();
     }
 
     /**
      * Creates new HttpClient or HttpServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<HttpClientBuilder, HttpServerBuilder> http() {
-        return new ClientServerEndpointBuilder<>(new HttpClientBuilder(), new HttpServerBuilder());
+    public static HttpEndpoints http() {
+        return HttpEndpoints.http();
     }
 
     /**
      * Creates new WebServiceClient or WebServiceServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<WebServiceClientBuilder, WebServiceServerBuilder> soap() {
-        return new ClientServerEndpointBuilder<>(new WebServiceClientBuilder(), new WebServiceServerBuilder());
+    public static WebServiceEndpoints soap() {
+        return WebServiceEndpoints.soap();
     }
 
     /**
      * Creates new JmxClient or JmxServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<JmxClientBuilder, JmxServerBuilder> jmx() {
-        return new ClientServerEndpointBuilder<>(new JmxClientBuilder(), new JmxServerBuilder());
+    public static JmxEndpoints jmx() {
+        return JmxEndpoints.jmx();
     }
 
     /**
      * Creates new RmiClient or RmiServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<RmiClientBuilder, RmiServerBuilder> rmi() {
-        return new ClientServerEndpointBuilder<>(new RmiClientBuilder(), new RmiServerBuilder());
+    public static RmiEndpoints rmi() {
+        return RmiEndpoints.rmi();
     }
 
     /**
      * Creates new MailClient or MailServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<MailClientBuilder, MailServerBuilder> mail() {
-        return new ClientServerEndpointBuilder<>(new MailClientBuilder(), new MailServerBuilder());
+    public static MailEndpoints mail() {
+        return MailEndpoints.mail();
     }
 
     /**
      * Creates new FtpClient or FtpServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<FtpClientBuilder, FtpServerBuilder> ftp() {
-        return new ClientServerEndpointBuilder<>(new FtpClientBuilder(), new FtpServerBuilder());
+    public static FtpEndpoints ftp() {
+        return FtpEndpoints.ftp();
     }
 
     /**
      * Creates new SftpClient or SftpServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<SftpClientBuilder, SftpServerBuilder> sftp() {
-        return new ClientServerEndpointBuilder<>(new SftpClientBuilder(), new SftpServerBuilder());
+    public static SftpEndpoints sftp() {
+        return SftpEndpoints.sftp();
     }
 
     /**
      * Creates new ScpClient or SftpServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<ScpClientBuilder, SftpServerBuilder> scp() {
-        return new ClientServerEndpointBuilder<>(new ScpClientBuilder(), new SftpServerBuilder());
+    public static SshEndpoints scp() {
+        return SshEndpoints.scp();
     }
 
     /**
      * Creates new SshClient or SshServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<SshClientBuilder, SshServerBuilder> ssh() {
-        return new ClientServerEndpointBuilder<>(new SshClientBuilder(), new SshServerBuilder());
+    public static SshEndpoints ssh() {
+        return SshEndpoints.ssh();
     }
 
     /**
      * Creates new VertxEndpoint sync or async builder.
      * @return
      */
-    public static AsyncSyncEndpointBuilder<VertxEndpointBuilder, VertxSyncEndpointBuilder> vertx() {
-        return new AsyncSyncEndpointBuilder<>(new VertxEndpointBuilder(), new VertxSyncEndpointBuilder());
+    public static VertxEndpoints vertx() {
+        return VertxEndpoints.vertx();
     }
 
     /**
      * Creates new WebSocketClient or WebSocketServer builder.
      * @return
      */
-    public static ClientServerEndpointBuilder<WebSocketClientBuilder, WebSocketServerBuilder> websocket() {
-        return new ClientServerEndpointBuilder<>(new WebSocketClientBuilder(), new WebSocketServerBuilder());
+    public static WebSocketEndpoints websocket() {
+        return WebSocketEndpoints.websocket();
     }
 
     /**
      * Creates new DockerClient builder.
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public static ClientServerEndpointBuilder<DockerClientBuilder, DockerClientBuilder> docker() {
-        return new ClientServerEndpointBuilder(new DockerClientBuilder(), new DockerClientBuilder()) {
-            @Override
-            public EndpointBuilder<? extends Endpoint> server() {
-                throw new UnsupportedOperationException("Citrus Docker stack has no support for server implementation");
-            }
-        };
+    public static DockerEndpoints docker() {
+        return DockerEndpoints.docker();
     }
 
     /**
      * Creates new KubernetesClient builder.
      * @return
      */
-    @SuppressWarnings("unchecked")
-    public static ClientServerEndpointBuilder<KubernetesClientBuilder, KubernetesClientBuilder> kubernetes() {
-        return new ClientServerEndpointBuilder(new KubernetesClientBuilder(), new KubernetesClientBuilder()) {
-            @Override
-            public EndpointBuilder<? extends Endpoint> server() {
-                throw new UnsupportedOperationException("Citrus Kubernetes stack has no support for server implementation");
-            }
-        };
+    public static KubernetesEndpoints kubernetes() {
+        return KubernetesEndpoints.kubernetes();
     }
 
     /**
      * Creates new SeleniumBrowser builder.
      * @return
      */
-    public static SeleniumBrowserEndpointBuilder selenium() {
-        return new SeleniumBrowserEndpointBuilder();
+    public static SeleniumEndpoints selenium() {
+        return SeleniumEndpoints.selenium();
     }
 
     /**
      * Creates new JdbcDbServer builder.
      * @return
      */
-    public static JdbcDbServerEndpointBuilder jdbc() {
-        return new JdbcDbServerEndpointBuilder();
+    public static JdbcEndpoints jdbc() {
+        return JdbcEndpoints.jdbc();
     }
 
     /**
      * Creates new KafkaEndpoint endpoint builder.
      * @return
      */
-    public static AsyncSyncEndpointBuilder<KafkaEndpointBuilder, KafkaEndpointBuilder> kafka() {
-        return new AsyncSyncEndpointBuilder<>(new KafkaEndpointBuilder(), new KafkaEndpointBuilder());
+    public static KafkaEndpoints kafka() {
+        return KafkaEndpoints.kafka();
     }
 
 }
