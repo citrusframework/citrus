@@ -26,12 +26,12 @@ Put simply, a Citrus test case is nothing but a simple Spring XML configuration 
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd">
-    
-    <bean name="MyFirstTest" 
+
+    <bean name="MyFirstTest"
              class="com.consol.citrus.TestCase">
         <property name="variableDefinitions">
             <!-- variables of this test go here -->
-        </property>     
+        </property>
         <property name="actions">
             <!-- actions of this test go here -->
         </property>
@@ -51,11 +51,11 @@ The custom XML schema aims to reach the convenience of domain specific languages
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:spring="http://www.springframework.org/schema/beans"
     xsi:schemaLocation="
-    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans
     http://www.springframework.org/schema/beans/spring-beans.xsd
-    http://www.citrusframework.org/schema/testcase 
+    http://www.citrusframework.org/schema/testcase
     http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
-    
+
     <testcase name="MyFirstTest">
         <description>
             First example showing the basic test case definition elements!
@@ -109,7 +109,7 @@ When using the Citrus Java DSL we need to include a special Maven dependency mod
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-java-dsl</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
   <scope>test</scope>
 </dependency>
 ----
@@ -133,9 +133,9 @@ public class MyFirstTestDesigner extends TestNGCitrusTestDesigner {
     @CitrusTest(name = "MyFirstTest")
     public void myFirstTest() {
         description("First example showing the basic test case definition elements!");
-    
+
         variable("text", "Hello Test Framework");
-    
+
         echo("${text}");
     }
 }
@@ -259,7 +259,7 @@ public class LoggingTestRunner extends TestNGCitrusTestRunner {
         echo("Before loggingService call");
 
         loggingService.log("Now called custom logging service");
-      
+
         echo("After loggingService call");
     }
 }
@@ -505,7 +505,7 @@ public void sampleTest() {
     description("This is a Test");
     author("Christoph");
     status(Status.FINAL);
-    
+
     echo("Hello Citrus!");
 }
 ----

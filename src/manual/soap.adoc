@@ -10,7 +10,7 @@ NOTE: The SOAP WebService components in Citrus are kept in a separate Maven modu
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-ws</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -23,15 +23,15 @@ In order to use the SOAP WebService support you need to include the specific XML
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.citrusframework.org/schema/config 
+       http://www.citrusframework.org/schema/config
        http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.citrusframework.org/schema/ws/config 
+       http://www.citrusframework.org/schema/ws/config
        http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd">
-       
+
     [...]
-    
+
 </beans>
 ----
 
@@ -82,10 +82,10 @@ TIP: Up to now we have used a static endpoint request url for the SOAP message s
 [source,xml]
 ----
 <citrus-ws:client id="soapClient"
-             endpoint-resolver="dynamicEndpointResolver" 
+             endpoint-resolver="dynamicEndpointResolver"
              message-factory="soap12MessageFactory"/>
-             
-<bean id="dynamicEndpointResolver" 
+
+<bean id="dynamicEndpointResolver"
        class="com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver"/>
 ----
 
@@ -94,7 +94,7 @@ The *dynamicEndpointResolver* bean must implement the EndpointUriResolver interf
 [source,xml]
 ----
 <header>
-  <element name="citrus_endpoint_uri" 
+  <element name="citrus_endpoint_uri"
            value="http://localhost:${port}/${context}" />
 </header>
 ----

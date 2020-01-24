@@ -10,7 +10,7 @@ NOTE: The http components in Citrus are kept in a separate Maven module. So you 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-http</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -23,15 +23,15 @@ As Citrus provides a customized HTTP configuration schema for the Spring applica
    xmlns:citrus="http://www.citrusframework.org/schema/config"
    xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
    xsi:schemaLocation="
-   http://www.springframework.org/schema/beans 
+   http://www.springframework.org/schema/beans
    http://www.springframework.org/schema/beans/spring-beans.xsd
-   http://www.citrusframework.org/schema/config 
+   http://www.citrusframework.org/schema/config
    http://www.citrusframework.org/schema/config/citrus-config.xsd
-   http://www.citrusframework.org/schema/http/config 
+   http://www.citrusframework.org/schema/http/config
    http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd">
-       
+
     [...]
-    
+
 </beans>
 ----
 
@@ -83,7 +83,7 @@ TIP: Citrus uses the Spring REST template mechanism for sending out HTTP request
                    request-method="GET"
                    content-type="text/plain"
                    rest-template="customizedRestTemplate"/>
-                               
+
 <!-- Customized rest template -->
 <bean name="customizedRestTemplate" class="org.springframework.web.client.RestTemplate">
   <property name="messageConverters">
@@ -106,7 +106,7 @@ TIP: Citrus uses the Spring REST template mechanism for sending out HTTP request
     </bean>
   </property>
 </bean>
-        
+
 ----
 
 Up to now we have used a normal *send* test action to send Http requests as a client. This is completely valid strategy as the Citrus Http client is a normal endpoint. But we might want to set some more Http REST specific properties and settings. In order to simplify the Http usage in a test case we can use a special test action implementation. The Citrus Http specific actions are located in a separate XML namespace. So wen need to add this namespace to our test case XML first.

@@ -14,7 +14,7 @@ NOTE: The Cucumber components in Citrus are kept in a separate Maven module. If 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-cucumber</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -132,7 +132,7 @@ public class EchoSteps {
 }
 ----
 
-If we have a closer look at the step definition class we see that it is a normal POJO that uses a *@CitrusResource* annotated *TestDesigner*. The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before. 
+If we have a closer look at the step definition class we see that it is a normal POJO that uses a *@CitrusResource* annotated *TestDesigner*. The test designer is automatically injected by Citrus Cucumber extension. This is done because we have included the citrus-cucumber dependency to our project before.
 
 We can set the injection mode for the Citrus Cucumber extension with a system property named _citrus.cucumber.injection.mode_. By default this is set to *DESIGNER* so Citrus will inject a test designer instance. In case you want to use the
 test runner instead you should set the system property or environment property in your project.
@@ -379,7 +379,7 @@ Then <[endpoint-name]> should send
   """
 ----
 
-Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps. 
+Once again it should be said that the step definitions included in this package are loaded automatically as glue code. So you can start to write feature stories in Gherkin syntax that trigger the predefined steps.
 
 There are several default step definitions for different aspects of integration testing. Please see the following packages that define default steps in Citrus:
 

@@ -11,7 +11,7 @@ NOTE: The Kubernetes test components in Citrus are kept in a separate Maven modu
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-kubernetes</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -23,13 +23,13 @@ Citrus provides a "citrus-kubernetes" configuration namespace and schema definit
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-k8s="http://www.citrusframework.org/schema/kubernetes/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.citrusframework.org/schema/kubernetes/config
        http://www.citrusframework.org/schema/kubernetes/config/citrus-kubernetes-config.xsd">
-       
+
     [...]
-    
+
 </beans>
 ----
 
@@ -136,9 +136,9 @@ We added a special kubernetes namespace with prefix *k8s:* so now we can start t
               "namespace": "test"
             }
           }</k8s:result>
-        </k8s:validate>      
+        </k8s:validate>
       </k8s:info>
-      
+
       <k8s:list-pods>
         <k8s:validate>
           <k8s:result>{
@@ -150,7 +150,7 @@ We added a special kubernetes namespace with prefix *k8s:* so now we can start t
             }
           }</k8s:result>
           <k8s:element path="$.result.items.size()" value="0"/>
-        </k8s:validate>        
+        </k8s:validate>
       </k8s:list-pods>
     </actions>
 </testcase>
@@ -248,7 +248,7 @@ The info command just gets the client connection settings and provides them as a
         "namespace": "test"
       }
     }</k8s:result>
-  </k8s:validate>      
+  </k8s:validate>
 </k8s:info>
 ----
 
@@ -474,7 +474,7 @@ spec:
 
 This YAML file specifies a new resource of kind _Pod_. We define the metadata as well as all containers that are part of this pod. The container is build from
 _jetty:9.3_ Docker image that should be pulled automatically from Docker Hub registry. We also expose port 8080 as _containerPort_ so the upcoming service configuration can provide this
-port to clients as Kubernetes service. 
+port to clients as Kubernetes service.
 
 [source]
 ----
@@ -502,7 +502,7 @@ spec:
 The service resource maps the port _8080_ and selects all pods with label _server=hello-jetty_. This makes the jetty container available to clients. The service type is _NodePort_ which means
 that clients outside of Kubernetes are also able to access the service by using the dynamic port _nodePort=31xxx_. We can use Citrus functions such as _randomNumber_ in the YAML files.
 
-In the test case we can use these YAML files to create the resources in Kubernetes: 
+In the test case we can use these YAML files to create the resources in Kubernetes:
 
 .XML DSL
 [source,xml]
@@ -525,7 +525,7 @@ public void createPodsTest() {
         .pods()
         .create(new ClassPathResource("templates/hello-jetty-pod.yml"))
         .namespace("default");
-    
+
     kubernetes()
         .services()
         .create(new ClassPathResource("templates/hello-jetty-service.yml"))
@@ -634,7 +634,7 @@ generic send/receive actions in Citrus for accessing the Kubernetes API. We demo
           </data>
         </message>
       </send>
-  
+
       <receive endpoint="k8sClient">
         <message type="json">
           <data>{
@@ -649,7 +649,7 @@ generic send/receive actions in Citrus for accessing the Kubernetes API. We demo
             }</data>
         </message>
       </receive>
-      
+
       <echo>
         <message>List all pods</message>
       </echo>

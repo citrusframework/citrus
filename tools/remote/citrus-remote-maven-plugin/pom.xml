@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>citrus-remote</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>2.9.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
   <artifactId>citrus-remote-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <name>citrus-remote-maven-plugin</name>
@@ -17,7 +17,7 @@
   <properties>
     <maven.version>3.5.2</maven.version>
   </properties>
-  
+
   <dependencies>
     <!-- Citrus -->
     <dependency>

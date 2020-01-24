@@ -10,7 +10,7 @@ NOTE: The JMS components in Citrus are kept in a separate Maven module. If not a
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-jms</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -22,13 +22,13 @@ Citrus provides a "citrus-jms" configuration namespace and schema definition for
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.citrusframework.org/schema/jms/config
        http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
-       
+
     [...]
-    
+
 </beans>
 ----
 
@@ -54,7 +54,7 @@ The endpoint needs a JMS connection factory for connecting to a JMS message brok
 
 [source,xml]
 ----
-<bean id="connectionFactory" 
+<bean id="connectionFactory"
          class="org.apache.activemq.ActiveMQConnectionFactory">
     <property name="brokerURL" value="tcp://localhost:61616" />
 </bean>
@@ -129,7 +129,7 @@ See the following example test case which references the synchronous message end
                 </data>
             </message>
         </send>
-        
+
         <receive endpoint="helloServiceSyncEndpoint">
             <message>
                 <data>

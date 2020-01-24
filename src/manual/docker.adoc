@@ -10,7 +10,7 @@ NOTE: The Docker test components in Citrus are kept in a separate Maven module. 
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-docker</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -22,13 +22,13 @@ Citrus provides a "citrus-docker" configuration namespace and schema definition 
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-docker="http://www.citrusframework.org/schema/docker/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.citrusframework.org/schema/docker/config
        http://www.citrusframework.org/schema/docker/config/citrus-docker-config.xsd">
-       
+
     [...]
-    
+
 </beans>
 ----
 

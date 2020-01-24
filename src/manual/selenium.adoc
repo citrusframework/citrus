@@ -10,7 +10,7 @@ NOTE: The Selenium test components in Citrus are kept in a separate Maven module
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-selenium</artifactId>
-  <version>2.9.0-SNAPSHOT</version>
+  <version>3.0-SNAPSHOT</version>
 </dependency>
 ----
 
@@ -22,13 +22,13 @@ Citrus provides a "citrus-selenium" configuration namespace and schema definitio
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus-selenium="http://www.citrusframework.org/schema/selenium/config"
        xsi:schemaLocation="
-       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.citrusframework.org/schema/selenium/config
        http://www.citrusframework.org/schema/selenium/config/citrus-selenium-config.xsd">
-       
+
     [...]
-    
+
 </beans>
 ----
 
@@ -65,7 +65,7 @@ you need to customize the Selenium web driver you can use the _browserType="cust
 <citrus-selenium:browser id="mySeleniumBrowser"
                 type="custom"
                 web-driver="operaWebDriver"/>
-                
+
 <bean id="operaWebDriver" class="org.openqa.selenium.opera.OperaDriver"/>
 ----
 
@@ -80,7 +80,7 @@ NOTE: When using Firefox as browser you may also want to set the optional proper
                 firefox-profile="firefoxProfile"
                 version="FIREFOX_38"
                 start-page="http://citrusframework.org"/>
-                
+
 <bean id="firefoxProfile" class="org.openqa.selenium.firefox.FirefoxProfile"/>
 ----
 
@@ -115,9 +115,9 @@ We added a special selenium namespace with prefix *selenium:* so now we can star
 <testcase name="SeleniumCommandIT">
     <actions>
       <selenium:start browser="webBrowser"/>
-      
+
       <selenium:navigate page="http://localhost:8080"/>
-              
+
       <selenium:find>
         <selenium:element tag-name="h1" text="Welcome!">
           <selenium:styles>
@@ -125,10 +125,10 @@ We added a special selenium namespace with prefix *selenium:* so now we can star
           </selenium:styles>
         </selenium:element>
       </selenium:find>
-      
+
       <selenium:click>
         <selenium:element id="ok-button"/>
-      </selenium:click>  
+      </selenium:click>
     </actions>
 </testcase>
 ----
@@ -182,7 +182,7 @@ private SeleniumBrowser seleniumBrowser;
 @CitrusTest
 public void seleniumTest() {
     selenium().start(seleniumBrowser);
-    
+
     selenium().navigate("http://localhost:8080");
 
     selenium().find().element(By.id("header"));
@@ -404,9 +404,9 @@ _setUserName_ or _submit_.
                action="setUserName">
   <selenium:arguments>
     <selenium:argument>Citrus</selenium:argument>
-  </selenium:arguments>              
+  </selenium:arguments>
 </selenium:page>
-                              
+
 <selenium:page type="com.consol.citrus.selenium.pages.UserFormPage"
                action="submit"/>
 ----
@@ -542,7 +542,7 @@ to Selenium limitations the minimum wait time is 1000 milliseconds.
 [[navigate]]
 == Navigate
 
-The action navigates to a new page either by using a new relative path or a complete new Http URL. 
+The action navigates to a new page either by using a new relative path or a complete new Http URL.
 
 .XML DSL
 [source,xml]
@@ -568,7 +568,7 @@ Navigation is always done on the active browser window. You can manage the opene
 [[window-actions]]
 == Window actions
 
-Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test. 
+Selenium is able to manage multiple windows. So you can open, close and switch active windows in a Citrus test.
 
 .XML DSL
 [source,xml]

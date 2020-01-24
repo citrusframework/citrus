@@ -5,7 +5,7 @@
   <parent>
     <artifactId>citrus-tools</artifactId>
     <groupId>com.consol.citrus</groupId>
-    <version>2.9.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -14,7 +14,7 @@
   <packaging>pom</packaging>
   <name>citrus-maven</name>
   <description>Citrus Maven Parent</description>
-  
+
   <modules>
     <module>citrus-maven-plugin</module>
     <module>citrus-maven-plugin-integration</module>

@@ -6,12 +6,12 @@
   <parent>
     <artifactId>citrus-archetypes</artifactId>
     <groupId>com.consol.citrus.archetypes</groupId>
-    <version>2.9.0-SNAPSHOT</version>
+    <version>3.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
+
   <artifactId>citrus-quickstart</artifactId>
   <name>citrus-quickstart</name>
   <description>Citrus quickstart project</description>
-  
+
 </project>
