@@ -3,15 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>citrus</artifactId>
+    <artifactId>citrus-platforms</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>3.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-arquillian</artifactId>
-  <name>citrus-arquillian</name>
+  <name>Citrus :: Platforms :: Arquillian</name>
+  <description>Citrus Arquillian framework integration</description>
 
   <dependencies>
     <dependency>

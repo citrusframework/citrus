@@ -70,8 +70,7 @@
     <module>modules/citrus-zookeeper</module>
     <module>modules/citrus-selenium</module>
     <module>modules/citrus-java-dsl</module>
-    <module>modules/citrus-cucumber</module>
-    <module>modules/citrus-arquillian</module>
+    <module>platforms</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-bom</module>
     <module>tools</module>

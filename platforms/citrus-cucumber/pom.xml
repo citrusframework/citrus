@@ -10,7 +10,8 @@
   </parent>
 
   <artifactId>citrus-cucumber</artifactId>
-  <name>citrus-cucumber</name>
+  <name>Citrus :: Platforms :: Cucumber</name>
+  <description>Citrus Cucumber BDD framework integration</description>
 
   <build>
     <plugins>
