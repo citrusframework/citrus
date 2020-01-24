@@ -16,6 +16,10 @@
 
 package com.consol.citrus.kubernetes.integration;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -24,8 +28,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 import org.testng.annotations.BeforeSuite;
-
-import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
@@ -36,22 +38,24 @@ public class AbstractKubernetesIT extends AbstractTestNGCitrusTest {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractKubernetesIT.class);
 
-    /** Minikube connection state, checks connectivity only once per test run */
+    /** Kubernetes connection state, checks connectivity only once per test run */
     private static boolean connected = false;
 
     @BeforeSuite(alwaysRun = true)
-    public void checkMinikubeEnvironment() {
-        try {
-            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
-                KubernetesClient kubernetesClient = new DefaultKubernetesClient();
-                kubernetesClient.pods().list();
-                return true;
-            });
+    public void checkKubernetesEnvironment() {
+        boolean enabled = Boolean.parseBoolean(System.getProperty("citrus.kuberenetes.it.enabled", Boolean.FALSE.toString()));
+        if (enabled) {
+            try {
+                Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                    KubernetesClient kubernetesClient = new DefaultKubernetesClient();
+                    kubernetesClient.pods().list();
+                    return true;
+                });
 
-            future.get(5000, TimeUnit.MILLISECONDS);
-            connected = true;
-        } catch (Exception e) {
-            log.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
+                connected = future.get(5000, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                log.warn("Skipping Kubernetes test execution as no proper Kubernetes environment is available on host system!", e);
+            }
         }
     }
 

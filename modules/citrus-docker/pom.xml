@@ -12,6 +12,10 @@
   <artifactId>citrus-docker</artifactId>
   <name>citrus-docker</name>
 
+  <properties>
+    <citrus.docker.it.enabled>false</citrus.docker.it.enabled>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -34,6 +38,16 @@
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
           </xjbSources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <citrus.docker.it.enabled>${citrus.docker.it.enabled}</citrus.docker.it.enabled>
+          </systemProperties>
         </configuration>
       </plugin>
     </plugins>

@@ -3,11 +3,11 @@
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:docker="http://www.citrusframework.org/schema/docker/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/docker/testcase
                                   http://www.citrusframework.org/schema/docker/testcase/citrus-docker-testcase.xsd
-                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="DockerExecuteIT">
@@ -72,7 +72,7 @@
         <docker:expect>
           <docker:result>
             <![CDATA[
-              {"Id":"@variable(containerId)@","Warnings":null}
+              {"Id":"@variable(containerId)@","Warnings":[]}
             ]]>
           </docker:result>
         </docker:expect>

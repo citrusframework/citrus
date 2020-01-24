@@ -12,6 +12,10 @@
   <artifactId>citrus-kubernetes</artifactId>
   <name>citrus-kubernetes</name>
 
+  <properties>
+    <citrus.kuberenetes.it.enabled>false</citrus.kuberenetes.it.enabled>
+  </properties>
+
   <build>
     <plugins>
       <plugin>
@@ -34,6 +38,16 @@
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
           </xjbSources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <citrus.kuberenetes.it.enabled>${citrus.kuberenetes.it.enabled}</citrus.kuberenetes.it.enabled>
+          </systemProperties>
         </configuration>
       </plugin>
     </plugins>

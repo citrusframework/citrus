@@ -16,6 +16,10 @@
 
 package com.consol.citrus.docker.integration;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientImpl;
@@ -25,8 +29,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.IHookCallBack;
 import org.testng.ITestResult;
 import org.testng.annotations.BeforeSuite;
-
-import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
@@ -42,19 +44,21 @@ public class AbstractDockerIT extends AbstractTestNGCitrusTest {
 
     @BeforeSuite(alwaysRun = true)
     public void checkDockerEnvironment() {
-        try {
-            Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
-                DockerClient dockerClient = DockerClientImpl.getInstance()
-                        .withDockerCmdExecFactory(new JerseyDockerCmdExecFactory());
+        boolean enabled = Boolean.parseBoolean(System.getProperty("citrus.docker.it.enabled", Boolean.FALSE.toString()));
+        if (enabled) {
+            try {
+                Future<Boolean> future = Executors.newSingleThreadExecutor().submit(() -> {
+                    DockerClient dockerClient = DockerClientImpl.getInstance()
+                            .withDockerCmdExecFactory(new JerseyDockerCmdExecFactory());
 
-                dockerClient.pingCmd().exec();
-                return true;
-            });
+                    dockerClient.pingCmd().exec();
+                    return true;
+                });
 
-            future.get(5000, TimeUnit.MILLISECONDS);
-            connected = true;
-        } catch (Exception e) {
-            log.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
+                connected = future.get(5000, TimeUnit.MILLISECONDS);
+            } catch (Exception e) {
+                log.warn("Skipping Docker test execution as no proper Docker environment is available on host system!", e);
+            }
         }
     }
 
