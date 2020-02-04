@@ -16,11 +16,16 @@
 
 package com.consol.citrus.message;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.TypeConversionUtils;
 import org.springframework.util.CollectionUtils;
-
-import java.util.*;
 
 /**
  * Default message implementation holds message payload and message headers. Also provides access methods for special

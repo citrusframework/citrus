@@ -48,4 +48,10 @@ public interface MessageQueue {
      * @return message or null if no matching message is available.
      */
     Message receive(MessageSelector selector, long timeout);
+
+    /**
+     * Purge messages selected by given selector.
+     * @param selector
+     */
+    void purge(MessageSelector selector);
 }

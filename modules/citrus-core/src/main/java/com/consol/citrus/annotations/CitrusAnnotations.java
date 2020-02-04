@@ -16,19 +16,16 @@
 
 package com.consol.citrus.annotations;
 
+import java.lang.reflect.Field;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.Endpoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
-import org.springframework.util.StringUtils;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 
 /**
- * Dependency injection support for {@link CitrusEndpoint} endpoint annotations.
+ * Dependency injection support for {@link CitrusFramework} and {@link CitrusEndpoint} annotations.
  *
  * @author Christoph Deppisch
  * @since 2.5
@@ -49,7 +46,7 @@ public abstract class CitrusAnnotations {
      * Creates new Citrus instance and injects all supported components and endpoints to target object using annotations.
      * @param target
      */
-    public static final void injectAll(final Object target) {
+    public static void injectAll(final Object target) {
         injectAll(target, Citrus.newInstance());
     }
 
@@ -57,7 +54,7 @@ public abstract class CitrusAnnotations {
      * Creates new Citrus test context and injects all supported components and endpoints to target object using annotations.
      * @param target
      */
-    public static final void injectAll(final Object target, final Citrus citrusFramework) {
+    public static void injectAll(final Object target, final Citrus citrusFramework) {
         injectAll(target, citrusFramework, citrusFramework.createTestContext());
     }
 
@@ -65,7 +62,7 @@ public abstract class CitrusAnnotations {
      * Injects all supported components and endpoints to target object using annotations.
      * @param target
      */
-    public static final void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
+    public static void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
         injectCitrusFramework(target, citrusFramework);
         injectEndpoints(target, context);
     }
@@ -77,44 +74,8 @@ public abstract class CitrusAnnotations {
      * @param target
      * @param context
      */
-    public static final void injectEndpoints(final Object target, final TestContext context) {
-        ReflectionUtils.doWithFields(target.getClass(), new ReflectionUtils.FieldCallback() {
-            @Override
-            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                log.debug(String.format("Injecting Citrus endpoint on test class field '%s'", field.getName()));
-                CitrusEndpoint endpointAnnotation = field.getAnnotation(CitrusEndpoint.class);
-
-                for (Annotation annotation : field.getAnnotations()) {
-                    if (annotation.annotationType().getAnnotation(CitrusEndpointConfig.class) != null) {
-                        ReflectionUtils.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), annotation, context));
-                        return;
-                    }
-                }
-
-                Endpoint endpoint;
-                if (StringUtils.hasText(endpointAnnotation.name())) {
-                    endpoint = context.getReferenceResolver().resolve(endpointAnnotation.name(), (Class<Endpoint>) field.getType());
-                } else {
-                    endpoint = context.getReferenceResolver().resolve((Class<Endpoint>) field.getType());
-                }
-
-                ReflectionUtils.setField(field, target, endpoint);
-            }
-        }, new ReflectionUtils.FieldFilter() {
-            @Override
-            public boolean matches(Field field) {
-                if (field.isAnnotationPresent(CitrusEndpoint.class) &&
-                        Endpoint.class.isAssignableFrom(field.getType())) {
-                    if (!field.isAccessible()) {
-                        ReflectionUtils.makeAccessible(field);
-                    }
-
-                    return true;
-                }
-
-                return false;
-            }
-        });
+    public static void injectEndpoints(final Object target, final TestContext context) {
+        CitrusEndpointAnnotations.injectEndpoints(target, context);
     }
 
     /**
@@ -122,7 +83,7 @@ public abstract class CitrusAnnotations {
      * @param testCase
      * @param citrusFramework
      */
-    public static final void injectCitrusFramework(final Object testCase, final Citrus citrusFramework) {
+    public static void injectCitrusFramework(final Object testCase, final Citrus citrusFramework) {
         ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
@@ -144,18 +105,5 @@ public abstract class CitrusAnnotations {
                 return false;
             }
         });
-    }
-
-    /**
-     * Either reads {@link CitrusEndpoint} name property or constructs endpoint name from field name.
-     * @param field
-     * @return
-     */
-    private static String getEndpointName(Field field) {
-        if (field.getAnnotation(CitrusEndpoint.class) != null && StringUtils.hasText(field.getAnnotation(CitrusEndpoint.class).name())) {
-            return field.getAnnotation(CitrusEndpoint.class).name();
-        }
-
-        return field.getName();
     }
 }

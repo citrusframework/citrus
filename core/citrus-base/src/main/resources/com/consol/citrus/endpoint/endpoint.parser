@@ -1,5 +1,5 @@
-endpoint.parser.direct=com.consol.citrus.config.annotation.DirectEndpointConfigParser
-endpoint.parser.direct.sync=com.consol.citrus.config.annotation.DirectSyncEndpointConfigParser
+endpoint.parser.direct=com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser
+endpoint.parser.direct.sync=com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser
 endpoint.parser.channel=com.consol.citrus.config.annotation.ChannelEndpointConfigParser
 endpoint.parser.channel.sync=com.consol.citrus.config.annotation.ChannelSyncEndpointConfigParser
 endpoint.parser.kafka=com.consol.citrus.kafka.config.annotation.KafkaEndpointConfigParser

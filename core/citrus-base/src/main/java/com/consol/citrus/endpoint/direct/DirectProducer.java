@@ -7,7 +7,6 @@ import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.util.StringUtils;
 
 /**
@@ -47,7 +46,7 @@ public class DirectProducer implements Producer {
 
         try {
             getDestinationQueue(context).send(message);
-        } catch (MessageDeliveryException e) {
+        } catch (Exception e) {
             throw new CitrusRuntimeException("Failed to send message to queue: '" + destinationQueueName + "'", e);
         }
 

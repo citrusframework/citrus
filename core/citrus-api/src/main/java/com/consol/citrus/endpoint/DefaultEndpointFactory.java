@@ -209,4 +209,12 @@ public class DefaultEndpointFactory implements EndpointFactory {
             log.warn("Unable to laod default endpoint annotation parsers from resource '%s'", e);
         }
     }
+
+    /**
+     * Specifies the referenceResolver.
+     * @param referenceResolver
+     */
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+    }
 }

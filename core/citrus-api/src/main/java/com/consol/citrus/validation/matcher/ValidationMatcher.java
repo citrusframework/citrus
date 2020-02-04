@@ -16,21 +16,22 @@
 
 package com.consol.citrus.validation.matcher;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 
-import java.util.List;
-
 /**
  * General validation matcher interface.
- * 
+ *
  * @author Christian Wied
  */
+@FunctionalInterface
 public interface ValidationMatcher {
 
     /**
      * Method called on validation.
-     * 
+     *
      * @param fieldName the fieldName for logging purpose.
      * @param value the value to be validated.
      * @param controlParameters the control parameters.
