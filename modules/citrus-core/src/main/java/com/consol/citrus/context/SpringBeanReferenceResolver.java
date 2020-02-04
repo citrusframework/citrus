@@ -16,14 +16,15 @@
 
 package com.consol.citrus.context;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Spring bean reference resolver operates on given application context to resolve bean references.
@@ -34,6 +35,30 @@ import java.util.List;
 public class SpringBeanReferenceResolver implements ReferenceResolver, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
+
+    /**
+     * Default constructor.
+     */
+    public SpringBeanReferenceResolver() {
+        super();
+    }
+
+    /**
+     * Constructor initializes with given application context.
+     * @param applicationContext
+     */
+    public SpringBeanReferenceResolver(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public <T> List<T> resolve(Class<T> requiredType, String... names) {
+        if (names.length > 0) {
+            return resolve(names, requiredType);
+        }
+
+        return new ArrayList<>(resolveAll(requiredType).values());
+    }
 
     @Override
     public <T> T resolve(Class<T> requiredType) {
@@ -65,7 +90,38 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     }
 
     @Override
+    public Object resolve(String name) {
+        try {
+            return applicationContext.getBean(name);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e);
+        }
+    }
+
+    @Override
+    public <T> Map<String, T> resolveAll(Class<T> requiredType) {
+        try {
+            return applicationContext.getBeansOfType(requiredType);
+        } catch (NoSuchBeanDefinitionException e) {
+            throw new CitrusRuntimeException(String.format("Unable to find bean references for type '%s'", requiredType), e);
+        }
+    }
+
+    @Override
+    public boolean isResolvable(String name) {
+        return applicationContext.containsBean(name);
+    }
+
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Obtains the applicationContext.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 }

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.ws.validation;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -24,48 +24,50 @@ import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.ws.message.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Abstract soap fault validation implementation offering basic faultCode and faultString validation.
  * Subclasses may add fault detail validation in addition to that.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
-    
+
     /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(AbstractSoapFaultValidator.class);
-    
+
     @Override
     public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault,
             TestContext context, ValidationContext validationContext) throws ValidationException {
         //fault string validation
         if (controlFault.getFaultString() != null &&
                 !controlFault.getFaultString().equals(receivedFault.getFaultString())) {
-            if (controlFault.getFaultString().equals(Citrus.IGNORE_PLACEHOLDER)) {
+            if (controlFault.getFaultString().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
                 log.debug("SOAP fault-string is ignored by placeholder - skipped fault-string validation");
             } else if (ValidationMatcherUtils.isValidationMatcherExpression(controlFault.getFaultString())) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault string", receivedFault.getFaultString(), controlFault.getFaultString(), context);
             } else {
-                throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" + 
+                throw new ValidationException("SOAP fault validation failed! Fault string does not match - expected: '" +
                         controlFault.getFaultString() + "' but was: '" + receivedFault.getFaultString() + "'");
             }
         }
-        
+
         //fault code validation
         if (StringUtils.hasText(controlFault.getFaultCodeQName().getLocalPart())) {
             Assert.isTrue(controlFault.getFaultCodeQName().equals(receivedFault.getFaultCodeQName()),
                     "SOAP fault validation failed! Fault code does not match - expected: '" +
                     controlFault.getFaultCodeQName() + "' but was: '" + receivedFault.getFaultCodeQName() + "'");
         }
-        
+
         //fault actor validation
         if (StringUtils.hasText(controlFault.getFaultActor())) {
-            if (controlFault.getFaultActor().startsWith(Citrus.VALIDATION_MATCHER_PREFIX) &&
-                    controlFault.getFaultActor().endsWith(Citrus.VALIDATION_MATCHER_SUFFIX)) {
+            if (controlFault.getFaultActor().startsWith(CitrusSettings.VALIDATION_MATCHER_PREFIX) &&
+                    controlFault.getFaultActor().endsWith(CitrusSettings.VALIDATION_MATCHER_SUFFIX)) {
                 ValidationMatcherUtils.resolveValidationMatcher("SOAP fault actor", receivedFault.getFaultActor(), controlFault.getFaultActor(), context);
             } else {
                 Assert.isTrue(controlFault.getFaultActor().equals(receivedFault.getFaultActor()),
@@ -73,7 +75,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
                         controlFault.getFaultActor() + "' but was: '" + receivedFault.getFaultActor() + "'");
             }
         }
-        
+
         if (!CollectionUtils.isEmpty(controlFault.getFaultDetails())) {
             validateFaultDetail(receivedFault, controlFault, context, validationContext);
         }
@@ -81,7 +83,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
 
     /**
      * Abstract method for soap fault detail validation.
-     * 
+     *
      * @param receivedDetail
      * @param controlDetail
      * @param context

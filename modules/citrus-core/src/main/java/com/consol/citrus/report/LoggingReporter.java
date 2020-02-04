@@ -16,7 +16,11 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.*;
+import java.util.Optional;
+
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestAction;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
@@ -24,21 +28,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
-import java.util.Optional;
-
 /**
  * Simple logging reporter printing test start and ending to the console/logger.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener, TestReporter {
-    
+
     /** Inbound message logger */
     private static Logger inboundMsgLogger = LoggerFactory.getLogger("Logger.Message_IN");
 
     /** Outbound message logger */
     private static Logger outboundMsgLogger = LoggerFactory.getLogger("Logger.Message_OUT");
-    
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
 

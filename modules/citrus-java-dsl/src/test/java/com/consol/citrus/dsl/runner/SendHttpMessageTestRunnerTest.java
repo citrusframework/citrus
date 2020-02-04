@@ -21,7 +21,7 @@ import javax.servlet.http.Cookie;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
@@ -216,8 +216,8 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
             Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-            Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+            Assert.assertEquals(message.getHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+            Assert.assertEquals(message.getHeader(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
@@ -246,8 +246,8 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
     }
 
     @Test
@@ -258,8 +258,8 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         doAnswer(invocation -> {
             Message message = (Message) invocation.getArguments()[0];
             Assert.assertEquals(message.getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-            Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-            Assert.assertEquals(message.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+            Assert.assertEquals(message.getHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+            Assert.assertEquals(message.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
@@ -289,8 +289,8 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
     }
 
 }

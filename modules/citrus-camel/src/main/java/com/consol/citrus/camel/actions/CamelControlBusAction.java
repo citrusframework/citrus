@@ -16,7 +16,7 @@
 
 package com.consol.citrus.camel.actions;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.camel.endpoint.CamelSyncEndpoint;
 import com.consol.citrus.camel.endpoint.CamelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
@@ -83,7 +83,7 @@ public class CamelControlBusAction extends AbstractCamelRouteAction {
         CamelSyncEndpoint camelEndpoint = new CamelSyncEndpoint(endpointConfiguration);
 
         String expression = context.replaceDynamicContentInString(VariableUtils.cutOffVariablesPrefix(languageExpression));
-        camelEndpoint.createProducer().send(new DefaultMessage(VariableUtils.isVariableName(languageExpression) ? Citrus.VARIABLE_PREFIX + expression + Citrus.VARIABLE_SUFFIX : expression), context);
+        camelEndpoint.createProducer().send(new DefaultMessage(VariableUtils.isVariableName(languageExpression) ? CitrusSettings.VARIABLE_PREFIX + expression + CitrusSettings.VARIABLE_SUFFIX : expression), context);
 
         Message response = camelEndpoint.createConsumer().receive(context);
 

@@ -16,13 +16,12 @@
 
 package com.consol.citrus.endpoint.resolver;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
-import org.springframework.util.StringUtils;
-
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
+import org.springframework.util.StringUtils;
 
 /**
  * Endpoint uri resolver working on message headers. Resolver is searching for a specific header entry which holds the actual
@@ -32,11 +31,6 @@ import java.util.StringTokenizer;
  * @since 1.4
  */
 public class DynamicEndpointUriResolver implements EndpointUriResolver {
-
-    /** Static header entry name specifying the dynamic endpoint uri */
-    public static final String ENDPOINT_URI_HEADER_NAME = MessageHeaders.PREFIX + "endpoint_uri";
-    public static final String REQUEST_PATH_HEADER_NAME = MessageHeaders.PREFIX + "request_path";
-    public static final String QUERY_PARAM_HEADER_NAME = MessageHeaders.PREFIX + "query_params";
 
     /** Default fallback uri */
     private String defaultEndpointUri;

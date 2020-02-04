@@ -22,7 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.container.StopTimer;
@@ -51,7 +52,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
     public void testDefaultVariables() {
         globalVariables.getVariables().put("defaultVar", "123");
 
-        TestCase testcase = new TestCase();
+        DefaultTestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.setVariableDefinitions(Collections.<String, Object>singletonMap("test1Var", "456"));
@@ -59,14 +60,14 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         TestContext testContext = createTestContext();
         testcase.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_NAME_VARIABLE), "MyTestCase");
-        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test1Var"));
         Assert.assertEquals(testContext.getVariables().get("test1Var"), "456");
 
-        TestCase testcase2 = new TestCase();
+        DefaultTestCase testcase2 = new DefaultTestCase();
         testcase2.setName("MyTestCase2");
         testcase2.setPackageName("com.consol.citrus");
 
@@ -75,8 +76,8 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         testContext = createTestContext();
         testcase2.execute(testContext);
 
-        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_NAME_VARIABLE), "MyTestCase2");
-        Assert.assertEquals(testContext.getVariables().get(Citrus.TEST_PACKAGE_VARIABLE), "com.consol.citrus");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase2");
+        Assert.assertEquals(testContext.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), "com.consol.citrus");
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "123");
         Assert.assertTrue(testContext.getVariables().containsKey("test2Var"));
@@ -88,7 +89,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
     public void testDefaultVariablesChange() {
         globalVariables.getVariables().put("defaultVar", "123");
 
-        TestCase testcase = new TestCase();
+        TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         CreateVariablesAction varSetting = new CreateVariablesAction.Builder()
@@ -102,7 +103,7 @@ public class TestContextTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(testContext.getVariables().containsKey("defaultVar"));
         Assert.assertEquals(testContext.getVariables().get("defaultVar"), "ABC");
 
-        TestCase testcase2 = new TestCase();
+        TestCase testcase2 = new DefaultTestCase();
         testcase2.setName("MyTestCase2");
 
         testContext = createTestContext();

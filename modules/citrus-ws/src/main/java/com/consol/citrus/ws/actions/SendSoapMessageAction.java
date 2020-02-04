@@ -25,7 +25,7 @@ import java.util.List;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
@@ -245,7 +245,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
          * @return self
          */
         public B uri(String uri) {
-            soapMessage.header(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
+            soapMessage.header(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, uri);
             return self;
         }
 

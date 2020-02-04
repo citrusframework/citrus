@@ -16,15 +16,6 @@
 
 package com.consol.citrus.docs;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.PropertyUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.xml.sax.SAXException;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -46,22 +37,31 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
+import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.PropertyUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.xml.sax.SAXException;
+
 public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
-    
+
     /** Logger */
     Logger log = LoggerFactory.getLogger(getClass());
-    
+
     private static final String OVERVIEW_PLACEHOLDER = "+++++ OVERVIEW +++++";
     private static final String BODY_PLACEHOLDER = "+++++ BODY +++++";
 
     private static final String OUTPUT_DIRECTORY = "target" + File.separator + "docs";
-    
-    String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
+
+    String srcDirectory = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY;
     private String testDocTemplate;
     String outputFile;
-    
+
     private List<File> testFiles = null;
-    
+
     /**
      * Default constructor using template name.
      */
@@ -69,7 +69,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
         this.outputFile = outputFile;
         this.testDocTemplate = testDocTemplate;
     }
-    
+
     /**
      * Generates the test documentation.
      */
@@ -77,10 +77,10 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
         BufferedReader reader = null;
         FileOutputStream fos = null;
         BufferedOutputStream buffered = null;
-        
+
         try {
             final Properties props = getTestDocProperties();
-            
+
             fos = getFileOutputStream(outputFile);
             buffered = new BufferedOutputStream(fos);
 
@@ -105,7 +105,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                     log.error("Failed to close reader", e);
                 }
             }
-            
+
             if (buffered != null) {
                 try {
                     buffered.flush();
@@ -113,7 +113,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                     log.error("Failed to close output stream", e);
                 }
             }
-            
+
             if (fos != null) {
                 try {
                     fos.close();
@@ -136,41 +136,41 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
                 throw new CitrusRuntimeException("Unable to create folder structure for test documentation");
             }
         }
-        
+
         return new FileOutputStream(file.getAbsolutePath() + File.separator + fileName);
     }
 
     /**
      * Generates the test documentation.
      */
-    public abstract void doBody(OutputStream buffered) 
+    public abstract void doBody(OutputStream buffered)
             throws TransformerException, IOException, SAXException;
-    
+
     /**
      * Generates the test documentation.
      */
-    public abstract void doHeader(OutputStream buffered) 
+    public abstract void doHeader(OutputStream buffered)
             throws TransformerException, IOException, SAXException;
-    
+
     /**
      * Gets the test doc properties.
      * @return
      */
     protected abstract Properties getTestDocProperties();
-    
+
     /**
      * Gets all test files from test directory.
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     List<File> getTestFiles() throws IOException {
         if (testFiles == null) {
-            testFiles = FileUtils.findFiles(Paths.get(srcDirectory, "resources").toString(), Citrus.getXmlTestFileNamePattern());
+            testFiles = FileUtils.findFiles(Paths.get(srcDirectory, "resources").toString(), CitrusSettings.getXmlTestFileNamePattern());
         }
-        
+
         return testFiles;
     }
-    
+
     /**
      * Gets a document builder instance properly configured.
      * @return
@@ -184,7 +184,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
             throw new CitrusRuntimeException(e);
         }
     }
-    
+
     /**
      * Gets a transformer with proper configuration.
      * @param fileName
@@ -193,19 +193,19 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     Transformer getTransformer(final String fileName, final String mediaType, final String method) {
         try {
             final Source source = new StreamSource(new ClassPathResource(fileName, getClass()).getInputStream());
-            
+
             final TransformerFactory factory = TransformerFactory.newInstance();
             final Transformer t = factory.newTransformer(source);
 
             t.setOutputProperty(OutputKeys.MEDIA_TYPE, mediaType);
             t.setOutputProperty(OutputKeys.METHOD, method);
-            
+
             return t;
         } catch (final TransformerException | IOException e) {
             throw new CitrusRuntimeException(e);
         }
     }
-    
+
     /**
      * @param srcDirectory the srcDirectory to set
      */
@@ -219,7 +219,7 @@ public abstract class AbstractTestDocsGenerator implements TestDocsGenerator {
     public String getSrcDirectory() {
         return srcDirectory;
     }
-    
+
     /**
      * @param outputFile the outputFile to set
      */

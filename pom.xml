@@ -50,6 +50,7 @@
   </ciManagement>
 
   <modules>
+    <module>core</module>
     <module>modules/citrus-core</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>

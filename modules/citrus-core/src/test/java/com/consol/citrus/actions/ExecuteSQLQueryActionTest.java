@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
@@ -489,8 +489,8 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
 
         List<String> stmts = Collections.singletonList(sql);
         executeSQLQueryAction.statements(stmts);
-        executeSQLQueryAction.validate("ORDERTYPE", "small", Citrus.IGNORE_PLACEHOLDER, "big");
-        executeSQLQueryAction.validate("STATUS", Citrus.IGNORE_PLACEHOLDER, "in_progress", "finished");
+        executeSQLQueryAction.validate("ORDERTYPE", "small", CitrusSettings.IGNORE_PLACEHOLDER, "big");
+        executeSQLQueryAction.validate("STATUS", CitrusSettings.IGNORE_PLACEHOLDER, "in_progress", "finished");
         executeSQLQueryAction.build().execute(context);
 
         Assert.assertNotNull(context.getVariable("ORDERTYPE"));
@@ -525,7 +525,7 @@ public class ExecuteSQLQueryActionTest extends AbstractTestNGUnitTest {
         executeSQLQueryAction.statements(stmts);
         executeSQLQueryAction.extract("STATUS", "orderStatus");
         executeSQLQueryAction.extract("ORDERTYPE", "orderType");
-        executeSQLQueryAction.validate("ORDERTYPE", "small", Citrus.IGNORE_PLACEHOLDER, "big");
+        executeSQLQueryAction.validate("ORDERTYPE", "small", CitrusSettings.IGNORE_PLACEHOLDER, "big");
         executeSQLQueryAction.validate("STATUS", "started", "in_progress", "finished");
         executeSQLQueryAction.build().execute(context);
 

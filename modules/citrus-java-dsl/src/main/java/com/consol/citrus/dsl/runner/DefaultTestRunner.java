@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Stack;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -99,7 +100,7 @@ import org.springframework.context.ApplicationContext;
 public class DefaultTestRunner implements TestRunner {
 
     /** Test case */
-    private final TestCase testCase;
+    private final DefaultTestCase testCase;
 
     /** This runners test context */
     private TestContext context;
@@ -112,7 +113,7 @@ public class DefaultTestRunner implements TestRunner {
 
     /** Default constructor */
     public DefaultTestRunner() {
-        testCase = new TestCase();
+        testCase = new DefaultTestCase();
         testClass(this.getClass());
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
@@ -122,7 +123,7 @@ public class DefaultTestRunner implements TestRunner {
      * Constructor initializing test case.
      * @param testCase
      */
-    protected DefaultTestRunner(TestCase testCase) {
+    protected DefaultTestRunner(DefaultTestCase testCase) {
         this.testCase = testCase;
     }
 

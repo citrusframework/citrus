@@ -16,12 +16,13 @@
 
 package com.consol.citrus.message.correlation;
 
-import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
+import com.consol.citrus.endpoint.direct.DirectSyncEndpointConfiguration;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class PollingCorrelationManagerTest {
@@ -30,7 +31,7 @@ public class PollingCorrelationManagerTest {
 
     @Test
     public void testFind() throws Exception {
-        ChannelSyncEndpointConfiguration pollableEndpointConfiguration = new ChannelSyncEndpointConfiguration();
+        DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(500L);
 
@@ -56,7 +57,7 @@ public class PollingCorrelationManagerTest {
 
     @Test
     public void testFindWithRetry() {
-        ChannelSyncEndpointConfiguration pollableEndpointConfiguration = new ChannelSyncEndpointConfiguration();
+        DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(500L);
 
@@ -71,7 +72,7 @@ public class PollingCorrelationManagerTest {
 
     @Test
     public void testNotFindWithRetry() {
-        ChannelSyncEndpointConfiguration pollableEndpointConfiguration = new ChannelSyncEndpointConfiguration();
+        DirectSyncEndpointConfiguration pollableEndpointConfiguration = new DirectSyncEndpointConfiguration();
         pollableEndpointConfiguration.setPollingInterval(100L);
         pollableEndpointConfiguration.setTimeout(300L);
 

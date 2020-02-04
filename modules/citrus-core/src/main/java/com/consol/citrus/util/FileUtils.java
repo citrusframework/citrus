@@ -16,22 +16,35 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.Citrus;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.Stack;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
-import java.io.*;
-import java.nio.charset.Charset;
-import java.util.*;
-
 /**
- * Class to provide general file utilities, such as listing all XML files in a directory, 
+ * Class to provide general file utilities, such as listing all XML files in a directory,
  * or finding certain tests in a directory.
  *
  * @author Christoph Deppisch
@@ -80,7 +93,7 @@ public abstract class FileUtils {
     public static String readToString(InputStream inputStream) throws IOException {
          return readToString(inputStream, getDefaultCharset());
     }
-    
+
     /**
      * Read file content to string value with default charset settings.
      * @param file
@@ -114,7 +127,7 @@ public abstract class FileUtils {
         }
         return readToString(resource.getInputStream(), charset);
     }
-    
+
     /**
      * Read file input stream to string value.
      * @param inputStream
@@ -188,11 +201,11 @@ public abstract class FileUtils {
         final Stack<File> dirs = new Stack<File>();
         /* start directory */
         final File startdir = new File(startDir);
-        
+
         if (!startdir.exists()) {
             throw new CitrusRuntimeException("Test directory " + startdir.getAbsolutePath() + " does not exist");
         }
-        
+
         if (startdir.isDirectory()) {
             dirs.push(startdir);
         }
@@ -284,7 +297,7 @@ public abstract class FileUtils {
      * @return
      */
     public static Charset getDefaultCharset() {
-        return Charset.forName(Citrus.CITRUS_FILE_ENCODING);
+        return Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
     }
 
     /**

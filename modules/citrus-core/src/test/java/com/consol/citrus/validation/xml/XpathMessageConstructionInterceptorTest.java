@@ -16,7 +16,11 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.Citrus;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -24,10 +28,6 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -44,36 +44,36 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
     public void testConstructWithXPath() {
         final Map<String, String> xPathExpressions = new HashMap<String, String>();
         xPathExpressions.put("/TestMessage/Text", "Hello!");
-        
+
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
+
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .endsWith("<TestMessage><Text>Hello!</Text></TestMessage>"));
     }
-    
+
     @Test
     public void testConstructWithXPathAndDefaultNamespace() {
         final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage xmlns=\"http://www.citrusframework.org/test\">" +
                 "<Text>Hello World!</Text>" +
                 "</TestMessage>");
-        
+
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/:TestMessage/:Text", "Hello!");
-        
+
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
+
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<Text>Hello!</Text>"));
     }
-    
+
     @Test
     public void testConstructWithXPathAndNamespace() {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns0:Text", "Hello!");
-        
+
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
+
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, CitrusSettings.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -86,22 +86,22 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
 
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, CitrusSettings.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
-    
+
     @Test
     public void testConstructWithXPathAndNestedNamespace() {
         final Message message = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns0:TestMessage xmlns:ns0=\"http://www.citrusframework.org/test\">" +
                 "<ns1:Text xmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello World!</ns1:Text>" +
                 "</ns0:TestMessage>");
-        
+
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns1:Text", "Hello!");
-        
+
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
-        
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
+
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns1:Textxmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 
@@ -112,7 +112,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         xPathExpressions.put(".Invalid/Unknown", "Hello!");
 
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
-        interceptor.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        interceptor.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
@@ -122,7 +122,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         xPathExpressions.put("/TestMessage/Unknown", "Hello!");
 
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
-        interceptor.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        interceptor.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
@@ -133,7 +133,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
 
         final XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(xPathExpressions);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, Citrus.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.interceptMessage(messageNamespace, CitrusSettings.DEFAULT_MESSAGE_TYPE, context).getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -155,7 +155,7 @@ public class XpathMessageConstructionInterceptorTest extends AbstractTestNGUnitT
         Assert.assertTrue(StringUtils
                 .trimAllWhitespace(
                         interceptor
-                                .interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context)
+                                .interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context)
                                 .getPayload(String.class))
                 .contains("<Text>foobar</Text>"));
     }

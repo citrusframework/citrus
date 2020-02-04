@@ -16,7 +16,11 @@
 
 package com.consol.citrus.generate.javadsl;
 
-import com.consol.citrus.Citrus;
+import java.io.File;
+import java.io.IOException;
+import java.util.Collections;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.utils.CleanupUtils;
@@ -25,17 +29,13 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Collections;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
 public class WsdlJavaTestGeneratorTest {
 
-    private String testDir = Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/";
+    private String testDir = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/";
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 

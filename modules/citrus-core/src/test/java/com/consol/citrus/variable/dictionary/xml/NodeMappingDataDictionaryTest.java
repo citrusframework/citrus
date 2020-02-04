@@ -16,7 +16,10 @@
 
 package com.consol.citrus.variable.dictionary.xml;
 
-import com.consol.citrus.Citrus;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -24,9 +27,6 @@ import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -45,7 +45,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
@@ -64,7 +64,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>Bye!</OtherText>" + System.getProperty("line.separator") +
@@ -82,7 +82,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>Hello!</OtherText>" + System.getProperty("line.separator") +
@@ -100,7 +100,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"newName\">Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"goodbyeText\">No changes</OtherText>" + System.getProperty("line.separator") +
@@ -118,7 +118,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"newName\">Hello World!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"newName\">No changes</OtherText>" + System.getProperty("line.separator") +
@@ -138,7 +138,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"TEXT\">Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
@@ -155,7 +155,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappingFile(new ClassPathResource("mapping.properties", DataDictionary.class));
         dictionary.afterPropertiesSet();
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"newName\">Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
@@ -172,7 +172,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>" + System.getProperty("line.separator") +
                 "      <value>Hello!</value>" + System.getProperty("line.separator") +
@@ -191,7 +191,7 @@ public class NodeMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, Citrus.DEFAULT_MESSAGE_TYPE, context);
+        Message intercepted = dictionary.interceptMessage(message, CitrusSettings.DEFAULT_MESSAGE_TYPE, context);
         Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello World!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +

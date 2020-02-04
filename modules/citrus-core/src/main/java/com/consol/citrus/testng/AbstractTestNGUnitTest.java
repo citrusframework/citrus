@@ -16,7 +16,7 @@
 
 package com.consol.citrus.testng;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -46,7 +46,7 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
     private JUnitReporter jUnitReporter;
 
     static {
-        System.setProperty(Citrus.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:com/consol/citrus/context/citrus-unit-context.xml");
+        System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:com/consol/citrus/context/citrus-unit-context.xml");
     }
 
     /**

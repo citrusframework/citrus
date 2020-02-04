@@ -19,13 +19,15 @@ package com.consol.citrus.ftp.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.ftp.client.SftpEndpointConfiguration;
 import com.consol.citrus.ftp.server.SftpServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
@@ -99,7 +101,7 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(sftpServer1.getUserHomePath());
         Assert.assertNull(sftpServer1.getUser());
         Assert.assertNull(sftpServer1.getPassword());
-        Assert.assertTrue(sftpServer1.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertTrue(sftpServer1.getEndpointAdapter() instanceof DirectEndpointAdapter);
         Assert.assertNotNull(sftpServer1.getMessageConverter());
         Assert.assertNull(sftpServer1.getActor());
 
@@ -114,7 +116,7 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpServer2.getUserHomePath(), "/home/user");
         Assert.assertEquals(sftpServer2.getUser(), "foo");
         Assert.assertEquals(sftpServer2.getPassword(), "bar");
-        Assert.assertTrue(sftpServer2.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertTrue(sftpServer2.getEndpointAdapter() instanceof DirectEndpointAdapter);
         Assert.assertNull(sftpServer2.getActor());
 
         // 3rd server

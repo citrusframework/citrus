@@ -16,11 +16,26 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.Citrus;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.AbstractMessageValidator;
 import com.consol.citrus.validation.ValidationUtils;
@@ -37,26 +52,21 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.*;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.XsdSchema;
-import org.w3c.dom.*;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.DocumentType;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
 import org.w3c.dom.ls.LSException;
-import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
-
-import javax.xml.XMLConstants;
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Default message validator implementation. Working on XML messages
@@ -68,7 +78,7 @@ import java.util.Map.Entry;
 public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageValidationContext> implements ApplicationContextAware {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DomXmlMessageValidator.class);
-    
+
     @Autowired(required = false)
     private List<XsdSchemaRepository> schemaRepositories = new ArrayList<XsdSchemaRepository>();
 
@@ -163,7 +173,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         schemaRepository = repository;
                     }
                 }
-                
+
                 if (schemaRepository == null) {
                     throw new CitrusRuntimeException(String.format("Failed to find proper schema repository in Spring bean context for validating element '%s(%s)'",
                             doc.getFirstChild().getLocalName(), doc.getFirstChild().getNamespaceURI()));
@@ -172,7 +182,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                 log.warn("Neither schema instance nor schema repository defined - skipping XML schema validation");
                 return;
             }
-            
+
             if (schemaRepository != null) {
                 if (!schemaRepository.canValidate(doc)) {
                     throw new CitrusRuntimeException(String.format("Unable to find proper XML schema definition for element '%s(%s)' in schema repository '%s'",
@@ -186,7 +196,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                     if (xsdSchema instanceof XsdSchemaCollection) {
                         for (Resource resource : ((XsdSchemaCollection) xsdSchema).getSchemaResources()) {
                             schemas.add(resource);
-                        }                            
+                        }
                     } else if (xsdSchema instanceof WsdlXsdSchema) {
                         for (Resource resource : ((WsdlXsdSchema) xsdSchema).getSchemaResources()) {
                             schemas.add(resource);
@@ -203,17 +213,17 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
                         }
                     }
                 }
-                
+
                 validator = XmlValidatorFactory.createValidator(schemas.toArray(new Resource[schemas.size()]), WsdlXsdSchema.W3C_XML_SCHEMA_NS_URI);
             }
-            
+
             SAXParseException[] results = validator.validate(new DOMSource(doc));
             if (results.length == 0) {
                 log.info("XML schema validation successful: All values OK");
             } else {
                 log.error("XML schema validation failed for message:\n" +
                         XMLUtils.prettyPrint(receivedMessage.getPayload(String.class)));
-                
+
                 // Report all parsing errors
                 log.debug("Found " + results.length + " schema validation errors");
                 StringBuilder errors = new StringBuilder();
@@ -249,7 +259,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
 
         Document received = XMLUtils.parseMessagePayload(receivedMessage.getPayload(String.class));
 
-        Map<String, String> foundNamespaces = XMLUtils.lookupNamespaces(receivedMessage.getPayload(String.class));
+        Map<String, String> foundNamespaces = NamespaceContextBuilder.lookupNamespaces(receivedMessage.getPayload(String.class));
 
         if (foundNamespaces.size() != expectedNamespaces.size()) {
             throw new ValidationException("Number of namespace declarations not equal for node " +
@@ -358,7 +368,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         validateXmlTree(received, source, validationContext, namespaceContextBuilder.buildContext(
                 receivedMessage, validationContext.getNamespaces()), context);
     }
-    
+
     /**
      * Validates XML header fragment data.
      * @param receivedHeaderData
@@ -381,7 +391,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             log.debug("Control header data:\n" + XMLUtils.serialize(source));
         }
 
-        validateXmlTree(received, source, validationContext, 
+        validateXmlTree(received, source, validationContext,
                 namespaceContextBuilder.buildContext(new DefaultMessage(receivedHeaderData), validationContext.getNamespaces()),
                 context);
     }
@@ -393,7 +403,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
      * @param source
      * @param validationContext
      */
-    private void validateXmlTree(Node received, Node source, 
+    private void validateXmlTree(Node received, Node source,
             XmlMessageValidationContext validationContext, NamespaceContext namespaceContext, TestContext context) {
         switch(received.getNodeType()) {
             case Node.DOCUMENT_TYPE_NODE:
@@ -443,10 +453,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             Assert.isNull(receivedDTD.getPublicId(),
                     ValidationUtils.buildValueMismatchErrorMessage("Document type public id not equal",
                     sourceDTD.getPublicId(), receivedDTD.getPublicId()));
-        } else if (sourceDTD.getPublicId().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
+        } else if (sourceDTD.getPublicId().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Document type public id: '" + receivedDTD.getPublicId() +
-                        "' is ignored by placeholder '" + Citrus.IGNORE_PLACEHOLDER + "'");
+                        "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
         } else {
             Assert.isTrue(StringUtils.hasText(receivedDTD.getPublicId()) &&
@@ -459,10 +469,10 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
             Assert.isNull(receivedDTD.getSystemId(),
                     ValidationUtils.buildValueMismatchErrorMessage("Document type system id not equal",
                     sourceDTD.getSystemId(), receivedDTD.getSystemId()));
-        } else if (sourceDTD.getSystemId().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
+        } else if (sourceDTD.getSystemId().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Document type system id: '" + receivedDTD.getSystemId() +
-                        "' is ignored by placeholder '" + Citrus.IGNORE_PLACEHOLDER + "'");
+                        "' is ignored by placeholder '" + CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
         } else {
             Assert.isTrue(StringUtils.hasText(receivedDTD.getSystemId()) &&
@@ -746,7 +756,7 @@ public class DomXmlMessageValidator extends AbstractMessageValidator<XmlMessageV
         if (schemaRepositories == null) {
             schemaRepositories = new ArrayList<XsdSchemaRepository>();
         }
-        
+
         schemaRepositories.add(schemaRepository);
     }
 

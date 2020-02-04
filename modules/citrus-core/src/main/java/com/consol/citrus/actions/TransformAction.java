@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -177,10 +177,10 @@ public class TransformAction extends AbstractTestAction {
 
         private String xmlData;
         private String xmlResourcePath;
-        private String xmlResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+        private String xmlResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
         private String xsltData;
         private String xsltResourcePath;
-        private String xsltResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+        private String xsltResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
         private String targetVariable = "transform-result";
 
         /**

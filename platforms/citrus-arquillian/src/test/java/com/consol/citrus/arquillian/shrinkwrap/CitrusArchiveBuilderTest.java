@@ -16,22 +16,23 @@
 
 package com.consol.citrus.arquillian.shrinkwrap;
 
+import java.io.File;
+import java.lang.reflect.Field;
+
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusVersion;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.lang.reflect.Field;
-
 public class CitrusArchiveBuilderTest {
 
     @BeforeClass
     public void setCitrusVersion() {
-        Field version = ReflectionUtils.findField(Citrus.class, "version");
+        Field version = ReflectionUtils.findField(CitrusVersion.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "3.0-SNAPSHOT");
+        ReflectionUtils.setField(version, CitrusVersion.class, "3.0-SNAPSHOT");
     }
 
     @Test

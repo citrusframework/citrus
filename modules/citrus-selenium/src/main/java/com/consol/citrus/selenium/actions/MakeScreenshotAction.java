@@ -19,7 +19,7 @@ package com.consol.citrus.selenium.actions;
 import java.io.File;
 import java.io.IOException;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
@@ -59,8 +59,8 @@ public class MakeScreenshotAction extends AbstractSeleniumAction {
 
         if (screenshot != null) {
             String testName = "Test";
-            if (context.getVariables().containsKey(Citrus.TEST_NAME_VARIABLE)) {
-                testName = context.getVariable(Citrus.TEST_NAME_VARIABLE);
+            if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
+                testName = context.getVariable(CitrusSettings.TEST_NAME_VARIABLE);
             }
 
             context.setVariable(SeleniumHeaders.SELENIUM_SCREENSHOT, testName + "_" + screenshot.getName());

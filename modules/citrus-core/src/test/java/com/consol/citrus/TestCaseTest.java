@@ -39,7 +39,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecution() {
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.addTestAction(new EchoAction.Builder().build());
@@ -49,7 +49,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWaitForFinish() {
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.addTestAction(new EchoAction.Builder().build());
@@ -70,7 +70,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = TestCaseFailedException.class,
           expectedExceptionsMessageRegExp = "Failed to wait for test container to finish properly")
     public void testWaitForFinishTimeout() {
-        final TestCase testcase = new TestCase();
+        final DefaultTestCase testcase = new DefaultTestCase();
         testcase.setTimeout(500L);
         testcase.setName("MyTestCase");
 
@@ -91,7 +91,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWaitForFinishAsync() {
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.addTestAction(new Async.Builder().actions(() -> new AbstractAsyncTestAction() {
@@ -110,7 +110,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecutionWithVariables() {
-        final TestCase testcase = new TestCase();
+        final DefaultTestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         final Map<String, Object> variables = new LinkedHashMap<>();
@@ -124,8 +124,8 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
         testcase.addTestAction(new AbstractTestAction() {
             @Override
             public void doExecute(final TestContext context) {
-                Assert.assertEquals(context.getVariables().get(Citrus.TEST_NAME_VARIABLE), "MyTestCase");
-                Assert.assertEquals(context.getVariables().get(Citrus.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
+                Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_NAME_VARIABLE), "MyTestCase");
+                Assert.assertEquals(context.getVariables().get(CitrusSettings.TEST_PACKAGE_VARIABLE), TestCase.class.getPackage().getName());
                 Assert.assertEquals(context.getVariable("${name}"), "Citrus");
                 Assert.assertEquals(context.getVariable("${framework}"), "Citrus");
                 Assert.assertEquals(context.getVariable("${hello}"), "Hello Citrus!");
@@ -139,7 +139,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {TestCaseFailedException.class})
     public void testUnknownVariable() {
-        final TestCase testcase = new TestCase();
+        final DefaultTestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         final String message = "Hello TestFramework!";
@@ -157,7 +157,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {TestCaseFailedException.class}, expectedExceptionsMessageRegExp = "This failed in forked action")
     public void testExceptionInContext() {
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.addTestAction(new AbstractTestAction() {
@@ -174,7 +174,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = {TestCaseFailedException.class})
     public void testExceptionInContextInFinish() {
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.addTestAction(new AbstractTestAction() {
@@ -189,7 +189,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFinalActions() {
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("MyTestCase");
 
         testcase.addTestAction(new EchoAction.Builder().build());
@@ -202,7 +202,7 @@ public class TestCaseTest extends AbstractTestNGUnitTest {
     public void testThreadLeak() {
 
         //GIVEN
-        final TestCase testcase = new TestCase();
+        final TestCase testcase = new DefaultTestCase();
         testcase.setName("ThreadLeakTestCase");
         testcase.addTestAction(new EchoAction.Builder().build());
 

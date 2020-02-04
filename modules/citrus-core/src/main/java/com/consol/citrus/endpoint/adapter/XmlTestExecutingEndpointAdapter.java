@@ -16,18 +16,21 @@
 
 package com.consol.citrus.endpoint.adapter;
 
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.channel.ChannelEndpointAdapter;
-import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy;
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
+import com.consol.citrus.endpoint.direct.DirectSyncEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -37,7 +40,7 @@ import org.springframework.core.task.TaskExecutor;
 
 /**
  * Special request dispatching endpoint adapter invokes XML test case for each incoming message. Incoming message is
- * passed to test case via normal message channel connection as usual.
+ * passed to test case via normal in memory message queue connection as usual.
  *
  * @author Christoph Deppisch
  * @since 1.4
@@ -46,7 +49,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     /** Executor start action sequence logic in separate thread task */
     private TaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
 
-    /** This adapter name - used for message channel generation */
+    /** This adapter name - used for message queue generation */
     private String name = EndpointAdapter.class.getSimpleName();
 
     /** Spring bean application context holding all available test builders and basic Citrus config */
@@ -95,8 +98,10 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
 
         try {
             TestCase testCase = ctx.getBean(testName, TestCase.class);
-            testCase.setName(testName);
-            testCase.setPackageName(packageName);
+            if (testCase instanceof DefaultTestCase) {
+                testCase.setName(testName);
+                ((DefaultTestCase) testCase).setPackageName(packageName);
+            }
             return testCase;
         } catch (NoSuchBeanDefinitionException e) {
             throw context.handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);
@@ -134,13 +139,12 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
      */
     public void afterPropertiesSet() throws Exception {
         if (endpointAdapterDelegate == null) {
-            ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
-            endpointConfiguration.setChannelName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
-            endpointConfiguration.setBeanFactory(applicationContext);
+            DirectSyncEndpointConfiguration endpointConfiguration = new DirectSyncEndpointConfiguration();
+            endpointConfiguration.setQueueName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
 
-            ChannelEndpointAdapter channelEndpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
-            channelEndpointAdapter.setTestContextFactory(testContextFactory);
-            endpointAdapterDelegate = channelEndpointAdapter;
+            DirectEndpointAdapter simpleEndpointAdapter = new DirectEndpointAdapter(endpointConfiguration);
+            simpleEndpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapterDelegate = simpleEndpointAdapter;
         }
 
         if (getMappingStrategy() == null) {

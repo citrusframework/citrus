@@ -16,7 +16,7 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestCase;
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.testng.annotations.BeforeClass;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  */
 public class LoggingReporterTest {
 
-    private TestCase test = new TestCase();
+    private DefaultTestCase test = new DefaultTestCase();
 
     private EchoAction echo = new EchoAction.Builder().build();
 
@@ -80,7 +80,7 @@ public class LoggingReporterTest {
         reporter.onTestStart(test);
         reporter.onTestFinish(test);
         reporter.onTestSuccess(test);
-        reporter.onTestSkipped(new TestCase());
+        reporter.onTestSkipped(new DefaultTestCase());
         reporter.onFinish();
         reporter.onFinishSuccess();
         reporter.generateTestResults();

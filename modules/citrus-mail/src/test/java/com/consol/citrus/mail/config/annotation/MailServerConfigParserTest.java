@@ -16,24 +16,26 @@
 
 package com.consol.citrus.mail.config.annotation;
 
+import java.util.Properties;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.Properties;
 
 import static org.mockito.Mockito.when;
 
@@ -100,7 +102,7 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(mailServer1.isAutoStart());
         Assert.assertFalse(mailServer1.isSplitMultipart());
         Assert.assertTrue(mailServer1.isAutoAccept());
-        Assert.assertEquals(mailServer1.getEndpointAdapter().getClass(), ChannelEndpointAdapter.class);
+        Assert.assertEquals(mailServer1.getEndpointAdapter().getClass(), DirectEndpointAdapter.class);
         Assert.assertTrue(mailServer1.getJavaMailProperties().isEmpty());
 
         // 2nd mail server

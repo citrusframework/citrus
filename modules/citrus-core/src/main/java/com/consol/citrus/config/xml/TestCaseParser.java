@@ -16,7 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.TestCase;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.config.TestActionRegistry;
@@ -32,13 +39,9 @@ import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 /**
  * Bean definition parser for test case.
- * 
+ *
  * @author Christoph Deppisch
  */
 @SuppressWarnings("PMD.AvoidDuplicateLiterals")
@@ -47,7 +50,7 @@ public class TestCaseParser implements BeanDefinitionParser {
     @Override
 	public final BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder testCaseFactory = BeanDefinitionBuilder.rootBeanDefinition(TestCaseFactory.class);
-        BeanDefinitionBuilder testCase = BeanDefinitionBuilder.rootBeanDefinition(TestCase.class);
+        BeanDefinitionBuilder testCase = BeanDefinitionBuilder.rootBeanDefinition(DefaultTestCase.class);
 
         String testName = element.getAttribute("name");
         if (!StringUtils.hasText(testName)) {
@@ -60,7 +63,7 @@ public class TestCaseParser implements BeanDefinitionParser {
         parseVariableDefinitions(testCase, element);
 
         DescriptionElementParser.doParse(element, testCase);
-        
+
         Element actionsElement = DomUtils.getChildElementByTagName(element, "actions");
         Element finallyBlockElement = DomUtils.getChildElementByTagName(element, "finally");
 
@@ -79,10 +82,10 @@ public class TestCaseParser implements BeanDefinitionParser {
      * @param parserContext the current parser context.
      * @return
      */
-    private ManagedList<BeanDefinition> parseActions(Element actionsContainerElement, ParserContext parserContext, 
+    private ManagedList<BeanDefinition> parseActions(Element actionsContainerElement, ParserContext parserContext,
             Map<String, BeanDefinitionParser> actionRegistry) {
         ManagedList<BeanDefinition> actions = new ManagedList<BeanDefinition>();
-        
+
         if (actionsContainerElement != null) {
             List<Element> actionList = DomUtils.getChildElements(actionsContainerElement);
             for (Element action : actionList) {
@@ -90,7 +93,7 @@ public class TestCaseParser implements BeanDefinitionParser {
                 if (action.getNamespaceURI().equals(actionsContainerElement.getNamespaceURI())) {
                     parser = actionRegistry.get(action.getLocalName());
                 }
-                
+
                 if (parser ==  null) {
                     actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
                 } else {
@@ -98,12 +101,12 @@ public class TestCaseParser implements BeanDefinitionParser {
                 }
             }
         }
-        
+
         return actions;
     }
 
     /**
-     * Parses all variable definitions and adds those to the bean definition 
+     * Parses all variable definitions and adds those to the bean definition
      * builder for this test case.
      * @param testCase the target bean definition builder for this test case.
      * @param element the source element.
@@ -158,7 +161,7 @@ public class TestCaseParser implements BeanDefinitionParser {
             } catch (ParseException e) {
                 throw new BeanCreationException("Unable to parse creation date", e);
             }
-            
+
             String status = DomUtils.getTextValue(statusElement);
             if (status.equals("DRAFT")) {
                 metaInfo.setStatus(Status.DRAFT);

@@ -16,9 +16,16 @@
 
 package com.consol.citrus.generate;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.generate.xml.XmlTestGenerator;
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.GnuParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.OptionBuilder;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /**
  * @author Christoph Deppisch
@@ -48,7 +55,7 @@ public class TestGeneratorMain {
                     .withAuthor(cmd.getOptionValue("author", "Unknown"))
                     .withDescription(cmd.getOptionValue("description", "TODO: Description"))
                     .usePackage(cmd.getOptionValue("package", "com.consol.citrus"))
-                    .useSrcDirectory(cmd.getOptionValue("srcdir", Citrus.DEFAULT_TEST_SRC_DIRECTORY))
+                    .useSrcDirectory(cmd.getOptionValue("srcdir", CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY))
                     .withFramework(UnitFramework.fromString(cmd.getOptionValue("framework", "testng")));
 
             generator.create();

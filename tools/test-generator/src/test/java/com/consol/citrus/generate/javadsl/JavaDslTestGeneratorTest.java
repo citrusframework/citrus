@@ -1,6 +1,9 @@
 package com.consol.citrus.generate.javadsl;
 
-import com.consol.citrus.Citrus;
+import java.io.File;
+import java.io.IOException;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
@@ -10,14 +13,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
-import java.io.IOException;
-
 
 public class JavaDslTestGeneratorTest {
 
     private JavaDslTestGenerator generatorUnderTest = new JavaDslTestGenerator();
-    private File testFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "/java/com/consol/citrus/FooTest.java");
+    private File testFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "/java/com/consol/citrus/FooTest.java");
 
     private final CleanupUtils cleanupUtils = new CleanupUtils();
 

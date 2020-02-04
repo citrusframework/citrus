@@ -16,9 +16,9 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.endpoint.AbstractEndpointAdapter;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
@@ -36,7 +36,7 @@ public abstract class StaticEndpointAdapter extends AbstractEndpointAdapter {
     }
 
     @Override
-    public ChannelSyncEndpointConfiguration getEndpointConfiguration() {
+    public EndpointConfiguration getEndpointConfiguration() {
         throw new CitrusRuntimeException(String.format("Unable to provide endpoint configuration for static endpoint adapter type '%s'", getClass()));
     }
 }

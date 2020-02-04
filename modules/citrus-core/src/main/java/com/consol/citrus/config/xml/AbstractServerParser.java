@@ -16,8 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.channel.MessageSelectingQueueChannel;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.message.DefaultMessageQueue;
 import com.consol.citrus.server.AbstractServer;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -43,7 +43,7 @@ public abstract class AbstractServerParser extends AbstractBeanDefinitionParser 
             BeanDefinitionParserUtils.setPropertyReference(serverBuilder, element.getAttribute("endpoint-adapter"), "endpointAdapter");
         } else {
             String channelId = element.getAttribute(ID_ATTRIBUTE) + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX;
-            BeanDefinitionParserUtils.registerBean(channelId, MessageSelectingQueueChannel.class, parserContext, shouldFireEvents());
+            BeanDefinitionParserUtils.registerBean(channelId, DefaultMessageQueue.class, parserContext, shouldFireEvents());
         }
 
         BeanDefinitionParserUtils.setPropertyValue(serverBuilder, element.getAttribute("debug-logging"), "debugLogging");

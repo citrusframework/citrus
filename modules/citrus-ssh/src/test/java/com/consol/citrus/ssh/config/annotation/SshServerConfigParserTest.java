@@ -19,13 +19,15 @@ package com.consol.citrus.ssh.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
@@ -98,7 +100,7 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(sshServer1.getUserHomePath());
         Assert.assertNull(sshServer1.getUser());
         Assert.assertNull(sshServer1.getPassword());
-        Assert.assertTrue(sshServer1.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertTrue(sshServer1.getEndpointAdapter() instanceof DirectEndpointAdapter);
         Assert.assertNotNull(sshServer1.getMessageConverter());
         Assert.assertNull(sshServer1.getActor());
 
@@ -111,7 +113,7 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sshServer2.getUserHomePath(), "/home/user");
         Assert.assertEquals(sshServer2.getUser(), "foo");
         Assert.assertEquals(sshServer2.getPassword(), "bar");
-        Assert.assertTrue(sshServer2.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertTrue(sshServer2.getEndpointAdapter() instanceof DirectEndpointAdapter);
         Assert.assertEquals(sshServer2.getMessageConverter(), messageConverter);
         Assert.assertNull(sshServer2.getActor());
 

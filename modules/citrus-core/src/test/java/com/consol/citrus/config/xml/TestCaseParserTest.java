@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.testng.AbstractActionParserTest;
@@ -34,9 +36,10 @@ public class TestCaseParserTest extends AbstractActionParserTest<EchoAction> {
         assertActionClassAndName(EchoAction.class, "echo");
 
         TestCase test = getTestCase();
-        Assert.assertEquals(test.getVariableDefinitions().size(), 3);
-        Assert.assertEquals(test.getVariableDefinitions().get("text"), "Hello");
-        Assert.assertEquals(test.getVariableDefinitions().get("sum"), "15");
-        Assert.assertEquals(test.getVariableDefinitions().get("embeddedXml"), "<embeddedXml>works!</embeddedXml>");
+        Map<String, Object> variables = test.getVariableDefinitions();
+        Assert.assertEquals(variables.size(), 3);
+        Assert.assertEquals(variables.get("text"), "Hello");
+        Assert.assertEquals(variables.get("sum"), "15");
+        Assert.assertEquals(variables.get("embeddedXml"), "<embeddedXml>works!</embeddedXml>");
     }
 }

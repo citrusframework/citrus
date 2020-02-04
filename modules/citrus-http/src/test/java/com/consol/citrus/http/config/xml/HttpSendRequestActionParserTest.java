@@ -18,7 +18,7 @@ package com.consol.citrus.http.config.xml;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
@@ -51,9 +51,9 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
         Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -68,14 +68,14 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.ID));
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/order/${id}");
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/order/${id}");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/order/${id}");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/xml");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_ACCEPT), "text/xml");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_VERSION), "HTTP/1.1");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "id=12345,type=gold");
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold");
-        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "id=12345,type=gold");
+        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "http://localhost:8080/test");
 
@@ -87,7 +87,7 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<user><id>1001</id><name>new_user</name></user>");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user");
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get("userId"), "1001");
         Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
@@ -101,7 +101,7 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.DELETE.name());
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user/${id}");
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/user/${id}");
         Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
@@ -114,9 +114,9 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.HEAD.name());
-        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
         Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
-        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/test");
+        Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/test");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -128,7 +128,7 @@ public class HttpSendRequestActionParserTest extends AbstractActionParserTest<Se
         messageBuilder = (PayloadTemplateMessageBuilder)httpMessageContentBuilder.getDelegate();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.OPTIONS.name());
-        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME));
+        Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME));
         Assert.assertNull(httpMessageContentBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_QUERY_PARAMS));
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "http://localhost:8080/test");

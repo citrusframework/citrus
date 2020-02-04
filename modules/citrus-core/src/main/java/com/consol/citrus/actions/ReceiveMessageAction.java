@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -141,7 +141,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.validationCallback = builder.validationCallback;
         this.validationContexts = builder.validationContexts;
         this.variableExtractors = builder.variableExtractors;
-        this.messageType = Optional.ofNullable(builder.messageType).orElse(Citrus.DEFAULT_MESSAGE_TYPE);
+        this.messageType = Optional.ofNullable(builder.messageType).orElse(CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
 
     /**
@@ -460,7 +460,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private ValidationCallback validationCallback;
         private List<ValidationContext> validationContexts = new ArrayList<>();
         private List<VariableExtractor> variableExtractors = new ArrayList<>();
-        private String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
+        private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
         /** Validation context used in this action builder */
         private HeaderValidationContext headerValidationContext = new HeaderValidationContext();

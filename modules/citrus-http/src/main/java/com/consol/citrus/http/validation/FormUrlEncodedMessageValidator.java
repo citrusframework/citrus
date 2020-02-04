@@ -16,12 +16,22 @@
 
 package com.consol.citrus.http.validation;
 
-import com.consol.citrus.Citrus;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.http.message.HttpMessageHeaders;
-import com.consol.citrus.http.model.*;
+import com.consol.citrus.http.model.Control;
+import com.consol.citrus.http.model.FormData;
+import com.consol.citrus.http.model.FormMarshaller;
+import com.consol.citrus.http.model.ObjectFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.DefaultMessageValidator;
@@ -31,11 +41,6 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.nio.charset.Charset;
-import java.util.*;
 
 /**
  * Validates x-www-form-urlencoded HTML form data content by marshalling form fields to Xml representation.
@@ -131,8 +136,8 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
      * @return
      */
     private String getEncoding() {
-        return System.getProperty(Citrus.CITRUS_FILE_ENCODING_PROPERTY, System.getenv(Citrus.CITRUS_FILE_ENCODING_ENV) != null ?
-                System.getenv(Citrus.CITRUS_FILE_ENCODING_ENV) : Charset.defaultCharset().displayName());
+        return System.getProperty(CitrusSettings.CITRUS_FILE_ENCODING_PROPERTY, System.getenv(CitrusSettings.CITRUS_FILE_ENCODING_ENV) != null ?
+                System.getenv(CitrusSettings.CITRUS_FILE_ENCODING_ENV) : Charset.defaultCharset().displayName());
     }
 
     /**

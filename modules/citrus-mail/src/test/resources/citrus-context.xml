@@ -37,7 +37,7 @@
                       auto-accept="false"
                       split-multipart="true"
                       port="25050"
-                      timeout="500"
+                      timeout="5000"
                       auto-start="true"/>
 
 </beans>

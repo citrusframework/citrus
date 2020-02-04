@@ -25,7 +25,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
@@ -313,7 +313,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         protected MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
-        protected String messageType = Citrus.DEFAULT_MESSAGE_TYPE;
+        protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
         protected DataDictionary<?> dataDictionary;
 
         /** Variable extractors filled within this builder */

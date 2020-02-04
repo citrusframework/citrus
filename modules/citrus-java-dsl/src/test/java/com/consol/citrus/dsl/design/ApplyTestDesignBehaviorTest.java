@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.util.List;
+
+import com.consol.citrus.DefaultTestCase;
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
@@ -101,12 +105,14 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActions().get(1).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)test.getActions().get(1)).getMessage(), "behavior");
 
-        Assert.assertEquals(test.getFinalActions().size(), 2);
-        Assert.assertEquals(test.getFinalActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getFinalActions().get(0)).getMessage(), "finally");
+        Assert.assertTrue(test instanceof DefaultTestCase);
+        List<TestAction> finalActions = ((DefaultTestCase)test).getFinalActions();
+        Assert.assertEquals(finalActions.size(), 2);
+        Assert.assertEquals(finalActions.get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)finalActions.get(0)).getMessage(), "finally");
 
-        Assert.assertEquals(test.getFinalActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getFinalActions().get(1)).getMessage(), "behaviorFinally");
+        Assert.assertEquals(finalActions.get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)finalActions.get(1)).getMessage(), "behaviorFinally");
     }
 
     @Test
@@ -187,12 +193,14 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sequence.getActions().get(1).getClass(), EchoAction.class);
         Assert.assertEquals(((EchoAction)sequence.getActions().get(1)).getMessage(), "behavior");
 
-        Assert.assertEquals(test.getFinalActions().size(), 2);
-        Assert.assertEquals(test.getFinalActions().get(0).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getFinalActions().get(0)).getMessage(), "finally");
+        Assert.assertTrue(test instanceof DefaultTestCase);
+        List<TestAction> finalActions = ((DefaultTestCase)test).getFinalActions();
+        Assert.assertEquals(finalActions.size(), 2);
+        Assert.assertEquals(finalActions.get(0).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)finalActions.get(0)).getMessage(), "finally");
 
-        Assert.assertEquals(test.getFinalActions().get(1).getClass(), EchoAction.class);
-        Assert.assertEquals(((EchoAction)test.getFinalActions().get(1)).getMessage(), "behaviorFinally");
+        Assert.assertEquals(finalActions.get(1).getClass(), EchoAction.class);
+        Assert.assertEquals(((EchoAction)finalActions.get(1)).getMessage(), "behaviorFinally");
     }
 
     @Test

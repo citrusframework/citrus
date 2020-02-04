@@ -16,13 +16,13 @@
 
 package com.consol.citrus.util;
 
-import com.consol.citrus.Citrus;
+import java.nio.charset.Charset;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.nio.charset.Charset;
 
 /**
  * @author Christoph Deppisch
@@ -47,7 +47,7 @@ public class FileUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testGetCharset() throws Exception {
-        Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), Citrus.CITRUS_FILE_ENCODING);
+        Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt").displayName(), CitrusSettings.CITRUS_FILE_ENCODING);
         Assert.assertEquals(FileUtils.getCharset("/path/to/some/file.txt" + FileUtils.FILE_PATH_CHARSET_PARAMETER + "ISO-8859-1"), Charset.forName("ISO-8859-1"));
     }
 

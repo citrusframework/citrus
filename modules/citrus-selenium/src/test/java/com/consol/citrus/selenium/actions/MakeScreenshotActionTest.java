@@ -18,7 +18,7 @@ package com.consol.citrus.selenium.actions;
 
 import java.io.File;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -67,7 +67,7 @@ public class MakeScreenshotActionTest extends AbstractTestNGUnitTest {
     public void testExecuteOutputDir() throws Exception {
         when(webDriver.getScreenshotAs(OutputType.FILE)).thenReturn(new ClassPathResource("screenshot.png").getFile());
 
-        context.setVariable(Citrus.TEST_NAME_VARIABLE, "MyTest");
+        context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, "MyTest");
 
         MakeScreenshotAction action =  new MakeScreenshotAction.Builder()
                 .browser(seleniumBrowser)

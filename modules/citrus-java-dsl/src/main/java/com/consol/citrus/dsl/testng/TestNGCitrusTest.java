@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
@@ -119,7 +120,9 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
     @Override
     protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
-        testCase.setGroups(testResult.getMethod().getGroups());
+        if (testCase instanceof TestGroupAware) {
+            ((TestGroupAware) testCase).setGroups(testResult.getMethod().getGroups());
+        }
 
         if (testResult.getAttribute(DESIGNER_ATTRIBUTE) != null) {
             super.invokeTestMethod(testResult, method, testCase, context, invocationCount);

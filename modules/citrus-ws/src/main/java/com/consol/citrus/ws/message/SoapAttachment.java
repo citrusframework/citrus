@@ -16,7 +16,17 @@
 
 package com.consol.citrus.ws.message;
 
-import com.consol.citrus.Citrus;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -28,14 +38,9 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.mime.Attachment;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import java.io.*;
-import java.nio.charset.Charset;
-
 /**
  * Citrus SOAP attachment implementation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SoapAttachment implements Attachment, Serializable {
@@ -54,19 +59,19 @@ public class SoapAttachment implements Attachment, Serializable {
 
     /** Content type */
     private String contentType = "text/plain";
-    
+
     /** Content identifier */
     private String contentId = null;
-    
+
     /** Chosen charset of content body */
     private String charsetName = "UTF-8";
-    
+
     /** send mtom attachments inline as hex or base64 coded */
     private boolean mtomInline = false;
-    
+
     /** Content data handler */
     private DataHandler dataHandler = null;
-    
+
     /** Optional MTOM encoding */
     private String encodingType = ENCODING_BASE64_BINARY;
 
@@ -105,7 +110,7 @@ public class SoapAttachment implements Attachment, Serializable {
             soapAttachment.setDataHandler(attachment.getDataHandler());
         }
 
-        soapAttachment.setCharsetName(Citrus.CITRUS_FILE_ENCODING);
+        soapAttachment.setCharsetName(CitrusSettings.CITRUS_FILE_ENCODING);
 
         return soapAttachment;
     }
@@ -304,7 +309,7 @@ public class SoapAttachment implements Attachment, Serializable {
     public void setEncodingType(String encodingType) {
         this.encodingType = encodingType;
     }
-    
+
     /**
      * Sets the test context this attachment is bound to. Variable resolving takes place with this context instance.
      * @param context Test context used to resolve dynamic content
@@ -312,7 +317,7 @@ public class SoapAttachment implements Attachment, Serializable {
     public void setTestContext(TestContext context) {
         this.context = context;
     }
-    
+
     /**
      * Get size in bytes of the given input stream
      * @param is Read all data from stream to calculate size of the stream

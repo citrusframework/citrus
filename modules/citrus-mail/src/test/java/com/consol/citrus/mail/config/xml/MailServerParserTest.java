@@ -16,15 +16,15 @@
 
 package com.consol.citrus.mail.config.xml;
 
-import com.consol.citrus.channel.ChannelEndpointAdapter;
+import java.util.Map;
+
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.mail.server.MailServer;
 import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -45,7 +45,7 @@ public class MailServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isSplitMultipart());
         Assert.assertTrue(server.isAutoAccept());
-        Assert.assertEquals(server.getEndpointAdapter().getClass(), ChannelEndpointAdapter.class);
+        Assert.assertEquals(server.getEndpointAdapter().getClass(), DirectEndpointAdapter.class);
         Assert.assertTrue(server.getJavaMailProperties().isEmpty());
 
         // 2nd mail server

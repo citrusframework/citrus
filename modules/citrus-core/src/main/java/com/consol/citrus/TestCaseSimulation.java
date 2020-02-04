@@ -22,7 +22,7 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class TestCaseSimulation extends TestCase {
+public class TestCaseSimulation extends DefaultTestCase {
 
     /**
      * Default constructor.

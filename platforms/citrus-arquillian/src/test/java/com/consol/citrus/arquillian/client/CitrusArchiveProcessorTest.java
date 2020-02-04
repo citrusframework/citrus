@@ -16,7 +16,11 @@
 
 package com.consol.citrus.arquillian.client;
 
+import java.lang.reflect.Field;
+import java.util.Properties;
+
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusVersion;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import org.jboss.arquillian.core.api.Instance;
@@ -38,9 +42,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.lang.reflect.Field;
-import java.util.Properties;
-
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -53,9 +54,9 @@ public class CitrusArchiveProcessorTest {
 
     @BeforeClass
     public void setCitrusVersion() {
-        Field version = ReflectionUtils.findField(Citrus.class, "version");
+        Field version = ReflectionUtils.findField(CitrusVersion.class, "version");
         ReflectionUtils.makeAccessible(version);
-        ReflectionUtils.setField(version, Citrus.class, "3.0-SNAPSHOT");
+        ReflectionUtils.setField(version, CitrusVersion.class, "3.0-SNAPSHOT");
     }
 
     @BeforeMethod

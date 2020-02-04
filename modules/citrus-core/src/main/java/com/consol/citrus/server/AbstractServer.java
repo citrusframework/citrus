@@ -16,38 +16,46 @@
 
 package com.consol.citrus.server;
 
-import com.consol.citrus.channel.*;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.context.TestContextFactory;
-import com.consol.citrus.endpoint.*;
+import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
+import com.consol.citrus.endpoint.direct.DirectSyncEndpointConfiguration;
+import com.consol.citrus.message.DefaultMessageQueue;
+import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.*;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.DisposableBean;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Abstract base class for {@link Server} implementations.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractServer extends AbstractEndpoint implements Server, InitializingBean, DisposableBean, BeanFactoryAware {
 
-    /** Default channel suffix */
+    /** Default in memory queue suffix */
     public static final String DEFAULT_CHANNEL_ID_SUFFIX = ".inbound";
 
     /** Running flag */
     private boolean running = false;
-    
+
     /** Autostart server after properties are set */
     private boolean autoStart = false;
-    
+
     /** Thread running the server */
     private Thread thread;
-    
+
     /**  Monitor for startup and running lifecycle */
     private final Object runningLock = new Object();
 
@@ -66,7 +74,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     @Autowired
     private TestContextFactory testContextFactory;
 
-    /** Inbound channel debug logging */
+    /** Inbound memory queue debug logging */
     private boolean debugLogging = false;
 
     /** Logger */
@@ -79,47 +87,43 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
         super(null);
     }
 
-    /**
-     * @see com.consol.citrus.server.Server#start()
-     */
+    @Override
     public void start() {
         if (log.isDebugEnabled()) {
             log.debug("Starting server: " + getName() + " ...");
         }
-            
+
         startup();
-        
+
         synchronized (runningLock) {
             running = true;
         }
-        
+
         thread = new Thread(this);
         thread.setDaemon(false);
         thread.start();
-        
+
         log.info("Started server: " + getName());
     }
 
-    /**
-     * @see com.consol.citrus.server.Server#stop()
-     */
+    @Override
     public void stop() {
         if (log.isDebugEnabled()) {
             log.debug("Stopping server: " + getName() + " ...");
         }
-        
+
         shutdown();
-        
+
         synchronized (runningLock) {
             running = false;
         }
-        
+
         thread = null;
-        
+
         log.info("Stopped server: " + getName());
     }
-    
-    /** 
+
+    /**
      * Subclasses may overwrite this method in order to add special execution logic.
      */
     public void run() {}
@@ -128,32 +132,31 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
      * Subclasses must implement this method called on server startup.
      */
     protected abstract void startup();
-    
+
     /**
      * Subclasses must implement this method called on server shutdown.
      */
     protected abstract void shutdown();
-    
+
     @Override
     public void afterPropertiesSet() throws Exception {
         if (endpointAdapter == null) {
-            /* The server inbound channel */
-            MessageSelectingQueueChannel inboundChannel;
+            /* The server inbound queue */
+            MessageQueue inboundQueue;
             if (beanFactory != null && beanFactory.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
-                inboundChannel = beanFactory.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageSelectingQueueChannel.class);
+                inboundQueue = beanFactory.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageQueue.class);
             } else {
-                inboundChannel = new MessageSelectingQueueChannel();
-                inboundChannel.setBeanName(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
+                inboundQueue = new DefaultMessageQueue();
             }
 
-            inboundChannel.setLoggingEnabled(debugLogging);
+            if (inboundQueue instanceof DefaultMessageQueue) {
+                ((DefaultMessageQueue) inboundQueue).setLoggingEnabled(debugLogging);
+            }
 
-            ChannelSyncEndpointConfiguration channelEndpointConfiguration = new ChannelSyncEndpointConfiguration();
-            channelEndpointConfiguration.setChannel(inboundChannel);
-            channelEndpointConfiguration.setBeanFactory(getBeanFactory());
-            channelEndpointConfiguration.setTimeout(defaultTimeout);
-            channelEndpointConfiguration.setUseObjectMessages(true);
-            endpointAdapter = new ChannelEndpointAdapter(channelEndpointConfiguration);
+            DirectSyncEndpointConfiguration directEndpointConfiguration = new DirectSyncEndpointConfiguration();
+            directEndpointConfiguration.setQueue(inboundQueue);
+            directEndpointConfiguration.setTimeout(defaultTimeout);
+            endpointAdapter = new DirectEndpointAdapter(directEndpointConfiguration);
             endpointAdapter.getEndpoint().setName(getName());
 
             if (testContextFactory == null) {
@@ -166,14 +169,14 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
                 }
             }
 
-            ((ChannelEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
+            ((DirectEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
         }
 
         if (autoStart && !isRunning()) {
             start();
         }
     }
-    
+
     /**
      * @see org.springframework.beans.factory.DisposableBean#destroy()
      */

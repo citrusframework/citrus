@@ -16,16 +16,16 @@
 
 package com.consol.citrus.generate.javadsl;
 
-import com.consol.citrus.Citrus;
+import java.io.File;
+import java.io.IOException;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -46,10 +46,10 @@ public class MessagingJavaTestGeneratorTest {
         generator.withResponse(new DefaultMessage("<TestResponse><Message>Hell Ya!</Message></TestResponse>"));
 
         generator.create();
-        
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleReqResIT.java");
+
+        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleReqResIT.java");
         Assert.assertTrue(javaFile.exists());
-        
+
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));

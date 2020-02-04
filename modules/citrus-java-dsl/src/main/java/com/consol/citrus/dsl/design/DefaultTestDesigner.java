@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -96,7 +97,7 @@ import org.springframework.core.io.Resource;
 public class DefaultTestDesigner implements TestDesigner {
 
     /** This builders test case */
-    private final TestCase testCase;
+    private final DefaultTestCase testCase;
 
     /** This runners test context */
     private TestContext context;
@@ -109,7 +110,7 @@ public class DefaultTestDesigner implements TestDesigner {
 
     /** Default constructor */
     public DefaultTestDesigner() {
-        testCase = new TestCase();
+        testCase = new DefaultTestCase();
         testClass(this.getClass());
         name(this.getClass().getSimpleName());
         packageName(this.getClass().getPackage().getName());
@@ -119,7 +120,7 @@ public class DefaultTestDesigner implements TestDesigner {
      * Constructor initializing test case.
      * @param testCase
      */
-    protected DefaultTestDesigner(TestCase testCase) {
+    protected DefaultTestDesigner(DefaultTestCase testCase) {
         this.testCase = testCase;
     }
 

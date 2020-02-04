@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
@@ -166,7 +166,7 @@ public class HttpMessage extends DefaultMessage {
      * @return The altered HttpMessage
      */
     public HttpMessage uri(final String requestUri) {
-        setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, requestUri);
+        setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, requestUri);
         setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, requestUri);
         return this;
     }
@@ -213,7 +213,7 @@ public class HttpMessage extends DefaultMessage {
      */
     public HttpMessage queryParams(final String queryParamString) {
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
-        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
+        header(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         Stream.of(queryParamString.split(","))
                 .map(keyValue -> Optional.ofNullable(StringUtils.split(keyValue, "=")).orElse(new String[]{keyValue, ""}))
@@ -253,7 +253,7 @@ public class HttpMessage extends DefaultMessage {
                 .collect(Collectors.joining(","));
 
         header(HttpMessageHeaders.HTTP_QUERY_PARAMS, queryParamString);
-        header(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
+        header(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         return this;
     }
@@ -268,7 +268,7 @@ public class HttpMessage extends DefaultMessage {
      */
     public HttpMessage path(final String path) {
         header(HttpMessageHeaders.HTTP_REQUEST_URI, path);
-        header(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
+        header(EndpointUriResolver.REQUEST_PATH_HEADER_NAME, path);
         return this;
     }
 
@@ -443,7 +443,7 @@ public class HttpMessage extends DefaultMessage {
      * @return The request path of the message
      */
     public String getPath() {
-        final Object path = getHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME);
+        final Object path = getHeader(EndpointUriResolver.REQUEST_PATH_HEADER_NAME);
 
         if (path != null) {
             return path.toString();

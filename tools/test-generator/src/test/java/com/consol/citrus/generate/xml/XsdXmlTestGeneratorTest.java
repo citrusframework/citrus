@@ -16,7 +16,10 @@
 
 package com.consol.citrus.generate.xml;
 
-import com.consol.citrus.Citrus;
+import java.io.File;
+import java.io.IOException;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.util.FileUtils;
@@ -24,9 +27,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -49,10 +49,10 @@ public class XsdXmlTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
+        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloIT.xml");
+        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
@@ -98,10 +98,10 @@ public class XsdXmlTestGeneratorTest {
 
         generator.create();
 
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
+        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/HelloIT.java");
         Assert.assertTrue(javaFile.exists());
 
-        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloIT.xml");
+        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/HelloIT.xml");
         Assert.assertTrue(xmlFile.exists());
 
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));

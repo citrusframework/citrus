@@ -16,13 +16,13 @@
 
 package com.consol.citrus.ssh.config.xml;
 
-import com.consol.citrus.channel.ChannelEndpointAdapter;
+import java.util.Map;
+
+import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Roland Huss, Christoph Deppisch
@@ -45,7 +45,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNull(server.getUserHomePath());
         Assert.assertNull(server.getUser());
         Assert.assertNull(server.getPassword());
-        Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertTrue(server.getEndpointAdapter() instanceof DirectEndpointAdapter);
         Assert.assertNotNull(server.getMessageConverter());
         Assert.assertNull(server.getActor());
 
@@ -59,7 +59,7 @@ public class SshServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getUserHomePath(), "/home/user");
         Assert.assertEquals(server.getUser(), "foo");
         Assert.assertEquals(server.getPassword(), "bar");
-        Assert.assertTrue(server.getEndpointAdapter() instanceof ChannelEndpointAdapter);
+        Assert.assertTrue(server.getEndpointAdapter() instanceof DirectEndpointAdapter);
         Assert.assertEquals(server.getMessageConverter(), beanDefinitionContext.getBean("sshMessageConverter"));
         Assert.assertNull(server.getActor());
 

@@ -16,7 +16,19 @@
 
 package com.consol.citrus.jms.message;
 
-import com.consol.citrus.Citrus;
+import javax.jms.Message;
+import javax.jms.Session;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
@@ -29,15 +41,12 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
-import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.xml.transform.StringResult;
 import org.springframework.xml.transform.StringSource;
-
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.xml.transform.*;
-import java.io.*;
-import java.util.Iterator;
 
 /**
  * Special message converter automatically adds SOAP envelope with proper SOAP header and body elements.
@@ -72,7 +81,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     public com.consol.citrus.message.Message convertInbound(Message jmsMessage, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         try {
             com.consol.citrus.message.Message message = super.convertInbound(jmsMessage, endpointConfiguration, context);
-            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(Citrus.CITRUS_FILE_ENCODING));
+            ByteArrayInputStream in = new ByteArrayInputStream(message.getPayload(String.class).getBytes(CitrusSettings.CITRUS_FILE_ENCODING));
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage(in);
 
             StringResult payload = new StringResult();

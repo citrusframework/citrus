@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
@@ -322,7 +322,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
 
     protected void validateSingleValue(String columnName, String controlValue, String resultValue, TestContext context) {
         // check if value is ignored
-        if (controlValue.equals(Citrus.IGNORE_PLACEHOLDER)) {
+        if (controlValue.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Ignoring column value '" + columnName + "(resultValue)'");
             }

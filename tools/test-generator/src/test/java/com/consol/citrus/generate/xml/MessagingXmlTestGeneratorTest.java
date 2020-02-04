@@ -16,16 +16,16 @@
 
 package com.consol.citrus.generate.xml;
 
-import com.consol.citrus.Citrus;
+import java.io.File;
+import java.io.IOException;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.generate.UnitFramework;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -46,20 +46,20 @@ public class MessagingXmlTestGeneratorTest {
         generator.withResponse(new DefaultMessage("<TestResponse><Message>Hell Ya!</Message></TestResponse>"));
 
         generator.create();
-        
-        File javaFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleReqResIT.java");
+
+        File javaFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "java/com/consol/citrus/SampleReqResIT.java");
         Assert.assertTrue(javaFile.exists());
-        
-        File xmlFile = new File(Citrus.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleReqResIT.xml");
+
+        File xmlFile = new File(CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY + "resources/com/consol/citrus/SampleReqResIT.xml");
         Assert.assertTrue(xmlFile.exists());
-        
+
         String javaContent = FileUtils.readToString(new FileSystemResource(javaFile));
         Assert.assertTrue(javaContent.contains("@author Christoph"));
         Assert.assertTrue(javaContent.contains("public class SampleReqResIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
         Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
-        
+
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
         Assert.assertTrue(xmlContent.contains("<description>This is a sample test</description>"));

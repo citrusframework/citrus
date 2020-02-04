@@ -16,13 +16,13 @@
 
 package com.consol.citrus.generate;
 
-import com.consol.citrus.Citrus;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+
+import com.consol.citrus.CitrusSettings;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
@@ -46,7 +46,7 @@ public abstract class AbstractTestGenerator<T extends TestGenerator> implements 
     private String targetPackage;
 
     /** Source directory for tests */
-    private String srcDirectory = Citrus.DEFAULT_TEST_SRC_DIRECTORY;
+    private String srcDirectory = CitrusSettings.DEFAULT_TEST_SRC_DIRECTORY;
 
     /** Target unit testing framework */
     private UnitFramework framework;

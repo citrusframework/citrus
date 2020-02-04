@@ -16,7 +16,12 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.Citrus;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
@@ -24,11 +29,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Endpoint adapter always returns a static response message.
@@ -45,7 +45,7 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
     private String messagePayloadResource;
 
     /** Charset applied to payload resource */
-    private String messagePayloadResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+    private String messagePayloadResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
 
     /** Response message header */
     private Map<String, Object> messageHeader = new HashMap<String, Object>();

@@ -16,7 +16,20 @@
 
 package com.consol.citrus.testng;
 
-import com.consol.citrus.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
+import com.consol.citrus.TestGroupAware;
+import com.consol.citrus.TestParameterAware;
+import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.common.TestLoader;
@@ -32,16 +45,20 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
-import org.springframework.util.*;
-import org.testng.*;
-import org.testng.annotations.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
-import java.util.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
+import org.testng.IHookCallBack;
+import org.testng.ITestContext;
+import org.testng.ITestNGMethod;
+import org.testng.ITestResult;
+import org.testng.Reporter;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
 
 /**
  * Abstract base test implementation for testng test cases. Providing test listener support and
@@ -103,7 +120,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
 
         TestContext ctx = prepareTestContext(citrus.createTestContext());
         TestCase testCase = testLoader.load();
-        testCase.setGroups(testResult.getMethod().getGroups());
+
+        if (testCase instanceof TestGroupAware) {
+            ((TestGroupAware) testCase).setGroups(testResult.getMethod().getGroups());
+        }
 
         invokeTestMethod(testResult, method, testCase, ctx, invocationCount);
     }
@@ -251,7 +271,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
                             if (packageScan.startsWith("file:")) {
                                 filePath = "file:" + filePath;
                             }
-                            
+
                             filePath = filePath.substring(filePath.indexOf(packageScan.replace('.', File.separatorChar)));
 
                             methodTestLoaders.add(createTestLoader(fileResource.getFilename().substring(0, fileResource.getFilename().length() - ".xml".length()), filePath));
@@ -307,7 +327,10 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         TestContext context = prepareTestContext(citrus.createTestContext());
         TestLoader testLoader = createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName());
         TestCase testCase = testLoader.load();
-        testCase.setGroups(testNGMethod.getGroups());
+
+        if (testCase instanceof TestGroupAware) {
+            ((TestGroupAware) testCase).setGroups(testNGMethod.getGroups());
+        }
 
         resolveParameter(result, testNGMethod.getConstructorOrMethod().getMethod(), testCase, context, testNGMethod.getCurrentInvocationCount());
 
@@ -353,7 +376,9 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
      * @param testCase the constructed Citrus test.
      */
     protected void injectTestParameters(Method method, TestCase testCase, Object[] parameterValues) {
-        testCase.setParameters(getParameterNames(method), parameterValues);
+        if (testCase instanceof TestParameterAware) {
+            ((TestParameterAware) testCase).setParameters(getParameterNames(method), parameterValues);
+        }
     }
 
     /**

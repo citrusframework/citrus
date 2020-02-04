@@ -36,7 +36,7 @@ public class DynamicEndpointUriResolverTest {
         Message testMessage;
 
         testMessage = createTestMessage()
-                .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, "http://localhost:8080/request");
+                .setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, "http://localhost:8080/request");
 
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), "http://localhost:8080/request");
     }
@@ -46,8 +46,8 @@ public class DynamicEndpointUriResolverTest {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
         Message testMessage = createTestMessage()
-                    .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, endpointUri)
-                    .setHeader(DynamicEndpointUriResolver.REQUEST_PATH_HEADER_NAME, requestPath);
+                    .setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, endpointUri)
+                    .setHeader(EndpointUriResolver.REQUEST_PATH_HEADER_NAME, requestPath);
 
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), expected);
     }
@@ -69,8 +69,8 @@ public class DynamicEndpointUriResolverTest {
         DynamicEndpointUriResolver endpointUriResolver = new DynamicEndpointUriResolver();
 
         Message testMessage = createTestMessage()
-                    .setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, endpointUri)
-                    .setHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
+                    .setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, endpointUri)
+                    .setHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME, queryParamString);
 
         Assert.assertEquals(endpointUriResolver.resolveEndpointUri(testMessage, "http://localhost:8080/default"), expected);
     }
@@ -107,7 +107,7 @@ public class DynamicEndpointUriResolverTest {
             endpointUriResolver.resolveEndpointUri(testMessage, null);
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to resolve dynamic endpoint uri"));
-            Assert.assertTrue(e.getMessage().contains(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
+            Assert.assertTrue(e.getMessage().contains(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME));
             return;
         }
 

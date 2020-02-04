@@ -19,7 +19,7 @@ package com.consol.citrus.http.config.xml;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
-import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
@@ -64,7 +64,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             if (!element.hasAttribute("client")) {
                 builder.addPropertyValue("endpointUri", element.getAttribute("uri"));
             } else {
-                httpMessage.setHeader(DynamicEndpointUriResolver.ENDPOINT_URI_HEADER_NAME, element.getAttribute("uri"));
+                httpMessage.setHeader(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME, element.getAttribute("uri"));
             }
         }
 

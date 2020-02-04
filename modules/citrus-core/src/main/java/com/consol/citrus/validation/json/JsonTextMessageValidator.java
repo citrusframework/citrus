@@ -16,7 +16,12 @@
 
 package com.consol.citrus.validation.json;
 
-import com.consol.citrus.Citrus;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -42,21 +47,16 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 /**
  * This message validator implementation is able to validate two JSON text objects. The order of JSON entries can differ
  * as specified in JSON protocol. Tester defines an expected control JSON text with optional ignored entries.
- * 
+ *
  * JSONArray as well as nested JSONObjects are supported, too.
  *
  * Validator offers two different modes to operate. By default strict mode is set and the validator will also check the exact amount of
  * control object fields to match. No additional fields in received JSON data structure will be accepted. In soft mode validator
  * allows additional fields in received JSON data structure so the control JSON object can be a partial subset.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessageValidationContext> implements ApplicationContextAware {
@@ -96,7 +96,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
         String receivedJsonText = receivedMessage.getPayload(String.class);
         String controlJsonText = context.replaceDynamicContentInString(controlMessage.getPayload(String.class));
-        
+
         try {
             if (!StringUtils.hasText(controlJsonText)) {
                 log.debug("Skip message payload validation as no control message was defined");
@@ -105,9 +105,9 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                 Assert.isTrue(StringUtils.hasText(receivedJsonText), "Validation failed - " +
                 		"expected message contents, but received empty message!");
             }
-            
+
             JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
-        
+
             Object receivedJson = parser.parse(receivedJsonText);
             ReadContext readContext = JsonPath.parse(receivedJson);
             Object controlJson = parser.parse(controlJsonText);
@@ -118,7 +118,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
                 tempReceived.put("array", receivedJson);
                 JSONObject tempControl = new JSONObject();
                 tempControl.put("array", controlJson);
-                
+
                 validateJson("$.", tempReceived, tempControl, validationContext, context, readContext);
             } else {
                 throw new CitrusRuntimeException("Unsupported json type " + receivedJson.getClass());
@@ -128,7 +128,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
-        
+
         log.info("JSON message validation successful: All values OK");
     }
 
@@ -156,7 +156,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
     /**
      * Validates JSON text with comparison to expected control JSON object.
      * JSON entries can be ignored with ignore placeholder.
-     * 
+     *
      * @param elementName the current element name that is under verification in this method
      * @param receivedJson the received JSON text object.
      * @param controlJson the expected control JSON text.
@@ -264,10 +264,10 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
      * @return
      */
     public boolean isIgnored(String controlKey, Object controlValue, Object receivedJson, Set<String> ignoreExpressions, ReadContext readContext) {
-        if (controlValue != null && controlValue.toString().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
+        if (controlValue != null && controlValue.toString().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("JSON entry: '" + controlKey + "' is ignored by placeholder '" +
-                        Citrus.IGNORE_PLACEHOLDER + "'");
+                        CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
             return true;
         }

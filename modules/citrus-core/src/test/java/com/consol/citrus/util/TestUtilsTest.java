@@ -19,8 +19,8 @@ package com.consol.citrus.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestAction;
-import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.TestActionContainer;
@@ -38,7 +38,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFirstActionFailing() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
@@ -77,7 +77,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testNestedContainerBeforeFailedAction() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
@@ -115,7 +115,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMiddleActionFailing() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
@@ -153,7 +153,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testActionFailingInContainer() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
@@ -196,7 +196,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
     }
 
     public void testActionFailingInContainerHierarchy() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
@@ -247,7 +247,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testContainerItselfFailing() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 
@@ -292,7 +292,7 @@ public class TestUtilsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testLastActionFailing() {
-        TestCase test = new TestCase();
+        DefaultTestCase test = new DefaultTestCase();
         test.setPackageName("com.consol.citrus.util");
         test.setName("FailureStackExampleTest");
 

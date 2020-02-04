@@ -16,14 +16,15 @@
 
 package com.consol.citrus.common;
 
+import java.io.File;
+
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContextFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.util.StringUtils;
-
-import java.io.File;
 
 /**
  * Loads test case as Spring bean from XML application context file. Loader holds application context file
@@ -63,8 +64,11 @@ public class XmlTestLoader implements TestLoader {
 
             try {
                 testCase = ctx.getBean(testName, TestCase.class);
-                testCase.setTestClass(testClass);
-                testCase.setPackageName(packageName);
+
+                if (testCase instanceof DefaultTestCase) {
+                    ((DefaultTestCase) testCase).setTestClass(testClass);
+                    ((DefaultTestCase) testCase).setPackageName(packageName);
+                }
             } catch (NoSuchBeanDefinitionException e) {
                 throw parentContext.getBean(TestContextFactory.class).getObject()
                         .handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);

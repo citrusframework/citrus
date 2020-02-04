@@ -21,7 +21,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.channel.ChannelEndpointConfiguration;
@@ -1579,7 +1580,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         TestContext newContext = createTestContext();
         newContext.setMessageValidatorRegistry(messageValidatorRegistry);
 
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(Citrus.DEFAULT_MESSAGE_TYPE);
+        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1593,7 +1594,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testDisabledReceiveMessage() {
-        TestCase testCase = new TestCase();
+        TestCase testCase = new DefaultTestCase();
 
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
@@ -1622,7 +1623,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testDisabledReceiveMessageByEndpointActor() {
-        TestCase testCase = new TestCase();
+        TestCase testCase = new DefaultTestCase();
 
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);

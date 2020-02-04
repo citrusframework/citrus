@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.util.ValidateMessageParserUtil;
@@ -70,7 +70,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", element.getLocalName());
 
-        if (endpointUri.contains(":") || (endpointUri.contains(Citrus.VARIABLE_PREFIX) && endpointUri.contains(Citrus.VARIABLE_SUFFIX))) {
+        if (endpointUri.contains(":") || (endpointUri.contains(CitrusSettings.VARIABLE_PREFIX) && endpointUri.contains(CitrusSettings.VARIABLE_SUFFIX))) {
             builder.addPropertyValue("endpointUri", endpointUri);
         } else {
             builder.addPropertyReference("endpoint", endpointUri);
@@ -111,7 +111,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         if (messageElement != null) {
             String messageType = messageElement.getAttribute("type");
             if (!StringUtils.hasText(messageType)) {
-                messageType = Citrus.DEFAULT_MESSAGE_TYPE;
+                messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
             } else {
                 builder.addPropertyValue("messageType", messageType);
             }

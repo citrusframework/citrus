@@ -16,7 +16,10 @@
 
 package com.consol.citrus.validation.xml;
 
-import com.consol.citrus.Citrus;
+import javax.xml.namespace.NamespaceContext;
+import java.util.Set;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
@@ -25,9 +28,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import javax.xml.namespace.NamespaceContext;
-import java.util.Set;
 
 /**
  * @author Christoph Deppisch
@@ -62,10 +62,10 @@ public abstract class XmlValidationUtils {
             return true;
         } else if (source.getFirstChild() != null &&
                 StringUtils.hasText(source.getFirstChild().getNodeValue()) &&
-                source.getFirstChild().getNodeValue().trim().equals(Citrus.IGNORE_PLACEHOLDER)) {
+                source.getFirstChild().getNodeValue().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             if (log.isDebugEnabled()) {
                 log.debug("Element: '" + received.getLocalName() + "' is ignored by placeholder '" +
-                        Citrus.IGNORE_PLACEHOLDER + "'");
+                        CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
             return true;
         }
@@ -147,10 +147,10 @@ public abstract class XmlValidationUtils {
 
             return true;
         } else if ((StringUtils.hasText(sourceAttribute.getNodeValue()) &&
-                sourceAttribute.getNodeValue().trim().equals(Citrus.IGNORE_PLACEHOLDER))) {
+                sourceAttribute.getNodeValue().trim().equals(CitrusSettings.IGNORE_PLACEHOLDER))) {
             if (log.isDebugEnabled()) {
                 log.debug("Attribute: '" + receivedAttribute.getLocalName() + "' is ignored by placeholder '" +
-                        Citrus.IGNORE_PLACEHOLDER + "'");
+                        CitrusSettings.IGNORE_PLACEHOLDER + "'");
             }
 
             return true;

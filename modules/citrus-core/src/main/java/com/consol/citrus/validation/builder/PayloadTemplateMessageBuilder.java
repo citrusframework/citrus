@@ -16,16 +16,16 @@
 
 package com.consol.citrus.validation.builder;
 
-import com.consol.citrus.Citrus;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.interceptor.BinaryMessageConstructionInterceptor;
 import com.consol.citrus.validation.interceptor.GzipMessageConstructionInterceptor;
 import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +36,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
     private String payloadResourcePath;
 
     /** Charset applied to payload resource */
-    private String payloadResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+    private String payloadResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
 
     /** Direct string representation of message payload */
     private String payloadData;
@@ -48,7 +48,7 @@ public class PayloadTemplateMessageBuilder extends AbstractMessageContentBuilder
     /** Message construction interceptor for binary messages */
     private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor =
             new BinaryMessageConstructionInterceptor();
-    
+
     /**
      * Build the control message from payload file resource or String data.
      */

@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
@@ -895,7 +896,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testDisabledSendMessage() {
-        TestCase testCase = new TestCase();
+        TestCase testCase = new DefaultTestCase();
 
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);
@@ -920,7 +921,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testDisabledSendMessageByEndpointActor() {
-        TestCase testCase = new TestCase();
+        TestCase testCase = new DefaultTestCase();
 
         TestActor disabledActor = new TestActor();
         disabledActor.setDisabled(true);

@@ -16,7 +16,10 @@
 
 package com.consol.citrus.validation.text;
 
-import com.consol.citrus.Citrus;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
@@ -27,12 +30,9 @@ import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 /**
  * Plain text validator using simple String comparison.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class PlainTextMessageValidator extends DefaultMessageValidator {
@@ -56,7 +56,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         }
 
         log.debug("Start text message validation");
-        
+
         if (log.isDebugEnabled()) {
             log.debug("Received message:\n" + receivedMessage);
             log.debug("Control message:\n" + controlMessage);
@@ -78,7 +78,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate text content", e);
         }
-        
+
         log.info("Text validation successful: All values OK");
     }
 
@@ -90,7 +90,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
      * @return
      */
     private String processIgnoreStatements(String control, String result) {
-        if (control.equals(Citrus.IGNORE_PLACEHOLDER)) {
+        if (control.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             return control;
         }
 
@@ -136,7 +136,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
      * @return
      */
     private String processVariableStatements(String control, String result, TestContext context) {
-        if (control.equals(Citrus.IGNORE_PLACEHOLDER)) {
+        if (control.equals(CitrusSettings.IGNORE_PLACEHOLDER)) {
             return control;
         }
 
@@ -161,7 +161,7 @@ public class PlainTextMessageValidator extends DefaultMessageValidator {
 
     /**
      * Compares two string with each other in order to validate plain text.
-     * 
+     *
      * @param receivedMessagePayload
      * @param controlMessagePayload
      */

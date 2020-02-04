@@ -16,7 +16,10 @@
 
 package com.consol.citrus.validation.script;
 
-import com.consol.citrus.Citrus;
+import java.io.IOException;
+import java.nio.charset.Charset;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
@@ -27,33 +30,30 @@ import org.codehaus.groovy.control.CompilationFailedException;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
-import java.nio.charset.Charset;
-
 /**
  * Builds a control message from Groovy code with markup builder support.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
 
     /** Default path to script template */
     private Resource scriptTemplateResource = new ClassPathResource("com/consol/citrus/script/markup-builder-template.groovy");
-    
+
     /** Control message payload defined in external file resource as Groovy MarkupBuilder script */
     private String scriptResourcePath;
 
     /** Charset applied to payload resource */
-    private String scriptResourceCharset = Citrus.CITRUS_FILE_ENCODING;
+    private String scriptResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
 
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
-    
+
     /**
      * Build the control message from script code.
      */
     public String buildMessagePayload(TestContext context, String messageType) {
-        try {    
+        try {
             //construct control message payload
             String messagePayload = "";
             if (scriptResourcePath != null) {
@@ -62,32 +62,32 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
             } else if (scriptData != null) {
                 messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
             }
-            
+
             return messagePayload;
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
         }
     }
-    
+
     /**
      * Builds an automatic Groovy MarkupBuilder script with given script body.
-     * 
+     *
      * @param scriptData
      * @return
      */
     private String buildMarkupBuilderScript(String scriptData) {
         try {
-            ClassLoader parent = GroovyScriptMessageBuilder.class.getClassLoader(); 
+            ClassLoader parent = GroovyScriptMessageBuilder.class.getClassLoader();
             GroovyClassLoader loader = new GroovyClassLoader(parent);
-            
+
             Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                             .withCode(scriptData)
                                                             .build());
-            
+
             if (groovyClass == null) {
-                throw new CitrusRuntimeException("Could not load groovy script!");    
+                throw new CitrusRuntimeException("Could not load groovy script!");
             }
-            
+
             GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
             return (String) groovyObject.invokeMethod("run", new Object[] {});
         } catch (CompilationFailedException e) {

@@ -17,16 +17,23 @@
 package com.consol.citrus.util;
 
 
+import javax.xml.XMLConstants;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
+
+import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.w3c.dom.*;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
-import javax.xml.XMLConstants;
-import java.io.*;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -162,7 +169,7 @@ public class XMLUtilsTest {
 
         int lines = 0;
         BufferedReader reader = null;
-        
+
         String prettyprint = XMLUtils.prettyPrint(xml);
         try {
             reader = new BufferedReader(new StringReader(prettyprint));
@@ -174,7 +181,7 @@ public class XMLUtilsTest {
                 reader.close();
             }
         }
-        
+
         Assert.assertTrue(prettyprint.startsWith("<?xml version=\"1.0\" encoding=\"UTF-8\"?>"));
         Assert.assertTrue(lines > 0);
     }
@@ -183,13 +190,13 @@ public class XMLUtilsTest {
     public void testLookupNamespacesInXMLFragment() {
         Map<String, String> namespaces;
 
-        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
         Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
 
-        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/xmlns/test\" xmlns:ns2=\"http://www.consol.de/xmlns/test2\"></ns1:testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/xmlns/test\" xmlns:ns2=\"http://www.consol.de/xmlns/test2\"></ns1:testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
@@ -214,19 +221,19 @@ public class XMLUtilsTest {
     public void testLookupNamespacesInXMLFragmentSingleQuotes() {
         Map<String, String> namespaces;
 
-        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1='http://www.consol.de/test' xmlns:ns2='http://www.consol.de/test2'></ns1:testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1='http://www.consol.de/test' xmlns:ns2='http://www.consol.de/test2'></ns1:testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
         Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
 
-        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" xmlns:ns2='http://www.consol.de/test2'></ns1:testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" xmlns:ns2='http://www.consol.de/test2'></ns1:testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
         Assert.assertEquals(namespaces.get("ns2"), "http://www.consol.de/test2");
 
-        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1='http://www.consol.de/xmlns/test' xmlns:ns2='http://www.consol.de/xmlns/test2'></ns1:testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1='http://www.consol.de/xmlns/test' xmlns:ns2='http://www.consol.de/xmlns/test2'></ns1:testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/xmlns/test");
@@ -258,7 +265,7 @@ public class XMLUtilsTest {
     public void testLookupNamespacesInXMLFragmentWithAtributes() {
         Map<String, String> namespaces;
 
-        namespaces = XMLUtils.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" id=\"123456789\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<ns1:testRequest xmlns:ns1=\"http://www.consol.de/test\" id=\"123456789\" xmlns:ns2=\"http://www.consol.de/test2\"></ns1:testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
@@ -276,23 +283,23 @@ public class XMLUtilsTest {
     public void testLookupNamespacesInXMLFragmentDefaultNamespaces() {
         Map<String, String> namespaces;
 
-        namespaces = XMLUtils.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/test-default\"></testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/test-default\"></testRequest>");
 
         Assert.assertEquals(namespaces.size(), 1);
         Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/test-default");
 
-        namespaces = XMLUtils.lookupNamespaces("<testRequest xmlns='http://www.consol.de/test-default'></testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns='http://www.consol.de/test-default'></testRequest>");
 
         Assert.assertEquals(namespaces.size(), 1);
         Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/test-default");
 
-        namespaces = XMLUtils.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/test-default\" xmlns:ns1=\"http://www.consol.de/test\"></testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/test-default\" xmlns:ns1=\"http://www.consol.de/test\"></testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/test-default");
         Assert.assertEquals(namespaces.get("ns1"), "http://www.consol.de/test");
 
-        namespaces = XMLUtils.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/xmlns/test-default\" xmlns:ns1=\"http://www.consol.de/xmlns/test\"></testRequest>");
+        namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest xmlns=\"http://www.consol.de/xmlns/test-default\" xmlns:ns1=\"http://www.consol.de/xmlns/test\"></testRequest>");
 
         Assert.assertEquals(namespaces.size(), 2);
         Assert.assertEquals(namespaces.get(XMLConstants.DEFAULT_NS_PREFIX), "http://www.consol.de/xmlns/test-default");
@@ -327,7 +334,7 @@ public class XMLUtilsTest {
 
     @Test
     public void testLookupNamespacesInXMLFragmentNoNamespacesFound() {
-        Map<String, String> namespaces = XMLUtils.lookupNamespaces("<testRequest id=\"123456789\"></testRequest>");
+        Map<String, String> namespaces = NamespaceContextBuilder.lookupNamespaces("<testRequest id=\"123456789\"></testRequest>");
 
         Assert.assertEquals(namespaces.size(), 0);
     }

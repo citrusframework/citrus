@@ -19,7 +19,7 @@ package com.consol.citrus.container;
 import java.util.Properties;
 
 import com.consol.citrus.AbstractIteratingContainerBuilder;
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
@@ -93,10 +93,10 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
 
         // replace dynamic content with each iteration
         String conditionString = condition;
-        if (conditionString.indexOf(Citrus.VARIABLE_PREFIX + indexName + Citrus.VARIABLE_SUFFIX) != -1) {
+        if (conditionString.indexOf(CitrusSettings.VARIABLE_PREFIX + indexName + CitrusSettings.VARIABLE_SUFFIX) != -1) {
             Properties props = new Properties();
             props.put(indexName, String.valueOf(index));
-            conditionString = new PropertyPlaceholderHelper(Citrus.VARIABLE_PREFIX, Citrus.VARIABLE_SUFFIX).replacePlaceholders(conditionString, props);
+            conditionString = new PropertyPlaceholderHelper(CitrusSettings.VARIABLE_PREFIX, CitrusSettings.VARIABLE_SUFFIX).replacePlaceholders(conditionString, props);
         }
 
         conditionString = context.replaceDynamicContentInString(conditionString);

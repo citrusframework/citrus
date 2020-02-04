@@ -16,7 +16,7 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import org.springframework.http.HttpStatus;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -145,7 +145,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParams(queryParamString);
 
         //THEN
-        assertEquals(resultMessage.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), queryParamString);
+        assertEquals(resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), queryParamString);
     }
 
     @Test
@@ -206,7 +206,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam("bar", "barbar");
 
         //THEN
-        assertEquals(resultMessage.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
+        assertEquals(resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
     }
 
     @Test
@@ -221,7 +221,7 @@ public class HttpMessageTest {
         final HttpMessage resultMessage = httpMessage.queryParam("bar", "barbar");
 
         //THEN
-        assertEquals(resultMessage.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
+        assertEquals(resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
     }
 
     @Test
@@ -288,6 +288,6 @@ public class HttpMessageTest {
         final HttpMessage resultMessage= httpMessage.queryParam("foo", "foobar");
 
         //THEN
-        assertEquals(resultMessage.getHeader(DynamicEndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
+        assertEquals(resultMessage.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), expectedHeaderValue);
     }
 }

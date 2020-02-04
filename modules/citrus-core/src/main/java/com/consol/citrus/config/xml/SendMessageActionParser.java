@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
@@ -51,7 +51,7 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
         BeanDefinitionBuilder builder = parseComponent(element, parserContext);
         builder.addPropertyValue("name", element.getLocalName());
 
-        if (endpointUri.contains(":") || (endpointUri.contains(Citrus.VARIABLE_PREFIX) && endpointUri.contains(Citrus.VARIABLE_SUFFIX))) {
+        if (endpointUri.contains(":") || (endpointUri.contains(CitrusSettings.VARIABLE_PREFIX) && endpointUri.contains(CitrusSettings.VARIABLE_SUFFIX))) {
             builder.addPropertyValue("endpointUri", endpointUri);
         } else {
             builder.addPropertyReference("endpoint", endpointUri);

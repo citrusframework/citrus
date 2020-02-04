@@ -16,12 +16,32 @@
 
 package com.consol.citrus.mail.message;
 
-import com.consol.citrus.Citrus;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimePart;
+import javax.xml.transform.Source;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.mail.client.MailEndpointConfiguration;
-import com.consol.citrus.mail.model.*;
-import com.consol.citrus.message.*;
+import com.consol.citrus.mail.model.AttachmentPart;
+import com.consol.citrus.mail.model.BodyPart;
+import com.consol.citrus.mail.model.MailRequest;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.util.FileUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -31,16 +51,6 @@ import org.springframework.mail.javamail.MimeMailMessage;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
-
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimePart;
-import javax.xml.transform.Source;
-import java.io.*;
-import java.nio.charset.Charset;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -366,7 +376,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
     /**
      * Parses the charset definition from a "Content-Type" header value, e.g. text/plain; charset=UTF-8, and returns it exclusively.
      * @param contentType 'Content-Type' header value as String
-     * @return a charset information parsed from the Content-Type, or {@link Citrus#CITRUS_FILE_ENCODING} as default if there is no charset definition
+     * @return a charset information parsed from the Content-Type, or {@link CitrusSettings#CITRUS_FILE_ENCODING} as default if there is no charset definition
      */
     static String parseCharsetFromContentType(String contentType) {
         final String charsetPrefix = "charset=";
@@ -374,7 +384,7 @@ public class MailMessageConverter implements MessageConverter<MimeMailMessage, M
             String charsetName = org.apache.commons.lang.StringUtils.substringAfter(contentType, charsetPrefix);
             return org.apache.commons.lang.StringUtils.substringBefore(charsetName, ";");
         } else {
-            return Citrus.CITRUS_FILE_ENCODING;
+            return CitrusSettings.CITRUS_FILE_ENCODING;
         }
     }
 }

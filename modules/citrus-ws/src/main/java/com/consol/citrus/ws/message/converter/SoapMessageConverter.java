@@ -16,7 +16,26 @@
 
 package com.consol.citrus.ws.message.converter;
 
-import com.consol.citrus.Citrus;
+import javax.servlet.http.HttpServletRequest;
+import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeader;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -47,25 +66,6 @@ import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeader;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Map.Entry;
-
 /**
  * Default converter implementation for SOAP messages. By default strips away the SOAP envelope and constructs internal message representation
  * from incoming SOAP request messages. Response messages are created from internal message representation accordingly.
@@ -79,8 +79,8 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     private static Logger log = LoggerFactory.getLogger(SoapMessageConverter.class);
 
     /** Default payload source encoding */
-    private String charset = Citrus.CITRUS_FILE_ENCODING;
-    
+    private String charset = CitrusSettings.CITRUS_FILE_ENCODING;
+
     @Override
     public WebServiceMessage convertOutbound(final Message internalMessage,
                                              final WebServiceEndpointConfiguration endpointConfiguration,
@@ -258,9 +258,9 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
     }
 
     /**
-     * Reads all soap headers from web service message and 
+     * Reads all soap headers from web service message and
      * adds them to message builder as normal headers. Also takes care of soap action header.
-     * 
+     *
      * @param soapMessage the web service message.
      * @param message the response message builder.
      */
@@ -329,12 +329,12 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             log.warn("Unsupported SOAP message implementation - unable to set mime message header '" + name + "'");
         }
     }
-    
+
     /**
      * Adds mime headers to constructed response message. This can be HTTP headers in case
-     * of HTTP transport. Note: HTTP headers may have multiple values that are represented as 
+     * of HTTP transport. Note: HTTP headers may have multiple values that are represented as
      * comma delimited string value.
-     * 
+     *
      * @param soapMessage the source SOAP message.
      * @param message the message build constructing the result message.
      */
@@ -342,7 +342,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                                             final SoapMessage message) {
         final Map<String, String> mimeHeaders = new HashMap<String, String>();
         MimeHeaders messageMimeHeaders = null;
-        
+
         // to get access to mime headers we need to get implementation specific here
         if (soapMessage instanceof SaajSoapMessage) {
             messageMimeHeaders = ((SaajSoapMessage)soapMessage).getSaajMessage().getMimeHeaders();
@@ -352,7 +352,7 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
         } else {
             log.warn("Unsupported SOAP message implementation - skipping mime headers");
         }
-        
+
         if (messageMimeHeaders != null) {
             final Iterator<?> mimeHeaderIterator = messageMimeHeaders.getAllHeaders();
             while (mimeHeaderIterator.hasNext()) {
@@ -367,24 +367,24 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
                     mimeHeaders.put(mimeHeader.getName(), mimeHeader.getValue());
                 }
             }
-            
+
             for (final Entry<String, String> httpHeaderEntry : mimeHeaders.entrySet()) {
                 message.setHeader(httpHeaderEntry.getKey(), httpHeaderEntry.getValue());
             }
         }
     }
-    
+
     /**
-     * Adds all message properties from web service message to message builder 
+     * Adds all message properties from web service message to message builder
      * as normal header entries.
-     * 
+     *
      * @param messageContext the web service request message context.
      * @param message the request message builder.
      */
     protected void handleInboundMessageProperties(final MessageContext messageContext,
                                                   final SoapMessage message) {
         if (messageContext == null) { return; }
-        
+
         final String[] propertyNames = messageContext.getPropertyNames();
         if (propertyNames != null) {
             for (final String propertyName : propertyNames) {
@@ -392,10 +392,10 @@ public class SoapMessageConverter implements WebServiceMessageConverter {
             }
         }
     }
-    
+
     /**
      * Adds attachments if present in soap web service message.
-     * 
+     *
      * @param soapMessage the web service message.
      * @param message the response message builder.
      */
