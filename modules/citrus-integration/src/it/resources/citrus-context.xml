@@ -14,6 +14,7 @@
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
        xmlns:citrus-zookeeper="http://www.citrusframework.org/schema/zookeeper/config"
+       xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:amq="http://activemq.apache.org/schema/core"
@@ -34,7 +35,8 @@
            http://www.citrusframework.org/schema/restdocs/config http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd
            http://www.citrusframework.org/schema/zookeeper/config http://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
-           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
+           http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
     <import resource="classpath:com/consol/citrus/demo/hello-demo-ctx.xml"/>
     <import resource="citrus-schemas-context.xml"/>
@@ -68,7 +70,7 @@
       </property>
       <property name="watchTopicAdvisories" value="false"/>
     </bean>
-  
+
     <citrus:global-variables>
         <citrus:variable name="project.name" value="Citrus Integration Testing"/>
         <citrus:variable name="globalRandomNumber1" value="citrus:randomNumber(5)"/>
@@ -82,20 +84,20 @@
     <citrus:actor id="helloClient"
          name="HELLO_CLIENT"
          disabled="false"/>
-    
+
     <citrus:actor id="helloServer"
          name="HELLO_SERVER"
          disabled="false"/>
-                  
+
     <citrus:actor id="disabledActor"
          name="DISABLED_ACTOR"
          disabled="true"/>
-    
+
     <!-- Listeners -->
     <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
-    
+
     <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultMessageCorrelator"/>
-    
+
     <!-- Default namespace mappings used in XPath expression evaluations -->
     <citrus:namespace-context>
         <citrus:namespace prefix="def" uri="http://www.consol.de/schemas/samples/sayHello.xsd"/>
@@ -127,13 +129,13 @@
 
     <!-- SOAP test server -->
     <citrus-ws:server id="soapServer"
-                      port="8091" 
+                      port="8091"
                       auto-start="true"
                       resource-base="src/it/resources"/>
-    
+
     <citrus-jms:endpoint id="webServiceRequestReceiver"
                              destination-name="${jms.ws.stub.request}"/>
-    
+
     <citrus-jms:endpoint id="webServiceResponseSender"
          use-object-messages="true"
          destination-name="${jms.ws.stub.response}"/>
@@ -150,12 +152,12 @@
          request-url="http://localhost:8071/hello"
          interceptors="restDocSoapInterceptors"
          message-factory="messageFactory"/>
-                              
+
     <citrus-ws:client id="webServiceFaultClient"
          request-url="http://localhost:8071/hello"
          message-factory="messageFactory"
          fault-strategy="propagateError"/>
-                              
+
     <citrus-ws:client id="wsAddressingHelloClient"
          request-url="http://localhost:8071/hello"
          message-factory="messageFactory"
@@ -185,7 +187,7 @@
         </bean>
       </constructor-arg>
     </bean>
-                                  
+
     <!-- HTTP settings -->
     <citrus-http:server id="httpServer"
          port="8072"
@@ -247,8 +249,8 @@
         <bean class="org.apache.http.auth.UsernamePasswordCredentials">
             <constructor-arg value="someUsername"/>
             <constructor-arg value="somePassword"/>
-        </bean>      
-      </property>  
+        </bean>
+      </property>
     </bean>
 
     <citrus-restdocs:documentation id="restDocumentation" identifier="rest-docs/{method-name}"/>
@@ -258,7 +260,7 @@
          request-method="POST"
          interceptors="restDocumentation"
          content-type="text/xml"/>
-  
+
     <citrus-http:client id="httpStandaloneClient"
          request-url="http://localhost:8073/test"
          request-method="POST"
@@ -337,7 +339,7 @@
          port="9072"
          auto-start="true"
          endpoint-adapter="sshEndpointAdapter"/>
-  
+
     <citrus-jms:endpoint-adapter id="sshEndpointAdapter"
          destination-name="${jms.queue.ssh.request.forward}"
          reply-destination-name="${jms.queue.ssh.request.ack}"
@@ -350,7 +352,7 @@
          private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
          strict-host-checking="false"
          host="localhost"/>
-  
+
     <citrus-ssh:client id="sshClientWithWrongPrivateKey"
          port="9072"
          user="roland"
@@ -358,17 +360,17 @@
          private-key-password="consol"
          strict-host-checking="false"
          host="localhost"/>
-  
+
     <citrus-ssh:client id="sshClientWithWrongUser"
          port="9072"
          user="blubber"
          private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
          strict-host-checking="false"
          host="localhost"/>
-  
+
     <citrus-jms:endpoint id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
     <citrus-jms:endpoint id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}"/>
-  
+
     <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
@@ -397,33 +399,33 @@
     <bean id="testTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
       <constructor-arg ref="testDataSource"/>
     </bean>
-    
+
     <!-- Citrus JMS Endpoints -->
     <citrus-jms:endpoint id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>
-  
+
     <citrus-jms:endpoint id="helloResponseJmsMessageReceiver"
          timeout="5000"
          destination-name="Citrus.Hello.Response.Queue"/>
-    
+
     <citrus-jms:sync-endpoint id="helloSyncJmsEndpoint"
          destination-name="Citrus.Hello.Sync.Request.Queue"
          timeout="5000"/>
-    
+
     <citrus-jms:endpoint id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
-  
+
     <citrus-jms:endpoint id="helloResponseReceiver"
          timeout="5000"
          destination-name="${jms.queue.hello.response}"/>
-                                 
+
     <citrus-jms:endpoint id="helloTopicRequestSender"
          destination-name="${jms.topic.hello.request}"
          pub-sub-domain="true"/>
-  
+
     <citrus-jms:endpoint id="helloTopicRequestReceiver"
          timeout="5000"
          destination-name="${jms.topic.hello.request}"
          pub-sub-domain="true"/>
-    
+
     <citrus-jms:sync-endpoint id="syncJmsTopicEndpoint"
          destination-name="${jms.topic.hello.sync.request}"
          timeout="5000"
@@ -434,36 +436,36 @@
          destination-name="${jms.topic.hello.sync.request}"
          message-correlator="replyMessageCorrelator"
          pub-sub-domain="true"/>
-  
+
     <citrus-jms:sync-endpoint id="syncJmsQueueEndpoint"
          destination-name="${jms.queue.hello.sync.request}"
          timeout="5000"/>
-    
+
     <citrus-jms:sync-endpoint id="syncGetDateRequestSender"
          destination-name="${jms.queue.date.sync.request}"
          message-correlator="replyMessageCorrelator"
          timeout="5000"/>
-    
+
     <citrus-jms:sync-endpoint id="syncGetDateRequestReceiver"
          timeout="5000"
          destination-name="${jms.queue.date.sync.request}"
          message-correlator="replyMessageCorrelator"/>
-  
+
     <citrus-jms:endpoint id="testMessageSender" destination-name="${jms.queue.test}"/>
-  
+
     <citrus-jms:endpoint id="testMessageReceiver" destination-name="${jms.queue.test}"/>
-    
+
     <citrus-jms:endpoint id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
-    
-    <citrus:channel-endpoint id="greetingEndpoint" channel="greetings"/>
 
-    <citrus:channel-endpoint id="channelRequestSender" channel="greetings"/>
+    <citrus-si:channel-endpoint id="greetingEndpoint" channel="greetings"/>
 
-    <citrus:channel-endpoint id="channelResponseReceiver"
+    <citrus-si:channel-endpoint id="channelRequestSender" channel="greetings"/>
+
+    <citrus-si:channel-endpoint id="channelResponseReceiver"
          channel="greetings"
          timeout="5000"/>
-                                     
-    <citrus:channel id="greetings" capacity="5"/>
+
+    <citrus-si:channel id="greetings" capacity="5"/>
 
     <!-- Citrus JMX -->
     <!-- JMX server -->
@@ -497,10 +499,10 @@
       <property name="statusChannelEndpoint" ref="statusChannelEndpoint"/>
     </bean>
 
-    <citrus:channel-endpoint id="statusChannelEndpoint"
+    <citrus-si:channel-endpoint id="statusChannelEndpoint"
             channel-name="statusChannel"/>
 
-    <citrus:channel id="statusChannel" capacity="5"/>
+    <citrus-si:channel id="statusChannel" capacity="5"/>
 
     <!-- Sample data dictionary for hello service messages -->
     <citrus:xml-data-dictionary id="helloServiceDataDictionary" global-scope="false">
@@ -514,7 +516,7 @@
         <citrus:mapping path="HelloResponse.Text" value="Hello Christoph"/>
       </citrus:mappings>
     </citrus:xml-data-dictionary>
-    
+
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
@@ -532,7 +534,7 @@
         </citrus-test:sql>
       </citrus:actions>
     </citrus:before-suite>
-    
+
     <citrus:before-test id="defaultBeforeTest">
       <citrus:actions>
         <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" receive-timeout="10">
@@ -551,7 +553,7 @@
         </citrus-jms-test:purge-jms-queues>
       </citrus:actions>
     </citrus:before-test>
-    
+
     <citrus:after-suite id="defaultAfterSuite">
       <citrus:actions>
         <citrus-test:sql datasource="testDataSource">

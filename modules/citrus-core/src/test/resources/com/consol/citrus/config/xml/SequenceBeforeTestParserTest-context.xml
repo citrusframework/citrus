@@ -14,16 +14,17 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
        xmlns:action="http://www.citrusframework.org/schema/testcase"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-                            http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+                            http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
   <context:annotation-config/>
 
@@ -79,6 +80,6 @@
 
   <bean id="customAction" class="com.consol.citrus.actions.CustomTestAction"/>
 
-  <citrus:channel-endpoint id="customEndpoint"/>
+  <citrus-si:channel-endpoint id="customEndpoint"/>
 
 </beans>

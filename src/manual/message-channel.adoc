@@ -34,7 +34,7 @@ Citrus offers a channel endpoint component that is able to create producer and c
 
 [source,xml]
 ----
-<citrus:channel-endpoint id="helloEndpoint" channel="helloChannel"/>
+<citrus-si:channel-endpoint id="helloEndpoint" channel="helloChannel"/>
 
 <si:channel id="helloChannel"/>
 ----
@@ -52,7 +52,7 @@ NOTE: The Spring Integration configuration components use a specific namespace t
     xmlns:si="http://www.springframework.org/schema/integration"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans.xsd
-            http://www.citrusframework.org/schema/config 
+            http://www.citrusframework.org/schema/config
             http://www.citrusframework.org/schema/config/citrus-config.xsd
             http://www.springframework.org/schema/integration
             http://www.springframework.org/schema/integration/spring-integration.xsd">
@@ -63,7 +63,7 @@ The Citrus channel endpoint also supports a customized message channel template 
 
 [source,xml]
 ----
-<citrus:channel-endpoint id="helloEndpoint"
+<citrus-si:channel-endpoint id="helloEndpoint"
                             channel="helloChannel"
                             message-channel-template="myMessageChannelTemplate"/>
 ----
@@ -104,7 +104,7 @@ The synchronous channel producer publishes messages and waits synchronously for 
 
 [source,xml]
 ----
-<citrus:channel-sync-endpoint id="helloSyncEndpoint"
+<citrus-si:channel-sync-endpoint id="helloSyncEndpoint"
                             channel="helloChannel"
                             reply-timeout="1000"
                             polling-interval="1000"/>
@@ -175,7 +175,7 @@ Unfortunately Spring Integration message channels do not support message selecto
 
 [source,xml]
 ----
-<citrus:channel id="orderChannel" capacity="5"/>
+<citrus-si:channel id="orderChannel" capacity="5"/>
 ----
 
 The Citrus message channel implementation extends the queue channel implementation from Spring Integration. So we can add a capacity attribute for this channel. That's it! Now we use the message channel that supports message selection. In our test we define message selectors on header values as described in link:#message-selectors[message-selector]and you will see that it works.
@@ -314,7 +314,7 @@ Knowing the correct XML namespace prefix is not always easy. If you are not sure
 [source,xml]
 ----
 <selector>
-    <element name="xpath://{http://citrus.org/schema}:Order/{http://citrus.org/schema}:status" 
+    <element name="xpath://{http://citrus.org/schema}:Order/{http://citrus.org/schema}:status"
                 value="pending"/>
 </selector>
 ----

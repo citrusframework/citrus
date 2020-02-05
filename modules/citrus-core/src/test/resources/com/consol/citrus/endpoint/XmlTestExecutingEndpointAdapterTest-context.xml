@@ -2,11 +2,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+       http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
   <!-- Used for autowiring -->
   <context:annotation-config/>
@@ -20,13 +22,13 @@
     <property name="responseEndpointAdapter" ref="channelAdapter"/>
   </bean>
 
-  <citrus:channel-endpoint-adapter id="channelAdapter"
+  <citrus-si:channel-endpoint-adapter id="channelAdapter"
           channel-name="testSimulator.inbound"
           timeout="5000"/>
 
-  <citrus:channel id="testSimulator.inbound"/>
+  <citrus-si:channel id="testSimulator.inbound"/>
 
-  <citrus:channel-sync-endpoint id="inboundChannelEndpoint"
+  <citrus-si:channel-sync-endpoint id="inboundChannelEndpoint"
                                         channel="testSimulator.inbound"
                                         timeout="5000"/>
 

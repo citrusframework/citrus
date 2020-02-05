@@ -10,7 +10,7 @@ We want to use the Spring Integration file adapter for both reading and writing 
 
 [source,xml]
 ----
-<citrus:channel-endpoint id="fileEndpoint" channel="fileChannel"/>
+<citrus-si:channel-endpoint id="fileEndpoint" channel="fileChannel"/>
 
 <file:outbound-channel-adapter id="fileOutboundAdapter"
       channel="fileChannel"
@@ -66,7 +66,7 @@ The next program listing shows a possible inbound file communication. So the Spr
     </si:interceptors>
 </si:channel>
 
-<citrus:channel-endpoint id="fileEndpoint" channel="fileChannel"/>
+<citrus-si:channel-endpoint id="fileEndpoint" channel="fileChannel"/>
 ----
 
 IMPORTANT: The file inbound adapter constructs Java file objects as the message payload by default. Citrus can only work on String message payloads. So we need a file transformer that converts the file objects to String payloads representing the file's content.

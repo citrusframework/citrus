@@ -2,19 +2,21 @@
 <beans  xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
-  <citrus:channel-sync-endpoint id="syncChannelEndpoint1"
+  <citrus-si:channel-sync-endpoint id="syncChannelEndpoint1"
                                         channel-resolver="channelResolver"
                                         channel-name="channelName"/>
 
-  <citrus:channel-sync-endpoint id="syncChannelEndpoint2"
+  <citrus-si:channel-sync-endpoint id="syncChannelEndpoint2"
                                         timeout="10000"
                                         channel="channel"
                                         message-correlator="replyMessageCorrelator"/>
 
-  <citrus:channel-sync-endpoint id="syncChannelEndpoint3"
+  <citrus-si:channel-sync-endpoint id="syncChannelEndpoint3"
                                         actor="testActor"
                                         polling-interval="250"
                                         messaging-template="messagingTemplate"/>

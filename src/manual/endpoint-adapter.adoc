@@ -150,7 +150,7 @@ The channel connecting endpoint adapter is the default adapter used in all Citru
 
 [source,xml]
 ----
-<citrus:channel-endpoint-adapter id="channelEndpointAdapter"
+<citrus-si:channel-endpoint-adapter id="channelEndpointAdapter"
               channel-name="inbound.channel"
               timeout="2500"/>
 ----

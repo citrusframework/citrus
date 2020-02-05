@@ -51,6 +51,7 @@
 
   <modules>
     <module>core</module>
+    <module>endpoints</module>
     <module>modules/citrus-core</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>

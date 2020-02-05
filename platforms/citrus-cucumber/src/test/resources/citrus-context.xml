@@ -2,13 +2,15 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
        xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
        http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
-       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
+       http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
   <!-- Common settings -->
   <context:property-placeholder location="classpath:citrus.properties"/>
@@ -17,10 +19,10 @@
     <citrus:variable name="project.name" value="Citrus Integration Tests"/>
   </citrus:global-variables>
 
-  <citrus:channel-endpoint id="fooEndpoint"
+  <citrus-si:channel-endpoint id="fooEndpoint"
                            channel="foo"/>
 
-  <citrus:channel id="foo"/>
+  <citrus-si:channel id="foo"/>
 
   <!-- Channel endpoint -->
   <citrus-camel:sync-endpoint id="echoEndpoint"

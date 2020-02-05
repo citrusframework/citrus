@@ -21,7 +21,7 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
 
 /**
  * Namespace handler for components in Citrus configuration.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
@@ -47,11 +47,11 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("before-test", new SequenceBeforeTestParser());
         registerBeanDefinitionParser("after-suite", new SequenceAfterSuiteParser());
         registerBeanDefinitionParser("after-test", new SequenceAfterTestParser());
-        registerBeanDefinitionParser("channel-endpoint", new ChannelEndpointParser());
-        registerBeanDefinitionParser("channel-sync-endpoint", new ChannelSyncEndpointParser());
-        registerBeanDefinitionParser("channel", new MessageSelectingQueueChannelParser());
-        registerBeanDefinitionParser("message-channel", new MessageSelectingQueueChannelParser());
-        registerBeanDefinitionParser("channel-endpoint-adapter", new ChannelEndpointAdapterParser());
+        registerBeanDefinitionParser("direct-endpoint", new DirectEndpointParser());
+        registerBeanDefinitionParser("direct-sync-endpoint", new DirectSyncEndpointParser());
+        registerBeanDefinitionParser("queue", new DefaultMessageQueueParser());
+        registerBeanDefinitionParser("message-queue", new DefaultMessageQueueParser());
+        registerBeanDefinitionParser("direct-endpoint-adapter", new DirectEndpointAdapterParser());
         registerBeanDefinitionParser("dispatching-endpoint-adapter", new RequestDispatchingEndpointAdapterParser());
         registerBeanDefinitionParser("static-response-adapter", new StaticResponseEndpointAdapterParser());
         registerBeanDefinitionParser("empty-response-adapter", new EmptyResponseEndpointAdapterParser());

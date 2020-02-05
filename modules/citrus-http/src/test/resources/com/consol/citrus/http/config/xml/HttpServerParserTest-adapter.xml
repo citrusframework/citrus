@@ -2,6 +2,7 @@
 <beans  xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
         xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
         xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
         xmlns:util="http://www.springframework.org/schema/util"
@@ -9,14 +10,15 @@
                             http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                             http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
                             http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
-                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+                            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
     <citrus-http:server id="httpServer1"
                         auto-start="false"
                         port="8081"
                         endpoint-adapter="httpServerAdapter1"/>
 
-    <citrus:channel-endpoint-adapter id="httpServerAdapter1"
+    <citrus-si:channel-endpoint-adapter id="httpServerAdapter1"
                         channel-name="serverChannel"
                         polling-interval="250"
                         timeout="10000"/>

@@ -18,6 +18,11 @@
       <artifactId>citrus-core-spring</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-spring-integration</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>commons-cli</groupId>

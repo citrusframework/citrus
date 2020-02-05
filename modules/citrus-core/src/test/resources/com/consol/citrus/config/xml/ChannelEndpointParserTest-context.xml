@@ -2,21 +2,23 @@
 <beans  xmlns="http://www.springframework.org/schema/beans"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xmlns:citrus="http://www.citrusframework.org/schema/config"
+        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
         xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+                            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
-  <citrus:channel-endpoint id="channelEndpoint1"
+  <citrus-si:channel-endpoint id="channelEndpoint1"
                                    channel-resolver="channelResolver"
                                    channel-name="channelName"/>
 
-  <citrus:channel-endpoint id="channelEndpoint2"
+  <citrus-si:channel-endpoint id="channelEndpoint2"
                                    timeout="10000"
                                    channel="channel"/>
 
-  <citrus:channel-endpoint id="channelEndpoint3"
+  <citrus-si:channel-endpoint id="channelEndpoint3"
                                    messaging-template="messagingTemplate"/>
 
-  <citrus:channel-endpoint id="channelEndpoint4"
+  <citrus-si:channel-endpoint id="channelEndpoint4"
                                    channel-resolver="channelResolver"
                                    channel-name="channelName"
                                    use-object-messages="true"

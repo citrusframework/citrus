@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
  * Copyright 2006-2014 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -32,41 +32,35 @@
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="message-channel">
+    <xs:element name="message-queue">
         <xs:annotation>
-          <xs:documentation>Message channel acting as queue channel with extended selector support.</xs:documentation>
+          <xs:documentation>Message queue acting as in memory object store.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="logging" type="xs:string"/>
-            <xs:attribute name="capacity" type="xs:string"/>
             <xs:attribute name="polling-interval" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
-    <xs:element name="channel">
+    <xs:element name="queue">
         <xs:annotation>
-            <xs:documentation>Message channel acting as queue channel with extended selector support.</xs:documentation>
+            <xs:documentation>Message queue acting as in memory object store.</xs:documentation>
         </xs:annotation>
         <xs:complexType>
             <xs:attribute name="id" type="xs:ID" use="required"/>
             <xs:attribute name="logging" type="xs:string"/>
-            <xs:attribute name="capacity" type="xs:string"/>
             <xs:attribute name="polling-interval" type="xs:string"/>
         </xs:complexType>
     </xs:element>
 
-    <xs:complexType name="MessageChannelAdapterType">
+    <xs:complexType name="DirectEndpointAdapterType">
         <xs:annotation>
-          <xs:documentation>Basic channel endpoint properties.</xs:documentation>
+          <xs:documentation>Basic direct endpoint properties.</xs:documentation>
         </xs:annotation>
         <xs:attribute name="id" type="xs:ID"/>
-        <xs:attribute name="message-channel-template" type="xs:string"/>
-        <xs:attribute name="messaging-template" type="xs:string"/>
-        <xs:attribute name="channel" type="xs:string"/>
-        <xs:attribute name="channel-name" type="xs:string"/>
-        <xs:attribute name="channel-resolver" type="xs:string"/>
-        <xs:attribute name="use-object-messages" type="xs:boolean"/>
+        <xs:attribute name="queue" type="xs:string"/>
+        <xs:attribute name="queue-name" type="xs:string"/>
         <xs:attribute name="actor" type="xs:string"/>
         <xs:attribute name="timeout" type="xs:string"/>
     </xs:complexType>
@@ -85,24 +79,24 @@
       </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="channel-endpoint">
+    <xs:element name="direct-endpoint">
       <xs:annotation>
-        <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
+        <xs:documentation>Direct message queue endpoint able to produce and consume messages on a in memory destination.</xs:documentation>
       </xs:annotation>
       <xs:complexType>
         <xs:complexContent>
-          <xs:restriction base="MessageChannelAdapterType"/>
+          <xs:restriction base="DirectEndpointAdapterType"/>
         </xs:complexContent>
       </xs:complexType>
     </xs:element>
 
-    <xs:element name="channel-sync-endpoint">
+    <xs:element name="direct-sync-endpoint">
       <xs:annotation>
-        <xs:documentation>Message channel endpoint able to produce and consume messages on a channel destination.</xs:documentation>
+        <xs:documentation>Direct message queue endpoint able to produce and consume messages on a in memory destination.</xs:documentation>
       </xs:annotation>
       <xs:complexType>
         <xs:complexContent>
-          <xs:extension base="MessageChannelAdapterType">
+          <xs:extension base="DirectEndpointAdapterType">
             <xs:attribute name="polling-interval" type="xs:string"/>
             <xs:attribute name="message-correlator" type="xs:string"/>
           </xs:extension>
@@ -494,13 +488,13 @@
 
     <!-- Endpoint adapters used in server configuration -->
 
-    <xs:element name="channel-endpoint-adapter">
+    <xs:element name="direct-endpoint-adapter">
       <xs:annotation>
-        <xs:documentation>Channel server endpoint adapter forwards incoming requests to message channel.</xs:documentation>
+        <xs:documentation>Server endpoint adapter forwards incoming requests to in memory message queue.</xs:documentation>
       </xs:annotation>
       <xs:complexType>
         <xs:complexContent>
-          <xs:extension base="MessageChannelAdapterType">
+          <xs:extension base="DirectEndpointAdapterType">
             <xs:attribute name="polling-interval" type="xs:string"/>
             <xs:attribute name="message-correlator" type="xs:string"/>
             <xs:attribute name="fallback-adapter" type="xs:string"/>
