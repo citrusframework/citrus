@@ -1,0 +1,109 @@
+/*
+ * Copyright 2006-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package com.consol.citrus.util;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import com.consol.citrus.Completable;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+/**
+ * Utility class for test cases providing several utility
+ * methods regarding Citrus test cases.
+ *
+ * @author Christoph Deppisch
+ */
+public abstract class TestUtils {
+
+    /** Used to identify waiting task threads pool */
+    public static final String WAIT_THREAD_PREFIX = "citrus-waiting-";
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(TestUtils.class);
+
+    /**
+     * Prevent instantiation.
+     */
+    private TestUtils() {
+        super();
+    }
+
+    /**
+     * Wait for container completion with default timeout.
+     * @param container
+     * @param context
+     */
+    public static void waitForCompletion(final Completable container,
+                                         final TestContext context) {
+        waitForCompletion(container, context, 10000L);
+    }
+
+    /**
+     * Wait for container completion using default thread executor.
+     * @param container
+     * @param context
+     * @param timeout
+     */
+    public static void waitForCompletion(final Completable container,
+                                         final TestContext context, long timeout) {
+        waitForCompletion(Executors.newSingleThreadScheduledExecutor(TestUtils::createWaitingThread), container, context, timeout);
+    }
+
+    /**
+     * Uses given scheduler to wait for container to finish properly. Method polls for done state on container for given
+     * amount of time.
+     *
+     * @param scheduledExecutor
+     * @param container
+     * @param context
+     * @param timeout
+     */
+    public static void waitForCompletion(final ScheduledExecutorService scheduledExecutor,
+                                         final Completable container,
+                                         final TestContext context, long timeout) {
+        try {
+            final CompletableFuture<Boolean> finished = new CompletableFuture<>();
+            scheduledExecutor.scheduleAtFixedRate(() -> {
+                if (container.isDone(context)) {
+                    finished.complete(true);
+                } else {
+                    log.debug("Wait for test container to finish properly ...");
+                }
+            }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
+
+            finished.get(timeout, TimeUnit.MILLISECONDS);
+        } catch (ExecutionException | TimeoutException | InterruptedException e) {
+            throw new CitrusRuntimeException("Failed to wait for test container to finish properly", e);
+        } finally {
+            scheduledExecutor.shutdown();
+        }
+    }
+
+    private static Thread createWaitingThread(final Runnable runnable) {
+        final Thread waitThread = Executors.defaultThreadFactory().newThread(runnable);
+        waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
+        return waitThread;
+    }
+}

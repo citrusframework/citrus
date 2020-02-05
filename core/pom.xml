@@ -17,6 +17,7 @@
   <modules>
     <module>citrus-api</module>
     <module>citrus-base</module>
+    <module>citrus-core-spring</module>
   </modules>
 
 </project>
