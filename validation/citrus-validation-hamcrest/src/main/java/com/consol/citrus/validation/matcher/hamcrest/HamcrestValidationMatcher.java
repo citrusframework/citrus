@@ -16,22 +16,34 @@
 
 package com.consol.citrus.validation.matcher.hamcrest;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.matcher.*;
-import com.consol.citrus.variable.VariableUtils;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.*;
-
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
 import java.util.stream.Collectors;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.validation.matcher.ControlExpressionParser;
+import com.consol.citrus.validation.matcher.DefaultControlExpressionParser;
+import com.consol.citrus.validation.matcher.ValidationMatcher;
+import com.consol.citrus.variable.VariableUtils;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -270,7 +282,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      */
     private Map<String, Object> getMap(String mapString) {
         Properties props = new Properties();
-        
+
         try {
             props.load(new StringReader(mapString.substring(1, mapString.length() - 1).replaceAll(",\\s*", "\n")));
         } catch (IOException e) {

@@ -70,15 +70,5 @@
       <artifactId>hsqldb</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>nl.jqno.equalsverifier</groupId>
-      <artifactId>equalsverifier</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.jparams</groupId>
-      <artifactId>to-string-verifier</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 </project>

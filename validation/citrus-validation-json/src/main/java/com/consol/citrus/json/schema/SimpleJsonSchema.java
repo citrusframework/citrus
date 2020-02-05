@@ -16,13 +16,13 @@
 
 package com.consol.citrus.json.schema;
 
+import java.util.Objects;
+
 import com.github.fge.jackson.JsonLoader;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
-
-import java.util.Objects;
 
 /**
  * Adapter between the resource reference from the bean configuration and the

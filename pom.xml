@@ -52,6 +52,7 @@
   <modules>
     <module>core</module>
     <module>endpoints</module>
+    <module>validation</module>
     <module>modules/citrus-core</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>
@@ -902,18 +903,6 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-junit-jupiter</artifactId>
         <version>${mockito.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>nl.jqno.equalsverifier</groupId>
-        <artifactId>equalsverifier</artifactId>
-        <version>3.1.4</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.jparams</groupId>
-        <artifactId>to-string-verifier</artifactId>
-        <version>1.4.5</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

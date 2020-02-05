@@ -47,6 +47,22 @@
       <version>${project.version}</version>
     </dependency>
 
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-json</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-xml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-hamcrest</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
     <!-- Spring framework -->
     <dependency>
       <groupId>org.springframework</groupId>

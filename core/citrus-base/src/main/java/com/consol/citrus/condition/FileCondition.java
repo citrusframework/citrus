@@ -16,15 +16,13 @@
 
 package com.consol.citrus.condition;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.util.FileUtils;
-import com.google.errorprone.annotations.Immutable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.File;
 import java.io.IOException;
-import java.util.Objects;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tests for the presence of a file and returns true if the file exists
@@ -32,7 +30,6 @@ import java.util.Objects;
  * @author Martin Maher
  * @since 2.4
  */
-@Immutable
 public class FileCondition extends AbstractCondition {
 
     /** File path to check for existence */
@@ -112,21 +109,6 @@ public class FileCondition extends AbstractCondition {
      */
     public void setFile(File file) {
         this.file = file;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FileCondition)) return false;
-        FileCondition that = (FileCondition) o;
-        return Objects.equals(getFilePath(), that.getFilePath()) &&
-                Objects.equals(getFile(), that.getFile()) &&
-                Objects.equals(getName(), that.getName());
-    }
-
-    @Override
-    public final int hashCode() {
-        return Objects.hash(getFilePath(), getFile(), getName());
     }
 
     @Override

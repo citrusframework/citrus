@@ -16,42 +16,42 @@
 
 package com.consol.citrus.xml.schema;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.xsd.XsdSchema;
-
 import javax.xml.namespace.QName;
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.util.StringUtils;
+import org.springframework.xml.xsd.XsdSchema;
+
 /**
  * Mapping strategy uses the root element local name to find matching schema
  * instance.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class RootQNameSchemaMappingStrategy extends AbstractSchemaMappingStrategy {
 
     /** Root element names mapping to schema instances */
     private Map<String, XsdSchema> mappings;
-    
+
     @Override
     public XsdSchema getSchema(List<XsdSchema> schemas, String namespace, String elementName) {
         XsdSchema schema = null;
         QName rootQName = new QName(namespace, elementName, "");
-        
+
         if (mappings.containsKey(rootQName.toString())) {
             schema = mappings.get(rootQName.toString());
         } else if (mappings.containsKey(elementName)) {
             schema = mappings.get(elementName);
         }
-        
-        if (schema!= null && !(StringUtils.hasText(schema.getTargetNamespace()) && 
+
+        if (schema!= null && !(StringUtils.hasText(schema.getTargetNamespace()) &&
                 schema.getTargetNamespace().equals(namespace))) {
             throw new CitrusRuntimeException("Schema target namespace inconsitency " +
             		"for located XSD schema definition (" + schema.getTargetNamespace() + ")");
         }
-        
+
         return schema;
     }
 

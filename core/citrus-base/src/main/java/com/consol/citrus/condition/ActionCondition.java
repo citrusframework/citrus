@@ -16,12 +16,10 @@
 
 package com.consol.citrus.condition;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.context.TestContext;
-import com.google.errorprone.annotations.Immutable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +27,6 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Deppisch
  * @since 2.7.6
  */
-@Immutable
 public class ActionCondition extends AbstractCondition {
 
     /** Logger */
@@ -129,21 +126,6 @@ public class ActionCondition extends AbstractCondition {
      */
     public void setCaughtException(Exception caughtException) {
         this.caughtException = caughtException;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ActionCondition)) return false;
-        ActionCondition that = (ActionCondition) o;
-        return Objects.equals(getAction(), that.getAction()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getCaughtException(), that.getCaughtException());
-    }
-
-    @Override
-    public final int hashCode() {
-        return Objects.hash(getAction(), getCaughtException(), getName());
     }
 
     @Override

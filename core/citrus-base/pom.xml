@@ -43,10 +43,10 @@
       <artifactId>jackson-databind</artifactId>
     </dependency>
 
-    <!--dependency>
+    <dependency>
       <groupId>xerces</groupId>
       <artifactId>xercesImpl</artifactId>
-    </dependency-->
+    </dependency>
 
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
@@ -60,53 +60,6 @@
     <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
-    </dependency>
-
-    <!-- XML validation -->
-    <dependency>
-      <groupId>xalan</groupId>
-      <artifactId>xalan</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>xerces</groupId>
-      <artifactId>xercesImpl</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>wsdl4j</groupId>
-      <artifactId>wsdl4j</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-xml</artifactId>
-    </dependency>
-
-    <!-- Json validation -->
-    <dependency>
-      <groupId>org.codehaus.groovy</groupId>
-      <artifactId>groovy-json</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.java-json-tools</groupId>
-      <artifactId>json-schema-validator</artifactId>
-    </dependency>
-
-    <!-- Xhtml validation -->
-    <dependency>
-      <groupId>net.sf.jtidy</groupId>
-      <artifactId>jtidy</artifactId>
-    </dependency>
-
-    <!-- Hamcrest validation -->
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-library</artifactId>
     </dependency>
 
     <!-- Optional dependencies -->

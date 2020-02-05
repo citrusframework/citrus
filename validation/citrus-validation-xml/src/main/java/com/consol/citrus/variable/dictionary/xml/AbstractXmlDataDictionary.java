@@ -16,6 +16,8 @@
 
 package com.consol.citrus.variable.dictionary.xml;
 
+import java.io.StringWriter;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
@@ -24,11 +26,15 @@ import com.consol.citrus.validation.xhtml.XhtmlMessageConverter;
 import com.consol.citrus.variable.dictionary.AbstractDataDictionary;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
-import org.w3c.dom.*;
-import org.w3c.dom.ls.*;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+import org.w3c.dom.ls.LSSerializerFilter;
 import org.w3c.dom.traversal.NodeFilter;
-
-import java.io.StringWriter;
 
 /**
  * Abstract data dictionary works on XML message payloads only with parsing the document and translating each element

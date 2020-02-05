@@ -41,11 +41,6 @@ public class DirectEndpointAdapterTest {
     private TestContextFactory testContextFactory = new TestContextFactory();
     private TestContext context;
 
-    @BeforeMethod
-    public void setupMocks() {
-        context = new TestContext();
-    }
-
     @BeforeClass
     public void setup() {
         endpointConfiguration = new DirectSyncEndpointConfiguration();
@@ -58,6 +53,7 @@ public class DirectEndpointAdapterTest {
 
     @BeforeMethod
     public void purgeQueue() {
+        context = new TestContext();
         queue.purge(new MessageSelector.AllAcceptingMessageSelector());
     }
 

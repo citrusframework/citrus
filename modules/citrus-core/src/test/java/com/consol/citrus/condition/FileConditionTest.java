@@ -17,8 +17,6 @@
 package com.consol.citrus.condition;
 
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.jparams.verifier.tostring.ToStringVerifier;
-import nl.jqno.equalsverifier.EqualsVerifier;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
@@ -55,20 +53,5 @@ public class FileConditionTest extends AbstractTestNGUnitTest {
         condition.setFilePath(filePath);
 
         assertFalse(condition.isSatisfied(context));
-    }
-
-    @Test
-    public void testEqualsContract(){
-        EqualsVerifier
-                .forClass(FileCondition.class)
-                .withRedefinedSuperclass()
-                .verify();
-    }
-
-    @Test
-    public void testToString(){
-        ToStringVerifier
-                .forClass(FileCondition.class)
-                .verify();
     }
 }

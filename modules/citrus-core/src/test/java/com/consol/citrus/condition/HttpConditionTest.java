@@ -16,15 +16,13 @@
 
 package com.consol.citrus.condition;
 
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.jparams.verifier.tostring.ToStringVerifier;
-import nl.jqno.equalsverifier.EqualsVerifier;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -111,20 +109,4 @@ public class HttpConditionTest extends AbstractTestNGUnitTest {
 
         Assert.assertFalse(testling.isSatisfied(context));
     }
-
-    @Test
-    public void testEqualsContract(){
-        EqualsVerifier
-                .forClass(HttpCondition.class)
-                .withRedefinedSuperclass()
-                .verify();
-    }
-
-    @Test
-    public void testToString(){
-        ToStringVerifier
-                .forClass(HttpCondition.class)
-                .verify();
-    }
-
 }

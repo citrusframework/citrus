@@ -16,17 +16,15 @@
 
 package com.consol.citrus.condition;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import jdk.nashorn.internal.ir.annotations.Immutable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Objects;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Tests if a HTTP Endpoint is reachable. The test is successful if the endpoint responds with the expected response
@@ -35,7 +33,6 @@ import java.util.Objects;
  * @author Martin Maher
  * @since 2.4
  */
-@Immutable
 public class HttpCondition extends AbstractCondition {
 
     /** Http request URL to invoke for the condition check */
@@ -175,23 +172,6 @@ public class HttpCondition extends AbstractCondition {
 
     public void setHttpResponseCode(String httpResponseCode) {
         this.httpResponseCode = httpResponseCode;
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof HttpCondition)) return false;
-        HttpCondition that = (HttpCondition) o;
-        return Objects.equals(getUrl(), that.getUrl()) &&
-                Objects.equals(getTimeout(), that.getTimeout()) &&
-                Objects.equals(getHttpResponseCode(), that.getHttpResponseCode()) &&
-                Objects.equals(getName(), that.getName()) &&
-                Objects.equals(getMethod(), that.getMethod());
-    }
-
-    @Override
-    public final int hashCode() {
-        return Objects.hash(getUrl(), getTimeout(), getHttpResponseCode(), getMethod(), getName());
     }
 
     @Override

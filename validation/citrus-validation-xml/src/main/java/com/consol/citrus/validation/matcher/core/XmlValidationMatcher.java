@@ -16,6 +16,8 @@
 
 package com.consol.citrus.validation.matcher.core;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
@@ -34,12 +36,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
-import java.util.List;
-
 /**
  * Validation matcher receives a XML data and validates it against expected XML with full
  * XML validation support (e.g. ignoring elements, namespace support, ...).
- * 
+ *
  * @author Christoph Deppisch
  */
 public class XmlValidationMatcher implements ValidationMatcher, ApplicationContextAware, InitializingBean {
@@ -53,13 +53,13 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
 
     /** Xml message validator */
     private DomXmlMessageValidator xmlMessageValidator;
-    
+
     /** Spring bean application context */
     private ApplicationContext applicationContext;
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(XmlValidationMatcher.class);
-    
+
     /**
       * {@inheritDoc}
       */
@@ -76,12 +76,12 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
      */
     private String removeCDataElements(String value) {
         String data = value.trim();
-        
+
         if (data.startsWith(CDATA_SECTION_START)) {
             data = value.substring(CDATA_SECTION_START.length());
             data = data.substring(0, data.length() - CDATA_SECTION_END.length());
         }
-        
+
         return data;
     }
 

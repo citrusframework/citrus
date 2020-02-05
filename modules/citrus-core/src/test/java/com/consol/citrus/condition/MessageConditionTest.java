@@ -19,8 +19,6 @@ package com.consol.citrus.condition;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageStore;
-import com.jparams.verifier.tostring.ToStringVerifier;
-import nl.jqno.equalsverifier.EqualsVerifier;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -64,20 +62,5 @@ public class MessageConditionTest {
         when(context.getMessageStore()).thenReturn(messageStore);
         when(messageStore.getMessage(messageName)).thenReturn(null);
         Assert.assertFalse(testling.isSatisfied(context));
-    }
-
-    @Test
-    public void testEqualsContract(){
-        EqualsVerifier
-                .forClass(MessageCondition.class)
-                .withRedefinedSuperclass()
-                .verify();
-    }
-
-    @Test
-    public void testToString(){
-        ToStringVerifier
-                .forClass(MessageCondition.class)
-                .verify();
     }
 }

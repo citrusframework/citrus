@@ -18,11 +18,7 @@ package com.consol.citrus.actions;
 
 import java.io.File;
 
-import com.consol.citrus.condition.ActionCondition;
 import com.consol.citrus.condition.Condition;
-import com.consol.citrus.condition.FileCondition;
-import com.consol.citrus.condition.HttpCondition;
-import com.consol.citrus.condition.MessageCondition;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.container.WaitActionConditionBuilder;
 import com.consol.citrus.container.WaitFileConditionBuilder;
@@ -70,18 +66,6 @@ public class WaitBuilderTest {
     }
 
     @Test
-    public void testWaitForHttpConditionIsCreated(){
-
-        //GIVEN
-
-        //WHEN
-        final WaitHttpConditionBuilder builder = waitBuilder.http();
-
-        //THEN
-        assertEquals(builder.getCondition(), new HttpCondition());
-    }
-
-    @Test
     public void testWaitForMessageStringIsSet(){
 
         //GIVEN
@@ -95,29 +79,15 @@ public class WaitBuilderTest {
     }
 
     @Test
-    public void testWaitForMessageConditionIsCreated(){
-
-        //GIVEN
-
-        //WHEN
-        final WaitMessageConditionBuilder builder = waitBuilder.message();
-
-        //THEN
-        assertEquals(builder.getCondition(), new MessageCondition());
-    }
-
-    @Test
     public void testWaitForExecutionConditionIsCreated(){
 
         //GIVEN
         EchoAction echo = new EchoAction.Builder().build();
-        ActionCondition expectedCondition = new ActionCondition(echo);
 
         //WHEN
         final WaitActionConditionBuilder builder = waitBuilder.execution().action(echo);
 
         //THEN
-        assertEquals(builder.getCondition(), expectedCondition);
         assertEquals(builder.getCondition().getAction(), echo);
     }
 
@@ -145,18 +115,6 @@ public class WaitBuilderTest {
 
         //THEN
         assertEquals(builder.getCondition().getFile(), file);
-    }
-
-    @Test
-    public void testWaitForFileConditionIsCreated(){
-
-        //GIVEN
-
-        //WHEN
-        final WaitFileConditionBuilder builder = waitBuilder.file();
-
-        //THEN
-        assertEquals(builder.getCondition(), new FileCondition());
     }
 
     @Test
