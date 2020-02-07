@@ -26,6 +26,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
+import com.consol.citrus.json.JsonUtils;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.AbstractMessageValidator;
@@ -300,21 +301,7 @@ public class JsonTextMessageValidator extends AbstractMessageValidator<JsonMessa
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        if (!messageType.equalsIgnoreCase(MessageType.JSON.name())) {
-            return false;
-        }
-
-        if (!(message.getPayload() instanceof String)) {
-            return false;
-        }
-
-        if (StringUtils.hasText(message.getPayload(String.class)) &&
-                !message.getPayload(String.class).trim().startsWith("{") &&
-                !message.getPayload(String.class).trim().startsWith("[")) {
-            return false;
-        }
-
-        return true;
+        return messageType.equalsIgnoreCase(MessageType.JSON.name()) && JsonUtils.hasJsonPayload(message);
     }
 
     /**

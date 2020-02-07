@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,31 +16,30 @@
 
 package com.consol.citrus.validation.script;
 
+import com.consol.citrus.json.JsonUtils;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
+import com.consol.citrus.message.MessageType;
 import org.springframework.core.io.ClassPathResource;
 
 /**
- * Extended groovy message validator providing specific XML slurper support.
- * With XML slurper the tester can validate the message payload with closures and without having
- * to deal with XPath for instance.
- * 
- * @author Christoph Deppisch
+ * Extended groovy message validator providing specific Json slurper support.
+ * With Json slurper the tester can validate the message payload with closures for instance.
+ *
+ * @author DanielP
+ * @since 1.2
  */
-public class GroovyXmlMessageValidator extends GroovyScriptMessageValidator {
+public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {
 
     /**
      * Default constructor using default script template.
      */
-    public GroovyXmlMessageValidator() {
-        super(new ClassPathResource("com/consol/citrus/validation/xml-validation-template.groovy"));
+    public GroovyJsonMessageValidator() {
+        super(new ClassPathResource("com/consol/citrus/validation/json-validation-template.groovy"));
     }
-    
+
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        // only support xml message type
-        return new DomXmlMessageValidator().supportsMessageType(messageType, message) ||
-                new XhtmlMessageValidator().supportsMessageType(messageType, message);
+        // only support json message type
+        return messageType.equalsIgnoreCase(MessageType.JSON.name()) && JsonUtils.hasJsonPayload(message);
     }
 }

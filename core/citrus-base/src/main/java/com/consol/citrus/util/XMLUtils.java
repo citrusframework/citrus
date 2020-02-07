@@ -23,10 +23,12 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.xml.XmlConfigurer;
 import org.springframework.util.StringUtils;
 import org.w3c.dom.Attr;
@@ -399,5 +401,21 @@ public final class XMLUtils {
         }
 
         return xml;
+    }
+
+    /**
+     * Checks if given message payload is of type XML. An empty payload is considered to be a valid Json payload.
+     * @param message to check.
+     * @return true if message payload is XML, false otherwise.
+     */
+    public static boolean hasXmlPayload(Message message) {
+        if (!(message.getPayload() instanceof String)) {
+            return false;
+        }
+
+        return Optional.ofNullable(message.getPayload(String.class))
+                .map(String::trim)
+                .map(payload -> payload.length() == 0 || payload.startsWith("<"))
+                .orElse(true);
     }
 }

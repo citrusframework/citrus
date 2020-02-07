@@ -71,7 +71,7 @@ public class MessageValidatorRegistry implements InitializingBean {
 
                 if (payload.startsWith("<") && !messageType.equals(MessageType.XML.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.XML.name(), message);
-                } else if ((payload.trim().startsWith("{") || payload.trim().startsWith("[")) && !messageType.equals(MessageType.JSON.name())) {
+                } else if ((payload.startsWith("{") || payload.startsWith("[")) && !messageType.equals(MessageType.JSON.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.JSON.name(), message);
                 } else if (!messageType.equals(MessageType.PLAINTEXT.name())) {
                     matchingValidators = findFallbackMessageValidators(MessageType.PLAINTEXT.name(), message);

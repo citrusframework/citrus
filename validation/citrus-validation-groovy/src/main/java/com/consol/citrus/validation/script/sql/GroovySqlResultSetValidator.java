@@ -16,11 +16,18 @@
 
 package com.consol.citrus.validation.script.sql;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.validation.script.*;
+import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
+import com.consol.citrus.validation.script.ScriptValidationContext;
+import com.consol.citrus.validation.script.TemplateBasedScriptBuilder;
 import groovy.lang.GroovyClassLoader;
 import groovy.lang.GroovyObject;
 import org.codehaus.groovy.control.CompilationFailedException;
@@ -30,14 +37,9 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Groovy script validator capable of validating SQL result sets.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator {
@@ -46,17 +48,17 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(GroovySqlResultSetValidator.class);
-    
+
     /** Static code snippet for groovy script validation */
     private Resource scriptTemplateResource;
-    
+
     /**
-     * Default constructor using a default script template. 
+     * Default constructor using a default script template.
      */
     public GroovySqlResultSetValidator() {
         this(new ClassPathResource("com/consol/citrus/validation/sql/sql-validation-template.groovy"));
     }
-    
+
     /**
      * Constructor with script template.
      * @param scriptTemplateResource
@@ -72,7 +74,7 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
         if (validationContext.getScriptType().equals(ScriptTypes.GROOVY)) {
             try {
                 String validationScript = validationContext.getValidationScript(context);
-                
+
                 if (StringUtils.hasText(validationScript)) {
                     log.debug("Start groovy SQL result set validation");
 
@@ -85,14 +87,14 @@ public class GroovySqlResultSetValidator implements SqlResultSetScriptValidator 
                     Class<?> groovyClass = loader.parseClass(TemplateBasedScriptBuilder.fromTemplateResource(scriptTemplateResource)
                                                                 .withCode(validationScript)
                                                                 .build());
-                    
+
                     if (groovyClass == null) {
                         throw new CitrusRuntimeException("Failed to load groovy validation script resource");
                     }
-                    
+
                     GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
                     ((SqlResultSetScriptExecutor) groovyObject).validate(resultSet, context);
-                    
+
                     log.info("Groovy SQL result set validation successful: All values OK");
                 }
             } catch (CompilationFailedException e) {

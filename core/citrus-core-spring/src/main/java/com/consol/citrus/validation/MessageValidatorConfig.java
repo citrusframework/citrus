@@ -16,9 +16,11 @@
 
 package com.consol.citrus.validation;
 
+import com.consol.citrus.validation.binary.BinaryMessageValidator;
 import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.validation.script.*;
+import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
 import com.consol.citrus.validation.text.*;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
@@ -50,6 +52,8 @@ public class MessageValidatorConfig {
     private final GroovyXmlMessageValidator defaultGroovyXmlMessageValidator = new GroovyXmlMessageValidator();
     private final GroovyJsonMessageValidator defaultGroovyJsonMessageValidator = new GroovyJsonMessageValidator();
     private final GroovyScriptMessageValidator defaultGroovyTextMessageValidator = new GroovyScriptMessageValidator();
+
+    private final GroovySqlResultSetValidator sqlResultSetScriptValidator = new GroovySqlResultSetValidator();
 
     @Bean(name = "defaultXmlMessageValidator")
     public DomXmlMessageValidator getDefaultXmlMessageValidator() {
@@ -119,6 +123,11 @@ public class MessageValidatorConfig {
     @Bean(name = "defaultGroovyTextMessageValidator")
     public GroovyScriptMessageValidator getDefaultGroovyTextMessageValidator() {
         return defaultGroovyTextMessageValidator;
+    }
+
+    @Bean(name = "sqlResultSetScriptValidator")
+    public GroovySqlResultSetValidator getSqlResultSetScriptValidator() {
+        return sqlResultSetScriptValidator;
     }
 
     @Bean(name = MessageValidatorRegistry.BEAN_NAME)

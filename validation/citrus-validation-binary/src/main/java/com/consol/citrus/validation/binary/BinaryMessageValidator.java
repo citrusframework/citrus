@@ -14,7 +14,13 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.text;
+package com.consol.citrus.validation.binary;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
+import java.nio.channels.ReadableByteChannel;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
@@ -23,16 +29,10 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.DefaultMessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-
 /**
  * Message validator compares binary streams. Assumes control
  * message payload is convertable to an input stream so we can compare the stream data with buffer read.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class BinaryMessageValidator extends DefaultMessageValidator {

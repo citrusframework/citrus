@@ -9,19 +9,14 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>citrus-validation-json</artifactId>
-  <name>Citrus :: Validation :: JSON</name>
+  <artifactId>citrus-validation-text</artifactId>
+  <name>Citrus :: Validation :: Plaintext</name>
 
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.java-json-tools</groupId>
-      <artifactId>json-schema-validator</artifactId>
     </dependency>
   </dependencies>
 </project>

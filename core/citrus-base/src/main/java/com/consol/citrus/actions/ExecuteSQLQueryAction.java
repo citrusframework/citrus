@@ -36,7 +36,6 @@ import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.script.sql.GroovySqlResultSetValidator;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -216,12 +215,25 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
      * Gets the script validator implementation either autowired from application context
      * or if not set here a default implementation.
      */
-    private SqlResultSetScriptValidator getScriptValidator() {
+    private SqlResultSetScriptValidator getScriptValidator(TestContext context) {
         if (validator != null) {
             return validator;
-        } else {
-            return new GroovySqlResultSetValidator();
         }
+
+        if (context.getReferenceResolver() != null) {
+            if (context.getReferenceResolver().isResolvable("sqlResultSetScriptValidator")) {
+                return context.getReferenceResolver().resolve("sqlResultSetScriptValidator", SqlResultSetScriptValidator.class);
+            } else {
+                Map<String, SqlResultSetScriptValidator> validators = context.getReferenceResolver().resolveAll(SqlResultSetScriptValidator.class);
+                if (validators.size() == 1) {
+                    return validators.values().iterator().next();
+                } else if (validators.size() > 1) {
+                    log.warn("Too many default SQL result set script validators defined in project, please add one explicitly to the test action for verification");
+                }
+            }
+        }
+
+        throw new CitrusRuntimeException("Unable to find proper SQL result set script validator in project");
     }
 
     /**
@@ -266,7 +278,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             throws UnknownElementException, ValidationException {
         // apply script validation if specified
         if (scriptValidationContext != null) {
-            getScriptValidator().validateSqlResultSet(allResultRows, scriptValidationContext, context);
+            getScriptValidator(context).validateSqlResultSet(allResultRows, scriptValidationContext, context);
         }
 
         //now apply control set validation if specified
