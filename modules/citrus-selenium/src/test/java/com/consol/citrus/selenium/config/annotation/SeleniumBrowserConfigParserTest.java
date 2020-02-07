@@ -16,20 +16,22 @@
 
 package com.consol.citrus.selenium.config.annotation;
 
+import java.util.Collections;
+
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.events.WebDriverEventListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -65,25 +67,27 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser browserWithDeprecatedConfig;
 
     @Mock
-    private WebDriverEventListener eventListener = Mockito.mock(WebDriverEventListener.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private WebDriver webDriver = Mockito.mock(WebDriver.class);
+    private WebDriverEventListener eventListener;
     @Mock
-    private FirefoxProfile firefoxProfile = Mockito.mock(FirefoxProfile.class);
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
+    private WebDriver webDriver;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private FirefoxProfile firefoxProfile;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("webDriver", WebDriver.class)).thenReturn(webDriver);
+        when(referenceResolver.resolve("firefoxProfile", FirefoxProfile.class)).thenReturn(firefoxProfile);
+        when(referenceResolver.resolve("eventListener", WebDriverEventListener.class)).thenReturn(eventListener);
+        when(referenceResolver.resolve(new String[] { "eventListener" }, WebDriverEventListener.class)).thenReturn(Collections.singletonList(eventListener));
+    }
 
-        when(applicationContext.getBean("webDriver", WebDriver.class)).thenReturn(webDriver);
-        when(applicationContext.getBean("firefoxProfile", FirefoxProfile.class)).thenReturn(firefoxProfile);
-        when(applicationContext.getBean("eventListener", WebDriverEventListener.class)).thenReturn(eventListener);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -94,7 +98,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(browser1.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
         Assert.assertNull(browser1.getEndpointConfiguration().getStartPageUrl());
         Assert.assertTrue(browser1.getEndpointConfiguration().getEventListeners().isEmpty());
-        Assert.assertEquals(browser1.getEndpointConfiguration().isJavaScript(), true);
+        Assert.assertTrue(browser1.getEndpointConfiguration().isJavaScript());
         Assert.assertNull(browser1.getEndpointConfiguration().getWebDriver());
         Assert.assertNotNull(browser1.getEndpointConfiguration().getFirefoxProfile());
         Assert.assertNull(browser1.getEndpointConfiguration().getRemoteServerUrl());
@@ -112,7 +116,7 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(browser2.getEndpointConfiguration().getEventListeners().get(0), eventListener);
         Assert.assertEquals(browser2.getEndpointConfiguration().getWebDriver(), webDriver);
         Assert.assertEquals(browser2.getEndpointConfiguration().getFirefoxProfile(), firefoxProfile);
-        Assert.assertEquals(browser2.getEndpointConfiguration().isJavaScript(), false);
+        Assert.assertFalse(browser2.getEndpointConfiguration().isJavaScript());
         Assert.assertNull(browser2.getEndpointConfiguration().getRemoteServerUrl());
         Assert.assertEquals(browser2.getEndpointConfiguration().getTimeout(), 10000L);
     }

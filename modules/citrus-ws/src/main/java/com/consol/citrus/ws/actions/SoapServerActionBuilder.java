@@ -18,8 +18,8 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -30,8 +30,8 @@ import org.springframework.util.Assert;
  */
 public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
 
-    /** Spring application context */
-    private ApplicationContext applicationContext;
+    /** Bean reference resolver */
+    private ReferenceResolver referenceResolver;
 
     /** Target soap client instance */
     private final Endpoint soapServer;
@@ -52,7 +52,7 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
     public ReceiveSoapMessageAction.Builder receive() {
         ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder()
                 .endpoint(soapServer)
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
@@ -64,7 +64,7 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
     public SendSoapMessageAction.Builder send() {
         SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder()
                 .endpoint(soapServer)
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
@@ -76,17 +76,17 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
     public SendSoapFaultAction.Builder sendFault() {
         SendSoapFaultAction.Builder builder = new SendSoapFaultAction.Builder()
                 .endpoint(soapServer)
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
 
     /**
      * Sets the Spring bean application context.
-     * @param applicationContext
+     * @param referenceResolver
      */
-    public SoapServerActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public SoapServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
         return this;
     }
 

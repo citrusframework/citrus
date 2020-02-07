@@ -16,6 +16,9 @@
 
 package com.consol.citrus.arquillian.enricher;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
@@ -30,9 +33,6 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.test.spi.TestEnricher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
 
 /**
  * Test enricher works on Citrus annotated test class fields and test methods. Injects
@@ -77,13 +77,13 @@ public class CitrusTestEnricher implements TestEnricher {
                     if (annotation instanceof CitrusResource) {
                         Class<?> type = parameterTypes[i];
                         if (TestDesigner.class.isAssignableFrom(type)) {
-                            TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().getApplicationContext(), citrusInstance.get().createTestContext());
+                            TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().createTestContext());
                             testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                             log.debug("Injecting Citrus test designer on method parameter");
                             values[i] = testDesigner;
                         } else if (TestRunner.class.isAssignableFrom(type)) {
-                            TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().getApplicationContext(), citrusInstance.get().createTestContext());
+                            TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().createTestContext());
                             testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                             log.debug("Injecting Citrus test runner on method parameter");

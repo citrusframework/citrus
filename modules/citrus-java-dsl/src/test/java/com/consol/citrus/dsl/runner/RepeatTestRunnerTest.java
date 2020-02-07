@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -50,7 +50,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), RepeatUntilTrue.class);
         assertEquals(test.getActions().get(0).getName(), "repeat");
-        
+
         RepeatUntilTrue container = (RepeatUntilTrue)test.getActions().get(0);
         assertEquals(container.getActionCount(), 3);
         assertEquals(container.getCondition(), "i lt 5");
@@ -61,7 +61,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatBuilderWithConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -91,7 +91,7 @@ public class RepeatTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatBuilderWithHamcrestConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");

@@ -36,7 +36,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorFrontPosition() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 applyBehavior(new FooBehavior());
@@ -59,7 +59,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorWithFinally() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 echo("test");
@@ -102,7 +102,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorInContainer() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 sequential().actions(
@@ -137,7 +137,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorInContainerWithFinally() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 doFinally().actions(
@@ -186,7 +186,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehavior() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("test", "test");
@@ -219,7 +219,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehaviorTwice() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 FooBehavior behavior = new FooBehavior();
@@ -248,7 +248,7 @@ public class ApplyTestRunnerBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehaviorInContainerTwice() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 FooBehavior behavior = new FooBehavior();

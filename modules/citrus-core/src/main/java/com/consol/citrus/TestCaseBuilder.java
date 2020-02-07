@@ -4,12 +4,12 @@ import java.util.Date;
 
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.FinallySequence;
-import org.springframework.context.ApplicationContextAware;
+import com.consol.citrus.context.TestContext;
 
 /**
  * @author Christoph Deppisch
  */
-public interface TestCaseBuilder extends ApplicationContextAware {
+public interface TestCaseBuilder {
 
     /**
      * Builds the test case.
@@ -92,4 +92,10 @@ public interface TestCaseBuilder extends ApplicationContextAware {
      * @return
      */
     FinallySequence.Builder doFinally();
+
+    /**
+     * Sets the test context.
+     * @param context
+     */
+    void setTestContext(TestContext context);
 }

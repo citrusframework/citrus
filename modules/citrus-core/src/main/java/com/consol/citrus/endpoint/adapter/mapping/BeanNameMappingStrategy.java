@@ -16,38 +16,39 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
- * Endpoint adapter mapping strategy uses Spring application context and tries to find appropriate Spring bean in
- * context for the mapping key. Bean id or name has to match the given mapping key and bean must be of type
+ * Endpoint adapter mapping strategy uses bean reference resolver and tries to find appropriate endpoint adapter
+ * for the given mapping key. Bean id or name has to match the given mapping key and bean must be of type
  * {@link com.consol.citrus.endpoint.EndpointAdapter}
  *
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class BeanNameMappingStrategy implements EndpointAdapterMappingStrategy, ApplicationContextAware {
+public class BeanNameMappingStrategy implements EndpointAdapterMappingStrategy {
 
-    /** Application context holding available endpoint adapters */
-    protected ApplicationContext applicationContext;
+    /** Bean reference resolver holding available endpoint adapters */
+    protected final ReferenceResolver referenceResolver;
+
+    /**
+     * Default constructor initializes with reference resolver.
+     * @param referenceResolver
+     */
+    public BeanNameMappingStrategy(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
+    }
 
     @Override
     public EndpointAdapter getEndpointAdapter(String mappingKey) {
         try {
-            return applicationContext.getBean(mappingKey, EndpointAdapter.class);
+            return referenceResolver.resolve(mappingKey, EndpointAdapter.class);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find matching endpoint adapter with bean name '" +
                     mappingKey + "' in Spring bean application context", e);
         }
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 }

@@ -16,6 +16,9 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.io.File;
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -26,9 +29,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.io.File;
-import java.io.IOException;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
@@ -42,12 +42,12 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
     private Resource resource = Mockito.mock(Resource.class);
     private File file = Mockito.mock(File.class);
-    
+
     @Test
     public void testExecuteSQLBuilderWithStatement() {
         reset(jdbcTemplate);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 sql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -78,7 +78,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     public void testExecuteSQLBuilderWithTransaction() {
         reset(jdbcTemplate, transactionManager);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 sql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -115,7 +115,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     public void testExecuteSQLBuilderWithResource() throws IOException {
         reset(jdbcTemplate);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 sql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -144,7 +144,7 @@ public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecuteSQLBuilderWithResourcePath() throws IOException {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 sql(builder -> builder.jdbcTemplate(jdbcTemplate)

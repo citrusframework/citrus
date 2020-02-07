@@ -16,10 +16,16 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestRequest;
 import com.consol.citrus.endpoint.Endpoint;
@@ -41,7 +47,6 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
@@ -49,11 +54,6 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -65,10 +65,10 @@ import static org.mockito.Mockito.when;
  * @since 2.3
  */
 public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Producer messageProducer = Mockito.mock(Producer.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
     private Resource resource = Mockito.mock(Resource.class);
 
     private XStreamMarshaller marshaller = new XStreamMarshaller();
@@ -90,7 +90,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(message.getHeader("operation"), "foo");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -129,7 +129,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         final Message message = new DefaultMessage(10).setHeader("operation", "foo");
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -176,7 +176,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         final Message message = new DefaultMessage(10).setHeader("operation", "foo");
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -212,7 +212,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithPayloadModel() {
-        reset(applicationContextMock, messageEndpoint, messageProducer);
+        reset(referenceResolver, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -221,13 +221,15 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", marshaller));
-        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.singletonMap("marshaller", marshaller));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -262,7 +264,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -288,7 +290,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithPayloadModelExplicitMarshallerName() {
-        reset(applicationContextMock, messageEndpoint, messageProducer);
+        reset(referenceResolver, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -297,13 +299,15 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.containsBean("myMarshaller")).thenReturn(true);
-        when(applicationContextMock.getBean("myMarshaller")).thenReturn(marshaller);
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
+        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -326,7 +330,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderWithPayloadData() {
         reset(messageEndpoint, messageProducer);
@@ -338,7 +342,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -349,10 +353,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        
+
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -374,7 +378,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -386,25 +390,22 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        
+
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
-        
+
         final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderWithEndpointName() {
-        final TestContext context = applicationContext.getBean(TestContext.class);
-        context.setApplicationContext(applicationContextMock);
-
-        reset(applicationContextMock, messageEndpoint, messageProducer);
+        reset(referenceResolver, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -413,12 +414,14 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
-        when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.resolve("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint("fooMessageEndpoint")
@@ -435,7 +438,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
 
     }
-    
+
     @Test
     public void testSendBuilderWithHeaders() {
         reset(messageEndpoint, messageProducer);
@@ -451,7 +454,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -480,7 +483,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("language"), "eng");
 
     }
-    
+
     @Test
     public void testSendBuilderWithHeaderData() {
         reset(messageEndpoint, messageProducer);
@@ -495,13 +498,13 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
                      .payload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                      .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
-                
+
                 send(builder -> builder.endpoint(messageEndpoint)
                     .message(new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>"))
                     .header("<Header><Name>operation</Name><Value>foo</Value></Header>"));
@@ -512,10 +515,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
-        
+
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -556,7 +559,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -605,7 +608,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderWithHeaderDataResource() throws IOException {
         reset(resource, messageEndpoint, messageProducer);
@@ -629,7 +632,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo1</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo2</Value></Header>".getBytes()));
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -646,10 +649,10 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 2);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
         Assert.assertEquals(test.getActions().get(1).getClass(), SendMessageAction.class);
-        
+
         SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
 
@@ -674,7 +677,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
 
     }
-    
+
     @Test
     public void testSendBuilderExtractFromPayload() {
         reset(messageEndpoint, messageProducer);
@@ -686,7 +689,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -705,12 +708,12 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), SendMessageAction.class);
-        
+
         final SendMessageAction action = ((SendMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "send");
-        
+
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        
+
         Assert.assertEquals(action.getVariableExtractors().size(), 1);
         Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
         Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
@@ -729,7 +732,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -761,7 +764,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
     }
-    
+
     @Test
     public void testSendBuilderExtractFromHeader() {
         reset(messageEndpoint, messageProducer);
@@ -773,7 +776,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -819,7 +822,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -856,7 +859,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -896,7 +899,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)
@@ -922,7 +925,7 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final JsonMappingDataDictionary dictionary = new JsonMappingDataDictionary();
         dictionary.getMappings().put("TestRequest.Message", "Hello World!");
 
-        reset(applicationContextMock, messageEndpoint, messageProducer);
+        reset(referenceResolver, messageEndpoint, messageProducer);
         when(messageEndpoint.createProducer()).thenReturn(messageProducer);
         when(messageEndpoint.getActor()).thenReturn(null);
         doAnswer(invocation -> {
@@ -932,12 +935,14 @@ public class SendMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBean("customDictionary", DataDictionary.class)).thenReturn(dictionary);
-        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve("customDictionary", DataDictionary.class)).thenReturn(dictionary);
+
+        context.setReferenceResolver(referenceResolver);
+        final MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 send(builder -> builder.endpoint(messageEndpoint)

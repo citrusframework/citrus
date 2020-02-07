@@ -29,10 +29,10 @@ import org.testng.annotations.Test;
  * @since 2.7
  */
 public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testKubernetesBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 kubernetes()

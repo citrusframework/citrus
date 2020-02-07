@@ -34,7 +34,7 @@ public class FailTestRunnerTest extends AbstractTestNGUnitTest {
         MockTestRunner builder = null;
 
         try {
-            builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            builder = new MockTestRunner(getClass().getSimpleName(), context) {
                 @Override
                 public void execute() {
                     fail("This test will fail.");

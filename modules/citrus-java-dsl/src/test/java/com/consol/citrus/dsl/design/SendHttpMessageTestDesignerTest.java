@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
@@ -26,7 +27,6 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,11 +38,11 @@ import org.testng.annotations.Test;
 public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     private HttpClient httpClient = Mockito.mock(HttpClient.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testFork() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 send(httpClient)
@@ -87,7 +87,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpMethod() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 http().client(httpClient)
@@ -117,7 +117,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndPath() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 http().client(httpClient)
@@ -150,7 +150,7 @@ public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestUriAndQueryParams() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 http().client(httpClient)

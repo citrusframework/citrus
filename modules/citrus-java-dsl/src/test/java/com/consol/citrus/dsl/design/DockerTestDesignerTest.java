@@ -28,10 +28,10 @@ import org.testng.annotations.Test;
  * @since 2.4
  */
 public class DockerTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testDockerBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 docker().info()

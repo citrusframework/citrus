@@ -87,7 +87,6 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.actions.SoapActionBuilder;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
-import org.springframework.context.ApplicationContext;
 
 /**
  * Default test runner implementation. Provides Java DSL methods for test actions. Immediately executes test actions as
@@ -104,9 +103,6 @@ public class DefaultTestRunner implements TestRunner {
 
     /** This runners test context */
     private TestContext context;
-
-    /** Spring bean application context */
-    private ApplicationContext applicationContext;
 
     /** Optional stack of containers cached for execution */
     protected Stack<TestActionContainerBuilder<? extends AbstractActionContainer, ?>> containers = new Stack<>();
@@ -129,24 +125,22 @@ public class DefaultTestRunner implements TestRunner {
 
     /**
      * Constructor using Spring bean application context.
-     * @param applicationContext
      * @param context
      */
-    public DefaultTestRunner(ApplicationContext applicationContext, TestContext context) {
+    public DefaultTestRunner(TestContext context) {
         this();
         this.context = context;
-        this.applicationContext = applicationContext;
 
-        if (applicationContext != null) {
+        if (context.getReferenceResolver() != null) {
             try {
-                testCase.setTestActionListeners(applicationContext.getBean(TestActionListeners.class));
+                testCase.setTestActionListeners(context.getReferenceResolver().resolve(TestActionListeners.class));
 
-                if (!applicationContext.getBeansOfType(SequenceBeforeTest.class).isEmpty()) {
-                    testCase.setBeforeTest(Arrays.asList(applicationContext.getBeansOfType(SequenceBeforeTest.class).values().toArray(new SequenceBeforeTest[]{})));
+                if (!context.getReferenceResolver().resolveAll(SequenceBeforeTest.class).isEmpty()) {
+                    testCase.setBeforeTest(Arrays.asList(context.getReferenceResolver().resolveAll(SequenceBeforeTest.class).values().toArray(new SequenceBeforeTest[]{})));
                 }
 
-                if (!applicationContext.getBeansOfType(SequenceAfterTest.class).isEmpty()) {
-                    testCase.setAfterTest(Arrays.asList(applicationContext.getBeansOfType(SequenceAfterTest.class).values().toArray(new SequenceAfterTest[]{})));
+                if (!context.getReferenceResolver().resolveAll(SequenceAfterTest.class).isEmpty()) {
+                    testCase.setAfterTest(Arrays.asList(context.getReferenceResolver().resolveAll(SequenceAfterTest.class).values().toArray(new SequenceAfterTest[]{})));
                 }
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to setup test designer", e);
@@ -244,7 +238,7 @@ public class DefaultTestRunner implements TestRunner {
         ApplyTestBehaviorAction.Builder builder = new ApplyTestBehaviorAction.Builder()
                 .runner(this)
                 .behavior(behavior);
-        behavior.setApplicationContext(applicationContext);
+        behavior.setTestContext(context);
         builder.build().execute(context);
         return builder;
     }
@@ -345,7 +339,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public PurgeJmsQueuesAction.Builder purgeQueues(BuilderSupport<PurgeJmsQueuesAction.Builder> configurer) {
         PurgeJmsQueuesAction.Builder builder = new PurgeJmsQueuesAction.Builder()
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -353,7 +347,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public PurgeMessageChannelAction.Builder purgeChannels(BuilderSupport<PurgeMessageChannelAction.Builder> configurer) {
         PurgeMessageChannelAction.Builder builder = new PurgeMessageChannelAction.Builder()
-                .channelResolver(applicationContext);
+                .channelResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -361,7 +355,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public PurgeEndpointAction.Builder purgeEndpoints(BuilderSupport<PurgeEndpointAction.Builder> configurer) {
         PurgeEndpointAction.Builder builder = new PurgeEndpointAction.Builder()
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -370,7 +364,7 @@ public class DefaultTestRunner implements TestRunner {
     public ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer) {
         ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder()
                 .messageType(MessageType.XML)
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -378,7 +372,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer) {
         SendMessageAction.Builder builder = new SendMessageAction.Builder()
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -551,7 +545,7 @@ public class DefaultTestRunner implements TestRunner {
             public AssertSoapFault.Builder actions(TestActionBuilder<?>... actions) {
                 return run(super.actions(actions));
             }
-        }.withApplicationContext(applicationContext);
+        }.withReferenceResolver(context.getReferenceResolver());
         return container(builder);
     }
 
@@ -679,7 +673,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public HttpActionBuilder http(BuilderSupport<HttpActionBuilder> configurer) {
         HttpActionBuilder builder = new HttpActionBuilder()
-                    .withApplicationContext(applicationContext);
+                    .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -687,7 +681,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public SoapActionBuilder soap(BuilderSupport<SoapActionBuilder> configurer) {
         SoapActionBuilder builder = new SoapActionBuilder()
-                    .withApplicationContext(applicationContext);
+                    .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -695,7 +689,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public CamelRouteActionBuilder camel(BuilderSupport<CamelRouteActionBuilder> configurer) {
         CamelRouteActionBuilder builder = new CamelRouteActionBuilder()
-                    .withApplicationContext(applicationContext);
+                    .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -703,7 +697,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public ZooExecuteAction.Builder zookeeper(BuilderSupport<ZooExecuteAction.Builder> configurer) {
         ZooExecuteAction.Builder builder = new ZooExecuteAction.Builder()
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);
     }
@@ -711,7 +705,7 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public Template.Builder applyTemplate(BuilderSupport<Template.Builder> configurer) {
         Template.Builder builder = new Template.Builder()
-                .withApplicationContext(applicationContext);
+                .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
 
         return run(builder);
@@ -736,29 +730,9 @@ public class DefaultTestRunner implements TestRunner {
         return context;
     }
 
-    /**
-     * Sets the test context.
-     * @param context
-     */
+    @Override
     public void setTestContext(TestContext context) {
         this.context = context;
-    }
-
-    /**
-     * Gets the value of the applicationContext property.
-     *
-     * @return the applicationContext
-     */
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    /**
-     * Sets the application context either from ApplicationContextAware injection or from outside.
-     * @param applicationContext
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 
     @Override

@@ -16,6 +16,14 @@
 
 package com.consol.citrus.http.config.annotation;
 
+import javax.servlet.Filter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
 import com.consol.citrus.context.ReferenceResolver;
@@ -30,9 +38,6 @@ import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.Filter;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -83,12 +88,13 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
 
         builder.connectors(getReferenceResolver().resolve(annotation.connectors(), Connector.class));
 
-        List<Filter> filterBeans = getReferenceResolver().resolve(annotation.filters(), Filter.class);
-        Map<String, Filter> filters = new HashMap<>();
-        for (int i = 0; i < annotation.filters().length; i++) {
-            filters.put(annotation.filters()[i], filterBeans.get(i));
+        if (annotation.filters().length > 0) {
+            builder.filters(getReferenceResolver().resolveAll(Filter.class)
+                    .entrySet()
+                    .stream()
+                    .filter(entry -> Stream.of(annotation.filters()).anyMatch(f -> f.equals(entry.getKey())))
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
         }
-        builder.filters(filters);
 
         Map<String, String> filterMappings = new HashMap<>();
         for (String filterMapping : annotation.filterMappings()) {

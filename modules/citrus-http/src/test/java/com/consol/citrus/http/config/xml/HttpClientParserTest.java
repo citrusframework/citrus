@@ -16,6 +16,8 @@
 
 package com.consol.citrus.http.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpResponseErrorHandler;
@@ -29,8 +31,6 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -53,10 +53,10 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
-        Assert.assertEquals(httpClient.getEndpointConfiguration().isDefaultAcceptHeader(), true);
+        Assert.assertTrue(httpClient.getEndpointConfiguration().isDefaultAcceptHeader());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(httpClient.getEndpointConfiguration().isHandleCookies(), false);
+        Assert.assertFalse(httpClient.getEndpointConfiguration().isHandleCookies());
 
         // 2nd message sender
         httpClient = clients.get("httpClient2");

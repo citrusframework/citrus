@@ -16,12 +16,14 @@
 
 package com.consol.citrus.dsl.design;
 
+import com.consol.citrus.context.TestContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
  * This test builder should be exclusively used as bean in a Spring application context. Either as bean definition in a XML configuration file or as
  * {@link org.springframework.stereotype.Component} annotated bean loaded with Spring's annotation scan support. The builder is aware of the application context and
- * the bean lifecylce automatically setting up application context and initializing tasks.
+ * the bean lifecycle automatically setting up application context and initializing tasks.
  *
  * Subclass may add custom logic in {@link TestDesignerComponent#configure()} method by calling builder methods.
  *
@@ -30,10 +32,30 @@ import org.springframework.context.ApplicationContextAware;
  */
 public class TestDesignerComponent extends DefaultTestDesigner implements ApplicationContextAware {
 
+    private ApplicationContext applicationContext;
+
     /**
      * Main entrance method for subclasses to call Java DSL builder methods in order to
      * add test actions and basic test case properties to this builder instance.
      */
     protected void configure() {
+    }
+
+    /**
+     * Obtains the applicationContext.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    /**
+     * Specifies the applicationContext.
+     * @param applicationContext
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        setTestContext(applicationContext.getBean(TestContext.class));
+        this.applicationContext = applicationContext;
     }
 }

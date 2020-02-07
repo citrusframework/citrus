@@ -16,6 +16,8 @@
 
 package com.consol.citrus.dsl.runner;
 
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
@@ -23,4 +25,19 @@ import org.springframework.context.ApplicationContextAware;
  * @since 2.3
  */
 public class TestRunnerComponent extends DefaultTestRunner implements ApplicationContextAware {
+
+    private ApplicationContext applicationContext;
+
+    /**
+     * Obtains the applicationContext.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
 }

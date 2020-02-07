@@ -16,6 +16,14 @@
 
 package com.consol.citrus.dsl.runner;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.Queue;
+import javax.jms.Session;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -23,9 +31,10 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -55,7 +64,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(messageConsumer.receive(200L)).thenReturn(null);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeQueues(builder -> builder.connectionFactory(connectionFactory)
@@ -95,7 +104,7 @@ public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(messageConsumer.receive(200L)).thenReturn(null);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeQueues(builder -> builder.connectionFactory(connectionFactory)

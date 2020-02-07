@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -55,7 +56,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -363,11 +363,11 @@ class ReceiveMessageBuilderTest {
 		final Object payload = "{hello}";
 		final String mapperName = "mapper";
 
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
-		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
+		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
 		final Marshaller marshaller = mock(Marshaller.class);
-		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
+		when(referenceResolver.resolve(mapperName)).thenReturn(marshaller);
 
 		//WHEN
 		final ReceiveMessageAction.Builder copy = builder.payload(payload, mapperName);
@@ -385,12 +385,12 @@ class ReceiveMessageBuilderTest {
 		final Object payload = "{hello}";
 		final String mapperName = "mapper";
 
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
-		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
+		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
 		final ObjectMapper mapper = mock(ObjectMapper.class);
 		final ObjectWriter writer = mock(ObjectWriter.class);
-		when(mockApplicationContext.getBean(mapperName)).thenReturn(mapper);
+		when(referenceResolver.resolve(mapperName)).thenReturn(mapper);
 		when(mapper.writer()).thenReturn(writer);
 		when(writer.writeValueAsString(payload)).thenReturn("hello");
 
@@ -410,11 +410,11 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final Object payload = "<hello/>";
 		final Marshaller marshaller = mock(Marshaller.class);
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 		final Map<String, Marshaller> map = Collections.singletonMap("marshaller", marshaller);
-		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(map);
-		when(mockApplicationContext.getBean(Marshaller.class)).thenReturn(marshaller);
+		when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(map);
+		when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
 
 		//WHEN
 		final ReceiveMessageAction.Builder copy = builder.payloadModel(payload);
@@ -431,12 +431,12 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final Object payload = "{hello}";
 		final ObjectMapper mapper = mock(ObjectMapper.class);
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 		final Map<String, ObjectMapper> map = Collections.singletonMap("mapper", mapper);
-		doReturn(Collections.emptyMap()).when(mockApplicationContext).getBeansOfType(Marshaller.class);
-		doReturn(map).when(mockApplicationContext).getBeansOfType(ObjectMapper.class);
-		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
+		doReturn(Collections.emptyMap()).when(referenceResolver).resolveAll(Marshaller.class);
+		doReturn(map).when(referenceResolver).resolveAll(ObjectMapper.class);
+		when(referenceResolver.resolve(ObjectMapper.class)).thenReturn(mapper);
 		final ObjectWriter writerMock = mock(ObjectWriter.class);
 		when(mapper.writer()).thenReturn(writerMock);
 		when(writerMock.writeValueAsString(payload)).thenReturn("hello");
@@ -554,10 +554,10 @@ class ReceiveMessageBuilderTest {
 		}).when(marshaller).marshal(eq("hello"), any(StringResult.class));
 
 		final String mapperName = "marshaller";
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
-		when(mockApplicationContext.getBean(mapperName)).thenReturn(marshaller);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
+		when(referenceResolver.resolve(mapperName)).thenReturn(marshaller);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 		final List<String> expected = Collections.singletonList("hello");
 
 		//WHEN
@@ -579,10 +579,10 @@ class ReceiveMessageBuilderTest {
 		when(objectMapper.writer()).thenReturn(objectWriter);
 		when(objectWriter.writeValueAsString(model)).thenReturn("hello");
 		final String mapperName = "object";
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		when(mockApplicationContext.containsBean(mapperName)).thenReturn(true);
-		when(mockApplicationContext.getBean(mapperName)).thenReturn(objectMapper);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		when(referenceResolver.isResolvable(mapperName)).thenReturn(true);
+		when(referenceResolver.resolve(mapperName)).thenReturn(objectMapper);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 		final List<String> expected = Collections.singletonList("hello");
 
 
@@ -607,11 +607,11 @@ class ReceiveMessageBuilderTest {
 		}).when(marshaller).marshal(eq("hello"), any(StringResult.class));
 
 		final String mapperName = "marshaller";
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
 		final Map<String, Marshaller> beans = Collections.singletonMap(mapperName, marshaller);
-		when(mockApplicationContext.getBeansOfType(Marshaller.class)).thenReturn(beans);
-		when(mockApplicationContext.getBean(Marshaller.class)).thenReturn(marshaller);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(beans);
+		when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 		final List<String> expected = Collections.singletonList("hello");
 
 		//WHEN
@@ -633,14 +633,14 @@ class ReceiveMessageBuilderTest {
 		when(writer.writeValueAsString(model)).thenReturn("hello");
 		when(mapper.writer()).thenReturn(writer);
 		final String mapperName = "object";
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
 		final Map<String, Marshaller> empty = new HashMap<>();
 		final Map<String, ObjectMapper> beans = new HashMap<>();
 		beans.put(mapperName, mapper);
-		doReturn(empty).when(mockApplicationContext).getBeansOfType(Marshaller.class);
-		doReturn(beans).when(mockApplicationContext).getBeansOfType(ObjectMapper.class);
-		when(mockApplicationContext.getBean(ObjectMapper.class)).thenReturn(mapper);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		doReturn(empty).when(referenceResolver).resolveAll(Marshaller.class);
+		doReturn(beans).when(referenceResolver).resolveAll(ObjectMapper.class);
+		when(referenceResolver.resolve(ObjectMapper.class)).thenReturn(mapper);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 		final List<String> expected = Collections.singletonList("hello");
 
 		//WHEN
@@ -1228,11 +1228,11 @@ class ReceiveMessageBuilderTest {
 		final String name1 = "validator1";
 		final String name2 = "validator2";
 		final String name3 = "validator3";
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		doReturn(validator1).when(mockApplicationContext).getBean(name1, MessageValidator.class);
-		doReturn(validator2).when(mockApplicationContext).getBean(name2, MessageValidator.class);
-		doReturn(validator3).when(mockApplicationContext).getBean(name3, MessageValidator.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		doReturn(validator1).when(referenceResolver).resolve(name1, MessageValidator.class);
+		doReturn(validator2).when(referenceResolver).resolve(name2, MessageValidator.class);
+		doReturn(validator3).when(referenceResolver).resolve(name3, MessageValidator.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
 		final ReceiveMessageAction.Builder copy = builder.validator(name1, name2, name3);
@@ -1273,11 +1273,11 @@ class ReceiveMessageBuilderTest {
 		final String name1 = "validator1";
 		final String name2 = "validator2";
 		final String name3 = "validator3";
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		doReturn(validator1).when(mockApplicationContext).getBean(name1, HeaderValidator.class);
-		doReturn(validator2).when(mockApplicationContext).getBean(name2, HeaderValidator.class);
-		doReturn(validator3).when(mockApplicationContext).getBean(name3, HeaderValidator.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		doReturn(validator1).when(referenceResolver).resolve(name1, HeaderValidator.class);
+		doReturn(validator2).when(referenceResolver).resolve(name2, HeaderValidator.class);
+		doReturn(validator3).when(referenceResolver).resolve(name3, HeaderValidator.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 
 		//WHEN
@@ -1313,9 +1313,9 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String name = "dictionary";
 		final DataDictionary dataDictionary = mock(DataDictionary.class);
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		when(mockApplicationContext.getBean(name, DataDictionary.class)).thenReturn(dataDictionary);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		when(referenceResolver.resolve(name, DataDictionary.class)).thenReturn(dataDictionary);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
 		final ReceiveMessageAction.Builder copy = builder.dictionary(name);
@@ -1407,19 +1407,19 @@ class ReceiveMessageBuilderTest {
 	}
 
 	@Test
-	void withApplicationContext() {
+	void withReferenceResolver() {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final ApplicationContext mockApplicationContext = mock(ApplicationContext.class);
-		ReflectionTestUtils.setField(builder, "applicationContext", mockApplicationContext);
+		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
+		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.withApplicationContext(mockApplicationContext);
+		final ReceiveMessageAction.Builder copy = builder.withReferenceResolver(referenceResolver);
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(mockApplicationContext, ReflectionTestUtils.getField(builder, "applicationContext"));
+		assertEquals(referenceResolver, ReflectionTestUtils.getField(builder, "referenceResolver"));
 	}
 
     @Test

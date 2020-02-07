@@ -30,7 +30,7 @@ public class EchoTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testEchoBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 echo("Hello Citrus!");

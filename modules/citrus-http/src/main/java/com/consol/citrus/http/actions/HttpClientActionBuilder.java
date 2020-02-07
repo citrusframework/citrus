@@ -18,8 +18,8 @@ package com.consol.citrus.http.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
@@ -33,8 +33,8 @@ import org.springframework.util.StringUtils;
  */
 public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
 
-    /** Spring application context */
-    private ApplicationContext applicationContext;
+    /** Bean reference resolver */
+    private ReferenceResolver referenceResolver;
 
     /** Target http client instance */
     private Endpoint httpClient;
@@ -84,7 +84,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(httpClientUri);
         }
 
-        builder.withApplicationContext(applicationContext);
+        builder.withReferenceResolver(referenceResolver);
         builder.method(method);
 
         if (StringUtils.hasText(path)) {
@@ -96,11 +96,11 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
-     * Sets the Spring bean application context.
-     * @param applicationContext
+     * Sets the bean reference resolver.
+     * @param referenceResolver
      */
-    public HttpClientActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public HttpClientActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
         return this;
     }
 
@@ -238,7 +238,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
                 builder.endpoint(httpClientUri);
             }
 
-            builder.withApplicationContext(applicationContext);
+            builder.withReferenceResolver(referenceResolver);
             HttpClientActionBuilder.this.delegate = builder;
             return builder;
         }
@@ -255,7 +255,7 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
                 builder.endpoint(httpClientUri);
             }
 
-            builder.withApplicationContext(applicationContext);
+            builder.withReferenceResolver(referenceResolver);
             builder.status(status);
             HttpClientActionBuilder.this.delegate = builder;
             return builder;

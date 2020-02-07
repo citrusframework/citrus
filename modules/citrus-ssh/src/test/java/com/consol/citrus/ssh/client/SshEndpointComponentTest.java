@@ -18,10 +18,7 @@ package com.consol.citrus.ssh.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -29,13 +26,7 @@ import org.testng.annotations.Test;
  */
 public class SshEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
-
-    @BeforeClass
-    public void setup() {
-        context.setApplicationContext(applicationContext);
-    }
 
     @Test
     public void testCreateEndpoint() throws Exception {
@@ -75,7 +66,7 @@ public class SshEndpointComponentTest {
         Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPort(), 2200);
         Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getUser(), "foo");
         Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPassword(), "12345678");
-        Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().isStrictHostChecking(), true);
+        Assert.assertTrue(((SshClient) endpoint).getEndpointConfiguration().isStrictHostChecking());
         Assert.assertEquals(((SshClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
     }
 }

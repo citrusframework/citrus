@@ -16,30 +16,33 @@
 
 package com.consol.citrus.dsl.endpoint;
 
+import com.consol.citrus.channel.ChannelEndpointAdapter;
+import com.consol.citrus.channel.ChannelSyncEndpoint;
+import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
+import com.consol.citrus.channel.MessageSelectingQueueChannel;
 import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 1.3.1
  */
+@ContextConfiguration(classes = TestExecutingEndpointAdapterTest.EndpointConfig.class)
 public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
-    private TestExecutingEndpointAdapter endpointAdapter;
 
-    @BeforeClass
-    public void loadContext() {
-        ApplicationContext ctx = new ClassPathXmlApplicationContext(new String[] {"classpath:com/consol/citrus/dsl/endpoint/TestExecutingEndpointAdapterTest-context.xml"}, applicationContext);
-        endpointAdapter = ctx.getBean(TestExecutingEndpointAdapter.class);
-    }
+    @Autowired
+    private TestExecutingEndpointAdapter endpointAdapter;
 
     /**
      * Test for handler routing by node content
@@ -133,6 +136,47 @@ public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
             Assert.fail("Missing exception due to unknown endpoint adapter");
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+        }
+    }
+
+    @Configuration
+    @ComponentScan({"com.consol.citrus.dsl.endpoint.designer",
+                    "com.consol.citrus.dsl.endpoint.runner"})
+    public static class EndpointConfig {
+
+        private MessageSelectingQueueChannel inboundChannel = new MessageSelectingQueueChannel();
+
+        @Bean
+        public TestExecutingEndpointAdapter testSimulator() {
+            TestExecutingEndpointAdapter endpointAdapter = new TestExecutingEndpointAdapter();
+            XPathPayloadMappingKeyExtractor mappingKeyExtractor = new XPathPayloadMappingKeyExtractor();
+            mappingKeyExtractor.setXpathExpression("//Test/@name");
+            endpointAdapter.setMappingKeyExtractor(mappingKeyExtractor);
+
+            endpointAdapter.setResponseEndpointAdapter(channelEndpointAdapter());
+
+            return endpointAdapter;
+        }
+
+        @Bean
+        public ChannelEndpointAdapter channelEndpointAdapter() {
+            ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
+            endpointConfiguration.setChannel(inboundChannel());
+            endpointConfiguration.setTimeout(5000L);
+            return new ChannelEndpointAdapter(endpointConfiguration);
+        }
+
+        @Bean
+        public MessageSelectingQueueChannel inboundChannel() {
+            return inboundChannel;
+        }
+
+        @Bean
+        public ChannelSyncEndpoint inboundChannelEndpoint() {
+            ChannelSyncEndpointConfiguration endpointConfiguration = new ChannelSyncEndpointConfiguration();
+            endpointConfiguration.setChannel(inboundChannel());
+            endpointConfiguration.setTimeout(5000L);
+            return new ChannelSyncEndpoint(endpointConfiguration);
         }
     }
 }

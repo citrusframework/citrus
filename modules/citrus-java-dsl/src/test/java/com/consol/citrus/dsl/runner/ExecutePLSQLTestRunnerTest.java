@@ -46,7 +46,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -77,7 +77,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithTransaction() {
         reset(jdbcTemplate, transactionManager);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -121,7 +121,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
                 "TEST_STMT_3\n" +
                 "/").getBytes()));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -154,7 +154,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithSQLResourcePath() throws IOException {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 plsql(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -183,7 +183,7 @@ public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
         reset(jdbcTemplate);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 plsql(builder -> builder.jdbcTemplate(jdbcTemplate)

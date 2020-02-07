@@ -17,23 +17,21 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.context.ApplicationContext;
 
 /**
  * Test instance for {@link com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner} used in unit tests in order to provide
  * unit testing access to builder functionality.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class MockTestDesigner extends DefaultTestDesigner {
 
     /**
      * Constructor using an application context.
-     * @param applicationContext
      * @param context
      */
-    public MockTestDesigner(ApplicationContext applicationContext, TestContext context) {
-        super(applicationContext, context);
+    public MockTestDesigner(TestContext context) {
+        super(context);
     }
 
     public void configure() {

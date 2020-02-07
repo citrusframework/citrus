@@ -16,14 +16,17 @@
 
 package com.consol.citrus.channel;
 
+import java.util.Optional;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-import org.springframework.messaging.*;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.util.StringUtils;
 
 /**
@@ -115,15 +118,15 @@ public class ChannelProducer implements Producer {
      * @return the MessageChannel object
      */
     protected MessageChannel resolveChannelName(String channelName, TestContext context) {
-        if (endpointConfiguration.getChannelResolver() == null) {
-            if (endpointConfiguration.getBeanFactory() != null) {
-                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
-            } else {
-                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(context.getApplicationContext()));
-            }
-        }
+        return Optional.ofNullable(endpointConfiguration.getChannelResolver())
+                .map(resolver -> resolver.resolveDestination(channelName))
+                .orElseGet(() -> {
+                    if (endpointConfiguration.getBeanFactory() != null) {
+                        return new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()).resolveDestination(channelName);
+                    }
 
-        return endpointConfiguration.getChannelResolver().resolveDestination(channelName);
+                    return context.getReferenceResolver().resolve(channelName, MessageChannel.class);
+                });
     }
 
     @Override

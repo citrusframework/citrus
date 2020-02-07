@@ -31,11 +31,11 @@ import java.util.List;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 
@@ -352,12 +352,12 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
         }
 
         /**
-         * Sets the Spring bean factory for using endpoint names.
-         * @param applicationContext
+         * Sets the bean reference resolver for using endpoint names.
+         * @param referenceResolver
          */
-        public Builder withApplicationContext(ApplicationContext applicationContext) {
-            if (applicationContext.containsBean("connectionFactory")) {
-                connectionFactory(applicationContext.getBean("connectionFactory", ConnectionFactory.class));
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            if (referenceResolver.isResolvable("connectionFactory")) {
+                connectionFactory(referenceResolver.resolve("connectionFactory", ConnectionFactory.class));
             }
 
             return this;

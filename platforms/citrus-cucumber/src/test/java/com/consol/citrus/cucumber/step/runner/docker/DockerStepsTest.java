@@ -77,7 +77,7 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
     @BeforeMethod
     public void injectResources() {
         steps = new DockerSteps();
-        runner = new DefaultTestRunner(applicationContext, context);
+        runner = new DefaultTestRunner(context);
         CitrusAnnotations.injectAll(steps, citrus, context);
         CitrusDslAnnotations.injectTestRunner(steps, runner);
     }

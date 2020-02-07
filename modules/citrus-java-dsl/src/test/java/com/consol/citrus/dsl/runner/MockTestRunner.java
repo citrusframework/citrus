@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.context.ApplicationContext;
 
 /**
  * @author Christoph Deppisch
@@ -27,11 +26,10 @@ public class MockTestRunner extends DefaultTestRunner {
 
     /**
      * Constructor using an application context.
-     * @param applicationContext
      * @param context
      */
-    public MockTestRunner(String name, ApplicationContext applicationContext, TestContext context) {
-        super(applicationContext, context);
+    public MockTestRunner(String name, TestContext context) {
+        super(context);
 
         name(name);
 

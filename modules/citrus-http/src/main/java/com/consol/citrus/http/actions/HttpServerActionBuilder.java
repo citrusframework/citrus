@@ -18,8 +18,8 @@ package com.consol.citrus.http.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
@@ -33,8 +33,8 @@ import org.springframework.util.StringUtils;
  */
 public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
 
-    /** Spring application context */
-    private ApplicationContext applicationContext;
+    /** Bean reference resolver */
+    private ReferenceResolver referenceResolver;
 
     /** Target http client instance */
     private final Endpoint httpServer;
@@ -87,7 +87,7 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
     private HttpServerRequestActionBuilder request(HttpMethod method, String path) {
         HttpServerRequestActionBuilder builder = new HttpServerRequestActionBuilder()
                 .endpoint(httpServer)
-                .withApplicationContext(applicationContext)
+                .withReferenceResolver(referenceResolver)
                 .method(method);
 
         if (StringUtils.hasText(path)) {
@@ -100,10 +100,10 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
 
     /**
      * Sets the Spring bean application context.
-     * @param applicationContext
+     * @param referenceResolver
      */
-    public HttpServerActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public HttpServerActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
         return this;
     }
 
@@ -118,7 +118,7 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
         public HttpServerResponseActionBuilder response() {
             HttpServerResponseActionBuilder builder =  new HttpServerResponseActionBuilder()
                     .endpoint(httpServer)
-                    .withApplicationContext(applicationContext);
+                    .withReferenceResolver(referenceResolver);
 
             HttpServerActionBuilder.this.delegate = builder;
             return builder;
@@ -131,7 +131,7 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
         public HttpServerResponseActionBuilder response(HttpStatus status) {
             HttpServerResponseActionBuilder builder = new HttpServerResponseActionBuilder()
                     .endpoint(httpServer)
-                    .withApplicationContext(applicationContext)
+                    .withReferenceResolver(referenceResolver)
                     .status(status);
 
             HttpServerActionBuilder.this.delegate = builder;

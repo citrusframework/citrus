@@ -16,10 +16,13 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -28,23 +31,24 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
 public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Consumer messageConsumer = Mockito.mock(Consumer.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testReceiveTimeoutBuilder() {
@@ -54,7 +58,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             Thread.sleep(500L);
             return null;
         }).when(messageConsumer).receive(any(TestContext.class), eq(250L));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receiveTimeout(builder -> builder.endpoint(messageEndpoint)
@@ -75,25 +79,26 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getTimeout(), 250);
 
     }
-    
+
     @Test
     public void testReceiveTimeoutBuilderWithEndpointName() {
         TestContext context = applicationContext.getBean(TestContext.class);
-        context.setApplicationContext(applicationContextMock);
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer);
+        reset(referenceResolver, messageEndpoint, messageConsumer);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         doAnswer(invocation -> {
             Thread.sleep(600L);
             return null;
         }).when(messageConsumer).receive(any(TestContext.class), eq(500L));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
-        when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.resolve("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receiveTimeout(builder -> builder.endpoint("fooMessageEndpoint")
@@ -122,7 +127,7 @@ public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
             return new DefaultMessage("Hello Citrus!");
         }).when(messageConsumer).receive(any(TestContext.class), eq(250L));
         try {
-            new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            new MockTestRunner(getClass().getSimpleName(), context) {
                 @Override
                 public void execute() {
                     receiveTimeout(builder -> builder.endpoint(messageEndpoint)

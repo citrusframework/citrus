@@ -27,13 +27,13 @@ import java.util.Optional;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 
 /**
  * This class represents a previously defined block of test actions. Test cases can call
@@ -189,7 +189,8 @@ public class Template extends AbstractTestAction {
         private List<TestAction> actions = new ArrayList<>();
         private Map<String, String> parameter = new LinkedHashMap<>();
         private boolean globalContext = true;
-        private ApplicationContext applicationContext;
+
+        private ReferenceResolver referenceResolver;
 
         public B templateName(String templateName) {
             this.templateName = templateName;
@@ -245,17 +246,17 @@ public class Template extends AbstractTestAction {
         }
 
         /**
-         * Sets the Spring bean factory for using endpoint names.
-         * @param applicationContext
+         * Sets the bean reference resolver for using endpoint names.
+         * @param referenceResolver
          */
-        public B withApplicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
+        public B withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return self;
         }
 
         protected void onBuild() {
-            if (applicationContext != null && templateName != null) {
-                Template rootTemplate = applicationContext.getBean(templateName, Template.class);
+            if (referenceResolver != null && templateName != null) {
+                Template rootTemplate = referenceResolver.resolve(templateName, Template.class);
                 globalContext(rootTemplate.isGlobalContext() && globalContext);
                 actor(Optional.ofNullable(getActor()).orElse(rootTemplate.getActor()));
                 parameters(Optional.ofNullable(rootTemplate.getParameter()).map(rootParams -> {

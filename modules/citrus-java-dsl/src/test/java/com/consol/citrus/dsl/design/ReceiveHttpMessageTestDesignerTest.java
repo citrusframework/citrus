@@ -42,7 +42,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpRequestProperties() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 http().server(httpServer)
@@ -80,7 +80,7 @@ public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testHttpResponseProperties() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 http().client(httpClient)

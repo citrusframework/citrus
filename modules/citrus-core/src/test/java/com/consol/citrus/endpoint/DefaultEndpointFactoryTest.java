@@ -16,32 +16,35 @@
 
 package com.consol.citrus.endpoint;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.channel.ChannelEndpointComponent;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
  */
 public class DefaultEndpointFactoryTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testResolveDirectEndpoint() throws Exception {
-        reset(applicationContext);
-        when(applicationContext.getBean("myEndpoint", Endpoint.class)).thenReturn(Mockito.mock(Endpoint.class));
+        reset(referenceResolver);
+        when(referenceResolver.resolve("myEndpoint", Endpoint.class)).thenReturn(Mockito.mock(Endpoint.class));
         TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("myEndpoint", context);
@@ -51,10 +54,10 @@ public class DefaultEndpointFactoryTest {
 
     @Test
     public void testResolveChannelEndpoint() throws Exception {
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(Collections.emptyMap());
         TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("channel:channel.name", context);
@@ -68,10 +71,10 @@ public class DefaultEndpointFactoryTest {
         Map<String, EndpointComponent> components = new HashMap<String, EndpointComponent>();
         components.put("custom", new ChannelEndpointComponent());
 
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(components);
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(components);
         TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("custom:custom.channel", context);
@@ -85,10 +88,10 @@ public class DefaultEndpointFactoryTest {
         Map<String, EndpointComponent> components = new HashMap<String, EndpointComponent>();
         components.put("jms", new ChannelEndpointComponent());
 
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(components);
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(components);
         TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("jms:custom.channel", context);
@@ -99,10 +102,10 @@ public class DefaultEndpointFactoryTest {
 
     @Test
     public void testResolveUnknownEndpointComponent() throws Exception {
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(Collections.emptyMap());
         TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         try {
@@ -115,9 +118,9 @@ public class DefaultEndpointFactoryTest {
 
     @Test
     public void testResolveInvalidEndpointUri() throws Exception {
-        reset(applicationContext);
+        reset(referenceResolver);
         TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         try {

@@ -51,7 +51,7 @@ public class SeleniumTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSeleniumBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 selenium().start(seleniumBrowser);

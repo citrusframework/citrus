@@ -64,7 +64,7 @@ import org.springframework.util.StringUtils;
  * Class holding and managing test variables. The test context also provides utility methods
  * for replacing dynamic content(variables and functions) in message payloads and headers.
  */
-public class TestContext {
+public class TestContext implements ReferenceResolverAware {
     /**
      * Logger
      */
@@ -660,11 +660,7 @@ public class TestContext {
         return referenceResolver;
     }
 
-    /**
-     * Sets the referenceResolver property.
-     *
-     * @param referenceResolver
-     */
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

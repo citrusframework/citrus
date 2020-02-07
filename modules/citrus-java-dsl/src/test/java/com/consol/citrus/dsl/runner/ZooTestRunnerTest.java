@@ -16,21 +16,29 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.command.AbstractZooCommand;
-import org.apache.zookeeper.*;
+import org.apache.zookeeper.AsyncCallback;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.ZooDefs;
+import org.apache.zookeeper.ZooKeeper;
 import org.apache.zookeeper.data.Stat;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.isNull;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Martin Maher
@@ -72,7 +80,7 @@ public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
         //  prepare set-data
         when(zookeeperClientMock.setData(path, data.getBytes(), 0)).thenReturn(statMock);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 zookeeper(builder -> builder.client(new com.consol.citrus.zookeeper.client.ZooClient(zookeeperClientMock))

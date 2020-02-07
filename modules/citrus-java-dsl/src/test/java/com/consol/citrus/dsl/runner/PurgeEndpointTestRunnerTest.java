@@ -16,10 +16,13 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.PurgeEndpointAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -28,13 +31,14 @@ import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -50,7 +54,7 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
     private Consumer consumer = Mockito.mock(Consumer.class);
     private SelectiveConsumer selectiveConsumer = Mockito.mock(SelectiveConsumer.class);
 
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testPurgeEndpointsBuilderWithEndpoints() {
@@ -66,7 +70,8 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
 
         doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeEndpoints(builder -> builder.endpoints(endpoint1, endpoint2)
@@ -87,15 +92,15 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
 
 
     }
-    
+
     @Test
     public void testPurgeEndpointBuilderWithNames() {
-        reset(applicationContextMock, endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
+        reset(referenceResolver, endpoint1, endpoint2, endpoint3, endpoint4, consumer, selectiveConsumer);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         when(endpoint1.getName()).thenReturn("e1");
         when(endpoint2.getName()).thenReturn("e2");
@@ -107,15 +112,16 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         when(endpoint3.createConsumer()).thenReturn(selectiveConsumer);
         when(endpoint4.createConsumer()).thenReturn(consumer);
 
-        when(applicationContextMock.getBean("e1", Endpoint.class)).thenReturn(endpoint1);
-        when(applicationContextMock.getBean("e2", Endpoint.class)).thenReturn(endpoint2);
-        when(applicationContextMock.getBean("e3", Endpoint.class)).thenReturn(endpoint3);
-        when(applicationContextMock.getBean("e4", Endpoint.class)).thenReturn(endpoint4);
+        when(referenceResolver.resolve("e1", Endpoint.class)).thenReturn(endpoint1);
+        when(referenceResolver.resolve("e2", Endpoint.class)).thenReturn(endpoint2);
+        when(referenceResolver.resolve("e3", Endpoint.class)).thenReturn(endpoint3);
+        when(referenceResolver.resolve("e4", Endpoint.class)).thenReturn(endpoint4);
 
         doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
         doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive(eq("operation = 'sayHello'"), any(TestContext.class), eq(100L));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeEndpoints(builder -> builder.endpointNames("e1", "e2", "e3")
@@ -131,7 +137,7 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         PurgeEndpointAction action = (PurgeEndpointAction) test.getActions().get(0);
         Assert.assertEquals(action.getEndpointNames().size(), 4);
         Assert.assertEquals(action.getEndpointNames().toString(), "[e1, e2, e3, e4]");
-        Assert.assertTrue(action.getBeanFactory() instanceof ApplicationContext);
+        Assert.assertNotNull(action.getReferenceResolver());
         Assert.assertEquals(action.getMessageSelectorMap().size(), 0);
         Assert.assertEquals(action.getMessageSelector(), "operation = 'sayHello'");
 
@@ -139,24 +145,25 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomEndpointResolver() {
-        reset(applicationContextMock, endpoint1, consumer, selectiveConsumer);
+        reset(referenceResolver, endpoint1, consumer, selectiveConsumer);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         when(endpoint1.getName()).thenReturn("e1");
         when(endpoint1.createConsumer()).thenReturn(consumer);
 
-        when(applicationContextMock.getBean("e1", Endpoint.class)).thenReturn(endpoint1);
+        when(referenceResolver.resolve("e1", Endpoint.class)).thenReturn(endpoint1);
         doThrow(new ActionTimeoutException()).when(consumer).receive(any(TestContext.class), eq(100L));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeEndpoints(builder -> builder.endpoint("e1")
-                        .withApplicationContext(applicationContextMock));
+                        .withReferenceResolver(referenceResolver));
             }
         };
 
@@ -167,8 +174,8 @@ public class PurgeEndpointTestRunnerTest extends AbstractTestNGUnitTest {
         PurgeEndpointAction action = (PurgeEndpointAction) test.getActions().get(0);
         Assert.assertEquals(action.getEndpointNames().size(), 1);
         Assert.assertEquals(action.getEndpointNames().toString(), "[e1]");
-        Assert.assertNotNull(action.getBeanFactory());
-        Assert.assertEquals(action.getBeanFactory(), applicationContextMock);
+        Assert.assertNotNull(action.getReferenceResolver());
+        Assert.assertEquals(action.getReferenceResolver(), referenceResolver);
 
     }
 }

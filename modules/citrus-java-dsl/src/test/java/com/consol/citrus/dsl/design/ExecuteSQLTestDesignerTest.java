@@ -16,6 +16,11 @@
 
 package com.consol.citrus.dsl.design;
 
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -24,9 +29,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.sql.DataSource;
-import java.io.*;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -41,10 +43,10 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
 
     private Resource resource = Mockito.mock(Resource.class);
     private File file = Mockito.mock(File.class);
-    
+
     @Test
     public void testExecuteSQLBuilderWithStatement() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -60,7 +62,7 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLAction.class);
-        
+
         ExecuteSQLAction action = (ExecuteSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "sql");
         Assert.assertEquals(action.getStatements().toString(), "[TEST_STMT_1, TEST_STMT_2, TEST_STMT_3]");
@@ -70,7 +72,7 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteSQLBuilderWithTransaction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 sql(dataSource)
@@ -102,7 +104,7 @@ public class ExecuteSQLTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteSQLBuilderWithResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 sql(dataSource)

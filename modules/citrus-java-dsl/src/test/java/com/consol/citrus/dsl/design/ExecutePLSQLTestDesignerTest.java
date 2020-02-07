@@ -16,6 +16,10 @@
 
 package com.consol.citrus.dsl.design;
 
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -24,10 +28,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.sql.DataSource;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -44,7 +44,7 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecutePLSQLBuilderWithStatement() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -59,7 +59,7 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecutePLSQLAction.class);
-          
+
         ExecutePLSQLAction action = (ExecutePLSQLAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "plsql");
         Assert.assertEquals(action.isIgnoreErrors(), false);
@@ -71,7 +71,7 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecutePLSQLBuilderWithTransaction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 plsql(dataSource)
@@ -101,17 +101,17 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
-    
+
     @Test
     public void testExecutePLSQLBuilderWithSQLResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 plsql(dataSource)
                     .sqlResource(sqlResource);
             }
         };
-        
+
         reset(sqlResource);
         when(sqlResource.getInputStream()).thenReturn(new ByteArrayInputStream("testScript".getBytes()));
         builder.configure();
@@ -127,10 +127,10 @@ public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getScript(), "testScript");
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
-    
+
     @Test
     public void testExecutePLSQLBuilderWithInlineScript() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 plsql(dataSource)

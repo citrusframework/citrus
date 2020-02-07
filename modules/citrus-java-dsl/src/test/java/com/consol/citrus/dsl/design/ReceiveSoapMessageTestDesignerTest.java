@@ -24,6 +24,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
@@ -36,7 +37,6 @@ import com.consol.citrus.ws.actions.ReceiveSoapMessageAction;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -53,7 +53,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     private WebServiceServer server = Mockito.mock(WebServiceServer.class);
 
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private Resource resource = Mockito.mock(Resource.class);
 
     private SoapAttachment testAttachment = new SoapAttachment();
@@ -71,7 +71,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWebServiceServerReceive() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(server)
@@ -111,7 +111,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAttachment() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(server)
@@ -151,7 +151,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAttachmentData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(server)
@@ -192,7 +192,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testSoapAttachmentResource() throws IOException {
         final Resource attachmentResource = Mockito.mock(Resource.class);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(server)
@@ -232,7 +232,7 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleSoapAttachmentData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(server)
@@ -278,11 +278,13 @@ public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithEndpointName() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive("replyMessageEndpoint")

@@ -29,6 +29,8 @@ import java.util.stream.Stream;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.context.ReferenceResolverAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -63,8 +65,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
@@ -479,9 +479,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private JsonPathVariableExtractor jsonPathExtractor;
 
         /**
-         * Basic application context
+         * Basic bean reference resolver.
          */
-        private ApplicationContext applicationContext;
+        private ReferenceResolver referenceResolver;
 
         /**
          * Sets the message endpoint to receive messages from.
@@ -656,10 +656,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B payloadModel(final Object payload) {
             validateApplicationContext();
 
-            if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
-                return payload(payload, applicationContext.getBean(Marshaller.class));
-            } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
-                return payload(payload, applicationContext.getBean(ObjectMapper.class));
+            if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
+                return payload(payload, referenceResolver.resolve(Marshaller.class));
+            } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
+                return payload(payload, referenceResolver.resolve(ObjectMapper.class));
             }
 
             throw createUnableToFindMapperException();
@@ -676,8 +676,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B payload(final Object payload, final String mapperName) {
             validateApplicationContext();
 
-            if (applicationContext.containsBean(mapperName)) {
-                final Object mapper = applicationContext.getBean(mapperName);
+            if (referenceResolver.isResolvable(mapperName)) {
+                final Object mapper = referenceResolver.resolve(mapperName);
 
                 if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
                     return payload(payload, (Marshaller) mapper);
@@ -736,10 +736,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B headerFragment(final Object model) {
             validateApplicationContext();
 
-            if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
-                return headerFragment(model, applicationContext.getBean(Marshaller.class));
-            } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
-                return headerFragment(model, applicationContext.getBean(ObjectMapper.class));
+            if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
+                return headerFragment(model, referenceResolver.resolve(Marshaller.class));
+            } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
+                return headerFragment(model, referenceResolver.resolve(ObjectMapper.class));
             }
 
             throw createUnableToFindMapperException();
@@ -756,8 +756,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B headerFragment(final Object model, final String mapperName) {
             validateApplicationContext();
 
-            if (applicationContext.containsBean(mapperName)) {
-                final Object mapper = applicationContext.getBean(mapperName);
+            if (referenceResolver.isResolvable(mapperName)) {
+                final Object mapper = referenceResolver.resolve(mapperName);
 
                 if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
                     return headerFragment(model, (Marshaller) mapper);
@@ -1188,7 +1188,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             validateApplicationContext();
 
             for (final String validatorName : validatorNames) {
-                this.validators.add(applicationContext.getBean(validatorName, MessageValidator.class));
+                this.validators.add(referenceResolver.resolve(validatorName, MessageValidator.class));
             }
 
             return self;
@@ -1215,7 +1215,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             validateApplicationContext();
 
             for (final String validatorName : validatorNames) {
-                headerValidationContext.addHeaderValidator(applicationContext.getBean(validatorName, HeaderValidator.class));
+                headerValidationContext.addHeaderValidator(referenceResolver.resolve(validatorName, HeaderValidator.class));
             }
 
             return self;
@@ -1240,7 +1240,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B dictionary(final String dictionaryName) {
             validateApplicationContext();
-            this.dataDictionary = applicationContext.getBean(dictionaryName, DataDictionary.class);
+            this.dataDictionary = referenceResolver.resolve(dictionaryName, DataDictionary.class);
             return self;
         }
 
@@ -1286,8 +1286,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B validationCallback(final ValidationCallback callback) {
-            if (callback instanceof ApplicationContextAware) {
-                ((ApplicationContextAware) callback).setApplicationContext(applicationContext);
+            if (callback instanceof ReferenceResolverAware) {
+                ((ReferenceResolverAware) callback).setReferenceResolver(referenceResolver);
             }
 
             this.validationCallback = callback;
@@ -1305,12 +1305,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Sets the Spring bean application context.
+         * Sets the bean reference resolver.
          *
-         * @param applicationContext
+         * @param referenceResolver
          */
-        public B withApplicationContext(final ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
+        public B withReferenceResolver(final ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return self;
         }
 
@@ -1409,11 +1409,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         private CitrusRuntimeException createUnableToFindMapperException() {
-            return new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+            return new CitrusRuntimeException("Unable to resolve default object mapper or marshaller");
         }
 
         private void validateApplicationContext() {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
         }
     }
 }

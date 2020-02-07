@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testIterateBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 iterate().index("i")
@@ -60,7 +60,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithAnonymousAction() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 iterate().index("i")
@@ -96,7 +96,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 iterate().startsWith(0)
@@ -124,7 +124,7 @@ public class IterateTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithHamcrestConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 iterate().startsWith(0)

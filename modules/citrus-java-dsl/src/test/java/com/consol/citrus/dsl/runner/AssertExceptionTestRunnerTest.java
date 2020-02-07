@@ -31,7 +31,7 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertDefaultExceptionBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertException().when(fail("Error!"));
@@ -52,7 +52,7 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertException().exception(CitrusRuntimeException.class)
@@ -65,9 +65,9 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
         assertEquals(test.getActionCount(), 1);
         assertEquals(test.getActions().get(0).getClass(), Assert.class);
         assertEquals(test.getActions().get(0).getName(), "assert");
-        
+
         Assert container = (Assert)(test.getTestAction(0));
-        
+
         assertEquals(container.getActionCount(), 1);
         assertEquals(container.getAction().getClass(), EchoAction.class);
         assertEquals(container.getException(), CitrusRuntimeException.class);
@@ -77,7 +77,7 @@ public class AssertExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertException().exception(CitrusRuntimeException.class)

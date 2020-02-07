@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -34,8 +35,6 @@ import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
 /**
@@ -52,8 +51,8 @@ public class PurgeEndpointAction extends AbstractTestAction {
     /** List of endpoints to be purged */
     private final List<Endpoint> endpoints;
 
-    /** The parent bean factory used for endpoint name resolving */
-    private final BeanFactory beanFactory;
+    /** The parent bean reference resolver used for endpoint name resolving */
+    private final ReferenceResolver referenceResolver;
 
     /** Build message selector with name value pairs */
     private final Map<String, Object> messageSelectorMap;
@@ -78,7 +77,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
 
         this.endpointNames = builder.endpointNames;
         this.endpoints = builder.endpoints;
-        this.beanFactory = builder.beanFactory;
+        this.referenceResolver = builder.referenceResolver;
         this.messageSelector = builder.messageSelector;
         this.messageSelectorMap = builder.messageSelectorMap;
         this.receiveTimeout = builder.receiveTimeout;
@@ -156,18 +155,18 @@ public class PurgeEndpointAction extends AbstractTestAction {
      */
     protected Endpoint resolveEndpointName(String endpointName) {
         try {
-            return beanFactory.getBean(endpointName, Endpoint.class);
+            return referenceResolver.resolve(endpointName, Endpoint.class);
         } catch (BeansException e) {
             throw new CitrusRuntimeException(String.format("Unable to resolve endpoint for name '%s'", endpointName), e);
         }
     }
 
     /**
-     * Gets the bean factory for endpoint name resolving.
+     * Gets the bean reference resolver for endpoint name resolving.
      * @return
      */
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
+    public ReferenceResolver getReferenceResolver() {
+        return referenceResolver;
     }
 
     /**
@@ -225,7 +224,7 @@ public class PurgeEndpointAction extends AbstractTestAction {
 
         private List<String> endpointNames = new ArrayList<>();
         private List<Endpoint> endpoints = new ArrayList<>();
-        private BeanFactory beanFactory;
+        private ReferenceResolver referenceResolver;
         private Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
         private long receiveTimeout = 100;
@@ -332,16 +331,16 @@ public class PurgeEndpointAction extends AbstractTestAction {
         }
 
         /**
-         * Sets the Spring bean factory for using endpoint names.
-         * @param applicationContext
+         * Sets the bean reference resolver for using endpoint names.
+         * @param referenceResolver
          */
-        public Builder withApplicationContext(ApplicationContext applicationContext) {
-            this.beanFactory = applicationContext;
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return this;
         }
 
-        public Builder beanFactory(BeanFactory beanFactory) {
-            this.beanFactory = beanFactory;
+        public Builder referenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return this;
         }
 

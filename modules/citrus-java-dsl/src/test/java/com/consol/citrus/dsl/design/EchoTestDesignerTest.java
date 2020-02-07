@@ -27,10 +27,10 @@ import com.consol.citrus.actions.EchoAction;
  * @author Christoph Deppisch
  */
 public class EchoTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testEchoBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 echo("Hello Citrus!");
@@ -42,7 +42,7 @@ public class EchoTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), EchoAction.class);
-        
+
         EchoAction action = (EchoAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "echo");
         Assert.assertEquals(action.getMessage(), "Hello Citrus!");

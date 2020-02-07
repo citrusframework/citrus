@@ -80,7 +80,7 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
                                 .stream()
                                 .map(beanName -> {
                                     try {
-                                        return context.getApplicationContext().getBean(beanName, HeaderValidator.class);
+                                        return context.getReferenceResolver().resolve(beanName, HeaderValidator.class);
                                     } catch (NoSuchBeanDefinitionException e) {
                                         log.warn("Failed to resolve header validator for name: " + beanName);
                                         return null;

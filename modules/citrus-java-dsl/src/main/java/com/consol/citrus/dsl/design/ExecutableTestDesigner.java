@@ -32,7 +32,7 @@ public class ExecutableTestDesigner extends DefaultTestDesigner implements Execu
      * @param applicationContext
      */
     public ExecutableTestDesigner(ApplicationContext applicationContext) {
-        super(applicationContext, Citrus.newInstance(applicationContext).createTestContext());
+        super(Citrus.newInstance(applicationContext).createTestContext());
     }
 
     @Override
@@ -46,23 +46,5 @@ public class ExecutableTestDesigner extends DefaultTestDesigner implements Execu
      */
     public void execute(TestContext context) {
         getTestCase().execute(context);
-    }
-
-    /**
-     * Creates new test context from Spring bean application context.
-     * If no Spring bean application context is set an exception is raised. Users may want to create proper test context
-     * instance themselves in case Spring application context is not present.
-     * @return
-     */
-    @Override
-    public TestContext getTestContext() {
-        if (super.getTestContext() == null) {
-            TestContext context = getApplicationContext().getBean(TestContext.class);
-            context.setApplicationContext(getApplicationContext());
-
-            return context;
-        } else {
-            return super.getTestContext();
-        }
     }
 }

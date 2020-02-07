@@ -16,6 +16,26 @@
 
 package com.consol.citrus.jmx.client;
 
+import javax.management.Attribute;
+import javax.management.InstanceNotFoundException;
+import javax.management.JMException;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.Notification;
+import javax.management.NotificationListener;
+import javax.management.ObjectName;
+import javax.management.openmbean.CompositeData;
+import javax.management.remote.JMXConnectionNotification;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.util.Collections;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -27,18 +47,12 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import javax.management.*;
-import javax.management.openmbean.CompositeData;
-import javax.management.remote.*;
-import java.io.IOException;
-import java.lang.management.ManagementFactory;
-import java.util.Collections;
-import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
@@ -120,7 +134,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
 
         try {
             if (invocation.getOperation() != null) {
-                Object result = serverConnection.invoke(objectName, invocation.getOperation().getName(), invocation.getOperation().getParamValues(context.getApplicationContext()), invocation.getOperation().getParamTypes());
+                Object result = serverConnection.invoke(objectName, invocation.getOperation().getName(), invocation.getOperation().getParamValues(context.getReferenceResolver()), invocation.getOperation().getParamTypes());
                 if (result != null) {
                     correlationManager.store(correlationKey, JmxMessage.result(result));
                 } else {
@@ -130,7 +144,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
                 ManagedBeanInvocation.Attribute attribute = invocation.getAttribute();
 
                 if (StringUtils.hasText(attribute.getValue())) {
-                    serverConnection.setAttribute(objectName, new Attribute(attribute.getName(), invocation.getAttributeValue(context.getApplicationContext())));
+                    serverConnection.setAttribute(objectName, new Attribute(attribute.getName(), invocation.getAttributeValue(context.getReferenceResolver())));
                 } else {
                     Object attributeValue = serverConnection.getAttribute(objectName, attribute.getName());
 

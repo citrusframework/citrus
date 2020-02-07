@@ -18,10 +18,10 @@ package com.consol.citrus.http.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -32,8 +32,8 @@ import org.springframework.util.Assert;
  */
 public class HttpActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
 
-	/** Spring application context */
-	private ApplicationContext applicationContext;
+	/** Bean reference resolver */
+	private ReferenceResolver referenceResolver;
 
 	private TestActionBuilder<?> delegate;
 
@@ -42,7 +42,7 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 */
 	public HttpClientActionBuilder client(HttpClient httpClient) {
 		HttpClientActionBuilder clientActionBuilder = new HttpClientActionBuilder(httpClient)
-				.withApplicationContext(applicationContext);
+				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
 	}
@@ -52,7 +52,7 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 */
 	public HttpClientActionBuilder client(String httpClient) {
 		HttpClientActionBuilder clientActionBuilder = new HttpClientActionBuilder(httpClient)
-				.withApplicationContext(applicationContext);
+				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
 	}
@@ -62,7 +62,7 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 */
 	public HttpServerActionBuilder server(HttpServer httpServer) {
 		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(httpServer)
-				.withApplicationContext(applicationContext);
+				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
 	}
@@ -71,19 +71,19 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 * Initiate http server action.
 	 */
 	public HttpServerActionBuilder server(String httpServer) {
-		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(applicationContext.getBean(httpServer, Endpoint.class))
-				.withApplicationContext(applicationContext);
+		Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(referenceResolver.resolve(httpServer, Endpoint.class))
+				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
 	}
 
 	/**
-	 * Sets the Spring bean application context.
-	 * @param applicationContext
+	 * Sets the bean reference resolver.
+	 * @param referenceResolver
 	 */
-	public HttpActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
+	public HttpActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+		this.referenceResolver = referenceResolver;
 		return this;
 	}
 

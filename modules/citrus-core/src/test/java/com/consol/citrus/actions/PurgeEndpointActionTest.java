@@ -18,6 +18,7 @@ package com.consol.citrus.actions;
 
 import java.util.Collections;
 
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.DefaultMessage;
@@ -57,7 +58,7 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
 
         PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
-                .beanFactory(applicationContext)
+                .referenceResolver(new SpringBeanReferenceResolver(applicationContext))
                 .endpointNames("mockEndpoint")
                 .build();
         purgeEndpointAction.execute(context);
@@ -78,7 +79,7 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         doThrow(new ActionTimeoutException()).when(consumer).receive(context, 100L);
 
         PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
-                .beanFactory(applicationContext)
+                .referenceResolver(new SpringBeanReferenceResolver(applicationContext))
                 .endpoints(mockEndpoint, emptyEndpoint)
                 .build();
         purgeEndpointAction.execute(context);
@@ -94,7 +95,7 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive("operation = 'sayHello'", context, 100L);
 
         PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
-                .beanFactory(applicationContext)
+                .referenceResolver(new SpringBeanReferenceResolver(applicationContext))
                 .endpoints(mockEndpoint)
                 .selector("operation = 'sayHello'")
                 .build();
@@ -111,7 +112,7 @@ public class PurgeEndpointActionTest extends AbstractTestNGUnitTest {
         doThrow(new ActionTimeoutException()).when(selectiveConsumer).receive("operation = 'sayHello'", context, 100L);
 
         PurgeEndpointAction purgeEndpointAction = new PurgeEndpointAction.Builder()
-                .beanFactory(applicationContext)
+                .referenceResolver(new SpringBeanReferenceResolver(applicationContext))
                 .endpoints(mockEndpoint)
                 .selector(Collections.singletonMap("operation", "sayHello"))
                 .build();

@@ -30,7 +30,7 @@ import static org.testng.Assert.assertEquals;
 public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testRepeatOnErrorBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -57,7 +57,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
         assertEquals(test.getActionCount(), 2);
         assertEquals(test.getActions().get(0).getClass(), RepeatOnErrorUntilTrue.class);
         assertEquals(test.getActions().get(0).getName(), "repeat-on-error");
-        
+
         RepeatOnErrorUntilTrue container = (RepeatOnErrorUntilTrue)test.getActions().get(0);
         assertEquals(container.getActionCount(), 3);
         assertEquals(container.getAutoSleep(), Long.valueOf(250L));
@@ -77,7 +77,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatOnErrorBuilderWithConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -123,7 +123,7 @@ public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatOnErrorBuilderWithHamcrestConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");

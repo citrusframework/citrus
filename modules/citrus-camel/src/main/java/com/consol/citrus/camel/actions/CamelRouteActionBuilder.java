@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelCamelContext;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -15,8 +15,8 @@ import org.springframework.util.Assert;
  */
 public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AbstractCamelRouteAction> {
 
-    /** Spring application context */
-    private ApplicationContext applicationContext;
+    /** Bean reference resolver */
+    private ReferenceResolver referenceResolver;
 
     private ModelCamelContext camelContext;
     private List<String> routeIds = new ArrayList<>();
@@ -37,8 +37,8 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      * @return
      */
     public CamelRouteActionBuilder context(String camelContext) {
-        Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-        this.camelContext = applicationContext.getBean(camelContext, ModelCamelContext.class);
+        Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+        this.camelContext = referenceResolver.resolve(camelContext, ModelCamelContext.class);
         return this;
     }
 
@@ -158,11 +158,11 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
-     * Sets the Spring bean application context.
-     * @param applicationContext
+     * Sets the bean reference resolver.
+     * @param referenceResolver
      */
-    public CamelRouteActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public CamelRouteActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
         return this;
     }
 
@@ -173,12 +173,12 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      */
     protected ModelCamelContext getCamelContext() {
         if (camelContext == null) {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 
-            if (applicationContext.containsBean("citrusCamelContext")) {
-                camelContext = applicationContext.getBean("citrusCamelContext", ModelCamelContext.class);
+            if (referenceResolver.isResolvable("citrusCamelContext")) {
+                camelContext = referenceResolver.resolve("citrusCamelContext", ModelCamelContext.class);
             } else {
-                camelContext = applicationContext.getBean(ModelCamelContext.class);
+                camelContext = referenceResolver.resolve(ModelCamelContext.class);
             }
         }
 

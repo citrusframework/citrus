@@ -520,6 +520,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
         return testDesigner.doFinally();
     }
 
+    @Override
+    public void setTestContext(TestContext context) {
+        testDesigner.setTestContext(context);
+    }
+
     /**
      * Get the test variables.
      * @return

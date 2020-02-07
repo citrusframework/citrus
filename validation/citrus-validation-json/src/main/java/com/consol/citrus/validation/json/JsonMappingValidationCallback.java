@@ -16,14 +16,14 @@
 
 package com.consol.citrus.validation.json;
 
+import java.io.IOException;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.callback.AbstractValidationCallback;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.Assert;
-
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -61,10 +61,10 @@ public abstract class JsonMappingValidationCallback<T> extends AbstractValidatio
     @SuppressWarnings("unchecked")
     private T readJson(Message message) {
         if (jsonMapper == null) {
-            Assert.notNull(applicationContext, "Json mapping validation callback requires object mapper instance " +
-                    "or Spring application context with nested bean definition of type marshaller");
+            Assert.notNull(referenceResolver, "Json mapping validation callback requires object mapper instance " +
+                    "or proper reference resolver with nested bean definition of type marshaller");
 
-            jsonMapper = applicationContext.getBean(ObjectMapper.class);
+            jsonMapper = referenceResolver.resolve(ObjectMapper.class);
         }
 
         try {

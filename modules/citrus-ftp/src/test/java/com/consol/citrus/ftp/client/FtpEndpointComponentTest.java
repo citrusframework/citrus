@@ -18,24 +18,13 @@ package com.consol.citrus.ftp.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.*;
 
 
 public class FtpEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
-
-    @BeforeClass
-    public void setup() {
-        context.setApplicationContext(applicationContext);
-    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
@@ -66,7 +55,6 @@ public class FtpEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         FtpEndpointComponent component = new FtpEndpointComponent();
 
-        reset(applicationContext);
         Endpoint endpoint = component.createEndpoint("ftp:localhost:22220?user=admin&password=consol&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), FtpClient.class);

@@ -16,18 +16,20 @@
 
 package com.consol.citrus.channel;
 
+import java.util.Optional;
+
 import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.MessageChannel;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.messaging.PollableChannel;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.util.StringUtils;
 
 /**
@@ -145,14 +147,14 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
      * @return the MessageChannel object
      */
     protected MessageChannel resolveChannelName(String channelName, TestContext context) {
-        if (endpointConfiguration.getChannelResolver() == null) {
-            if (endpointConfiguration.getBeanFactory() != null) {
-                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()));
-            } else {
-                endpointConfiguration.setChannelResolver(new BeanFactoryChannelResolver(context.getApplicationContext()));
-            }
-        }
+        return Optional.ofNullable(endpointConfiguration.getChannelResolver())
+                .map(resolver -> resolver.resolveDestination(channelName))
+                .orElseGet(() -> {
+                    if (endpointConfiguration.getBeanFactory() != null) {
+                        return new BeanFactoryChannelResolver(endpointConfiguration.getBeanFactory()).resolveDestination(channelName);
+                    }
 
-        return endpointConfiguration.getChannelResolver().resolveDestination(channelName);
+                    return context.getReferenceResolver().resolve(channelName, MessageChannel.class);
+                });
     }
 }

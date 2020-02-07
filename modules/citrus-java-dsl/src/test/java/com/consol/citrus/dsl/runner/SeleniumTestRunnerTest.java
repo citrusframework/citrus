@@ -24,6 +24,7 @@ import java.util.Set;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.selenium.actions.AlertAction;
@@ -59,7 +60,6 @@ import org.openqa.selenium.interactions.Mouse;
 import org.openqa.selenium.interactions.internal.Coordinates;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.RemoteWebElement;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -76,7 +76,7 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
     private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private WebElement element = Mockito.mock(WebElement.class);
     private WebElement button = Mockito.mock(WebElement.class);
     private RemoteWebElement link = Mockito.mock(RemoteWebElement.class);
@@ -94,17 +94,17 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSeleniumBuilder() {
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         when(seleniumBrowser.getEndpointConfiguration()).thenReturn(seleniumBrowserConfiguration);
         when(seleniumBrowserConfiguration.getBrowserType()).thenReturn(BrowserType.CHROME);
         when(seleniumBrowser.getWebDriver()).thenReturn(webDriver);
 
         when(seleniumBrowser.getName()).thenReturn("mockBrowser");
-        when(applicationContextMock.getBean("mockBrowser", SeleniumBrowser.class)).thenReturn(seleniumBrowser);
+        when(referenceResolver.resolve("mockBrowser", SeleniumBrowser.class)).thenReturn(seleniumBrowser);
 
         when(webDriver.navigate()).thenReturn(navigation);
         when(webDriver.manage()).thenReturn(options);
@@ -161,10 +161,10 @@ public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
         when(webDriver.getWindowHandles()).thenReturn(Collections.singleton("last_window")).thenReturn(windows);
         when(webDriver.getWindowHandle()).thenReturn("last_window");
 
-        context.setApplicationContext(applicationContextMock);
         context.setVariable("cssClass", "btn");
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 selenium(action -> action.start(seleniumBrowser));

@@ -6,7 +6,7 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation=
                "http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+                http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                 http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
@@ -15,7 +15,7 @@
   <context:annotation-config/>
 
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"/>
-  
+
   <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
     <property name="messageConverters">
       <util:list id="converters">
@@ -34,7 +34,10 @@
           mapping-strategy="beanNameMappingStrategy"/>
 
   <bean id="payloadRootQnameMappingKeyExtractor" class="com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor"/>
-  <bean id="beanNameMappingStrategy" class="com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy"/>
+  <bean id="referenceResolver" class="com.consol.citrus.context.SpringBeanReferenceResolver"/>
+  <bean id="beanNameMappingStrategy" class="com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy">
+    <constructor-arg ref="referenceResolver"/>
+  </bean>
 
   <citrus:static-response-adapter id="testRequestMessage">
     <citrus:payload>

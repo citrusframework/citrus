@@ -123,7 +123,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
      * @return
      */
     protected TestDesigner createTestDesigner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
-        TestDesigner testDesigner = new DefaultTestDesigner(applicationContext, context);
+        TestDesigner testDesigner = new DefaultTestDesigner(context);
         testDesigner.testClass(getClass());
         testDesigner.name(frameworkMethod.getTestName());
         testDesigner.packageName(frameworkMethod.getPackageName());
@@ -140,7 +140,7 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
      * @return
      */
     protected TestRunner createTestRunner(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod, TestContext context) {
-        TestRunner testRunner = new DefaultTestRunner(applicationContext, context);
+        TestRunner testRunner = new DefaultTestRunner(context);
         testRunner.testClass(getClass());
         testRunner.name(frameworkMethod.getTestName());
         testRunner.packageName(frameworkMethod.getPackageName());

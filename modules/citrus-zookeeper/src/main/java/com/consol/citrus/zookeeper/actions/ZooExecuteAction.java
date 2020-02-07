@@ -23,6 +23,7 @@ import java.util.Map;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -47,7 +48,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
 
 /**
@@ -253,7 +253,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         private JsonPathMessageValidationContext jsonPathMessageValidationContext;
         private List<VariableExtractor> variableExtractors = new ArrayList<>();
 
-        private ApplicationContext applicationContext;
+        private ReferenceResolver referenceResolver;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -423,17 +423,17 @@ public class ZooExecuteAction extends AbstractTestAction {
 
         /**
          * Sets the Spring bean application context.
-         * @param ctx
+         * @param referenceResolver
          */
-        public Builder withApplicationContext(ApplicationContext ctx) {
-            this.applicationContext = ctx;
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
 
-            if (applicationContext.containsBean("zookeeperClient")) {
-                this.zookeeperClient = applicationContext.getBean("zookeeperClient", ZooClient.class);
+            if (referenceResolver.isResolvable("zookeeperClient")) {
+                this.zookeeperClient = referenceResolver.resolve("zookeeperClient", ZooClient.class);
             }
 
-            if (applicationContext.containsBean("zookeeperCommandResultMapper")) {
-                this.jsonMapper = applicationContext.getBean("zookeeperCommandResultMapper", ObjectMapper.class);
+            if (referenceResolver.isResolvable("zookeeperCommandResultMapper")) {
+                this.jsonMapper = referenceResolver.resolve("zookeeperCommandResultMapper", ObjectMapper.class);
             }
 
             return this;

@@ -18,12 +18,10 @@ package com.consol.citrus.docker.config.annotation;
 
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -48,13 +46,9 @@ public class DockerClientConfigParserTest extends AbstractTestNGUnitTest {
             configPath="/path/to/some/config/directory")
     private DockerClient dockerClient2;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        referenceResolver.setApplicationContext(applicationContext);
     }
 
     @Test

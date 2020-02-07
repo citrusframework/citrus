@@ -22,12 +22,11 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
@@ -50,11 +49,11 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
     private MessageChannel channel2 = Mockito.mock(MessageChannel.class);
     private MessageChannel channel3 = Mockito.mock(MessageChannel.class);
 
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testPurgeChannelsBuilderWithChannels() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -79,11 +78,13 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
 
     @Test
     public void testPurgeChannelBuilderWithNames() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -105,17 +106,18 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1, ch2, ch3, ch4]");
         Assert.assertEquals(action.getChannelResolver(), channelResolver);
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
-
     }
 
     @Test
     public void testMissingChannelResolver() {
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 purgeChannels()
@@ -133,7 +135,5 @@ public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest 
         Assert.assertEquals(action.getChannelNames().size(), 1);
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1]");
         Assert.assertNotNull(action.getChannelResolver());
-        Assert.assertTrue(action.getChannelResolver() instanceof BeanFactoryChannelResolver);
-
     }
 }

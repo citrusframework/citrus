@@ -23,6 +23,7 @@ import java.util.HashMap;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -30,7 +31,6 @@ import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -48,12 +48,12 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
     public static final String FAULT_CODE = "CITRUS-1000";
 
     private WebServiceServer soapServer = Mockito.mock(WebServiceServer.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private Resource resource = Mockito.mock(Resource.class);
 
     @Test
     public void testSendSoapFault() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(soapServer)
@@ -86,12 +86,14 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultByEndpointName() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBean("soapServer", Endpoint.class)).thenReturn(soapServer);
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolve("soapServer", Endpoint.class)).thenReturn(soapServer);
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server("soapServer")
@@ -123,7 +125,7 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithDetailResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(soapServer)
@@ -159,7 +161,7 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithDetail() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(soapServer)
@@ -193,7 +195,7 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithDetailResourcePath() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(soapServer)
@@ -228,7 +230,7 @@ public class SendSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendSoapFaultWithMultipleDetail() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().server(soapServer)

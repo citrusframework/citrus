@@ -19,15 +19,15 @@ package com.consol.citrus.ssh.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.ssh.client.SshClient;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -56,24 +56,24 @@ public class SshClientConfigParserTest extends AbstractTestNGUnitTest {
             messageConverter="sshMessageConverter")
     private SshClient sshClient2;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private SshMessageConverter messageConverter = Mockito.mock(SshMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private SshMessageConverter messageConverter;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("sshMessageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("sshMessageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -89,7 +89,7 @@ public class SshClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(sshClient1.getEndpointConfiguration().getPrivateKeyPassword());
         Assert.assertNull(sshClient1.getEndpointConfiguration().getKnownHosts());
         Assert.assertEquals(sshClient1.getEndpointConfiguration().getCommandTimeout(), 1000 * 60 * 5);
-        Assert.assertEquals(sshClient1.getEndpointConfiguration().getConnectionTimeout(), 1000 * 60 * 1);
+        Assert.assertEquals(sshClient1.getEndpointConfiguration().getConnectionTimeout(), 1000 * 60);
         Assert.assertFalse(sshClient1.getEndpointConfiguration().isStrictHostChecking());
         Assert.assertNotNull(sshClient1.getEndpointConfiguration().getMessageConverter());
 

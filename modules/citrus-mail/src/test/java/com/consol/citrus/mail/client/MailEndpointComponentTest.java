@@ -16,16 +16,17 @@
 
 package com.consol.citrus.mail.client;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.mail.model.MailMarshaller;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -33,13 +34,13 @@ import static org.mockito.Mockito.*;
  */
 public class MailEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private MailMarshaller marshaller = Mockito.mock(MailMarshaller.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -75,9 +76,9 @@ public class MailEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         MailEndpointComponent component = new MailEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("myMarshaller")).thenReturn(true);
-        when(applicationContext.getBean("myMarshaller")).thenReturn(marshaller);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
+        when(referenceResolver.resolve("myMarshaller", MailMarshaller.class)).thenReturn(marshaller);
         Endpoint endpoint = component.createEndpoint("smtp://localhost?timeout=10000&username=foo&password=1234&marshaller=myMarshaller", context);
 
         Assert.assertEquals(endpoint.getClass(), MailClient.class);

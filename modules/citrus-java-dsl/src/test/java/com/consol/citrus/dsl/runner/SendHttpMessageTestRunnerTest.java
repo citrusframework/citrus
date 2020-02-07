@@ -61,7 +61,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(message.getPayload(String.class), "Foo");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(builder -> builder.client(httpClient)
@@ -128,7 +128,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(message.getPayload(String.class), "Foo");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(builder -> builder.client(httpClient)
@@ -182,7 +182,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http((builder -> builder.client(httpClient)
@@ -221,7 +221,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(builder -> builder.client(httpClient)
@@ -262,7 +262,7 @@ public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
             Assert.assertEquals(message.getHeader(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(builder -> builder.client(httpClient)

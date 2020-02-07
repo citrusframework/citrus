@@ -42,7 +42,7 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAsyncBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -68,7 +68,7 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAsyncBuilderWithAnonymousAction() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -108,7 +108,7 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = TestCaseFailedException.class)
     public void testAsyncError() {
-        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", "foo");
@@ -127,7 +127,7 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
         CompletableFuture<Boolean> errorActionPerformed = new CompletableFuture<>();
 
         try {
-            new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            new MockTestRunner(getClass().getSimpleName(), context) {
                 @Override
                 public void execute() {
                     variable("var", "foo");
@@ -161,7 +161,7 @@ public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
         CompletableFuture<Boolean> errorActionPerformed = new CompletableFuture<>();
 
         try {
-            new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+            new MockTestRunner(getClass().getSimpleName(), context) {
                 @Override
                 public void execute() {
                     variable("var", "foo");

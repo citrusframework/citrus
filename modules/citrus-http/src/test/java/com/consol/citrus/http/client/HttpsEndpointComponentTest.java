@@ -16,11 +16,11 @@
 
 package com.consol.citrus.http.client;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.testng.Assert;
@@ -36,13 +36,13 @@ import static org.mockito.Mockito.when;
  */
 public class HttpsEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private ClientHttpRequestFactory requestFactory = Mockito.mock(ClientHttpRequestFactory.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -63,9 +63,9 @@ public class HttpsEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         HttpsEndpointComponent component = new HttpsEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("sslRequestFactory")).thenReturn(true);
-        when(applicationContext.getBean("sslRequestFactory")).thenReturn(requestFactory);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("sslRequestFactory")).thenReturn(true);
+        when(referenceResolver.resolve("sslRequestFactory", ClientHttpRequestFactory.class)).thenReturn(requestFactory);
         Endpoint endpoint = component.createEndpoint("https:localhost:8088?requestFactory=sslRequestFactory", context);
 
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);

@@ -16,20 +16,21 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.util.HashMap;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo.Status;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -37,17 +38,19 @@ import static org.mockito.Mockito.*;
  */
 public class DefaultTestDesignerTest {
 
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testCitrusTestDesigner() {
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, Mockito.mock(TestContext.class)) {
+        TestContext context = new TestContext();
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -64,9 +67,9 @@ public class DefaultTestDesignerTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getName(), "");
         Assert.assertEquals(test.getPackageName(), "com.consol.citrus.dsl.design");
-        
+
         Assert.assertEquals(test.getDescription(), "This is a Test");
-        
+
         Assert.assertEquals(test.getMetaInfo().getAuthor(), "Christoph");
         Assert.assertEquals(test.getMetaInfo().getStatus(), Status.FINAL);
 

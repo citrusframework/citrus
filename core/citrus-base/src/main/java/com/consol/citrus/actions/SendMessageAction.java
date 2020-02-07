@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -52,7 +53,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.oxm.Marshaller;
@@ -309,7 +309,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         protected Endpoint endpoint;
         protected String endpointUri;
-        protected List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        protected List<VariableExtractor> variableExtractors = new ArrayList<>();
         protected MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
@@ -327,8 +327,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         private final GzipMessageConstructionInterceptor gzipMessageConstructionInterceptor = new GzipMessageConstructionInterceptor();
         private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor = new BinaryMessageConstructionInterceptor();
 
-        /** Basic application context */
-        private ApplicationContext applicationContext;
+        /** Basic bean reference resolver */
+        private ReferenceResolver referenceResolver;
 
         /**
          * Sets the message endpoint to send messages to.
@@ -487,12 +487,12 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B payloadModel(Object payload) {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 
-            if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
-                return payload(payload, applicationContext.getBean(Marshaller.class));
-            } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
-                return payload(payload, applicationContext.getBean(ObjectMapper.class));
+            if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
+                return payload(payload, referenceResolver.resolve(Marshaller.class));
+            } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
+                return payload(payload, referenceResolver.resolve(ObjectMapper.class));
             }
 
             throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
@@ -507,10 +507,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B payload(Object payload, String mapperName) {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 
-            if (applicationContext.containsBean(mapperName)) {
-                Object mapper = applicationContext.getBean(mapperName);
+            if (referenceResolver.isResolvable(mapperName)) {
+                Object mapper = referenceResolver.resolve(mapperName);
 
                 if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
                     return payload(payload, (Marshaller) mapper);
@@ -617,12 +617,12 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B headerFragment(Object model) {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 
-            if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(Marshaller.class))) {
-                return headerFragment(model, applicationContext.getBean(Marshaller.class));
-            } else if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ObjectMapper.class))) {
-                return headerFragment(model, applicationContext.getBean(ObjectMapper.class));
+            if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
+                return headerFragment(model, referenceResolver.resolve(Marshaller.class));
+            } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
+                return headerFragment(model, referenceResolver.resolve(ObjectMapper.class));
             }
 
             throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
@@ -637,10 +637,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B headerFragment(Object model, String mapperName) {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 
-            if (applicationContext.containsBean(mapperName)) {
-                Object mapper = applicationContext.getBean(mapperName);
+            if (referenceResolver.isResolvable(mapperName)) {
+                Object mapper = referenceResolver.resolve(mapperName);
 
                 if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
                     return headerFragment(model, (Marshaller) mapper);
@@ -813,11 +813,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Sets the Spring bean application context.
-         * @param applicationContext
+         * Sets the bean reference resolver.
+         * @param referenceResolver
          */
-        public B withApplicationContext(ApplicationContext applicationContext) {
-            this.applicationContext = applicationContext;
+        public B withReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
             return self;
         }
 
@@ -838,8 +838,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          */
         @SuppressWarnings("unchecked")
         public B dictionary(String dictionaryName) {
-            Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-            DataDictionary dictionary = applicationContext.getBean(dictionaryName, DataDictionary.class);
+            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+            DataDictionary dictionary = referenceResolver.resolve(dictionaryName, DataDictionary.class);
 
             this.dataDictionary = dictionary;
             return self;

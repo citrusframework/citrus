@@ -26,6 +26,7 @@ import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.container.AbstractActionContainer;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -411,11 +412,11 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         /**
          * Sets the Spring bean application context.
-         * @param applicationContext
+         * @param referenceResolver
          */
-        public Builder withApplicationContext(ApplicationContext applicationContext) {
-            if (applicationContext.containsBean("soapFaultValidator")) {
-                validator(applicationContext.getBean("soapFaultValidator", SoapFaultValidator.class));
+        public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
+            if (referenceResolver.isResolvable("soapFaultValidator")) {
+                validator(referenceResolver.resolve("soapFaultValidator", SoapFaultValidator.class));
             }
 
             return this;

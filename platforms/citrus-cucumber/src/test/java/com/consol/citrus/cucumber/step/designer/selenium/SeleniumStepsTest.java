@@ -62,7 +62,7 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
     @BeforeMethod
     public void injectResources() {
         steps = new SeleniumSteps();
-        designer = new DefaultTestDesigner(applicationContext, context);
+        designer = new DefaultTestDesigner(context);
         CitrusAnnotations.injectAll(steps, citrus, context);
         CitrusDslAnnotations.injectTestDesigner(steps, designer);
     }

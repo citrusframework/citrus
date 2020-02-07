@@ -16,18 +16,19 @@
 
 package com.consol.citrus.http.client;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -35,13 +36,13 @@ import static org.mockito.Mockito.*;
  */
 public class HttpEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private ClientHttpRequestFactory requestFactory = Mockito.mock(ClientHttpRequestFactory.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -62,9 +63,9 @@ public class HttpEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         HttpEndpointComponent component = new HttpEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("myRequestFactory")).thenReturn(true);
-        when(applicationContext.getBean("myRequestFactory")).thenReturn(requestFactory);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("myRequestFactory")).thenReturn(true);
+        when(referenceResolver.resolve("myRequestFactory", ClientHttpRequestFactory.class)).thenReturn(requestFactory);
         Endpoint endpoint = component.createEndpoint("http:localhost:8088?requestMethod=GET&timeout=10000&errorHandlingStrategy=throwsException&requestFactory=myRequestFactory", context);
 
         Assert.assertEquals(endpoint.getClass(), HttpClient.class);

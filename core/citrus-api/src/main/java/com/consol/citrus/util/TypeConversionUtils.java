@@ -231,9 +231,9 @@ public abstract class TypeConversionUtils {
         try {
             return convertStringToType(value, type);
         } catch (CitrusRuntimeException e) {
-            // try to resolve bean in application context
-            if (context.getApplicationContext() != null && context.getApplicationContext().containsBean(value)) {
-                Object bean = context.getApplicationContext().getBean(value);
+            // try to resolve bean with reference resolver
+            if (context.getReferenceResolver() != null && context.getReferenceResolver().isResolvable(value)) {
+                Object bean = context.getReferenceResolver().resolve(value, type);
                 if (type.isAssignableFrom(bean.getClass())) {
                     return (T) bean;
                 }

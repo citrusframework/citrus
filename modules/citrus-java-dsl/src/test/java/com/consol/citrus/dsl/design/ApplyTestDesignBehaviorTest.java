@@ -35,7 +35,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorFrontPosition() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 applyBehavior(new FooBehavior());
@@ -65,7 +65,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorWithFinally() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -117,7 +117,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorInContainer() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 sequential().actions(
@@ -154,7 +154,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testBehaviorInContainerWithFinally() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 doFinally().actions(
@@ -205,7 +205,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehavior() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -247,7 +247,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehaviorTwice() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 description("This is a Test");
@@ -283,7 +283,7 @@ public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testApplyBehaviorInContainerTwice() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 FooBehavior behavior = new FooBehavior();

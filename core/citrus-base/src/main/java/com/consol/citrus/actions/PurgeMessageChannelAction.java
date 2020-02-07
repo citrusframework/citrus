@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,11 +187,11 @@ public class PurgeMessageChannelAction extends AbstractTestAction {
         }
 
         /**
-         * Sets the Spring bean factory channel resolver for using channel names.
-         * @param applicationContext
+         * Sets the bean reference resolver channel resolver for using channel names.
+         * @param referenceResolver
          */
-        public Builder channelResolver(ApplicationContext applicationContext) {
-            this.channelResolver = new BeanFactoryChannelResolver(applicationContext);
+        public Builder channelResolver(ReferenceResolver referenceResolver) {
+            this.channelResolver = channelName -> referenceResolver.resolve(channelName, MessageChannel.class);
             return this;
         }
 

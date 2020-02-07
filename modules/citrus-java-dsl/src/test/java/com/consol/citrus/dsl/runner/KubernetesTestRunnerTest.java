@@ -16,14 +16,27 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.net.URL;
+import java.util.UUID;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
-import com.consol.citrus.kubernetes.command.*;
+import com.consol.citrus.kubernetes.command.Info;
+import com.consol.citrus.kubernetes.command.ListNamespaces;
+import com.consol.citrus.kubernetes.command.ListNodes;
+import com.consol.citrus.kubernetes.command.ListPods;
+import com.consol.citrus.kubernetes.command.WatchEventResult;
+import com.consol.citrus.kubernetes.command.WatchNodes;
+import com.consol.citrus.kubernetes.command.WatchServices;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.github.dockerjava.api.command.CreateContainerResponse;
-import io.fabric8.kubernetes.api.model.*;
+import io.fabric8.kubernetes.api.model.NamespaceList;
+import io.fabric8.kubernetes.api.model.Node;
+import io.fabric8.kubernetes.api.model.NodeList;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.kubernetes.client.dsl.ClientMixedOperation;
@@ -32,11 +45,11 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.net.URL;
-import java.util.UUID;
-
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -89,7 +102,7 @@ public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
         final KubernetesClient client = new KubernetesClient();
         client.getEndpointConfiguration().setKubernetesClient(k8sClient);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 kubernetes(action -> action.client(client)

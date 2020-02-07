@@ -31,7 +31,7 @@ import static org.testng.Assert.assertEquals;
 public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testCatchDefaultExceptionBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 catchException().when(fail("Error"));
@@ -50,7 +50,7 @@ public class CatchExceptionTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCatchBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 catchException().exception(CitrusRuntimeException.class.getName())

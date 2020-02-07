@@ -16,16 +16,26 @@
 
 package com.consol.citrus.jmx.model;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
-
-import javax.xml.bind.annotation.*;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -65,7 +75,7 @@ public class ManagedBeanInvocation {
      * Gets this service result as object casted to target type if necessary.
      * @return
      */
-    public java.lang.Object getAttributeValue(ApplicationContext applicationContext) {
+    public java.lang.Object getAttributeValue(ReferenceResolver referenceResolver) {
         if (attribute == null) {
             return null;
         }
@@ -80,8 +90,8 @@ public class ManagedBeanInvocation {
 
             if (attribute.getValue() != null) {
                 value = attribute.getValue();
-            } else if (StringUtils.hasText(attribute.getRef()) && applicationContext != null) {
-                value = applicationContext.getBean(attribute.getRef());
+            } else if (StringUtils.hasText(attribute.getRef()) && referenceResolver != null) {
+                value = referenceResolver.resolve(attribute.getRef());
             }
 
             if (value == null) {
@@ -426,7 +436,7 @@ public class ManagedBeanInvocation {
          * Gets method parameter as objects. Automatically converts simple types and ready referenced beans.
          * @return
          */
-        public Object[] getParamValues(ApplicationContext applicationContext) {
+        public Object[] getParamValues(ReferenceResolver referenceResolver) {
             List<Object> argValues = new ArrayList<>();
 
             try {
@@ -439,8 +449,8 @@ public class ManagedBeanInvocation {
                             value = operationParam.getValueObject();
                         } else if (operationParam.getValue() != null) {
                             value = operationParam.getValue();
-                        } else if (StringUtils.hasText(operationParam.getRef()) && applicationContext != null) {
-                            value = applicationContext.getBean(operationParam.getRef());
+                        } else if (StringUtils.hasText(operationParam.getRef()) && referenceResolver != null) {
+                            value = referenceResolver.resolve(operationParam.getRef());
                         }
 
                         if (value == null) {

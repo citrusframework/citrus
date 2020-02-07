@@ -27,6 +27,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.TestRequest;
 import com.consol.citrus.endpoint.Endpoint;
@@ -62,7 +63,6 @@ import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import com.github.fge.jsonschema.main.JsonSchema;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
@@ -95,7 +95,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     private Consumer messageConsumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
     private Resource resource = Mockito.mock(Resource.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     private XStreamMarshaller marshaller = new XStreamMarshaller();
 
@@ -112,7 +112,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("<Message>Hello</Message>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint));
@@ -142,7 +142,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("Foo").setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -174,7 +174,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadModel() {
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -183,13 +183,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.getBeansOfType(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -227,7 +229,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -256,7 +258,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshallerName() {
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -265,13 +267,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.containsBean("myMarshaller")).thenReturn(true);
-        when(applicationContextMock.getBean("myMarshaller")).thenReturn(marshaller);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
+        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -308,7 +312,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -347,7 +351,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "foo"));
 
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -377,9 +381,8 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveBuilderWithEndpointName() {
         TestContext context = applicationContext.getBean(TestContext.class);
-        context.setApplicationContext(applicationContextMock);
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -388,12 +391,14 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
-        when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.resolve("fooMessageEndpoint", Endpoint.class)).thenReturn(messageEndpoint);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint("fooMessageEndpoint")
@@ -420,7 +425,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -453,7 +458,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("some", "value")
                         .setHeader("operation", "sayHello")
                         .setHeader("foo", "bar"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -512,7 +517,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo</Value></Header>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -568,7 +573,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "foo")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo1</Value></Header>")
                         .addHeaderData("<Header><Name>operation</Name><Value>foo2</Value></Header>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -618,7 +623,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderFragment() {
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -628,13 +633,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .addHeaderData("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.getBeansOfType(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -674,7 +681,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage()
                         .addHeaderData("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -704,7 +711,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderFragmentExplicitMarshallerName() {
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -714,13 +721,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .addHeaderData("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.containsBean("myMarshaller")).thenReturn(true);
-        when(applicationContextMock.getBean("myMarshaller")).thenReturn(marshaller);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
+        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -766,7 +775,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -826,7 +835,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>foo</Value></Header>".getBytes()))
                                        .thenReturn(new ByteArrayInputStream("<Header><Name>operation</Name><Value>bar</Value></Header>".getBytes()));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -886,7 +895,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -919,20 +928,21 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatorName() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -964,19 +974,20 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithDictionary() {
         final DataDictionary dictionary = new NodeMappingDataDictionary();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1007,20 +1018,21 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithDictionaryName() {
         final DataDictionary dictionary = new NodeMappingDataDictionary();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean("customDictionary", DataDictionary.class)).thenReturn(dictionary);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve("customDictionary", DataDictionary.class)).thenReturn(dictionary);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1062,7 +1074,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         final Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("operation", "sayHello");
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1097,7 +1109,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(selectiveConsumer.receive(eq("operation = 'sayHello'"), any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1123,7 +1135,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -1132,12 +1144,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1172,7 +1185,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderExtractJsonPathFromPayload() {
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -1181,12 +1194,13 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1235,7 +1249,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "sayHello")
                         .setHeader("requestId", "123456"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1280,7 +1294,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                         .setHeader("operation", "sayHello")
                         .setHeader("requestId", "123456"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1335,7 +1349,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1361,7 +1375,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
-        verify(callback).setApplicationContext(applicationContext);
+        verify(callback).setReferenceResolver(context.getReferenceResolver());
         verify(callback).validate(any(Message.class), any(TestContext.class));
     }
 
@@ -1369,20 +1383,21 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScript() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1422,20 +1437,21 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScriptResourcePath() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1474,20 +1490,21 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1526,20 +1543,21 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatonScriptAndHeader() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
         when(messageEndpoint.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1591,7 +1609,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "foo"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1634,7 +1652,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1678,7 +1696,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1729,7 +1747,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1752,7 +1770,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1775,7 +1793,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1818,7 +1836,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1860,7 +1878,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         XsdSchema schema = applicationContext.getBean("testSchema", XsdSchema.class);
         XmlValidator validator = Mockito.mock(XmlValidator.class);
 
-        reset(applicationContextMock, schema, validator, messageEndpoint, messageConsumer, configuration);
+        reset(referenceResolver, schema, validator, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
         when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
         when(configuration.getTimeout()).thenReturn(100L);
@@ -1869,15 +1887,15 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
                         .setHeader("operation", "sayHello"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         when(schema.createValidator()).thenReturn(validator);
         when(validator.validate(any(Source.class))).thenReturn(new SAXParseException[] {});
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1934,7 +1952,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 "          </xs:sequence>\n" +
                 "      </xs:complexType>\n" +
                 "    </xs:element></xs:schema>"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -1978,7 +1996,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -2021,7 +2039,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -2068,7 +2086,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
         when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
@@ -2112,7 +2130,7 @@ public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)

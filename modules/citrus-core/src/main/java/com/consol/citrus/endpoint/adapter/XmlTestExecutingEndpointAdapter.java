@@ -18,6 +18,7 @@ package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.EndpointAdapter;
@@ -97,6 +98,8 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         ClassPathXmlApplicationContext ctx = createApplicationContext(context, packageName, testName);
 
         try {
+            context.setApplicationContext(ctx);
+            context.setReferenceResolver(new SpringBeanReferenceResolver(ctx));
             TestCase testCase = ctx.getBean(testName, TestCase.class);
             if (testCase instanceof DefaultTestCase) {
                 testCase.setName(testName);
@@ -148,8 +151,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         }
 
         if (getMappingStrategy() == null) {
-            BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy();
-            mappingStrategy.setApplicationContext(applicationContext);
+            BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy(new SpringBeanReferenceResolver(applicationContext));
             setMappingStrategy(mappingStrategy);
         }
     }

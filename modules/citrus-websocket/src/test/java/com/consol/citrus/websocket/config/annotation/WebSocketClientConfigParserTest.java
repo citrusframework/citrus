@@ -19,16 +19,16 @@ package com.consol.citrus.websocket.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.websocket.client.WebSocketClient;
 import com.consol.citrus.websocket.message.WebSocketMessageConverter;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -55,27 +55,27 @@ public class WebSocketClientConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private WebSocketClient webSocketClient3;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private WebSocketMessageConverter messageConverter = Mockito.mock(WebSocketMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private EndpointUriResolver endpointResolver = Mockito.mock(EndpointUriResolver.class);
+    private WebSocketMessageConverter messageConverter;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private EndpointUriResolver endpointResolver;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("messageConverter", WebSocketMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test

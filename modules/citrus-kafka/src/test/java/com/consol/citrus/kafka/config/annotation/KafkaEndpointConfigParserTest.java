@@ -19,16 +19,23 @@ package com.consol.citrus.kafka.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.kafka.endpoint.KafkaEndpoint;
-import com.consol.citrus.kafka.message.*;
+import com.consol.citrus.kafka.message.KafkaMessageConverter;
+import com.consol.citrus.kafka.message.KafkaMessageHeaderMapper;
+import com.consol.citrus.kafka.message.KafkaMessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.kafka.common.serialization.*;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.IntegerDeserializer;
+import org.apache.kafka.common.serialization.IntegerSerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -68,27 +75,27 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private KafkaEndpoint kafkaEndpoint3;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private KafkaMessageConverter messageConverter = Mockito.mock(KafkaMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private KafkaMessageHeaderMapper headerMapper = Mockito.mock(KafkaMessageHeaderMapper.class);
+    private KafkaMessageConverter messageConverter;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private KafkaMessageHeaderMapper headerMapper;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("messageConverter", KafkaMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("headerMapper", KafkaMessageHeaderMapper.class)).thenReturn(headerMapper);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("messageConverter", KafkaMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("headerMapper", KafkaMessageHeaderMapper.class)).thenReturn(headerMapper);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -101,7 +108,7 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(kafkaEndpoint1.getEndpointConfiguration().getClientId());
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getHeaderMapper().getClass(), KafkaMessageHeaderMapper.class);
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getMessageConverter().getClass(), KafkaMessageConverter.class);
-        Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().isAutoCommit(), true);
+        Assert.assertTrue(kafkaEndpoint1.getEndpointConfiguration().isAutoCommit());
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getAutoCommitInterval(), 1000L);
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getOffsetReset(), "earliest");
         Assert.assertEquals(kafkaEndpoint1.getEndpointConfiguration().getTopic(), "test");
@@ -119,7 +126,7 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getClientId(), "kafkaEndpoint2");
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getHeaderMapper(), headerMapper);
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getMessageConverter(), messageConverter);
-        Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().isAutoCommit(), false);
+        Assert.assertFalse(kafkaEndpoint2.getEndpointConfiguration().isAutoCommit());
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getAutoCommitInterval(), 500L);
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getOffsetReset(), "latest");
         Assert.assertEquals(kafkaEndpoint2.getEndpointConfiguration().getTopic(), "test");

@@ -16,17 +16,18 @@
 
 package com.consol.citrus.ws.client;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -34,20 +35,20 @@ import static org.mockito.Mockito.*;
  */
 public class WebServiceEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private WebServiceMessageFactory messageFactory = Mockito.mock(WebServiceMessageFactory.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
         WebServiceEndpointComponent component = new WebServiceEndpointComponent();
 
-        reset(applicationContext);
+        reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("http://localhost:8088/test", context);
 
         Assert.assertEquals(endpoint.getClass(), WebServiceClient.class);
@@ -62,9 +63,9 @@ public class WebServiceEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         WebServiceEndpointComponent component = new WebServiceEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("myMessageFactory")).thenReturn(true);
-        when(applicationContext.getBean("myMessageFactory")).thenReturn(messageFactory);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("myMessageFactory")).thenReturn(true);
+        when(referenceResolver.resolve("myMessageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);
         Endpoint endpoint = component.createEndpoint("http:localhost:8088?timeout=10000&errorHandlingStrategy=propagateError&messageFactory=myMessageFactory", context);
 
         Assert.assertEquals(endpoint.getClass(), WebServiceClient.class);

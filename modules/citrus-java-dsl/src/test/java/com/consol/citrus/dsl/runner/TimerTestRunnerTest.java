@@ -36,7 +36,7 @@ public class TimerTestRunnerTest extends AbstractTestNGUnitTest {
         final int repeatCount = 1;
         final boolean fork = false;
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 timer()

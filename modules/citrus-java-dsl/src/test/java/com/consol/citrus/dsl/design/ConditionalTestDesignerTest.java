@@ -28,7 +28,7 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 conditional().when("${var} = 5").actions(echo("${var}"));
@@ -49,7 +49,7 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderConditionExpression() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 conditional().when(context -> context.getVariable("var").equals("Hello")).actions(echo("${var}"));
@@ -70,7 +70,7 @@ public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderHamcrestConditionExpression() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 conditional().when("${var}", is("Hello")).actions(echo("${var}"));

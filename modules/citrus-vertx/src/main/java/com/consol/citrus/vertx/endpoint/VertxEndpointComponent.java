@@ -16,14 +16,14 @@
 
 package com.consol.citrus.vertx.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -61,15 +61,15 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
         if (parameters.containsKey(VERTX_INSTANCE_FACTORY)) {
             String vertFactoryBean = parameters.remove(VERTX_INSTANCE_FACTORY);
 
-            if (context.getApplicationContext() != null) {
-                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean(vertFactoryBean, VertxInstanceFactory.class));
+            if (context.getReferenceResolver() != null) {
+                endpoint.setVertxInstanceFactory(context.getReferenceResolver().resolve(vertFactoryBean, VertxInstanceFactory.class));
             } else {
                 log.warn("Unable to set custom Vert.x instance factory as Spring application context is not accessible!");
             }
         } else {
             // set default jms connection factory
-            if (context.getApplicationContext() != null && context.getApplicationContext().containsBean(VERTX_INSTANCE_FACTORY)) {
-                endpoint.setVertxInstanceFactory(context.getApplicationContext().getBean(VERTX_INSTANCE_FACTORY, VertxInstanceFactory.class));
+            if (context.getReferenceResolver() != null && context.getReferenceResolver().isResolvable(VERTX_INSTANCE_FACTORY)) {
+                endpoint.setVertxInstanceFactory(context.getReferenceResolver().resolve(VERTX_INSTANCE_FACTORY, VertxInstanceFactory.class));
             } else {
                 log.warn("Unable to set default Vert.x instance factory as Spring application context is not accessible or default factory bean is not available!");
             }

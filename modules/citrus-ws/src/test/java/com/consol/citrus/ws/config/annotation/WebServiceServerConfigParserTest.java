@@ -16,22 +16,24 @@
 
 package com.consol.citrus.ws.config.annotation;
 
+import java.util.Arrays;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -78,37 +80,38 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
     @WebServiceServerConfig(servletHandler="servletHandler")
     private WebServiceServer soapServer6;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private Connector connector1 = Mockito.mock(Connector.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private Connector connector2 = Mockito.mock(Connector.class);
+    private Connector connector1;
     @Mock
-    private SecurityHandler securityHandler = Mockito.mock(SecurityHandler.class);
+    private Connector connector2;
     @Mock
-    private WebServiceMessageConverter messageConverter = Mockito.mock(WebServiceMessageConverter.class);
+    private SecurityHandler securityHandler;
     @Mock
-    private ServletHandler servletHandler = Mockito.mock(ServletHandler.class);
+    private WebServiceMessageConverter messageConverter;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private ServletHandler servletHandler;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("securityHandler", SecurityHandler.class)).thenReturn(securityHandler);
+        when(referenceResolver.resolve("messageConverter", WebServiceMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("servletHandler", ServletHandler.class)).thenReturn(servletHandler);
+        when(referenceResolver.resolve("connector", Connector.class)).thenReturn(connector1);
+        when(referenceResolver.resolve("connector1", Connector.class)).thenReturn(connector1);
+        when(referenceResolver.resolve("connector2", Connector.class)).thenReturn(connector2);
+        when(referenceResolver.resolve(new String[] { "connector1", "connector2" }, Connector.class)).thenReturn(Arrays.asList(connector1, connector2));
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("securityHandler", SecurityHandler.class)).thenReturn(securityHandler);
-        when(applicationContext.getBean("messageConverter", WebServiceMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("servletHandler", ServletHandler.class)).thenReturn(servletHandler);
-        when(applicationContext.getBean("connector", Connector.class)).thenReturn(connector1);
-        when(applicationContext.getBean("connector1", Connector.class)).thenReturn(connector1);
-        when(applicationContext.getBean("connector2", Connector.class)).thenReturn(connector2);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -205,7 +208,7 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(soapServer5.getSecurityHandler(), securityHandler);
         Assert.assertEquals(soapServer5.getConnectors().length, 0);
         Assert.assertNull(soapServer5.getConnector());
-        
+
         // 6th server
         Assert.assertEquals(soapServer6.getName(), "soapServer6");
         Assert.assertFalse(soapServer6.isAutoStart());

@@ -34,7 +34,7 @@ public class AsyncTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAsyncBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 async().actions(echo("${var}"), sleep(5000L));
@@ -55,7 +55,7 @@ public class AsyncTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAsyncBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 async().actions(

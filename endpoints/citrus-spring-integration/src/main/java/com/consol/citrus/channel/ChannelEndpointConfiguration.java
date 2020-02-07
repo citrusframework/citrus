@@ -86,7 +86,7 @@ public class ChannelEndpointConfiguration extends AbstractEndpointConfiguration 
      * Set the channel resolver.
      * @param channelResolver the channelResolver to set
      */
-    public void setChannelResolver(DestinationResolver channelResolver) {
+    public void setChannelResolver(DestinationResolver<MessageChannel> channelResolver) {
         this.channelResolver = channelResolver;
     }
 

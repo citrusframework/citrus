@@ -96,11 +96,11 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
         }
 
         if (InjectionMode.DESIGNER.equals(mode)) {
-            designer = new DefaultTestDesigner(CitrusBackend.getCitrus().getApplicationContext(), context);
+            designer = new DefaultTestDesigner(context);
         }
 
         if (InjectionMode.RUNNER.equals(mode)) {
-            runner = new DefaultTestRunner(CitrusBackend.getCitrus().getApplicationContext(), context);
+            runner = new DefaultTestRunner(context);
         }
     }
 

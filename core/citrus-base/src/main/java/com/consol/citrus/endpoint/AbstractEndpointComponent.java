@@ -20,6 +20,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -81,7 +82,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
 
     @Override
     public Map<String, String> getParameters(String endpointUri) {
-        Map<String, String> parameters = new LinkedHashMap<String, String>();
+        Map<String, String> parameters = new LinkedHashMap<>();
 
         if (endpointUri.contains("?")) {
             String parameterString = endpointUri.substring(endpointUri.indexOf('?') + 1);
@@ -94,7 +95,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
                 } else if (parameterValue.length == 2) {
                     parameters.put(parameterValue[0], parameterValue[1]);
                 } else {
-                    throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", parameterValue));
+                    throw new CitrusRuntimeException(String.format("Invalid parameter key/value combination '%s'", Arrays.toString(parameterValue)));
                 }
             }
         }
@@ -142,7 +143,7 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
      */
     protected Map<String, String> getEndpointConfigurationParameters(Map<String, String> parameters,
                                                                      Class<? extends EndpointConfiguration> endpointConfigurationType) {
-        Map<String, String> params = new HashMap<String, String>();
+        Map<String, String> params = new HashMap<>();
 
         for (Map.Entry<String, String> parameterEntry : parameters.entrySet()) {
             Field field = ReflectionUtils.findField(endpointConfigurationType, parameterEntry.getKey());

@@ -24,6 +24,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -33,7 +34,6 @@ import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -49,7 +49,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     private WebServiceClient soapClient = Mockito.mock(WebServiceClient.class);
 
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private Resource resource = Mockito.mock(Resource.class);
 
     private SoapAttachment testAttachment = new SoapAttachment();
@@ -67,7 +67,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFork() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 send(soapClient)
@@ -112,7 +112,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client(soapClient)
@@ -142,7 +142,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAttachment() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client(soapClient)
@@ -178,7 +178,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMtomSoapAttachment() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client(soapClient)
@@ -217,7 +217,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAttachmentData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client(soapClient)
@@ -253,7 +253,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleSoapAttachmentData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client(soapClient)
@@ -295,7 +295,7 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSoapAttachmentResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client(soapClient)
@@ -331,11 +331,13 @@ public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSendBuilderWithEndpointName() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 soap().client("soapClient")

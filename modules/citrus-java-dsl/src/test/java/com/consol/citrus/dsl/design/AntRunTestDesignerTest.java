@@ -28,32 +28,32 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testAntRunBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
                     .target("doBuild");
             }
         };
-        
+
         builder.configure();
 
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertEquals(action.getTarget(), "doBuild");
     }
-    
+
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -66,17 +66,17 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
         Assert.assertNull(action.getTarget());
         Assert.assertEquals(action.getTargets(), "prepare,test,release");
     }
-    
+
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -91,7 +91,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
@@ -100,10 +100,10 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getProperties().getProperty("name"), "MyBuildTest");
         Assert.assertEquals(action.getProperties().getProperty("filePath"), "/home/sayHello.txt");
     }
-    
+
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -117,7 +117,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/ant/build.xml");
@@ -125,12 +125,12 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getProperties().size(), 0L);
         Assert.assertEquals(action.getPropertyFilePath(), "/ant/build.properties");
     }
-    
+
     @Test
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = Mockito.mock(BuildListener.class);
-        
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 antrun("com/consol/ant/build.xml")
@@ -144,7 +144,7 @@ public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildListener(), buildListener);

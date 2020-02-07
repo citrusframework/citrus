@@ -16,6 +16,14 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.context.TestContext;
@@ -31,11 +39,11 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -48,7 +56,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
     private Resource resource = Mockito.mock(Resource.class);
 
     private SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
-    
+
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -58,7 +66,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         when(jdbcTemplate.queryForList(anyString())).thenReturn(results)
                                                     .thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "100000")));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("episodeId", "citrus:randomNumber(5)");
@@ -82,9 +90,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
         Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
@@ -99,7 +107,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(action.getValidator());
 
     }
-    
+
     @Test
     public void testExecuteSQLQueryWithStatements() {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -109,7 +117,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "9999")));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -132,9 +140,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 2);
         Set<Map.Entry<String, List<String>>> rows = action.getControlResultSet().entrySet();
@@ -159,7 +167,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate, transactionManager);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
         when(jdbcTemplate.queryForList("SELECT COUNT(*) as CNT_EPISODES FROM EPISODES")).thenReturn(Collections.singletonList(Collections.<String, Object>singletonMap("CNT_EPISODES", "9999")));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -214,7 +222,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -227,9 +235,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -241,7 +249,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
     }
-    
+
     @Test
     public void testValidationScriptResource() throws IOException {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -250,7 +258,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate, resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[0].NAME == 'Radj'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -262,9 +270,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -276,7 +284,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
     }
-    
+
     @Test
     public void testGroovyValidationScript() {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -285,7 +293,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -297,9 +305,9 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -311,7 +319,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getJdbcTemplate(), jdbcTemplate);
 
     }
-    
+
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
         List<Map<String, Object>> results = new ArrayList<>();
@@ -322,7 +330,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
         reset(jdbcTemplate, resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("assert rows[1].NAME == 'Howard'".getBytes()));
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)
@@ -330,13 +338,13 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
                         .groovy(resource));
             }
         };
-        
+
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -358,7 +366,7 @@ public class ExecuteSQLQueryTestRunnerTest extends AbstractTestNGUnitTest {
 
         reset(jdbcTemplate, validator);
         when(jdbcTemplate.queryForList("SELECT NAME FROM ACTORS")).thenReturn(results);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 query(builder -> builder.jdbcTemplate(jdbcTemplate)

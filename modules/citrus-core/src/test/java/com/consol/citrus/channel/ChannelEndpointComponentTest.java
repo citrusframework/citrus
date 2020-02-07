@@ -16,17 +16,18 @@
 
 package com.consol.citrus.channel;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -34,27 +35,31 @@ import static org.mockito.Mockito.*;
  */
 public class ChannelEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
-    private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
+    @Mock
+    private ReferenceResolver referenceResolver;
+    @Mock
+    private DestinationResolver<?> channelResolver;
+
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        MockitoAnnotations.initMocks(this);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
     public void testCreateChannelEndpoint() throws Exception {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
-        reset(applicationContext);
+        reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("channel:channelName", context);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
 
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory(), applicationContext);
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver().getClass(), BeanFactoryChannelResolver.class);
+        Assert.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
+        Assert.assertNotNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
         Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
 
     }
@@ -63,14 +68,14 @@ public class ChannelEndpointComponentTest {
     public void testCreateSyncChannelEndpoint() throws Exception {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
-        reset(applicationContext);
+        reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("channel:sync:channelName", context);
 
         Assert.assertEquals(endpoint.getClass(), ChannelSyncEndpoint.class);
 
         Assert.assertEquals(((ChannelSyncEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertEquals(((ChannelSyncEndpoint) endpoint).getEndpointConfiguration().getBeanFactory(), applicationContext);
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver().getClass(), BeanFactoryChannelResolver.class);
+        Assert.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
+        Assert.assertNotNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver());
 
     }
 
@@ -78,15 +83,15 @@ public class ChannelEndpointComponentTest {
     public void testCreateChannelEndpointWithParameters() throws Exception {
         ChannelEndpointComponent component = new ChannelEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("myChannelResolver")).thenReturn(true);
-        when(applicationContext.getBean("myChannelResolver")).thenReturn(channelResolver);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("myChannelResolver")).thenReturn(true);
+        when(referenceResolver.resolve("myChannelResolver", DestinationResolver.class)).thenReturn(channelResolver);
         Endpoint endpoint = component.createEndpoint("channel:channelName?timeout=10000&channelResolver=myChannelResolver", context);
 
         Assert.assertEquals(endpoint.getClass(), ChannelEndpoint.class);
 
         Assert.assertEquals(((ChannelEndpoint)endpoint).getEndpointConfiguration().getChannelName(), "channelName");
-        Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory(), applicationContext);
+        Assert.assertNull(((ChannelEndpoint) endpoint).getEndpointConfiguration().getBeanFactory());
         Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getChannelResolver(), channelResolver);
         Assert.assertEquals(((ChannelEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 

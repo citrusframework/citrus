@@ -22,16 +22,17 @@ import java.util.Map;
 
 import com.consol.citrus.actions.PurgeEndpointAction;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.ManagedList;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
@@ -77,13 +78,13 @@ public class PurgeEndpointActionParser implements BeanDefinitionParser {
     /**
      * Test action factory bean.
      */
-    public static class PurgeEndpointActionFactoryBean extends AbstractTestActionFactoryBean<PurgeEndpointAction, PurgeEndpointAction.Builder> implements BeanFactoryAware {
+    public static class PurgeEndpointActionFactoryBean extends AbstractTestActionFactoryBean<PurgeEndpointAction, PurgeEndpointAction.Builder> implements ApplicationContextAware {
 
         private final PurgeEndpointAction.Builder builder = new PurgeEndpointAction.Builder();
 
         @Override
-        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-            builder.beanFactory(beanFactory);
+        public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+            builder.referenceResolver(new SpringBeanReferenceResolver(applicationContext));
         }
 
         /**

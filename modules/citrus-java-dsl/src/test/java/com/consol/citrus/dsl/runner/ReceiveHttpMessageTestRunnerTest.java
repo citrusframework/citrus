@@ -67,7 +67,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 .queryParam("noValue", null)
                 .queryParam("param1", "value1")
                 .queryParam("param2", "value2"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(action -> action.server(httpServer)
@@ -115,7 +115,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 .header("X-Bar", "bar")
                 .contentType(ContentType.APPLICATION_XML.getMimeType())
                 .queryParam("param1", "value1"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(action -> action.server(httpServer)
@@ -168,7 +168,7 @@ public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 .uri("/test")
                 .status(HttpStatus.OK)
                 .version("HTTP/1.1"));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 http(action -> action.client(httpClient)

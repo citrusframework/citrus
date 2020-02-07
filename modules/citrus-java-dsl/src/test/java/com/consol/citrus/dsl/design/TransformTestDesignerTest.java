@@ -16,6 +16,9 @@
 
 package com.consol.citrus.dsl.design;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -24,19 +27,17 @@ import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
 	private Resource xmlResource = Mockito.mock(Resource.class);
 	private Resource xsltResource = Mockito.mock(Resource.class);
-	
+
 	@Test
 	public void testTransformBuilderWithData() {
-		MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+		MockTestDesigner builder = new MockTestDesigner(context) {
     		@Override
     		public void configure() {
     		    transform()
@@ -51,28 +52,28 @@ public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
 		TestCase test = builder.getTestCase();
 		Assert.assertEquals(test.getActionCount(), 1);
 		Assert.assertEquals(test.getActions().get(0).getClass(), TransformAction.class);
-		
+
 		TransformAction action = (TransformAction)test.getActions().get(0);
-		
+
 		Assert.assertEquals(action.getName(), "transform");
 		Assert.assertEquals(action.getXmlData(), "<Test>XML</test>");
 		Assert.assertEquals(action.getXsltData(), "XSLT");
 		Assert.assertEquals(action.getTargetVariable(), "result");
 	}
-		
+
 	@Test
 	public void testTransformBuilderWithResource() throws IOException {
-		MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+		MockTestDesigner builder = new MockTestDesigner(context) {
 			@Override
 			public void configure() {
 				transform()
 					.source(xmlResource)
 					.xslt(xsltResource)
 					.result("result");
-						
+
 			}
 		};
-		
+
 		reset(xmlResource, xsltResource);
         when(xmlResource.getInputStream()).thenReturn(new ByteArrayInputStream("xmlData".getBytes()));
         when(xsltResource.getInputStream()).thenReturn(new ByteArrayInputStream("xsltSource".getBytes()));
@@ -81,9 +82,9 @@ public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
 		TestCase test = builder.getTestCase();
 		Assert.assertEquals(test.getActionCount(), 1);
 		Assert.assertEquals(test.getActions().get(0).getClass(), TransformAction.class);
-		
+
 		TransformAction action = (TransformAction)test.getActions().get(0);
-		
+
 		Assert.assertEquals(action.getName(), "transform");
 		Assert.assertEquals(action.getXmlData(), "xmlData");
 		Assert.assertEquals(action.getXsltData(), "xsltSource");

@@ -19,13 +19,8 @@ package com.consol.citrus.rmi.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.rmi.client.RmiClient;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.reset;
 
 /**
  * @author Christoph Deppisch
@@ -33,13 +28,7 @@ import static org.mockito.Mockito.reset;
  */
 public class RmiEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
-
-    @BeforeClass
-    public void setup() {
-        context.setApplicationContext(applicationContext);
-    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
@@ -93,7 +82,6 @@ public class RmiEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         RmiEndpointComponent component = new RmiEndpointComponent();
 
-        reset(applicationContext);
         Endpoint endpoint = component.createEndpoint("rmi://localhost:2099?binding=rmiBinding&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), RmiClient.class);

@@ -31,17 +31,17 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  */
 public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testAntRunBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
                     .target("sayHello"));
             }
         };
-        
+
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
@@ -52,10 +52,10 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/citrus/dsl/runner/build.xml");
         Assert.assertEquals(action.getTarget(), "sayHello");
     }
-    
+
     @Test
     public void testAntRunBuilderWithTargets() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
@@ -67,17 +67,17 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         Assert.assertEquals(test.getActiveAction().getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/citrus/dsl/runner/build.xml");
         Assert.assertNull(action.getTarget());
         Assert.assertEquals(action.getTargets(), "sayHello,sayGoodbye");
     }
-    
+
     @Test
     public void testAntRunBuilderWithProperty() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")
@@ -91,7 +91,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         Assert.assertEquals(test.getActiveAction().getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/citrus/dsl/runner/build.xml");
@@ -100,10 +100,10 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getProperties().getProperty("welcomeText"), "Hi everybody!");
         Assert.assertEquals(action.getProperties().getProperty("goodbyeText"), "Goodbye!");
     }
-    
+
     @Test
     public void testAntRunBuilderWithPropertyFile() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("checked", true);
@@ -118,7 +118,7 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AntRunAction.class);
         Assert.assertEquals(test.getActiveAction().getClass(), AntRunAction.class);
-        
+
         AntRunAction action = (AntRunAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "antrun");
         Assert.assertEquals(action.getBuildFilePath(), "com/consol/citrus/dsl/runner/build.xml");
@@ -126,13 +126,13 @@ public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getProperties().size(), 0L);
         Assert.assertEquals(action.getPropertyFilePath(), "classpath:com/consol/citrus/dsl/runner/build.properties");
     }
-    
+
     @Test
     public void testAntRunBuilderWithBuildListener() {
         final BuildListener buildListener = Mockito.mock(BuildListener.class);
 
         reset(buildListener);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 antrun(builder -> builder.buildFilePath("com/consol/citrus/dsl/runner/build.xml")

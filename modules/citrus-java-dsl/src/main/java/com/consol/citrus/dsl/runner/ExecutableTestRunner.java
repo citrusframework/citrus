@@ -31,7 +31,7 @@ public class ExecutableTestRunner extends DefaultTestRunner implements Executabl
      * @param applicationContext
      */
     public ExecutableTestRunner(ApplicationContext applicationContext) {
-        super(applicationContext, Citrus.newInstance(applicationContext).createTestContext());
+        super(Citrus.newInstance(applicationContext).createTestContext());
     }
 
     @Override

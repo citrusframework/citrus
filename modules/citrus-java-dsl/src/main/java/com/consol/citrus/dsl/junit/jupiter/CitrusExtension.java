@@ -16,6 +16,9 @@
 
 package com.consol.citrus.dsl.junit.jupiter;
 
+import java.lang.reflect.Method;
+import java.util.stream.Stream;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusTest;
@@ -30,12 +33,12 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
 import org.junit.jupiter.api.TestFactory;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.ParameterContext;
+import org.junit.jupiter.api.extension.ParameterResolutionException;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import java.lang.reflect.Method;
-import java.util.stream.Stream;
 
 /**
  * JUnit5 extension adding {@link TestRunner} and {@link TestDesigner} support as well as Citrus annotation based resource injection
@@ -144,7 +147,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
                 }
             }
 
-            TestDesigner testDesigner = new DefaultTestDesigner(getCitrus(extensionContext).getApplicationContext(), getTestContext(extensionContext));
+            TestDesigner testDesigner = new DefaultTestDesigner(getTestContext(extensionContext));
             testDesigner.testClass(extensionContext.getRequiredTestClass());
             testDesigner.name(testName);
             testDesigner.packageName(extensionContext.getRequiredTestClass().getPackage().getName());
@@ -169,7 +172,7 @@ public class CitrusExtension extends CitrusBaseExtension implements TestExecutio
                 }
             }
 
-            TestRunner testRunner = new DefaultTestRunner(getCitrus(extensionContext).getApplicationContext(), getTestContext(extensionContext));
+            TestRunner testRunner = new DefaultTestRunner(getTestContext(extensionContext));
             testRunner.testClass(extensionContext.getRequiredTestClass());
             testRunner.name(testName);
             testRunner.packageName(extensionContext.getRequiredTestClass().getPackage().getName());

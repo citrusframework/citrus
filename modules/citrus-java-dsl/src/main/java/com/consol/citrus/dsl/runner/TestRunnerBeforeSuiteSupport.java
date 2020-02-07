@@ -60,6 +60,6 @@ public abstract class TestRunnerBeforeSuiteSupport extends SequenceBeforeSuite i
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testRunner = new DefaultTestRunner(applicationContext, Citrus.newInstance(applicationContext).createTestContext());
+        testRunner = new DefaultTestRunner(Citrus.newInstance(applicationContext).createTestContext());
     }
 }

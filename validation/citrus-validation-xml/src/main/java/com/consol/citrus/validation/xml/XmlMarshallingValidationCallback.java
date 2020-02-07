@@ -64,10 +64,10 @@ public abstract class XmlMarshallingValidationCallback<T> extends AbstractValida
     @SuppressWarnings("unchecked")
     private T unmarshalMessage(Message message) {
         if (unmarshaller == null) {
-            Assert.notNull(applicationContext, "Marshalling validation callback requires marshaller instance " +
-            		"or Spring application context with nested bean definition of type marshaller");
+            Assert.notNull(referenceResolver, "Marshalling validation callback requires marshaller instance " +
+            		"or proper reference resolver with nested bean definition of type marshaller");
 
-            unmarshaller = applicationContext.getBean(Unmarshaller.class);
+            unmarshaller = referenceResolver.resolve(Unmarshaller.class);
         }
 
         try {

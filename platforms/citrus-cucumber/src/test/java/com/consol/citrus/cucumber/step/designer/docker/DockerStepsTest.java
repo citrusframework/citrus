@@ -54,7 +54,7 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
     @BeforeMethod
     public void injectResources() {
         steps = new DockerSteps();
-        designer = new DefaultTestDesigner(applicationContext, context);
+        designer = new DefaultTestDesigner(context);
         CitrusAnnotations.injectAll(steps, citrus, context);
         CitrusDslAnnotations.injectTestDesigner(steps, designer);
     }

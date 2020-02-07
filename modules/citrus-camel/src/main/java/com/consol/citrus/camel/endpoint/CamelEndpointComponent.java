@@ -16,13 +16,13 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -40,11 +40,11 @@ public class CamelEndpointComponent extends AbstractEndpointComponent {
             endpoint.getEndpointConfiguration().setEndpointUri(resourcePath + getParameterString(parameters, CamelEndpointConfiguration.class));
         }
 
-        if (context.getApplicationContext() != null) {
-            if (context.getApplicationContext().getBeansOfType(CamelContext.class).size() == 1) {
-                endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean(CamelContext.class));
-            } else if (context.getApplicationContext().containsBean("camelContext")) {
-                endpoint.getEndpointConfiguration().setCamelContext(context.getApplicationContext().getBean("camelContext", CamelContext.class));
+        if (context.getReferenceResolver() != null) {
+            if (context.getReferenceResolver().resolveAll(CamelContext.class).size() == 1) {
+                endpoint.getEndpointConfiguration().setCamelContext(context.getReferenceResolver().resolve(CamelContext.class));
+            } else if (context.getReferenceResolver().isResolvable("camelContext")) {
+                endpoint.getEndpointConfiguration().setCamelContext(context.getReferenceResolver().resolve("camelContext", CamelContext.class));
             } else {
                 endpoint.getEndpointConfiguration().setCamelContext(new DefaultCamelContext());
             }

@@ -16,12 +16,12 @@
 
 package com.consol.citrus.selenium.endpoint;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.BrowserType;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -35,13 +35,13 @@ import static org.mockito.Mockito.when;
  */
 public class SeleniumEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private WebDriver chromeDriver = Mockito.mock(WebDriver.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -66,9 +66,9 @@ public class SeleniumEndpointComponentTest {
     public void testCreateBrowserEndpointWithParameters() throws Exception {
         SeleniumEndpointComponent component = new SeleniumEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("chromeDriver")).thenReturn(true);
-        when(applicationContext.getBean("chromeDriver")).thenReturn(chromeDriver);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("chromeDriver")).thenReturn(true);
+        when(referenceResolver.resolve("chromeDriver", WebDriver.class)).thenReturn(chromeDriver);
         Endpoint endpoint = component.createEndpoint("selenium:chrome?start-page=https://localhost:8080&remote-server=https://localhost:8081&webDriver=chromeDriver&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), SeleniumBrowser.class);

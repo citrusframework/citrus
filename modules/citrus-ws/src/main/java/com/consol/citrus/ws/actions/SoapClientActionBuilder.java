@@ -18,8 +18,8 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -30,8 +30,8 @@ import org.springframework.util.Assert;
  */
 public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
 
-    /** Spring application context */
-    private ApplicationContext applicationContext;
+    /** Bean reference resolver */
+    private ReferenceResolver referenceResolver;
 
     /** Target soap client instance */
     private Endpoint soapClient;
@@ -65,7 +65,7 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(soapClientUri);
         }
 
-        builder.withApplicationContext(applicationContext);
+        builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
@@ -82,17 +82,17 @@ public class SoapClientActionBuilder implements TestActionBuilder.DelegatingTest
             builder.endpoint(soapClientUri);
         }
 
-        builder.withApplicationContext(applicationContext);
+        builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
 
     /**
-     * Sets the Spring bean application context.
-     * @param applicationContext
+     * Sets the bean reference resolver.
+     * @param referenceResolver
      */
-    public SoapClientActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public SoapClientActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
         return this;
     }
 

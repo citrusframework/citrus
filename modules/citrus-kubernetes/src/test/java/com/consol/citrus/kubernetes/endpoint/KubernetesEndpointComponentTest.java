@@ -19,13 +19,8 @@ package com.consol.citrus.kubernetes.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.reset;
 
 /**
  * @author Christoph Deppisch
@@ -33,13 +28,7 @@ import static org.mockito.Mockito.reset;
  */
 public class KubernetesEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
-
-    @BeforeClass
-    public void setup() {
-        context.setApplicationContext(applicationContext);
-    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
@@ -63,7 +52,6 @@ public class KubernetesEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         KubernetesEndpointComponent component = new KubernetesEndpointComponent();
 
-        reset(applicationContext);
         Endpoint endpoint = component.createEndpoint("k8s:localhost:8443?namespace=myNamespace&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), KubernetesClient.class);

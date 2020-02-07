@@ -16,16 +16,18 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import org.apache.camel.CamelContext;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -37,22 +39,22 @@ import static org.mockito.Mockito.when;
  */
 public class CamelEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private CamelContext camelContext = Mockito.mock(CamelContext.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
     public void testCreateEndpoint() throws Exception {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
-        when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(referenceResolver.resolve(CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:direct:news", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
@@ -75,9 +77,9 @@ public class CamelEndpointComponentTest {
     public void testCreateSyncEndpoint() throws Exception {
         CamelEndpointComponent component = new CamelEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
-        when(applicationContext.getBean(CamelContext.class)).thenReturn(camelContext);
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(Collections.singletonMap("myCamelContext", camelContext));
+        when(referenceResolver.resolve(CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:sync:direct:news", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelSyncEndpoint.class);
@@ -104,11 +106,11 @@ public class CamelEndpointComponentTest {
         camelContextMap.put("someCamelContext", Mockito.mock(CamelContext.class));
         camelContextMap.put("myCamelContext", camelContext);
 
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(camelContextMap);
-        when(applicationContext.containsBean("camelContext")).thenReturn(false);
-        when(applicationContext.containsBean("myCamelContext")).thenReturn(true);
-        when(applicationContext.getBean("myCamelContext")).thenReturn(camelContext);
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(camelContextMap);
+        when(referenceResolver.isResolvable("camelContext")).thenReturn(false);
+        when(referenceResolver.isResolvable("myCamelContext")).thenReturn(true);
+        when(referenceResolver.resolve("myCamelContext", CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:direct:news-feed?timeout=10000&camelContext=myCamelContext", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);
@@ -127,11 +129,11 @@ public class CamelEndpointComponentTest {
         camelContextMap.put("someCamelContext", Mockito.mock(CamelContext.class));
         camelContextMap.put("myCamelContext", camelContext);
 
-        reset(applicationContext);
-        when(applicationContext.getBeansOfType(CamelContext.class)).thenReturn(camelContextMap);
-        when(applicationContext.containsBean("camelContext")).thenReturn(false);
-        when(applicationContext.containsBean("myCamelContext")).thenReturn(true);
-        when(applicationContext.getBean("myCamelContext")).thenReturn(camelContext);
+        reset(referenceResolver);
+        when(referenceResolver.resolveAll(CamelContext.class)).thenReturn(camelContextMap);
+        when(referenceResolver.isResolvable("camelContext")).thenReturn(false);
+        when(referenceResolver.isResolvable("myCamelContext")).thenReturn(true);
+        when(referenceResolver.resolve("myCamelContext", CamelContext.class)).thenReturn(camelContext);
         Endpoint endpoint = component.createEndpoint("camel:controlbus:route?routeId=news&timeout=10000&camelContext=myCamelContext&action=stats", context);
 
         Assert.assertEquals(endpoint.getClass(), CamelEndpoint.class);

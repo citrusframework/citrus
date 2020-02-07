@@ -26,6 +26,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.dsl.TestRequest;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DefaultMessage;
@@ -52,7 +53,6 @@ import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import org.hamcrest.core.StringContains;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.oxm.Marshaller;
@@ -73,7 +73,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Resource resource = Mockito.mock(Resource.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     private XStreamMarshaller marshaller = new XStreamMarshaller();
 
@@ -84,7 +84,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveEmpty() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint);
@@ -110,7 +110,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -141,13 +141,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadModel() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.getBeansOfType(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -178,7 +180,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshaller() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -208,13 +210,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadModelExplicitMarshallerName() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.containsBean("myMarshaller")).thenReturn(true);
-        when(applicationContextMock.getBean("myMarshaller")).thenReturn(marshaller);
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
+        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -245,7 +249,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadString() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -275,7 +279,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithPayloadResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -308,11 +312,13 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithEndpointName() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive("fooMessageEndpoint")
@@ -335,7 +341,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithTimeout() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -359,7 +365,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaders() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -410,7 +416,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -457,7 +463,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithMultipleHeaderData() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -508,13 +514,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderFragment() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.getBeansOfType(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
-        when(applicationContextMock.getBean(Marshaller.class)).thenReturn(marshaller);
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(Marshaller.class)).thenReturn(Collections.<String, Marshaller>singletonMap("marshaller", marshaller));
+        when(referenceResolver.resolve(Marshaller.class)).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -546,7 +554,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderFragmentExplicitMarshaller() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -577,13 +585,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderFragmentExplicitMarshallerName() {
-        reset(applicationContextMock);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.containsBean("myMarshaller")).thenReturn(true);
-        when(applicationContextMock.getBean("myMarshaller")).thenReturn(marshaller);
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        reset(referenceResolver);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.isResolvable("myMarshaller")).thenReturn(true);
+        when(referenceResolver.resolve("myMarshaller")).thenReturn(marshaller);
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -615,7 +625,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithHeaderResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -664,7 +674,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithMultipleHeaderResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -719,7 +729,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidator() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -753,14 +763,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidatorName() {
         final PlainTextMessageValidator validator = new PlainTextMessageValidator();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean("plainTextValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -794,13 +805,14 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithDictionary() {
         final DataDictionary dictionary = new NodeMappingDataDictionary();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -833,14 +845,15 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithDictionaryName() {
         final DataDictionary dictionary = new NodeMappingDataDictionary();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean("customDictionary", DataDictionary.class)).thenReturn(dictionary);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve("customDictionary", DataDictionary.class)).thenReturn(dictionary);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -874,7 +887,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
         final Map<String, String> messageSelector = new HashMap<>();
         messageSelector.put("operation", "sayHello");
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -900,7 +913,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithSelectorExpression() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -927,13 +940,14 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderExtractFromPayload() {
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -964,13 +978,14 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderExtractJsonPathFromPayload() {
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1002,7 +1017,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderExtractFromHeader() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1032,13 +1047,14 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderExtractCombined() {
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1077,7 +1093,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     public void testReceiveBuilderWithValidationCallback() {
         final ValidationCallback callback = Mockito.mock(ValidationCallback.class);
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1107,17 +1123,18 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScript() {
+    public void testReceiveBuilderWithValidationScript() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1156,17 +1173,18 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
+    public void testReceiveBuilderWithValidationScriptResource() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1203,17 +1221,18 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScriptResourcePath() throws IOException {
+    public void testReceiveBuilderWithValidationScriptResourcePath() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1251,17 +1270,18 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScriptAndHeader() {
+    public void testReceiveBuilderWithValidationScriptAndHeader() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
 
-        when(applicationContextMock.getBean("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1307,7 +1327,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithNamespaceValidation() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1342,7 +1362,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithXpathExpressions() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1378,7 +1398,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithJsonPathExpressions() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1422,7 +1442,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithJsonPathExpressionsInvalidMessageType() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1437,7 +1457,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithIgnoreElementsXpath() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1472,7 +1492,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithIgnoreElementsJsonPath() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1510,7 +1530,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithSchema() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)
@@ -1544,7 +1564,7 @@ public class ReceiveMessageTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testReceiveBuilderWithSchemaRepository() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 receive(messageEndpoint)

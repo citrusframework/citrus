@@ -40,7 +40,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Christoph Deppisch
  */
-public class TestContextFactory implements FactoryBean<TestContext>, ApplicationContextAware {
+public class TestContextFactory implements FactoryBean<TestContext>, ApplicationContextAware, ReferenceResolverAware {
 
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -263,11 +263,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         return referenceResolver;
     }
 
-    /**
-     * Sets the referenceResolver property.
-     *
-     * @param referenceResolver
-     */
+    @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         this.referenceResolver = referenceResolver;
     }

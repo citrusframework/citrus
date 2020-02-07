@@ -23,14 +23,13 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.integration.channel.QueueChannel;
 import org.springframework.integration.core.MessageSelector;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
@@ -54,7 +53,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
     private QueueChannel channel3 = Mockito.mock(QueueChannel.class);
     private MessageChannel channel4 = Mockito.mock(MessageChannel.class);
 
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     @Test
     public void testPurgeChannelsBuilderWithChannels() {
@@ -64,7 +63,7 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
         when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeChannels(builder -> builder.channels(channel1, channel2)
@@ -86,22 +85,23 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testPurgeChannelBuilderWithNames() {
-        reset(applicationContextMock, channel1, channel2, channel3, channel4);
+        reset(referenceResolver, channel1, channel2, channel3, channel4);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
-        when(applicationContextMock.getBean("ch1", MessageChannel.class)).thenReturn(channel1);
-        when(applicationContextMock.getBean("ch2", MessageChannel.class)).thenReturn(channel2);
-        when(applicationContextMock.getBean("ch3", MessageChannel.class)).thenReturn(channel3);
-        when(applicationContextMock.getBean("ch4", MessageChannel.class)).thenReturn(channel4);
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve("ch1", MessageChannel.class)).thenReturn(channel1);
+        when(referenceResolver.resolve("ch2", MessageChannel.class)).thenReturn(channel2);
+        when(referenceResolver.resolve("ch3", MessageChannel.class)).thenReturn(channel3);
+        when(referenceResolver.resolve("ch4", MessageChannel.class)).thenReturn(channel4);
 
         when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
         when(channel2.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
         when(channel3.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeChannels(builder -> builder.channelNames("ch1", "ch2", "ch3")
@@ -117,21 +117,24 @@ public class PurgeMessageChannelTestRunnerTest extends AbstractTestNGUnitTest {
         PurgeMessageChannelAction action = (PurgeMessageChannelAction) test.getActions().get(0);
         Assert.assertEquals(action.getChannelNames().size(), 4);
         Assert.assertEquals(action.getChannelNames().toString(), "[ch1, ch2, ch3, ch4]");
-        Assert.assertTrue(action.getChannelResolver() instanceof BeanFactoryChannelResolver);
+        Assert.assertNotNull(action.getChannelResolver());
         Assert.assertEquals(action.getMessageSelector(), messageSelector);
     }
 
     @Test
     public void testCustomChannelResolver() {
-        reset(applicationContextMock, channelResolver, channel1);
+        reset(referenceResolver, channelResolver, channel1);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<String, SequenceBeforeTest>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<String, SequenceAfterTest>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
         when(channelResolver.resolveDestination("ch1")).thenReturn(channel1);
         when(channel1.purge(any(MessageSelector.class))).thenReturn(new ArrayList<>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 purgeChannels(builder -> builder.channel("ch1")

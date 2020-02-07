@@ -114,7 +114,7 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
             }
             context.onOutboundMessage(message);
 
-            Object result = method[0].invoke(remoteTarget, invocation.getArgValues(context.getApplicationContext()));
+            Object result = method[0].invoke(remoteTarget, invocation.getArgValues(context.getReferenceResolver()));
             RmiServiceResult serviceResult = new RmiServiceResult();
 
             if (result != null) {

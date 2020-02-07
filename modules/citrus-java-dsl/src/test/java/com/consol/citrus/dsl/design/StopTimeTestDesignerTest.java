@@ -24,10 +24,10 @@ import org.testng.annotations.Test;
 import com.consol.citrus.actions.StopTimeAction;
 
 public class StopTimeTestDesignerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testStopTimeBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 stopTime("TestId");
@@ -39,7 +39,7 @@ public class StopTimeTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), StopTimeAction.class);
-        
+
         StopTimeAction action = (StopTimeAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "stop-time");
         Assert.assertEquals(action.getId(), "TestId");

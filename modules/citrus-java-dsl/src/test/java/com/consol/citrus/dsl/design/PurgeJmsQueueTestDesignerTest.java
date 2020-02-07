@@ -16,6 +16,9 @@
 
 package com.consol.citrus.dsl.design;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Queue;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -23,23 +26,20 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.ConnectionFactory;
-import javax.jms.Queue;
-
 /**
  * @author Christoph Deppisch
  * @since 1.3
  */
 public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
-    
+
     private Queue queue1 = Mockito.mock(Queue.class);
     private Queue queue2 = Mockito.mock(Queue.class);
     private Queue queue3 = Mockito.mock(Queue.class);
-    
+
     @Test
     public void testPurgeJmsQueuesBuilderWithQueueNames() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 purgeQueues()
@@ -57,7 +57,7 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "purge-queue");
-          
+
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000L);
         Assert.assertEquals(action.getSleepTime(), 1000L);
@@ -66,10 +66,10 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getQueueNames().toString(), "[q1, q2, q3, q4]");
         Assert.assertEquals(action.getQueues().size(), 0);
     }
-    
+
     @Test
     public void testPurgeJmsQueuesBuilderWithQueues() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 purgeQueues()
@@ -86,7 +86,7 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), PurgeJmsQueuesAction.class);
-          
+
         PurgeJmsQueuesAction action = (PurgeJmsQueuesAction)test.getActions().get(0);
         Assert.assertEquals(action.getReceiveTimeout(), 2000L);
         Assert.assertEquals(action.getSleepTime(), 1000L);
@@ -95,5 +95,5 @@ public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getQueues().size(), 3);
         Assert.assertEquals(action.getQueues().toString(), "[" + queue1.toString() + ", " + queue2.toString() + ", " + queue3.toString() + "]");
     }
-    
+
 }

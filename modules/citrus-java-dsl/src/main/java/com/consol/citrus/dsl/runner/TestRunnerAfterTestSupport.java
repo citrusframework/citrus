@@ -60,6 +60,6 @@ public abstract class TestRunnerAfterTestSupport extends SequenceAfterTest imple
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testRunner = new DefaultTestRunner(applicationContext, Citrus.newInstance(applicationContext).createTestContext());
+        testRunner = new DefaultTestRunner(Citrus.newInstance(applicationContext).createTestContext());
     }
 }

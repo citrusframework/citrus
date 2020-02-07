@@ -54,7 +54,7 @@ public abstract class TestDesignerAfterTestSupport extends SequenceAfterTest imp
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testDesigner = new DefaultTestDesigner(applicationContext, Citrus.newInstance(applicationContext).createTestContext());
+        testDesigner = new DefaultTestDesigner(Citrus.newInstance(applicationContext).createTestContext());
         afterTest(testDesigner);
 
         setActions(testDesigner.getTestCase().getActions());

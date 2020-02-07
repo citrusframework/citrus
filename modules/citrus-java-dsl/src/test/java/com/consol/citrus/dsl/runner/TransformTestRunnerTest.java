@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testTransformBuilderWithData() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 transform(builder -> builder.source("<TestRequest>" +
@@ -72,7 +72,7 @@ public class TransformTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testTransformBuilderWithResource() throws IOException {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 transform(builder -> builder.source(new ClassPathResource("com/consol/citrus/dsl/runner/transform-source.xml"))

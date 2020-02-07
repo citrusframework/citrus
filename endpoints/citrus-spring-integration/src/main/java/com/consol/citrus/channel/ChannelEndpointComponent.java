@@ -16,12 +16,12 @@
 
 package com.consol.citrus.channel;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
-import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
-
-import java.util.Map;
+import org.springframework.messaging.MessageChannel;
 
 /**
  * Channel endpoint component creates synchronous or asynchronous channel endpoint and sets configuration properties
@@ -46,7 +46,10 @@ public class ChannelEndpointComponent extends AbstractEndpointComponent {
 
         if (context.getApplicationContext() != null) {
             endpoint.getEndpointConfiguration().setBeanFactory(context.getApplicationContext());
-            endpoint.getEndpointConfiguration().setChannelResolver(new BeanFactoryChannelResolver(context.getApplicationContext()));
+        }
+
+        if (context.getReferenceResolver() != null) {
+            endpoint.getEndpointConfiguration().setChannelResolver(channelName -> context.getReferenceResolver().resolve(channelName, MessageChannel.class));
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);

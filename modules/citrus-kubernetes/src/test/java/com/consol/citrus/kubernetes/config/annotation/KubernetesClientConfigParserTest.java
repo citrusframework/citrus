@@ -18,16 +18,16 @@ package com.consol.citrus.kubernetes.config.annotation;
 
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -52,22 +52,23 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
     private KubernetesClient client2;
 
     @Mock
-    private KubernetesMessageConverter messageConverter = Mockito.mock(KubernetesMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
+    private KubernetesMessageConverter messageConverter;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ObjectMapper objectMapper;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("objectMapper", ObjectMapper.class)).thenReturn(objectMapper);
+    }
 
-        when(applicationContext.getBean("messageConverter", KubernetesMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("objectMapper", ObjectMapper.class)).thenReturn(objectMapper);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test

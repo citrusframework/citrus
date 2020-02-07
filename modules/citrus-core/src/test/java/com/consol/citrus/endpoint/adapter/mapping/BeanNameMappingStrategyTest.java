@@ -16,37 +16,28 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
+import com.consol.citrus.context.SimpleReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.*;
-
 
 /**
  * @author Christoph Deppisch
  */
 public class BeanNameMappingStrategyTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
     private EndpointAdapter fooEndpointAdapter = Mockito.mock(EndpointAdapter.class);
     private EndpointAdapter barEndpointAdapter = Mockito.mock(EndpointAdapter.class);
 
     @Test
-    public void testGetEndpointAdapter() throws Exception {
-        BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy();
+    public void testGetEndpointAdapter() {
+        BeanNameMappingStrategy mappingStrategy = new BeanNameMappingStrategy(referenceResolver);
 
-        mappingStrategy.setApplicationContext(applicationContext);
-
-        reset(applicationContext);
-
-        when(applicationContext.getBean("foo", EndpointAdapter.class)).thenReturn(fooEndpointAdapter);
-        when(applicationContext.getBean("bar", EndpointAdapter.class)).thenReturn(barEndpointAdapter);
-        doThrow(new NoSuchBeanDefinitionException("unknown")).when(applicationContext).getBean("unknown", EndpointAdapter.class);
+        referenceResolver.bind("foo", fooEndpointAdapter);
+        referenceResolver.bind("bar", barEndpointAdapter);
 
         Assert.assertEquals(mappingStrategy.getEndpointAdapter("foo"), fooEndpointAdapter);
         Assert.assertEquals(mappingStrategy.getEndpointAdapter("bar"), barEndpointAdapter);
@@ -55,7 +46,7 @@ public class BeanNameMappingStrategyTest {
             mappingStrategy.getEndpointAdapter("unknown");
             Assert.fail("Missing exception due to unknown mapping key");
         } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getCause() instanceof NoSuchBeanDefinitionException);
+            Assert.assertEquals(e.getMessage(), "Unable to find bean reference for name 'unknown'");
         }
 
     }

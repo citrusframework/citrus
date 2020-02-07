@@ -23,6 +23,7 @@ import java.util.HashMap;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
@@ -40,7 +41,6 @@ import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -59,7 +59,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     private Consumer messageConsumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);
     private WebServiceServer server = Mockito.mock(WebServiceServer.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private Resource resource = Mockito.mock(Resource.class);
 
     private SoapAttachment testAttachment = new SoapAttachment();
@@ -85,7 +85,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new SoapMessage("Foo")
                 .setHeader("operation","foo")
                 .addAttachment(testAttachment));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 soap(action -> action.server(server)
@@ -132,7 +132,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .setHeader("operation","foo")
                 .addAttachment(testAttachment));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 soap(action -> action.server(server)
@@ -178,7 +178,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .setHeader("operation","foo")
                 .addAttachment(testAttachment));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 soap(action -> action.server(server)
@@ -229,7 +229,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<TestRequest><Message>Hello World!</Message></TestRequest>".getBytes()));
         when(attachmentResource.getInputStream()).thenReturn(new ByteArrayInputStream("This is an attachment".getBytes()));
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 soap(action -> action.server(server)
@@ -285,7 +285,7 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
                 .setHeader("operation","foo")
                 .addAttachment(attachment1)
                 .addAttachment(attachment2));
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 soap(action -> action.server(server)
@@ -330,9 +330,8 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveBuilderWithEndpointName() {
         TestContext context = applicationContext.getBean(TestContext.class);
-        context.setApplicationContext(applicationContextMock);
 
-        reset(applicationContextMock);
+        reset(referenceResolver);
         reset(server, messageConsumer, configuration);
         when(server.createConsumer()).thenReturn(messageConsumer);
         when(server.getEndpointConfiguration()).thenReturn(configuration);
@@ -340,13 +339,15 @@ public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
         when(server.getActor()).thenReturn(null);
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new SoapMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .setHeader("operation","foo"));
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(context);
-        when(applicationContextMock.getBean("replyMessageEndpoint", Endpoint.class)).thenReturn(server);
-        when(applicationContextMock.getBean("fooMessageEndpoint", Endpoint.class)).thenReturn(server);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.resolve("replyMessageEndpoint", Endpoint.class)).thenReturn(server);
+        when(referenceResolver.resolve("fooMessageEndpoint", Endpoint.class)).thenReturn(server);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 soap(action -> action.server("replyMessageEndpoint")

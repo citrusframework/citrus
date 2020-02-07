@@ -16,28 +16,38 @@
 
 package com.consol.citrus.channel;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.beans.factory.BeanFactory;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.messaging.*;
+import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageDeliveryException;
+import org.springframework.messaging.PollableChannel;
 import org.springframework.messaging.core.DestinationResolver;
 import org.springframework.messaging.support.GenericMessage;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -45,21 +55,21 @@ import static org.mockito.Mockito.*;
 public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
-    
+
     private PollableChannel channel = Mockito.mock(PollableChannel.class);
     private MessageChannel replyChannel = Mockito.mock(MessageChannel.class);
 
     private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
-    
+
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithReplyChannel() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
@@ -84,7 +94,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageChannelNameResolver() {
@@ -93,7 +103,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannelName("testChannel");
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
@@ -101,7 +111,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel, replyChannel, channelResolver);
-        
+
         when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
 
         when(messagingTemplate.receive(channel)).thenReturn(message);
@@ -120,27 +130,27 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithReplyChannelName() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
-        BeanFactory factory = Mockito.mock(BeanFactory.class);
-        endpoint.getEndpointConfiguration().setBeanFactory(factory);
-        
-        Map<String, Object> headers = new HashMap<String, Object>();
+
+        ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
+        Map<String, Object> headers = new HashMap<>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
                                 .setReplyChannelName("replyChannel")
                                 .build();
 
-        reset(messagingTemplate, channel, replyChannel, factory);
-        
+        reset(messagingTemplate, channel, replyChannel, referenceResolver);
+
         when(messagingTemplate.receive(channel)).thenReturn(message);
-        when(factory.getBean("replyChannel", MessageChannel.class)).thenReturn(replyChannel);
+        when(referenceResolver.resolve("replyChannel", MessageChannel.class)).thenReturn(replyChannel);
+
+        context.setReferenceResolver(referenceResolver);
         ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
         Message receivedMessage = channelSyncConsumer.receive(context);
 
@@ -155,7 +165,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithCustomTimeout() {
@@ -164,7 +174,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
 
         endpoint.getEndpointConfiguration().setTimeout(10000L);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
@@ -188,7 +198,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(10000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithReplyMessageCorrelator() {
@@ -200,7 +210,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setTimeout(500L);
         endpoint.getEndpointConfiguration().setPollingInterval(100);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)
@@ -208,7 +218,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel, replyChannel, messageCorrelator);
-        
+
         when(messagingTemplate.receive(channel)).thenReturn(message);
 
         when(messageCorrelator.getCorrelationKey(any(Message.class))).thenReturn(MessageHeaders.ID + " = '123456789'");
@@ -231,15 +241,15 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(500L);
     }
-    
+
     @Test
     public void testReceiveNoMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         reset(messagingTemplate, channel, replyChannel);
-        
+
         when(messagingTemplate.receive(channel)).thenReturn(null);
 
 
@@ -254,7 +264,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
         Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageNoReplyChannel() {
@@ -264,7 +274,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setTimeout(500L);
         endpoint.getEndpointConfiguration().setPollingInterval(150L);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(headers)

@@ -16,23 +16,23 @@
 
 package com.consol.citrus.ftp.config.annotation;
 
+import java.io.IOException;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.ftp.server.FtpServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.ftpserver.ftplet.UserManager;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 import static org.mockito.Mockito.when;
 
@@ -73,33 +73,33 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
             endpointAdapter="endpointAdapter")
     private FtpServer ftpServer5;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private org.apache.ftpserver.FtpServer apacheFtpServer = Mockito.mock(org.apache.ftpserver.FtpServer.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private UserManager userManager = Mockito.mock(UserManager.class);
+    private org.apache.ftpserver.FtpServer apacheFtpServer;
     @Mock
-    private Resource userManagerProperties = Mockito.mock(Resource.class);
+    private UserManager userManager;
     @Mock
-    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private Resource userManagerProperties;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private EndpointAdapter endpointAdapter;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("apacheFtpServer", org.apache.ftpserver.FtpServer.class)).thenReturn(apacheFtpServer);
+        when(referenceResolver.resolve("userManager", UserManager.class)).thenReturn(userManager);
+        when(referenceResolver.resolve("userManagerProperties", Resource.class)).thenReturn(userManagerProperties);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+    }
 
-        when(applicationContext.getBean("apacheFtpServer", org.apache.ftpserver.FtpServer.class)).thenReturn(apacheFtpServer);
-        when(applicationContext.getBean("userManager", UserManager.class)).thenReturn(userManager);
-        when(applicationContext.getBean("userManagerProperties", Resource.class)).thenReturn(userManagerProperties);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
-        when(applicationContext.getBean("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test

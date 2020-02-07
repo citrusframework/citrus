@@ -16,18 +16,24 @@
 
 package com.consol.citrus.dsl.runner;
 
+import java.util.UUID;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.github.dockerjava.api.command.*;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InfoCmd;
+import com.github.dockerjava.api.command.InspectContainerCmd;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.PingCmd;
+import com.github.dockerjava.api.command.VersionCmd;
 import com.github.dockerjava.api.model.Info;
 import com.github.dockerjava.api.model.Version;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.UUID;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -72,7 +78,7 @@ public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
         final DockerClient client = new com.consol.citrus.docker.client.DockerClient();
         client.getEndpointConfiguration().setDockerClient(dockerClient);
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 docker(builder -> builder.client(client)

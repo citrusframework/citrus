@@ -26,6 +26,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -33,7 +34,6 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.ws.soap.SoapBody;
 import org.springframework.ws.soap.SoapFault;
@@ -58,7 +58,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     private Resource resource = Mockito.mock(Resource.class);
     private SoapFaultValidator soapFaultValidator = Mockito.mock(SoapFaultValidator.class);
-    private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
     private SoapMessage soapMessage = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
     private SoapBody soapBody = Mockito.mock(SoapBody.class);
@@ -68,7 +68,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertSoapFaultBuilder() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -79,13 +79,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -115,7 +116,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertSoapFaultDefaultValidatorBuilder() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -126,14 +127,15 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(true);
-        when(applicationContextMock.getBean(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(true);
+        when(referenceResolver.resolve(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -165,7 +167,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFaultDetail() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -179,13 +181,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFaultDetail.getDetailEntries()).thenReturn(Collections.singleton(soapFaultDetailElement).iterator());
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><message>Something went wrong</message></ErrorDetail>"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -218,7 +221,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleFaultDetails() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -233,13 +236,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><code>1001</code></ErrorDetail>"))
                                                 .thenReturn(new StringSource("<MessageDetail><message>Something went wrong</message></MessageDetail>"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -274,7 +278,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFaultDetailResource() throws IOException {
-        reset(resource, applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(resource, referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<ErrorDetail><message>Something went wrong</message></ErrorDetail>".getBytes()));
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
@@ -289,13 +293,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFaultDetail.getDetailEntries()).thenReturn(Collections.singleton(soapFaultDetailElement).iterator());
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><message>Something went wrong</message></ErrorDetail>"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -328,7 +333,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFaultDetailResourcePath() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -342,13 +347,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFaultDetail.getDetailEntries()).thenReturn(Collections.singleton(soapFaultDetailElement).iterator());
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><message>Something went wrong</message></ErrorDetail>"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -382,7 +388,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testMultipleFaultDetailsInlineAndResource() throws IOException {
-        reset(resource, applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(resource, referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("<MessageDetail><message>Something went wrong</message></MessageDetail>".getBytes()));
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
@@ -398,13 +404,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><code>1001</code></ErrorDetail>"))
                                                 .thenReturn(new StringSource("<MessageDetail><message>Something went wrong</message></MessageDetail>"));
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -439,7 +446,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertSoapFaultBuilderWithValidator() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -450,14 +457,15 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(true);
-        when(applicationContextMock.getBean(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(true);
+        when(referenceResolver.resolve(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
@@ -491,7 +499,7 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertSoapFaultBuilderWithActor() {
-        reset(applicationContextMock, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
 
         when(soapMessage.getSoapBody()).thenReturn(soapBody);
         when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
@@ -502,13 +510,14 @@ public class AssertSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(applicationContextMock.getBean(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(applicationContextMock.containsBean(SOAP_FAULT_VALIDATOR)).thenReturn(false);
-        when(applicationContextMock.getBean(TestActionListeners.class)).thenReturn(new TestActionListeners());
-        when(applicationContextMock.getBeansOfType(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
-        when(applicationContextMock.getBeansOfType(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContextMock, context) {
+        context.setReferenceResolver(referenceResolver);
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())

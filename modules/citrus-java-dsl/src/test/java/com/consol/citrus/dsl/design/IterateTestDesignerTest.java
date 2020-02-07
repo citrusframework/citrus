@@ -31,7 +31,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 iterate()
@@ -60,7 +60,7 @@ public class IterateTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testIterateBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             /** Logger */
             private Logger log = LoggerFactory.getLogger(IterateTestDesignerTest.class);
 

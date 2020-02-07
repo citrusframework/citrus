@@ -31,7 +31,7 @@ public class FailTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testFailBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 fail("This test will fail.");
@@ -43,7 +43,7 @@ public class FailTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), FailAction.class);
-        
+
         FailAction action = (FailAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "fail");
         Assert.assertEquals(action.getMessage(), "This test will fail.");

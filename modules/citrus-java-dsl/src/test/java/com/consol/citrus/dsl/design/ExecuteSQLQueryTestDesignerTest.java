@@ -16,6 +16,11 @@
 
 package com.consol.citrus.dsl.design;
 
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.script.ScriptTypes;
@@ -26,9 +31,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.sql.DataSource;
-import java.io.*;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -43,10 +45,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
 
     private Resource resource = Mockito.mock(Resource.class);
     private SqlResultSetScriptValidator validator = Mockito.mock(SqlResultSetScriptValidator.class);
-    
+
     @Test
     public void testExecuteSQLQueryWithResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -55,7 +57,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
                     .extract("COLUMN", "variable");
             }
         };
-        
+
         reset(resource);
         when(resource.getFile()).thenReturn(Mockito.mock(File.class));
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("SELECT * FROM DUAL;".getBytes()));
@@ -65,9 +67,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().entrySet().iterator().next().toString(), "COLUMN=[value]");
@@ -81,10 +83,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertNull(action.getValidator());
 
     }
-    
+
     @Test
     public void testExecuteSQLQueryWithStatements() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -101,9 +103,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 1);
         Assert.assertEquals(action.getControlResultSet().entrySet().iterator().next().toString(), "COLUMN=[value1, value2]");
@@ -118,7 +120,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExecuteSQLQueryWithTransaction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -155,10 +157,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getTransactionTimeout(), "5000");
         Assert.assertEquals(action.getTransactionIsolationLevel(), "ISOLATION_READ_COMMITTED");
     }
-    
+
     @Test
     public void testValidationScript() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -172,9 +174,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -185,10 +187,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
-    
+
     @Test
     public void testValidationScriptResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -196,7 +198,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
                     .validateScript(resource, ScriptTypes.GROOVY);
             }
         };
-        
+
         reset(resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
@@ -204,9 +206,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -218,10 +220,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getDataSource(), dataSource);
 
     }
-    
+
     @Test
     public void testGroovyValidationScript() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -235,9 +237,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -248,10 +250,10 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getStatements().toString(), "[stmt]");
         Assert.assertEquals(action.getDataSource(), dataSource);
     }
-    
+
     @Test
     public void testGroovyValidationScriptResource() throws IOException {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)
@@ -259,7 +261,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
                     .groovy(resource);
             }
         };
-        
+
         reset(resource);
         when(resource.getInputStream()).thenReturn(new ByteArrayInputStream("someScript".getBytes()));
         builder.configure();
@@ -267,9 +269,9 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), ExecuteSQLQueryAction.class);
-        
+
         ExecuteSQLQueryAction action = (ExecuteSQLQueryAction)test.getActions().get(0);
-        
+
         Assert.assertEquals(action.getName(), "sql-query");
         Assert.assertEquals(action.getControlResultSet().size(), 0);
         Assert.assertEquals(action.getExtractVariables().size(), 0);
@@ -284,7 +286,7 @@ public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomScriptValidator() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 query(dataSource)

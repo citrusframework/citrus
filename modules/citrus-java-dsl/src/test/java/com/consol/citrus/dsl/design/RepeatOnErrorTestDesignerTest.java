@@ -28,7 +28,7 @@ public class RepeatOnErrorTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatOnErrorUntilTrueBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 repeatOnError()

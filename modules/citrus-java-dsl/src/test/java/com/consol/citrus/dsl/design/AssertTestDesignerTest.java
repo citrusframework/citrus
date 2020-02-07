@@ -32,7 +32,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 assertException()
@@ -60,7 +60,7 @@ public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testAssertBuilderWithAnonymousAction() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 assertException()

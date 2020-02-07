@@ -19,16 +19,16 @@ package com.consol.citrus.vertx.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.vertx.endpoint.VertxEndpoint;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
 import com.consol.citrus.vertx.message.VertxMessageConverter;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -61,30 +61,30 @@ public class VertxEndpointConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private VertxEndpoint vertxEndpoint4;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private VertxInstanceFactory vertxInstanceFactory = Mockito.mock(VertxInstanceFactory.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private VertxInstanceFactory specialVertxInstanceFactory = Mockito.mock(VertxInstanceFactory.class);
+    private VertxInstanceFactory vertxInstanceFactory;
     @Mock
-    private VertxMessageConverter messageConverter = Mockito.mock(VertxMessageConverter.class);
+    private VertxInstanceFactory specialVertxInstanceFactory;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private VertxMessageConverter messageConverter;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("vertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(vertxInstanceFactory);
+        when(referenceResolver.resolve("specialVertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(specialVertxInstanceFactory);
+        when(referenceResolver.resolve("messageConverter", VertxMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("vertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(vertxInstanceFactory);
-        when(applicationContext.getBean("specialVertxInstanceFactory", VertxInstanceFactory.class)).thenReturn(specialVertxInstanceFactory);
-        when(applicationContext.getBean("messageConverter", VertxMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -108,7 +108,7 @@ public class VertxEndpointConfigParserTest extends AbstractTestNGUnitTest {
 
         // 3rd message receiver
         Assert.assertEquals(vertxEndpoint3.getEndpointConfiguration().getAddress(), "news-feed3");
-        Assert.assertEquals(vertxEndpoint3.getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertTrue(vertxEndpoint3.getEndpointConfiguration().isPubSubDomain());
 
         // 4th message receiver
         Assert.assertNotNull(vertxEndpoint4.getActor());

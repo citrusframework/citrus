@@ -19,19 +19,17 @@ package com.consol.citrus.ssh.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -64,27 +62,27 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private SshServer sshServer3;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private SshMessageConverter messageConverter = Mockito.mock(SshMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private SshMessageConverter messageConverter;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private EndpointAdapter endpointAdapter;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("messageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("messageConverter", SshMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test

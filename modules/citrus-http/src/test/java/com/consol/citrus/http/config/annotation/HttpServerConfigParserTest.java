@@ -16,10 +16,15 @@
 
 package com.consol.citrus.http.config.annotation;
 
+import javax.servlet.Filter;
+
+import java.util.Arrays;
+import java.util.HashMap;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
@@ -27,17 +32,16 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.servlet.Filter;
 
 import static org.mockito.Mockito.when;
 
@@ -97,52 +101,60 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
             endpointAdapter="endpointAdapter")
     private HttpServer httpServer6;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private Connector connector1 = Mockito.mock(Connector.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private Connector connector2 = Mockito.mock(Connector.class);
+    private Connector connector1;
     @Mock
-    private Filter filter1 = Mockito.mock(Filter.class);
+    private Connector connector2;
     @Mock
-    private Filter filter2 = Mockito.mock(Filter.class);
+    private Filter filter1;
     @Mock
-    private SecurityHandler securityHandler = Mockito.mock(SecurityHandler.class);
+    private Filter filter2;
     @Mock
-    private HttpMessageConverter messageConverter = Mockito.mock(HttpMessageConverter.class);
+    private SecurityHandler securityHandler;
     @Mock
-    private EndpointAdapter endpointAdapter = Mockito.mock(EndpointAdapter.class);
+    private HttpMessageConverter messageConverter;
     @Mock
-    private ServletHandler servletHandler = Mockito.mock(ServletHandler.class);
+    private EndpointAdapter endpointAdapter;
     @Mock
-    private HandlerInterceptor clientInterceptor1 = Mockito.mock(HandlerInterceptor.class);
+    private ServletHandler servletHandler;
     @Mock
-    private HandlerInterceptor clientInterceptor2 = Mockito.mock(HandlerInterceptor.class);
+    private HandlerInterceptor clientInterceptor1;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private HandlerInterceptor clientInterceptor2;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        HashMap<String, Filter> filters = new HashMap<>();
+        filters.put("filter1", filter1);
+        filters.put("filter2", filter2);
+        filters.put("filter3", Mockito.mock(Filter.class));
 
-        when(applicationContext.getBean("securityHandler", SecurityHandler.class)).thenReturn(securityHandler);
-        when(applicationContext.getBean("messageConverter", HttpMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("servletHandler", ServletHandler.class)).thenReturn(servletHandler);
-        when(applicationContext.getBean("connector", Connector.class)).thenReturn(connector1);
-        when(applicationContext.getBean("connector1", Connector.class)).thenReturn(connector1);
-        when(applicationContext.getBean("connector2", Connector.class)).thenReturn(connector2);
-        when(applicationContext.getBean("filter1", Filter.class)).thenReturn(filter1);
-        when(applicationContext.getBean("filter2", Filter.class)).thenReturn(filter2);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
-        when(applicationContext.getBean("clientInterceptor1", HandlerInterceptor.class)).thenReturn(clientInterceptor1);
-        when(applicationContext.getBean("clientInterceptor2", HandlerInterceptor.class)).thenReturn(clientInterceptor2);
-        when(applicationContext.getBean("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+        when(referenceResolver.resolve("securityHandler", SecurityHandler.class)).thenReturn(securityHandler);
+        when(referenceResolver.resolve("messageConverter", HttpMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("servletHandler", ServletHandler.class)).thenReturn(servletHandler);
+        when(referenceResolver.resolve("connector", Connector.class)).thenReturn(connector1);
+        when(referenceResolver.resolve("connector1", Connector.class)).thenReturn(connector1);
+        when(referenceResolver.resolve("connector2", Connector.class)).thenReturn(connector2);
+        when(referenceResolver.resolve(new String[] { "connector1", "connector2" }, Connector.class)).thenReturn(Arrays.asList(connector1, connector2));
+        when(referenceResolver.resolve("filter1", Filter.class)).thenReturn(filter1);
+        when(referenceResolver.resolve("filter2", Filter.class)).thenReturn(filter2);
+        when(referenceResolver.resolveAll(Filter.class)).thenReturn(filters);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        when(referenceResolver.resolve("clientInterceptor1", HandlerInterceptor.class)).thenReturn(clientInterceptor1);
+        when(referenceResolver.resolve("clientInterceptor2", HandlerInterceptor.class)).thenReturn(clientInterceptor2);
+        when(referenceResolver.resolve(new String[] { "clientInterceptor1", "clientInterceptor2" }, HandlerInterceptor.class)).thenReturn(Arrays.asList(clientInterceptor1, clientInterceptor2));
+        when(referenceResolver.resolve("endpointAdapter", EndpointAdapter.class)).thenReturn(endpointAdapter);
+    }
+
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -193,7 +205,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer2.getServletMappingPath(), "/foo");
         Assert.assertEquals(httpServer2.getBinaryMediaTypes().size(), 2L);
         Assert.assertTrue(httpServer2.getBinaryMediaTypes().contains(MediaType.valueOf("application/custom")));
-        
+
         // 3rd message sender
         Assert.assertNull(httpServer3.getConnector());
         Assert.assertNotNull(httpServer3.getConnectors());
@@ -209,7 +221,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(httpServer3.isAutoStart());
         Assert.assertFalse(httpServer3.isUseRootContextAsParent());
         Assert.assertEquals(httpServer3.getServletName(), "httpServer3-servlet");
-        
+
         // 4th message sender
         Assert.assertNull(httpServer4.getConnector());
         Assert.assertNotNull(httpServer4.getServletHandler());
@@ -223,7 +235,7 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpServer4.getServletName(), "httpServer4-servlet");
         Assert.assertNotNull(httpServer4.getInterceptors());
         Assert.assertEquals(httpServer4.getInterceptors().size(), 0L);
-        
+
         // 5th message sender
         Assert.assertNull(httpServer5.getConnector());
         Assert.assertNotNull(httpServer5.getSecurityHandler());

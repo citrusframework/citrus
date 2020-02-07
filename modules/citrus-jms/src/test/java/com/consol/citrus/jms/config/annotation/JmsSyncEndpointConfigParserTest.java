@@ -16,27 +16,27 @@
 
 package com.consol.citrus.jms.config.annotation;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 
 import static org.mockito.Mockito.when;
 
@@ -95,48 +95,48 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private JmsSyncEndpoint jmsSyncEndpoint8;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private Destination jmsQueue = Mockito.mock(Destination.class);
+    private JmsTemplate jmsTemplate;
     @Mock
-    private Destination replyQueue = Mockito.mock(Destination.class);
+    private Destination jmsQueue;
     @Mock
-    private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
+    private Destination replyQueue;
     @Mock
-    private ConnectionFactory jmsConnectionFactory = Mockito.mock(ConnectionFactory.class);
+    private ConnectionFactory connectionFactory;
     @Mock
-    private JmsMessageConverter messageConverter = Mockito.mock(JmsMessageConverter.class);
+    private ConnectionFactory jmsConnectionFactory;
     @Mock
-    private DestinationResolver destinationResolver = Mockito.mock(DestinationResolver.class);
+    private JmsMessageConverter messageConverter;
     @Mock
-    private EndpointUriResolver destinationNameResolver = Mockito.mock(EndpointUriResolver.class);
+    private DestinationResolver destinationResolver;
     @Mock
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private EndpointUriResolver destinationNameResolver;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private MessageCorrelator messageCorrelator;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
+        when(referenceResolver.resolve("jmsQueue", Destination.class)).thenReturn(jmsQueue);
+        when(referenceResolver.resolve("replyQueue", Destination.class)).thenReturn(replyQueue);
+        when(referenceResolver.resolve("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
+        when(referenceResolver.resolve("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
+        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        when(referenceResolver.resolve("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("jmsTemplate", JmsTemplate.class)).thenReturn(jmsTemplate);
-        when(applicationContext.getBean("jmsQueue", Destination.class)).thenReturn(jmsQueue);
-        when(applicationContext.getBean("replyQueue", Destination.class)).thenReturn(replyQueue);
-        when(applicationContext.getBean("messageConverter", JmsMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("destinationResolver", DestinationResolver.class)).thenReturn(destinationResolver);
-        when(applicationContext.getBean("destinationNameResolver", EndpointUriResolver.class)).thenReturn(destinationNameResolver);
-        when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
-        when(applicationContext.getBean("jmsConnectionFactory", ConnectionFactory.class)).thenReturn(jmsConnectionFactory);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -164,7 +164,7 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsSyncEndpoint3.getEndpointConfiguration().getDestination());
         Assert.assertEquals(jmsSyncEndpoint3.getEndpointConfiguration().getCorrelator(), messageCorrelator);
-        Assert.assertEquals(jmsSyncEndpoint3.getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertTrue(jmsSyncEndpoint3.getEndpointConfiguration().isPubSubDomain());
 
         // 4th message receiver
         Assert.assertNotNull(jmsSyncEndpoint4.getActor());
@@ -197,11 +197,10 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getConnectionFactory());
         Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getDestinationName());
         Assert.assertNull(jmsSyncEndpoint7.getEndpointConfiguration().getDestination());
-        Assert.assertEquals(jmsSyncEndpoint7.getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertTrue(jmsSyncEndpoint7.getEndpointConfiguration().isPubSubDomain());
         Assert.assertEquals(jmsSyncEndpoint7.getEndpointConfiguration().getCorrelator(), messageCorrelator);
 
         // 8th message sender
-        Assert.assertNotNull(jmsSyncEndpoint8.getEndpointConfiguration().getPollingInterval());
         Assert.assertEquals(jmsSyncEndpoint8.getEndpointConfiguration().getPollingInterval(), 250L);
         Assert.assertNotNull(jmsSyncEndpoint8.getActor());
         Assert.assertEquals(jmsSyncEndpoint8.getActor(), testActor);

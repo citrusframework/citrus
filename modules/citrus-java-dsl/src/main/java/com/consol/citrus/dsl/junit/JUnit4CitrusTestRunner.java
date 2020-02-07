@@ -438,4 +438,9 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     public FinallySequence.Builder doFinally() {
         return testRunner.doFinally();
     }
+
+    @Override
+    public void setTestContext(TestContext context) {
+        testRunner.setTestContext(context);
+    }
 }

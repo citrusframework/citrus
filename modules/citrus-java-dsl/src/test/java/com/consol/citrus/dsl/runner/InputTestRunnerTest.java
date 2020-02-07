@@ -26,7 +26,7 @@ public class InputTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void TestInputBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("answer", "yes");
@@ -40,7 +40,7 @@ public class InputTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), InputAction.class);
-        
+
         InputAction action = (InputAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "input");
         Assert.assertEquals(action.getMessage(), "Want to test me?");

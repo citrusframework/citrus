@@ -19,26 +19,15 @@ package com.consol.citrus.kafka.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.reset;
 
 /**
  * @author Christoph Deppisch
  */
 public class KafkaEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
-
-    @BeforeClass
-    public void setup() {
-        context.setApplicationContext(applicationContext);
-    }
 
     @Test
     public void testCreateEndpoint() {
@@ -57,7 +46,6 @@ public class KafkaEndpointComponentTest {
     public void testCreateEndpointWithParameters() {
         KafkaEndpointComponent component = new KafkaEndpointComponent();
 
-        reset(applicationContext);
         Endpoint endpoint = component.createEndpoint("kafka:test?server=localhost:9091&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
@@ -71,7 +59,6 @@ public class KafkaEndpointComponentTest {
     public void testCreateEndpointWithNullParameters() {
         KafkaEndpointComponent component = new KafkaEndpointComponent();
 
-        reset(applicationContext);
         Endpoint endpoint = component.createEndpoint("kafka:test?server", context);
 
         Assert.assertEquals(endpoint.getClass(), KafkaEndpoint.class);
@@ -84,7 +71,6 @@ public class KafkaEndpointComponentTest {
     public void testInvalidEndpointUri() {
         KafkaEndpointComponent component = new KafkaEndpointComponent();
         try {
-            reset(applicationContext);
             component.createEndpoint("kafka:test?param1=&param2=value2", context);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {

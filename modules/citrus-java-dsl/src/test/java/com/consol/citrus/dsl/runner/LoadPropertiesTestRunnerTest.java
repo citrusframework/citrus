@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
 public class LoadPropertiesTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testLoadBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("checked", true);

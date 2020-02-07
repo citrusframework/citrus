@@ -16,20 +16,23 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.*;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import java.util.Collections;
 
-import static org.mockito.Mockito.*;
+import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.DefaultEndpointFactory;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.mockito.Mockito;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -37,44 +40,41 @@ import static org.mockito.Mockito.*;
  */
 public class JmsEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private Destination replyDestination = Mockito.mock(Destination.class);
     private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
-        context.setApplicationContext(applicationContext);
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
     public void testCreateQueueEndpoint() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("connectionFactory")).thenReturn(true);
-        when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("connectionFactory")).thenReturn(true);
+        when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         Endpoint endpoint = component.createEndpoint("jms:queuename", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
         Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
-        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory); 
+        Assert.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
+        Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 
     @Test
     public void testResolveJmsEndpoint() throws Exception {
-        reset(applicationContext);
+        reset(referenceResolver);
 
-        when(applicationContext.getBeansOfType(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
-        when(applicationContext.containsBean("connectionFactory")).thenReturn(true);
-        when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(Mockito.mock(ConnectionFactory.class));
-
-        TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
+        when(referenceResolver.resolveAll(EndpointComponent.class)).thenReturn(Collections.<String, EndpointComponent>emptyMap());
+        when(referenceResolver.isResolvable("connectionFactory")).thenReturn(true);
+        when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(Mockito.mock(ConnectionFactory.class));
 
         DefaultEndpointFactory factory = new DefaultEndpointFactory();
         Endpoint endpoint = factory.create("jms:Sample.Queue.Name", context);
@@ -87,15 +87,15 @@ public class JmsEndpointComponentTest {
     public void testCreateTopicEndpoint() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("connectionFactory")).thenReturn(true);
-        when(applicationContext.getBean("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("connectionFactory")).thenReturn(true);
+        when(referenceResolver.resolve("connectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         Endpoint endpoint = component.createEndpoint("jms:topic:topicname", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
         Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "topicname");
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), true);
+        Assert.assertTrue(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
@@ -105,14 +105,14 @@ public class JmsEndpointComponentTest {
     public void testCreateSyncQueueEndpoint() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("connectionFactory")).thenReturn(false);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("connectionFactory")).thenReturn(false);
         Endpoint endpoint = component.createEndpoint("jms:sync:queuename", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsSyncEndpoint.class);
 
         Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
+        Assert.assertFalse(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
         Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory());
         Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
     }
@@ -121,16 +121,16 @@ public class JmsEndpointComponentTest {
     public void testCreateEndpointWithParameters() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("connectionFactory")).thenReturn(false);
-        when(applicationContext.containsBean("specialConnectionFactory")).thenReturn(true);
-        when(applicationContext.getBean("specialConnectionFactory")).thenReturn(connectionFactory);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("connectionFactory")).thenReturn(false);
+        when(referenceResolver.isResolvable("specialConnectionFactory")).thenReturn(true);
+        when(referenceResolver.resolve("specialConnectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
         Endpoint endpoint = component.createEndpoint("jms:queuename?connectionFactory=specialConnectionFactory&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
         Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
+        Assert.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
@@ -140,13 +140,13 @@ public class JmsEndpointComponentTest {
     public void testCreateEndpointWithNullParameters() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
-        reset(applicationContext);
+        reset(referenceResolver);
         Endpoint endpoint = component.createEndpoint("jms:queuename?destination", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsEndpoint.class);
 
         Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertEquals(((JmsEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
+        Assert.assertFalse(((JmsEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
         Assert.assertNull(((JmsEndpoint) endpoint).getEndpointConfiguration().getDestination());
     }
 
@@ -154,18 +154,18 @@ public class JmsEndpointComponentTest {
     public void testCreateSyncEndpointWithParameters() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
 
-        reset(applicationContext);
-        when(applicationContext.containsBean("connectionFactory")).thenReturn(false);
-        when(applicationContext.containsBean("specialConnectionFactory")).thenReturn(true);
-        when(applicationContext.getBean("specialConnectionFactory")).thenReturn(connectionFactory);
-        when(applicationContext.containsBean("myReplyDestination")).thenReturn(true);
-        when(applicationContext.getBean("myReplyDestination")).thenReturn(replyDestination);
+        reset(referenceResolver);
+        when(referenceResolver.isResolvable("connectionFactory")).thenReturn(false);
+        when(referenceResolver.isResolvable("specialConnectionFactory")).thenReturn(true);
+        when(referenceResolver.resolve("specialConnectionFactory", ConnectionFactory.class)).thenReturn(connectionFactory);
+        when(referenceResolver.isResolvable("myReplyDestination")).thenReturn(true);
+        when(referenceResolver.resolve("myReplyDestination", Destination.class)).thenReturn(replyDestination);
         Endpoint endpoint = component.createEndpoint("jms:sync:queuename?connectionFactory=specialConnectionFactory&pollingInterval=100&replyDestination=myReplyDestination", context);
 
         Assert.assertEquals(endpoint.getClass(), JmsSyncEndpoint.class);
 
         Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().getDestinationName(), "queuename");
-        Assert.assertEquals(((JmsSyncEndpoint)endpoint).getEndpointConfiguration().isPubSubDomain(), false);
+        Assert.assertFalse(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().isPubSubDomain());
         Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getConnectionFactory(), connectionFactory);
         Assert.assertNull(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getDestination());
         Assert.assertEquals(((JmsSyncEndpoint) endpoint).getEndpointConfiguration().getReplyDestination(), replyDestination);
@@ -176,7 +176,7 @@ public class JmsEndpointComponentTest {
     public void testInvalidEndpointUri() throws Exception {
         JmsEndpointComponent component = new JmsEndpointComponent();
         try {
-            reset(applicationContext);
+            reset(referenceResolver);
             component.createEndpoint("jms:queuename?param1=&param2=value2", context);
             Assert.fail("Missing exception due to invalid endpoint uri");
         } catch (CitrusRuntimeException e) {

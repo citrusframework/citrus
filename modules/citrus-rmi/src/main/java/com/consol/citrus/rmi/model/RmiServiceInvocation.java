@@ -16,18 +16,26 @@
 
 package com.consol.citrus.rmi.model;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.context.ApplicationContext;
-import org.springframework.util.StringUtils;
-
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.beans.ConversionNotSupportedException;
+import org.springframework.beans.SimpleTypeConverter;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -110,7 +118,7 @@ public class RmiServiceInvocation {
      * Gets method args as objects. Automatically converts simple types and ready referenced beans.
      * @return
      */
-    public Object[] getArgValues(ApplicationContext applicationContext) {
+    public Object[] getArgValues(ReferenceResolver referenceResolver) {
         List<Object> argValues = new ArrayList<>();
 
         try {
@@ -123,8 +131,8 @@ public class RmiServiceInvocation {
                         value = methodArg.getValueObject();
                     } else if (methodArg.getValue() != null) {
                         value = methodArg.getValue();
-                    } else if (StringUtils.hasText(methodArg.getRef()) && applicationContext != null) {
-                        value = applicationContext.getBean(methodArg.getRef());
+                    } else if (StringUtils.hasText(methodArg.getRef()) && referenceResolver != null) {
+                        value = referenceResolver.resolve(methodArg.getRef());
                     }
 
                     if (value == null) {

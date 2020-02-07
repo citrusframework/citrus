@@ -16,29 +16,29 @@
 
 package com.consol.citrus.validation.callback;
 
+import java.util.Map;
+
+import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.context.ReferenceResolverAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-
-import java.util.Map;
 
 /**
  * Validation callback automatically extracts message payload and headers so we work with
  * Java code for validation.
- *  
+ *
  * @author Christoph Deppisch
  */
-public abstract class AbstractValidationCallback<T> implements ValidationCallback, ApplicationContextAware {
+public abstract class AbstractValidationCallback<T> implements ValidationCallback, ReferenceResolverAware {
 
-    /** Spring application context injected before validation callback is called */
-    protected ApplicationContext applicationContext;
-    
+    /** Bean reference resolver injected before validation callback is called */
+    protected ReferenceResolver referenceResolver;
+
     @Override
     public void validate(Message message, TestContext context) {
         validate((T) message.getPayload(), message.getHeaders(), context);
     }
-    
+
     /**
      * Subclasses do override this method for validation purpose.
      * @param payload the message payload object.
@@ -46,12 +46,9 @@ public abstract class AbstractValidationCallback<T> implements ValidationCallbac
      * @param context the current test context
      */
     public abstract void validate(T payload, Map<String, Object> headers, TestContext context);
-    
-    /**
-     * Sets the applicationContext.
-     * @param applicationContext the applicationContext to set
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 }

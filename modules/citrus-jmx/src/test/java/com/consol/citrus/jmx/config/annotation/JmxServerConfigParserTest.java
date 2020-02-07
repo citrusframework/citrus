@@ -16,23 +16,24 @@
 
 package com.consol.citrus.jmx.config.annotation;
 
+import java.util.Collections;
+import java.util.Properties;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.jmx.mbean.HelloBean;
 import com.consol.citrus.jmx.mbean.NewsBean;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.jmx.server.JmxServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 import static org.mockito.Mockito.when;
 
@@ -72,29 +73,29 @@ public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
             mbeans = { @MbeanConfig(type = HelloBean.class, objectDomain = "hello")})
     private JmxServer jmxServer3;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private JmxMessageConverter messageConverter = Mockito.mock(JmxMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private Properties environmentProperties = Mockito.mock(Properties.class);
+    private JmxMessageConverter messageConverter;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private Properties environmentProperties;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
-
-        when(applicationContext.getBean("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("environmentProperties", Properties.class)).thenReturn(environmentProperties);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+        when(referenceResolver.resolve("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("environmentProperties", Properties.class)).thenReturn(environmentProperties);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
 
         when(environmentProperties.entrySet()).thenReturn(Collections.<Object, Object>singletonMap("com.sun.management.jmxremote.authenticate", "false").entrySet());
+    }
+
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -104,7 +105,7 @@ public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
         // 1st server
         Assert.assertEquals(jmxServer1.getEndpointConfiguration().getServerUrl(), "platform");
         Assert.assertEquals(jmxServer1.getEndpointConfiguration().getEnvironmentProperties().size(), 0L);
-        Assert.assertEquals(jmxServer1.isCreateRegistry(), false);
+        Assert.assertFalse(jmxServer1.isCreateRegistry());
         Assert.assertEquals(jmxServer1.getMbeans().size(), 2L);
         Assert.assertEquals(jmxServer1.getMbeans().get(0).getType(), HelloBean.class);
         Assert.assertEquals(jmxServer1.getMbeans().get(0).getOperations().size(), 0L);
@@ -138,7 +139,7 @@ public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmxServer3.getEndpointConfiguration().getPort(), 2099);
         Assert.assertEquals(jmxServer3.getEndpointConfiguration().getProtocol(), "rmi");
         Assert.assertEquals(jmxServer3.getEndpointConfiguration().getBinding(), "jmxrmi");
-        Assert.assertEquals(jmxServer3.isCreateRegistry(), true);
+        Assert.assertTrue(jmxServer3.isCreateRegistry());
 
         Assert.assertEquals(jmxServer3.getMbeans().size(), 1L);
         Assert.assertEquals(jmxServer3.getMbeans().get(0).getType(), HelloBean.class);

@@ -44,7 +44,7 @@ public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
         final String acl = "custom-acl";
         final int version = 10;
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 zookeeper().info().validateCommandResult((result, context) -> Assert.assertNotNull(result));

@@ -53,7 +53,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         final double seconds = 3.0;
         final String interval = "500";
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 waitFor()
@@ -86,7 +86,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         final String time = "3000";
         final String interval = "500";
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 waitFor().file()
@@ -109,7 +109,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWaitActionBuilderSuccess() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 waitFor().execution()
@@ -140,7 +140,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
         final long seconds = 1L;
         final String interval = "500";
 
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 waitFor().file()
@@ -153,7 +153,7 @@ public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test(expectedExceptions = TestCaseFailedException.class)
     public void testWaitActionBuilderFailed() {
-        new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 waitFor().execution()

@@ -16,22 +16,22 @@
 
 package com.consol.citrus.jmx.config.annotation;
 
+import javax.management.NotificationFilter;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.management.NotificationFilter;
 
 import static org.mockito.Mockito.when;
 
@@ -58,30 +58,30 @@ public class JmxClientConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private JmxClient jmxClient2;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private JmxMessageConverter messageConverter = Mockito.mock(JmxMessageConverter.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private JmxMessageConverter messageConverter;
     @Mock
-    private NotificationFilter notificationFilter = Mockito.mock(NotificationFilter.class);
+    private MessageCorrelator messageCorrelator;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private NotificationFilter notificationFilter;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(referenceResolver.resolve("notificationFilter", NotificationFilter.class)).thenReturn(notificationFilter);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
 
-        when(applicationContext.getBean("messageConverter", JmxMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("messageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(applicationContext.getBean("notificationFilter", NotificationFilter.class)).thenReturn(notificationFilter);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test

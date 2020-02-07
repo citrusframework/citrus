@@ -23,10 +23,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class StopTimeTestRunnerTest extends AbstractTestNGUnitTest {
-    
+
     @Test
     public void testStopTimeBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 stopTime();
@@ -42,7 +42,7 @@ public class StopTimeTestRunnerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 5);
         Assert.assertEquals(test.getActions().get(0).getClass(), StopTimeAction.class);
-        
+
         StopTimeAction action = (StopTimeAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "stop-time");
         Assert.assertEquals(action.getId(), "CITRUS_TIMELINE");

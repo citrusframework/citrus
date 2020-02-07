@@ -16,11 +16,12 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.*;
-
 import javax.jms.ConnectionFactory;
 import java.util.Map;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.AbstractEndpointComponent;
+import com.consol.citrus.endpoint.Endpoint;
 
 /**
  * Jms endpoint component is able to create jms endpoint from endpoint uri with parameters. Depending on uri creates a
@@ -55,8 +56,8 @@ public class JmsEndpointComponent extends AbstractEndpointComponent {
         }
 
         // set default jms connection factory
-        if (context.getApplicationContext() != null && context.getApplicationContext().containsBean("connectionFactory")) {
-            endpoint.getEndpointConfiguration().setConnectionFactory(context.getApplicationContext().getBean("connectionFactory", ConnectionFactory.class));
+        if (context.getReferenceResolver() != null && context.getReferenceResolver().isResolvable("connectionFactory")) {
+            endpoint.getEndpointConfiguration().setConnectionFactory(context.getReferenceResolver().resolve("connectionFactory", ConnectionFactory.class));
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);

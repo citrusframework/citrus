@@ -23,17 +23,15 @@ import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.direct.DirectSyncEndpoint;
-import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfig;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.message.MessageQueue;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -83,35 +81,36 @@ public class DirectSyncEndpointConfigParserTest {
     private DirectSyncEndpoint directSyncEndpoint8;
 
     @Mock
-    private ReferenceResolver resolver = Mockito.mock(ReferenceResolver.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private MessageQueue myQueue = Mockito.mock(MessageQueue.class);
+    private MessageQueue myQueue;
     @Mock
-    private EndpointUriResolver endpointNameResolver = Mockito.mock(EndpointUriResolver.class);
+    private EndpointUriResolver endpointNameResolver;
     @Mock
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private MessageCorrelator messageCorrelator;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
-    @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
+
+    private TestContext context = new TestContext();
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        when(resolver.resolve("myQueue", MessageQueue.class)).thenReturn(myQueue);
-        when(resolver.resolve("endpointNameResolver", EndpointUriResolver.class)).thenReturn(endpointNameResolver);
-        when(resolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(resolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        when(referenceResolver.resolve("myQueue", MessageQueue.class)).thenReturn(myQueue);
+        when(referenceResolver.resolve("endpointNameResolver", EndpointUriResolver.class)).thenReturn(endpointNameResolver);
+        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+    }
+
+    @BeforeMethod
+    public void setMocks() {
+        context.setEndpointFactory(new DefaultEndpointFactory());
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
     public void testDirectSyncEndpointAsConsumerParser() {
-        TestContext context = new TestContext();
-        context.setApplicationContext(applicationContext);
-        DefaultEndpointFactory endpointFactory = new DefaultEndpointFactory();
-        endpointFactory.setReferenceResolver(resolver);
-        context.setEndpointFactory(endpointFactory);
         CitrusEndpointAnnotations.injectEndpoints(this, context);
 
         // 1st message receiver

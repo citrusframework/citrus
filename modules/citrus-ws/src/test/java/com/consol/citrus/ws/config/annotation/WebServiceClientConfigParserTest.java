@@ -16,18 +16,23 @@
 
 package com.consol.citrus.ws.config.annotation;
 
+import java.util.Arrays;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.client.WebServiceClient;
-import com.consol.citrus.ws.message.converter.*;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import com.consol.citrus.ws.message.converter.SoapMessageConverter;
+import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
+import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
@@ -35,6 +40,7 @@ import org.springframework.ws.soap.SoapMessageFactory;
 import org.springframework.ws.transport.WebServiceMessageSender;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -80,47 +86,48 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private WebServiceClient client6;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private WebServiceTemplate wsTemplate = Mockito.mock(WebServiceTemplate.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private SoapMessageFactory messageFactory = Mockito.mock(SoapMessageFactory.class);
+    private WebServiceTemplate wsTemplate;
     @Mock
-    private WsAddressingMessageConverter messageConverter = Mockito.mock(WsAddressingMessageConverter.class);
+    private SoapMessageFactory messageFactory;
     @Mock
-    private EndpointUriResolver endpointResolver = Mockito.mock(EndpointUriResolver.class);
+    private WsAddressingMessageConverter messageConverter;
     @Mock
-    private WebServiceMessageSender messageSender = Mockito.mock(WebServiceMessageSender.class);
+    private EndpointUriResolver endpointResolver;
     @Mock
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private WebServiceMessageSender messageSender;
     @Mock
-    private ClientInterceptor clientInterceptor1 = Mockito.mock(ClientInterceptor.class);
+    private MessageCorrelator messageCorrelator;
     @Mock
-    private ClientInterceptor clientInterceptor2 = Mockito.mock(ClientInterceptor.class);
+    private ClientInterceptor clientInterceptor1;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private ClientInterceptor clientInterceptor2;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("messageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);
+        when(referenceResolver.resolve("soapMessageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);
+        when(referenceResolver.resolve("wsMessageSender", WebServiceMessageSender.class)).thenReturn(messageSender);
+        when(referenceResolver.resolve("wsAddressingMessageConverter", WebServiceMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
+        when(referenceResolver.resolve("wsTemplate", WebServiceTemplate.class)).thenReturn(wsTemplate);
+        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        when(referenceResolver.resolve("singleInterceptor", ClientInterceptor.class)).thenReturn(clientInterceptor1);
+        when(referenceResolver.resolve("clientInterceptor1", ClientInterceptor.class)).thenReturn(clientInterceptor1);
+        when(referenceResolver.resolve("clientInterceptor2", ClientInterceptor.class)).thenReturn(clientInterceptor2);
+        when(referenceResolver.resolve(new String[] { "clientInterceptor1", "clientInterceptor2" }, ClientInterceptor.class)).thenReturn(Arrays.asList(clientInterceptor1, clientInterceptor2));
+    }
 
-        when(applicationContext.getBean("messageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);
-        when(applicationContext.getBean("soapMessageFactory", WebServiceMessageFactory.class)).thenReturn(messageFactory);
-        when(applicationContext.getBean("wsMessageSender", WebServiceMessageSender.class)).thenReturn(messageSender);
-        when(applicationContext.getBean("wsAddressingMessageConverter", WebServiceMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
-        when(applicationContext.getBean("wsTemplate", WebServiceTemplate.class)).thenReturn(wsTemplate);
-        when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
-        when(applicationContext.getBean("singleInterceptor", ClientInterceptor.class)).thenReturn(clientInterceptor1);
-        when(applicationContext.getBean("clientInterceptor1", ClientInterceptor.class)).thenReturn(clientInterceptor1);
-        when(applicationContext.getBean("clientInterceptor2", ClientInterceptor.class)).thenReturn(clientInterceptor2);
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test

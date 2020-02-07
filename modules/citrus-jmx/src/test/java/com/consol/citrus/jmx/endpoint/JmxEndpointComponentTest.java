@@ -19,13 +19,8 @@ package com.consol.citrus.jmx.endpoint;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.jmx.client.JmxClient;
-import org.mockito.Mockito;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.reset;
 
 /**
  * @author Christoph Deppisch
@@ -33,13 +28,7 @@ import static org.mockito.Mockito.reset;
  */
 public class JmxEndpointComponentTest {
 
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
     private TestContext context = new TestContext();
-
-    @BeforeClass
-    public void setup() {
-        context.setApplicationContext(applicationContext);
-    }
 
     @Test
     public void testCreateClientEndpoint() throws Exception {
@@ -63,13 +52,12 @@ public class JmxEndpointComponentTest {
     public void testCreateClientEndpointWithParameters() throws Exception {
         JmxEndpointComponent component = new JmxEndpointComponent();
 
-        reset(applicationContext);
         Endpoint endpoint = component.createEndpoint("jmx:rmi:///jndi/rmi://localhost:1099/someService?autoReconnect=false&timeout=10000", context);
 
         Assert.assertEquals(endpoint.getClass(), JmxClient.class);
 
         Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "service:jmx:rmi:///jndi/rmi://localhost:1099/someService");
-        Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().isAutoReconnect(), false);
+        Assert.assertFalse(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
         Assert.assertEquals(((JmxClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
         endpoint = component.createEndpoint("jmx:platform?autoReconnect=true", context);
@@ -77,7 +65,7 @@ public class JmxEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), JmxClient.class);
 
         Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "platform");
-        Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().isAutoReconnect(), true);
+        Assert.assertTrue(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
         Assert.assertEquals(((JmxClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
     }
 

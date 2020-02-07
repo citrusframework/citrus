@@ -30,7 +30,7 @@ import com.consol.citrus.actions.LoadPropertiesAction;
 public class LoadPropertiesTestDesignerTest extends AbstractTestNGUnitTest {
     @Test
     public void testLoadBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 load("classpath:test.properties");
@@ -42,7 +42,7 @@ public class LoadPropertiesTestDesignerTest extends AbstractTestNGUnitTest {
         TestCase test = builder.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), LoadPropertiesAction.class);
-        
+
         LoadPropertiesAction action = (LoadPropertiesAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "load");
         Assert.assertEquals(action.getFilePath(), "classpath:test.properties");

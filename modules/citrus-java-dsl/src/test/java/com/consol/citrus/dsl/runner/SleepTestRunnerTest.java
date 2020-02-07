@@ -31,7 +31,7 @@ public class SleepTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testSleepBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 sleep(200);

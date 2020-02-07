@@ -33,9 +33,6 @@ public class ExecutableTestRunnerComponent extends TestRunnerComponent implement
      * Prepare test execution and create new test context.
      */
     public void prepareExecution() {
-        TestContext context = getApplicationContext().getBean(TestContext.class);
-        context.setApplicationContext(getApplicationContext());
-
-        setTestContext(context);
+        setTestContext(getApplicationContext().getBean(TestContext.class));
     }
 }

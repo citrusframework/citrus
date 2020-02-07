@@ -29,7 +29,7 @@ import static org.hamcrest.Matchers.lessThan;
 public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
     @Test
     public void testConditionalBuilder() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", 5);
@@ -55,7 +55,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderSkip() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", 0);
@@ -80,7 +80,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", 5);
@@ -106,7 +106,7 @@ public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConditionalBuilderHamcrestConditionExpression() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 variable("var", 5);

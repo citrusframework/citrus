@@ -16,26 +16,33 @@
 
 package com.consol.citrus.http.config.annotation;
 
+import java.util.Collections;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.SpringBeanReferenceResolver;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpResponseErrorHandler;
 import com.consol.citrus.http.message.HttpMessageConverter;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.mockito.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.*;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.when;
@@ -78,43 +85,43 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
             actor="testActor")
     private HttpClient httpClient4;
 
-    @Autowired
-    private SpringBeanReferenceResolver referenceResolver;
-
     @Mock
-    private RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
+    private ReferenceResolver referenceResolver;
     @Mock
-    private ClientHttpRequestFactory requestFactory = Mockito.mock(ClientHttpRequestFactory.class);
+    private RestTemplate restTemplate;
     @Mock
-    private HttpMessageConverter messageConverter = Mockito.mock(HttpMessageConverter.class);
+    private ClientHttpRequestFactory requestFactory;
     @Mock
-    private EndpointUriResolver endpointResolver = Mockito.mock(EndpointUriResolver.class);
+    private HttpMessageConverter messageConverter;
     @Mock
-    private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
+    private EndpointUriResolver endpointResolver;
     @Mock
-    private ClientHttpRequestInterceptor clientInterceptor = Mockito.mock(ClientHttpRequestInterceptor.class);
+    private MessageCorrelator messageCorrelator;
     @Mock
-    private ResponseErrorHandler errorHandler = Mockito.mock(ResponseErrorHandler.class);
+    private ClientHttpRequestInterceptor clientInterceptor;
     @Mock
-    private TestActor testActor = Mockito.mock(TestActor.class);
+    private ResponseErrorHandler errorHandler;
     @Mock
-    private ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
+    private TestActor testActor;
 
     @BeforeClass
     public void setup() {
         MockitoAnnotations.initMocks(this);
 
-        referenceResolver.setApplicationContext(applicationContext);
+        when(referenceResolver.resolve("soapRequestFactory", ClientHttpRequestFactory.class)).thenReturn(requestFactory);
+        when(referenceResolver.resolve("messageConverter", HttpMessageConverter.class)).thenReturn(messageConverter);
+        when(referenceResolver.resolve("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
+        when(referenceResolver.resolve("restTemplate", RestTemplate.class)).thenReturn(restTemplate);
+        when(referenceResolver.resolve("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
+        when(referenceResolver.resolve("testActor", TestActor.class)).thenReturn(testActor);
+        when(referenceResolver.resolve(new String[] {"clientInterceptor"}, ClientHttpRequestInterceptor.class)).thenReturn(Collections.singletonList(clientInterceptor));
+        when(referenceResolver.resolve("errorHandler", ResponseErrorHandler.class)).thenReturn(errorHandler);
+        when(referenceResolver.resolve("", ClientHttpRequestFactory.class)).thenThrow(new RuntimeException("Unexpected call to getBean on application context"));
+    }
 
-        when(applicationContext.getBean("soapRequestFactory", ClientHttpRequestFactory.class)).thenReturn(requestFactory);
-        when(applicationContext.getBean("messageConverter", HttpMessageConverter.class)).thenReturn(messageConverter);
-        when(applicationContext.getBean("endpointResolver", EndpointUriResolver.class)).thenReturn(endpointResolver);
-        when(applicationContext.getBean("restTemplate", RestTemplate.class)).thenReturn(restTemplate);
-        when(applicationContext.getBean("replyMessageCorrelator", MessageCorrelator.class)).thenReturn(messageCorrelator);
-        when(applicationContext.getBean("testActor", TestActor.class)).thenReturn(testActor);
-        when(applicationContext.getBean("clientInterceptor", ClientHttpRequestInterceptor.class)).thenReturn(clientInterceptor);
-        when(applicationContext.getBean("errorHandler", ResponseErrorHandler.class)).thenReturn(errorHandler);
-        when(applicationContext.getBean("", ClientHttpRequestFactory.class)).thenThrow(new RuntimeException("Unexpected call to getBean on application context"));
+    @BeforeMethod
+    public void setMocks() {
+        context.setReferenceResolver(referenceResolver);
     }
 
     @Test
@@ -127,10 +134,10 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient1.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().size(), 0L);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
-        Assert.assertEquals(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader(), true);
+        Assert.assertTrue(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader());
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getTimeout(), 5000L);
-        Assert.assertEquals(httpClient1.getEndpointConfiguration().isHandleCookies(), false);
+        Assert.assertFalse(httpClient1.getEndpointConfiguration().isHandleCookies());
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getBinaryMediaTypes().size(), 6L);
@@ -146,8 +153,8 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getMessageConverter(), messageConverter);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getEndpointUriResolver(), endpointResolver);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader(), false);
-        Assert.assertEquals(httpClient2.getEndpointConfiguration().isHandleCookies(), true);
+        Assert.assertFalse(httpClient2.getEndpointConfiguration().isDefaultAcceptHeader());
+        Assert.assertTrue(httpClient2.getEndpointConfiguration().isHandleCookies());
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getErrorHandler(), errorHandler);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getBinaryMediaTypes().size(), 2L);

@@ -28,7 +28,7 @@ public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testRepeatUntilTrueBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 repeat()

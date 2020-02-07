@@ -35,7 +35,7 @@ public class CustomContainerTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomContainer() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 container(new CustomActionContainer()).actions(
@@ -62,7 +62,7 @@ public class CustomContainerTestRunnerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomContainerWithPredefinedActions() {
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), applicationContext, context) {
+        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
             public void execute() {
                 CustomActionContainer container = new CustomActionContainer();

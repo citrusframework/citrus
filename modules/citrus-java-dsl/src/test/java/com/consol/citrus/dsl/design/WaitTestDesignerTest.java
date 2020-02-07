@@ -46,7 +46,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
         final String interval = "1500";
         final String url = "http://some.path/";
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 waitFor()
@@ -83,7 +83,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
         final String interval = "1500";
         final String filePath = "path/to/some/file.txt";
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 waitFor()
@@ -116,7 +116,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
         when(file.getPath()).thenReturn("path/to/some/file.txt");
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 waitFor()
@@ -145,7 +145,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
     public void testWaitMessageBuilder() {
         final String messageName = "request";
 
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 waitFor()
@@ -170,7 +170,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWaitActionBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 waitFor()
@@ -195,7 +195,7 @@ public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testWaitActionFluentBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 waitFor()

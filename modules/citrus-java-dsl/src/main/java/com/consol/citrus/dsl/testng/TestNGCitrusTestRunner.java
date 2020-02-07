@@ -438,4 +438,9 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     public FinallySequence.Builder doFinally() {
         return testRunner.doFinally();
     }
+
+    @Override
+    public void setTestContext(TestContext context) {
+        testRunner.setTestContext(context);
+    }
 }

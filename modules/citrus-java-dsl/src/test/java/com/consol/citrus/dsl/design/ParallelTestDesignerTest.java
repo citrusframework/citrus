@@ -29,7 +29,7 @@ public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testParallelBuilder() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 parallel()
@@ -53,7 +53,7 @@ public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testParallelBuilderNestedContainers() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 parallel().actions(echo("1.0"),

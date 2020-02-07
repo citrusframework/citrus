@@ -509,4 +509,9 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     public FinallySequence.Builder doFinally() {
         return testDesigner.doFinally();
     }
+
+    @Override
+    public void setTestContext(TestContext context) {
+        testDesigner.setTestContext(context);
+    }
 }

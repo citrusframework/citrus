@@ -35,7 +35,7 @@ public class CustomContainerTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomContainer() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 container(new CustomActionContainer()).actions(
@@ -62,7 +62,7 @@ public class CustomContainerTestDesignerTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testCustomContainerWithPredefinedActions() {
-        MockTestDesigner builder = new MockTestDesigner(applicationContext, context) {
+        MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
                 CustomActionContainer container = new CustomActionContainer();

@@ -18,10 +18,10 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.Assert;
 
 /**
@@ -32,8 +32,8 @@ import org.springframework.util.Assert;
  */
 public class SoapActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
 
-	/** Spring application context */
-	private ApplicationContext applicationContext;
+	/** Bean reference resolver */
+	private ReferenceResolver referenceResolver;
 
 	private TestActionBuilder<?> delegate;
 
@@ -42,7 +42,7 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 */
 	public SoapClientActionBuilder client(WebServiceClient soapClient) {
 		SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder(soapClient)
-				.withApplicationContext(applicationContext);
+				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
 	}
@@ -52,7 +52,7 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 */
 	public SoapClientActionBuilder client(String soapClient) {
 		SoapClientActionBuilder clientActionBuilder = new SoapClientActionBuilder(soapClient)
-				.withApplicationContext(applicationContext);
+				.withReferenceResolver(referenceResolver);
 		this.delegate = clientActionBuilder;
 		return clientActionBuilder;
 	}
@@ -62,7 +62,7 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 */
 	public SoapServerActionBuilder server(WebServiceServer soapServer) {
 		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(soapServer)
-				.withApplicationContext(applicationContext);
+				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
 	}
@@ -71,19 +71,19 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 * Initiate soap server action.
 	 */
 	public SoapServerActionBuilder server(String soapServer) {
-		Assert.notNull(applicationContext, "Citrus application context is not initialized!");
-		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(applicationContext.getBean(soapServer, Endpoint.class))
-				.withApplicationContext(applicationContext);
+		Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(referenceResolver.resolve(soapServer, Endpoint.class))
+				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
 	}
 
 	/**
-	 * Sets the Spring bean application context.
-	 * @param applicationContext
+	 * Sets the bean reference resolver.
+	 * @param referenceResolver
 	 */
-	public SoapActionBuilder withApplicationContext(ApplicationContext applicationContext) {
-		this.applicationContext = applicationContext;
+	public SoapActionBuilder withReferenceResolver(ReferenceResolver referenceResolver) {
+		this.referenceResolver = referenceResolver;
 		return this;
 	}
 
