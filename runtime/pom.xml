@@ -9,9 +9,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>citrus-platforms</artifactId>
-  <name>Citrus :: Platforms</name>
-  <description>Citrus test execution platforms</description>
+  <artifactId>citrus-runtime</artifactId>
+  <name>Citrus :: Runtime</name>
+  <description>Citrus test execution runtime</description>
   <packaging>pom</packaging>
 
   <modules>

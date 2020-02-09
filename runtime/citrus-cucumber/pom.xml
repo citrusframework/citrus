@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>citrus</artifactId>
+    <artifactId>citrus-runtime</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>3.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>citrus-cucumber</artifactId>
-  <name>Citrus :: Platforms :: Cucumber</name>
+  <name>Citrus :: Runtime :: Cucumber</name>
   <description>Citrus Cucumber BDD framework integration</description>
 
   <build>
