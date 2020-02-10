@@ -17,6 +17,7 @@
 package com.consol.citrus.arquillian.enricher;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
@@ -53,7 +54,7 @@ public class CitrusInstanceProducer {
         try {
             if (!event.getDeployment().testable()) {
                 log.info("Producing Citrus framework instance");
-                citrusInstance.set(Citrus.newInstance(configurationInstance.get().getConfigurationClass()));
+                citrusInstance.set(Citrus.newInstance(CitrusSpringContext.create(configurationInstance.get().getConfigurationClass())));
             }
         } catch (Exception e) {
             log.error(CitrusExtensionConstants.CITRUS_EXTENSION_ERROR, e);

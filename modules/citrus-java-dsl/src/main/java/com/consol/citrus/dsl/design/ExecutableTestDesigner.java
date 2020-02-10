@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.design;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.endpoint.Executable;
 import org.springframework.context.ApplicationContext;
@@ -32,7 +32,7 @@ public class ExecutableTestDesigner extends DefaultTestDesigner implements Execu
      * @param applicationContext
      */
     public ExecutableTestDesigner(ApplicationContext applicationContext) {
-        super(Citrus.newInstance(applicationContext).createTestContext());
+        super(CitrusSpringContext.create(applicationContext).createTestContext());
     }
 
     @Override

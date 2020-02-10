@@ -152,9 +152,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         return factory;
     }
 
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObject()
-     */
+    @Override
     public TestContext getObject() {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
@@ -180,17 +178,12 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         return context;
     }
 
-    /**
-     * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-     */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-    public Class getObjectType() {
+    @Override
+    public Class<TestContext> getObjectType() {
         return TestContext.class;
     }
 
-	/**
-	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-	 */
+	@Override
     public boolean isSingleton() {
         return false;
     }

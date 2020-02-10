@@ -62,8 +62,8 @@ public class SeleniumSteps {
 
     @Before
     public void before(Scenario scenario) {
-        if (browser == null && citrus.getApplicationContext().getBeansOfType(SeleniumBrowser.class).size() == 1L) {
-            browser = citrus.getApplicationContext().getBean(SeleniumBrowser.class);
+        if (browser == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(SeleniumBrowser.class).size() == 1L) {
+            browser = citrus.getCitrusContext().getReferenceResolver().resolve(SeleniumBrowser.class);
         }
 
         pages = new HashMap<>();
@@ -72,11 +72,11 @@ public class SeleniumSteps {
 
     @Given("^(?:selenium )?browser \"([^\"]+)\"$")
     public void setBrowser(String id) {
-        if (!citrus.getApplicationContext().containsBean(id)) {
+        if (!citrus.getCitrusContext().getReferenceResolver().isResolvable(id)) {
             throw new CitrusRuntimeException("Unable to find selenium browser for id: " + id);
         }
 
-        browser = citrus.getApplicationContext().getBean(id, SeleniumBrowser.class);
+        browser = citrus.getCitrusContext().getReferenceResolver().resolve(id, SeleniumBrowser.class);
     }
 
     @Given("^pages$")

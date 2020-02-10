@@ -16,29 +16,40 @@
 
 package com.consol.citrus.arquillian.enricher;
 
+import java.net.URL;
+
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import org.jboss.arquillian.core.api.Instance;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.net.URL;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 public class CitrusTestEnricherTest {
 
     private CitrusTestEnricher testEnricher = new CitrusTestEnricher();
 
-    private Citrus citrusFramework = Citrus.newInstance(ArquillianTestConfig.class);
-    private Instance<Citrus> citrusInstance = Mockito.mock(Instance.class);
+    private Citrus citrusFramework = Citrus.newInstance(CitrusSpringContext.create(ArquillianTestConfig.class));
+
+    @Mock
+    private Instance<Citrus> citrusInstance;
+
+    @BeforeMethod
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testEnrichTest() throws Exception {

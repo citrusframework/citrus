@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
 import org.springframework.beans.factory.InitializingBean;
@@ -60,6 +60,6 @@ public abstract class TestRunnerBeforeTestSupport extends SequenceBeforeTest imp
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testRunner = new DefaultTestRunner(Citrus.newInstance(applicationContext).createTestContext());
+        testRunner = new DefaultTestRunner(CitrusSpringContext.create(applicationContext).createTestContext());
     }
 }

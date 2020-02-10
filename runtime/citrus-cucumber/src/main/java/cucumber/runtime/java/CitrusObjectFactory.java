@@ -88,7 +88,7 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
     @Override
     public void start() {
         super.start();
-        context = CitrusBackend.getCitrus().createTestContext();
+        context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
 
         if (mode == null) {
             mode = InjectionMode.valueOf(System.getProperty(INJECTION_MODE_PROPERTY, System.getenv(INJECTION_MODE_ENV) != null ?

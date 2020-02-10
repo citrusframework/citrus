@@ -19,6 +19,7 @@ package com.consol.citrus.cucumber.step.designer.http;
 import java.io.IOException;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -54,7 +55,7 @@ public class HttpStepsTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        citrus = Citrus.newInstance(applicationContext);
+        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
     }
 
     @BeforeMethod

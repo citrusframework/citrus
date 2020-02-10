@@ -17,6 +17,7 @@
 package com.consol.citrus.cucumber.step.designer.selenium;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
@@ -56,7 +57,7 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        citrus = Citrus.newInstance(applicationContext);
+        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
     }
 
     @BeforeMethod

@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Christoph Deppisch
  */
-public class SequenceBeforeSuite extends AbstractSuiteActionContainer {
+public class SequenceBeforeSuite extends AbstractSuiteActionContainer implements BeforeSuite {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceBeforeSuite.class);

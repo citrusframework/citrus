@@ -26,7 +26,6 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.core.api.annotation.Observes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * Observes Arquillian before and after suite events in order to execute corresponding lifecycle phases in Citrus.
@@ -84,6 +83,6 @@ public class CitrusLifecycleHandler {
      */
     private void closeApplicationContext() {
         log.debug("Closing Citrus Spring application context");
-        ((ConfigurableApplicationContext)citrusInstance.get().getApplicationContext()).close();
+        citrusInstance.get().getCitrusContext().close();
     }
 }

@@ -1,0 +1,43 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>citrus-runtime</artifactId>
+    <groupId>com.consol.citrus</groupId>
+    <version>3.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>citrus-testng</artifactId>
+  <name>Citrus :: Runtime :: TestNG</name>
+  <description>Citrus TestNG framework integration</description>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core-spring</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring Framework -->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+</project>

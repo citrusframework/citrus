@@ -44,18 +44,18 @@ public class DockerSteps {
 
     @Before
     public void before(Scenario scenario) {
-        if (dockerClient == null && citrus.getApplicationContext().getBeansOfType(DockerClient.class).size() == 1L) {
-            dockerClient = citrus.getApplicationContext().getBean(DockerClient.class);
+        if (dockerClient == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(DockerClient.class).size() == 1L) {
+            dockerClient = citrus.getCitrusContext().getReferenceResolver().resolve(DockerClient.class);
         }
     }
 
     @Given("^docker-client \"([^\"]+)\"$")
     public void setClient(String id) {
-        if (!citrus.getApplicationContext().containsBean(id)) {
+        if (!citrus.getCitrusContext().getReferenceResolver().isResolvable(id)) {
             throw new CitrusRuntimeException("Unable to find docker client for id: " + id);
         }
 
-        dockerClient = citrus.getApplicationContext().getBean(id, DockerClient.class);
+        dockerClient = citrus.getCitrusContext().getReferenceResolver().resolve(id, DockerClient.class);
     }
 
     @When("^create container \"([^\"]+)\" from \"([^\"]+)\"$")

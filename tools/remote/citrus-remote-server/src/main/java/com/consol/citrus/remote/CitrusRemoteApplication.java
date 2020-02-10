@@ -16,7 +16,23 @@
 
 package com.consol.citrus.remote;
 
+import java.io.File;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusInstanceManager;
+import com.consol.citrus.CitrusInstanceStrategy;
 import com.consol.citrus.TestClass;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.CitrusAppConfiguration;
@@ -32,18 +48,19 @@ import com.consol.citrus.report.LoggingReporter;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import spark.Filter;
 import spark.servlet.SparkApplication;
 
-import java.io.File;
-import java.net.URLDecoder;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static spark.Spark.*;
+import static spark.Spark.before;
+import static spark.Spark.exception;
+import static spark.Spark.get;
+import static spark.Spark.halt;
+import static spark.Spark.path;
+import static spark.Spark.post;
+import static spark.Spark.put;
 
 /**
  * Remote application creates routes for this web application.
@@ -92,8 +109,8 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     @Override
     public void init() {
-        Citrus.mode(Citrus.InstanceStrategy.SINGLETON);
-        Citrus.CitrusInstanceManager.addInstanceProcessor(citrus -> {
+        CitrusInstanceManager.mode(CitrusInstanceStrategy.SINGLETON);
+        CitrusInstanceManager.addInstanceProcessor(citrus -> {
             citrus.addTestSuiteListener(remoteTestResultReporter);
             citrus.addTestListener(remoteTestResultReporter);
         });
@@ -269,7 +286,7 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     @Override
     public void destroy() {
-        Citrus citrus = Citrus.CitrusInstanceManager.getSingleton();
+        Citrus citrus = CitrusInstanceManager.getSingleton();
         if (citrus != null) {
             log.info("Closing Citrus and its application context");
             citrus.close();

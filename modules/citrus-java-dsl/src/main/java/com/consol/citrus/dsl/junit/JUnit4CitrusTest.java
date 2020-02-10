@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.junit;
 import java.lang.reflect.Method;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseBuilder;
 import com.consol.citrus.TestResult;
@@ -50,10 +51,10 @@ public class JUnit4CitrusTest extends AbstractJUnit4CitrusTest {
     @Override
     protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {
         if (citrus == null) {
-            citrus = Citrus.newInstance(applicationContext);
+            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         }
 
-        TestContext ctx = prepareTestContext(citrus.createTestContext());
+        TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
         TestCaseBuilder testBuilder;
         if (isDesignerMethod(frameworkMethod.getMethod())) {

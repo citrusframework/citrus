@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.design;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.container.SequenceAfterSuite;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
@@ -54,7 +54,7 @@ public abstract class TestDesignerAfterSuiteSupport extends SequenceAfterSuite i
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        testDesigner = new DefaultTestDesigner(Citrus.newInstance(applicationContext).createTestContext());
+        testDesigner = new DefaultTestDesigner(CitrusSpringContext.create(applicationContext).createTestContext());
         afterSuite(testDesigner);
 
         setActions(testDesigner.getTestCase().getActions());

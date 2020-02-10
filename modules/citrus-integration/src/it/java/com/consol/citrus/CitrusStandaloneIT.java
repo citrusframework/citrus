@@ -37,12 +37,12 @@ public class CitrusStandaloneIT extends AbstractTestNGCitrusTest {
 
     @BeforeClass
     public void before() {
-        citrus = Citrus.newInstance(applicationContext);
+        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
     }
 
     @Test
     public void echoTest() {
-        DefaultTestDesigner test = new DefaultTestDesigner(citrus.createTestContext());
+        DefaultTestDesigner test = new DefaultTestDesigner(citrus.getCitrusContext().createTestContext());
 
         test.name("EchoIT");
 
@@ -53,7 +53,7 @@ public class CitrusStandaloneIT extends AbstractTestNGCitrusTest {
 
     @Test
     public void jmsTest() {
-        DefaultTestDesigner test = new DefaultTestDesigner(citrus.createTestContext());
+        DefaultTestDesigner test = new DefaultTestDesigner(citrus.getCitrusContext().createTestContext());
 
         test.name("JmsIT");
 
@@ -74,7 +74,7 @@ public class CitrusStandaloneIT extends AbstractTestNGCitrusTest {
 
     @Test
     public void httpTest() {
-        DefaultTestDesigner test = new DefaultTestDesigner(citrus.createTestContext());
+        DefaultTestDesigner test = new DefaultTestDesigner(citrus.getCitrusContext().createTestContext());
 
         test.name("HttpIT");
 
@@ -95,7 +95,7 @@ public class CitrusStandaloneIT extends AbstractTestNGCitrusTest {
 
     @Test
     public void soapTest() {
-        DefaultTestDesigner test = new DefaultTestDesigner(citrus.createTestContext());
+        DefaultTestDesigner test = new DefaultTestDesigner(citrus.getCitrusContext().createTestContext());
 
         test.name("SoapIT");
 

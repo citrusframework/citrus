@@ -71,12 +71,12 @@ public class HttpSteps {
 
     @Before
     public void before(Scenario scenario) {
-        if (httpClient == null && citrus.getApplicationContext().getBeansOfType(HttpClient.class).size() == 1L) {
-            httpClient = citrus.getApplicationContext().getBean(HttpClient.class);
+        if (httpClient == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(HttpClient.class).size() == 1L) {
+            httpClient = citrus.getCitrusContext().getReferenceResolver().resolve(HttpClient.class);
         }
 
-        if (httpServer == null && citrus.getApplicationContext().getBeansOfType(HttpServer.class).size() == 1L) {
-            httpServer = citrus.getApplicationContext().getBean(HttpServer.class);
+        if (httpServer == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(HttpServer.class).size() == 1L) {
+            httpServer = citrus.getCitrusContext().getReferenceResolver().resolve(HttpServer.class);
         }
 
         request = new HttpMessage();
@@ -87,20 +87,20 @@ public class HttpSteps {
 
     @Given("^http-client \"([^\"\\s]+)\"$")
     public void setClient(String id) {
-        if (!citrus.getApplicationContext().containsBean(id)) {
+        if (!citrus.getCitrusContext().getReferenceResolver().isResolvable(id)) {
             throw new CitrusRuntimeException("Unable to find http client for id: " + id);
         }
 
-        httpClient = citrus.getApplicationContext().getBean(id, HttpClient.class);
+        httpClient = citrus.getCitrusContext().getReferenceResolver().resolve(id, HttpClient.class);
     }
 
     @Given("^http-server \"([^\"\\s]+)\"$")
     public void setServer(String id) {
-        if (!citrus.getApplicationContext().containsBean(id)) {
+        if (!citrus.getCitrusContext().getReferenceResolver().isResolvable(id)) {
             throw new CitrusRuntimeException("Unable to find http server for id: " + id);
         }
 
-        httpServer = citrus.getApplicationContext().getBean(id, HttpServer.class);
+        httpServer = citrus.getCitrusContext().getReferenceResolver().resolve(id, HttpServer.class);
     }
 
     @Given("^URL: ([^\\s]+)$")

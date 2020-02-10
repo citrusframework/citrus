@@ -16,7 +16,7 @@
 
 package cucumber.runtime.java.spring;
 
-import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusVersion;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
@@ -25,7 +25,9 @@ import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.runtime.CucumberException;
-import cucumber.runtime.java.*;
+import cucumber.runtime.java.CitrusBackend;
+import cucumber.runtime.java.CitrusObjectFactory;
+import cucumber.runtime.java.InjectionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -64,7 +66,7 @@ public class CitrusSpringObjectFactory extends SpringFactory {
     public boolean addClass(Class<?> clazz) {
         InjectionMode fallback;
         if (mode == null) {
-            log.info("Initializing injection mode for Citrus " + Citrus.getVersion());
+            log.info("Initializing injection mode for Citrus " + CitrusVersion.version());
             fallback = InjectionMode.valueOf(System.getProperty(CitrusObjectFactory.INJECTION_MODE_PROPERTY, System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) != null ?
                     System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
         } else {
@@ -109,7 +111,7 @@ public class CitrusSpringObjectFactory extends SpringFactory {
                 CitrusBackend.initializeCitrus(context.getApplicationContext());
             } catch (CucumberException e) {
                 log.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
-                context = CitrusBackend.getCitrus().createTestContext();
+                context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
             }
         }
 

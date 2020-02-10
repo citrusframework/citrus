@@ -77,13 +77,13 @@ public class CitrusTestEnricher implements TestEnricher {
                     if (annotation instanceof CitrusResource) {
                         Class<?> type = parameterTypes[i];
                         if (TestDesigner.class.isAssignableFrom(type)) {
-                            TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().createTestContext());
+                            TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().getCitrusContext().createTestContext());
                             testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                             log.debug("Injecting Citrus test designer on method parameter");
                             values[i] = testDesigner;
                         } else if (TestRunner.class.isAssignableFrom(type)) {
-                            TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().createTestContext());
+                            TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().getCitrusContext().createTestContext());
                             testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                             log.debug("Injecting Citrus test runner on method parameter");

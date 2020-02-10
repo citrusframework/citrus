@@ -16,14 +16,14 @@
 
 package com.consol.citrus.arquillian.shrinkwrap;
 
-import com.consol.citrus.Citrus;
-import org.jboss.shrinkwrap.resolver.api.FormatStage;
-import org.jboss.shrinkwrap.resolver.api.maven.Maven;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.consol.citrus.CitrusVersion;
+import org.jboss.shrinkwrap.resolver.api.FormatStage;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
 
 /**
  * Resolves Citrus artifacts with transitive dependencies to file set which can be used as library resource in
@@ -41,7 +41,7 @@ public final class CitrusArchiveBuilder {
     private boolean offline = true;
 
     /** Citrus version to use */
-    private String version = Citrus.getVersion();
+    private String version = CitrusVersion.version();
 
     /** List of Citrus artifact names to resolve */
     private List<String> artifactCoordinates = new ArrayList<>();

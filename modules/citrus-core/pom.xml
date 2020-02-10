@@ -20,6 +20,26 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-testng</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-junit</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-junit5</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-main</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-spring-integration</artifactId>
       <version>${project.version}</version>
     </dependency>

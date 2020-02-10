@@ -29,7 +29,7 @@ import org.springframework.util.CollectionUtils;
  *
  * @author Christoph Deppisch
  */
-public class SequenceAfterTest extends AbstractTestBoundaryActionContainer {
+public class SequenceAfterTest extends AbstractTestBoundaryActionContainer implements AfterTest {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(SequenceAfterTest.class);

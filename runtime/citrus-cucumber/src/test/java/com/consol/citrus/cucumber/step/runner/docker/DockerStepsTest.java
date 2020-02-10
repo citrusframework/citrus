@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.UUID;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
@@ -71,7 +72,7 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        citrus = Citrus.newInstance(applicationContext);
+        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
     }
 
     @BeforeMethod

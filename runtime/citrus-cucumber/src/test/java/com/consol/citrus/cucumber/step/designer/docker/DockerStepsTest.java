@@ -17,11 +17,17 @@
 package com.consol.citrus.cucumber.step.designer.docker;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
-import com.consol.citrus.docker.command.*;
+import com.consol.citrus.docker.command.AbstractDockerCommand;
+import com.consol.citrus.docker.command.ContainerCreate;
+import com.consol.citrus.docker.command.ContainerInspect;
+import com.consol.citrus.docker.command.ContainerStart;
+import com.consol.citrus.docker.command.ContainerStop;
+import com.consol.citrus.docker.command.ImageBuild;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -30,7 +36,9 @@ import cucumber.api.Scenario;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -48,7 +56,7 @@ public class DockerStepsTest extends AbstractTestNGUnitTest {
 
     @BeforeClass
     public void setup() {
-        citrus = Citrus.newInstance(applicationContext);
+        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
     }
 
     @BeforeMethod
