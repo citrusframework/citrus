@@ -20,8 +20,8 @@ import java.util.Stack;
 
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
-import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.FinallySequence;
+import com.consol.citrus.container.TestActionContainer;
 
 /**
  * @author Christoph Deppisch
@@ -41,9 +41,9 @@ public abstract class AbstractTestBehavior extends DefaultTestRunner implements 
     @Override
     public void apply(TestRunner target) {
         this.target = target;
-        containers = new Stack<TestActionContainerBuilder<? extends AbstractActionContainer, ?>>() {
+        containers = new Stack<TestActionContainerBuilder<? extends TestActionContainer, ?>>() {
             @Override
-            public TestActionContainerBuilder<? extends AbstractActionContainer, ?> push(TestActionContainerBuilder<? extends AbstractActionContainer, ?> item) {
+            public TestActionContainerBuilder<? extends TestActionContainer, ?> push(TestActionContainerBuilder<? extends TestActionContainer, ?> item) {
                 target.container(item);
                 return item;
             }

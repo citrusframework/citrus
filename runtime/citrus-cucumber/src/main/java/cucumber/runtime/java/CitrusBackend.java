@@ -132,7 +132,7 @@ public class CitrusBackend implements Backend {
      */
     public static Citrus getCitrus() {
         if (citrus == null) {
-            citrus = Citrus.newInstance();
+            citrus = Citrus.newInstance(CitrusSpringContext.create());
         }
 
         return citrus;

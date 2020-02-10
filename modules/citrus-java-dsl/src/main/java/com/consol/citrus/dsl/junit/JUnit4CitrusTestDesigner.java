@@ -21,7 +21,6 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
-import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -50,23 +49,22 @@ import com.consol.citrus.actions.StopTimerAction;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.actions.TransformAction;
 import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
-import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
 import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.container.Parallel;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.container.Sequence;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
-import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
-import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.dsl.design.ApplyTestBehaviorAction;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestBehavior;
@@ -78,6 +76,7 @@ import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.script.GroovyAction;
+import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.actions.SoapActionBuilder;
@@ -221,12 +220,12 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     }
 
     @Override
-    public <T extends AbstractActionContainer, B extends AbstractTestContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
+    public <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container) {
         return testDesigner.container(container);
     }
 
     @Override
-    public <T extends TestActionContainerBuilder<? extends AbstractActionContainer, ?>> T container(T container) {
+    public <T extends TestActionContainerBuilder<? extends TestActionContainer, ?>> T container(T container) {
         return testDesigner.container(container);
     }
 

@@ -3,7 +3,7 @@ package com.consol.citrus;
 /**
  * @author Christoph Deppisch
  */
-public abstract class AbstractTestActionBuilder<T extends TestAction, S extends AbstractTestActionBuilder<T, S>> implements TestActionBuilder<T> {
+public abstract class AbstractTestActionBuilder<T extends TestAction, S extends TestActionBuilder<T>> implements TestActionBuilder<T> {
 
     protected S self;
 

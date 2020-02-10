@@ -2,8 +2,7 @@ package com.consol.citrus;
 
 import java.util.Date;
 
-import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.container.FinallySequence;
+import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
 
 /**
@@ -78,20 +77,14 @@ public interface TestCaseBuilder {
      * @param container
      * @return
      */
-    <T extends AbstractActionContainer, B extends AbstractTestContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container);
+    <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container);
 
     /**
      * Prepare and add a custom container implementation.
      * @param builder
      * @return
      */
-    <T extends TestActionContainerBuilder<? extends AbstractActionContainer, ?>> T container(T builder);
-
-    /**
-     * Adds sequence of test actions to finally block.
-     * @return
-     */
-    FinallySequence.Builder doFinally();
+    <T extends TestActionContainerBuilder<? extends TestActionContainer, ?>> T container(T builder);
 
     /**
      * Sets the test context.

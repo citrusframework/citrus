@@ -16,12 +16,12 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
+import java.util.Collections;
+
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
-import com.consol.citrus.message.Message;
-
-import java.util.Collections;
 
 /**
  * Extracts predicate from message payload via XPath expression evaluation.

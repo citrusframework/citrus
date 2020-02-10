@@ -16,11 +16,11 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 
 /**
  * Endpoint adapter mapping strategy simply holds a map of mapping keys and adapter instances. Searches for available mapping key

@@ -45,6 +45,7 @@ import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
 import com.consol.citrus.container.Conditional;
+import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.container.Iterate;
 import com.consol.citrus.container.Parallel;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
@@ -476,4 +477,10 @@ public interface TestRunner extends TestCaseBuilder {
      * @return
      */
     Template.Builder applyTemplate(BuilderSupport<Template.Builder> configurer);
+
+    /**
+     * Adds sequence of test actions to finally block.
+     * @return
+     */
+    FinallySequence.Builder doFinally();
 }

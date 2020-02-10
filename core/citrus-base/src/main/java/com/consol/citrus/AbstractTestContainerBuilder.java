@@ -28,7 +28,7 @@ import com.consol.citrus.container.TestActionContainer;
  * Abstract container builder takes care on calling the container runner when actions are placed in the container.
  * @author Christoph Deppisch
  */
-public abstract class AbstractTestContainerBuilder<T extends TestActionContainer, S extends AbstractTestContainerBuilder<T, S>> extends AbstractTestActionBuilder<T, S> implements TestActionContainerBuilder<T, S> {
+public abstract class AbstractTestContainerBuilder<T extends TestActionContainer, S extends TestActionContainerBuilder<T, S>> extends AbstractTestActionBuilder<T, S> implements TestActionContainerBuilder<T, S> {
 
     protected final List<TestActionBuilder<?>> actions = new ArrayList<>();
 

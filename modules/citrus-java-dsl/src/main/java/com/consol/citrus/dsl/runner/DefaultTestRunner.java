@@ -53,7 +53,6 @@ import com.consol.citrus.condition.ActionCondition;
 import com.consol.citrus.condition.Condition;
 import com.consol.citrus.condition.FileCondition;
 import com.consol.citrus.condition.HttpCondition;
-import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
@@ -67,6 +66,7 @@ import com.consol.citrus.container.Sequence;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.container.WaitActionConditionBuilder;
@@ -105,7 +105,7 @@ public class DefaultTestRunner implements TestRunner {
     private TestContext context;
 
     /** Optional stack of containers cached for execution */
-    protected Stack<TestActionContainerBuilder<? extends AbstractActionContainer, ?>> containers = new Stack<>();
+    protected Stack<TestActionContainerBuilder<? extends TestActionContainer, ?>> containers = new Stack<>();
 
     /** Default constructor */
     public DefaultTestRunner() {
@@ -244,7 +244,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public <T extends AbstractActionContainer, B extends AbstractTestContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container)  {
+    public <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container)  {
         TestActionContainerBuilder<T, B> builder = new AbstractTestContainerBuilder<T, B>() {
             @Override
             public B actions(TestActionBuilder<?>... actions) {
@@ -265,7 +265,7 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public <T extends TestActionContainerBuilder<? extends AbstractActionContainer, ?>> T container(T container) {
+    public <T extends TestActionContainerBuilder<? extends TestActionContainer, ?>> T container(T container) {
         containers.push(container);
         return container;
     }
