@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:si="http://www.citrusframework.org/schema/spring-integration/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/spring-integration/testcase http://www.citrusframework.org/schema/spring-integration/testcase/citrus-spring-integration-testcase.xsd">
+
+    <testcase name="PurgeMessageChannelActionParserTest">
+        <actions>
+            <si:purge-channel>
+                <si:channel name="testChannel1"/>
+                <si:channel name=""/>
+                <si:channel ref=""/>
+            </si:purge-channel>
+        </actions>
+    </testcase>
+
+</spring:beans>

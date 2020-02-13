@@ -68,8 +68,8 @@ public class TestCaseParser implements BeanDefinitionParser {
         Element finallyBlockElement = DomUtils.getChildElementByTagName(element, "finally");
 
         testCaseFactory.addPropertyValue("testCase", testCase.getBeanDefinition());
-        testCaseFactory.addPropertyValue("testActions", parseActions(actionsElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
-        testCaseFactory.addPropertyValue("finalActions", parseActions(finallyBlockElement, parserContext, TestActionRegistry.getRegisteredActionParser()));
+        testCaseFactory.addPropertyValue("testActions", parseActions(actionsElement, parserContext));
+        testCaseFactory.addPropertyValue("finalActions", parseActions(finallyBlockElement, parserContext));
 
         parserContext.getRegistry().registerBeanDefinition(testName, testCaseFactory.getBeanDefinition());
 
@@ -82,8 +82,7 @@ public class TestCaseParser implements BeanDefinitionParser {
      * @param parserContext the current parser context.
      * @return
      */
-    private ManagedList<BeanDefinition> parseActions(Element actionsContainerElement, ParserContext parserContext,
-            Map<String, BeanDefinitionParser> actionRegistry) {
+    private ManagedList<BeanDefinition> parseActions(Element actionsContainerElement, ParserContext parserContext) {
         ManagedList<BeanDefinition> actions = new ManagedList<BeanDefinition>();
 
         if (actionsContainerElement != null) {
@@ -91,7 +90,7 @@ public class TestCaseParser implements BeanDefinitionParser {
             for (Element action : actionList) {
                 BeanDefinitionParser parser = null;
                 if (action.getNamespaceURI().equals(actionsContainerElement.getNamespaceURI())) {
-                    parser = actionRegistry.get(action.getLocalName());
+                    parser = TestActionRegistry.getActionParser(action.getLocalName());
                 }
 
                 if (parser ==  null) {

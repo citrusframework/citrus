@@ -9,7 +9,6 @@
     <relativePath>../../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-restdocs</artifactId>
   <name>citrus-restdocs</name>
 
@@ -34,6 +33,14 @@
       <artifactId>spring-ws-core</artifactId>
       <optional>true</optional>
       <scope>provided</scope>
+    </dependency>
+
+    <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-test-support</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

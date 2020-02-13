@@ -29,6 +29,7 @@
           <sourceType>xmlschema</sourceType>
           <sources>
             <source>src/main/resources/com/consol/citrus/schema/citrus-spring-integration-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-spring-integration-testcase.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
@@ -55,6 +56,14 @@
     <dependency>
       <groupId>org.springframework.integration</groupId>
       <artifactId>spring-integration-core</artifactId>
+    </dependency>
+
+    <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-test-support</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 </project>

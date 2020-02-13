@@ -27,6 +27,7 @@
         <configuration>
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
+          <catalog>src/main/resources/catalog.cat</catalog>
           <sources>
             <source>src/main/resources/com/consol/citrus/schema/citrus-ws-config.xsd</source>
             <source>src/main/resources/com/consol/citrus/schema/citrus-ws-testcase.xsd</source>
@@ -157,5 +158,17 @@
       <scope>test</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-test-support</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-testng</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>

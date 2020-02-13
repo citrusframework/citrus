@@ -16,8 +16,6 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.condition.ActionCondition;
 import com.consol.citrus.condition.Condition;
@@ -134,11 +132,9 @@ public class WaitParser implements BeanDefinitionParser {
      * @return
      */
     private BeanDefinition parseActionCondition(Element element, ParserContext parserContext) {
-        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
-
         Element action = DOMUtil.getFirstChildElement(element);
         if (action != null) {
-            BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
+            BeanDefinitionParser parser = TestActionRegistry.getActionParser(action.getTagName());
 
             if (parser !=  null) {
                 return parser.parse(action, parserContext);

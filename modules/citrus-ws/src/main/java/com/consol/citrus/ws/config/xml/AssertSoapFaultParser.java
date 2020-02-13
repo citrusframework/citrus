@@ -18,7 +18,6 @@ package com.consol.citrus.ws.config.xml;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.config.TestActionRegistry;
@@ -106,10 +105,9 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
             beanDefinition.addPropertyValue("validationContext", validationContext);
         }
 
-        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
-            BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
+            BeanDefinitionParser parser = TestActionRegistry.getActionParser(action.getTagName());
 
             if (parser ==  null) {
             	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));

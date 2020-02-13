@@ -14,7 +14,7 @@ Following action definition purges all messages from a list of message channels:
           <channel name="someChannelName"/>
           <channel name="anotherChannelName"/>
       </purge-channel>
-      
+
       <purge-channel>
           <channel ref="someChannel"/>
           <channel ref="anotherChannel"/>
@@ -135,7 +135,7 @@ You simply define the message selector as a new Spring bean in the Citrus applic
 
 [source,xml]
 ----
-<bean id="specialMessageSelector" 
+<bean id="specialMessageSelector"
     class="com.consol.citrus.special.TimeBasedMessageSelector"/>
 ----
 
@@ -144,10 +144,10 @@ Now let us have a look at how you reference the selector in your test case:
 .XML DSL
 [source,xml]
 ----
-<purge-channels message-selector="specialMessageSelector">
+<purge-channel message-selector="specialMessageSelector">
   <channel name="someChannelName"/>
   <channel name="anotherChannelName"/>
-</purge-channels>
+</purge-channel>
 ----
 
 .Java DSL designer

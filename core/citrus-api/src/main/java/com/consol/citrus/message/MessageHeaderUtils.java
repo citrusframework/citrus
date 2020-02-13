@@ -18,14 +18,15 @@ package com.consol.citrus.message;
 
 import java.util.Map;
 
-import org.springframework.integration.IntegrationMessageHeaderAccessor;
-import org.springframework.messaging.MessageHeaders;
-
 /**
  * @author Christoph Deppisch
  * @since 1.4.1
  */
 public final class MessageHeaderUtils {
+
+    public static final String SEQUENCE_NUMBER = "sequenceNumber";
+    public static final String SEQUENCE_SIZE = "sequenceSize";
+    public static final String PRIORITY = "priority";
 
     /**
      * Private constructor prevents instantiation.
@@ -46,31 +47,31 @@ public final class MessageHeaderUtils {
         // "springintegration_" makes Citrus work with Spring Integration 1.x release
         if (headerName.startsWith("springintegration_")) {
             return true;
-        } else if (headerName.equals(MessageHeaders.ID)) {
+        } else if (headerName.equals("id")) {
             return true;
-        } else if (headerName.equals(MessageHeaders.TIMESTAMP)) {
+        } else if (headerName.equals("timestamp")) {
             return true;
-        } else if (headerName.equals(MessageHeaders.REPLY_CHANNEL)) {
+        } else if (headerName.equals("replyChannel")) {
             return true;
-        } else if (headerName.equals(MessageHeaders.ERROR_CHANNEL)) {
+        } else if (headerName.equals("errorChannel")) {
             return true;
-        } else if (headerName.equals(MessageHeaders.CONTENT_TYPE)) {
+        } else if (headerName.equals("contentType")) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.PRIORITY)) {
+        } else if (headerName.equals(PRIORITY)) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.CORRELATION_ID)) {
+        } else if (headerName.equals("correlationId")) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.ROUTING_SLIP)) {
+        } else if (headerName.equals("routingSlip")) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.DUPLICATE_MESSAGE)) {
+        } else if (headerName.equals("duplicateMessage")) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER)) {
+        } else if (headerName.equals(SEQUENCE_NUMBER)) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE)) {
+        } else if (headerName.equals(SEQUENCE_SIZE)) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.SEQUENCE_DETAILS)) {
+        } else if (headerName.equals("sequenceDetails")) {
             return true;
-        } else if (headerName.equals(IntegrationMessageHeaderAccessor.EXPIRATION_DATE)) {
+        } else if (headerName.equals("expirationDate")) {
             return true;
         } else if (headerName.startsWith("jms_")) {
             return true;
@@ -81,18 +82,18 @@ public final class MessageHeaderUtils {
 
     /**
      * Safely sets header on message builder. Some headers need to be cast to specific type such
-     * as PRIORITY in {@link org.springframework.integration.IntegrationMessageHeaderAccessor}.
+     * as PRIORITY.
      * @param message
      * @param name
      * @param value
      */
     public static void setHeader(Message message, String name, String value) {
-        if (name.equals(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER)) {
-            message.setHeader(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER, Integer.valueOf(value));
-        } else if (name.equals(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE)) {
-            message.setHeader(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, Integer.valueOf(value));
-        } else if (name.equals(IntegrationMessageHeaderAccessor.PRIORITY)) {
-            message.setHeader(IntegrationMessageHeaderAccessor.PRIORITY, Integer.valueOf(value));
+        if (name.equals(SEQUENCE_NUMBER)) {
+            message.setHeader(SEQUENCE_NUMBER, Integer.valueOf(value));
+        } else if (name.equals(SEQUENCE_SIZE)) {
+            message.setHeader(SEQUENCE_SIZE, Integer.valueOf(value));
+        } else if (name.equals(PRIORITY)) {
+            message.setHeader(PRIORITY, Integer.valueOf(value));
         } else {
             message.setHeader(name, value);
         }
@@ -105,19 +106,19 @@ public final class MessageHeaderUtils {
      * @param headers the headers to check.
      */
     public static void checkHeaderTypes(Map<String, Object> headers) {
-        if (headers.containsKey(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER)) {
-            String number = headers.get(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER).toString();
-            headers.put(IntegrationMessageHeaderAccessor.SEQUENCE_NUMBER, Integer.valueOf(number));
+        if (headers.containsKey(SEQUENCE_NUMBER)) {
+            String number = headers.get(SEQUENCE_NUMBER).toString();
+            headers.put(SEQUENCE_NUMBER, Integer.valueOf(number));
         }
 
-        if (headers.containsKey(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE)) {
-            String size = headers.get(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE).toString();
-            headers.put(IntegrationMessageHeaderAccessor.SEQUENCE_SIZE, Integer.valueOf(size));
+        if (headers.containsKey(SEQUENCE_SIZE)) {
+            String size = headers.get(SEQUENCE_SIZE).toString();
+            headers.put(SEQUENCE_SIZE, Integer.valueOf(size));
         }
 
-        if (headers.containsKey(IntegrationMessageHeaderAccessor.PRIORITY)) {
-            String size = headers.get(IntegrationMessageHeaderAccessor.PRIORITY).toString();
-            headers.put(IntegrationMessageHeaderAccessor.PRIORITY, Integer.valueOf(size));
+        if (headers.containsKey(PRIORITY)) {
+            String size = headers.get(PRIORITY).toString();
+            headers.put(PRIORITY, Integer.valueOf(size));
         }
     }
 }

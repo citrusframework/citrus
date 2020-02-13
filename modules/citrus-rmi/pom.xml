@@ -46,25 +46,40 @@
         <version>2.21.1</version>
         <scope>test</scope>
       </dependency>
+
     </dependencies>
   </dependencyManagement>
 
   <dependencies>
     <!-- Citrus -->
     <dependency>
-        <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-core</artifactId>
-        <version>${project.version}</version>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core</artifactId>
+      <version>${project.version}</version>
     </dependency>
+
+    <!-- Test scoped dependencies -->
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-camel</artifactId>
-        <version>${project.version}</version>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rmi</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-test-support</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-testng</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

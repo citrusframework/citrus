@@ -16,8 +16,6 @@
 
 package com.consol.citrus.config.xml;
 
-import java.util.Map;
-
 import com.consol.citrus.TestAction;
 import com.consol.citrus.config.TestActionRegistry;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
@@ -46,11 +44,9 @@ public class AssertParser implements BeanDefinitionParser {
 
         DescriptionElementParser.doParse(element, builder);
 
-        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
-
         Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
-            BeanDefinitionParser parser = actionRegistry.get(action.getTagName());
+            BeanDefinitionParser parser = TestActionRegistry.getActionParser(action.getTagName());
 
             if (parser !=  null) {
                 builder.addPropertyValue("action", parser.parse(action, parserContext));

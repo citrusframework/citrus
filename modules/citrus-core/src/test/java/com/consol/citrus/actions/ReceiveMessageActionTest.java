@@ -25,8 +25,6 @@ import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.channel.ChannelEndpointConfiguration;
-import com.consol.citrus.channel.ChannelMessageConverter;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
@@ -34,6 +32,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
@@ -58,7 +57,6 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.integration.channel.QueueChannel;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -77,7 +75,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
     @Autowired
-    private QueueChannel mockChannel;
+    private MessageQueue mockQueue;
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -92,10 +90,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        when(mockChannel.receive(15000)).thenReturn(new ChannelMessageConverter().convertOutbound(controlMessage, new ChannelEndpointConfiguration(), context));
+        when(mockQueue.receive(15000)).thenReturn(controlMessage);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint("channel:mockChannel?timeout=15000")
+                .endpoint("direct:mockQueue?timeout=15000")
                 .actor(testActor)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
@@ -106,7 +104,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithVariableEndpointName() {
-        context.setVariable("varEndpoint", "channel:mockChannel");
+        context.setVariable("varEndpoint", "direct:mockQueue");
         TestActor testActor = new TestActor();
         testActor.setName("TESTACTOR");
 
@@ -116,7 +114,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        when(mockChannel.receive(5000)).thenReturn(new ChannelMessageConverter().convertOutbound(controlMessage, new ChannelEndpointConfiguration(), context));
+        when(mockQueue.receive(5000)).thenReturn(controlMessage);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint("${varEndpoint}")

@@ -1,7 +1,6 @@
 package com.consol.citrus.endpoint.direct;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.correlation.CorrelationManager;
@@ -9,7 +8,6 @@ import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -60,12 +58,7 @@ public class DirectSyncConsumer extends DirectConsumer implements ReplyProducer 
             log.debug("Message to send is:\n" + message.toString());
         }
 
-        try {
-            replyQueue.send(message);
-        } catch (MessageDeliveryException e) {
-            throw new CitrusRuntimeException("Failed to send message to channel: '" + replyQueue + "'", e);
-        }
-
+        replyQueue.send(message);
         log.info("Message was sent to reply channel: '" + replyQueue + "'");
     }
 

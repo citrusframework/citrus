@@ -1,1 +1,2 @@
+http\://www.citrusframework.org/schema/spring-integration/testcase=com.consol.citrus.config.handler.CitrusSpringIntegrationTestcaseNamespaceHandler
 http\://www.citrusframework.org/schema/spring-integration/config=com.consol.citrus.config.handler.CitrusSpringIntegrationConfigNamespaceHandler

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.variable;
 
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Date;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -23,68 +27,64 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.Date;
-
 /**
  * @author Christoph Deppisch
  */
 public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest {
-    
+
     @Autowired
     private FunctionRegistry functionRegistry;
-    
-    @Autowired (required = false)
+
+    @Autowired(required = false)
     private GlobalVariables globalVariables;
-    
+
     @Test
     public void testPropertyLoadingFromClasspath() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
         propertyLoader.setPropertyFiles(Collections.singletonList("classpath:com/consol/citrus/variable/loadtest.properties"));
-        
+
         GlobalVariables globalVariables = new GlobalVariables();
-        
+
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(functionRegistry);
-        
+
         propertyLoader.loadPropertiesAsVariables();
-        
-        Assert.assertTrue(globalVariables.getVariables().size() == 1);
+
+        Assert.assertEquals(globalVariables.getVariables().size(), 1);
         Assert.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
     }
-    
+
     @Test
     public void testOverrideExistingVariables() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
         propertyLoader.setPropertyFiles(Collections.singletonList("classpath:com/consol/citrus/variable/loadtest.properties"));
-        
+
         GlobalVariables globalVariables = new GlobalVariables();
-        
+
         globalVariables.getVariables().put("property.load.test", "InitialValue");
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(functionRegistry);
-        
+
         propertyLoader.loadPropertiesAsVariables();
-        
-        Assert.assertTrue(globalVariables.getVariables().size() == 1);
+
+        Assert.assertEquals(globalVariables.getVariables().size(), 1);
         Assert.assertTrue(globalVariables.getVariables().containsKey("property.load.test"));
-        Assert.assertFalse(globalVariables.getVariables().get("property.load.test").equals("InitialValue"));
+        Assert.assertNotEquals(globalVariables.getVariables().get("property.load.test"), "InitialValue");
     }
-    
+
     @Test(expectedExceptions = {CitrusRuntimeException.class})
     public void testPropertyFileDoesNotExist() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
         propertyLoader.setPropertyFiles(Collections.singletonList("classpath:file_not_exists.properties"));
-        
+
         GlobalVariables globalVariables = new GlobalVariables();
-        
+
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(functionRegistry);
-        
+
         propertyLoader.loadPropertiesAsVariables();
     }
-    
+
     @Test
     public void testVariablesSupport() {
         Assert.assertNotNull(globalVariables.getVariables().get("globalUserName"));
@@ -92,24 +92,24 @@ public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest 
         Assert.assertNotNull(globalVariables.getVariables().get("globalWelcomeText"));
         Assert.assertEquals(globalVariables.getVariables().get("globalWelcomeText"), "Hello Citrus!");
     }
-    
+
     @Test
     public void testFunctionSupport() {
         Assert.assertNotNull(globalVariables.getVariables().get("globalDate"));
-        Assert.assertEquals(globalVariables.getVariables().get("globalDate"), 
+        Assert.assertEquals(globalVariables.getVariables().get("globalDate"),
                 "Today is " + new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis())) + "!");
     }
-    
+
     @Test
     public void testUnknownVariableDuringPropertyLoading() {
         GlobalVariablesPropertyLoader propertyLoader = new GlobalVariablesPropertyLoader();
         propertyLoader.setPropertyFiles(Collections.singletonList("classpath:com/consol/citrus/variable/global-variable-error.properties"));
-        
+
         GlobalVariables globalVariables = new GlobalVariables();
-        
+
         propertyLoader.setGlobalVariables(globalVariables);
         propertyLoader.setFunctionRegistry(functionRegistry);
-        
+
         try {
             propertyLoader.loadPropertiesAsVariables();
         } catch (CitrusRuntimeException e) {
@@ -117,7 +117,7 @@ public class LoadPropertiesAsGlobalVariablesTest extends AbstractTestNGUnitTest 
             Assert.assertEquals(e.getMessage(), "Unknown variable 'unknownVar'");
             return;
         }
-        
+
         Assert.fail("Missing exception because of unknown variable in global variable property loader");
     }
 }

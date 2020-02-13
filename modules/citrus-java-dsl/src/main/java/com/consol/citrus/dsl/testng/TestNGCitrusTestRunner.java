@@ -74,8 +74,6 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.actions.SoapActionBuilder;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -85,9 +83,6 @@ import org.slf4j.LoggerFactory;
  * @since 2.3
  */
 public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunner {
-
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
     private TestRunner testRunner;

@@ -30,7 +30,6 @@ import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageQueue;
 import org.mockito.Mockito;
-import org.springframework.messaging.MessageDeliveryException;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -396,17 +395,15 @@ public class DirectEndpointSyncConsumerTest {
 
         reset(replyQueue);
 
-        doThrow(new MessageDeliveryException("Internal error!")).when(replyQueue).send(any(Message.class));
+        doThrow(new CitrusRuntimeException("Internal error!")).when(replyQueue).send(any(Message.class));
 
         try {
             DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.saveReplyMessageQueue(new DefaultMessage("").setHeader(DirectMessageHeaders.REPLY_QUEUE, replyQueue), context);
             channelSyncConsumer.send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to send message to channel: "));
-            Assert.assertNotNull(e.getCause());
-            Assert.assertEquals(e.getCause().getClass(), MessageDeliveryException.class);
-            Assert.assertEquals(e.getCause().getLocalizedMessage(), "Internal error!");
+            Assert.assertEquals(e.getClass(), CitrusRuntimeException.class);
+            Assert.assertEquals(e.getLocalizedMessage(), "Internal error!");
             return;
         }
 

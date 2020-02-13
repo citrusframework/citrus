@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.List;
+
 import com.consol.citrus.config.TestActionRegistry;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -25,17 +27,14 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Abstract parser implementation that is aware of several embedded test actions of a container. Bean definitions that use
- * this parser component must have an 'actions' property of type {@link List} in order to receive the list of embedded test actions. 
- * 
+ * this parser component must have an 'actions' property of type {@link List} in order to receive the list of embedded test actions.
+ *
  * @author Christoph Deppisch
  */
 public abstract class ActionContainerParser implements BeanDefinitionParser {
-    
+
     /**
      * Prevent instantiation.
      */
@@ -51,7 +50,6 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
     }
 
     public static void doParse(Element element, ParserContext parserContext, BeanDefinitionBuilder builder, String propertyName) {
-        Map<String, BeanDefinitionParser> actionRegistry = TestActionRegistry.getRegisteredActionParser();
         ManagedList<BeanDefinition> actions = new ManagedList<>();
 
         List<Element> childElements = DomUtils.getChildElements(element);
@@ -63,7 +61,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
 
             BeanDefinitionParser parser = null;
             if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
-                parser = actionRegistry.get(action.getLocalName());
+                parser = TestActionRegistry.getActionParser(action.getLocalName());
             }
 
             if (parser ==  null) {
@@ -72,7 +70,7 @@ public abstract class ActionContainerParser implements BeanDefinitionParser {
                 actions.add(parser.parse(action, parserContext));
             }
         }
-        
+
         if (actions.size() > 0) {
             builder.addPropertyValue(propertyName, actions);
         }

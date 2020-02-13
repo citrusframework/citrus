@@ -460,19 +460,6 @@
         </xs:sequence>
     </xs:complexType>
 
-    <xs:complexType name="PurgeChannelActionType">
-        <xs:sequence>
-            <xs:element ref="description" minOccurs="0"/>
-            <xs:element name="channel" maxOccurs="unbounded">
-                <xs:complexType>
-                    <xs:attribute name="name" type="xs:string"/>
-                    <xs:attribute name="ref" type="xs:string"/>
-                </xs:complexType>
-            </xs:element>
-        </xs:sequence>
-        <xs:attribute name="message-selector" type="xs:string"/>
-    </xs:complexType>
-
     <xs:complexType name="CreateVariablesActionType">
         <xs:sequence>
             <xs:element ref="description" minOccurs="0"/>
@@ -889,7 +876,6 @@
             <xs:element ref="echo"/>
             <xs:element ref="expect-timeout"/>
             <xs:element ref="purge-endpoint"/>
-            <xs:element ref="purge-channel"/>
             <xs:element ref="call-template"/>
             <xs:element ref="input"/>
             <xs:element ref="iterate"/>
@@ -959,7 +945,6 @@
     <xs:element name="echo" type="EchoActionType"/>
     <xs:element name="trace-variables" type="TraceVariablesActionType"/>
     <xs:element name="purge-endpoint" type="PurgeEndpointActionType"/>
-    <xs:element name="purge-channel" type="PurgeChannelActionType"/>
     <xs:element name="create-variables" type="CreateVariablesActionType"/>
     <xs:element name="trace-time" type="TraceTimeActionType"/>
     <xs:element name="expect-timeout" type="ExpectTimeoutActionType"/>

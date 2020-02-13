@@ -18,7 +18,7 @@
           <citrus:schema id="testSchema" location="classpath:com/consol/citrus/validation/test.xsd"/>
         </citrus:schemas>
     </citrus:schema-repository>
-    
+
     <bean id="testSchema1" class="org.springframework.xml.xsd.SimpleXsdSchema">
         <property name="xsd" value="classpath:com/consol/citrus/validation/test.xsd"/>
     </bean>
@@ -41,26 +41,26 @@
     </citrus:schema-repository>
 
     <bean name="testCaseParser" class="com.consol.citrus.script.GroovyTestCaseParser"/>
-	
+
     <citrus:global-variables>
         <citrus:variable name="project.name" value="Citrus Unit Tests"/>
         <citrus:file path="classpath:com/consol/citrus/variable/global-variable.properties"/>
     </citrus:global-variables>
-    
+
     <citrus:validation-matcher-library id="fooValidationMatcherLibrary" prefix="foo:">
       <citrus:matcher name="customMatcher" ref="validationMatcher"/>
     </citrus:validation-matcher-library>
-    
+
     <bean id ="validationMatcher" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.validation.matcher.ValidationMatcher"/>
     </bean>
-    
-    <bean id="mockChannel" class="org.mockito.Mockito" factory-method="mock">
-      <constructor-arg value="org.springframework.integration.channel.QueueChannel"/>
+
+    <bean id="mockQueue" class="org.mockito.Mockito" factory-method="mock">
+      <constructor-arg value="com.consol.citrus.message.MessageQueue"/>
     </bean>
 
     <bean id="mockEndpoint" class="org.mockito.Mockito" factory-method="mock">
       <constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </bean>
-    
+
 </beans>

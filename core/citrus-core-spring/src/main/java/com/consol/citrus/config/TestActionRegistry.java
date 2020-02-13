@@ -16,11 +16,48 @@
 
 package com.consol.citrus.config;
 
-import com.consol.citrus.config.xml.*;
-import org.springframework.beans.factory.xml.BeanDefinitionParser;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.config.xml.ActionParser;
+import com.consol.citrus.config.xml.AntRunActionParser;
+import com.consol.citrus.config.xml.AssertParser;
+import com.consol.citrus.config.xml.AsyncParser;
+import com.consol.citrus.config.xml.CallTemplateParser;
+import com.consol.citrus.config.xml.CatchParser;
+import com.consol.citrus.config.xml.ConditionalParser;
+import com.consol.citrus.config.xml.CreateVariablesActionParser;
+import com.consol.citrus.config.xml.EchoActionParser;
+import com.consol.citrus.config.xml.ExecutePLSQLActionParser;
+import com.consol.citrus.config.xml.FailActionParser;
+import com.consol.citrus.config.xml.GroovyActionParser;
+import com.consol.citrus.config.xml.InputActionParser;
+import com.consol.citrus.config.xml.IterateParser;
+import com.consol.citrus.config.xml.JavaActionParser;
+import com.consol.citrus.config.xml.LoadPropertiesActionParser;
+import com.consol.citrus.config.xml.ParallelParser;
+import com.consol.citrus.config.xml.PurgeEndpointActionParser;
+import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.config.xml.ReceiveTimeoutActionParser;
+import com.consol.citrus.config.xml.RepeatOnErrorUntilTrueParser;
+import com.consol.citrus.config.xml.RepeatUntilTrueParser;
+import com.consol.citrus.config.xml.SQLActionParser;
+import com.consol.citrus.config.xml.SendMessageActionParser;
+import com.consol.citrus.config.xml.SequenceParser;
+import com.consol.citrus.config.xml.SleepActionParser;
+import com.consol.citrus.config.xml.StartServerActionParser;
+import com.consol.citrus.config.xml.StopServerActionParser;
+import com.consol.citrus.config.xml.StopTimeActionParser;
+import com.consol.citrus.config.xml.StopTimerParser;
+import com.consol.citrus.config.xml.TemplateParser;
+import com.consol.citrus.config.xml.TimerParser;
+import com.consol.citrus.config.xml.TraceVariablesActionParser;
+import com.consol.citrus.config.xml.TransformActionParser;
+import com.consol.citrus.config.xml.WaitParser;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 
 /**
  * Registers bean definition parser for actions in test case.
@@ -29,12 +66,17 @@ import java.util.Map;
  * @since 2007
  */
 public final class TestActionRegistry {
-    /** Parser registry as map */
-    private static Map<String, BeanDefinitionParser> parser = new HashMap<>();
 
-    /**
-     * Default constructor.
-     */
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(TestActionRegistry.class);
+
+    private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
+
+    private static final ResourcePathTypeResolver<BeanDefinitionParser> typeResolver = new ResourcePathTypeResolver<>(RESOURCE_PATH, BeanDefinitionParser.class);
+
+    /** Parser registry as map */
+    private static Map<String, BeanDefinitionParser> parserCache = new HashMap<>();
+
     static {
         registerActionParser("send", new SendMessageActionParser());
         registerActionParser("receive", new ReceiveMessageActionParser());
@@ -47,7 +89,6 @@ public final class TestActionRegistry {
         registerActionParser("echo", new EchoActionParser());
         registerActionParser("expect-timeout", new ReceiveTimeoutActionParser());
         registerActionParser("purge-endpoint", new PurgeEndpointActionParser());
-        registerActionParser("purge-channel", new PurgeMessageChannelActionParser());
         registerActionParser("action", new ActionParser());
         registerActionParser("template", new TemplateParser());
         registerActionParser("call-template", new CallTemplateParser());
@@ -86,7 +127,7 @@ public final class TestActionRegistry {
      * @param parserObject
      */
     public static void registerActionParser(String actionName, BeanDefinitionParser parserObject) {
-        parser.put(actionName, parserObject);
+        parserCache.put(actionName, parserObject);
     }
 
     /**
@@ -94,6 +135,24 @@ public final class TestActionRegistry {
      * @return
      */
     public static Map<String, BeanDefinitionParser> getRegisteredActionParser() {
-        return parser;
+        return parserCache;
+    }
+
+    /**
+     * Resolve test action parser for given action name. If not already present in the local parser cache try to locate
+     * the parser through resource lookup.
+     * @param name
+     * @return
+     */
+    public static BeanDefinitionParser getActionParser(String name) {
+        if (!parserCache.containsKey(name)) {
+            try {
+                parserCache.put(name, typeResolver.resolve(name));
+            } catch (Exception e) {
+                log.warn(String.format("Unable to locate test action parser for '%s'", name), e);
+            }
+        }
+
+        return parserCache.get(name);
     }
 }

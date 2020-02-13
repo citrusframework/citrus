@@ -81,8 +81,6 @@ import com.consol.citrus.server.Server;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.actions.SoapActionBuilder;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 
@@ -94,9 +92,6 @@ import org.springframework.util.ReflectionUtils;
  * @since 2.3
  */
 public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDesigner {
-
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /** Test builder delegate */
     private TestDesigner testDesigner;

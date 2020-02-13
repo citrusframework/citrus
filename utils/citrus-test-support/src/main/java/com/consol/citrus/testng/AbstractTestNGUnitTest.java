@@ -16,14 +16,25 @@
 
 package com.consol.citrus.testng;
 
+import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.HtmlReporter;
 import com.consol.citrus.report.JUnitReporter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.springframework.util.Assert;
+import org.testng.ITestContext;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.BeforeSuite;
 
 /**
  * Abstract base testng test implementation for Citrus unit testing. Provides access to
@@ -31,7 +42,17 @@ import org.testng.annotations.BeforeMethod;
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
+@ContextConfiguration(classes = CitrusSpringConfig.class)
+public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
+
+    private static final String DEFAULT_UNIT_TEST_CONFIG = "classpath:com/consol/citrus/context/citrus-unit-context.xml";
+    static {
+        System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, DEFAULT_UNIT_TEST_CONFIG);
+    }
+
+    /** Logger */
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
     /** Test context */
     protected TestContext context;
 
@@ -45,8 +66,32 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGCitrusTest {
     @Autowired
     private JUnitReporter jUnitReporter;
 
-    static {
-        System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, "classpath:com/consol/citrus/context/citrus-unit-context.xml");
+    /** Citrus instance */
+    protected Citrus citrus;
+
+    /**
+     * Runs tasks before test suite.
+     * @param testContext the test context.
+     * @throws Exception on error.
+     */
+    @BeforeSuite(alwaysRun = true)
+    public void beforeSuite(ITestContext testContext) throws Exception {
+        springTestContextPrepareTestInstance();
+        Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
+
+        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
+        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+    }
+
+    /**
+     * Runs tasks after test suite.
+     * @param testContext the test context.
+     */
+    @AfterSuite(alwaysRun = true)
+    public void afterSuite(ITestContext testContext) {
+        if (citrus != null) {
+            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
+        }
     }
 
     /**

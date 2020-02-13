@@ -51,6 +51,7 @@
 
   <modules>
     <module>core</module>
+    <module>utils</module>
     <module>endpoints</module>
     <module>validation</module>
     <module>modules/citrus-core</module>

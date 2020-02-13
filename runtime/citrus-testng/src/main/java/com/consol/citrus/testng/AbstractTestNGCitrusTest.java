@@ -297,7 +297,7 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
     @BeforeSuite(alwaysRun = true)
     public void beforeSuite(ITestContext testContext) throws Exception {
         springTestContextPrepareTestInstance();
-        Assert.notNull(applicationContext);
+        Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
 
         citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
         citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());

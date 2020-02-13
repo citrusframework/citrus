@@ -36,8 +36,6 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.IHookCallBack;
@@ -48,9 +46,6 @@ import org.testng.ITestResult;
  * @since 2.5
  */
 public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
-
-    /** Logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     private static final String DESIGNER_ATTRIBUTE = "designer";
     private static final String RUNNER_ATTRIBUTE = "runner";
