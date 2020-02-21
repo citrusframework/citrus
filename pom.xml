@@ -58,7 +58,6 @@
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-docker</module>
     <module>modules/citrus-kubernetes</module>
-    <module>modules/citrus-jmx</module>
     <module>modules/citrus-restdocs</module>
     <module>modules/citrus-zookeeper</module>
     <module>modules/citrus-selenium</module>
