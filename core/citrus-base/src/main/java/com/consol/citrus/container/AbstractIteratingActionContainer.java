@@ -23,6 +23,7 @@ import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.BooleanExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.springframework.util.PropertyPlaceholderHelper;
@@ -105,7 +106,7 @@ public abstract class AbstractIteratingActionContainer extends AbstractActionCon
             try {
                 ValidationMatcherUtils.resolveValidationMatcher("iteratingCondition", String.valueOf(index), conditionString, context);
                 return true;
-            } catch (AssertionError e) {
+            } catch (AssertionError | ValidationException e) {
                 return false;
             }
         }
