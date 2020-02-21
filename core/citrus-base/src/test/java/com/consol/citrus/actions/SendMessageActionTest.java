@@ -35,19 +35,15 @@ import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -89,14 +85,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -116,20 +107,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -153,20 +142,17 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 		GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
 		scriptMessageBuidler.setScriptData(sb.toString());
 
-		final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+		final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
+                "  <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -192,20 +178,17 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
         scriptMessageBuidler.setScriptData(sb.toString());
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
+                "  <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -224,20 +207,17 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         GroovyScriptMessageBuilder scriptMessageBuidler = new GroovyScriptMessageBuilder();
         scriptMessageBuidler.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
+                "  <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -264,14 +244,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -292,20 +267,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable("myText", "Hello World!");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -324,20 +297,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -362,20 +333,17 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         messageBuilder.add(interceptor);
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
+                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -400,20 +368,15 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteElements);
         messageBuilder.add(interceptor);
 
-        final Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");
+        final Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                JsonTextMessageValidator validator = new JsonTextMessageValidator();
-                JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -439,20 +402,17 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         messageBuilder.add(interceptor);
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
+                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -478,22 +438,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         messageBuilder.add(interceptor);
 
-        final Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\"><ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
+                "   <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
+                "</ns0:TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setSchemaValidation(false);
-
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -519,22 +475,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         messageBuilder.add(interceptor);
 
-        final Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
+                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validationContext.setSchemaValidation(false);
-
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -565,14 +517,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -605,14 +552,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -626,7 +568,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSendMessageWithUnknwonVariableInMessagePayload() {
+    public void testSendMessageWithUnknownVariableInMessagePayload() {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
 
@@ -650,7 +592,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testSendMessageWithUnknwonVariableInHeaders() {
+    public void testSendMessageWithUnknownVariableInHeaders() {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -702,14 +644,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -733,14 +670,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), new DefaultMessage(""), context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), new DefaultMessage(""));
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -764,14 +696,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -796,14 +723,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -828,14 +750,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -879,20 +796,18 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-iso-encoding.xml");
 
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
         when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                DomXmlMessageValidator validator = new DomXmlMessageValidator();
-                XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-                validator.validateMessage(((Message)invocation.getArguments()[0]), controlMessage, context, validationContext);
-                return null;
-            }
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
         }).when(producer).send(any(Message.class), any(TestContext.class));
 
         when(endpoint.getActor()).thenReturn(null);
@@ -954,4 +869,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     }
 
+    private void validateMessageToSend(Message toSend, Message controlMessage) {
+        Assert.assertEquals(toSend.getPayload(String.class).trim(), controlMessage.getPayload(String.class).trim());
+        DefaultMessageHeaderValidator validator = new DefaultMessageHeaderValidator();
+        validator.validateMessage(toSend, controlMessage, context, new HeaderValidationContext());
+    }
 }

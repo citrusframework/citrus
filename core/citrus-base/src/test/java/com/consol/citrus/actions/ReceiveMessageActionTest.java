@@ -21,7 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
@@ -31,46 +30,37 @@ import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
-import com.consol.citrus.validation.script.ScriptValidationContext;
-import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
-import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageValidator;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -83,25 +73,26 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
-    private MessageQueue mockQueue = Mockito.mock(MessageQueue.class);
+    @Mock
+    private MessageValidator<?> validator;
+    @Mock
+    private MessageQueue mockQueue;
 
     @Override
     protected TestContextFactory createTestContextFactory() {
+        MockitoAnnotations.initMocks(this);
+        when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
+
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new DomXmlMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new JsonTextMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new JsonPathMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new XpathMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new XhtmlMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new XhtmlXpathMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(validator);
 
         SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
         referenceResolver.bind("mockQueue", mockQueue);
         factory.setReferenceResolver(referenceResolver);
+
         return factory;
     }
 
@@ -115,10 +106,19 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         when(mockQueue.receive(15000)).thenReturn(controlMessage);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint("direct:mockQueue?timeout=15000")
@@ -143,6 +143,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         when(mockQueue.receive(5000)).thenReturn(controlMessage);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint("${varEndpoint}")
@@ -174,6 +184,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .actor(testActor)
@@ -190,7 +210,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -199,6 +222,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -221,7 +254,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptData(sb.toString());
 
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
+                "  <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -230,6 +265,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -254,7 +299,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptData(sb.toString());
 
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
+                "  <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -263,6 +310,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -280,7 +337,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
+                "  <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -289,6 +348,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -318,6 +387,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -336,7 +415,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         context.setVariable("myText", "Hello World!");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -345,6 +427,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -362,7 +454,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
 
-        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
+                "<TestRequest>" + System.lineSeparator() +
+                "    <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -371,6 +466,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -394,7 +499,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
+                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -403,6 +510,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -426,7 +543,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
-        Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");
+        Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -435,6 +552,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -459,7 +586,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
+                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -468,6 +597,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -492,8 +631,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
+        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
+                "   <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
+                "</ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -503,6 +644,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -527,8 +678,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
+        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
+                "   <ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message>" + System.lineSeparator() +
+                "</ns0:TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -538,6 +691,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -562,7 +725,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
-        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>");
+        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
+                "   <Message>Hello World!</Message>" + System.lineSeparator() +
+                "</TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -572,6 +738,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
         validationContext.setSchemaValidation(false);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -604,6 +780,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -639,6 +825,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -671,6 +867,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -699,6 +905,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -739,6 +955,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -749,163 +975,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(context.getVariable("myOperation"));
         Assert.assertEquals(context.getVariable("myOperation"), "sayHello");
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidateMessageElementsFromMessageXPath() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-
-        Map<String, Object> messageElements = new HashMap<>();
-        messageElements.put("/TestRequest/Message", "Hello World!");
-        validationContext.setXpathExpressions(messageElements);
-
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidateMessageElementsXPathDefaultNamespaceSupport() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-
-        Map<String, Object> messageElements = new HashMap<>();
-        messageElements.put("/:TestRequest/:Message", "Hello World!");
-        validationContext.setXpathExpressions(messageElements);
-
-        Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidateMessageElementsXPathNamespaceSupport() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-
-        Map<String, Object> messageElements = new HashMap<>();
-        messageElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
-        validationContext.setXpathExpressions(messageElements);
-
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidateMessageElementsXPathNestedNamespaceSupport() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-
-        Map<String, Object> messageElements = new HashMap<>();
-        messageElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
-        validationContext.setXpathExpressions(messageElements);
-
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidateMessageElementsXPathNamespaceBindings() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-
-        Map<String, Object> messageElements = new HashMap<>();
-        messageElements.put("/pfx:TestRequest/pfx:Message", "Hello World!");
-        validationContext.setXpathExpressions(messageElements);
-
-        Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("pfx", "http://citrusframework.org/unittest");
-        validationContext.setNamespaces(namespaces);
-
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
 
     }
 
@@ -932,6 +1001,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -971,6 +1050,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1014,6 +1103,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -1041,7 +1140,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
         variableExtractor.setXpathExpressions(extractMessageElements);
 
-        Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
+        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1054,85 +1153,15 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         validationContext.setSchemaValidation(false);
 
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceSupport() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>");
-
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
-
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
-
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        validationContext.setSchemaValidation(false);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageXPathNestedNamespaceSupport() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\" xmlns:ns1=\"http://citrusframework.org/unittest/message\">" +
-                "<ns1:Message>Hello World!</ns1:Message></TestRequest>");
-
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
-
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
-
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        validationContext.setSchemaValidation(false);
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1165,8 +1194,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         namespaces.put("pfx", "http://citrusframework.org/unittest");
         variableExtractor.setNamespaces(namespaces);
 
-        Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
+        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);
@@ -1177,6 +1206,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
 
         validationContext.setSchemaValidation(false);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1189,94 +1228,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(context.getVariable("messageVar"));
         Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
 
-    }
-
-    @Test
-    public void testReceiveMessageWithJsonPathValidation() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-
-        Map<String, Object> jsonPathExpressions = new HashMap<>();
-        jsonPathExpressions.put("$..text", "Hello World!");
-        jsonPathExpressions.put("$.person.name", "John");
-        jsonPathExpressions.put("$.person.surname", "Doe");
-        jsonPathExpressions.put("$.index", "5");
-        validationContext.setJsonPathExpressions(jsonPathExpressions);
-
-        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .messageType(MessageType.JSON)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void testReceiveMessageWithJsonPathValidationFailure() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-
-        Map<String, Object> jsonPathExpressions = new HashMap<>();
-        jsonPathExpressions.put("$..text", "Hello Citrus!");
-        validationContext.setJsonPathExpressions(jsonPathExpressions);
-
-        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .messageType(MessageType.JSON)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-    }
-
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testReceiveMessageWithJsonPathValidationNoPathResult() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-
-        Map<String, Object> jsonPathExpressions = new HashMap<>();
-        jsonPathExpressions.put("$.person.age", "50");
-        validationContext.setJsonPathExpressions(jsonPathExpressions);
-
-        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .messageType(MessageType.JSON)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
     }
 
     @Test
@@ -1295,6 +1246,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(context, 3000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1327,6 +1288,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(messageSelector, context, 5000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -1357,6 +1328,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(messageSelector, context, 5000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1391,6 +1372,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive("Operation = 'sayHello'", context, 5000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
@@ -1423,6 +1414,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive("Operation = 'sayHello'", context, 5000L)).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .timeout(5000L)
@@ -1447,6 +1448,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(null);
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1480,114 +1491,15 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
 
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveEmptyMessagePayloadUnexpected() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        Message controlMessage = new DefaultMessage("");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        try {
-            receiveAction.execute(context);
-        } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getMessage(), "Validation failed: Unable to validate message payload - received message payload was empty, control message payload is not");
-            return;
-        }
-
-        Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidationScript() {
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript("assert root.Message.name() == 'Message'\n" +
-                "assert root.Message.text() == 'Hello World!'");
-
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .validator(new GroovyXmlMessageValidator())
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithValidationScriptResource() {
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScriptResourcePath("classpath:com/consol/citrus/actions/test-validation-script.groovy");
-
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .validator(new GroovyXmlMessageValidator())
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testInjectedMessageValidators() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1595,26 +1507,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
-
-        // now inject multiple validators
-        List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<MessageValidator<? extends ValidationContext>>();
-        validators.add(new DomXmlMessageValidator());
-        validators.add(new GroovyXmlMessageValidator());
-
-        MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
-        messageValidatorRegistry.setMessageValidators(validators);
-        TestContext newContext = createTestContext();
-        newContext.setMessageValidatorRegistry(messageValidatorRegistry);
-
-        ScriptValidationContext scriptValidationContext = new ScriptValidationContext(CitrusSettings.DEFAULT_MESSAGE_TYPE);
-
-        receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .validationContext(scriptValidationContext)
-                .build();
-        receiveAction.execute(newContext);
 
     }
 
@@ -1635,6 +1527,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
         when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -1664,6 +1566,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpointConfiguration.getTimeout()).thenReturn(5000L);
 
         when(endpoint.getActor()).thenReturn(disabledActor);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
