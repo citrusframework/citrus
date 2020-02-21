@@ -16,19 +16,32 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import com.consol.citrus.channel.*;
+import javax.jms.ConnectionFactory;
+import javax.jms.JMSException;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicSession;
+import javax.jms.TopicSubscriber;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.endpoint.direct.DirectEndpoint;
+import com.consol.citrus.endpoint.direct.DirectEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessageQueue;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.message.MessageQueue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import javax.jms.*;
-import java.util.Optional;
-import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
@@ -42,11 +55,11 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
     /** Boolean flag for continued message consumption, if false stop */
     private boolean running = true;
 
-    /** Test context factory for send operation on message channel */
+    /** Test context factory for send operation on message queue */
     private final TestContextFactory testContextFactory;
 
-    /** Delegate message channel caching all messages */
-    private ChannelEndpoint messageChannel;
+    /** Delegate in-memory message queue caching all inbound messages */
+    private DirectEndpoint messageQueue;
 
     private Executor subscription = Executors.newSingleThreadExecutor();
     private CompletableFuture<Boolean> stopped = new CompletableFuture<>();
@@ -63,14 +76,12 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
         this.testContextFactory = testContextFactory;
 
-        ChannelEndpointConfiguration channelEndpointConfiguration = new ChannelEndpointConfiguration();
+        DirectEndpointConfiguration directEndpointConfiguration = new DirectEndpointConfiguration();
 
-        MessageSelectingQueueChannel inboundChannel = new MessageSelectingQueueChannel();
-        inboundChannel.setBeanName(getName() + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
-        channelEndpointConfiguration.setChannel(inboundChannel);
+        MessageQueue inboundQueue = new DefaultMessageQueue();
+        directEndpointConfiguration.setQueue(inboundQueue);
 
-        channelEndpointConfiguration.setUseObjectMessages(true);
-        this.messageChannel = new ChannelEndpoint(channelEndpointConfiguration);
+        this.messageQueue = new DirectEndpoint(directEndpointConfiguration);
     }
 
     /**
@@ -128,7 +139,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Received topic event '%s'", message.getId()));
                     }
-                    messageChannel.createProducer().send(message, context);
+                    messageQueue.createProducer().send(message, context);
                 } else {
                     log.warn("Topic subscriber received null message - continue after " + endpointConfiguration.getPollingInterval() + " milliseconds");
 
@@ -183,12 +194,12 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
     @Override
     public Message receive(TestContext context, long timeout) {
-        return messageChannel.createConsumer().receive(context, timeout);
+        return messageQueue.createConsumer().receive(context, timeout);
     }
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        return messageChannel.createConsumer().receive(selector, context, timeout);
+        return messageQueue.createConsumer().receive(selector, context, timeout);
     }
 
     /**

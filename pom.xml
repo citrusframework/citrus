@@ -56,7 +56,6 @@
     <module>runtime</module>
     <module>endpoints</module>
     <module>modules/citrus-jdbc</module>
-    <module>modules/citrus-jms</module>
     <module>modules/citrus-kafka</module>
     <module>modules/citrus-http</module>
     <module>modules/citrus-websocket</module>
