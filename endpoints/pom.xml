@@ -29,6 +29,7 @@
     <module>citrus-jmx</module>
     <module>citrus-websocket</module>
     <module>citrus-vertx</module>
+    <module>citrus-zookeeper</module>
   </modules>
 
 </project>

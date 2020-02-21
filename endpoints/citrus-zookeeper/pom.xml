@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>citrus</artifactId>
+    <artifactId>citrus-endpoints</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>3.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>citrus-zookeeper</artifactId>
-  <name>citrus-zookeeper</name>
+  <name>Citrus :: Endpoints :: Zookeeper</name>
 
   <properties>
     <zookeeper.port.listen>21181</zookeeper.port.listen>
@@ -47,8 +47,14 @@
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
+      <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core-spring</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
