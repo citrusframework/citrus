@@ -104,7 +104,7 @@ public class GroovyScriptMessageValidator extends AbstractMessageValidator<Scrip
     }
 
     @Override
-    protected ScriptValidationContext findValidationContext(List<ValidationContext> validationContexts) {
+    public ScriptValidationContext findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (getRequiredValidationContextType().isInstance(validationContext) &&
                     ((ScriptValidationContext)validationContext).getScriptType().equals(ScriptTypes.GROOVY)) {

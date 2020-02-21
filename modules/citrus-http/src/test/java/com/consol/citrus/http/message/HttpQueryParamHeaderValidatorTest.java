@@ -16,13 +16,16 @@
 
 package com.consol.citrus.http.message;
 
+import java.util.Collections;
+
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.HeaderValidationContext;
+import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 import static org.hamcrest.Matchers.is;
 
@@ -34,6 +37,14 @@ public class HttpQueryParamHeaderValidatorTest extends AbstractTestNGUnitTest {
 
     private HttpQueryParamHeaderValidator validator = new HttpQueryParamHeaderValidator();
     private HeaderValidationContext validationContext = new HeaderValidationContext();
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        TestContextFactory factory = super.createTestContextFactory();
+        factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
+        factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
+        return factory;
+    }
 
     @Test(dataProvider = "successData")
     public void testValidateHeader(Object receivedValue, Object controlValue) {

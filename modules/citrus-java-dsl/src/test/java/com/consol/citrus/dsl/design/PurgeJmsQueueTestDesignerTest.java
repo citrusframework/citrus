@@ -21,7 +21,7 @@ import javax.jms.Queue;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class PurgeJmsQueueTestDesignerTest extends AbstractTestNGUnitTest {
+public class PurgeJmsQueueTestDesignerTest extends UnitTestSupport {
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
 
     private Queue queue1 = Mockito.mock(Queue.class);

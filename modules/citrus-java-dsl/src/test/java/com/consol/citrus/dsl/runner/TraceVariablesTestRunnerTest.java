@@ -20,11 +20,11 @@ import java.util.Collections;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TraceVariablesAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class TraceVariablesTestRunnerTest extends AbstractTestNGUnitTest {
+public class TraceVariablesTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testTraceVariablesBuilder() {

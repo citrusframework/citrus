@@ -17,13 +17,13 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.StopTimeAction;
 
-public class StopTimeTestDesignerTest extends AbstractTestNGUnitTest {
+public class StopTimeTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testStopTimeBuilder() {

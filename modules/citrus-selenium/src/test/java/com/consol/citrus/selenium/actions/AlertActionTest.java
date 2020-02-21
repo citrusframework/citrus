@@ -16,16 +16,21 @@
 
 package com.consol.citrus.selenium.actions;
 
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mockito;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -38,6 +43,14 @@ public class AlertActionTest extends AbstractTestNGUnitTest {
     private WebDriver.TargetLocator locator = Mockito.mock(WebDriver.TargetLocator.class);
 
     private Alert alert = Mockito.mock(Alert.class);
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        TestContextFactory factory = super.createTestContextFactory();
+        factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
+        factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
+        return factory;
+    }
 
     @BeforeMethod
     public void setup() {

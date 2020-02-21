@@ -24,7 +24,7 @@ import java.io.IOException;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLQueryAction;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.script.sql.SqlResultSetScriptValidator;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class ExecuteSQLQueryTestDesignerTest extends AbstractTestNGUnitTest {
+public class ExecuteSQLQueryTestDesignerTest extends UnitTestSupport {
     private DataSource dataSource = Mockito.mock(DataSource.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
 

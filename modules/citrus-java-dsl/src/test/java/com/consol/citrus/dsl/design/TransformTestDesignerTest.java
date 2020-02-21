@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-public class TransformTestDesignerTest extends AbstractTestNGUnitTest {
+public class TransformTestDesignerTest extends UnitTestSupport {
 	private Resource xmlResource = Mockito.mock(Resource.class);
 	private Resource xsltResource = Mockito.mock(Resource.class);
 

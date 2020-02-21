@@ -16,6 +16,8 @@
 
 package com.consol.citrus.validation;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
@@ -23,12 +25,10 @@ import com.consol.citrus.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 /**
  * Base abstract implementation for message validators. Calls method to finds a proper validation context
  * in the list of available validation contexts and performs validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractMessageValidator<T extends ValidationContext> implements MessageValidator<T> {
@@ -40,7 +40,7 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
     public final void validateMessage(Message receivedMessage, Message controlMessage, TestContext context,
             List<ValidationContext> validationContexts) throws ValidationException {
         T validationContext = findValidationContext(validationContexts);
-        
+
         // check if we were able to find a proper validation context
         if (validationContext != null) {
             validateMessage(receivedMessage, controlMessage, context, validationContext);
@@ -68,7 +68,7 @@ public abstract class AbstractMessageValidator<T extends ValidationContext> impl
      * @param validationContexts
      * @return
      */
-    protected T findValidationContext(List<ValidationContext> validationContexts) {
+    public T findValidationContext(List<ValidationContext> validationContexts) {
         for (ValidationContext validationContext : validationContexts) {
             if (getRequiredValidationContextType().isInstance(validationContext)) {
                 return (T) validationContext;

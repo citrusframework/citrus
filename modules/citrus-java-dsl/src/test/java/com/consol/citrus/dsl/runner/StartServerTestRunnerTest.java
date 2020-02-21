@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.StartServerAction;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class StartServerTestRunnerTest extends AbstractTestNGUnitTest {
+public class StartServerTestRunnerTest extends UnitTestSupport {
     private Server testServer = Mockito.mock(Server.class);
 
     private Server server1 = Mockito.mock(Server.class);

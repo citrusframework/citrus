@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.Timer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author Martin Maher
  * @since 2.5
  */
-public class TimerTestDesignerTest extends AbstractTestNGUnitTest {
+public class TimerTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testTimerBuilder() {

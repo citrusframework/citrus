@@ -26,7 +26,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.ws.UnitTestSupport;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.soap.SoapFault;
@@ -44,7 +44,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class AssertSoapFaultTest extends AbstractTestNGUnitTest {
+public class AssertSoapFaultTest extends UnitTestSupport {
 
     @Autowired
     private SaajSoapMessageFactory messageFactory;

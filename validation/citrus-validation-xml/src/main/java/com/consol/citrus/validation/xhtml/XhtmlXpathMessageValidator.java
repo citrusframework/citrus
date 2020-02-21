@@ -18,8 +18,12 @@ package com.consol.citrus.validation.xhtml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.*;
-import com.consol.citrus.validation.xml.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -43,7 +47,7 @@ public class XhtmlXpathMessageValidator extends XpathMessageValidator implements
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.XHTML.name());
+        return messageType.equalsIgnoreCase(MessageType.XHTML.name()) && XMLUtils.hasXmlPayload(message);
     }
 
     @Override

@@ -16,7 +16,7 @@
 
 package com.consol.citrus.dsl.runner;
 
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -25,7 +25,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class BeforeSuiteTestRunnerTest extends AbstractTestNGUnitTest {
+public class BeforeSuiteTestRunnerTest extends UnitTestSupport {
 
     @Autowired
     private BeforeSuiteTestRunner beforeSuiteTestRunner;

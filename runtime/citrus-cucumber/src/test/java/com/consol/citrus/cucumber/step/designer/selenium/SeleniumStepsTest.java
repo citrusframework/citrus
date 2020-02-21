@@ -16,10 +16,9 @@
 
 package com.consol.citrus.cucumber.step.designer.selenium;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.cucumber.UnitTestSupport;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
@@ -32,12 +31,10 @@ import com.consol.citrus.selenium.actions.SetInputAction;
 import com.consol.citrus.selenium.actions.StartBrowserAction;
 import com.consol.citrus.selenium.actions.StopBrowserAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import cucumber.api.Scenario;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -45,20 +42,14 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumStepsTest extends AbstractTestNGUnitTest {
+public class SeleniumStepsTest extends UnitTestSupport {
 
-    private Citrus citrus;
     private SeleniumSteps steps;
 
     private TestDesigner designer;
 
     @Autowired
     private SeleniumBrowser seleniumBrowser;
-
-    @BeforeClass
-    public void setup() {
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-    }
 
     @BeforeMethod
     public void injectResources() {

@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AntRunAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.BuildListener;
 import org.mockito.Mockito;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.*;
 /**
  * @author Christoph Deppisch
  */
-public class AntRunTestRunnerTest extends AbstractTestNGUnitTest {
+public class AntRunTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testAntRunBuilder() {

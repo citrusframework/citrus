@@ -29,7 +29,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.ws.actions.SendSoapFaultAction;
 import com.consol.citrus.ws.message.SoapFault;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class SendSoapFaultTestRunnerTest extends AbstractTestNGUnitTest {
+public class SendSoapFaultTestRunnerTest extends UnitTestSupport {
 
     public static final String FAULT_STRING = "Something went wrong";
     public static final String FAULT_CODE = "CITRUS-1000";

@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class ExecutePLSQLTestDesignerTest extends AbstractTestNGUnitTest {
+public class ExecutePLSQLTestDesignerTest extends UnitTestSupport {
     private DataSource dataSource = Mockito.mock(DataSource.class);
     private Resource sqlResource = Mockito.mock(Resource.class);
 

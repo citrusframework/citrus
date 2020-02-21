@@ -16,13 +16,13 @@
 
 package com.consol.citrus.websocket.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.websocket.servlet.CitrusWebSocketDispatcherServlet;
 import org.springframework.web.servlet.DispatcherServlet;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -42,11 +42,8 @@ public class WebSocketServer extends HttpServer {
         setContextConfigLocation("classpath:com/consol/citrus/websocket/citrus-servlet-context.xml");
     }
 
-    /**
-     * Gets the Citrus dispatcher servlet.
-     * @return
-     */
-    protected DispatcherServlet getDispatherServlet() {
+    @Override
+    protected DispatcherServlet getDispatcherServlet() {
         return new CitrusWebSocketDispatcherServlet(this);
     }
 

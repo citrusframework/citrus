@@ -34,7 +34,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class SendMessageTestDesignerTest extends AbstractTestNGUnitTest {
+public class SendMessageTestDesignerTest extends UnitTestSupport {
 
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
 

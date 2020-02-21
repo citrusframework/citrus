@@ -52,8 +52,9 @@
   <modules>
     <module>core</module>
     <module>utils</module>
-    <module>endpoints</module>
     <module>validation</module>
+    <module>runtime</module>
+    <module>endpoints</module>
     <module>modules/citrus-core</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-jms</module>
@@ -74,7 +75,6 @@
     <module>modules/citrus-zookeeper</module>
     <module>modules/citrus-selenium</module>
     <module>modules/citrus-java-dsl</module>
-    <module>runtime</module>
     <module>modules/citrus-integration</module>
     <module>modules/citrus-bom</module>
     <module>tools</module>

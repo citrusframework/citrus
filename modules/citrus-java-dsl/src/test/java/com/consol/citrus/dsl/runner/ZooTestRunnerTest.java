@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.command.AbstractZooCommand;
 import org.apache.zookeeper.AsyncCallback;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZooTestRunnerTest extends AbstractTestNGUnitTest {
+public class ZooTestRunnerTest extends UnitTestSupport {
 
     private ZooKeeper zookeeperClientMock = Mockito.mock(ZooKeeper.class);
     private Stat statMock = prepareStatMock();

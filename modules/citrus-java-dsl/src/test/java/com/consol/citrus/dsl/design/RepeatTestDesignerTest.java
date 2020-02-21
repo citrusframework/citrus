@@ -19,12 +19,12 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatUntilTrue;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class RepeatTestDesignerTest extends AbstractTestNGUnitTest {
+public class RepeatTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testRepeatUntilTrueBuilder() {

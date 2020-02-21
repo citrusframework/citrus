@@ -18,10 +18,9 @@ package com.consol.citrus.cucumber.step.runner.selenium;
 
 import java.net.URL;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.cucumber.UnitTestSupport;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.runner.DefaultTestRunner;
 import com.consol.citrus.dsl.runner.TestRunner;
@@ -35,7 +34,6 @@ import com.consol.citrus.selenium.actions.StartBrowserAction;
 import com.consol.citrus.selenium.actions.StopBrowserAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import cucumber.api.Scenario;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
@@ -44,7 +42,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -56,9 +53,8 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumStepsTest extends AbstractTestNGUnitTest {
+public class SeleniumStepsTest extends UnitTestSupport {
 
-    private Citrus citrus;
     private SeleniumSteps steps;
 
     private TestRunner runner;
@@ -67,11 +63,6 @@ public class SeleniumStepsTest extends AbstractTestNGUnitTest {
     private SeleniumBrowser seleniumBrowser;
 
     private ChromeDriver webDriver = Mockito.mock(ChromeDriver.class);
-
-    @BeforeClass
-    public void setup() {
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-    }
 
     @BeforeMethod
     public void injectResources() {

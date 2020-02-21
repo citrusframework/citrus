@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class FailTestRunnerTest extends AbstractTestNGUnitTest {
+public class FailTestRunnerTest extends UnitTestSupport {
 
     @Test()
     public void testFailBuilder() {

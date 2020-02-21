@@ -48,7 +48,7 @@ import com.consol.citrus.selenium.actions.WaitUntilAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
 import com.consol.citrus.selenium.endpoint.SeleniumHeaders;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -71,7 +71,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumTestRunnerTest extends AbstractTestNGUnitTest {
+public class SeleniumTestRunnerTest extends UnitTestSupport {
 
     private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
     private SeleniumBrowserConfiguration seleniumBrowserConfiguration = Mockito.mock(SeleniumBrowserConfiguration.class);

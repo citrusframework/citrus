@@ -16,25 +16,15 @@
 
 package com.consol.citrus.message.selector;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class JsonPathPayloadMessageSelectorTest {
-
-    private TestContext context;
-
-    @BeforeMethod
-    public void setupMocks() {
-        context = new TestContext();
-    }
+public class JsonPathPayloadMessageSelectorTest extends UnitTestSupport {
 
     @Test
     public void testJsonPathEvaluation() {
@@ -50,13 +40,6 @@ public class JsonPathPayloadMessageSelectorTest {
     public void testJsonPathEvaluationValidationMatcher() {
         JsonPathPayloadMessageSelector messageSelector = new JsonPathPayloadMessageSelector("jsonPath:$.foo.text", "@startsWith(foo)@", context);
 
-        ValidationMatcherLibrary library = new ValidationMatcherLibrary();
-        library.getMembers().put("startsWith", (fieldName, value, controlParameters, context) -> {
-            if (!value.startsWith(controlParameters.get(0))) {
-                throw new ValidationException("Not starting with " + controlParameters.get(0));
-            }
-        });
-        context.getValidationMatcherRegistry().getValidationMatcherLibraries().add(library);
         Assert.assertTrue(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"foobar\" } }")));
         Assert.assertFalse(messageSelector.accept(new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\" } }")));
         Assert.assertFalse(messageSelector.accept(new DefaultMessage("{ \"bar\": { \"text\": \"foobar\" } }")));

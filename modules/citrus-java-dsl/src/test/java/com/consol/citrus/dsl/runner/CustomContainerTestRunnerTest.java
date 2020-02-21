@@ -22,7 +22,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -31,7 +31,7 @@ import static org.testng.Assert.assertEquals;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class CustomContainerTestRunnerTest extends AbstractTestNGUnitTest {
+public class CustomContainerTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testCustomContainer() {

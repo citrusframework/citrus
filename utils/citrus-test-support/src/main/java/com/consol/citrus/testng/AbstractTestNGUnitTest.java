@@ -16,23 +16,16 @@
 
 package com.consol.citrus.testng;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.CitrusSpringContext;
-import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.HtmlReporter;
-import com.consol.citrus.report.JUnitReporter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 import org.springframework.util.Assert;
 import org.testng.ITestContext;
-import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 
@@ -42,13 +35,8 @@ import org.testng.annotations.BeforeSuite;
  *
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = CitrusSpringConfig.class)
+@ContextConfiguration(classes = AbstractTestNGUnitTest.UnitTestConfig.class)
 public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContextTests {
-
-    private static final String DEFAULT_UNIT_TEST_CONFIG = "classpath:com/consol/citrus/context/citrus-unit-context.xml";
-    static {
-        System.setProperty(CitrusSettings.DEFAULT_APPLICATION_CONTEXT_PROPERTY, DEFAULT_UNIT_TEST_CONFIG);
-    }
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -57,17 +45,7 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
     protected TestContext context;
 
     /** Factory bean for test context */
-    @Autowired
     protected TestContextFactory testContextFactory;
-
-    @Autowired
-    private HtmlReporter htmlReporter;
-
-    @Autowired
-    private JUnitReporter jUnitReporter;
-
-    /** Citrus instance */
-    protected Citrus citrus;
 
     /**
      * Runs tasks before test suite.
@@ -78,20 +56,6 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
     public void beforeSuite(ITestContext testContext) throws Exception {
         springTestContextPrepareTestInstance();
         Assert.notNull(applicationContext, "Missing proper application context in before suite initialization");
-
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-        citrus.beforeSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
-    }
-
-    /**
-     * Runs tasks after test suite.
-     * @param testContext the test context.
-     */
-    @AfterSuite(alwaysRun = true)
-    public void afterSuite(ITestContext testContext) {
-        if (citrus != null) {
-            citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
-        }
     }
 
     /**
@@ -99,20 +63,28 @@ public abstract class AbstractTestNGUnitTest extends AbstractTestNGSpringContext
      */
     @BeforeMethod
     public void prepareTest() {
-        htmlReporter.setEnabled(false);
-        jUnitReporter.setEnabled(false);
+        testContextFactory = createTestContextFactory();
         context = createTestContext();
     }
 
     /**
-     * Creates the test context with global variables and function registry.
+     * Creates the test context for this unit test.
      * @return
      */
     protected TestContext createTestContext() {
-        try {
-            return testContextFactory.getObject();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to create test context", e);
-        }
+        return testContextFactory.getObject();
+    }
+
+    /**
+     * Creates the test context factory for this unit test.
+     * @return
+     */
+    protected TestContextFactory createTestContextFactory() {
+        return TestContextFactory.newInstance();
+    }
+
+    @Configuration
+    @ImportResource(locations = "classpath:com/consol/citrus/context/citrus-unit-context.xml")
+    public static class UnitTestConfig {
     }
 }

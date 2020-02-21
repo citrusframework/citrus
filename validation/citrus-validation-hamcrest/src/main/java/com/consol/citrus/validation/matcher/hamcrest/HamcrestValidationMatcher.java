@@ -40,7 +40,6 @@ import com.consol.citrus.validation.matcher.ValidationMatcher;
 import com.consol.citrus.variable.VariableUtils;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -72,9 +71,6 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
 
     private List<String> iterableMatchers = Arrays.asList( "anyOf", "allOf" );
 
-    @Autowired
-    private List<HamcrestMatcherProvider> customMatchers = new ArrayList<>();
-
     @Override
     public void validate(String fieldName, String value, List<String> controlParameters, TestContext context) throws ValidationException {
         String matcherExpression;
@@ -94,7 +90,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i].trim());
         }
 
-        Matcher matcher = getMatcher(matcherName, matcherParameter);
+        Matcher matcher = getMatcher(matcherName, matcherParameter, context);
         if (noArgumentCollectionMatchers.contains(matcherName) ||
                 collectionMatchers.contains(matcherName) ||
                 matcherName.equals("everyItem")) {
@@ -118,9 +114,10 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
      * Construct matcher by name and parameters.
      * @param matcherName
      * @param matcherParameter
+     * @param context
      * @return
      */
-    private Matcher<?> getMatcher(String matcherName, String[] matcherParameter) {
+    private Matcher<?> getMatcher(String matcherName, String[] matcherParameter, TestContext context) {
         try {
             if (noArgumentMatchers.contains(matcherName)) {
                 Method matcherMethod = ReflectionUtils.findMethod(Matchers.class, matcherName);
@@ -150,7 +147,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                         String nestedMatcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
                         String[] nestedMatcherParameter = matcherExpression.trim().substring(nestedMatcherName.length() + 1, matcherExpression.trim().length() - 1).split(",");
 
-                        return (Matcher) matcherMethod.invoke(null, getMatcher(nestedMatcherName, nestedMatcherParameter));
+                        return (Matcher) matcherMethod.invoke(null, getMatcher(nestedMatcherName, nestedMatcherParameter,context));
                     }
                 }
             }
@@ -163,14 +160,16 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                     for (String matcherExpression : matcherParameter) {
                         String nestedMatcherName = matcherExpression.trim().substring(0, matcherExpression.trim().indexOf("("));
                         String nestedMatcherParameter = matcherExpression.trim().substring(nestedMatcherName.length() + 1, matcherExpression.trim().length() - 1);
-                        nestedMatchers.add(getMatcher(nestedMatcherName, new String[] { nestedMatcherParameter }));
+                        nestedMatchers.add(getMatcher(nestedMatcherName, new String[] { nestedMatcherParameter }, context));
                     }
 
                     return (Matcher) matcherMethod.invoke(null, nestedMatchers);
                 }
             }
 
-            Optional<HamcrestMatcherProvider> matcherProvider = customMatchers.stream()
+            Optional<HamcrestMatcherProvider> matcherProvider = context.getReferenceResolver().resolveAll(HamcrestMatcherProvider.class)
+                                                                                .values()
+                                                                                .stream()
                                                                                 .filter(provider -> provider.getName().equals(matcherName))
                                                                                 .findFirst();
             if (matcherProvider.isPresent()) {

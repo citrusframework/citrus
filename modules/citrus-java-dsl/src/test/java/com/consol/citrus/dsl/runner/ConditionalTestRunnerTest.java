@@ -19,14 +19,14 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.Conditional;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 
-public class ConditionalTestRunnerTest extends AbstractTestNGUnitTest {
+public class ConditionalTestRunnerTest extends UnitTestSupport {
     @Test
     public void testConditionalBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

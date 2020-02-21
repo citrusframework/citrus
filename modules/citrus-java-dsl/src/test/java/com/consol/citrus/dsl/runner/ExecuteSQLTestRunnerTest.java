@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecuteSQLAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.verify;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class ExecuteSQLTestRunnerTest extends AbstractTestNGUnitTest {
+public class ExecuteSQLTestRunnerTest extends UnitTestSupport {
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
     private Resource resource = Mockito.mock(Resource.class);

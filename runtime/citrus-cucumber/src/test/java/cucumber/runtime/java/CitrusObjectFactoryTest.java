@@ -16,7 +16,9 @@
 
 package cucumber.runtime.java;
 
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,6 +28,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.6
  */
+@ContextConfiguration(classes = CitrusSpringConfig.class)
 public class CitrusObjectFactoryTest extends AbstractTestNGUnitTest {
 
     @BeforeClass

@@ -15,24 +15,16 @@
  */
 package com.consol.citrus.message.selector;
 
-import com.consol.citrus.context.TestContext;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class RootQNameMessageSelectorTest {
-
-    private TestContext context;
-
-    @BeforeMethod
-    public void setupMocks() {
-        context = new TestContext();
-    }
+public class RootQNameMessageSelectorTest extends UnitTestSupport {
 
     @Test
     public void testQNameSelector() {

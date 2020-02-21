@@ -22,7 +22,7 @@ import com.consol.citrus.camel.actions.CreateCamelRouteAction;
 import com.consol.citrus.camel.actions.RemoveCamelRouteAction;
 import com.consol.citrus.camel.actions.StartCamelRouteAction;
 import com.consol.citrus.camel.actions.StopCamelRouteAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.apache.camel.ServiceStatus;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.builder.SimpleBuilder;
@@ -36,7 +36,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class CamelRouteTestDesignerTest extends AbstractTestNGUnitTest {
+public class CamelRouteTestDesignerTest extends UnitTestSupport {
 
     private DefaultCamelContext camelContext;
 

@@ -28,7 +28,7 @@ import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.messaging.SelectiveConsumer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -47,7 +47,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
+public class ReceiveHttpMessageTestRunnerTest extends UnitTestSupport {
 
     private SelectiveConsumer messageConsumer = Mockito.mock(SelectiveConsumer.class);
     private HttpEndpointConfiguration configuration = Mockito.mock(HttpEndpointConfiguration.class);

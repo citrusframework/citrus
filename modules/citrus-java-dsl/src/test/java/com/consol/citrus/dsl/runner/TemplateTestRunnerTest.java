@@ -30,7 +30,7 @@ import com.consol.citrus.container.Template;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-public class TemplateTestRunnerTest extends AbstractTestNGUnitTest {
+public class TemplateTestRunnerTest extends UnitTestSupport {
 
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 

@@ -15,27 +15,17 @@
  */
 package com.consol.citrus.message.selector;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class HeaderMatchingMessageSelectorTest {
-
-    private TestContext context;
-
-    @BeforeMethod
-    public void setupMocks() {
-        context = new TestContext();
-    }
+public class HeaderMatchingMessageSelectorTest extends UnitTestSupport {
 
     @Test
     public void testHeaderMatchingSelector() {
@@ -53,14 +43,6 @@ public class HeaderMatchingMessageSelectorTest {
 
     @Test
     public void testHeaderMatchingSelectorValidationMatcher() {
-        ValidationMatcherLibrary library = new ValidationMatcherLibrary();
-        library.getMembers().put("contains", (fieldName, value, controlParameters, context) -> {
-            if (!value.contains(controlParameters.get(0))) {
-                throw new ValidationException("Not containing " + controlParameters.get(0));
-            }
-        });
-        context.getValidationMatcherRegistry().getValidationMatcherLibraries().add(library);
-
         HeaderMatchingMessageSelector messageSelector = new HeaderMatchingMessageSelector("operation", "@contains(foo)@", context);
 
         Message acceptMessage = new DefaultMessage("FooTest")

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.xml.XsdSchemaRepository;
@@ -28,10 +32,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * Bean definition parser for schema-repository configuration.
@@ -51,7 +51,6 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-
         if (isXmlSchemaRepository(element)) {
             registerXmlSchemaRepository(element, parserContext);
         } else if (isJsonSchemaRepository(element)) {
@@ -108,7 +107,6 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
     private boolean isJsonSchemaRepository(Element element) {
         return Objects.equals(element.getAttribute("type"), "json");
     }
-
 
     /**
      * Adds the locations contained in the given locations element to the BeanDefinitionBuilder

@@ -25,7 +25,7 @@ import com.consol.citrus.condition.FileCondition;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
  * @author Martin Maher
  * @since 2.4
  */
-public class WaitTestRunnerTest extends AbstractTestNGUnitTest {
+public class WaitTestRunnerTest extends UnitTestSupport {
 
     private Condition condition = Mockito.mock(Condition.class);
     private File file = Mockito.mock(File.class);

@@ -16,25 +16,15 @@
 
 package com.consol.citrus.message.selector;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class XpathPayloadMessageSelectorTest {
-
-    private TestContext context;
-
-    @BeforeMethod
-    public void setupMocks() {
-        context = new TestContext();
-    }
+public class XpathPayloadMessageSelectorTest extends UnitTestSupport {
 
     @Test
     public void testXPathEvaluation() {
@@ -72,13 +62,6 @@ public class XpathPayloadMessageSelectorTest {
     public void testXPathEvaluationValidationMatcher() {
         XpathPayloadMessageSelector messageSelector = new XpathPayloadMessageSelector("xpath://Foo/text", "@startsWith(foo)@", context);
 
-        ValidationMatcherLibrary library = new ValidationMatcherLibrary();
-        library.getMembers().put("startsWith", (fieldName, value, controlParameters, context) -> {
-            if (!value.startsWith(controlParameters.get(0))) {
-                throw new ValidationException("Not starting with " + controlParameters.get(0));
-            }
-        });
-        context.getValidationMatcherRegistry().getValidationMatcherLibraries().add(library);
         Assert.assertTrue(messageSelector.accept(new DefaultMessage("<Foo><text>foobar</text></Foo>")));
         Assert.assertFalse(messageSelector.accept(new DefaultMessage("<Foo xmlns=\"http://citrusframework.org/schema\"><text>foobar</text></Foo>")));
         Assert.assertFalse(messageSelector.accept(new DefaultMessage("<Bar><text>foobar</text></Bar>")));

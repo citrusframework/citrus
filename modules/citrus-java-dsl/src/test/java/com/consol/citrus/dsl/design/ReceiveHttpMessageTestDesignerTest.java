@@ -22,7 +22,7 @@ import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.http.server.HttpServer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
+public class ReceiveHttpMessageTestDesignerTest extends UnitTestSupport {
 
     private HttpClient httpClient = Mockito.mock(HttpClient.class);
     private HttpServer httpServer = Mockito.mock(HttpServer.class);

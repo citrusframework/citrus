@@ -30,7 +30,7 @@ import com.consol.citrus.kubernetes.command.WatchEventResult;
 import com.consol.citrus.kubernetes.command.WatchNodes;
 import com.consol.citrus.kubernetes.command.WatchServices;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import io.fabric8.kubernetes.api.model.NamespaceList;
 import io.fabric8.kubernetes.api.model.Node;
@@ -55,7 +55,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesTestRunnerTest extends AbstractTestNGUnitTest {
+public class KubernetesTestRunnerTest extends UnitTestSupport {
 
     private io.fabric8.kubernetes.client.KubernetesClient k8sClient = Mockito.mock(io.fabric8.kubernetes.client.KubernetesClient.class);
 

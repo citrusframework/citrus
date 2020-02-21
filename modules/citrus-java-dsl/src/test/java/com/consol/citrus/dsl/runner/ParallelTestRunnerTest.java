@@ -19,12 +19,12 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Parallel;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class ParallelTestRunnerTest extends AbstractTestNGUnitTest {
+public class ParallelTestRunnerTest extends UnitTestSupport {
     @Test
     public void testParallelBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

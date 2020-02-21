@@ -20,12 +20,12 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Parallel;
 import com.consol.citrus.container.Sequence;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class ParallelTestDesignerTest extends AbstractTestNGUnitTest {
+public class ParallelTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testParallelBuilder() {

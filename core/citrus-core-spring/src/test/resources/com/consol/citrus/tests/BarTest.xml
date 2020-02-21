@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <testcase name="BarTest">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2014-01-14</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2014-01-14T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Processing a test request providing proper response message.</description>
+
+    <actions>
+      <echo>
+        <message>Validate test request</message>
+      </echo>
+
+      <receive endpoint="inboundDirectEndpoint">
+        <message type="plaintext">
+          <data>
+            <![CDATA[
+              <Test name="BarTest"></Test>
+            ]]>
+          </data>
+        </message>
+      </receive>
+
+      <send endpoint="inboundDirectEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <Test name="BarTest">OK</Test>
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <echo>
+        <message>BarTest OK!</message>
+      </echo>
+    </actions>
+  </testcase>
+</spring:beans>

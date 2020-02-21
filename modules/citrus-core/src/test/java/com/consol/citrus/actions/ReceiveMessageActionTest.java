@@ -25,11 +25,14 @@ import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.context.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
@@ -37,6 +40,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
@@ -44,19 +48,24 @@ import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
+import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
+import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
+import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageValidator;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -74,8 +83,27 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     private SelectiveConsumer consumer = Mockito.mock(SelectiveConsumer.class);
     private EndpointConfiguration endpointConfiguration = Mockito.mock(EndpointConfiguration.class);
 
-    @Autowired
-    private MessageQueue mockQueue;
+    private MessageQueue mockQueue = Mockito.mock(MessageQueue.class);
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        TestContextFactory factory = super.createTestContextFactory();
+        factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
+        factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
+
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new DomXmlMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new JsonTextMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new JsonPathMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new XpathMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new XhtmlMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().add(new XhtmlXpathMessageValidator());
+
+        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
+        referenceResolver.bind("mockQueue", mockQueue);
+        factory.setReferenceResolver(referenceResolver);
+        return factory;
+    }
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })

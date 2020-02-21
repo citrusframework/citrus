@@ -18,6 +18,7 @@ package com.consol.citrus.message.selector;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.DefaultMessage;
@@ -26,7 +27,6 @@ import com.consol.citrus.message.MessageSelector;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
@@ -35,16 +35,9 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class DelegatingMessageSelectorTest {
+public class DelegatingMessageSelectorTest extends UnitTestSupport {
 
     private ReferenceResolver resolver = Mockito.mock(ReferenceResolver.class);
-
-    private TestContext context;
-
-    @BeforeMethod
-    public void setupMocks() {
-        context = new TestContext();
-    }
 
     @Test
     public void testHeaderMatchingSelector() {

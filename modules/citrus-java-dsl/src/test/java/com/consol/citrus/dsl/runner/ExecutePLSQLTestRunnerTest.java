@@ -21,7 +21,7 @@ import java.io.IOException;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ExecutePLSQLAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class ExecutePLSQLTestRunnerTest extends AbstractTestNGUnitTest {
+public class ExecutePLSQLTestRunnerTest extends UnitTestSupport {
     private JdbcTemplate jdbcTemplate = Mockito.mock(JdbcTemplate.class);
     private PlatformTransactionManager transactionManager = Mockito.mock(PlatformTransactionManager.class);
     private Resource sqlResource = Mockito.mock(Resource.class);

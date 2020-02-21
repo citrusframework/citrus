@@ -26,7 +26,7 @@ import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -38,7 +38,7 @@ import static org.testng.Assert.assertTrue;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class AsyncTestRunnerTest extends AbstractTestNGUnitTest {
+public class AsyncTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testAsyncBuilder() {

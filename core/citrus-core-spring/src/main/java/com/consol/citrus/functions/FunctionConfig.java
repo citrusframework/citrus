@@ -16,7 +16,6 @@
 
 package com.consol.citrus.functions;
 
-import com.consol.citrus.functions.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,96 +26,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class FunctionConfig {
 
-    private final RandomNumberFunction randomNumberFunction = new RandomNumberFunction();
-    private final RandomStringFunction randomStringFunction = new RandomStringFunction();
-    private final ConcatFunction concatFunction = new ConcatFunction();
-    private final CurrentDateFunction currentDateFunction = new CurrentDateFunction();
-    private final SubstringFunction substringFunction = new SubstringFunction();
-    private final StringLengthFunction stringLengthFunction = new StringLengthFunction();
-    private final TranslateFunction translateFunction = new TranslateFunction();
-    private final SubstringBeforeFunction substringBeforeFunction = new SubstringBeforeFunction();
-    private final SubstringAfterFunction substringAfterFunction = new SubstringAfterFunction();
-    private final RoundFunction roundFunction = new RoundFunction();
-    private final FloorFunction floorFunction = new FloorFunction();
-    private final CeilingFunction ceilingFunction = new CeilingFunction();
-    private final UpperCaseFunction upperCaseFunction = new UpperCaseFunction();
-    private final LowerCaseFunction lowerCaseFunction = new LowerCaseFunction();
-    private final AvgFunction avgFunction = new AvgFunction();
-    private final MinFunction minFunction = new MinFunction();
-    private final MaxFunction maxFunction = new MaxFunction();
-    private final SumFunction sumFunction = new SumFunction();
-    private final AbsoluteFunction absolutFunction = new AbsoluteFunction();
-    private final RandomEnumValueFunction randomEnumValueFunction = new RandomEnumValueFunction();
-    private final RandomUUIDFunction randomUuidFunction = new RandomUUIDFunction();
-    private final CreateCDataSectionFunction createCDataSectionFunction = new CreateCDataSectionFunction();
-    private final EscapeXmlFunction escapeXmlFunction = new EscapeXmlFunction();
-    private final EncodeBase64Function encodeBase64Function = new EncodeBase64Function();
-    private final DecodeBase64Function decodeBase64Function = new DecodeBase64Function();
-    private final UrlEncodeFunction urlEncodeFunction = new UrlEncodeFunction();
-    private final UrlDecodeFunction urlDecodeFunction = new UrlDecodeFunction();
-    private final DigestAuthHeaderFunction digestAuthHeaderFunction = new DigestAuthHeaderFunction();
-    private final LocalHostAddressFunction localHostAddressFunction = new LocalHostAddressFunction();
-    private final ChangeDateFunction changeDateFunction = new ChangeDateFunction();
-    private final ReadFileResourceFunction readFileResourceFunction = new ReadFileResourceFunction();
-    private final LoadMessageFunction loadMessageFunction = new LoadMessageFunction();
-    private final XpathFunction xpathFunction = new XpathFunction();
-    private final JsonPathFunction jsonPathFunction = new JsonPathFunction();
-    private final SystemPropertyFunction systemPropertyFunction = new SystemPropertyFunction();
+    private final FunctionLibrary citrusFunctionLibrary = new DefaultFunctionLibrary();
 
     @Bean(name = "functionRegistry")
     public FunctionRegistry getFunctionRegistry() {
         return new FunctionRegistry();
     }
 
-    @Bean(name = "environmentPropertyFunction")
-    public EnvironmentPropertyFunction environmentPropertyFunction() {
-        return new EnvironmentPropertyFunction();
-    }
-
     @Bean(name="citrusFunctionLibrary")
-    public FunctionLibrary getFunctionaLibrary() {
-        FunctionLibrary citrusFunctionLibrary = new FunctionLibrary();
-
-        citrusFunctionLibrary.setPrefix("citrus:");
-        citrusFunctionLibrary.setName("citrusFunctionLibrary");
-
-        citrusFunctionLibrary.getMembers().put("randomNumber", randomNumberFunction);
-        citrusFunctionLibrary.getMembers().put("randomString", randomStringFunction);
-        citrusFunctionLibrary.getMembers().put("concat", concatFunction);
-        citrusFunctionLibrary.getMembers().put("currentDate", currentDateFunction);
-        citrusFunctionLibrary.getMembers().put("substring", substringFunction);
-        citrusFunctionLibrary.getMembers().put("stringLength", stringLengthFunction);
-        citrusFunctionLibrary.getMembers().put("translate", translateFunction);
-        citrusFunctionLibrary.getMembers().put("substringBefore", substringBeforeFunction);
-        citrusFunctionLibrary.getMembers().put("substringAfter", substringAfterFunction);
-        citrusFunctionLibrary.getMembers().put("round", roundFunction);
-        citrusFunctionLibrary.getMembers().put("floor", floorFunction);
-        citrusFunctionLibrary.getMembers().put("ceiling", ceilingFunction);
-        citrusFunctionLibrary.getMembers().put("upperCase", upperCaseFunction);
-        citrusFunctionLibrary.getMembers().put("lowerCase", lowerCaseFunction);
-        citrusFunctionLibrary.getMembers().put("average", avgFunction);
-        citrusFunctionLibrary.getMembers().put("minimum", minFunction);
-        citrusFunctionLibrary.getMembers().put("maximum", maxFunction);
-        citrusFunctionLibrary.getMembers().put("sum", sumFunction);
-        citrusFunctionLibrary.getMembers().put("absolute", absolutFunction);
-        citrusFunctionLibrary.getMembers().put("randomEnumValue", randomEnumValueFunction);
-        citrusFunctionLibrary.getMembers().put("randomUUID", randomUuidFunction);
-        citrusFunctionLibrary.getMembers().put("cdataSection", createCDataSectionFunction);
-        citrusFunctionLibrary.getMembers().put("escapeXml", escapeXmlFunction);
-        citrusFunctionLibrary.getMembers().put("encodeBase64", encodeBase64Function);
-        citrusFunctionLibrary.getMembers().put("decodeBase64", decodeBase64Function);
-        citrusFunctionLibrary.getMembers().put("urlEncode", urlEncodeFunction);
-        citrusFunctionLibrary.getMembers().put("urlDecode", urlDecodeFunction);
-        citrusFunctionLibrary.getMembers().put("digestAuthHeader", digestAuthHeaderFunction);
-        citrusFunctionLibrary.getMembers().put("localHostAddress", localHostAddressFunction);
-        citrusFunctionLibrary.getMembers().put("changeDate", changeDateFunction);
-        citrusFunctionLibrary.getMembers().put("readFile", readFileResourceFunction);
-        citrusFunctionLibrary.getMembers().put("message", loadMessageFunction);
-        citrusFunctionLibrary.getMembers().put("xpath", xpathFunction);
-        citrusFunctionLibrary.getMembers().put("jsonPath", jsonPathFunction);
-        citrusFunctionLibrary.getMembers().put("systemProperty", systemPropertyFunction);
-        citrusFunctionLibrary.getMembers().put("env", environmentPropertyFunction());
-
+    public FunctionLibrary getFunctionLibrary() {
         return citrusFunctionLibrary;
     }
 }

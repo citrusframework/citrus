@@ -18,11 +18,11 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.CreateVariablesAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class CreateVariablesTestRunnerTest extends AbstractTestNGUnitTest {
+public class CreateVariablesTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testCreateVariablesBuilder() {

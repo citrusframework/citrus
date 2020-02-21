@@ -27,7 +27,7 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.ws.actions.SendSoapMessageAction;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -45,7 +45,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class SendSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
+public class SendSoapMessageTestDesignerTest extends UnitTestSupport {
 
     private WebServiceClient soapClient = Mockito.mock(WebServiceClient.class);
 

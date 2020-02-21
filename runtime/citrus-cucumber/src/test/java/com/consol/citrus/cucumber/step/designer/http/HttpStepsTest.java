@@ -18,24 +18,21 @@ package com.consol.citrus.cucumber.step.designer.http;
 
 import java.io.IOException;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.annotations.CitrusAnnotations;
+import com.consol.citrus.cucumber.UnitTestSupport;
 import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
 import com.consol.citrus.dsl.design.DefaultTestDesigner;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -43,20 +40,14 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class HttpStepsTest extends AbstractTestNGUnitTest {
+public class HttpStepsTest extends UnitTestSupport {
 
-    private Citrus citrus;
     private HttpSteps steps;
 
     private TestDesigner designer;
 
     @Autowired
     private HttpClient httpClient;
-
-    @BeforeClass
-    public void setup() {
-        citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-    }
 
     @BeforeMethod
     public void injectResources() {

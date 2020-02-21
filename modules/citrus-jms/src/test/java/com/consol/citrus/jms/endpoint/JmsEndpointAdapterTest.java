@@ -16,20 +16,32 @@
 
 package com.consol.citrus.jms.endpoint;
 
-import com.consol.citrus.context.TestContextFactory;
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TemporaryQueue;
+import javax.jms.TextMessage;
+import java.util.HashMap;
+
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.jms.*;
-import java.util.HashMap;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -46,9 +58,6 @@ public class JmsEndpointAdapterTest extends AbstractTestNGUnitTest {
 
     private JmsEndpointAdapter endpointAdapter;
     private JmsSyncEndpointConfiguration endpointConfiguration;
-
-    @Autowired
-    private TestContextFactory testContextFactory;
 
     @BeforeMethod
     public void setup() {

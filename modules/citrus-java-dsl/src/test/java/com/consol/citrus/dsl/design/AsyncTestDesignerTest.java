@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.*;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
@@ -30,7 +30,7 @@ import static org.testng.Assert.assertTrue;
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public class AsyncTestDesignerTest extends AbstractTestNGUnitTest {
+public class AsyncTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testAsyncBuilder() {

@@ -27,41 +27,57 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
  * Soap attachment validator delegating attachment content validation to a {@link MessageValidator}.
  * Through {@link XmlMessageValidationContext} this class supports message validation for XML payload.
- * 
+ *
  * @author Christoph Deppisch
  */
-public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements InitializingBean, ApplicationContextAware {
+public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements ApplicationContextAware {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XmlSoapFaultValidator.class);
 
-    @Autowired
-    private MessageValidatorRegistry messageValidatorRegistry;
-
-    @Autowired
     private TestContextFactory testContextFactory;
 
     /** Xml message validator */
     private DomXmlMessageValidator messageValidator;
 
-    /** Spring bean application context */
     private ApplicationContext applicationContext;
 
 	@Override
     protected void validateAttachmentContentData(String receivedContent, String controlContent, String controlContentId) {
-        messageValidator.validateMessage(new DefaultMessage(receivedContent), new DefaultMessage(controlContent), testContextFactory.getObject(), new XmlMessageValidationContext());
+        getMessageValidator().validateMessage(new DefaultMessage(receivedContent), new DefaultMessage(controlContent), getTestContextFactory().getObject(), new XmlMessageValidationContext());
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    private TestContextFactory getTestContextFactory() {
+	    if (testContextFactory == null) {
+            if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactory.class).isEmpty()) {
+                testContextFactory = applicationContext.getBean(TestContextFactory.class);
+            } else {
+                testContextFactory = TestContextFactory.newInstance();
+            }
+        }
+
+	    return testContextFactory;
+    }
+
+    private DomXmlMessageValidator getMessageValidator() {
+	    if (messageValidator != null) {
+	        return messageValidator;
+        }
+
+        MessageValidatorRegistry messageValidatorRegistry;
+
+        if (applicationContext != null && !applicationContext.getBeansOfType(MessageValidatorRegistry.class).isEmpty()) {
+            messageValidatorRegistry = applicationContext.getBean(MessageValidatorRegistry.class);
+        } else {
+            messageValidatorRegistry = new MessageValidatorRegistry();
+        }
+
         // try to find xml message validator in registry
         for (MessageValidator<? extends ValidationContext> validator : messageValidatorRegistry.getMessageValidators()) {
             if (validator instanceof DomXmlMessageValidator &&
@@ -73,8 +89,9 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
         if (messageValidator == null) {
             log.warn("No XML message validator found in Spring bean context - setting default validator");
             messageValidator = new DomXmlMessageValidator();
-            messageValidator.setApplicationContext(applicationContext);
         }
+
+        return messageValidator;
     }
 
     @Override

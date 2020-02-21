@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.design;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.command.*;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class DockerTestDesignerTest extends AbstractTestNGUnitTest {
+public class DockerTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testDockerBuilder() {

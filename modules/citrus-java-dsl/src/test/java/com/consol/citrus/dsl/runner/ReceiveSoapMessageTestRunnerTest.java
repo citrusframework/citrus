@@ -31,7 +31,7 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -54,7 +54,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveSoapMessageTestRunnerTest extends AbstractTestNGUnitTest {
+public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
 
     private Consumer messageConsumer = Mockito.mock(Consumer.class);
     private EndpointConfiguration configuration = Mockito.mock(EndpointConfiguration.class);

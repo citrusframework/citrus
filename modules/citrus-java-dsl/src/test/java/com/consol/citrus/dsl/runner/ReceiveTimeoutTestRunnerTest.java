@@ -29,7 +29,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class ReceiveTimeoutTestRunnerTest extends AbstractTestNGUnitTest {
+public class ReceiveTimeoutTestRunnerTest extends UnitTestSupport {
 
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Consumer messageConsumer = Mockito.mock(Consumer.class);

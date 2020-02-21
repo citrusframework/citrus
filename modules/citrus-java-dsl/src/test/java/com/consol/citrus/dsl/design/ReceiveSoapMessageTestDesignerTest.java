@@ -28,7 +28,7 @@ import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -49,7 +49,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveSoapMessageTestDesignerTest extends AbstractTestNGUnitTest {
+public class ReceiveSoapMessageTestDesignerTest extends UnitTestSupport {
 
     private WebServiceServer server = Mockito.mock(WebServiceServer.class);
 

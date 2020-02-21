@@ -110,7 +110,6 @@ public class XmlValidationMatcher implements ValidationMatcher, ApplicationConte
         if (xmlMessageValidator == null) {
             LOG.warn("No XML message validator found in Spring bean context - setting default validator");
             xmlMessageValidator = new DomXmlMessageValidator();
-            xmlMessageValidator.setApplicationContext(applicationContext);
         }
     }
 }

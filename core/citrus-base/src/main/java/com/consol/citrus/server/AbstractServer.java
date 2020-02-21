@@ -31,18 +31,17 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 
 /**
  * Abstract base class for {@link Server} implementations.
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractServer extends AbstractEndpoint implements Server, InitializingBean, DisposableBean, BeanFactoryAware {
+public abstract class AbstractServer extends AbstractEndpoint implements Server, InitializingBean, DisposableBean, ApplicationContextAware {
 
     /** Default in memory queue suffix */
     public static final String DEFAULT_CHANNEL_ID_SUFFIX = ".inbound";
@@ -60,7 +59,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     private final Object runningLock = new Object();
 
     /** Spring bean factory injected */
-    private BeanFactory beanFactory;
+    private ApplicationContext applicationContext;
 
     /** Message endpoint adapter for incoming requests */
     private EndpointAdapter endpointAdapter;
@@ -70,9 +69,6 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
 
     /** Timeout delegated to default endpoint adapter if not set explicitly */
     private long defaultTimeout = 1000;
-
-    @Autowired
-    private TestContextFactory testContextFactory;
 
     /** Inbound memory queue debug logging */
     private boolean debugLogging = false;
@@ -143,8 +139,8 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
         if (endpointAdapter == null) {
             /* The server inbound queue */
             MessageQueue inboundQueue;
-            if (beanFactory != null && beanFactory.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
-                inboundQueue = beanFactory.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageQueue.class);
+            if (applicationContext != null && applicationContext.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
+                inboundQueue = applicationContext.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageQueue.class);
             } else {
                 inboundQueue = new DefaultMessageQueue();
             }
@@ -159,22 +155,22 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             endpointAdapter = new DirectEndpointAdapter(directEndpointConfiguration);
             endpointAdapter.getEndpoint().setName(getName());
 
-            if (testContextFactory == null) {
-                if (beanFactory != null) {
-                    testContextFactory = beanFactory.getBean(TestContextFactory.class);
-                } else {
-                    log.warn("Unable to create test context factory from Spring application context - " +
-                            "using minimal test context factory");
-                    testContextFactory = new TestContextFactory();
-                }
-            }
-
-            ((DirectEndpointAdapter)endpointAdapter).setTestContextFactory(testContextFactory);
+            ((DirectEndpointAdapter)endpointAdapter).setTestContextFactory(getTestContextFactory());
         }
 
         if (autoStart && !isRunning()) {
             start();
         }
+    }
+
+    private TestContextFactory getTestContextFactory() {
+        if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactory.class).isEmpty()) {
+            return applicationContext.getBean(TestContextFactory.class);
+        }
+
+        log.warn("Unable to create test context factory from Spring application context - " +
+                "using minimal test context factory");
+        return TestContextFactory.newInstance();
     }
 
     /**
@@ -246,19 +242,16 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     }
 
     /**
-     * Gets the Spring bean factory.
+     * Gets the Spring application context.
      * @return
      */
-    public BeanFactory getBeanFactory() {
-        return beanFactory;
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
-    /**
-     * Sets the Spring bean factory.
-     * @param beanFactory
-     */
-    public void setBeanFactory(BeanFactory beanFactory) {
-        this.beanFactory = beanFactory;
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 
     /**

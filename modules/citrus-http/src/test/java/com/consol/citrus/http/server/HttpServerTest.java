@@ -16,8 +16,9 @@
 
 package com.consol.citrus.http.server;
 
+import java.util.Random;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpEndpointConfiguration;
@@ -33,12 +34,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.SocketUtils;
 import org.springframework.web.client.ResourceAccessException;
 import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.util.Random;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Simple unit test for HttpServer
@@ -54,9 +57,6 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
 
     @Autowired
     private EndpointAdapter mockResponseEndpointAdapter;
-
-    @Autowired
-    private TestContextFactory testContextFactory;
 
     @BeforeClass
     public void setupClient() {

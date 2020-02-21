@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AntRunAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.apache.tools.ant.BuildListener;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class AntRunTestDesignerTest extends AbstractTestNGUnitTest {
+public class AntRunTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testAntRunBuilder() {

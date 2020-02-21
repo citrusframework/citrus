@@ -26,7 +26,7 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.mockito.Mockito;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
-public class AssertSoapFaultTestDesignerTest extends AbstractTestNGUnitTest {
+public class AssertSoapFaultTestDesignerTest extends UnitTestSupport {
 
     public static final String SOAP_FAULT_VALIDATOR = "soapFaultValidator";
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";

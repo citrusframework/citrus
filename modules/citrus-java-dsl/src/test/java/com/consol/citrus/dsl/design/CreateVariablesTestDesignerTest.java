@@ -17,13 +17,13 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import com.consol.citrus.actions.CreateVariablesAction;
 
-public class CreateVariablesTestDesignerTest extends AbstractTestNGUnitTest {
+public class CreateVariablesTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testCreateVariablesBuilder() {

@@ -20,14 +20,14 @@ import java.util.concurrent.TimeUnit;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SleepAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class SleepTestRunnerTest extends AbstractTestNGUnitTest {
+public class SleepTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testSleepBuilder() {

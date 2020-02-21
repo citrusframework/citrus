@@ -41,7 +41,7 @@ import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
@@ -89,7 +89,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class ReceiveMessageTestRunnerTest extends AbstractTestNGUnitTest {
+public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
     private Endpoint messageEndpoint = Mockito.mock(Endpoint.class);
     private Consumer messageConsumer = Mockito.mock(Consumer.class);

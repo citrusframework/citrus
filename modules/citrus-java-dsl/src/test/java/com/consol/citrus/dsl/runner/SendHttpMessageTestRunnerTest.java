@@ -31,7 +31,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.apache.http.entity.ContentType;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
@@ -46,7 +46,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class SendHttpMessageTestRunnerTest extends AbstractTestNGUnitTest {
+public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
     private HttpClient httpClient = Mockito.mock(HttpClient.class);
     private Producer messageProducer = Mockito.mock(Producer.class);

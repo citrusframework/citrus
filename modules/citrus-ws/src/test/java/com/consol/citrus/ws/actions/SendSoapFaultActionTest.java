@@ -24,7 +24,7 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.ws.UnitTestSupport;
 import com.consol.citrus.ws.message.SoapFault;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Christoph Deppisch
  */
-public class SendSoapFaultActionTest extends AbstractTestNGUnitTest {
+public class SendSoapFaultActionTest extends UnitTestSupport {
 
     private Endpoint endpoint = Mockito.mock(Endpoint.class);
     private Producer producer = Mockito.mock(Producer.class);

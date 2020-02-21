@@ -26,7 +26,7 @@ import javax.jms.Session;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class PurgeJmsQueueTestRunnerTest extends AbstractTestNGUnitTest {
+public class PurgeJmsQueueTestRunnerTest extends UnitTestSupport {
     private ConnectionFactory connectionFactory = Mockito.mock(ConnectionFactory.class);
     private Connection connection = Mockito.mock(Connection.class);
     private Session session = Mockito.mock(Session.class);

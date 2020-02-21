@@ -24,14 +24,14 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Sequence;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class ApplyTestDesignBehaviorTest extends AbstractTestNGUnitTest {
+public class ApplyTestDesignBehaviorTest extends UnitTestSupport {
 
     @Test
     public void testBehaviorFrontPosition() {

@@ -26,7 +26,7 @@ import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class PurgeEndpointTestDesignerTest extends AbstractTestNGUnitTest {
+public class PurgeEndpointTestDesignerTest extends UnitTestSupport {
     private Endpoint endpoint1 = Mockito.mock(Endpoint.class);
     private Endpoint endpoint2 = Mockito.mock(Endpoint.class);
     private Endpoint endpoint3 = Mockito.mock(Endpoint.class);

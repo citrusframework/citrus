@@ -27,8 +27,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 
-import java.util.Optional;
-
 /**
  * Jms message endpoint capable of sending/receiving messages from Jms message destination. Either uses a Jms connection factory or
  * a Spring Jms template to connect with Jms destinations.
@@ -63,8 +61,7 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingBean, D
     public SelectiveConsumer createConsumer() {
         if (jmsConsumer == null) {
             if (getEndpointConfiguration().isAutoStart()) {
-                TestContextFactory testContextFactory = Optional.ofNullable(applicationContext).map(context -> context.getBean(TestContextFactory.class))
-                        .orElse(TestContextFactory.newInstance());
+                TestContextFactory testContextFactory = getTestContextFactory();
 
                 JmsTopicSubscriber jmsTopicSubscriber = new JmsTopicSubscriber(getSubscriberName(), getEndpointConfiguration(), testContextFactory);
                 jmsConsumer = jmsTopicSubscriber;
@@ -76,6 +73,13 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingBean, D
         }
 
         return jmsConsumer;
+    }
+
+    private TestContextFactory getTestContextFactory() {
+        if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactory.class).isEmpty()) {
+            return applicationContext.getBean(TestContextFactory.class);
+        }
+        return TestContextFactory.newInstance();
     }
 
     @Override

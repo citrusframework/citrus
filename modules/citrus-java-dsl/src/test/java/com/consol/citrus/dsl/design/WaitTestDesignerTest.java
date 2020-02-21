@@ -25,7 +25,7 @@ import com.consol.citrus.condition.FileCondition;
 import com.consol.citrus.condition.HttpCondition;
 import com.consol.citrus.condition.MessageCondition;
 import com.consol.citrus.container.Wait;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
  * @author Martin Maher
  * @since 2.4
  */
-public class WaitTestDesignerTest extends AbstractTestNGUnitTest {
+public class WaitTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testWaitHttpBuilder() {

@@ -23,11 +23,11 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.JavaAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class JavaTestDesignerTest extends AbstractTestNGUnitTest {
+public class JavaTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testJavaBuilderWithClassName() throws InstantiationException, IllegalAccessException, ClassNotFoundException {

@@ -40,7 +40,6 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-main</artifactId>
       <version>${project.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>

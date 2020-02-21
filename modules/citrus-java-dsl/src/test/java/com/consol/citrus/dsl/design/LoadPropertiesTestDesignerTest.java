@@ -17,7 +17,7 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ import com.consol.citrus.actions.LoadPropertiesAction;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class LoadPropertiesTestDesignerTest extends AbstractTestNGUnitTest {
+public class LoadPropertiesTestDesignerTest extends UnitTestSupport {
     @Test
     public void testLoadBuilder() {
         MockTestDesigner builder = new MockTestDesigner(context) {

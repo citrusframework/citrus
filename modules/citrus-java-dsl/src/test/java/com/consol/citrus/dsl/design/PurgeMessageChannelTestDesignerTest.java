@@ -24,7 +24,7 @@ import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.report.TestActionListeners;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessageSelector;
 import org.springframework.messaging.MessageChannel;
@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class PurgeMessageChannelTestDesignerTest extends AbstractTestNGUnitTest {
+public class PurgeMessageChannelTestDesignerTest extends UnitTestSupport {
     private MessageSelector messageSelector = Mockito.mock(MessageSelector.class);
 
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);

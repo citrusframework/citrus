@@ -22,13 +22,13 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-public class AssertTestDesignerTest extends AbstractTestNGUnitTest {
+public class AssertTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testAssertBuilder() {

@@ -79,7 +79,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     private static Logger log = LoggerFactory.getLogger(TestContextFactory.class);
 
     /**
-     * Create new empty instance that has
+     * Create new empty instance with default components set.
      * @return
      */
     public static TestContextFactory newInstance() {

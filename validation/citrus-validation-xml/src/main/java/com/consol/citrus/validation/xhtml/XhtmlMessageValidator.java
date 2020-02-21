@@ -18,7 +18,10 @@ package com.consol.citrus.validation.xhtml;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,7 +29,7 @@ import org.springframework.beans.factory.InitializingBean;
 /**
  * XHTML message validator using W3C jtidy to automatically convert HTML content to XHTML fixing most common
  * well-formed errors in HTML markup.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class XhtmlMessageValidator extends DomXmlMessageValidator implements InitializingBean {
@@ -38,16 +41,15 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
     public void validateMessage(Message receivedMessage, Message controlMessage,
             TestContext context, XmlMessageValidationContext validationContext)
             throws ValidationException {
-        
+
         String messagePayload = receivedMessage.getPayload(String.class);
         super.validateMessage(new DefaultMessage(messageConverter.convert(messagePayload), receivedMessage.getHeaders()),
                 controlMessage, context, validationContext);
     }
-    
+
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return super.supportsMessageType(MessageType.XML.name(), message)
-                && messageType.equalsIgnoreCase(MessageType.XHTML.name());
+        return messageType.equalsIgnoreCase(MessageType.XHTML.name()) && XMLUtils.hasXmlPayload(message);
     }
 
     @Override

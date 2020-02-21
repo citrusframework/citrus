@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class EchoTestRunnerTest extends AbstractTestNGUnitTest {
+public class EchoTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testEchoBuilder() {

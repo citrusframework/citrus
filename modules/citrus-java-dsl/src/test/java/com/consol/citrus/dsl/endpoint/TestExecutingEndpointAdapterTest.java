@@ -24,7 +24,7 @@ import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtracto
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -39,7 +39,7 @@ import org.testng.annotations.Test;
  * @since 1.3.1
  */
 @ContextConfiguration(classes = TestExecutingEndpointAdapterTest.EndpointConfig.class)
-public class TestExecutingEndpointAdapterTest extends AbstractTestNGUnitTest {
+public class TestExecutingEndpointAdapterTest extends UnitTestSupport {
 
     @Autowired
     private TestExecutingEndpointAdapter endpointAdapter;

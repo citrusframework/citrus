@@ -24,7 +24,7 @@ import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
@@ -35,7 +35,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class SendHttpMessageTestDesignerTest extends AbstractTestNGUnitTest {
+public class SendHttpMessageTestDesignerTest extends UnitTestSupport {
 
     private HttpClient httpClient = Mockito.mock(HttpClient.class);
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);

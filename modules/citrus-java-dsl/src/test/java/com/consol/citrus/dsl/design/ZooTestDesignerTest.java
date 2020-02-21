@@ -17,7 +17,7 @@
 package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.command.AbstractZooCommand;
 import com.consol.citrus.zookeeper.command.Create;
@@ -33,7 +33,7 @@ import org.testng.annotations.Test;
  * @author Martin Maher
  * @since 2.5
  */
-public class ZooTestDesignerTest extends AbstractTestNGUnitTest {
+public class ZooTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testZooBuilder() {

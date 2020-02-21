@@ -23,12 +23,12 @@ import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.container.Catch;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertEquals;
 
-public class CatchTestDesignerTest extends AbstractTestNGUnitTest {
+public class CatchTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testCatchBuilder() {

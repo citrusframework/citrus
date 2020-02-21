@@ -18,7 +18,8 @@ package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -27,24 +28,19 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
 /**
  * Soap fault validator implementation that delegates soap fault detail validation to default XML message validator
  * in order to support XML fault detail content validation.
- * 
+ *
  * @author Christoph Deppisch
  */
-public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implements InitializingBean, ApplicationContextAware {
+public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implements ApplicationContextAware {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XmlSoapFaultValidator.class);
-
-    @Autowired
-    private MessageValidatorRegistry messageValidatorRegistry;
 
     /** Xml message validator */
     private DomXmlMessageValidator messageValidator;
@@ -56,21 +52,32 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implemen
      * Delegates to XML message validator for validation of fault detail.
      */
     @Override
-    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString, 
+    protected void validateFaultDetailString(String receivedDetailString, String controlDetailString,
             TestContext context, ValidationContext validationContext) throws ValidationException {
         XmlMessageValidationContext xmlMessageValidationContext;
-        
+
         if (validationContext instanceof XmlMessageValidationContext) {
             xmlMessageValidationContext = (XmlMessageValidationContext) validationContext;
         } else {
             xmlMessageValidationContext = new XmlMessageValidationContext();
         }
-        
-        messageValidator.validateMessage(new DefaultMessage(receivedDetailString), new DefaultMessage(controlDetailString), context, xmlMessageValidationContext);
+
+        getMessageValidator().validateMessage(new DefaultMessage(receivedDetailString), new DefaultMessage(controlDetailString), context, xmlMessageValidationContext);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    private DomXmlMessageValidator getMessageValidator() {
+        if (messageValidator != null) {
+            return messageValidator;
+        }
+
+        MessageValidatorRegistry messageValidatorRegistry;
+
+        if (applicationContext != null && !applicationContext.getBeansOfType(MessageValidatorRegistry.class).isEmpty()) {
+            messageValidatorRegistry = applicationContext.getBean(MessageValidatorRegistry.class);
+        } else {
+            messageValidatorRegistry = new MessageValidatorRegistry();
+        }
+
         // try to find xml message validator in registry
         for (MessageValidator<? extends ValidationContext> validator : messageValidatorRegistry.getMessageValidators()) {
             if (validator instanceof DomXmlMessageValidator &&
@@ -82,8 +89,9 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implemen
         if (messageValidator == null) {
             log.warn("No XML message validator found in Spring bean context - setting default validator");
             messageValidator = new DomXmlMessageValidator();
-            messageValidator.setApplicationContext(applicationContext);
         }
+
+        return messageValidator;
     }
 
     @Override

@@ -22,7 +22,7 @@ import java.io.IOException;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
-public class GroovyTestDesignerTest extends AbstractTestNGUnitTest {
+public class GroovyTestDesignerTest extends UnitTestSupport {
     private Resource scriptResource = Mockito.mock(Resource.class);
     private Resource scriptTemplate = Mockito.mock(Resource.class);
     private File file = Mockito.mock(File.class);

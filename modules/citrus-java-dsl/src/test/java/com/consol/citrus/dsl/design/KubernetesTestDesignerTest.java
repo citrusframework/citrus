@@ -20,7 +20,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.command.*;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesTestDesignerTest extends AbstractTestNGUnitTest {
+public class KubernetesTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testKubernetesBuilder() {

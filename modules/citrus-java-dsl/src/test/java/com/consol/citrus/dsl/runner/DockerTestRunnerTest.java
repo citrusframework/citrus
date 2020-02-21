@@ -21,7 +21,7 @@ import java.util.UUID;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.InfoCmd;
@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class DockerTestRunnerTest extends AbstractTestNGUnitTest {
+public class DockerTestRunnerTest extends UnitTestSupport {
 
     private com.github.dockerjava.api.DockerClient dockerClient = Mockito.mock(com.github.dockerjava.api.DockerClient.class);
 

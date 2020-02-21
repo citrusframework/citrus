@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class LoadPropertiesTestRunnerTest extends AbstractTestNGUnitTest {
+public class LoadPropertiesTestRunnerTest extends UnitTestSupport {
     @Test
     public void testLoadBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

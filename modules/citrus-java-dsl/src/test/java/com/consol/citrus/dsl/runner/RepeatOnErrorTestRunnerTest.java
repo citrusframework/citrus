@@ -20,14 +20,14 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertEquals;
 
-public class RepeatOnErrorTestRunnerTest extends AbstractTestNGUnitTest {
+public class RepeatOnErrorTestRunnerTest extends UnitTestSupport {
     @Test
     public void testRepeatOnErrorBuilder() {
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

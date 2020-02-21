@@ -18,13 +18,13 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.container.Conditional;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.Matchers.is;
 
-public class ConditionalTestDesignerTest extends AbstractTestNGUnitTest {
+public class ConditionalTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testConditionalBuilder() {

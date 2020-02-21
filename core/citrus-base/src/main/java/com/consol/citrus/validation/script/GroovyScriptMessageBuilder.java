@@ -90,11 +90,7 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
 
             GroovyObject groovyObject = (GroovyObject) groovyClass.newInstance();
             return (String) groovyObject.invokeMethod("run", new Object[] {});
-        } catch (CompilationFailedException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new CitrusRuntimeException(e);
-        } catch (IllegalAccessException e) {
+        } catch (CompilationFailedException | InstantiationException | IllegalAccessException e) {
             throw new CitrusRuntimeException(e);
         }
     }

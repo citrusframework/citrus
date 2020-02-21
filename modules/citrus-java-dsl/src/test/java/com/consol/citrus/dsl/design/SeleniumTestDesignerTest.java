@@ -35,7 +35,7 @@ import com.consol.citrus.selenium.actions.StoreFileAction;
 import com.consol.citrus.selenium.actions.SwitchWindowAction;
 import com.consol.citrus.selenium.actions.WaitUntilAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.dsl.UnitTestSupport;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.testng.Assert;
@@ -45,7 +45,7 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumTestDesignerTest extends AbstractTestNGUnitTest {
+public class SeleniumTestDesignerTest extends UnitTestSupport {
 
     private SeleniumBrowser seleniumBrowser = Mockito.mock(SeleniumBrowser.class);
 
