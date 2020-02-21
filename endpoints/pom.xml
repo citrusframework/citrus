@@ -22,6 +22,7 @@
     <module>citrus-mail</module>
     <module>citrus-ws</module>
     <module>citrus-camel</module>
+    <module>citrus-ssh</module>
     <module>citrus-ftp</module>
     <module>citrus-websocket</module>
   </modules>
