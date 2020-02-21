@@ -19,6 +19,7 @@
     <module>citrus-jms</module>
     <module>citrus-kafka</module>
     <module>citrus-http</module>
+    <module>citrus-mail</module>
     <module>citrus-ftp</module>
     <module>citrus-websocket</module>
   </modules>
