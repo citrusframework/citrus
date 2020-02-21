@@ -57,7 +57,6 @@
     <module>endpoints</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-ssh</module>
-    <module>modules/citrus-ws</module>
     <module>modules/citrus-vertx</module>
     <module>modules/citrus-docker</module>
     <module>modules/citrus-kubernetes</module>
