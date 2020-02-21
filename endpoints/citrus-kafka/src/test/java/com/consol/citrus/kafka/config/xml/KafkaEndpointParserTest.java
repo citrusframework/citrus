@@ -16,17 +16,24 @@
 
 package com.consol.citrus.kafka.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.kafka.endpoint.KafkaEndpoint;
-import com.consol.citrus.kafka.message.*;
+import com.consol.citrus.kafka.message.KafkaMessageConverter;
+import com.consol.citrus.kafka.message.KafkaMessageHeaderMapper;
+import com.consol.citrus.kafka.message.KafkaMessageHeaders;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.*;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.apache.kafka.common.serialization.IntegerDeserializer;
+import org.apache.kafka.common.serialization.IntegerSerializer;
+import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
