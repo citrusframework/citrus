@@ -25,6 +25,7 @@
     <module>citrus-ssh</module>
     <module>citrus-ftp</module>
     <module>citrus-websocket</module>
+    <module>citrus-vertx</module>
   </modules>
 
 </project>
