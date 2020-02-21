@@ -16,6 +16,7 @@
 
   <modules>
     <module>citrus-spring-integration</module>
+    <module>citrus-jdbc</module>
     <module>citrus-jms</module>
     <module>citrus-kafka</module>
     <module>citrus-http</module>
