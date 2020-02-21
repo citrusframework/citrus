@@ -24,6 +24,7 @@
     <module>citrus-camel</module>
     <module>citrus-ssh</module>
     <module>citrus-ftp</module>
+    <module>citrus-rmi</module>
     <module>citrus-websocket</module>
     <module>citrus-vertx</module>
   </modules>
