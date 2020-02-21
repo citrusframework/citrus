@@ -60,8 +60,8 @@
     <module>modules/citrus-selenium</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
-    <module>modules/citrus-bom</module>
     <module>tools</module>
+    <module>catalog</module>
   </modules>
 
   <developers>

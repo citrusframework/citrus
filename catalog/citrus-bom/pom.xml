@@ -3,16 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>citrus</artifactId>
+    <artifactId>citrus-catalog</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>3.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-bom</artifactId>
   <packaging>pom</packaging>
-  <name>citrus-bom</name>
+  <name>Citrus :: Catalog :: BOM</name>
 
   <dependencyManagement>
     <dependencies>
