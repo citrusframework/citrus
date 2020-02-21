@@ -17,6 +17,7 @@
   <modules>
     <module>citrus-spring-integration</module>
     <module>citrus-jms</module>
+    <module>citrus-http</module>
     <module>citrus-ftp</module>
   </modules>
 

@@ -57,7 +57,6 @@
     <module>endpoints</module>
     <module>modules/citrus-jdbc</module>
     <module>modules/citrus-kafka</module>
-    <module>modules/citrus-http</module>
     <module>modules/citrus-websocket</module>
     <module>modules/citrus-ssh</module>
     <module>modules/citrus-ws</module>

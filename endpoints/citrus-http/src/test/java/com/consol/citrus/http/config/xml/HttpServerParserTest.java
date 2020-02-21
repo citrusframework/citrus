@@ -16,10 +16,16 @@
 
 package com.consol.citrus.http.config.xml;
 
+import javax.jms.ConnectionFactory;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.channel.ChannelEndpointConfiguration;
 import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.endpoint.adapter.*;
+import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
+import com.consol.citrus.endpoint.adapter.StaticResponseEndpointAdapter;
+import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.jms.endpoint.JmsEndpointAdapter;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
@@ -31,10 +37,6 @@ import org.springframework.util.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.ConnectionFactory;
-import java.util.List;
-import java.util.Map;
-
 /**
  * @author Christoph Deppisch
  */
@@ -43,9 +45,9 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
     @Test
     public void testHttpServerParser() {
         Map<String, HttpServer> servers = beanDefinitionContext.getBeansOfType(HttpServer.class);
-        
+
         Assert.assertEquals(servers.size(), 5);
-        
+
         // 1st message sender
         HttpServer server = servers.get("httpServer1");
         Assert.assertNull(server.getConnector());
@@ -107,7 +109,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertFalse(server.isAutoStart());
         Assert.assertFalse(server.isUseRootContextAsParent());
         Assert.assertEquals(server.getServletName(), "httpServer3-servlet");
-        
+
         // 4th message sender
         server = servers.get("httpServer4");
         Assert.assertNull(server.getConnector());
@@ -122,7 +124,7 @@ public class HttpServerParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(server.getServletName(), "httpServer4-servlet");
         Assert.assertNotNull(server.getInterceptors());
         Assert.assertEquals(server.getInterceptors().size(), 0L);
-        
+
         // 5th message sender
         server = servers.get("httpServer5");
         Assert.assertNull(server.getConnector());
