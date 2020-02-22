@@ -55,8 +55,7 @@
     <module>validation</module>
     <module>runtime</module>
     <module>endpoints</module>
-    <module>modules/citrus-docker</module>
-    <module>modules/citrus-kubernetes</module>
+    <module>connectors</module>
     <module>modules/citrus-selenium</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>

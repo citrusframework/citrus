@@ -3,17 +3,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <artifactId>citrus</artifactId>
+    <artifactId>citrus-connectors</artifactId>
     <groupId>com.consol.citrus</groupId>
     <version>3.0-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>citrus-docker</artifactId>
-  <name>citrus-docker</name>
+  <artifactId>citrus-kubernetes</artifactId>
+  <name>Citrus :: Connectors :: Kubernetes</name>
 
   <properties>
-    <citrus.docker.it.enabled>false</citrus.docker.it.enabled>
+    <citrus.kuberenetes.it.enabled>false</citrus.kuberenetes.it.enabled>
   </properties>
 
   <build>
@@ -32,8 +32,8 @@
           <extension>true</extension>
           <sourceType>xmlschema</sourceType>
           <sources>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-docker-config.xsd</source>
-            <source>src/main/resources/com/consol/citrus/schema/citrus-docker-testcase.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-kubernetes-config.xsd</source>
+            <source>src/main/resources/com/consol/citrus/schema/citrus-kubernetes-testcase.xsd</source>
           </sources>
           <xjbSources>
             <xjbSource>src/main/resources/binding.xjb</xjbSource>
@@ -46,7 +46,7 @@
         <artifactId>maven-failsafe-plugin</artifactId>
         <configuration>
           <systemProperties>
-            <citrus.docker.it.enabled>${citrus.docker.it.enabled}</citrus.docker.it.enabled>
+            <citrus.kuberenetes.it.enabled>${citrus.kuberenetes.it.enabled}</citrus.kuberenetes.it.enabled>
           </systemProperties>
         </configuration>
       </plugin>
@@ -56,17 +56,19 @@
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
+      <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core-spring</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
-      <groupId>com.github.docker-java</groupId>
-      <artifactId>docker-java</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-client</artifactId>
     </dependency>
 
     <dependency>
@@ -85,6 +87,13 @@
     <dependency>
       <groupId>com.fasterxml.jackson.jaxrs</groupId>
       <artifactId>jackson-jaxrs-json-provider</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-http</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- Test scoped dependencies -->
