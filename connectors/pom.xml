@@ -17,6 +17,7 @@
   <modules>
     <module>citrus-docker</module>
     <module>citrus-kubernetes</module>
+    <module>citrus-selenium</module>
   </modules>
 
 </project>

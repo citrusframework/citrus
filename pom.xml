@@ -22,7 +22,7 @@
   <artifactId>citrus</artifactId>
   <packaging>pom</packaging>
   <version>3.0-SNAPSHOT</version>
-  <name>citrus</name>
+  <name>Citrus</name>
   <description>Citrus Test Framework</description>
   <url>https://citrusframework.org</url>
   <inceptionYear>2008</inceptionYear>
@@ -56,10 +56,9 @@
     <module>runtime</module>
     <module>endpoints</module>
     <module>connectors</module>
-    <module>modules/citrus-selenium</module>
+    <module>tools</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
-    <module>tools</module>
     <module>catalog</module>
   </modules>
 
