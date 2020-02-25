@@ -19,9 +19,6 @@
     <citrus:variable name="project.name" value="Citrus Vertx Integration Testing"/>
   </citrus:global-variables>
 
-  <!-- Xsd schema resources and definitions -->
-  <citrus:schema-repository id="schemaRepository"/>
-
   <!-- Test Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 

@@ -16,14 +16,8 @@
 
 package com.consol.citrus.validation.matcher;
 
-import com.consol.citrus.validation.matcher.core.*;
-import com.consol.citrus.validation.matcher.hamcrest.HamcrestMatcherProvider;
-import com.consol.citrus.validation.matcher.hamcrest.HamcrestValidationMatcher;
-import org.hamcrest.CustomMatcher;
-import org.hamcrest.Matcher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.util.AntPathMatcher;
 
 /**
  * @author Christoph Deppisch
@@ -32,51 +26,15 @@ import org.springframework.util.AntPathMatcher;
 @Configuration
 public class ValidationMatcherConfig {
 
-    private final XmlValidationMatcher xmlValidationMatcher = new XmlValidationMatcher();
-    private final HamcrestValidationMatcher hamcrestValidationMatcher = new HamcrestValidationMatcher();
-
-    private final ValidationMatcherLibrary citrusValidationMatcherLibrary = new DefaultValidationMatcherLibrary();
-
-    @Bean(name = "matchesPath")
-    public HamcrestMatcherProvider matchesPath() {
-        return new HamcrestMatcherProvider() {
-            @Override
-            public String getName() {
-                return "matchesPath";
-            }
-
-            @Override
-            public Matcher<String> provideMatcher(String predicate) {
-                return new CustomMatcher<String>(String.format("path matching %s", predicate)) {
-                    @Override
-                    public boolean matches(Object item) {
-                        return ((item instanceof String) && new AntPathMatcher().match(predicate, (String) item));
-                    }
-                };
-            }
-        };
-    }
-
-    @Bean
-    public HamcrestValidationMatcher hamcrestValidationMatcher() {
-        return hamcrestValidationMatcher;
-    }
+    private ValidationMatcherLibrary validationMatcherLibrary = new DefaultValidationMatcherLibrary();
 
     @Bean(name = "validationMatcherRegistry")
-    public ValidationMatcherRegistry getValidationMatcherRegistry() {
+    public ValidationMatcherRegistry validationMatcherRegistry() {
         return new ValidationMatcherRegistry();
     }
 
-    @Bean(name = "xmlValidationMatcher")
-    public XmlValidationMatcher getXmlValidationMatcher() {
-        return xmlValidationMatcher;
-    }
-
     @Bean(name = "citrusValidationMatcherLibrary")
-    public ValidationMatcherLibrary getValidationMatcherLibrary() {
-        citrusValidationMatcherLibrary.getMembers().put("matchesXml", xmlValidationMatcher);
-        citrusValidationMatcherLibrary.getMembers().put("assertThat", hamcrestValidationMatcher());
-
-        return citrusValidationMatcherLibrary;
+    public ValidationMatcherLibrary validationMatcherLibrary() {
+        return validationMatcherLibrary;
     }
 }

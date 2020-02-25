@@ -63,9 +63,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new JsonTextMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new JsonPathMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("header", new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("json", new JsonTextMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("jsonPath", new JsonPathMessageValidator());
 
         SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
         referenceResolver.bind("mockQueue", mockQueue);

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.docker.actions;
 
+import java.util.Collections;
+
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
@@ -34,8 +36,12 @@ import com.consol.citrus.docker.command.Version;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -63,7 +69,12 @@ public class DockerExecuteAction extends AbstractTestAction {
     private final ObjectMapper jsonMapper;
 
     /** Validator used to validate expected json results */
-    private final JsonTextMessageValidator jsonTextMessageValidator;
+    private final MessageValidator<? extends ValidationContext> jsonMessageValidator;
+
+    /** Type resolver for message validator lookup via resource path */
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
+
+    public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DockerExecuteAction.class);
@@ -78,7 +89,7 @@ public class DockerExecuteAction extends AbstractTestAction {
         this.command = builder.command;
         this.expectedCommandResult = builder.expectedCommandResult;
         this.jsonMapper = builder.jsonMapper;
-        this.jsonTextMessageValidator = builder.validator;
+        this.jsonMessageValidator = builder.validator;
     }
 
     @Override
@@ -117,7 +128,7 @@ public class DockerExecuteAction extends AbstractTestAction {
             try {
                 String commandResultJson = jsonMapper.writeValueAsString(command.getCommandResult());
                 JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-                jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, validationContext);
+                getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
                 log.info("Docker command result validation successful - all values OK!");
             } catch (JsonProcessingException e) {
                 throw new CitrusRuntimeException(e);
@@ -127,6 +138,35 @@ public class DockerExecuteAction extends AbstractTestAction {
         if (command.getResultCallback() != null) {
             command.getResultCallback().doWithCommandResult(command.getCommandResult(), context);
         }
+    }
+
+    /**
+     * Find proper JSON message validator. Uses several strategies to lookup default JSON message validator.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
+        if (jsonMessageValidator != null) {
+            return jsonMessageValidator;
+        }
+
+        // try to find json message validator in registry
+        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_MESSAGE_VALIDATOR);
+
+        if (defaultJsonMessageValidator == null) {
+            try {
+                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default JSON message validator in message validator registry");
+            }
+        }
+
+        if (defaultJsonMessageValidator == null) {
+            // try to find json message validator via resource path lookup
+            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+        }
+
+        return defaultJsonMessageValidator;
     }
 
     /**
@@ -162,7 +202,7 @@ public class DockerExecuteAction extends AbstractTestAction {
         private DockerCommand<?> command;
         private String expectedCommandResult;
         private ObjectMapper jsonMapper = new ObjectMapper();
-        private JsonTextMessageValidator validator = new JsonTextMessageValidator();
+        private MessageValidator<? extends ValidationContext> validator;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -185,7 +225,7 @@ public class DockerExecuteAction extends AbstractTestAction {
             return this;
         }
 
-        public Builder validator(JsonTextMessageValidator validator) {
+        public Builder validator(MessageValidator<? extends ValidationContext> validator) {
             this.validator = validator;
             return this;
         }

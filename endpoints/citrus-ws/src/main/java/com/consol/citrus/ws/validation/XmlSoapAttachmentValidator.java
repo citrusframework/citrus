@@ -16,13 +16,16 @@
 
 package com.consol.citrus.ws.validation;
 
+import java.util.Collections;
+
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,13 +47,19 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
     private TestContextFactory testContextFactory;
 
     /** Xml message validator */
-    private DomXmlMessageValidator messageValidator;
+    private MessageValidator<? extends ValidationContext> messageValidator;
+
+    /** Type resolver for message validator lookup via resource path */
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     private ApplicationContext applicationContext;
 
+    public static final String DEFAULT_XML_MESSAGE_VALIDATOR = "defaultXmlMessageValidator";
+
 	@Override
     protected void validateAttachmentContentData(String receivedContent, String controlContent, String controlContentId) {
-        getMessageValidator().validateMessage(new DefaultMessage(receivedContent), new DefaultMessage(controlContent), getTestContextFactory().getObject(), new XmlMessageValidationContext());
+        getMessageValidator().validateMessage(new DefaultMessage(receivedContent), new DefaultMessage(controlContent),
+                getTestContextFactory().getObject(), Collections.singletonList(new XmlMessageValidationContext()));
     }
 
     private TestContextFactory getTestContextFactory() {
@@ -65,30 +74,25 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
 	    return testContextFactory;
     }
 
-    private DomXmlMessageValidator getMessageValidator() {
+    private MessageValidator<? extends ValidationContext> getMessageValidator() {
 	    if (messageValidator != null) {
 	        return messageValidator;
         }
 
-        MessageValidatorRegistry messageValidatorRegistry;
-
-        if (applicationContext != null && !applicationContext.getBeansOfType(MessageValidatorRegistry.class).isEmpty()) {
-            messageValidatorRegistry = applicationContext.getBean(MessageValidatorRegistry.class);
-        } else {
-            messageValidatorRegistry = new MessageValidatorRegistry();
-        }
-
         // try to find xml message validator in registry
-        for (MessageValidator<? extends ValidationContext> validator : messageValidatorRegistry.getMessageValidators()) {
-            if (validator instanceof DomXmlMessageValidator &&
-                    validator.supportsMessageType(MessageType.XML.name(), new DefaultMessage(""))) {
-                messageValidator = (DomXmlMessageValidator) validator;
+        messageValidator = getTestContextFactory().getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_XML_MESSAGE_VALIDATOR);
+
+        if (messageValidator == null) {
+            try {
+                messageValidator = getTestContextFactory().getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 
-        if (messageValidator == null) {
-            log.warn("No XML message validator found in Spring bean context - setting default validator");
-            messageValidator = new DomXmlMessageValidator();
+	    if (messageValidator == null) {
+            // try to find xml message validator via resource path lookup
+            messageValidator = TYPE_RESOLVER.resolve("xml");
         }
 
         return messageValidator;

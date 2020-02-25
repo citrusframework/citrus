@@ -31,6 +31,7 @@ import com.consol.citrus.validation.context.ValidationContext;
  * @author Christoph Deppisch
  */
 public interface MessageValidator<T extends ValidationContext> {
+
     /**
      * Validates a message with given test context and validation context.
      * @param receivedMessage the message to validate.

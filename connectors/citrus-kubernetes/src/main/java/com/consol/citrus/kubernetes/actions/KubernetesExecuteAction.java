@@ -16,6 +16,7 @@
 
 package com.consol.citrus.kubernetes.actions;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,10 +51,13 @@ import com.consol.citrus.kubernetes.command.WatchPods;
 import com.consol.citrus.kubernetes.command.WatchReplicationControllers;
 import com.consol.citrus.kubernetes.command.WatchServices;
 import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidator;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.fabric8.kubernetes.api.model.EndpointsList;
 import io.fabric8.kubernetes.api.model.EventList;
@@ -94,9 +98,15 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     /** Control path expressions in command result */
     private final Map<String, Object> commandResultExpressions;
 
-    private final JsonTextMessageValidator jsonTextMessageValidator;
+    /** Validator used to validate expected json results */
+    private final MessageValidator<? extends ValidationContext> jsonMessageValidator;
+    private final MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
 
-    private final JsonPathMessageValidator jsonPathMessageValidator;
+    /** Type resolver for message validator lookup via resource path */
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
+
+    public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
+    public static final String DEFAULT_JSON_PATH_MESSAGE_VALIDATOR = "defaultJsonPathMessageValidator";
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(KubernetesExecuteAction.class);
@@ -111,7 +121,7 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         this.command = builder.command;
         this.commandResult = builder.commandResult;
         this.commandResultExpressions = builder.commandResultExpressions;
-        this.jsonTextMessageValidator = builder.jsonTextMessageValidator;
+        this.jsonMessageValidator = builder.jsonMessageValidator;
         this.jsonPathMessageValidator = builder.jsonPathMessageValidator;
     }
 
@@ -153,14 +163,14 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                 String commandResultJson = kubernetesClient.getEndpointConfiguration()
                         .getObjectMapper().writeValueAsString(result);
                 if (StringUtils.hasText(commandResult)) {
-                    jsonTextMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, new JsonMessageValidationContext());
+                    getMessageValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(new JsonMessageValidationContext()));
                     log.info("Kubernetes command result validation successful - all values OK!");
                 }
 
                 if (!CollectionUtils.isEmpty(commandResultExpressions)) {
                     JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
                     validationContext.setJsonPathExpressions(commandResultExpressions);
-                    jsonPathMessageValidator.validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, validationContext);
+                    getPathValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(validationContext));
                     log.info("Kubernetes command result path validation successful - all values OK!");
                 }
             } catch (JsonProcessingException e) {
@@ -171,6 +181,64 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         if (command.getResultCallback() != null && result != null) {
             command.getResultCallback().validateCommandResult(result, context);
         }
+    }
+
+    /**
+     * Find proper JSON message validator. Uses several strategies to lookup default JSON message validator.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
+        if (jsonMessageValidator != null) {
+            return jsonMessageValidator;
+        }
+
+        // try to find json message validator in registry
+        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_MESSAGE_VALIDATOR);
+
+        if (defaultJsonMessageValidator == null) {
+            try {
+                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default JSON message validator in message validator registry");
+            }
+        }
+
+        if (defaultJsonMessageValidator == null) {
+            // try to find json message validator via resource path lookup
+            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+        }
+
+        return defaultJsonMessageValidator;
+    }
+
+    /**
+     * Find proper JSON path message validator. Uses several strategies to lookup default JSON path message validator.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getPathValidator(TestContext context) {
+        if (jsonPathMessageValidator != null) {
+            return jsonPathMessageValidator;
+        }
+
+        // try to find json message validator in registry
+        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR);
+
+        if (defaultJsonMessageValidator == null) {
+            try {
+                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default JSON path message validator in message validator registry");
+            }
+        }
+
+        if (defaultJsonMessageValidator == null) {
+            // try to find json message validator via resource path lookup
+            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+        }
+
+        return defaultJsonMessageValidator;
     }
 
     /**
@@ -214,8 +282,8 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         private KubernetesCommand command;
         private String commandResult;
         private Map<String, Object> commandResultExpressions = new HashMap<>();
-        private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
-        private JsonPathMessageValidator jsonPathMessageValidator = new JsonPathMessageValidator();
+        private MessageValidator<? extends ValidationContext> jsonMessageValidator;
+        private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -262,12 +330,12 @@ public class KubernetesExecuteAction extends AbstractTestAction {
             return this;
         }
 
-        public Builder validator(JsonTextMessageValidator validator) {
-            this.jsonTextMessageValidator = validator;
+        public Builder validator(MessageValidator<? extends ValidationContext> validator) {
+            this.jsonMessageValidator = validator;
             return this;
         }
 
-        public Builder validator(JsonPathMessageValidator validator) {
+        public Builder pathExpressionValidator(MessageValidator<? extends ValidationContext> validator) {
             this.jsonPathMessageValidator = validator;
             return this;
         }

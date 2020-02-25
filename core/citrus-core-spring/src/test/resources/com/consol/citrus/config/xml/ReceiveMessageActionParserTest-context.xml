@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
-              xmlns:spring="http://www.springframework.org/schema/beans" 
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
     <testcase name="ReceiveMessageActionParserTest">
         <actions>
@@ -32,7 +32,7 @@
                     <element name="operation" value="Test"/>
                 </header>
             </receive>
-            
+
             <receive endpoint="myMessageEndpoint" timeout="1000">
                 <selector>
                     <element name="operation" value="Test"/>
@@ -41,7 +41,7 @@
                     <resource file="classpath:com/consol/citrus/actions/test-request-payload.xml"/>
                 </message>
             </receive>
-            
+
             <receive endpoint="myMessageEndpoint">
                 <selector>
                     <value>operation = 'Test'</value>
@@ -54,7 +54,7 @@
                     </data>
                 </message>
             </receive>
-            
+
             <receive endpoint="myMessageEndpoint">
                 <message>
                     <builder type="groovy">
@@ -68,13 +68,13 @@
                     <element name="header2" value="Test"/>
                 </header>
             </receive>
-            
+
             <receive endpoint="myMessageEndpoint">
                 <message>
                     <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
                 </message>
             </receive>
-            
+
             <receive endpoint="myMessageEndpoint">
                 <message data-dictionary="myDataDictionary">
                     <data>
@@ -88,7 +88,7 @@
                     <message path="/TestMessage/text()" variable="text"/>
                 </extract>
             </receive>
-            
+
             <receive endpoint="myMessageEndpoint">
                 <message schema-validation="false">
                     <data>
@@ -101,7 +101,7 @@
                     <namespace prefix="ns" value="http://www.consol.com"/>
                 </message>
             </receive>
-            
+
             <receive endpoint="channel:myMessageEndpoint">
                 <message>
                     <validate path="/TestMessage/text" value="Hello Citrus"/>
@@ -193,7 +193,7 @@
             </receive>
 
             <receive endpoint="myMessageEndpoint">
-                <message validators="myValidator,defaultPlaintextMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
+                <message validators="myValidator,defaultMessageValidator" header-validators="myHeaderValidator,defaultHeaderValidator">
                     <data>
                         <![CDATA[
                             <TestMessage>Hello Citrus</TestMessage>
@@ -207,7 +207,7 @@
 
         </actions>
     </testcase>
-    
+
     <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </spring:bean>
@@ -217,6 +217,10 @@
     </spring:bean>
 
     <spring:bean id="myValidator" class="org.mockito.Mockito" factory-method="mock">
+        <spring:constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+    </spring:bean>
+
+    <spring:bean id="defaultMessageValidator" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
     </spring:bean>
 

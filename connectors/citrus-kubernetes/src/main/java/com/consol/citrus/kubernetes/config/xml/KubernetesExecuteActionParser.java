@@ -28,8 +28,8 @@ import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.kubernetes.message.KubernetesMessageHeaders;
-import com.consol.citrus.validation.json.JsonPathMessageValidator;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -133,10 +133,12 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand> implemen
         private KubernetesClient kubernetesClient;
 
         @Autowired(required = false)
-        private JsonTextMessageValidator jsonTextMessageValidator;
+        @Qualifier("defaultJsonMessageValidator")
+        private MessageValidator<? extends ValidationContext> jsonMessageValidator;
 
         @Autowired(required = false)
-        private JsonPathMessageValidator jsonPathMessageValidator;
+        @Qualifier("defaultJsonPathMessageValidator")
+        private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
 
         private final KubernetesExecuteAction.Builder builder = new KubernetesExecuteAction.Builder();
 
@@ -179,12 +181,12 @@ public class KubernetesExecuteActionParser<T extends KubernetesCommand> implemen
                 builder.client(kubernetesClient);
             }
 
-            if (jsonTextMessageValidator != null) {
-                builder.validator(jsonTextMessageValidator);
+            if (jsonMessageValidator != null) {
+                builder.validator(jsonMessageValidator);
             }
 
             if (jsonPathMessageValidator != null) {
-                builder.validator(jsonPathMessageValidator);
+                builder.pathExpressionValidator(jsonPathMessageValidator);
             }
 
             return builder.build();

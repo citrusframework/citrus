@@ -16,6 +16,11 @@
 
 package com.consol.citrus.validation.json.schema;
 
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
@@ -26,11 +31,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
-import org.springframework.context.ApplicationContext;
-
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * This class is responsible for the validation of json messages against json schemas / json schema repositories.
@@ -63,14 +63,14 @@ public class JsonSchemaValidation {
      * @param message The message to be validated
      * @param schemaRepositories The schema repositories to be used for validation
      * @param validationContext The context of the validation to be used for the validation
-     * @param applicationContext The application context to be used for the validation
+     * @param referenceResolver holding bean references for lookup.
      * @return A report holding the results of the validation
      */
     public ProcessingReport validate(Message message,
                                      List<JsonSchemaRepository> schemaRepositories,
                                      JsonMessageValidationContext validationContext,
-                                     ApplicationContext applicationContext) {
-        return validate(message, jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext));
+                                     ReferenceResolver referenceResolver) {
+        return validate(message, jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolver));
     }
 
     /**

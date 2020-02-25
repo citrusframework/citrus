@@ -16,14 +16,16 @@
 
 package com.consol.citrus.config.xml;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.json.schema.SimpleJsonSchema;
-import com.consol.citrus.xml.schema.WsdlXsdSchema;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.util.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
-import org.springframework.xml.xsd.SimpleXsdSchema;
 import org.w3c.dom.Element;
 
 /**
@@ -34,28 +36,41 @@ import org.w3c.dom.Element;
  */
 public class SchemaParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SchemaParser.class);
+
+    /** Resource path where to find custom schema parsers via lookup */
+    private static final String RESOURCE_PATH = "META-INF/citrus/schema/parser";
+
+    /** Type resolver for dynamic schema parser lookup via resource path */
+    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /** Local cache to hold already looked up parsers */
+    private static final Map<String, BeanDefinitionParser> PARSER_CACHE = new HashMap<>();
+
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String location = element.getAttribute("location");
-        BeanDefinitionBuilder builder = null;
+        return lookupSchemaParser(location).parse(element, parserContext);
+    }
 
-        if (location.endsWith(".wsdl")) {
-            builder = BeanDefinitionBuilder.genericBeanDefinition(WsdlXsdSchema.class);
-            BeanDefinitionParserUtils.setPropertyValue(builder, location, "wsdl");
-        } else if (location.endsWith(".xsd")) {
-            builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleXsdSchema.class);
-            BeanDefinitionParserUtils.setPropertyValue(builder, location, "xsd");
-        } else if (location.endsWith(".json")) {
-            builder = BeanDefinitionBuilder.genericBeanDefinition(SimpleJsonSchema.class);
-            BeanDefinitionParserUtils.setPropertyValue(builder, location, "json");
+    /**
+     * Lookup schema parser based on the file extension used in the schema location. Each file type should have a schema parser
+     * that is able to create a proper bean definition form the given element.
+     * @param location
+     * @return
+     */
+    private BeanDefinitionParser lookupSchemaParser(String location) {
+        // extract file extension from schema location and use this as key to lookup the parser for these files
+        String fileExtension = FileUtils.getFileExtension(location);
+
+        if (PARSER_CACHE.containsKey(fileExtension)) {
+            return PARSER_CACHE.get(fileExtension);
         }
 
-        if (builder != null) {
-            parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
-        }
-
-        return null;
+        BeanDefinitionParser parser = TYPE_RESOLVER.resolve(fileExtension);
+        log.info(String.format("Found schema bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + fileExtension));
+        PARSER_CACHE.put(fileExtension, parser);
+        return parser;
     }
 }

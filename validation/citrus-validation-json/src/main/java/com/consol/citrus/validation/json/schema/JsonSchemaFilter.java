@@ -16,6 +16,12 @@
 
 package com.consol.citrus.validation.json.schema;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
@@ -23,13 +29,7 @@ import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.StringUtils;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * This class is responsible for filtering JsonSchemas based on a
@@ -45,16 +45,16 @@ public class JsonSchemaFilter {
      * and returns a list of relevant schemas for the validation
      * @param schemaRepositories The repositories to be filtered
      * @param jsonMessageValidationContext The context for the json message validation
-     * @param applicationContext The application context to extract beans from
+     * @param referenceResolver holding bean references for lookup.
      * @return A list of json schemas relevant for the validation based on the configuration
      */
     public List<SimpleJsonSchema> filter(List<JsonSchemaRepository> schemaRepositories,
                                          JsonMessageValidationContext jsonMessageValidationContext,
-                                         ApplicationContext applicationContext) {
+                                         ReferenceResolver referenceResolver) {
         if (isSchemaRepositorySpecified(jsonMessageValidationContext)) {
             return filterByRepositoryName(schemaRepositories, jsonMessageValidationContext);
         } else if (isSchemaSpecified(jsonMessageValidationContext)) {
-            return getSchemaFromContext(jsonMessageValidationContext, applicationContext);
+            return getSchemaFromContext(jsonMessageValidationContext, referenceResolver);
         } else {
             return mergeRepositories(schemaRepositories);
         }
@@ -63,15 +63,15 @@ public class JsonSchemaFilter {
     /**
      * Extracts the the schema specified in the jsonMessageValidationContext from the application context
      * @param jsonMessageValidationContext The message validation context containing the name of the schema to extract
-     * @param applicationContext The application context to extract the schema from
+     * @param referenceResolver holding bean references for lookup.
      * @return A list containing the relevant schema
      * @throws CitrusRuntimeException If no matching schema was found
      */
     private List<SimpleJsonSchema> getSchemaFromContext(JsonMessageValidationContext jsonMessageValidationContext,
-                                                        ApplicationContext applicationContext) {
+                                                        ReferenceResolver referenceResolver) {
         try {
             SimpleJsonSchema simpleJsonSchema =
-                    applicationContext.getBean(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
+                    referenceResolver.resolve(jsonMessageValidationContext.getSchema(), SimpleJsonSchema.class);
 
             if (log.isDebugEnabled()) {
                 log.debug("Found specified schema: \"" + jsonMessageValidationContext.getSchema() + "\".");

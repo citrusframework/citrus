@@ -134,12 +134,15 @@ public class WaitParser implements BeanDefinitionParser {
     private BeanDefinition parseActionCondition(Element element, ParserContext parserContext) {
         Element action = DOMUtil.getFirstChildElement(element);
         if (action != null) {
-            BeanDefinitionParser parser = TestActionRegistry.getActionParser(action.getTagName());
+            BeanDefinitionParser parser = null;
+            if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
+                parser = TestActionRegistry.getActionParser(action.getLocalName());
+            }
 
-            if (parser !=  null) {
-                return parser.parse(action, parserContext);
-            } else {
+            if (parser == null) {
                 return parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext);
+            } else {
+                return parser.parse(action, parserContext);
             }
         }
 

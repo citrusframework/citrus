@@ -93,7 +93,7 @@ public class TestCaseParser implements BeanDefinitionParser {
                     parser = TestActionRegistry.getActionParser(action.getLocalName());
                 }
 
-                if (parser ==  null) {
+                if (parser == null) {
                     actions.add(parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
                 } else {
                     actions.add(parser.parse(action, parserContext));

@@ -17,6 +17,7 @@
 package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectSyncEndpoint;
@@ -26,12 +27,20 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.DefaultMessageQueue;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.validation.MessageValidator;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -42,6 +51,24 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
 
     @Autowired
     private XmlTestExecutingEndpointAdapter endpointAdapter;
+
+    @Mock
+    private MessageValidator<?> xmlMessageValidator;
+
+    @BeforeClass
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()));
+    }
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        TestContextFactory contextFactory = super.createTestContextFactory();
+
+        contextFactory.getMessageValidatorRegistry().getMessageValidators().put("text", xmlMessageValidator);
+
+        return contextFactory;
+    }
 
     /**
      * Test for handler routing by node content

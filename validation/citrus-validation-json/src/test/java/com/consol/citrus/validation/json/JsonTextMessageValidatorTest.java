@@ -17,10 +17,10 @@
 package com.consol.citrus.validation.json;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.context.SimpleReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
@@ -40,7 +40,6 @@ import org.testng.annotations.Test;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -439,7 +438,9 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
         validator.setJsonSchemaValidation(jsonSchemaValidation);
 
         JsonSchemaRepository jsonSchemaRepository = mock(JsonSchemaRepository.class);
-        validator.setSchemaRepositories(Collections.singletonList(jsonSchemaRepository));
+        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
+        referenceResolver.bind("jsonSchemaRepository", jsonSchemaRepository);
+        context.setReferenceResolver(referenceResolver);
 
         Message receivedMessage = new DefaultMessage("{\"id\":42}");
         Message controlMessage = new DefaultMessage("{\"id\":42}");
@@ -448,7 +449,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         //THEN
-        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList(), eq(validationContext), isNull());
+        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList(), eq(validationContext), eq(referenceResolver));
     }
 
     @Test

@@ -25,7 +25,6 @@
         <message>Test: Send a request to the server and detect the invalid server response</message>
       </echo>
 
-
       <http:send-request client="echoHttpClient" fork="true">
         <http:GET/>
       </http:send-request>

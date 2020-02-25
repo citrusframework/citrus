@@ -313,4 +313,17 @@ public abstract class FileUtils {
             return FileUtils.getDefaultCharset();
         }
     }
+
+    /**
+     * Extract file extension form given path.
+     * @param path
+     * @return
+     */
+    public static String getFileExtension(String path) {
+        if (path.indexOf(".") > 0) {
+            return path.substring(path.lastIndexOf(".") + 1);
+        }
+
+        return "";
+    }
 }

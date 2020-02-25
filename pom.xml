@@ -54,8 +54,8 @@
     <module>utils</module>
     <module>validation</module>
     <module>runtime</module>
-    <module>endpoints</module>
     <module>connectors</module>
+    <module>endpoints</module>
     <module>tools</module>
     <module>modules/citrus-java-dsl</module>
     <module>modules/citrus-integration</module>
@@ -524,9 +524,20 @@
         <version>1.6.1</version>
       </dependency>
       <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>javax.mail</artifactId>
+        <version>1.6.1</version>
+      </dependency>
+      <dependency>
         <groupId>org.subethamail</groupId>
         <artifactId>subethasmtp</artifactId>
         <version>3.1.7</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Citrus vert.x dependencies -->
@@ -753,6 +764,12 @@
         <groupId>com.github.java-json-tools</groupId>
         <artifactId>json-schema-validator</artifactId>
         <version>${json.schema.validator.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>mailapi</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <!-- Logging -->

@@ -24,12 +24,15 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 
 /**
- * Validator working on SQL result sets. Scripts get the actual test context 
+ * Validator working on SQL result sets. Scripts get the actual test context
  * and a SQL result set representation for validation.
- *  
+ *
  * @author Christoph Deppisch
  */
 public interface SqlResultSetScriptValidator {
+
+    /** Message validator resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/sql/result-set/validator";
 
     /**
      * Validates the SQL result set.
@@ -37,6 +40,6 @@ public interface SqlResultSetScriptValidator {
      * @param validationContext the current validation context.
      * @param context the current test context.
      */
-    void validateSqlResultSet(List<Map<String, Object>> resultSet, 
+    void validateSqlResultSet(List<Map<String, Object>> resultSet,
             ScriptValidationContext validationContext, TestContext context) throws ValidationException;
 }

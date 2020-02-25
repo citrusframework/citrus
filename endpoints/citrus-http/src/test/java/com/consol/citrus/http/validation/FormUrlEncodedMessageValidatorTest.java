@@ -16,23 +16,34 @@
 
 package com.consol.citrus.http.validation;
 
-import com.consol.citrus.context.TestContext;
+import java.util.Collections;
+
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class FormUrlEncodedMessageValidatorTest {
+public class FormUrlEncodedMessageValidatorTest extends AbstractTestNGUnitTest {
 
     /** Class under test */
     private FormUrlEncodedMessageValidator validator = new FormUrlEncodedMessageValidator();
-    private ValidationContext validationContext = new DefaultValidationContext();
+    private ValidationContext validationContext = new XmlMessageValidationContext();
+
+    @Override
+    protected TestContextFactory createTestContextFactory() {
+        TestContextFactory factory = super.createTestContextFactory();
+        factory.setMessageValidatorRegistry(new DefaultMessageValidatorRegistry());
+        return factory;
+    }
 
     private String expectedFormData = "<form-data xmlns=\"http://www.citrusframework.org/schema/http/message\">\n" +
                 "<content-type>application/x-www-form-urlencoded</content-type>\n" +
@@ -55,7 +66,7 @@ public class FormUrlEncodedMessageValidatorTest {
                                         .setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/x-www-form-urlencoded")
                                         .setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, "/form-test");
 
-        validator.validateMessage(receivedMessage, controlMessage, new TestContext(), validationContext);
+        validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext));
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -66,7 +77,7 @@ public class FormUrlEncodedMessageValidatorTest {
                 .setHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE, "application/x-www-form-urlencoded")
                 .setHeader(HttpMessageHeaders.HTTP_REQUEST_URI, "/form-test");
 
-        validator.validateMessage(receivedMessage, controlMessage, new TestContext(), validationContext);
+        validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext));
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -75,6 +86,6 @@ public class FormUrlEncodedMessageValidatorTest {
 
         Message receivedMessage = new DefaultMessage("password=s%21cr%21t&username=test");
 
-        validator.validateMessage(receivedMessage, controlMessage, new TestContext(), validationContext);
+        validator.validateMessage(receivedMessage, controlMessage, context, Collections.singletonList(validationContext));
     }
 }

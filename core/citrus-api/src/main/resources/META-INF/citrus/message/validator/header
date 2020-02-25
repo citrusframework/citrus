@@ -1,0 +1,2 @@
+name=defaultMessageHeaderValidator
+type=com.consol.citrus.validation.DefaultMessageHeaderValidator

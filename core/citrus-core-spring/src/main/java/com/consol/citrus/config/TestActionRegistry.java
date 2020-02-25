@@ -70,9 +70,11 @@ public final class TestActionRegistry {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestActionRegistry.class);
 
+    /** Resource path where to find custom action parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/action/parser";
 
-    private static final ResourcePathTypeResolver<BeanDefinitionParser> typeResolver = new ResourcePathTypeResolver<>(RESOURCE_PATH, BeanDefinitionParser.class);
+    /** Type resolver for dynamic action parser lookup via resource path */
+    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /** Parser registry as map */
     private static Map<String, BeanDefinitionParser> parserCache = new HashMap<>();
@@ -147,7 +149,7 @@ public final class TestActionRegistry {
     public static BeanDefinitionParser getActionParser(String name) {
         if (!parserCache.containsKey(name)) {
             try {
-                parserCache.put(name, typeResolver.resolve(name));
+                parserCache.put(name, TYPE_RESOLVER.resolve(name));
             } catch (Exception e) {
                 log.warn(String.format("Unable to locate test action parser for '%s'", name), e);
             }

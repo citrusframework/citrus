@@ -16,20 +16,20 @@
 
 package com.consol.citrus.ws.validation;
 
+import java.util.Collections;
+
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * Soap fault validator implementation that delegates soap fault detail validation to default XML message validator
@@ -37,16 +37,18 @@ import org.springframework.context.ApplicationContextAware;
  *
  * @author Christoph Deppisch
  */
-public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implements ApplicationContextAware {
+public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XmlSoapFaultValidator.class);
 
     /** Xml message validator */
-    private DomXmlMessageValidator messageValidator;
+    private MessageValidator<? extends ValidationContext> messageValidator;
 
-    /** Spring bean application context */
-    private ApplicationContext applicationContext;
+    /** Type resolver for message validator lookup via resource path */
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
+
+    public static final String DEFAULT_XML_MESSAGE_VALIDATOR = "defaultXmlMessageValidator";
 
     /**
      * Delegates to XML message validator for validation of fault detail.
@@ -62,40 +64,37 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator implemen
             xmlMessageValidationContext = new XmlMessageValidationContext();
         }
 
-        getMessageValidator().validateMessage(new DefaultMessage(receivedDetailString), new DefaultMessage(controlDetailString), context, xmlMessageValidationContext);
+        getMessageValidator(context).validateMessage(new DefaultMessage(receivedDetailString), new DefaultMessage(controlDetailString),
+                context, Collections.singletonList(xmlMessageValidationContext));
     }
 
-    private DomXmlMessageValidator getMessageValidator() {
+    /**
+     * Find proper XML message validator. Uses several strategies to lookup default XML message validator. Caches found validator for
+     * future usage once the lookup is done.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
         if (messageValidator != null) {
             return messageValidator;
         }
 
-        MessageValidatorRegistry messageValidatorRegistry;
-
-        if (applicationContext != null && !applicationContext.getBeansOfType(MessageValidatorRegistry.class).isEmpty()) {
-            messageValidatorRegistry = applicationContext.getBean(MessageValidatorRegistry.class);
-        } else {
-            messageValidatorRegistry = new MessageValidatorRegistry();
-        }
-
         // try to find xml message validator in registry
-        for (MessageValidator<? extends ValidationContext> validator : messageValidatorRegistry.getMessageValidators()) {
-            if (validator instanceof DomXmlMessageValidator &&
-                    validator.supportsMessageType(MessageType.XML.name(), new DefaultMessage(""))) {
-                messageValidator = (DomXmlMessageValidator) validator;
+        messageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_XML_MESSAGE_VALIDATOR);
+
+        if (messageValidator == null) {
+            try {
+                messageValidator = context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 
         if (messageValidator == null) {
-            log.warn("No XML message validator found in Spring bean context - setting default validator");
-            messageValidator = new DomXmlMessageValidator();
+            // try to find xml message validator via resource path lookup
+            messageValidator = TYPE_RESOLVER.resolve("xml");
         }
 
         return messageValidator;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 }

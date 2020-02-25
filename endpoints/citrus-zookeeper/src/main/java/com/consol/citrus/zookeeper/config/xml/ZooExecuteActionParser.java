@@ -27,9 +27,9 @@ import com.consol.citrus.config.util.VariableExtractorParserUtil;
 import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidator;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import com.consol.citrus.zookeeper.client.ZooClient;
@@ -146,10 +146,12 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
         private ObjectMapper jsonMapper;
 
         @Autowired(required = false)
-        private JsonTextMessageValidator jsonTextMessageValidator;
+        @Qualifier("defaultJsonMessageValidator")
+        private MessageValidator<? extends ValidationContext> jsonMessageValidator;
 
         @Autowired(required = false)
-        private JsonPathMessageValidator jsonPathMessageValidator;
+        @Qualifier("defaultJsonPathMessageValidator")
+        private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
 
         /**
          * Sets zookeeper command to execute.
@@ -212,12 +214,12 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
                 builder.client(zookeeperClient);
             }
 
-            if (jsonTextMessageValidator != null) {
-                builder.validator(jsonTextMessageValidator);
+            if (jsonMessageValidator != null) {
+                builder.validator(jsonMessageValidator);
             }
 
             if (jsonPathMessageValidator != null) {
-                builder.validator(jsonPathMessageValidator);
+                builder.pathExpressionValidator(jsonPathMessageValidator);
             }
 
             if (jsonMapper != null) {

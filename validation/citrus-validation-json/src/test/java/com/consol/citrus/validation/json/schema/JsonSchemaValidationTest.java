@@ -20,13 +20,13 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.testng.Assert;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 public class JsonSchemaValidationTest {
 
-    private ApplicationContext applicationContextMock = mock(ApplicationContext.class);
+    private ReferenceResolver referenceResolverMock = mock(ReferenceResolver.class);
     private JsonMessageValidationContext validationContextMock = mock(JsonMessageValidationContext.class);
     private JsonSchemaFilter jsonSchemaFilterMock = mock(JsonSchemaFilter.class);
     private JsonSchemaValidation validator = new JsonSchemaValidation(jsonSchemaFilterMock);
@@ -59,7 +59,7 @@ public class JsonSchemaValidationTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
         //Mock the filter behavior
-        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, applicationContextMock))
+        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
         //Create the received message
@@ -83,8 +83,7 @@ public class JsonSchemaValidationTest {
                 receivedMessage,
                 schemaRepositories,
                 validationContextMock,
-                applicationContextMock);
-
+                referenceResolverMock);
 
         //THEN
         Assert.assertTrue(report.isSuccess());
@@ -106,7 +105,7 @@ public class JsonSchemaValidationTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
         //Mock the filter behavior
-        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, applicationContextMock))
+        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
         Message receivedMessage = new DefaultMessage("[\n" +
@@ -122,14 +121,12 @@ public class JsonSchemaValidationTest {
                 "              }\n" +
                 "            ]");
 
-
         //WHEN
         ProcessingReport report = validator.validate(
                 receivedMessage,
                 schemaRepositories,
                 validationContextMock,
-                applicationContextMock);
-
+                referenceResolverMock);
 
         //THEN
         Assert.assertFalse(report.isSuccess());
@@ -156,7 +153,7 @@ public class JsonSchemaValidationTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
         //Mock the filter behavior
-        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, applicationContextMock))
+        when(jsonSchemaFilterMock.filter(schemaRepositories,  validationContextMock, referenceResolverMock))
                 .thenReturn(Collections.singletonList(schema));
 
         Message receivedMessage = new DefaultMessage("[\n" +
@@ -173,14 +170,12 @@ public class JsonSchemaValidationTest {
                 "              }\n" +
                 "            ]");
 
-
         //WHEN
         ProcessingReport report = validator.validate(
                 receivedMessage,
                 schemaRepositories,
                 validationContextMock,
-                applicationContextMock);
-
+                referenceResolverMock);
 
         //THEN
         Assert.assertTrue(report.isSuccess());
@@ -226,14 +221,12 @@ public class JsonSchemaValidationTest {
                 "              }\n" +
                 "            ]");
 
-
         //WHEN
         ProcessingReport report = validator.validate(
                 receivedMessage,
                 repositoryList,
                 validationContextMock,
-                applicationContextMock);
-
+                referenceResolverMock);
 
         //THEN
         Assert.assertTrue(report.isSuccess());
@@ -246,13 +239,12 @@ public class JsonSchemaValidationTest {
         List<JsonSchemaRepository> repositoryList = Collections.singletonList(mock(JsonSchemaRepository.class));
         Message message = mock(Message.class);
         JsonMessageValidationContext jsonMessageValidationContext = mock(JsonMessageValidationContext.class);
-        ApplicationContext applicationContext = mock(ApplicationContext.class);
 
         //WHEN
-        validator.validate(message, repositoryList, jsonMessageValidationContext, applicationContext);
+        validator.validate(message, repositoryList, jsonMessageValidationContext, referenceResolverMock);
 
         //THEN
-        verify(jsonSchemaFilterMock).filter(repositoryList, jsonMessageValidationContext, applicationContext);
+        verify(jsonSchemaFilterMock).filter(repositoryList, jsonMessageValidationContext, referenceResolverMock);
     }
 
 }

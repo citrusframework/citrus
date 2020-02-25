@@ -16,8 +16,36 @@
 
 package com.consol.citrus.config.handler;
 
-import com.consol.citrus.config.xml.*;
+import java.io.IOException;
+import java.util.stream.Stream;
+
+import com.consol.citrus.config.xml.DefaultMessageQueueParser;
+import com.consol.citrus.config.xml.DirectEndpointAdapterParser;
+import com.consol.citrus.config.xml.DirectEndpointParser;
+import com.consol.citrus.config.xml.DirectSyncEndpointParser;
+import com.consol.citrus.config.xml.EmptyResponseEndpointAdapterParser;
+import com.consol.citrus.config.xml.FunctionLibraryParser;
+import com.consol.citrus.config.xml.GlobalVariablesParser;
+import com.consol.citrus.config.xml.MessageValidatorRegistryParser;
+import com.consol.citrus.config.xml.NamespaceContextParser;
+import com.consol.citrus.config.xml.RequestDispatchingEndpointAdapterParser;
+import com.consol.citrus.config.xml.SchemaParser;
+import com.consol.citrus.config.xml.SchemaRepositoryParser;
+import com.consol.citrus.config.xml.SequenceAfterSuiteParser;
+import com.consol.citrus.config.xml.SequenceAfterTestParser;
+import com.consol.citrus.config.xml.SequenceBeforeSuiteParser;
+import com.consol.citrus.config.xml.SequenceBeforeTestParser;
+import com.consol.citrus.config.xml.StaticResponseEndpointAdapterParser;
+import com.consol.citrus.config.xml.TestActorParser;
+import com.consol.citrus.config.xml.TimeoutProducingEndpointAdapterParser;
+import com.consol.citrus.config.xml.ValidationMatcherLibraryParser;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
  * Namespace handler for components in Citrus configuration.
@@ -26,19 +54,21 @@ import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
  */
 public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
-    /**
-     * @see org.springframework.beans.factory.xml.NamespaceHandler#init()
-     */
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(CitrusConfigNamespaceHandler.class);
+
+    /** Resource path where to find custom config parsers via lookup */
+    private static final String RESOURCE_PATH = "META-INF/citrus/config/parser/core";
+
+    /** Type resolver for dynamic action parser lookup via resource path */
+    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    @Override
     public void init() {
         registerBeanDefinitionParser("schema-repository", new SchemaRepositoryParser());
         registerBeanDefinitionParser("schema", new SchemaParser());
-        registerBeanDefinitionParser("schema-collection", new SchemaCollectionParser());
         registerBeanDefinitionParser("actor", new TestActorParser());
         registerBeanDefinitionParser("global-variables", new GlobalVariablesParser());
-        registerBeanDefinitionParser("xml-data-dictionary", new XmlDataDictionaryParser());
-        registerBeanDefinitionParser("xpath-data-dictionary", new XpathDataDictionaryParser());
-        registerBeanDefinitionParser("json-data-dictionary", new JsonDataDictionaryParser());
-        registerBeanDefinitionParser("json-path-data-dictionary", new JsonPathDataDictionaryParser());
         registerBeanDefinitionParser("message-validators", new MessageValidatorRegistryParser());
         registerBeanDefinitionParser("namespace-context", new NamespaceContextParser());
         registerBeanDefinitionParser("function-library", new FunctionLibraryParser());
@@ -56,6 +86,25 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
         registerBeanDefinitionParser("static-response-adapter", new StaticResponseEndpointAdapterParser());
         registerBeanDefinitionParser("empty-response-adapter", new EmptyResponseEndpointAdapterParser());
         registerBeanDefinitionParser("timeout-producing-adapter", new TimeoutProducingEndpointAdapterParser());
+
+        lookupBeanDefinitionParser();
+    }
+
+    /**
+     * Lookup custom bean definition parser from resource path.
+     */
+    private void lookupBeanDefinitionParser() {
+        try {
+            Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + RESOURCE_PATH + "/*"))
+                    .forEach(file -> {
+                        String resourceName = file.getFilename();
+                        BeanDefinitionParser parser = TYPE_RESOLVER.resolve(resourceName);
+                        log.info(String.format("Register bean definition parser %s from resource %s", parser.getClass(), file));
+                        registerBeanDefinitionParser(resourceName, parser);
+                    });
+        } catch (IOException e) {
+            log.warn("Failed to add custom bean definition parsers", e);
+        }
     }
 
 }

@@ -107,9 +107,12 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
 
         Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
-            BeanDefinitionParser parser = TestActionRegistry.getActionParser(action.getTagName());
+            BeanDefinitionParser parser = null;
+            if (action.getNamespaceURI().equals("http://www.citrusframework.org/schema/testcase")) {
+                parser = TestActionRegistry.getActionParser(action.getLocalName());
+            }
 
-            if (parser ==  null) {
+            if (parser == null) {
             	beanDefinition.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
             } else {
             	beanDefinition.addPropertyValue("action", parser.parse(action, parserContext));

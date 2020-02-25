@@ -82,7 +82,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
     @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getMessageValidatorRegistry().getMessageValidators().add(validator);
+        factory.getMessageValidatorRegistry().getMessageValidators().put("defaultXmlMessageValidator", validator);
 
         SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
         referenceResolver.bind("schemaRepository", schemaRepository);

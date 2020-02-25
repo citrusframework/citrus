@@ -16,13 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.json.JsonSchemaRepository;
-import com.consol.citrus.xml.XsdSchemaRepository;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -41,71 +42,52 @@ import org.w3c.dom.Element;
  */
 public class SchemaRepositoryParser implements BeanDefinitionParser {
 
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(SchemaRepositoryParser.class);
+
     private static final String LOCATION = "location";
     private static final String LOCATIONS = "locations";
     private static final String SCHEMA = "schema";
     private static final String SCHEMAS = "schemas";
     private static final String ID = "id";
 
-    private final SchemaParser schemaParser = new SchemaParser();
+    private final static SchemaParser SCHEMA_PARSER = new SchemaParser();
+
+    /** Resource path where to find custom schema repository parsers via lookup */
+    private static final String RESOURCE_PATH = "META-INF/citrus/schema-repository/parser";
+
+    /** Type resolver for dynamic schema repository parser lookup via resource path */
+    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /** Local cache to hold already looked up parsers */
+    private static final Map<String, BeanDefinitionParser> PARSER_CACHE = new HashMap<>();
 
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
-        if (isXmlSchemaRepository(element)) {
-            registerXmlSchemaRepository(element, parserContext);
-        } else if (isJsonSchemaRepository(element)) {
-            registerJsonSchemaRepository(element, parserContext);
+        String schemaRepositoryType = element.getAttribute("type");
+
+        if (StringUtils.isEmpty(schemaRepositoryType)) {
+            schemaRepositoryType = "xml";
         }
 
-        return null;
+        return lookupSchemaRepositoryParser(schemaRepositoryType).parse(element, parserContext);
     }
 
     /**
-     * Registers a JsonSchemaRepository definition in the parser context
-     * @param element The element to be converted into a JsonSchemaRepository definition
-     * @param parserContext The parser context to add the definitions to
+     * Lookup schema repository parser based on the given type. Each repository type should have a schema repository parser
+     * that is able to create a proper bean definition form the given element.
+     * @param type
+     * @return
      */
-    private void registerJsonSchemaRepository(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(JsonSchemaRepository.class);
-        addLocationsToBuilder(element, builder);
-        parseSchemasElement(element, builder, parserContext);
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
-    }
+    private BeanDefinitionParser lookupSchemaRepositoryParser(String type) {
+        if (PARSER_CACHE.containsKey(type)) {
+            return PARSER_CACHE.get(type);
+        }
 
-    /**
-     * Registers a XsdSchemaRepository definition in the parser context
-     * @param element The element to be converted into a XmlSchemaRepository definition
-     * @param parserContext The parser context to add the definitions to
-     */
-    private void registerXmlSchemaRepository(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(XsdSchemaRepository.class);
-        BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("schema-mapping-strategy"), "schemaMappingStrategy");
-        addLocationsToBuilder(element, builder);
-        parseSchemasElement(element, builder, parserContext);
-        parserContext.getRegistry().registerBeanDefinition(element.getAttribute(ID), builder.getBeanDefinition());
-    }
-
-    /**
-     * Decides whether the given element is a xml schema repository.
-     *
-     * Note:
-     * If the "type" attribute has not been set, the repository is interpreted as a xml repository by definition.
-     * This is important to guarantee downwards compatibility.
-     * @param element The element to be checked
-     * @return Whether the given element is a xml schema repository
-     */
-    private boolean isXmlSchemaRepository(Element element) {
-        String schemaRepositoryType = element.getAttribute("type");
-        return StringUtils.isEmpty(schemaRepositoryType) || "xml".equals(schemaRepositoryType);
-    }
-
-    /**
-     * Decides whether the given element is a json schema repository
-     * @param element The element to be checked
-     * @return  whether the given element is a json schema repository
-     */
-    private boolean isJsonSchemaRepository(Element element) {
-        return Objects.equals(element.getAttribute("type"), "json");
+        BeanDefinitionParser parser = TYPE_RESOLVER.resolve(type);
+        log.info(String.format("Found schema repository bean definition parser %s from resource %s", parser.getClass(), RESOURCE_PATH + "/" + type));
+        PARSER_CACHE.put(type, parser);
+        return parser;
     }
 
     /**
@@ -113,7 +95,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @param element the element containing the locations to be added to the builder
      * @param builder the BeanDefinitionBuilder to add the locations to
      */
-    private void addLocationsToBuilder(Element element, BeanDefinitionBuilder builder) {
+    static void addLocationsToBuilder(Element element, BeanDefinitionBuilder builder) {
         Element locationsElement = DomUtils.getChildElementByTagName(element, LOCATIONS);
         if (locationsElement != null) {
             List<Element> locationElements = DomUtils.getChildElementsByTagName(locationsElement, LOCATION);
@@ -135,7 +117,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @param builder The builder to add the resulting RuntimeBeanReference to
      * @param parserContext The context to parse the schema elements in
      */
-    private void parseSchemasElement(Element element,
+    static void parseSchemasElement(Element element,
                                      BeanDefinitionBuilder builder,
                                      ParserContext parserContext) {
         Element schemasElement = DomUtils.getChildElementByTagName(element, SCHEMAS);
@@ -157,7 +139,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
      * @param schemaElements The element to be parsed
      * @return A list of RuntimeBeanReferences that have been defined in the xml document
      */
-    private ManagedList<RuntimeBeanReference> constructRuntimeBeanReferences(
+    private static ManagedList<RuntimeBeanReference> constructRuntimeBeanReferences(
             ParserContext parserContext,
             List<Element> schemaElements) {
 
@@ -168,7 +150,7 @@ public class SchemaRepositoryParser implements BeanDefinitionParser {
                 runtimeBeanReferences.add(
                         new RuntimeBeanReference(schemaElement.getAttribute(SCHEMA)));
             } else  {
-                schemaParser.parse(schemaElement, parserContext);
+                SCHEMA_PARSER.parse(schemaElement, parserContext);
                 runtimeBeanReferences.add(
                         new RuntimeBeanReference(schemaElement.getAttribute(ID)));
             }

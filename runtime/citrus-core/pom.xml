@@ -14,11 +14,46 @@
   <description>Citrus core combines multiple other modules to a default runtime</description>
 
   <dependencies>
+    <!-- Citrus Spring core module -->
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-core-spring</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- Validation modules -->
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-xml</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-json</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-text</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-binary</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-hamcrest</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-groovy</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- Runtime modules -->
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-testng</artifactId>
@@ -57,6 +92,8 @@
       <artifactId>citrus-main</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!-- Endpoints -->
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-spring-integration</artifactId>

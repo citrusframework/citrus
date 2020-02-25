@@ -16,15 +16,15 @@
 
 package com.consol.citrus.validation.matcher;
 
-import com.consol.citrus.exceptions.NoSuchValidationMatcherException;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.exceptions.NoSuchValidationMatcherException;
 
 /**
  * Library holding a set of validation matchers. Each library defines a validation prefix as namespace, so
  * there will be no naming conflicts when using multiple libraries at a time.
- * 
+ *
  * @author Christian Wied
  */
 public class ValidationMatcherLibrary {
@@ -37,9 +37,12 @@ public class ValidationMatcherLibrary {
     /** validationMatcher library prefix */
     private String prefix = "";
 
+    /** Message validator resource lookup path */
+    public static final String RESOURCE_PATH = "META-INF/citrus/validation/matcher";
+
     /**
      * Try to find validationMatcher in library by name.
-     * 
+     *
      * @param validationMatcherName validationMatcher name.
      * @return the validationMatcher instance.
      * @throws com.consol.citrus.exceptions.NoSuchValidationMatcherException
@@ -54,7 +57,7 @@ public class ValidationMatcherLibrary {
 
     /**
      * Does this library know a validationMatcher with the given name.
-     * 
+     *
      * @param validationMatcherName name to search for.
      * @return boolean flag to mark existence.
      */
@@ -62,7 +65,7 @@ public class ValidationMatcherLibrary {
         // custom libraries:
         if (validationMatcherName.contains(":")) {
             String validationMatcherPrefix = validationMatcherName.substring(0, validationMatcherName.indexOf(':') + 1);
-            
+
             if (!validationMatcherPrefix.equals(prefix)) {
                 return false;
             }

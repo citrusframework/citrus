@@ -19,8 +19,10 @@ package com.consol.citrus.http.validation;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.StringTokenizer;
 
 import com.consol.citrus.CitrusSettings;
@@ -34,10 +36,14 @@ import com.consol.citrus.http.model.FormMarshaller;
 import com.consol.citrus.http.model.ObjectFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.DefaultMessageValidator;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
@@ -48,7 +54,10 @@ import org.springframework.xml.transform.StringResult;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
+public class FormUrlEncodedMessageValidator implements MessageValidator<ValidationContext> {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(FormUrlEncodedMessageValidator.class);
 
     /** Message type this validator is bound to */
     public static final String MESSAGE_TYPE = "x-www-form-urlencoded";
@@ -57,30 +66,84 @@ public class FormUrlEncodedMessageValidator extends DefaultMessageValidator {
     private FormMarshaller formMarshaller = new FormMarshaller();
 
     /** Xml message validator delegate */
-    private DomXmlMessageValidator xmlMessageValidator = new DomXmlMessageValidator();
+    private MessageValidator<? extends ValidationContext> xmlMessageValidator;
+
+    /** Type resolver for message validator lookup via resource path */
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     /** Should form name value pairs be decoded by default */
     private boolean autoDecode = true;
 
+    public static final String DEFAULT_XML_MESSAGE_VALIDATOR = "defaultXmlMessageValidator";
+
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage,
-                                TestContext context, ValidationContext validationContext) throws ValidationException {
+                                TestContext context, List<ValidationContext> validationContexts) throws ValidationException {
         log.info("Start " + MESSAGE_TYPE + " message validation");
 
         try {
-            XmlMessageValidationContext xmlMessageValidationContext = new XmlMessageValidationContext();
-
             Message formMessage = new DefaultMessage(receivedMessage);
             StringResult result = new StringResult();
             formMarshaller.marshal(createFormData(receivedMessage), result);
             formMessage.setPayload(result.toString());
 
-            xmlMessageValidator.validateMessage(formMessage, controlMessage, context, xmlMessageValidationContext);
+            getXmlMessageValidator(context).validateMessage(formMessage, controlMessage, context, prepareValidationContexts(validationContexts));
         } catch (IllegalArgumentException e) {
             throw new ValidationException("Failed to validate " + MESSAGE_TYPE + " message", e);
         }
 
         log.info("Validation of " + MESSAGE_TYPE + " message finished successfully: All values OK");
+    }
+
+    /**
+     * Looks for provided XML message validation context in given list of contexts. If no such XML message validation context is
+     * present add a new context that applies for XML message validation.
+     * @param validationContexts
+     * @return
+     */
+    private List<ValidationContext> prepareValidationContexts(List<ValidationContext> validationContexts) {
+        Optional<XmlMessageValidationContext> provided = validationContexts.stream()
+                .filter(XmlMessageValidationContext.class::isInstance)
+                .map(XmlMessageValidationContext.class::cast)
+                .findFirst();
+
+        if (!provided.isPresent()) {
+            List<ValidationContext> enriched = new ArrayList<>(validationContexts);
+            enriched.add(new XmlMessageValidationContext());
+            return enriched;
+        }
+
+        return validationContexts;
+    }
+
+    /**
+     * Find proper XML message validator. Uses several strategies to lookup default XML message validator. Caches found validator for
+     * future usage once the lookup is done.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getXmlMessageValidator(TestContext context) {
+        if (xmlMessageValidator != null) {
+            return xmlMessageValidator;
+        }
+
+        // try to find xml message validator in registry
+        xmlMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_XML_MESSAGE_VALIDATOR);
+
+        if (xmlMessageValidator == null) {
+            try {
+                xmlMessageValidator = context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default XML message validator in message validator registry");
+            }
+        }
+
+        if (xmlMessageValidator == null) {
+            // try to find xml message validator via resource path lookup
+            xmlMessageValidator = TYPE_RESOLVER.resolve("xml");
+        }
+
+        return xmlMessageValidator;
     }
 
     /**

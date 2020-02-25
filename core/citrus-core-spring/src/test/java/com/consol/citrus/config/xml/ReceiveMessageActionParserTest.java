@@ -374,7 +374,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidators().size(), 2);
         Assert.assertEquals(action.getValidators().get(0), beanDefinitionContext.getBean("myValidator", MessageValidator.class));
-        Assert.assertEquals(action.getValidators().get(1), beanDefinitionContext.getBean("defaultPlaintextMessageValidator", MessageValidator.class));
+        Assert.assertEquals(action.getValidators().get(1), beanDefinitionContext.getBean("defaultMessageValidator", MessageValidator.class));
         headerValidationContext = (HeaderValidationContext) action.getValidationContexts().get(0);
         Assert.assertEquals(headerValidationContext.getValidatorNames().size(), 2);
         Assert.assertEquals(headerValidationContext.getValidatorNames().get(0), "myHeaderValidator");

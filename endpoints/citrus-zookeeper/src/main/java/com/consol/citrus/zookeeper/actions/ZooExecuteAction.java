@@ -17,6 +17,7 @@
 package com.consol.citrus.zookeeper.actions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,11 +30,14 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageValidator;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.zookeeper.client.ZooClient;
 import com.consol.citrus.zookeeper.command.Create;
@@ -73,9 +77,15 @@ public class ZooExecuteAction extends AbstractTestAction {
     /** JSON data binding */
     private final ObjectMapper jsonMapper;
 
-    private final JsonTextMessageValidator jsonTextMessageValidator;
+    /** Validator used to validate expected json results */
+    private final MessageValidator<? extends ValidationContext> jsonMessageValidator;
+    private final MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
 
-    private final JsonPathMessageValidator jsonPathMessageValidator;
+    /** Type resolver for message validator lookup via resource path */
+    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
+
+    public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
+    public static final String DEFAULT_JSON_PATH_MESSAGE_VALIDATOR = "defaultJsonPathMessageValidator";
 
     /** An optional validation contextst containing json path validators to validate the command result */
     private final JsonPathMessageValidationContext jsonPathMessageValidationContext;
@@ -93,7 +103,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         this.command = builder.command;
         this.expectedCommandResult = builder.expectedCommandResult;
         this.jsonMapper = builder.jsonMapper;
-        this.jsonTextMessageValidator = builder.jsonTextMessageValidator;
+        this.jsonMessageValidator = builder.jsonMessageValidator;
         this.jsonPathMessageValidator = builder.jsonPathMessageValidator;
         this.jsonPathMessageValidationContext = builder.jsonPathMessageValidationContext;
         this.variableExtractors = builder.variableExtractors;
@@ -118,6 +128,64 @@ public class ZooExecuteAction extends AbstractTestAction {
     }
 
     /**
+     * Find proper JSON message validator. Uses several strategies to lookup default JSON message validator.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getMessageValidator(TestContext context) {
+        if (jsonMessageValidator != null) {
+            return jsonMessageValidator;
+        }
+
+        // try to find json message validator in registry
+        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_MESSAGE_VALIDATOR);
+
+        if (defaultJsonMessageValidator == null) {
+            try {
+                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default JSON message validator in message validator registry");
+            }
+        }
+
+        if (defaultJsonMessageValidator == null) {
+            // try to find json message validator via resource path lookup
+            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+        }
+
+        return defaultJsonMessageValidator;
+    }
+
+    /**
+     * Find proper JSON path message validator. Uses several strategies to lookup default JSON path message validator.
+     * @param context
+     * @return
+     */
+    private MessageValidator<? extends ValidationContext> getPathValidator(TestContext context) {
+        if (jsonPathMessageValidator != null) {
+            return jsonPathMessageValidator;
+        }
+
+        // try to find json message validator in registry
+        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR);
+
+        if (defaultJsonMessageValidator == null) {
+            try {
+                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR, MessageValidator.class);
+            } catch (CitrusRuntimeException e) {
+                log.warn("Unable to find default JSON path message validator in message validator registry");
+            }
+        }
+
+        if (defaultJsonMessageValidator == null) {
+            // try to find json message validator via resource path lookup
+            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+        }
+
+        return defaultJsonMessageValidator;
+    }
+
+    /**
      * Validate command results.
      *
      * @param command
@@ -135,12 +203,12 @@ public class ZooExecuteAction extends AbstractTestAction {
         if (StringUtils.hasText(expectedCommandResult)) {
             assertResultExists(commandResult);
             JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-            jsonTextMessageValidator.validateMessage(commandResult, new DefaultMessage(expectedCommandResult), context, validationContext);
+            getMessageValidator(context).validateMessage(commandResult, new DefaultMessage(expectedCommandResult), context, Collections.singletonList(validationContext));
         }
 
         if (jsonPathMessageValidationContext != null) {
             assertResultExists(commandResult);
-            jsonPathMessageValidator.validateMessage(commandResult, null, context, jsonPathMessageValidationContext);
+            getPathValidator(context).validateMessage(commandResult, null, context, Collections.singletonList(jsonPathMessageValidationContext));
         }
 
         log.info("Zookeeper command result validation successful - all values OK!");
@@ -248,12 +316,10 @@ public class ZooExecuteAction extends AbstractTestAction {
         private ZooCommand<?> command;
         private String expectedCommandResult;
         private ObjectMapper jsonMapper = new ObjectMapper();
-        private JsonTextMessageValidator jsonTextMessageValidator = new JsonTextMessageValidator();
-        private JsonPathMessageValidator jsonPathMessageValidator = new JsonPathMessageValidator();
+        private MessageValidator<? extends ValidationContext> jsonMessageValidator;
+        private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
         private JsonPathMessageValidationContext jsonPathMessageValidationContext;
         private List<VariableExtractor> variableExtractors = new ArrayList<>();
-
-        private ReferenceResolver referenceResolver;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -370,12 +436,12 @@ public class ZooExecuteAction extends AbstractTestAction {
             return this;
         }
 
-        public Builder validator(JsonTextMessageValidator validator) {
-            this.jsonTextMessageValidator = validator;
+        public Builder validator(MessageValidator<? extends ValidationContext> validator) {
+            this.jsonMessageValidator = validator;
             return this;
         }
 
-        public Builder validator(JsonPathMessageValidator validator) {
+        public Builder pathExpressionValidator(MessageValidator<? extends ValidationContext> validator) {
             this.jsonPathMessageValidator = validator;
             return this;
         }
@@ -426,8 +492,6 @@ public class ZooExecuteAction extends AbstractTestAction {
          * @param referenceResolver
          */
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
-            this.referenceResolver = referenceResolver;
-
             if (referenceResolver.isResolvable("zookeeperClient")) {
                 this.zookeeperClient = referenceResolver.resolve("zookeeperClient", ZooClient.class);
             }

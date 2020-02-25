@@ -22,7 +22,8 @@ import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.command.DockerCommand;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
+import com.consol.citrus.validation.MessageValidator;
+import com.consol.citrus.validation.context.ValidationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,7 +138,8 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
         private ObjectMapper jsonMapper;
 
         @Autowired(required = false)
-        private JsonTextMessageValidator jsonTextMessageValidator;
+        @Qualifier("defaultJsonMessageValidator")
+        private MessageValidator<? extends ValidationContext> jsonMessageValidator;
 
         /**
          * Sets docker command to execute.
@@ -171,8 +173,8 @@ public class DockerExecuteActionParser implements BeanDefinitionParser {
                 builder.client(dockerClient);
             }
 
-            if (jsonTextMessageValidator != null) {
-                builder.validator(jsonTextMessageValidator);
+            if (jsonMessageValidator != null) {
+                builder.validator(jsonMessageValidator);
             }
 
             if (jsonMapper != null) {

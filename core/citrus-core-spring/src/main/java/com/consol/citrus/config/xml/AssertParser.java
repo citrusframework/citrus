@@ -46,12 +46,15 @@ public class AssertParser implements BeanDefinitionParser {
 
         Element action = DOMUtil.getFirstChildElement(DomUtils.getChildElementByTagName(element, "when"));
         if (action != null) {
-            BeanDefinitionParser parser = TestActionRegistry.getActionParser(action.getTagName());
+            BeanDefinitionParser parser = null;
+            if (action.getNamespaceURI().equals(element.getNamespaceURI())) {
+                parser = TestActionRegistry.getActionParser(action.getLocalName());
+            }
 
-            if (parser !=  null) {
-                builder.addPropertyValue("action", parser.parse(action, parserContext));
-            } else {
+            if (parser == null) {
                 builder.addPropertyValue("action", parserContext.getReaderContext().getNamespaceHandlerResolver().resolve(action.getNamespaceURI()).parse(action, parserContext));
+            } else {
+                builder.addPropertyValue("action", parser.parse(action, parserContext));
             }
         }
 

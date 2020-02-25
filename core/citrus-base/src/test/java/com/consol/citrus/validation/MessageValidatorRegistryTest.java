@@ -16,8 +16,9 @@
 
 package com.consol.citrus.validation;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonUtils;
@@ -88,32 +89,31 @@ public class MessageValidatorRegistryTest {
         when(binaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.BINARY_BASE64.name()));
         when(gzipBinaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.GZIP_BASE64.name()));
 
-        messageValidatorRegistry.getMessageValidators().add(xmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(xPathMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(groovyXmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(jsonTextMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(jsonPathMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(plainTextMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(new DefaultMessageHeaderValidator());
-        messageValidatorRegistry.getMessageValidators().add(binaryMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(binaryBase64MessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(gzipBinaryBase64MessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("xmlMessageValidator", xmlMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("xPathMessageValidator", xPathMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("groovyXmlMessageValidator", groovyXmlMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("jsonTextMessageValidator", jsonTextMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("jsonPathMessageValidator", jsonPathMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("plainTextMessageValidator", plainTextMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("headerMessageValidator", new DefaultMessageHeaderValidator());
+        messageValidatorRegistry.getMessageValidators().put("binaryMessageValidator", binaryMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("binaryBase64MessageValidator", binaryBase64MessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("gzipBinaryBase64MessageValidator", gzipBinaryBase64MessageValidator);
 
-        messageValidatorRegistry.getMessageValidators().add(groovyJsonMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(groovyScriptMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(xhtmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(xhtmlXpathMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("groovyJsonMessageValidator", groovyJsonMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("groovyScriptMessageValidator", groovyScriptMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("xhtmlMessageValidator", xhtmlMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("xhtmlXpathMessageValidator", xhtmlXpathMessageValidator);
     }
 
     @Test
     public void testFindMessageValidators() throws Exception {
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
 
-        List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<>();
-        messageValidators.add(plainTextMessageValidator);
+        Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new HashMap<>();
+        messageValidators.put("plainTextMessageValidator", plainTextMessageValidator);
 
         messageValidatorRegistry.setMessageValidators(messageValidators);
-        messageValidatorRegistry.afterPropertiesSet();
 
         List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
@@ -128,15 +128,15 @@ public class MessageValidatorRegistryTest {
             Assert.assertTrue(e.getMessage().startsWith("Could not find proper message validator for message type"));
         }
 
-        messageValidatorRegistry.getMessageValidators().add(xmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().add(groovyScriptMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("xmlMessageValidator", xmlMessageValidator);
+        messageValidatorRegistry.getMessageValidators().put("groovyScriptMessageValidator", groovyScriptMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 
         Assert.assertNotNull(matchingValidators);
         Assert.assertEquals(matchingValidators.size(), 2L);
-        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
-        Assert.assertEquals(matchingValidators.get(1), groovyScriptMessageValidator);
+        Assert.assertEquals(matchingValidators.get(0), groovyScriptMessageValidator);
+        Assert.assertEquals(matchingValidators.get(1), plainTextMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.XML.name(), new DefaultMessage(""));
 
@@ -272,11 +272,5 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
         Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
         Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
-    }
-
-    @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testEmptyListOfMessageValidators() throws Exception {
-        MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
-        messageValidatorRegistry.afterPropertiesSet();
     }
 }

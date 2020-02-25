@@ -16,8 +16,9 @@
 
 package com.consol.citrus.validation.script;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
@@ -77,10 +78,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new GroovyJsonMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new GroovyScriptMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new GroovyXmlMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("header", new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("groovyJson", new GroovyJsonMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("groovyText", new GroovyScriptMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("groovyXml", new GroovyXmlMessageValidator());
 
         SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
         referenceResolver.bind("mockQueue", mockQueue);
@@ -246,7 +247,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
-        context.getMessageValidatorRegistry().getMessageValidators().add(xmlMessageValidator);
+        context.getMessageValidatorRegistry().getMessageValidators().put("xml", xmlMessageValidator);
         when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
@@ -257,9 +258,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction.execute(context);
 
         // now inject multiple validators
-        List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
-        validators.add(xmlMessageValidator);
-        validators.add(new GroovyXmlMessageValidator());
+        Map<String, MessageValidator<? extends ValidationContext>> validators = new HashMap<>();
+        validators.put("xml", xmlMessageValidator);
+        validators.put("groovyXml", new GroovyXmlMessageValidator());
 
         MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
         messageValidatorRegistry.setMessageValidators(validators);

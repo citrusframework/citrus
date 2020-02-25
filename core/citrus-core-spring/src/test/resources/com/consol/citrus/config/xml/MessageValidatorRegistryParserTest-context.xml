@@ -11,29 +11,16 @@
 
   <!-- Default message validators -->
   <citrus:message-validators>
-    <citrus:validator ref="defaultXmlMessageValidator"/>
-    <citrus:validator ref="defaultXpathMessageValidator"/>
-    <citrus:validator ref="defaultGroovyXmlMessageValidator"/>
-    <citrus:validator class="com.consol.citrus.validation.text.PlainTextMessageValidator"/>
-    <citrus:validator ref="defaultBinaryBase64MessageValidator"/>
-    <citrus:validator ref="defaultGzipBinaryBase64MessageValidator"/>
-    <citrus:validator ref="defaultJsonMessageValidator"/>
-    <citrus:validator ref="defaultJsonPathMessageValidator"/>
-    <citrus:validator ref="defaultMessageHeaderValidator"/>
-    <citrus:validator ref="defaultGroovyJsonMessageValidator"/>
-    <citrus:validator ref="defaultXhtmlMessageValidator"/>
+    <citrus:validator class="com.consol.citrus.validation.DefaultMessageHeaderValidator"/>
+    <citrus:validator ref="validator1"/>
+    <citrus:validator ref="validator2"/>
   </citrus:message-validators>
 
-  <bean id="defaultMessageHeaderValidator" class="com.consol.citrus.validation.DefaultMessageHeaderValidator"/>
-  <bean id="defaultXmlMessageValidator" class="com.consol.citrus.validation.xml.DomXmlMessageValidator"/>
-  <bean id="defaultXpathMessageValidator" class="com.consol.citrus.validation.xml.XpathMessageValidator"/>
-  <bean id="defaultJsonMessageValidator" class="com.consol.citrus.validation.json.JsonTextMessageValidator"/>
-  <bean id="defaultJsonPathMessageValidator" class="com.consol.citrus.validation.json.JsonPathMessageValidator"/>
-  <bean id="defaultXhtmlMessageValidator" class="com.consol.citrus.validation.xhtml.XhtmlMessageValidator"/>
-  <bean id="defaultBinaryBase64MessageValidator" class="com.consol.citrus.validation.text.BinaryBase64MessageValidator"/>
-  <bean id="defaultGzipBinaryBase64MessageValidator" class="com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator"/>
-
-  <bean id="defaultGroovyXmlMessageValidator" class="com.consol.citrus.validation.script.GroovyXmlMessageValidator"/>
-  <bean id="defaultGroovyJsonMessageValidator" class="com.consol.citrus.validation.script.GroovyJsonMessageValidator"/>
+  <bean id="validator1" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+  </bean>
+  <bean id="validator2" class="org.mockito.Mockito" factory-method="mock">
+    <constructor-arg value="com.consol.citrus.validation.MessageValidator"/>
+  </bean>
 
 </beans>

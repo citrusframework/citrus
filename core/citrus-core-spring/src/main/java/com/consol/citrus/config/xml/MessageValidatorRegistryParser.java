@@ -20,7 +20,7 @@ import com.consol.citrus.validation.MessageValidatorRegistry;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.RuntimeBeanReference;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.ManagedList;
+import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
@@ -49,13 +49,13 @@ public class MessageValidatorRegistryParser implements BeanDefinitionParser {
      * @param element the source element.
      */
     private void parseValidators(BeanDefinitionBuilder builder, Element element) {
-        ManagedList validators = new ManagedList();
+        ManagedMap validators = new ManagedMap();
         for (Element validator : DomUtils.getChildElementsByTagName(element, "validator")) {
 
             if (validator.hasAttribute("ref")) {
-                validators.add(new RuntimeBeanReference(validator.getAttribute("ref")));
+                validators.put(validator.getAttribute("ref"), new RuntimeBeanReference(validator.getAttribute("ref")));
             } else {
-                validators.add(BeanDefinitionBuilder.rootBeanDefinition(validator.getAttribute("class")).getBeanDefinition());
+                validators.put(validator.getAttribute("class"), BeanDefinitionBuilder.rootBeanDefinition(validator.getAttribute("class")).getBeanDefinition());
             }
         }
 

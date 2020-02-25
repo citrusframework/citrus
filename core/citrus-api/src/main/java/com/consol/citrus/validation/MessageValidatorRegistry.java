@@ -17,7 +17,9 @@
 package com.consol.citrus.validation;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -25,7 +27,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 
 /**
@@ -36,7 +37,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Christoph Deppisch
  */
-public class MessageValidatorRegistry implements InitializingBean {
+public class MessageValidatorRegistry {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MessageValidatorRegistry.class);
@@ -44,8 +45,11 @@ public class MessageValidatorRegistry implements InitializingBean {
     /** The default bean id in Spring application context*/
     public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
 
-    /** List of registered message validator implementations */
-    private List<MessageValidator<? extends ValidationContext>> messageValidators = new ArrayList<>();
+    /** Message validator resource lookup path */
+    public static final String RESOURCE_PATH = "META-INF/citrus/message/validator";
+
+    /** Registered message validators */
+    private Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new LinkedHashMap<>();
 
     /**
      * Finds matching message validators for this message type.
@@ -57,7 +61,7 @@ public class MessageValidatorRegistry implements InitializingBean {
     public List<MessageValidator<? extends ValidationContext>> findMessageValidators(String messageType, Message message) {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
 
-        for (MessageValidator<? extends ValidationContext> validator : messageValidators) {
+        for (MessageValidator<? extends ValidationContext> validator : messageValidators.values()) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingValidators.add(validator);
             }
@@ -94,7 +98,7 @@ public class MessageValidatorRegistry implements InitializingBean {
     private List<MessageValidator<? extends ValidationContext>> findFallbackMessageValidators(String messageType, Message message) {
         List<MessageValidator<? extends ValidationContext>> matchingValidators = new ArrayList<>();
 
-        for (MessageValidator<? extends ValidationContext> validator : messageValidators) {
+        for (MessageValidator<? extends ValidationContext> validator : messageValidators.values()) {
             if (validator.supportsMessageType(messageType, message)) {
                 matchingValidators.add(validator);
             }
@@ -104,21 +108,11 @@ public class MessageValidatorRegistry implements InitializingBean {
     }
 
     /**
-     * Check if we have at least one message validator available.
-     */
-    public void afterPropertiesSet() throws Exception {
-        if (messageValidators.isEmpty()) {
-            throw new CitrusRuntimeException("No message validators available in Spring bean context - " +
-                    "please define message validators!");
-        }
-    }
-
-    /**
      * Sets available message validator implementations.
      * @param messageValidators the messageValidators to set
      */
     public void setMessageValidators(
-            List<MessageValidator<? extends ValidationContext>> messageValidators) {
+            Map<String, MessageValidator<? extends ValidationContext>> messageValidators) {
         this.messageValidators = messageValidators;
     }
 
@@ -126,7 +120,7 @@ public class MessageValidatorRegistry implements InitializingBean {
      * Gets the message validators.
      * @return
      */
-    public List<MessageValidator<? extends ValidationContext>> getMessageValidators() {
+    public Map<String, MessageValidator<? extends ValidationContext>> getMessageValidators() {
         return messageValidators;
     }
 
@@ -134,10 +128,11 @@ public class MessageValidatorRegistry implements InitializingBean {
      * Gets the default message header validator.
      * @return
      */
-    public MessageValidator getDefaultMessageHeaderValidator() {
-        return messageValidators
+    public DefaultMessageHeaderValidator getDefaultMessageHeaderValidator() {
+        return messageValidators.values()
                 .stream()
                 .filter(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))
+                .map(DefaultMessageHeaderValidator.class::cast)
                 .findFirst()
                 .orElse(null);
     }

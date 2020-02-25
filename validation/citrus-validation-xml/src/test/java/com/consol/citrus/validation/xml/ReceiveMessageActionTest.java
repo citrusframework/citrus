@@ -70,11 +70,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new DomXmlMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new XpathMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new XhtmlMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().add(new XhtmlXpathMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("header", new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("xml", new DomXmlMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("xpath", new XpathMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("xhtml", new XhtmlMessageValidator());
+        factory.getMessageValidatorRegistry().getMessageValidators().put("xhtmlXpath", new XhtmlXpathMessageValidator());
 
         SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
         referenceResolver.bind("mockQueue", mockQueue);

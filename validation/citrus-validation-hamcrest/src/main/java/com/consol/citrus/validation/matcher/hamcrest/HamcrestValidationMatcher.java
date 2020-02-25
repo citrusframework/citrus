@@ -167,11 +167,7 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
                 }
             }
 
-            Optional<HamcrestMatcherProvider> matcherProvider = context.getReferenceResolver().resolveAll(HamcrestMatcherProvider.class)
-                                                                                .values()
-                                                                                .stream()
-                                                                                .filter(provider -> provider.getName().equals(matcherName))
-                                                                                .findFirst();
+            Optional<HamcrestMatcherProvider> matcherProvider = lookupMatcherProvider(matcherName, context);
             if (matcherProvider.isPresent()) {
                 return matcherProvider.get().provideMatcher(matcherParameter[0]);
             }
@@ -254,6 +250,28 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
         }
 
         throw new CitrusRuntimeException("Unsupported matcher: " + matcherName);
+    }
+
+    /**
+     * Try to find matcher provider using different lookup strategies. Looks into reference resolver and resource path for matcher provider.
+     * @param matcherName
+     * @param context
+     * @return
+     */
+    private Optional<HamcrestMatcherProvider> lookupMatcherProvider(String matcherName, TestContext context) {
+        // try to find matcher provider via reference
+        Optional<HamcrestMatcherProvider> matcherProvider = context.getReferenceResolver().resolveAll(HamcrestMatcherProvider.class)
+                .values()
+                .stream()
+                .filter(provider -> provider.getName().equals(matcherName))
+                .findFirst();
+
+        if (!matcherProvider.isPresent()) {
+            // try to resolve via resource path lookup
+            matcherProvider = HamcrestMatcherProvider.lookup(matcherName);
+        }
+
+        return matcherProvider;
     }
 
     /**

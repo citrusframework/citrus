@@ -1,5 +1,9 @@
 package com.consol.citrus.validation.matcher;
 
+import java.io.IOException;
+import java.util.stream.Stream;
+
+import com.consol.citrus.spi.ResourcePathTypeResolver;
 import com.consol.citrus.validation.matcher.core.ContainsIgnoreCaseValidationMatcher;
 import com.consol.citrus.validation.matcher.core.ContainsValidationMatcher;
 import com.consol.citrus.validation.matcher.core.CreateVariableValidationMatcher;
@@ -22,11 +26,18 @@ import com.consol.citrus.validation.matcher.core.StringLengthValidationMatcher;
 import com.consol.citrus.validation.matcher.core.TrimAllWhitespacesValidationMatcher;
 import com.consol.citrus.validation.matcher.core.TrimValidationMatcher;
 import com.consol.citrus.validation.matcher.core.WeekdayValidationMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
  * @author Christoph Deppisch
  */
 public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(DefaultValidationMatcherLibrary.class);
 
     /**
      * Default constructor adds default matcher implementations.
@@ -56,5 +67,24 @@ public class DefaultValidationMatcherLibrary extends ValidationMatcherLibrary {
         getMembers().put("notNull", new NotNullValidationMatcher());
         getMembers().put("ignore", new IgnoreValidationMatcher());
         getMembers().put("hasLength", new StringLengthValidationMatcher());
+
+        lookupValidationMatchers();
+    }
+
+    /**
+     * Add custom matcher implementations loaded from resource path lookup.
+     */
+    private void lookupValidationMatchers() {
+        try {
+            Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + RESOURCE_PATH + "/*"))
+                    .forEach(file -> {
+                        String matcherName = file.getFilename();
+                        ValidationMatcher matcher = new ResourcePathTypeResolver(RESOURCE_PATH).resolve(matcherName);
+                        log.info(String.format("Register message matcher '%s' as %s", matcherName, matcher.getClass()));
+                        getMembers().put(matcherName, matcher);
+                    });
+        } catch (IOException e) {
+            log.warn("Failed to resolve list of message matchers - validation matcher registry might be missing custom matcher implementations", e);
+        }
     }
 }

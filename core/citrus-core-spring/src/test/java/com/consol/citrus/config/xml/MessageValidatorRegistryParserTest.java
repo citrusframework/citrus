@@ -21,18 +21,7 @@ import java.util.Map;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.json.JsonPathMessageValidator;
-import com.consol.citrus.validation.json.JsonTextMessageValidator;
-import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
-import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
-import com.consol.citrus.validation.text.BinaryBase64MessageValidator;
-import com.consol.citrus.validation.text.GzipBinaryBase64MessageValidator;
-import com.consol.citrus.validation.text.PlainTextMessageValidator;
-import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
-import com.consol.citrus.validation.xml.DomXmlMessageValidator;
-import com.consol.citrus.validation.xml.XpathMessageValidator;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
@@ -41,30 +30,16 @@ import org.testng.annotations.Test;
  */
 public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionParserTest {
 
-    @BeforeClass
-    @Override
-    protected void parseBeanDefinitions() {
-    }
-
     @Test
     public void testNamespaceContextParser() throws Exception {
-        beanDefinitionContext = createApplicationContext("context");
         Map<String, MessageValidatorRegistry> messageValidators = beanDefinitionContext.getBeansOfType(MessageValidatorRegistry.class);
 
         Assert.assertEquals(messageValidators.size(), 1L);
 
         MessageValidatorRegistry messageValidatorBean = messageValidators.values().iterator().next();
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 11L);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(0).getClass(), DomXmlMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(1).getClass(), XpathMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(2).getClass(), GroovyXmlMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(3).getClass(), PlainTextMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(4).getClass(), BinaryBase64MessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(5).getClass(), GzipBinaryBase64MessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(6).getClass(), JsonTextMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(7).getClass(), JsonPathMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(8).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(9).getClass(), GroovyJsonMessageValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(10).getClass(), XhtmlMessageValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 3L);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(DefaultMessageHeaderValidator.class.getName()).getClass(), DefaultMessageHeaderValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get("validator1"), beanDefinitionContext.getBean("validator1"));
+        Assert.assertEquals(messageValidatorBean.getMessageValidators().get("validator2"), beanDefinitionContext.getBean("validator2"));
     }
 }

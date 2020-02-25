@@ -20,13 +20,16 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.consol.citrus.context.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.context.ApplicationContext;
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
@@ -36,6 +39,14 @@ import static org.mockito.Mockito.when;
 public class JsonSchemaFilterTest {
 
     private JsonSchemaFilter jsonSchemaFilter = new JsonSchemaFilter();
+
+    @Mock
+    private ReferenceResolver referenceResolverMock;
+
+    @BeforeMethod
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testFilterOnSchemaRepositoryName() {
@@ -64,7 +75,7 @@ public class JsonSchemaFilterTest {
 
         //WHEN
         List<SimpleJsonSchema> simpleJsonSchemas =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+                jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
         Assert.assertEquals(simpleJsonSchemas.size(), 2);
@@ -90,15 +101,14 @@ public class JsonSchemaFilterTest {
         validationContext.setSchema("mySchema");
 
         //Setup application validationContext
-        ApplicationContext applicationContext = mock(ApplicationContext.class);
-        when(applicationContext.getBean("mySchema", SimpleJsonSchema.class))
+        when(referenceResolverMock.resolve("mySchema", SimpleJsonSchema.class))
                 .thenReturn(mock(SimpleJsonSchema.class));
 
         //WHEN
-        jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
+        jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
-        verify(applicationContext).getBean(validationContext.getSchema(), SimpleJsonSchema.class);
+        verify(referenceResolverMock).resolve(validationContext.getSchema(), SimpleJsonSchema.class);
     }
 
     @Test
@@ -122,13 +132,12 @@ public class JsonSchemaFilterTest {
         SimpleJsonSchema expectedSimpleJsonSchema = mock(SimpleJsonSchema.class);
 
         //Setup application validationContext
-        ApplicationContext applicationContext = mock(ApplicationContext.class);
-        when(applicationContext.getBean(validationContext.getSchema(), SimpleJsonSchema.class))
+        when(referenceResolverMock.resolve(validationContext.getSchema(), SimpleJsonSchema.class))
                 .thenReturn(expectedSimpleJsonSchema);
 
         //WHEN
         List<SimpleJsonSchema> simpleJsonSchemas =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
+                jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
         Assert.assertEquals(simpleJsonSchemas.size(),1);
@@ -153,7 +162,7 @@ public class JsonSchemaFilterTest {
         validationContext.setSchemaRepository("schemaRepository2");
 
         //WHEN
-        jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+        jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
         //Exception has been thrown
@@ -178,12 +187,11 @@ public class JsonSchemaFilterTest {
 
 
         //Setup application validationContext
-        ApplicationContext applicationContext = mock(ApplicationContext.class);
-        when(applicationContext.getBean(validationContext.getSchema(), SimpleJsonSchema.class))
+        when(referenceResolverMock.resolve(validationContext.getSchema(), SimpleJsonSchema.class))
                 .thenThrow(NoSuchBeanDefinitionException.class);
 
         //WHEN
-        jsonSchemaFilter.filter(schemaRepositories, validationContext, applicationContext);
+        jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
         //Exception has been thrown
@@ -215,7 +223,7 @@ public class JsonSchemaFilterTest {
 
         //WHEN
         List<SimpleJsonSchema> simpleJsonSchemas =
-                jsonSchemaFilter.filter(schemaRepositories, validationContext, mock(ApplicationContext.class));
+                jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
 
         //THEN
         Assert.assertEquals(simpleJsonSchemas.size(), 3);
