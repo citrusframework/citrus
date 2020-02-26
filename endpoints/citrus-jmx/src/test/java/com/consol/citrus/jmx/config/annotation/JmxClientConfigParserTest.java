@@ -21,7 +21,7 @@ import javax.management.NotificationFilter;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;

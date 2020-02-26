@@ -1,4 +1,4 @@
-package com.consol.citrus.context;
+package com.consol.citrus.spi;
 
 import java.util.ArrayList;
 import java.util.HashMap;

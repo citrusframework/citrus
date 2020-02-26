@@ -27,7 +27,7 @@ import java.util.concurrent.CompletableFuture;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;

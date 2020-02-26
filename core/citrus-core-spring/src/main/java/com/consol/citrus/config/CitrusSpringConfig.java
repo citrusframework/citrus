@@ -16,7 +16,7 @@
 
 package com.consol.citrus.config;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;

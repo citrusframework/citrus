@@ -19,7 +19,7 @@ package com.consol.citrus.actions;
 import java.util.Collections;
 
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.context.SimpleReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;

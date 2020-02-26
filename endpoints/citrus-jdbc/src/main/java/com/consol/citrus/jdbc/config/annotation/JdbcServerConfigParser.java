@@ -18,7 +18,7 @@ package com.consol.citrus.jdbc.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.jdbc.server.JdbcServerBuilder;

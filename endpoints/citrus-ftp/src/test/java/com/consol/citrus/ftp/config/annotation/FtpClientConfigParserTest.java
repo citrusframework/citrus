@@ -19,7 +19,7 @@ package com.consol.citrus.ftp.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ftp.client.FtpClient;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;

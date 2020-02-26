@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;

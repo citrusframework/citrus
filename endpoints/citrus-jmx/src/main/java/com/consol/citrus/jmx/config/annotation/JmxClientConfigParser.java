@@ -18,7 +18,7 @@ package com.consol.citrus.jmx.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.client.JmxClientBuilder;
 import com.consol.citrus.jmx.message.JmxMessageConverter;

@@ -18,7 +18,7 @@ package com.consol.citrus.kafka.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kafka.endpoint.KafkaEndpoint;
 import com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder;

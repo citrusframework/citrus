@@ -19,7 +19,7 @@ package com.consol.citrus.endpoint.direct;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;

@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;

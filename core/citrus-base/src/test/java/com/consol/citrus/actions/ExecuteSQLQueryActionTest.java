@@ -24,7 +24,7 @@ import java.util.Map;
 
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.context.SimpleReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;

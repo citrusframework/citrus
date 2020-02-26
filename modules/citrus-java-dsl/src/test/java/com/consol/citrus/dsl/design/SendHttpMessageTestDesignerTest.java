@@ -18,7 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.SendMessageAction;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;

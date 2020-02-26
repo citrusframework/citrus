@@ -18,7 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;

@@ -19,7 +19,7 @@ package com.consol.citrus.ssh.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ssh.client.SshClient;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;

@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.consol.citrus.context.SimpleReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.hamcrest.CustomMatcher;

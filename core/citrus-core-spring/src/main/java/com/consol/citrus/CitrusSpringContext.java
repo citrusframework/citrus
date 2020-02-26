@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;

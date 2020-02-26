@@ -20,7 +20,7 @@ import java.util.Collections;
 
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;

@@ -45,6 +45,8 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;

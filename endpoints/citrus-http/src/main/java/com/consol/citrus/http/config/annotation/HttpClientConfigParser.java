@@ -18,7 +18,7 @@ package com.consol.citrus.http.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
@@ -106,7 +106,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         if (!binaryMediaTypes.isEmpty()) {
             builder.binaryMediaTypes(binaryMediaTypes);
         }
-        
+
         builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
 
         // Set outbound header mapper

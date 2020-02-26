@@ -19,7 +19,7 @@ package com.consol.citrus.channel;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;

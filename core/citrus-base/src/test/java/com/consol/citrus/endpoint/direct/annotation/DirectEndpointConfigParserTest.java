@@ -19,7 +19,7 @@ package com.consol.citrus.endpoint.direct.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointAnnotations;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.direct.DirectEndpoint;

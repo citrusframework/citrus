@@ -18,7 +18,7 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.util.Assert;
 

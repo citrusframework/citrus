@@ -18,7 +18,7 @@ package com.consol.citrus.websocket.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;

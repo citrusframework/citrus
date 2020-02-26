@@ -17,7 +17,7 @@
 package com.consol.citrus.selenium.config.annotation;
 
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
 import org.openqa.selenium.WebDriver;

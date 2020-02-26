@@ -27,7 +27,7 @@ import java.util.Optional;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.variable.GlobalVariables;

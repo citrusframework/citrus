@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelCamelContext;
 import org.springframework.util.Assert;

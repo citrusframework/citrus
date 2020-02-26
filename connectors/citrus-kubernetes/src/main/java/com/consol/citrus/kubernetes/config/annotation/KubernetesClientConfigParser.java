@@ -17,7 +17,7 @@
 package com.consol.citrus.kubernetes.config.annotation;
 
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.client.KubernetesClientBuilder;
 import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;

@@ -18,7 +18,7 @@ package com.consol.citrus.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.channel.*;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.integration.core.MessagingTemplate;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.core.DestinationResolver;

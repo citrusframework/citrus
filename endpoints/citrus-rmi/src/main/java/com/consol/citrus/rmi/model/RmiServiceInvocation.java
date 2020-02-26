@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;

@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonSchemaRepository;
 import com.consol.citrus.json.schema.SimpleJsonSchema;

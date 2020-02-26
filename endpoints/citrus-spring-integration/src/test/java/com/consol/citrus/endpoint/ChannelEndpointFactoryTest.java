@@ -3,7 +3,7 @@ package com.consol.citrus.endpoint;
 import java.util.Collections;
 
 import com.consol.citrus.channel.ChannelEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import org.mockito.Mockito;
 import org.testng.Assert;

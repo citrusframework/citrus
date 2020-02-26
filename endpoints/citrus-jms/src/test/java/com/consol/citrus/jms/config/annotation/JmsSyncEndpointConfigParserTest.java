@@ -22,7 +22,7 @@ import javax.jms.Destination;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
 import com.consol.citrus.jms.message.JmsMessageConverter;

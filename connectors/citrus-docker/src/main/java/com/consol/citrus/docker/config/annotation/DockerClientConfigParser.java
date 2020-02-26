@@ -17,7 +17,7 @@
 package com.consol.citrus.docker.config.annotation;
 
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.client.DockerClientBuilder;
 import org.springframework.util.StringUtils;

@@ -24,7 +24,7 @@ import java.util.HashMap;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;

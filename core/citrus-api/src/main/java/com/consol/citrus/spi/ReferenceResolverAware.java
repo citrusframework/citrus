@@ -1,4 +1,4 @@
-package com.consol.citrus.context;
+package com.consol.citrus.spi;
 
 /**
  * @author Christoph Deppisch

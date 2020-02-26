@@ -21,7 +21,7 @@ import java.util.Properties;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.mail.client.MailClient;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;

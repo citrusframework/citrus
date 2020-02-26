@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.context.SimpleReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;

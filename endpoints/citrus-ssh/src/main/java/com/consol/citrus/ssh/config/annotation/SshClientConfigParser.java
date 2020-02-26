@@ -18,7 +18,7 @@ package com.consol.citrus.ssh.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.ssh.client.SshClient;
 import com.consol.citrus.ssh.client.SshClientBuilder;

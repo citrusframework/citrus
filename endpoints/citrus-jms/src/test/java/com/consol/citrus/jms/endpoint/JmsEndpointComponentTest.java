@@ -20,7 +20,7 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import java.util.Collections;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.Endpoint;

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.context.SimpleReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;

@@ -2,7 +2,7 @@ package com.consol.citrus.endpoint.direct.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.direct.DirectEndpoint;
 import com.consol.citrus.endpoint.direct.DirectEndpointBuilder;
 import com.consol.citrus.message.MessageQueue;

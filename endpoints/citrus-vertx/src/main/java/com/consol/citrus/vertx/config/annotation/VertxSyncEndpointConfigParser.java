@@ -18,7 +18,7 @@ package com.consol.citrus.vertx.config.annotation;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpoint;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder;

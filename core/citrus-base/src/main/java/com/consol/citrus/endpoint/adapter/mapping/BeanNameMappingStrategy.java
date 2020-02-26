@@ -16,7 +16,7 @@
 
 package com.consol.citrus.endpoint.adapter.mapping;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;

@@ -19,7 +19,7 @@ package com.consol.citrus.kafka.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.kafka.endpoint.KafkaEndpoint;
 import com.consol.citrus.kafka.message.KafkaMessageConverter;
 import com.consol.citrus.kafka.message.KafkaMessageHeaderMapper;

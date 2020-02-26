@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
-import com.consol.citrus.context.ReferenceRegistry;
-import com.consol.citrus.context.ReferenceResolver;
-import com.consol.citrus.context.SimpleReferenceResolver;
+import com.consol.citrus.spi.ReferenceRegistry;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;

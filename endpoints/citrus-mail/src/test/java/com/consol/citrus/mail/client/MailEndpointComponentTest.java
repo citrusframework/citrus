@@ -16,7 +16,7 @@
 
 package com.consol.citrus.mail.client;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.mail.model.MailMarshaller;

@@ -26,7 +26,7 @@ import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.dsl.UnitTestSupport;

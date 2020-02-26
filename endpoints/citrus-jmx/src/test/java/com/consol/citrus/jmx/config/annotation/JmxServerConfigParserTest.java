@@ -22,7 +22,7 @@ import java.util.Properties;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.jmx.mbean.HelloBean;
 import com.consol.citrus.jmx.mbean.NewsBean;
 import com.consol.citrus.jmx.message.JmxMessageConverter;

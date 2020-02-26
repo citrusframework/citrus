@@ -18,7 +18,7 @@ package com.consol.citrus.config.annotation;
 
 import java.lang.annotation.Annotation;
 
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
 
 /**

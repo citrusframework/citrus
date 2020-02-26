@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.context;
+package com.consol.citrus.spi;
 
 import java.util.List;
 import java.util.Map;

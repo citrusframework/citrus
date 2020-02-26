@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 import com.consol.citrus.config.annotation.AnnotationConfigParser;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;

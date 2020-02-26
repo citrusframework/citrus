@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.consol.citrus.AbstractTestActionBuilder;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

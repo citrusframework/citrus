@@ -21,7 +21,7 @@ import java.util.Arrays;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.context.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import com.consol.citrus.ws.server.WebServiceServer;

@@ -18,8 +18,8 @@ package com.consol.citrus.validation.callback;
 
 import java.util.Map;
 
-import com.consol.citrus.context.ReferenceResolver;
-import com.consol.citrus.context.ReferenceResolverAware;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
