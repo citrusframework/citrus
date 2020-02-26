@@ -11,7 +11,7 @@
 
   <artifactId>citrus-remote</artifactId>
   <packaging>pom</packaging>
-  <name>citrus-remote</name>
+  <name>Citrus :: Tools :: Remote</name>
   <description>Citrus Remote Parent</description>
 
   <modules>

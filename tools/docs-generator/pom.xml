@@ -10,13 +10,13 @@
   </parent>
 
   <artifactId>citrus-docs-generator</artifactId>
-  <name>citrus-docs-generator</name>
+  <name>Citrus :: Tools :: Docs Generator</name>
   <description>Citrus Documentation Generator</description>
 
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
+      <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
 

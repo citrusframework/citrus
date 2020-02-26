@@ -12,7 +12,7 @@
   <groupId>com.consol.citrus.archetypes</groupId>
   <artifactId>citrus-archetypes</artifactId>
   <packaging>pom</packaging>
-  <name>citrus-archetypes</name>
+  <name>Citrus :: Tools :: Archetypes</name>
   <description>Citrus Archetypes Parent</description>
 
   <modules>

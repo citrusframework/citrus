@@ -16,8 +16,14 @@
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
+      <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core-spring</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
@@ -30,13 +36,6 @@
       <artifactId>snakeyaml</artifactId>
       <version>1.15</version>
       <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-jms</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -56,9 +55,22 @@
       <artifactId>shrinkwrap-resolver-impl-maven</artifactId>
     </dependency>
 
+    <!-- Test scoped dependencies -->
     <dependency>
       <groupId>org.jboss.shrinkwrap</groupId>
       <artifactId>shrinkwrap-impl-base</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jms</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-spring-integration</artifactId>
+      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

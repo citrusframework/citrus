@@ -15,6 +15,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>citrus-core</module>
     <module>citrus-bom</module>
   </modules>
 

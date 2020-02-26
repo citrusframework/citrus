@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>citrus-quickstart-jms</artifactId>
-  <name>citrus-quickstart-jms</name>
+  <name>Citrus :: Tools :: Archetypes :: Quickstart JMS</name>
   <description>Citrus quickstart project with JMS consumer and producer</description>
 
 </project>

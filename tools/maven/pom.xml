@@ -12,7 +12,7 @@
   <groupId>com.consol.citrus.mvn</groupId>
   <artifactId>citrus-maven</artifactId>
   <packaging>pom</packaging>
-  <name>citrus-maven</name>
+  <name>Citrus :: Tools :: Maven</name>
   <description>Citrus Maven Parent</description>
 
   <modules>

@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>citrus-tools</artifactId>
-  <name>citrus-tools</name>
+  <name>Citrus :: Tools</name>
   <packaging>pom</packaging>
 
   <modules>

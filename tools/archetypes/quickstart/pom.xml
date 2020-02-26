@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>citrus-quickstart</artifactId>
-  <name>citrus-quickstart</name>
+  <name>Citrus :: Tools :: Archetypes :: Quickstart</name>
   <description>Citrus quickstart project</description>
 
 </project>

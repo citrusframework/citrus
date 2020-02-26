@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>citrus-quickstart-soap</artifactId>
-  <name>citrus-quickstart-soap</name>
+  <name>Citrus :: Tools :: Archetypes :: Quickstart SOAP</name>
   <description>Citrus quickstart project with SOAP client and server</description>
 
 </project>

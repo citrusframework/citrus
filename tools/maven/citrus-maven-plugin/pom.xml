@@ -11,7 +11,7 @@
 
   <artifactId>citrus-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
-  <name>citrus-maven-plugin</name>
+  <name>Citrus :: Tools :: Maven :: Plugin</name>
   <description>Citrus Maven Plugin</description>
 
   <properties>
@@ -21,7 +21,7 @@
   <dependencies>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
+      <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

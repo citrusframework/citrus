@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>citrus-remote-server</artifactId>
-  <name>citrus-remote-server</name>
+  <name>Citrus :: Tools :: Remote Server</name>
   <description>Citrus Remote Server</description>
 
   <dependencies>
@@ -22,7 +22,12 @@
     <!-- Citrus -->
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
+      <artifactId>citrus-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-main</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

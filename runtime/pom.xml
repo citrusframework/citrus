@@ -21,7 +21,6 @@
     <module>citrus-arquillian</module>
     <module>citrus-cucumber</module>
     <module>citrus-main</module>
-    <module>citrus-core</module>
   </modules>
 
 </project>
