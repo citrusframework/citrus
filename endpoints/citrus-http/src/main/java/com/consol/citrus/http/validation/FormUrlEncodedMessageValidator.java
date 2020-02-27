@@ -36,10 +36,7 @@ import com.consol.citrus.http.model.FormMarshaller;
 import com.consol.citrus.http.model.ObjectFactory;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
-import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
@@ -67,9 +64,6 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
 
     /** Xml message validator delegate */
     private MessageValidator<? extends ValidationContext> xmlMessageValidator;
-
-    /** Type resolver for message validator lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     /** Should form name value pairs be decoded by default */
     private boolean autoDecode = true;
@@ -140,7 +134,8 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
 
         if (xmlMessageValidator == null) {
             // try to find xml message validator via resource path lookup
-            xmlMessageValidator = TYPE_RESOLVER.resolve("xml");
+            xmlMessageValidator = MessageValidator.lookup("xml")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project"));
         }
 
         return xmlMessageValidator;

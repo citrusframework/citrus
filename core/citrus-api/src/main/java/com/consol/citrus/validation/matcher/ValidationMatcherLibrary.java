@@ -37,9 +37,6 @@ public class ValidationMatcherLibrary {
     /** validationMatcher library prefix */
     private String prefix = "";
 
-    /** Message validator resource lookup path */
-    public static final String RESOURCE_PATH = "META-INF/citrus/validation/matcher";
-
     /**
      * Try to find validationMatcher in library by name.
      *

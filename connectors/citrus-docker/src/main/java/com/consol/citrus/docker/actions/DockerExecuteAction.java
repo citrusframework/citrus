@@ -36,10 +36,7 @@ import com.consol.citrus.docker.command.Version;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
-import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -70,9 +67,6 @@ public class DockerExecuteAction extends AbstractTestAction {
 
     /** Validator used to validate expected json results */
     private final MessageValidator<? extends ValidationContext> jsonMessageValidator;
-
-    /** Type resolver for message validator lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
 
@@ -163,7 +157,8 @@ public class DockerExecuteAction extends AbstractTestAction {
 
         if (defaultJsonMessageValidator == null) {
             // try to find json message validator via resource path lookup
-            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+            defaultJsonMessageValidator = MessageValidator.lookup("json")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper JSON message validator - please add validator to project"));
         }
 
         return defaultJsonMessageValidator;

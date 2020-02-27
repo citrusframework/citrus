@@ -26,7 +26,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.stream.Stream;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
@@ -34,8 +33,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.script.ScriptTypes;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
-import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -44,8 +41,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.dao.DataAccessException;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
@@ -233,7 +228,7 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
             } else {
                 Map<String, SqlResultSetScriptValidator> validators = context.getReferenceResolver().resolveAll(SqlResultSetScriptValidator.class);
                 if (validators.isEmpty()) {
-                    Map<String, SqlResultSetScriptValidator> defaultValidators = lookupValidators();
+                    Map<String, SqlResultSetScriptValidator> defaultValidators = SqlResultSetScriptValidator.lookup();
                     if (defaultValidators.size() > 1) {
                         log.warn("Too many default SQL result set script validators in classpath, please explicitly add one to the test action for verification");
                     } else if (defaultValidators.size() == 1) {
@@ -248,28 +243,6 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
         }
 
         throw new CitrusRuntimeException("Unable to find proper SQL result set script validator in project");
-    }
-
-    /**
-     * Lookup SQL result set validators via resource path lookup.
-     */
-    private Map<String, SqlResultSetScriptValidator> lookupValidators() {
-        Map<String, SqlResultSetScriptValidator> validators = new HashMap<>();
-        try {
-            TypeResolver typeResolver = new ResourcePathTypeResolver(SqlResultSetScriptValidator.RESOURCE_PATH);
-            Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + SqlResultSetScriptValidator.RESOURCE_PATH + "/*"))
-                    .forEach(file -> {
-                        String resourceName = file.getFilename();
-                        SqlResultSetScriptValidator validator = typeResolver.resolve(resourceName);
-                        String validatorName = typeResolver.resolveProperty(resourceName, "name");
-                        log.info(String.format("Found SQL result set validator '%s' as %s", validatorName, validator.getClass()));
-                        validators.put(validatorName, validator);
-                    });
-        } catch (IOException e) {
-            log.warn("Failed to resolve list of SQL result set validators", e);
-        }
-
-        return validators;
     }
 
     /**

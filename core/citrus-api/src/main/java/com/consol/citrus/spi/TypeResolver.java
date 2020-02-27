@@ -1,5 +1,7 @@
 package com.consol.citrus.spi;
 
+import java.util.Map;
+
 /**
  * Resolves types by searching for classpath resource mapping files in order to resolve class references at runtime.
  * @author Christoph Deppisch
@@ -11,26 +13,71 @@ public interface TypeResolver {
 
     /**
      * Resolve resource path property file with given name and load given property.
-     * @param resourceName
+     * @param resourcePath
      * @param property
      * @return
      */
-    String resolveProperty(String resourceName, String property);
+    String resolveProperty(String resourcePath, String property);
 
     /**
      * Load default type information from given resource path property file and create new instance of given type.
-     * @param resourceName
+     * @param resourcePath
      * @return
      */
-    default <T> T resolve(String resourceName) {
-        return resolve(resourceName, DEFAULT_TYPE_PROPERTY);
+    default <T> T resolve(String resourcePath) {
+        return resolve(resourcePath, DEFAULT_TYPE_PROPERTY);
     }
 
     /**
-     * Load given property from given resource path property file and create new instance of given type.
-     * @param resourceName
+     * Load given property from given resource path property file and create new instance of given type. The type information
+     * is read by the given property in the resource file.
+     * @param resourcePath
      * @param property
      * @return
      */
-    <T> T resolve(String resourceName, String property);
+    <T> T resolve(String resourcePath, String property);
+
+    /**
+     * Load all resources and create new instance of given type. The type information is read by
+     * the given property in the resource file. The keys in the resulting map represent the resource file names.
+     * @param <T>
+     * @return
+     */
+    default <T> Map<String, T> resolveAll() {
+        return resolveAll("");
+    }
+
+    /**
+     * Load all resources in given resource path and create new instance of given type. The type information is read by
+     * the given property in the resource file. The keys in the resulting map represent the resource file names.
+     * @param resourcePath
+     * @param <T>
+     * @return
+     */
+    default <T> Map<String, T> resolveAll(String resourcePath) {
+        return resolveAll(resourcePath, DEFAULT_TYPE_PROPERTY);
+    }
+
+    /**
+     * Load all resources in given resource path and create new instance of given type. The type information is read by
+     * the given property in the resource file. The keys in the resulting map represent the resource file names.
+     * @param resourcePath
+     * @param property
+     * @param <T>
+     * @return
+     */
+    default <T> Map<String, T> resolveAll(String resourcePath, String property) {
+        return resolveAll(resourcePath, property, null);
+    }
+
+    /**
+     * Load all resources in given resource path and create new instance of given type. The type information is read by
+     * the given property in the resource file.
+     * @param resourcePath
+     * @param property
+     * @param keyProperty
+     * @param <T>
+     * @return
+     */
+    <T> Map<String, T> resolveAll(String resourcePath, String property, String keyProperty);
 }

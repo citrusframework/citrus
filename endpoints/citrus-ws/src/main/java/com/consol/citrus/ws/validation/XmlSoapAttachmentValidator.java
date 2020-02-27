@@ -21,10 +21,7 @@ import java.util.Collections;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
-import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
@@ -48,9 +45,6 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
 
     /** Xml message validator */
     private MessageValidator<? extends ValidationContext> messageValidator;
-
-    /** Type resolver for message validator lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     private ApplicationContext applicationContext;
 
@@ -92,7 +86,8 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
 
 	    if (messageValidator == null) {
             // try to find xml message validator via resource path lookup
-            messageValidator = TYPE_RESOLVER.resolve("xml");
+            messageValidator = MessageValidator.lookup("xml")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project"));
         }
 
         return messageValidator;

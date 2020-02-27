@@ -21,7 +21,11 @@ import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.script.ScriptValidationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Validator working on SQL result sets. Scripts get the actual test context
@@ -31,8 +35,27 @@ import com.consol.citrus.validation.script.ScriptValidationContext;
  */
 public interface SqlResultSetScriptValidator {
 
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(SqlResultSetScriptValidator.class);
+
     /** Message validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/sql/result-set/validator";
+
+    /** Type resolver to find custom SQL result set validators on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
+     * and instantiates those validators.
+     * @return
+     */
+    static Map<String, SqlResultSetScriptValidator> lookup() {
+        Map<String, SqlResultSetScriptValidator> validators =
+                TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
+
+        validators.forEach((k, v) -> LOG.info(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+        return validators;
+    }
 
     /**
      * Validates the SQL result set.

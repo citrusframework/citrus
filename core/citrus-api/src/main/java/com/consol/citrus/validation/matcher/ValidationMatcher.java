@@ -17,9 +17,13 @@
 package com.consol.citrus.validation.matcher;
 
 import java.util.List;
+import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * General validation matcher interface.
@@ -28,6 +32,24 @@ import com.consol.citrus.exceptions.ValidationException;
  */
 @FunctionalInterface
 public interface ValidationMatcher {
+
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(ValidationMatcher.class);
+
+    /** Message validator resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/validation/matcher";
+
+    /**
+     * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
+     * and instantiates those validators.
+     * @return
+     */
+    static Map<String, ValidationMatcher> lookup() {
+        Map<String, ValidationMatcher> matcher = new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH);
+
+        matcher.forEach((k, v) -> LOG.info(String.format("Found validation matcher '%s' as %s", k, v.getClass())));
+        return matcher;
+    }
 
     /**
      * Method called on validation.

@@ -95,6 +95,13 @@
       <groupId>org.hamcrest</groupId>
       <artifactId>hamcrest-library</artifactId>
     </dependency>
+
+    <!-- Test scoped dependencies -->
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
 

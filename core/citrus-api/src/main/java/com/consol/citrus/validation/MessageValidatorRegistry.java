@@ -45,9 +45,6 @@ public class MessageValidatorRegistry {
     /** The default bean id in Spring application context*/
     public static final String BEAN_NAME = "citrusMessageValidatorRegistry";
 
-    /** Message validator resource lookup path */
-    public static final String RESOURCE_PATH = "META-INF/citrus/message/validator";
-
     /** Registered message validators */
     private Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new LinkedHashMap<>();
 

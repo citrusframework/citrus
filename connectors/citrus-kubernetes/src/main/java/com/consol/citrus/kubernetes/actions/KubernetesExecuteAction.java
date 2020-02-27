@@ -51,10 +51,7 @@ import com.consol.citrus.kubernetes.command.WatchPods;
 import com.consol.citrus.kubernetes.command.WatchReplicationControllers;
 import com.consol.citrus.kubernetes.command.WatchServices;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
-import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
@@ -101,9 +98,6 @@ public class KubernetesExecuteAction extends AbstractTestAction {
     /** Validator used to validate expected json results */
     private final MessageValidator<? extends ValidationContext> jsonMessageValidator;
     private final MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
-
-    /** Type resolver for message validator lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     public static final String DEFAULT_JSON_MESSAGE_VALIDATOR = "defaultJsonMessageValidator";
     public static final String DEFAULT_JSON_PATH_MESSAGE_VALIDATOR = "defaultJsonPathMessageValidator";
@@ -206,7 +200,8 @@ public class KubernetesExecuteAction extends AbstractTestAction {
 
         if (defaultJsonMessageValidator == null) {
             // try to find json message validator via resource path lookup
-            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+            defaultJsonMessageValidator = MessageValidator.lookup("json")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper JSON message validator - please add validator to project"));
         }
 
         return defaultJsonMessageValidator;
@@ -235,7 +230,8 @@ public class KubernetesExecuteAction extends AbstractTestAction {
 
         if (defaultJsonMessageValidator == null) {
             // try to find json message validator via resource path lookup
-            defaultJsonMessageValidator = TYPE_RESOLVER.resolve("json");
+            defaultJsonMessageValidator = MessageValidator.lookup("json-path")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper JSON path message validator - please add validator to project"));
         }
 
         return defaultJsonMessageValidator;

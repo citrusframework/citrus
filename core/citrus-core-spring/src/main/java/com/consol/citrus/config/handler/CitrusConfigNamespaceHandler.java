@@ -16,8 +16,7 @@
 
 package com.consol.citrus.config.handler;
 
-import java.io.IOException;
-import java.util.stream.Stream;
+import java.util.Map;
 
 import com.consol.citrus.config.xml.DefaultMessageQueueParser;
 import com.consol.citrus.config.xml.DirectEndpointAdapterParser;
@@ -44,8 +43,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 
 /**
  * Namespace handler for components in Citrus configuration.
@@ -59,9 +56,6 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
 
     /** Resource path where to find custom config parsers via lookup */
     private static final String RESOURCE_PATH = "META-INF/citrus/config/parser/core";
-
-    /** Type resolver for dynamic action parser lookup via resource path */
-    private static final ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     @Override
     public void init() {
@@ -94,17 +88,13 @@ public class CitrusConfigNamespaceHandler extends NamespaceHandlerSupport {
      * Lookup custom bean definition parser from resource path.
      */
     private void lookupBeanDefinitionParser() {
-        try {
-            Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + RESOURCE_PATH + "/*"))
-                    .forEach(file -> {
-                        String resourceName = file.getFilename();
-                        BeanDefinitionParser parser = TYPE_RESOLVER.resolve(resourceName);
-                        log.info(String.format("Register bean definition parser %s from resource %s", parser.getClass(), file));
-                        registerBeanDefinitionParser(resourceName, parser);
-                    });
-        } catch (IOException e) {
-            log.warn("Failed to add custom bean definition parsers", e);
-        }
+        Map<String, BeanDefinitionParser> actionParserMap = new ResourcePathTypeResolver()
+                .resolveAll(RESOURCE_PATH);
+
+        actionParserMap.forEach((k, p) -> {
+            registerBeanDefinitionParser(k, p);
+            log.info(String.format("Register bean definition parser %s from resource %s", p.getClass(), k));
+        });
     }
 
 }

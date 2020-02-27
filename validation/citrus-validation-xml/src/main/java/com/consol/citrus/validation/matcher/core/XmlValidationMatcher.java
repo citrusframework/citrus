@@ -23,10 +23,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.spi.ResourcePathTypeResolver;
-import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
@@ -47,9 +44,6 @@ public class XmlValidationMatcher implements ValidationMatcher {
 
     /** Xml message validator */
     private MessageValidator<? extends ValidationContext> messageValidator;
-
-    /** Type resolver for message validator lookup via resource path */
-    private static final TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(MessageValidatorRegistry.RESOURCE_PATH);
 
     public static final String DEFAULT_XML_MESSAGE_VALIDATOR = "defaultXmlMessageValidator";
 
@@ -87,7 +81,8 @@ public class XmlValidationMatcher implements ValidationMatcher {
 
         if (messageValidator == null) {
             // try to find xml message validator via resource path lookup
-            messageValidator = TYPE_RESOLVER.resolve("xml");
+            messageValidator = MessageValidator.lookup("xml")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project"));
         }
 
         return messageValidator;

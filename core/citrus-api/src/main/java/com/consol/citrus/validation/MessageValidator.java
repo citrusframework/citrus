@@ -17,11 +17,19 @@
 package com.consol.citrus.validation;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.matcher.ValidationMatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Message validator interface. Message validation need specific information like
@@ -31,6 +39,48 @@ import com.consol.citrus.validation.context.ValidationContext;
  * @author Christoph Deppisch
  */
 public interface MessageValidator<T extends ValidationContext> {
+
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(MessageValidator.class);
+
+    /** Message validator resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/message/validator";
+
+    /** Type resolver to find custom message validators on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
+     * and instantiates those validators.
+     * @return
+     */
+    static Map<String, MessageValidator<? extends ValidationContext>> lookup() {
+        Map<String, MessageValidator<? extends ValidationContext>> validators =
+                TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
+
+        if (LOG.isDebugEnabled()) {
+            validators.forEach((k, v) -> LOG.debug(String.format("Found message validator '%s' as %s", k, v.getClass())));
+        }
+        return validators;
+    }
+
+    /**
+     * Resolves validator from resource path lookup with given validator resource name. Scans classpath for validator meta information
+     * with given name and returns instance of validator. Returns optional instead of throwing exception when no validator
+     * could be found.
+     * @param validator
+     * @return
+     */
+    static Optional<MessageValidator<? extends ValidationContext>> lookup(String validator) {
+        try {
+            MessageValidator<? extends ValidationMatcher> instance = TYPE_RESOLVER.resolve(validator);
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            LOG.warn(String.format("Failed to resolve validator with from resource '%s/%s'", RESOURCE_PATH, validator));
+        }
+
+        return Optional.empty();
+    }
 
     /**
      * Validates a message with given test context and validation context.
