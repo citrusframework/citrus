@@ -29,7 +29,6 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.DependsOn;
 
 /**
  * @author Christoph Deppisch
@@ -41,13 +40,14 @@ public class MessageValidatorConfig {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MessageValidatorConfig.class);
 
+    private static final MessageValidatorRegistry MESSAGE_VALIDATOR_REGISTRY = new DefaultMessageValidatorRegistry();
+
     @Bean
-    @DependsOn(MessageValidatorRegistry.BEAN_NAME)
-    public BeanDefinitionRegistryPostProcessor registerMessageValidators(MessageValidatorRegistry validatorRegistry) {
+    public static BeanDefinitionRegistryPostProcessor messageValidatorRegistrationProcessor() {
         return new BeanDefinitionRegistryPostProcessor() {
             @Override
             public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-                for (Map.Entry<String, MessageValidator<? extends ValidationContext>> entry : validatorRegistry.getMessageValidators().entrySet()) {
+                for (Map.Entry<String, MessageValidator<? extends ValidationContext>> entry : MESSAGE_VALIDATOR_REGISTRY.getMessageValidators().entrySet()) {
                     if (!registry.containsBeanDefinition(entry.getKey())) {
                         MessageValidator messageValidator = entry.getValue();
                         Supplier<MessageValidator> supplier = () -> messageValidator;
@@ -65,6 +65,6 @@ public class MessageValidatorConfig {
 
     @Bean(name = MessageValidatorRegistry.BEAN_NAME)
     public MessageValidatorRegistryFactory messageValidatorRegistry() {
-        return new MessageValidatorRegistryFactory();
+        return new MessageValidatorRegistryFactory(MESSAGE_VALIDATOR_REGISTRY);
     }
 }

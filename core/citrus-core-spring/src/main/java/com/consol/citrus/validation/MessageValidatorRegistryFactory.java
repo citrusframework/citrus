@@ -12,10 +12,14 @@ public class MessageValidatorRegistryFactory implements FactoryBean<MessageValid
 
     private ApplicationContext applicationContext;
 
+    private final MessageValidatorRegistry messageValidatorRegistry;
+
+    public MessageValidatorRegistryFactory(MessageValidatorRegistry messageValidatorRegistry) {
+        this.messageValidatorRegistry = messageValidatorRegistry;
+    }
+
     @Override
     public MessageValidatorRegistry getObject() throws Exception {
-        MessageValidatorRegistry messageValidatorRegistry = new DefaultMessageValidatorRegistry();
-
         if (applicationContext != null) {
             applicationContext.getBeansOfType(MessageValidator.class)
                     .forEach((key, value) -> messageValidatorRegistry.getMessageValidators().put(key, value));
