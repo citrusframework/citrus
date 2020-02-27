@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.json.JsonSchemaRepository;
@@ -438,9 +437,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
         validator.setJsonSchemaValidation(jsonSchemaValidation);
 
         JsonSchemaRepository jsonSchemaRepository = mock(JsonSchemaRepository.class);
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("jsonSchemaRepository", jsonSchemaRepository);
-        context.setReferenceResolver(referenceResolver);
+        context.getReferenceResolver().bind("jsonSchemaRepository", jsonSchemaRepository);
 
         Message receivedMessage = new DefaultMessage("{\"id\":42}");
         Message controlMessage = new DefaultMessage("{\"id\":42}");
@@ -449,7 +446,7 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
 
         //THEN
-        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList(), eq(validationContext), eq(referenceResolver));
+        verify(jsonSchemaValidation).validate(eq(receivedMessage), anyList(), eq(validationContext), eq(context.getReferenceResolver()));
     }
 
     @Test

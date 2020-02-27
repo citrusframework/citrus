@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.hamcrest.CustomMatcher;
@@ -58,10 +57,7 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
             }
         };
 
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("matchesPath", customMatcherProvider);
-        factory.setReferenceResolver(referenceResolver);
-
+        factory.getReferenceResolver().bind("matchesPath", customMatcherProvider);
         return factory;
     }
 

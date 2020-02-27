@@ -1,12 +1,8 @@
 package com.consol.citrus.spi;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 
@@ -17,15 +13,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegistry {
 
     private final Map<String, Object> objectStore = new HashMap<>();
-
-    @Override
-    public <T> List<T> resolve(Class<T> type, String... names) {
-        if (names.length > 0) {
-            return resolve(names, type);
-        }
-
-        return new ArrayList<>(resolveAll(type).values());
-    }
 
     @Override
     public <T> T resolve(Class<T> type) {
@@ -47,15 +34,6 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     }
 
     @Override
-    public <T> List<T> resolve(String[] names, Class<T> type) {
-        return objectStore.entrySet().stream()
-                .filter(entry -> Stream.of(names).anyMatch(name -> name.equals(entry.getKey())) && type.isInstance(entry.getValue()))
-                .map(Map.Entry::getValue)
-                .map(type::cast)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public <T> Map<String, T> resolveAll(Class<T> type) {
         return objectStore.entrySet().stream()
                 .filter(entry -> type.isInstance(entry.getValue()))
@@ -65,12 +43,6 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     @Override
     public boolean isResolvable(String name) {
         return objectStore.containsKey(name);
-    }
-
-    @Override
-    public Object resolve(String name) {
-        return Optional.ofNullable(objectStore.get(name))
-                .orElseThrow(() -> new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name)));
     }
 
     @Override

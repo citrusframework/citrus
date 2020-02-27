@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
@@ -67,9 +66,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getMessageValidatorRegistry().getMessageValidators().put("json", new JsonTextMessageValidator());
         factory.getMessageValidatorRegistry().getMessageValidators().put("jsonPath", new JsonPathMessageValidator());
 
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("mockQueue", mockQueue);
-        factory.setReferenceResolver(referenceResolver);
+        factory.getReferenceResolver().bind("mockQueue", mockQueue);
         return factory;
     }
 

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.spi;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +24,7 @@ import java.util.Map;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public interface ReferenceResolver {
+public interface ReferenceResolver extends ReferenceRegistry {
 
     /**
      * Resolve all references of type and given names. When no names are provided method resolves all
@@ -33,7 +34,37 @@ public interface ReferenceResolver {
      * @param <T>
      * @return
      */
-    <T> List<T> resolve(Class<T> type, String... names);
+    default <T> List<T> resolve(Class<T> type, String... names) {
+        if (names.length > 0) {
+            return resolve(names, type);
+        }
+
+        return new ArrayList<>(resolveAll(type).values());
+    }
+
+    /**
+     * Resolve all references of type and given names.
+     * @param names
+     * @param type
+     * @param <T>
+     * @return
+     */
+    default <T> List<T> resolve(String[] names, Class<T> type) {
+        List<T> resolved = new ArrayList<>();
+        for (String name : names) {
+            resolved.add(resolve(name, type));
+        }
+        return resolved;
+    }
+
+    /**
+     * Resolves reference by given name to any object.
+     * @param name
+     * @return
+     */
+    default Object resolve(String name) {
+        return resolve(name, Object.class);
+    }
 
     /**
      * Resolve reference of type.
@@ -53,15 +84,6 @@ public interface ReferenceResolver {
     <T> T resolve(String name, Class<T> type);
 
     /**
-     * Resolve all references of type and given names.
-     * @param names
-     * @param type
-     * @param <T>
-     * @return
-     */
-    <T> List<T> resolve(String[] names, Class<T> type);
-
-    /**
      * Resolves all references of given type returning a map of names and type instances.
      * @param type
      * @param <T>
@@ -75,11 +97,4 @@ public interface ReferenceResolver {
      * @return
      */
     boolean isResolvable(String name);
-
-    /**
-     * Resolves reference by given name to any object.
-     * @param name
-     * @return
-     */
-    Object resolve(String name);
 }

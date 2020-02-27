@@ -16,8 +16,6 @@
 
 package com.consol.citrus.context;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -53,15 +51,6 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     }
 
     @Override
-    public <T> List<T> resolve(Class<T> requiredType, String... names) {
-        if (names.length > 0) {
-            return resolve(names, requiredType);
-        }
-
-        return new ArrayList<>(resolveAll(requiredType).values());
-    }
-
-    @Override
     public <T> T resolve(Class<T> requiredType) {
         try {
             return applicationContext.getBean(requiredType);
@@ -77,17 +66,6 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e);
         }
-    }
-
-    @Override
-    public <T> List<T> resolve(String[] names, Class<T> type) {
-        List<T> resolved = new ArrayList<>();
-
-        for (String name : names) {
-            resolved.add(resolve(name, type));
-        }
-
-        return resolved;
     }
 
     @Override
@@ -111,6 +89,12 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     @Override
     public boolean isResolvable(String name) {
         return applicationContext.containsBean(name);
+    }
+
+    @Override
+    public void bind(String name, Object value) {
+        throw new UnsupportedOperationException("Spring bean reference resolver does not support manual reference bindings - " +
+                "please add proper bean reference to the Spring application context instead");
     }
 
     @Override

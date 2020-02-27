@@ -25,7 +25,6 @@ import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
@@ -76,9 +75,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getMessageValidatorRegistry().getMessageValidators().put("xhtml", new XhtmlMessageValidator());
         factory.getMessageValidatorRegistry().getMessageValidators().put("xhtmlXpath", new XhtmlXpathMessageValidator());
 
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("mockQueue", mockQueue);
-        factory.setReferenceResolver(referenceResolver);
+        factory.getReferenceResolver().bind("mockQueue", mockQueue);
         return factory;
     }
 

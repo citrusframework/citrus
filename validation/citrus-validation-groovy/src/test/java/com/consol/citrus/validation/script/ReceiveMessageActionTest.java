@@ -22,7 +22,6 @@ import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
@@ -83,9 +82,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getMessageValidatorRegistry().getMessageValidators().put("groovyText", new GroovyScriptMessageValidator());
         factory.getMessageValidatorRegistry().getMessageValidators().put("groovyXml", new GroovyXmlMessageValidator());
 
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("mockQueue", mockQueue);
-        factory.setReferenceResolver(referenceResolver);
+        factory.getReferenceResolver().bind("mockQueue", mockQueue);
         return factory;
     }
 

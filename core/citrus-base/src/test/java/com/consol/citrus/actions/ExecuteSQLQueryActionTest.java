@@ -22,9 +22,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.spi.SimpleReferenceResolver;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -63,10 +62,7 @@ public class ExecuteSQLQueryActionTest extends UnitTestSupport {
     @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
-
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("sqlResultSetScriptValidator", resultSetScriptValidator);
-        factory.setReferenceResolver(referenceResolver);
+        factory.getReferenceResolver().bind("sqlResultSetScriptValidator", resultSetScriptValidator);
         return factory;
     }
 

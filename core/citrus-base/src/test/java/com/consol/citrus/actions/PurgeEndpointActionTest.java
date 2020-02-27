@@ -47,10 +47,7 @@ public class PurgeEndpointActionTest extends UnitTestSupport {
     @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
-
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("mockEndpoint", mockEndpoint);
-        factory.setReferenceResolver(referenceResolver);
+        factory.getReferenceResolver().bind("mockEndpoint", mockEndpoint);
         return factory;
     }
 

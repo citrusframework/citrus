@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.Set;
 
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -84,15 +83,13 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         TestContextFactory factory = super.createTestContextFactory();
         factory.getMessageValidatorRegistry().getMessageValidators().put("defaultXmlMessageValidator", validator);
 
-        SimpleReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        referenceResolver.bind("schemaRepository", schemaRepository);
-        referenceResolver.bind("testSchemaRepository1", testSchemaRepository1);
-        referenceResolver.bind("testSchemaRepository2", testSchemaRepository2);
-        referenceResolver.bind("testSchema", testSchema);
-        referenceResolver.bind("testSchema1", testSchema1);
-        referenceResolver.bind("testSchema2", testSchema2);
-        referenceResolver.bind("testSchema3", testSchema3);
-        factory.setReferenceResolver(referenceResolver);
+        factory.getReferenceResolver().bind("schemaRepository", schemaRepository);
+        factory.getReferenceResolver().bind("testSchemaRepository1", testSchemaRepository1);
+        factory.getReferenceResolver().bind("testSchemaRepository2", testSchemaRepository2);
+        factory.getReferenceResolver().bind("testSchema", testSchema);
+        factory.getReferenceResolver().bind("testSchema1", testSchema1);
+        factory.getReferenceResolver().bind("testSchema2", testSchema2);
+        factory.getReferenceResolver().bind("testSchema3", testSchema3);
         return factory;
     }
 
