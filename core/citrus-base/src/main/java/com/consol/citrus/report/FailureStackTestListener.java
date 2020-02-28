@@ -52,7 +52,7 @@ public class FailureStackTestListener extends AbstractTestListener {
     }
 
     /**
-     *
+     * Get failure stack from given test.
      * @param test
      * @return
      */

@@ -16,13 +16,10 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestCase;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.consol.citrus.TestCase;
 
 /**
  * Class that spreads test events to all available test listeners
@@ -30,11 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  *
  * @author Christoph Deppisch
  */
-public class TestListeners {
+public class TestListeners implements TestListenerAware {
 
     /** List of test listeners **/
-    @Autowired
-    private List<TestListener> testListeners = new ArrayList<TestListener>();
+    private List<TestListener> testListeners = new ArrayList<>();
 
     public void onTestFailure(TestCase test, Throwable cause) {
         for (TestListener listener : testListeners) {
@@ -66,10 +62,7 @@ public class TestListeners {
         }
     }
 
-    /**
-     * Adds a new test listener.
-     * @param listener
-     */
+    @Override
     public void addTestListener(TestListener listener) {
         if (!testListeners.contains(listener)) {
             this.testListeners.add(listener);

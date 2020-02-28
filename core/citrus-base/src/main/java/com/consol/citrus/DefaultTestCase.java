@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.container.SequenceAfterTest;
-import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.container.AfterTest;
+import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
@@ -17,7 +17,6 @@ import com.consol.citrus.util.TestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Default test case implementation holding a list of test actions to execute. Test case also holds variable definitions and
@@ -45,14 +44,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     /** In case test was called with parameters from outside */
     private Map<String, Object> parameters = new LinkedHashMap<>();
 
-    @Autowired
     private TestActionListeners testActionListeners = new TestActionListeners();
 
-    @Autowired(required = false)
-    private List<SequenceBeforeTest> beforeTest;
+    private List<BeforeTest> beforeTest;
 
-    @Autowired(required = false)
-    private List<SequenceAfterTest> afterTest;
+    private List<AfterTest> afterTest;
 
     /** The result of this test case */
     private TestResult testResult;
@@ -154,7 +150,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public void beforeTest(final TestContext context) {
         if (beforeTest != null) {
-            for (final SequenceBeforeTest sequenceBeforeTest : beforeTest) {
+            for (final BeforeTest sequenceBeforeTest : beforeTest) {
                 try {
                     if (sequenceBeforeTest.shouldExecute(getName(), packageName, groups))
                         sequenceBeforeTest.execute(context);
@@ -168,7 +164,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     @Override
     public void afterTest(final TestContext context) {
         if (afterTest != null) {
-            for (final SequenceAfterTest sequenceAfterTest : afterTest) {
+            for (final AfterTest sequenceAfterTest : afterTest) {
                 try {
                     if (sequenceAfterTest.shouldExecute(getName(), packageName, groups)) {
                         sequenceAfterTest.execute(context);
@@ -345,9 +341,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         return finalActions.stream().map(TestActionBuilder::build).collect(Collectors.toList());
     }
 
-    /**
-     * @see org.springframework.beans.factory.BeanNameAware#setBeanName(java.lang.String)
-     */
+    @Override
     public void setBeanName(final String name) {
         if (getName() == null) {
             setName(name);
@@ -399,27 +393,18 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         return parameters;
     }
 
-    /**
-     * Sets the list of test action listeners.
-     * @param testActionListeners
-     */
+    @Override
     public void setTestActionListeners(final TestActionListeners testActionListeners) {
         this.testActionListeners = testActionListeners;
     }
 
-    /**
-     * Sets the before test action sequence.
-     * @param beforeTest
-     */
-    public void setBeforeTest(final List<SequenceBeforeTest> beforeTest) {
+    @Override
+    public void setBeforeTest(final List<BeforeTest> beforeTest) {
         this.beforeTest = beforeTest;
     }
 
-    /**
-     * Sets the after test action sequence.
-     * @param afterTest
-     */
-    public void setAfterTest(final List<SequenceAfterTest> afterTest) {
+    @Override
+    public void setAfterTest(final List<AfterTest> afterTest) {
         this.afterTest = afterTest;
     }
 

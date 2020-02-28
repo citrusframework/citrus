@@ -33,6 +33,8 @@ import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestResult;
+import com.consol.citrus.container.AfterTest;
+import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.endpoint.EndpointFactory;
@@ -44,6 +46,7 @@ import com.consol.citrus.message.DefaultMessageStore;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
@@ -943,6 +946,21 @@ public class TestContext implements ReferenceResolverAware {
 
         @Override
         public void addFinalAction(TestAction action) {
+            // do nothing
+        }
+
+        @Override
+        public void setTestActionListeners(TestActionListeners testActionListeners) {
+            // do nothing
+        }
+
+        @Override
+        public void setBeforeTest(List<BeforeTest> beforeTest) {
+            // do nothing
+        }
+
+        @Override
+        public void setAfterTest(List<AfterTest> afterTest) {
             // do nothing
         }
 

@@ -63,18 +63,18 @@ public class CitrusSpringConfig {
     }
 
     @Bean
-    public TestListeners testListeners() {
-        return new TestListeners();
+    public TestListenersFactory testListeners() {
+        return new TestListenersFactory();
     }
 
     @Bean
-    public TestActionListeners testActionListeners() {
-        return new TestActionListeners();
+    public TestActionListenersFactory testActionListeners() {
+        return new TestActionListenersFactory();
     }
 
     @Bean
-    public TestSuiteListeners testSuiteListeners() {
-        return new TestSuiteListeners();
+    public TestSuiteListenersFactory testSuiteListeners() {
+        return new TestSuiteListenersFactory();
     }
 
     @Bean

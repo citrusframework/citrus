@@ -16,10 +16,14 @@
 
 package com.consol.citrus;
 
+import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.container.AfterTest;
+import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.report.TestActionListenersAware;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -28,7 +32,7 @@ import com.consol.citrus.context.TestContext;
  * @since 2006
  */
 @SuppressWarnings({"unused", "JavaDoc"})
-public interface TestCase extends TestActionContainer {
+public interface TestCase extends TestActionContainer, TestActionListenersAware {
 
     /**
      * Starts the test case.
@@ -107,6 +111,18 @@ public interface TestCase extends TestActionContainer {
      * @return
      */
     Map<String, Object> getVariableDefinitions();
+
+    /**
+     * Sets the before test action sequence.
+     * @param beforeTest
+     */
+    void setBeforeTest(final List<BeforeTest> beforeTest);
+
+    /**
+     * Sets the after test action sequence.
+     * @param afterTest
+     */
+    void setAfterTest(final List<AfterTest> afterTest);
 
     /**
      * Adds action to finally action chain.

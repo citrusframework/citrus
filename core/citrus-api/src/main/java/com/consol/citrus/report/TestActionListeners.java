@@ -21,7 +21,6 @@ import java.util.List;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class broadcasting test action events to all available test action listeners
@@ -30,11 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class TestActionListeners {
+public class TestActionListeners implements TestActionListenerAware {
 
     /** List of test action listeners **/
-    @Autowired(required = false)
-    private List<TestActionListener> testActionListeners = new ArrayList<TestActionListener>();
+    private List<TestActionListener> testActionListeners = new ArrayList<>();
 
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
@@ -54,10 +52,7 @@ public class TestActionListeners {
         }
     }
 
-    /**
-     * Adds a new test action listener.
-     * @param listener
-     */
+    @Override
     public void addTestActionListener(TestActionListener listener) {
         this.testActionListeners.add(listener);
     }

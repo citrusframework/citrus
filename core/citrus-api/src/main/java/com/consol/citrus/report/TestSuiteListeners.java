@@ -19,24 +19,18 @@ package com.consol.citrus.report;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 /**
  * Class managing a list of injected test suite listeners. Each event is spread to all
  * managed listeners.
  *
  * @author Christoph Deppisch
  */
-public class TestSuiteListeners {
+public class TestSuiteListeners implements TestSuiteListenerAware {
 
     /** List of testsuite listeners **/
-    @Autowired
     private List<TestSuiteListener> testSuiteListeners = new ArrayList<>();
 
-    /**
-     * Adds a new test suite listener.
-     * @param testSuiteListener the listener.
-     */
+    @Override
     public void addTestSuiteListener(TestSuiteListener testSuiteListener) {
         if (!testSuiteListeners.contains(testSuiteListener)) {
             testSuiteListeners.add(testSuiteListener);

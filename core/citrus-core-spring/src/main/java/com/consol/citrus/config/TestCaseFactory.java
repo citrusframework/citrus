@@ -20,7 +20,11 @@ import java.util.List;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.container.AfterTest;
+import com.consol.citrus.container.BeforeTest;
+import com.consol.citrus.report.TestActionListeners;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Test case factory bean constructs test cases with test actions and test finally block.
@@ -36,6 +40,15 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
     /** Test actions in finally block */
     private List<TestAction> finalActions;
 
+    @Autowired
+    private TestActionListeners testActionListeners;
+
+    @Autowired(required = false)
+    private List<BeforeTest> beforeTest;
+
+    @Autowired(required = false)
+    private List<AfterTest> afterTest;
+
     @Override
     public TestCase getObject() throws Exception {
         if (this.testActions != null && this.testActions.size() > 0) {
@@ -49,6 +62,10 @@ public class TestCaseFactory implements FactoryBean<TestCase> {
                 testCase.addFinalAction(action);
             }
         }
+
+        testCase.setTestActionListeners(testActionListeners);
+        testCase.setBeforeTest(beforeTest);
+        testCase.setAfterTest(afterTest);
 
         return this.testCase;
     }
