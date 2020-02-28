@@ -12,6 +12,7 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -94,6 +95,7 @@ public class CitrusSpringContext extends CitrusContext {
             this.applicationContext = applicationContext;
 
             functionRegistry(applicationContext.getBean(FunctionRegistry.class));
+            validationMatcherRegistry(applicationContext.getBean(ValidationMatcherRegistry.class));
             messageValidatorRegistry(applicationContext.getBean(MessageValidatorRegistry.class));
             messageListeners(applicationContext.getBean(MessageListeners.class));
             testListeners(applicationContext.getBean(TestListeners.class));

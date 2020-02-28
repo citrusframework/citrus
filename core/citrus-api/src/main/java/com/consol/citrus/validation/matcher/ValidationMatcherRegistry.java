@@ -19,8 +19,8 @@ package com.consol.citrus.validation.matcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchValidationMatcherLibraryException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * ValidationMatcher registry holding all available validation matcher libraries.
@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */
-    @Autowired
     private List<ValidationMatcherLibrary> validationMatcherLibraries = new ArrayList<>();
 
     /**
@@ -47,6 +46,21 @@ public class ValidationMatcherRegistry {
         }
 
         throw new NoSuchValidationMatcherLibraryException(String.format("Can not find validationMatcher library for prefix '%s'", validationMatcherPrefix));
+    }
+
+    /**
+     * Adds given validation matcher library to this registry.
+     */
+    public void addValidationMatcherLibrary(ValidationMatcherLibrary validationMatcherLibrary) {
+        boolean prefixAlreadyUsed = this.validationMatcherLibraries.stream()
+                .anyMatch(lib -> lib.getPrefix().equals(validationMatcherLibrary.getPrefix()));
+
+        if (prefixAlreadyUsed) {
+            throw new CitrusRuntimeException(String.format("Validation matcher library prefix '%s' is already bound to another instance. " +
+                    "Please choose another prefix.", validationMatcherLibrary.getPrefix()));
+        }
+
+        this.validationMatcherLibraries.add(validationMatcherLibrary);
     }
 
     /**

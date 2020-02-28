@@ -25,6 +25,7 @@ import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
+import com.consol.citrus.validation.matcher.DefaultValidationMatcherRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -243,7 +244,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private List<AfterSuite> afterSuite = new ArrayList<>();
 
         private FunctionRegistry functionRegistry = new DefaultFunctionRegistry();
-        private ValidationMatcherRegistry validationMatcherRegistry = new ValidationMatcherRegistry();
+        private ValidationMatcherRegistry validationMatcherRegistry = new DefaultValidationMatcherRegistry();
         private GlobalVariables globalVariables = new GlobalVariables();
         private MessageValidatorRegistry messageValidatorRegistry = new DefaultMessageValidatorRegistry();
         private MessageListeners messageListeners = new MessageListeners();

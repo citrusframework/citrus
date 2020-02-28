@@ -29,8 +29,8 @@ public class ValidationMatcherConfig {
     private ValidationMatcherLibrary validationMatcherLibrary = new DefaultValidationMatcherLibrary();
 
     @Bean(name = "validationMatcherRegistry")
-    public ValidationMatcherRegistry validationMatcherRegistry() {
-        return new ValidationMatcherRegistry();
+    public ValidationMatcherRegistryFactory validationMatcherRegistry() {
+        return new ValidationMatcherRegistryFactory();
     }
 
     @Bean(name = "citrusValidationMatcherLibrary")

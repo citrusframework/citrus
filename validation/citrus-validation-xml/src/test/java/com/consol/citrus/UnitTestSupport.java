@@ -19,7 +19,7 @@ public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
-        factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
+        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(new DefaultValidationMatcherLibrary());
 
         factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
         factory.getMessageValidatorRegistry().addMessageValidator("xml", new DomXmlMessageValidator());

@@ -49,7 +49,7 @@ public class ValidationMatcherRegistryTest extends AbstractTestNGUnitTest {
     @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(validationMatcherLibrary);
+        factory.getValidationMatcherRegistry().addValidationMatcherLibrary(validationMatcherLibrary);
         return factory;
     }
 
