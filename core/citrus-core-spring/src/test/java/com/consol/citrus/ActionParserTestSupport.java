@@ -3,6 +3,7 @@ package com.consol.citrus;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.HtmlReporter;
 import com.consol.citrus.report.JUnitReporter;
@@ -22,7 +23,7 @@ public class ActionParserTestSupport<T extends TestAction> extends AbstractActio
 
     /** Factory bean for test context */
     @Autowired
-    protected TestContextFactory testContextFactory;
+    protected TestContextFactoryBean testContextFactory;
 
     @Autowired
     private HtmlReporter htmlReporter;

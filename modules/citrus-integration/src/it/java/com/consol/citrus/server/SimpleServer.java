@@ -17,7 +17,7 @@
 package com.consol.citrus.server;
 
 import com.consol.citrus.channel.ChannelEndpoint;
-import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.message.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +36,9 @@ public class SimpleServer extends AbstractServer {
     /** Server publishes start stop events to this channel **/
     private ChannelEndpoint statusChannelEndpoint;
 
-    @Autowired
     /** Test context factory */
-    private TestContextFactory testContextFactory;
+    @Autowired
+    private TestContextFactoryBean testContextFactory;
 
     @Override
     protected void startup() {

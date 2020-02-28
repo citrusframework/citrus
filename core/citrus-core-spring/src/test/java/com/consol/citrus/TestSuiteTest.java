@@ -24,7 +24,7 @@ import com.consol.citrus.container.SequenceAfterSuite;
 import com.consol.citrus.container.SequenceBeforeSuite;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListener;
@@ -50,7 +50,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
     private TestSuiteListeners testSuiteListeners;
     private TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
     private ApplicationContext applicationContextMock = Mockito.mock(ApplicationContext.class);
-    private TestContextFactory testContextFactory = Mockito.mock(TestContextFactory.class);
+    private TestContextFactoryBean testContextFactory = Mockito.mock(TestContextFactoryBean.class);
     private TestAction actionMock = Mockito.mock(TestAction.class);
     private Citrus citrus;
 
@@ -69,7 +69,7 @@ public class TestSuiteTest extends AbstractTestNGUnitTest {
         afterActions = new SequenceAfterSuite();
 
         when(testContextFactory.getObject()).thenReturn(context);
-        when(applicationContextMock.getBean(TestContextFactory.class)).thenReturn(testContextFactory);
+        when(applicationContextMock.getBean(TestContextFactoryBean.class)).thenReturn(testContextFactory);
         when(applicationContextMock.getBeansOfType(AfterSuite.class)).thenReturn(Collections.singletonMap("afterActions", afterActions));
         when(applicationContextMock.getBeansOfType(BeforeSuite.class)).thenReturn(Collections.singletonMap("beforeActions", beforeActions));
         when(applicationContextMock.getBean(TestSuiteListeners.class)).thenReturn(testSuiteListeners);

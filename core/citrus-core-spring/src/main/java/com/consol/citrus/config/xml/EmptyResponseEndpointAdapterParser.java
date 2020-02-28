@@ -16,7 +16,11 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -32,6 +36,37 @@ public class EmptyResponseEndpointAdapterParser extends AbstractBeanDefinitionPa
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(EmptyResponseEndpointAdapter.class).getBeanDefinition();
+        return BeanDefinitionBuilder.genericBeanDefinition(EmptyResponseEndpointAdapterFactory.class).getBeanDefinition();
+    }
+
+    /**
+     * Factory bean for endpoint adapter.
+     */
+    private static class EmptyResponseEndpointAdapterFactory implements FactoryBean<EmptyResponseEndpointAdapter>, BeanNameAware {
+
+        @Autowired(required = false)
+        private TestContextFactoryBean testContextFactory;
+
+        private String name;
+
+        @Override
+        public EmptyResponseEndpointAdapter getObject() throws Exception {
+            EmptyResponseEndpointAdapter endpointAdapter = new EmptyResponseEndpointAdapter();
+
+            endpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapter.setName(name);
+
+            return endpointAdapter;
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return EmptyResponseEndpointAdapter.class;
+        }
+
+        @Override
+        public void setBeanName(String name) {
+            this.name = name;
+        }
     }
 }

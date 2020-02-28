@@ -17,7 +17,14 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.RequestDispatchingEndpointAdapter;
+import com.consol.citrus.endpoint.adapter.mapping.EndpointAdapterMappingStrategy;
+import com.consol.citrus.endpoint.adapter.mapping.MappingKeyExtractor;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -33,7 +40,7 @@ public class RequestDispatchingEndpointAdapterParser extends AbstractBeanDefinit
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RequestDispatchingEndpointAdapter.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RequestDispatchingEndpointAdapterFactory.class);
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("mapping-key-extractor"), "mappingKeyExtractor");
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("mapping-strategy"), "mappingStrategy");
@@ -41,5 +48,75 @@ public class RequestDispatchingEndpointAdapterParser extends AbstractBeanDefinit
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("fallback-adapter"), "fallbackEndpointAdapter");
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Factory bean for endpoint adapter.
+     */
+    private static class RequestDispatchingEndpointAdapterFactory implements FactoryBean<RequestDispatchingEndpointAdapter>, BeanNameAware {
+
+        @Autowired(required = false)
+        private TestContextFactoryBean testContextFactory;
+
+        private String name;
+        private EndpointAdapter fallbackEndpointAdapter;
+        private MappingKeyExtractor mappingKeyExtractor;
+        private EndpointAdapterMappingStrategy mappingStrategy;
+
+        /**
+         * Specifies the fallbackEndpointAdapter.
+         * @param fallbackEndpointAdapter
+         */
+        public void setFallbackEndpointAdapter(EndpointAdapter fallbackEndpointAdapter) {
+            this.fallbackEndpointAdapter = fallbackEndpointAdapter;
+        }
+
+        /**
+         * Specifies the mappingKeyExtractor.
+         * @param mappingKeyExtractor
+         */
+        public void setMappingKeyExtractor(MappingKeyExtractor mappingKeyExtractor) {
+            this.mappingKeyExtractor = mappingKeyExtractor;
+        }
+
+        /**
+         * Specifies the mappingStrategy.
+         * @param mappingStrategy
+         */
+        public void setMappingStrategy(EndpointAdapterMappingStrategy mappingStrategy) {
+            this.mappingStrategy = mappingStrategy;
+        }
+
+        @Override
+        public RequestDispatchingEndpointAdapter getObject() throws Exception {
+            RequestDispatchingEndpointAdapter endpointAdapter = new RequestDispatchingEndpointAdapter();
+
+            if (mappingKeyExtractor != null) {
+                endpointAdapter.setMappingKeyExtractor(mappingKeyExtractor);
+            }
+
+            if (mappingStrategy != null) {
+                endpointAdapter.setMappingStrategy(mappingStrategy);
+            }
+
+            endpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapter.setName(name);
+
+            if (fallbackEndpointAdapter != null) {
+                endpointAdapter.setFallbackEndpointAdapter(fallbackEndpointAdapter);
+            }
+
+            return endpointAdapter;
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return RequestDispatchingEndpointAdapter.class;
+        }
+
+        @Override
+        public void setBeanName(String name) {
+            this.name = name;
+        }
     }
 }

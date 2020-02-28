@@ -17,7 +17,7 @@
 package com.consol.citrus.config;
 
 import com.consol.citrus.context.SpringBeanReferenceResolver;
-import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionConfig;
@@ -50,8 +50,8 @@ import org.springframework.context.annotation.ImportResource;
 public class CitrusSpringConfig {
 
     @Bean
-    public TestContextFactory testContextFactory() {
-        return new TestContextFactory();
+    public TestContextFactoryBean testContextFactory() {
+        return new TestContextFactoryBean();
     }
 
     @Bean

@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Optional;
 
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.validation.MessageValidator;
@@ -59,8 +60,8 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
 
     private TestContextFactory getTestContextFactory() {
 	    if (testContextFactory == null) {
-            if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactory.class).isEmpty()) {
-                testContextFactory = applicationContext.getBean(TestContextFactory.class);
+            if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactoryBean.class).isEmpty()) {
+                testContextFactory = applicationContext.getBean(TestContextFactoryBean.class);
             } else {
                 testContextFactory = TestContextFactory.newInstance();
             }

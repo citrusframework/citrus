@@ -20,7 +20,6 @@ import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.mapping.BeanNameMappingStrategy;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
@@ -32,7 +31,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -56,9 +54,6 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
     /** Spring bean application context holding all available test builders and basic Citrus config */
     private ApplicationContext applicationContext;
 
-    @Autowired
-    private TestContextFactory testContextFactory;
-
     /** First request message is handled by this endpoint adapter */
     private EndpointAdapter endpointAdapterDelegate;
 
@@ -71,7 +66,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         final TestContext testContext;
 
         try {
-            testContext = testContextFactory.getObject();
+            testContext = getTestContextFactory().getObject();
             test = getTestCase(testContext, mappingName);
         } catch (NoSuchBeanDefinitionException e) {
             throw new CitrusRuntimeException("Unable to find test builder with name '" +
@@ -146,7 +141,7 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
             endpointConfiguration.setQueueName(name + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX);
 
             DirectEndpointAdapter simpleEndpointAdapter = new DirectEndpointAdapter(endpointConfiguration);
-            simpleEndpointAdapter.setTestContextFactory(testContextFactory);
+            simpleEndpointAdapter.setTestContextFactory(getTestContextFactory());
             endpointAdapterDelegate = simpleEndpointAdapter;
         }
 

@@ -17,6 +17,7 @@
 package com.consol.citrus.jms.endpoint;
 
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -76,8 +77,8 @@ public class JmsEndpoint extends AbstractEndpoint implements InitializingBean, D
     }
 
     private TestContextFactory getTestContextFactory() {
-        if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactory.class).isEmpty()) {
-            return applicationContext.getBean(TestContextFactory.class);
+        if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactoryBean.class).isEmpty()) {
+            return applicationContext.getBean(TestContextFactoryBean.class);
         }
         return TestContextFactory.newInstance();
     }

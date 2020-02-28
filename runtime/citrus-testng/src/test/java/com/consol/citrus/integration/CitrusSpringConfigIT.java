@@ -1,7 +1,7 @@
 package com.consol.citrus.integration;
 
 import com.consol.citrus.context.SpringBeanReferenceResolver;
-import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
@@ -79,7 +79,7 @@ public class CitrusSpringConfigIT extends AbstractTestNGCitrusTest {
     private ReferenceResolver referenceResolver;
 
     @Autowired
-    private TestContextFactory testContextFactory;
+    private TestContextFactoryBean testContextFactory;
 
     @Autowired
     private LoggingReporter loggingReporter;

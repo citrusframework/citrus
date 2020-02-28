@@ -16,7 +16,11 @@
 
 package com.consol.citrus.config.xml;
 
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -32,6 +36,37 @@ public class TimeoutProducingEndpointAdapterParser extends AbstractBeanDefinitio
 
     @Override
     protected AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        return BeanDefinitionBuilder.genericBeanDefinition(TimeoutProducingEndpointAdapter.class).getBeanDefinition();
+        return BeanDefinitionBuilder.genericBeanDefinition(TimeoutProducingEndpointAdapterFactory.class).getBeanDefinition();
+    }
+
+    /**
+     * Factory bean for endpoint adapter.
+     */
+    private static class TimeoutProducingEndpointAdapterFactory implements FactoryBean<TimeoutProducingEndpointAdapter>, BeanNameAware {
+
+        @Autowired(required = false)
+        private TestContextFactoryBean testContextFactory;
+
+        private String name;
+
+        @Override
+        public TimeoutProducingEndpointAdapter getObject() throws Exception {
+            TimeoutProducingEndpointAdapter endpointAdapter = new TimeoutProducingEndpointAdapter();
+
+            endpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapter.setName(name);
+
+            return endpointAdapter;
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return TimeoutProducingEndpointAdapter.class;
+        }
+
+        @Override
+        public void setBeanName(String name) {
+            this.name = name;
+        }
     }
 }

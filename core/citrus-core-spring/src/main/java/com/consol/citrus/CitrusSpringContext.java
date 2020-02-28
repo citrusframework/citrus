@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
-import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
@@ -102,7 +102,7 @@ public class CitrusSpringContext extends CitrusContext {
             testListeners(applicationContext.getBean(TestListeners.class));
             testReporters(applicationContext.getBean(TestReporters.class));
             testSuiteListeners(applicationContext.getBean(TestSuiteListeners.class));
-            testContextFactory(applicationContext.getBean(TestContextFactory.class));
+            testContextFactory(applicationContext.getBean(TestContextFactoryBean.class));
             referenceResolver(applicationContext.getBean(ReferenceResolver.class));
             beforeSuite(new ArrayList<>(applicationContext.getBeansOfType(BeforeSuite.class).values()));
             afterSuite(new ArrayList<>(applicationContext.getBeansOfType(AfterSuite.class).values()));

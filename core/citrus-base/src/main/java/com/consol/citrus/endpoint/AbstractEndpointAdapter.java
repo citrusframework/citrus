@@ -21,11 +21,6 @@ import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.message.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * Abstract endpoint adapter adds fallback endpoint adapter in case no response was provided.
@@ -33,7 +28,7 @@ import org.springframework.context.ApplicationContextAware;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNameAware, InitializingBean, ApplicationContextAware {
+public abstract class AbstractEndpointAdapter implements EndpointAdapter {
 
     /** Fallback adapter */
     private EndpointAdapter fallbackEndpointAdapter = null;
@@ -41,10 +36,6 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
     /** Endpoint adapter name */
     private String name = getClass().getSimpleName();
 
-    /** The Spring bean application context */
-    private ApplicationContext applicationContext;
-
-    @Autowired(required = false)
     private TestContextFactory testContextFactory;
 
     /** Logger */
@@ -76,23 +67,11 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
      */
     protected abstract Message handleMessageInternal(Message message);
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        if (testContextFactory == null) {
-            log.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
-                    "This restricts test context capabilities to an absolute minimum! You could do better when enabling the root application context for this server instance.");
-
-            testContextFactory = TestContextFactory.newInstance(applicationContext);
-        }
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
-    @Override
-    public void setBeanName(String name) {
+    /**
+     * Sets the name of this endpoint adapter.
+     * @param name
+     */
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -133,6 +112,13 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
      * @return
      */
     public TestContextFactory getTestContextFactory() {
+        if (testContextFactory == null) {
+            log.warn("Could not identify proper test context factory from Spring bean application context - constructing own test context factory. " +
+                    "This restricts test context capabilities to an absolute minimum! You could do better when enabling the root application context for this server instance.");
+
+            testContextFactory = TestContextFactory.newInstance();
+        }
+
         return testContextFactory;
     }
 
@@ -141,6 +127,6 @@ public abstract class AbstractEndpointAdapter implements EndpointAdapter, BeanNa
      * @return
      */
     protected TestContext getTestContext() {
-        return testContextFactory.getObject();
+        return getTestContextFactory().getObject();
     }
 }

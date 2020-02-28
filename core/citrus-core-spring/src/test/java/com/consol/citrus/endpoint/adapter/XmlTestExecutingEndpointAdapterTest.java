@@ -18,6 +18,7 @@ package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectSyncEndpoint;
@@ -55,18 +56,21 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
     @Mock
     private MessageValidator<?> xmlMessageValidator;
 
+    @Mock
+    private MessageValidator<?> plaintextMessageValidator;
+
     @BeforeClass
     public void setupMocks() {
         MockitoAnnotations.initMocks(this);
         when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()));
+        when(plaintextMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.PLAINTEXT.name()));
     }
 
     @Override
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory contextFactory = super.createTestContextFactory();
-
-        contextFactory.getMessageValidatorRegistry().addMessageValidator("text", xmlMessageValidator);
-
+        contextFactory.getMessageValidatorRegistry().addMessageValidator("xml", xmlMessageValidator);
+        contextFactory.getMessageValidatorRegistry().addMessageValidator("text", plaintextMessageValidator);
         return contextFactory;
     }
 
@@ -147,13 +151,14 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
         private MessageQueue inboundQueue = new DefaultMessageQueue();
 
         @Bean
-        public XmlTestExecutingEndpointAdapter testSimulator() {
+        public XmlTestExecutingEndpointAdapter testSimulator(TestContextFactoryBean testContextFactoryBean) {
             XmlTestExecutingEndpointAdapter endpointAdapter = new XmlTestExecutingEndpointAdapter();
             XPathPayloadMappingKeyExtractor mappingKeyExtractor = new XPathPayloadMappingKeyExtractor();
             mappingKeyExtractor.setXpathExpression("//Test/@name");
             endpointAdapter.setMappingKeyExtractor(mappingKeyExtractor);
 
             endpointAdapter.setResponseEndpointAdapter(channelEndpointAdapter());
+            endpointAdapter.setTestContextFactory(testContextFactoryBean);
 
             return endpointAdapter;
         }

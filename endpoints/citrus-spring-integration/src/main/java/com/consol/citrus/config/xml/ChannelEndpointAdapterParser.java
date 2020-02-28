@@ -19,6 +19,14 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.channel.ChannelEndpointAdapter;
 import com.consol.citrus.channel.ChannelSyncEndpointConfiguration;
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -34,7 +42,7 @@ public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {
 
     @Override
     public AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ChannelEndpointAdapter.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(ChannelEndpointAdapterFactory.class);
 
         BeanDefinitionBuilder endpointConfiguration = BeanDefinitionBuilder.genericBeanDefinition(ChannelSyncEndpointConfiguration.class);
         new ChannelSyncEndpointParser().parseEndpointConfiguration(endpointConfiguration, element, parserContext);
@@ -42,10 +50,73 @@ public class ChannelEndpointAdapterParser extends AbstractBeanDefinitionParser {
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "EndpointAdapterConfiguration";
         BeanDefinitionParserUtils.registerBean(endpointConfigurationId, endpointConfiguration.getBeanDefinition(), parserContext, shouldFireEvents());
 
-        builder.addConstructorArgReference(endpointConfigurationId);
+        builder.addPropertyReference("endpointConfiguration", endpointConfigurationId);
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("fallback-adapter"), "fallbackEndpointAdapter");
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Factory bean for endpoint adapter.
+     */
+    private static class ChannelEndpointAdapterFactory implements FactoryBean<ChannelEndpointAdapter>, BeanFactoryAware, BeanNameAware {
+
+        @Autowired(required = false)
+        private TestContextFactoryBean testContextFactory;
+
+        private String name;
+        private ChannelSyncEndpointConfiguration endpointConfiguration;
+        private EndpointAdapter fallbackEndpointAdapter;
+        private BeanFactory beanFactory;
+
+        /**
+         * Specifies the endpointConfiguration.
+         * @param endpointConfiguration
+         */
+        public void setEndpointConfiguration(ChannelSyncEndpointConfiguration endpointConfiguration) {
+            this.endpointConfiguration = endpointConfiguration;
+        }
+
+        /**
+         * Specifies the fallbackEndpointAdapter.
+         * @param fallbackEndpointAdapter
+         */
+        public void setFallbackEndpointAdapter(EndpointAdapter fallbackEndpointAdapter) {
+            this.fallbackEndpointAdapter = fallbackEndpointAdapter;
+        }
+
+        @Override
+        public ChannelEndpointAdapter getObject() throws Exception {
+            ChannelEndpointAdapter endpointAdapter = new ChannelEndpointAdapter(endpointConfiguration);
+
+            endpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapter.setName(name);
+
+            if (fallbackEndpointAdapter != null) {
+                endpointAdapter.setFallbackEndpointAdapter(fallbackEndpointAdapter);
+            }
+
+            if (beanFactory != null) {
+                endpointAdapter.setBeanFactory(beanFactory);
+            }
+
+            return endpointAdapter;
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return ChannelEndpointAdapter.class;
+        }
+
+        @Override
+        public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+            this.beanFactory = beanFactory;
+        }
+
+        @Override
+        public void setBeanName(String name) {
+            this.name = name;
+        }
     }
 }

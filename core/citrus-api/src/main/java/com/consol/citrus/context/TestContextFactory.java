@@ -31,52 +31,34 @@ import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.CollectionUtils;
 
 /**
- * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}.
+ * Factory bean implementation constructs test context instances. Takes care of adding proper default components
+ * to the test context such as {@link FunctionRegistry} or {@link GlobalVariables}.
  *
  * @author Christoph Deppisch
  */
-public class TestContextFactory implements FactoryBean<TestContext>, ApplicationContextAware, ReferenceResolverAware {
+public class TestContextFactory implements ReferenceResolverAware {
 
-    @Autowired
     private FunctionRegistry functionRegistry;
 
-    @Autowired
     private ValidationMatcherRegistry validationMatcherRegistry;
 
-    @Autowired(required = false)
     private GlobalVariables globalVariables = new GlobalVariables();
 
-    @Autowired
     private MessageValidatorRegistry messageValidatorRegistry;
 
-    @Autowired
     private TestListeners testListeners;
 
-    @Autowired
     private MessageListeners messageListeners;
 
-    @Autowired
     private EndpointFactory endpointFactory;
 
-    @Autowired
     private ReferenceResolver referenceResolver;
 
-    @Autowired
     private MessageConstructionInterceptors messageConstructionInterceptors;
 
-    @Autowired(required=false)
     private NamespaceContextBuilder namespaceContextBuilder;
-
-    /** Spring bean application context */
-    private ApplicationContext applicationContext;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestContextFactory.class);
@@ -103,59 +85,9 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     }
 
     /**
-     * Construct new factory instance from application context.
-     * @param applicationContext
+     * Factory method creates new test context instance and adds all default components in this factory.
      * @return
      */
-    public static TestContextFactory newInstance(ApplicationContext applicationContext) {
-        TestContextFactory factory = new TestContextFactory();
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(FunctionRegistry.class))) {
-            factory.setFunctionRegistry(applicationContext.getBean(FunctionRegistry.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ValidationMatcherRegistry.class))) {
-            factory.setValidationMatcherRegistry(applicationContext.getBean(ValidationMatcherRegistry.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(GlobalVariables.class))) {
-            factory.setGlobalVariables(applicationContext.getBean(GlobalVariables.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(MessageValidatorRegistry.class))) {
-            factory.setMessageValidatorRegistry(applicationContext.getBean(MessageValidatorRegistry.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(TestListeners.class))) {
-            factory.setTestListeners(applicationContext.getBean(TestListeners.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(MessageListeners.class))) {
-            factory.setMessageListeners(applicationContext.getBean(MessageListeners.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(MessageConstructionInterceptors.class))) {
-            factory.setMessageConstructionInterceptors(applicationContext.getBean(MessageConstructionInterceptors.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(EndpointFactory.class))) {
-            factory.setEndpointFactory(applicationContext.getBean(EndpointFactory.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(ReferenceResolver.class))) {
-            factory.setReferenceResolver(applicationContext.getBean(ReferenceResolver.class));
-        }
-
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(NamespaceContextBuilder.class))) {
-            factory.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
-        }
-
-        factory.setApplicationContext(applicationContext);
-
-        return factory;
-    }
-
-    @Override
     public TestContext getObject() {
         TestContext context = new TestContext();
         context.setFunctionRegistry(functionRegistry);
@@ -167,7 +99,6 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         context.setEndpointFactory(endpointFactory);
         context.setReferenceResolver(referenceResolver);
-        context.setApplicationContext(applicationContext);
 
         if (namespaceContextBuilder != null) {
             context.setNamespaceContextBuilder(namespaceContextBuilder);
@@ -179,16 +110,6 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         }
 
         return context;
-    }
-
-    @Override
-    public Class<TestContext> getObjectType() {
-        return TestContext.class;
-    }
-
-	@Override
-    public boolean isSingleton() {
-        return false;
     }
 
     /**
@@ -342,10 +263,5 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
      */
     public MessageConstructionInterceptors getMessageConstructionInterceptors() {
         return messageConstructionInterceptors;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 }

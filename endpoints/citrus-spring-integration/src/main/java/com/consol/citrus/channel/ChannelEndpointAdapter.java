@@ -24,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.BeanFactoryAware;
 
 /**
  * Endpoint adapter forwards incoming requests to message channel and waits synchronously for response
@@ -34,7 +33,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements BeanFactoryAware {
+public class ChannelEndpointAdapter extends AbstractEndpointAdapter {
 
     /** Endpoint handling incoming requests */
     private ChannelSyncEndpoint endpoint;
@@ -88,7 +87,11 @@ public class ChannelEndpointAdapter extends AbstractEndpointAdapter implements B
         return endpointConfiguration;
     }
 
-    @Override
+    /**
+     * Sets the bean factory that constructed this endpoint adapter.
+     * @param beanFactory
+     * @throws BeansException
+     */
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         endpointConfiguration.setBeanFactory(beanFactory);
     }

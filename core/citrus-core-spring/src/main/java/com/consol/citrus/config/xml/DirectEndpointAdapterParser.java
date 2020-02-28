@@ -17,8 +17,13 @@
 package com.consol.citrus.config.xml;
 
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
+import com.consol.citrus.context.TestContextFactoryBean;
+import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectSyncEndpointConfiguration;
+import org.springframework.beans.factory.BeanNameAware;
+import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.AbstractBeanDefinitionParser;
@@ -34,7 +39,7 @@ public class DirectEndpointAdapterParser extends AbstractBeanDefinitionParser {
 
     @Override
     public AbstractBeanDefinition parseInternal(Element element, ParserContext parserContext) {
-        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(DirectEndpointAdapter.class);
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(DirectEndpointAdapterFactory.class);
 
         BeanDefinitionBuilder endpointConfiguration = BeanDefinitionBuilder.genericBeanDefinition(DirectSyncEndpointConfiguration.class);
         new DirectSyncEndpointParser().parseEndpointConfiguration(endpointConfiguration, element, parserContext);
@@ -42,10 +47,63 @@ public class DirectEndpointAdapterParser extends AbstractBeanDefinitionParser {
         String endpointConfigurationId = element.getAttribute(ID_ATTRIBUTE) + "EndpointAdapterConfiguration";
         BeanDefinitionParserUtils.registerBean(endpointConfigurationId, endpointConfiguration.getBeanDefinition(), parserContext, shouldFireEvents());
 
-        builder.addConstructorArgReference(endpointConfigurationId);
+        builder.addPropertyReference("endpointConfiguration", endpointConfigurationId);
 
         BeanDefinitionParserUtils.setPropertyReference(builder, element.getAttribute("fallback-adapter"), "fallbackEndpointAdapter");
 
         return builder.getBeanDefinition();
+    }
+
+    /**
+     * Factory bean for endpoint adapter.
+     */
+    private static class DirectEndpointAdapterFactory implements FactoryBean<DirectEndpointAdapter>, BeanNameAware {
+
+        @Autowired(required = false)
+        private TestContextFactoryBean testContextFactory;
+
+        private String name;
+        private DirectSyncEndpointConfiguration endpointConfiguration;
+        private EndpointAdapter fallbackEndpointAdapter;
+
+        /**
+         * Specifies the endpointConfiguration.
+         * @param endpointConfiguration
+         */
+        public void setEndpointConfiguration(DirectSyncEndpointConfiguration endpointConfiguration) {
+            this.endpointConfiguration = endpointConfiguration;
+        }
+
+        /**
+         * Specifies the fallbackEndpointAdapter.
+         * @param fallbackEndpointAdapter
+         */
+        public void setFallbackEndpointAdapter(EndpointAdapter fallbackEndpointAdapter) {
+            this.fallbackEndpointAdapter = fallbackEndpointAdapter;
+        }
+
+        @Override
+        public DirectEndpointAdapter getObject() throws Exception {
+            DirectEndpointAdapter endpointAdapter = new DirectEndpointAdapter(endpointConfiguration);
+
+            endpointAdapter.setTestContextFactory(testContextFactory);
+            endpointAdapter.setName(name);
+
+            if (fallbackEndpointAdapter != null) {
+                endpointAdapter.setFallbackEndpointAdapter(fallbackEndpointAdapter);
+            }
+
+            return endpointAdapter;
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return DirectEndpointAdapter.class;
+        }
+
+        @Override
+        public void setBeanName(String name) {
+            this.name = name;
+        }
     }
 }

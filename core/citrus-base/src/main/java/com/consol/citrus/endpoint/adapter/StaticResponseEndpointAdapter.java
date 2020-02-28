@@ -48,7 +48,7 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
     private String messagePayloadResourceCharset = CitrusSettings.CITRUS_FILE_ENCODING;
 
     /** Response message header */
-    private Map<String, Object> messageHeader = new HashMap<String, Object>();
+    private Map<String, Object> messageHeader = new HashMap<>();
 
     @Override
     public Message handleMessageInternal(Message request) {
@@ -102,6 +102,22 @@ public class StaticResponseEndpointAdapter extends StaticEndpointAdapter {
      */
     public void setMessagePayloadResource(String messagePayloadResource) {
         this.messagePayloadResource = messagePayloadResource;
+    }
+
+    /**
+     * Obtains the messagePayloadResourceCharset.
+     * @return
+     */
+    public String getMessagePayloadResourceCharset() {
+        return messagePayloadResourceCharset;
+    }
+
+    /**
+     * Specifies the messagePayloadResourceCharset.
+     * @param messagePayloadResourceCharset
+     */
+    public void setMessagePayloadResourceCharset(String messagePayloadResourceCharset) {
+        this.messagePayloadResourceCharset = messagePayloadResourceCharset;
     }
 
     /**
