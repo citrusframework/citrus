@@ -77,7 +77,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
             message.setName(messageName);
 
             if (payload != null) {
-                for (final MessageConstructionInterceptor interceptor: context.getGlobalMessageConstructionInterceptors().getMessageConstructionInterceptors()) {
+                for (final MessageConstructionInterceptor interceptor: context.getMessageConstructionInterceptors().getMessageConstructionInterceptors()) {
                     if (direction.equals(MessageDirection.UNBOUND)
                             || interceptor.getDirection().equals(MessageDirection.UNBOUND)
                             || direction.equals(interceptor.getDirection())) {

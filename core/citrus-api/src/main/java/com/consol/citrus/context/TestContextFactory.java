@@ -25,7 +25,7 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -70,7 +70,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
     private ReferenceResolver referenceResolver;
 
     @Autowired
-    private GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors;
+    private MessageConstructionInterceptors messageConstructionInterceptors;
 
     @Autowired(required=false)
     private NamespaceContextBuilder namespaceContextBuilder;
@@ -94,7 +94,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         factory.setMessageValidatorRegistry(new MessageValidatorRegistry());
         factory.setTestListeners(new TestListeners());
         factory.setMessageListeners(new MessageListeners());
-        factory.setGlobalMessageConstructionInterceptors(new GlobalMessageConstructionInterceptors());
+        factory.setMessageConstructionInterceptors(new MessageConstructionInterceptors());
         factory.setEndpointFactory(new DefaultEndpointFactory());
         factory.setReferenceResolver(new SimpleReferenceResolver());
         factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
@@ -134,8 +134,8 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
             factory.setMessageListeners(applicationContext.getBean(MessageListeners.class));
         }
 
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(GlobalMessageConstructionInterceptors.class))) {
-            factory.setGlobalMessageConstructionInterceptors(applicationContext.getBean(GlobalMessageConstructionInterceptors.class));
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(MessageConstructionInterceptors.class))) {
+            factory.setMessageConstructionInterceptors(applicationContext.getBean(MessageConstructionInterceptors.class));
         }
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(EndpointFactory.class))) {
@@ -164,7 +164,7 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         context.setTestListeners(testListeners);
         context.setMessageListeners(messageListeners);
-        context.setGlobalMessageConstructionInterceptors(globalMessageConstructionInterceptors);
+        context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         context.setEndpointFactory(endpointFactory);
         context.setReferenceResolver(referenceResolver);
         context.setApplicationContext(applicationContext);
@@ -332,16 +332,16 @@ public class TestContextFactory implements FactoryBean<TestContext>, Application
      * Sets the message construction interceptors.
      * @param messageConstructionInterceptors
      */
-    public void setGlobalMessageConstructionInterceptors(GlobalMessageConstructionInterceptors messageConstructionInterceptors) {
-        this.globalMessageConstructionInterceptors = messageConstructionInterceptors;
+    public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
+        this.messageConstructionInterceptors = messageConstructionInterceptors;
     }
 
     /**
      * Gets the message construction interceptors.
      * @return
      */
-    public GlobalMessageConstructionInterceptors getGlobalMessageConstructionInterceptors() {
-        return globalMessageConstructionInterceptors;
+    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
+        return messageConstructionInterceptors;
     }
 
     @Override

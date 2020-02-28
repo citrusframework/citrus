@@ -16,18 +16,25 @@
 
 package com.consol.citrus.config;
 
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionConfig;
-import com.consol.citrus.report.*;
+import com.consol.citrus.report.FailureStackTestListener;
+import com.consol.citrus.report.MessageListenersFactory;
+import com.consol.citrus.report.TestActionListenersFactory;
+import com.consol.citrus.report.TestListenersFactory;
+import com.consol.citrus.report.TestSuiteListenersFactory;
 import com.consol.citrus.reporter.ReporterConfig;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.MessageValidatorConfig;
-import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptorsFactory;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * @author Christoph Deppisch
@@ -58,8 +65,8 @@ public class CitrusSpringConfig {
     }
 
     @Bean
-    public GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors() {
-        return new GlobalMessageConstructionInterceptors();
+    public MessageConstructionInterceptorsFactory messageConstructionInterceptors() {
+        return new MessageConstructionInterceptorsFactory();
     }
 
     @Bean

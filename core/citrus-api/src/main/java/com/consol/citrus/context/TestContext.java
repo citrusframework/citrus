@@ -52,7 +52,7 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
@@ -128,7 +128,7 @@ public class TestContext implements ReferenceResolverAware {
     /**
      * List of global message construction interceptors
      */
-    private GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors = new GlobalMessageConstructionInterceptors();
+    private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
 
     /**
      * Central namespace context builder
@@ -625,8 +625,8 @@ public class TestContext implements ReferenceResolverAware {
      *
      * @return
      */
-    public GlobalMessageConstructionInterceptors getGlobalMessageConstructionInterceptors() {
-        return globalMessageConstructionInterceptors;
+    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
+        return messageConstructionInterceptors;
     }
 
     /**
@@ -634,8 +634,8 @@ public class TestContext implements ReferenceResolverAware {
      *
      * @param messageConstructionInterceptors
      */
-    public void setGlobalMessageConstructionInterceptors(GlobalMessageConstructionInterceptors messageConstructionInterceptors) {
-        this.globalMessageConstructionInterceptors = messageConstructionInterceptors;
+    public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
+        this.messageConstructionInterceptors = messageConstructionInterceptors;
     }
 
     /**

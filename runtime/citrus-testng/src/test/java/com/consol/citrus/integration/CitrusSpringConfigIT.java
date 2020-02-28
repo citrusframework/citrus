@@ -26,6 +26,8 @@ import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -57,6 +59,9 @@ public class CitrusSpringConfigIT extends AbstractTestNGCitrusTest {
 
     @Autowired
     private MessageListeners messageListeners;
+
+    @Autowired
+    private MessageConstructionInterceptors messageConstructionInterceptors;
 
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -107,6 +112,9 @@ public class CitrusSpringConfigIT extends AbstractTestNGCitrusTest {
         Assert.assertTrue(messageListeners.getMessageListener().stream().anyMatch(CustomConfig.messageListener::equals));
         Assert.assertTrue(messageListeners.getMessageListener().stream().anyMatch(loggingReporter::equals));
 
+        Assert.assertEquals(messageConstructionInterceptors.getMessageConstructionInterceptors().size(), 1);
+        Assert.assertTrue(messageConstructionInterceptors.getMessageConstructionInterceptors().stream().anyMatch(CustomConfig.messageConstructionInterceptor::equals));
+
         Assert.assertEquals(functionRegistry.getFunctionLibraries().size(), 2);
         Assert.assertTrue(functionRegistry.getFunctionLibraries().stream().anyMatch(CustomConfig.functionLibrary::equals));
         Assert.assertTrue(functionRegistry.getFunctionLibraries().stream().anyMatch(DefaultFunctionLibrary.class::isInstance));
@@ -125,6 +133,7 @@ public class CitrusSpringConfigIT extends AbstractTestNGCitrusTest {
 
         Assert.assertEquals(testContextFactory.getTestListeners(), testListeners);
         Assert.assertEquals(testContextFactory.getMessageListeners(), messageListeners);
+        Assert.assertEquals(testContextFactory.getMessageConstructionInterceptors(), messageConstructionInterceptors);
         Assert.assertEquals(testContextFactory.getFunctionRegistry(), functionRegistry);
         Assert.assertEquals(testContextFactory.getValidationMatcherRegistry(), validationMatcherRegistry);
         Assert.assertEquals(testContextFactory.getMessageValidatorRegistry(), messageValidatorRegistry);
@@ -139,6 +148,7 @@ public class CitrusSpringConfigIT extends AbstractTestNGCitrusTest {
         static TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
         static TestActionListener testActionListener = Mockito.mock(TestActionListener.class);
         static MessageListener messageListener = Mockito.mock(MessageListener.class);
+        static MessageConstructionInterceptor messageConstructionInterceptor = Mockito.mock(MessageConstructionInterceptor.class);
 
         static FunctionLibrary functionLibrary = Mockito.mock(FunctionLibrary.class);
         static ValidationMatcherLibrary validationMatcherLibrary = Mockito.mock(ValidationMatcherLibrary.class);
@@ -167,6 +177,11 @@ public class CitrusSpringConfigIT extends AbstractTestNGCitrusTest {
         @Bean
         public MessageListener messageListener() {
             return messageListener;
+        }
+
+        @Bean
+        public MessageConstructionInterceptor messageConstructionInterceptor() {
+            return messageConstructionInterceptor;
         }
 
         @Bean

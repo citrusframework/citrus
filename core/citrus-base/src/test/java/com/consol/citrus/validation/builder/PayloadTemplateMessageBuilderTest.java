@@ -58,7 +58,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("TestMessagePayload");
 
-        context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.emptyList());
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.emptyList());
     }
 
     @Test
@@ -278,7 +278,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         when(dataDictionary.isGlobalScope()).thenReturn(true);
         when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
@@ -315,7 +315,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
         when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(globalDataDictionary));
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(globalDataDictionary));
         messageBuilder.setDataDictionary(dataDictionary);
 
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
@@ -337,7 +337,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         when(dataDictionary.isGlobalScope()).thenReturn(true);
         when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
@@ -354,7 +354,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         when(dataDictionary.isGlobalScope()).thenReturn(true);
         when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getGlobalMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
+        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);

@@ -30,7 +30,7 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
+import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
@@ -59,7 +59,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     private final MessageListeners messageListeners;
     private final EndpointFactory endpointFactory;
     private final ReferenceResolver referenceResolver;
-    private final GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors;
+    private final MessageConstructionInterceptors messageConstructionInterceptors;
     private final NamespaceContextBuilder namespaceContextBuilder;
 
     /**
@@ -81,7 +81,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         this.messageListeners = builder.messageListeners;
         this.endpointFactory = builder.endpointFactory;
         this.referenceResolver = builder.referenceResolver;
-        this.globalMessageConstructionInterceptors = builder.globalMessageConstructionInterceptors;
+        this.messageConstructionInterceptors = builder.messageConstructionInterceptors;
         this.namespaceContextBuilder = builder.namespaceContextBuilder;
 
         this.testContextFactory = Optional.ofNullable(builder.testContextFactory)
@@ -220,11 +220,11 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     }
 
     /**
-     * Obtains the globalMessageConstructionInterceptors.
+     * Obtains the messageConstructionInterceptors.
      * @return
      */
-    public GlobalMessageConstructionInterceptors getGlobalMessageConstructionInterceptors() {
-        return globalMessageConstructionInterceptors;
+    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
+        return messageConstructionInterceptors;
     }
 
     /**
@@ -269,7 +269,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private MessageListeners messageListeners = new MessageListeners();
         private EndpointFactory endpointFactory = new DefaultEndpointFactory();
         private ReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        private GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors = new GlobalMessageConstructionInterceptors();
+        private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
         public Builder testContextFactory(TestContextFactory testContextFactory) {
@@ -367,8 +367,8 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
             return this;
         }
 
-        public Builder globalMessageConstructionInterceptors(GlobalMessageConstructionInterceptors globalMessageConstructionInterceptors) {
-            this.globalMessageConstructionInterceptors = globalMessageConstructionInterceptors;
+        public Builder messageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
+            this.messageConstructionInterceptors = messageConstructionInterceptors;
             return this;
         }
 
