@@ -16,16 +16,6 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestResult;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.PropertyUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -39,6 +29,15 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+import com.consol.citrus.TestResult;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.PropertyUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
@@ -49,42 +48,35 @@ public class JUnitReporter extends AbstractTestReporter {
     private static Logger log = LoggerFactory.getLogger(JUnitReporter.class);
 
     /** Output directory */
-    @Value("${citrus.junit.report.directory:junitreports}")
-    private String outputDirectory = "junitreports";
+    private String outputDirectory = JUnitReporterSettings.getReportDirectory();
 
     /** Resulting test report file name */
-    @Value("${citrus.junit.report.file.pattern:TEST-%s.xml}")
-    private String reportFileNamePattern = "TEST-%s.xml";
+    private String reportFileNamePattern = JUnitReporterSettings.getReportFilePattern();
 
     /** Test suite name to use in report */
-    @Value("${citrus.junit.report.suite.name:TestSuite}")
-    private String suiteName = "TestSuite";
+    private String suiteName = JUnitReporterSettings.getSuiteName();
 
     /** Static resource for the summary test report template */
-    @Value("${citrus.junit.report.template:classpath:com/consol/citrus/report/junit-report.xml}")
-    private String reportTemplate = "classpath:com/consol/citrus/report/junit-report.xml";
+    private String reportTemplate = JUnitReporterSettings.getReportTemplate();
 
     /** Test result template */
-    @Value("${citrus.junit.report.success.template:classpath:com/consol/citrus/report/junit-test.xml}")
-    private String successTemplate = "classpath:com/consol/citrus/report/junit-test.xml";
+    private String successTemplate = JUnitReporterSettings.getSuccessTemplate();
 
     /** Test result template */
-    @Value("${citrus.junit.report.failed.template:classpath:com/consol/citrus/report/junit-test-failed.xml}")
-    private String failedTemplate = "classpath:com/consol/citrus/report/junit-test-failed.xml";
+    private String failedTemplate = JUnitReporterSettings.getFailedTemplate();
 
     /** Enables/disables report generation */
-    @Value("${citrus.junit.report.enabled:true}")
-    private String enabled = Boolean.TRUE.toString();
+    private boolean enabled = JUnitReporterSettings.isReportEnabled();
 
     @Override
-    public void generateTestResults() {
+    public void generate(TestResults testResults) {
         if (isEnabled()) {
             ReportTemplates reportTemplates = new ReportTemplates();
 
             log.debug("Generating JUnit test report");
 
             try {
-                List<TestResult> results = getTestResults().asList();
+                List<TestResult> results = testResults.asList();
                 createReportFile(String.format(reportFileNamePattern, suiteName), createReportContent(suiteName, results, reportTemplates), new File(getReportDirectory()));
 
                 Map<String, List<TestResult>> groupedResults = new HashMap<>();
@@ -328,7 +320,7 @@ public class JUnitReporter extends AbstractTestReporter {
      * @return
      */
     public boolean isEnabled() {
-        return StringUtils.hasText(enabled) && enabled.equalsIgnoreCase(Boolean.TRUE.toString());
+        return enabled;
     }
 
     /**
@@ -337,6 +329,6 @@ public class JUnitReporter extends AbstractTestReporter {
      * @param enabled
      */
     public void setEnabled(boolean enabled) {
-        this.enabled = String.valueOf(enabled);
+        this.enabled = enabled;
     }
 }

@@ -16,15 +16,30 @@
 
 package com.consol.citrus.remote.plugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.consol.citrus.TestClass;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.main.TestRunConfiguration;
 import com.consol.citrus.remote.model.RemoteResult;
 import com.consol.citrus.remote.plugin.config.RunConfiguration;
-import com.consol.citrus.report.*;
+import com.consol.citrus.report.HtmlReporter;
+import com.consol.citrus.report.JUnitReporter;
+import com.consol.citrus.report.OutputStreamReporter;
+import com.consol.citrus.report.SummaryReporter;
+import com.consol.citrus.report.TestResults;
 import com.consol.citrus.util.FileUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.apache.http.*;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.client.utils.HttpClientUtils;
 import org.apache.http.entity.ContentType;
@@ -33,13 +48,10 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.*;
-
-import java.io.*;
-import java.net.URLEncoder;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * @author Christoph Deppisch
@@ -220,23 +232,24 @@ public class RunTestMojo extends AbstractCitrusRemoteMojo {
     private void handleTestResults(RemoteResult[] results) {
         StringWriter resultWriter = new StringWriter();
         resultWriter.append(String.format("%n"));
+
+        TestResults testResults = new TestResults();
+        Arrays.stream(results).forEach(remoteResult -> testResults.addResult(RemoteResult.toTestResult(remoteResult)));
+
         OutputStreamReporter reporter = new OutputStreamReporter(resultWriter);
-        Stream.of(results).forEach(result -> reporter.getTestResults().addResult(RemoteResult.toTestResult(result)));
-        reporter.generateTestResults();
+        reporter.generate(testResults);
         getLog().info(resultWriter.toString());
 
         if (getReport().isHtmlReport()) {
             HtmlReporter htmlReporter = new HtmlReporter();
             htmlReporter.setReportDirectory(getOutputDirectory().getPath() + File.separator + getReport().getDirectory());
-            Stream.of(results).forEach(result -> htmlReporter.getTestResults().addResult(RemoteResult.toTestResult(result)));
-            htmlReporter.generateTestResults();
+            htmlReporter.generate(testResults);
         }
 
         SummaryReporter summaryReporter = new SummaryReporter();
-        Stream.of(results).forEach(result -> summaryReporter.getTestResults().addResult(RemoteResult.toTestResult(result)));
         summaryReporter.setReportDirectory(getOutputDirectory().getPath() + File.separator + getReport().getDirectory());
         summaryReporter.setReportFileName(getReport().getSummaryFile());
-        summaryReporter.generateTestResults();
+        summaryReporter.generate(testResults);
 
         getAndSaveReports();
     }

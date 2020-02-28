@@ -30,7 +30,7 @@ import com.consol.citrus.TestCase;
 public class TestListeners implements TestListenerAware {
 
     /** List of test listeners **/
-    private List<TestListener> testListeners = new ArrayList<>();
+    private final List<TestListener> testListeners = new ArrayList<>();
 
     public void onTestFailure(TestCase test, Throwable cause) {
         for (TestListener listener : testListeners) {
@@ -67,5 +67,13 @@ public class TestListeners implements TestListenerAware {
         if (!testListeners.contains(listener)) {
             this.testListeners.add(listener);
         }
+    }
+
+    /**
+     * Obtains the testListeners.
+     * @return
+     */
+    public List<TestListener> getTestListeners() {
+        return testListeners;
     }
 }

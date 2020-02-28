@@ -111,8 +111,7 @@ public class CitrusRemoteApplication implements SparkApplication {
     public void init() {
         CitrusInstanceManager.mode(CitrusInstanceStrategy.SINGLETON);
         CitrusInstanceManager.addInstanceProcessor(citrus -> {
-            citrus.addTestSuiteListener(remoteTestResultReporter);
-            citrus.addTestListener(remoteTestResultReporter);
+            citrus.addTestReporter(remoteTestResultReporter);
         });
 
         before((Filter) (request, response) -> log.info(request.requestMethod() + " " + request.url() + Optional.ofNullable(request.queryString()).map(query -> "?" + query).orElse("")));
@@ -139,7 +138,7 @@ public class CitrusRemoteApplication implements SparkApplication {
                 }
 
                 List<RemoteResult> results = new ArrayList<>();
-                remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+                remoteTestResultReporter.getLatestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
                 return results;
             }, responseTransformer);
 
@@ -265,7 +264,7 @@ public class CitrusRemoteApplication implements SparkApplication {
         }
 
         List<RemoteResult> results = new ArrayList<>();
-        remoteTestResultReporter.getTestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
+        remoteTestResultReporter.getLatestResults().doWithResults(result -> results.add(RemoteResult.fromTestResult(result)));
         return results;
     }
 

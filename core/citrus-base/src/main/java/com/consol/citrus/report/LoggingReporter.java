@@ -33,7 +33,7 @@ import org.springframework.util.StringUtils;
  *
  * @author Christoph Deppisch
  */
-public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener, TestReporter {
+public class LoggingReporter extends AbstractTestReporter implements MessageListener, TestSuiteListener, TestListener, TestActionListener {
 
     /** Inbound message logger */
     private static Logger inboundMsgLogger = LoggerFactory.getLogger("Logger.Message_IN");
@@ -45,13 +45,13 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     private static Logger log = LoggerFactory.getLogger(LoggingReporter.class);
 
     @Override
-    public void generateTestResults() {
+    public void generate(TestResults testResults) {
         separator();
         newLine();
         info("CITRUS TEST RESULTS");
         newLine();
 
-        getTestResults().doWithResults(testResult -> {
+        testResults.doWithResults(testResult -> {
             info(testResult.toString());
 
             if (testResult.isFailed()) {
@@ -64,12 +64,12 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
         newLine();
 
-        info("TOTAL:\t" + (getTestResults().getFailed() + getTestResults().getSuccess()));
+        info("TOTAL:\t" + (testResults.getFailed() + testResults.getSuccess()));
 
-        debug("SKIPPED:\t" + getTestResults().getSkipped() + " (" + getTestResults().getSkippedPercentage() + "%)");
+        debug("SKIPPED:\t" + testResults.getSkipped() + " (" + testResults.getSkippedPercentage() + "%)");
 
-        info("FAILED:\t" + getTestResults().getFailed() + " (" + getTestResults().getFailedPercentage() + "%)");
-        info("SUCCESS:\t" + getTestResults().getSuccess() + " (" + getTestResults().getSuccessPercentage() + "%)");
+        info("FAILED:\t" + testResults.getFailed() + " (" + testResults.getFailedPercentage() + "%)");
+        info("SUCCESS:\t" + testResults.getSuccess() + " (" + testResults.getSuccessPercentage() + "%)");
         newLine();
 
         separator();
@@ -77,8 +77,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
-        super.onTestFailure(test, cause);
-
         newLine();
         error("TEST FAILED " + test.getName() + " <" + test.getPackageName() + "> Nested exception is: ", cause);
         separator();
@@ -94,8 +92,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
             separator();
             newLine();
         }
-
-        super.onTestSkipped(test);
     }
 
     @Override
@@ -109,9 +105,12 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
     }
 
     @Override
-    public void onTestSuccess(TestCase test) {
-        super.onTestSuccess(test);
+    public void onTestFinish(TestCase test) {
+        // do nothing
+    }
 
+    @Override
+    public void onTestSuccess(TestCase test) {
         newLine();
         info("TEST SUCCESS " + test.getName() + " (" + test.getPackageName() + ")");
         separator();
@@ -120,8 +119,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onFinish() {
-        super.onFinish();
-
         newLine();
         separator();
         debug("AFTER TEST SUITE");
@@ -130,8 +127,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onStart() {
-        super.onStart();
-
         newLine();
         separator();
         info("       .__  __                       ");
@@ -156,8 +151,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         info("AFTER TEST SUITE: FAILED");
         separator();
         newLine();
-
-        super.onFinishFailure(cause);
     }
 
     @Override
@@ -166,14 +159,10 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
         info("AFTER TEST SUITE: SUCCESS");
         separator();
         newLine();
-
-        super.onFinishSuccess();
     }
 
     @Override
     public void onStartFailure(Throwable cause) {
-        super.onStartFailure(cause);
-
         newLine();
         info("BEFORE TEST SUITE: FAILED");
         separator();
@@ -182,8 +171,6 @@ public class LoggingReporter extends AbstractTestReporter implements MessageList
 
     @Override
     public void onStartSuccess() {
-        super.onStartSuccess();
-
         newLine();
         info("BEFORE TEST SUITE: SUCCESS");
         separator();

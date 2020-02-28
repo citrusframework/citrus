@@ -16,14 +16,12 @@
 
 package com.consol.citrus.report;
 
+import java.io.IOException;
+import java.util.Properties;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.util.PropertyUtils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.util.Properties;
 
 /**
  * Reporter creates a summary report as file.
@@ -34,28 +32,25 @@ import java.util.Properties;
 public class SummaryReporter extends AbstractOutputFileReporter {
 
     /** Enables/disables report generation */
-    @Value("${citrus.summary.report.enabled:true}")
-    private String enabled = Boolean.TRUE.toString();
+    private boolean enabled = SummaryReporterSettings.isReportEnabled();
 
     /** Resulting summary test report file name */
-    @Value("${citrus.summary.report.file:citrus-summary.xml}")
-    private String reportFileName = "citrus-summary.xml";
+    private String reportFileName = SummaryReporterSettings.getReportFile();
 
     /** Static resource for the summary test report template */
-    @Value("${citrus.summary.report.template:classpath:com/consol/citrus/report/summary-report.xml}")
-    private String reportTemplate = "classpath:com/consol/citrus/report/summary-report.xml";
+    private String reportTemplate = SummaryReporterSettings.getReportTemplate();
 
     @Override
-    protected String getReportContent() {
+    protected String getReportContent(TestResults testResults) {
         try {
             Properties reportProps = new Properties();
-            reportProps.put("test.cnt", Integer.toString(getTestResults().getSize()));
-            reportProps.put("skipped.test.cnt", Integer.toString(getTestResults().getSkipped()));
-            reportProps.put("skipped.test.pct", getTestResults().getSkippedPercentage());
-            reportProps.put("failed.test.cnt", Integer.toString(getTestResults().getFailed()));
-            reportProps.put("failed.test.pct", getTestResults().getFailedPercentage());
-            reportProps.put("success.test.cnt", Integer.toString(getTestResults().getSuccess()));
-            reportProps.put("success.test.pct", getTestResults().getSuccessPercentage());
+            reportProps.put("test.cnt", Integer.toString(testResults.getSize()));
+            reportProps.put("skipped.test.cnt", Integer.toString(testResults.getSkipped()));
+            reportProps.put("skipped.test.pct", testResults.getSkippedPercentage());
+            reportProps.put("failed.test.cnt", Integer.toString(testResults.getFailed()));
+            reportProps.put("failed.test.pct", testResults.getFailedPercentage());
+            reportProps.put("success.test.cnt", Integer.toString(testResults.getSuccess()));
+            reportProps.put("success.test.pct", testResults.getSuccessPercentage());
             return PropertyUtils.replacePropertiesInString(FileUtils.readToString(FileUtils.getFileResource(reportTemplate)), reportProps);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to generate summary test report", e);
@@ -68,12 +63,12 @@ public class SummaryReporter extends AbstractOutputFileReporter {
      * @param enabled
      */
     public void setEnabled(boolean enabled) {
-        this.enabled = String.valueOf(enabled);
+        this.enabled = enabled;
     }
 
     @Override
     protected boolean isEnabled() {
-        return StringUtils.hasText(enabled) && enabled.equalsIgnoreCase(Boolean.TRUE.toString());
+        return enabled;
     }
 
     /**

@@ -16,9 +16,9 @@
 
 package com.consol.citrus.config;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.report.*;
-import org.slf4j.Logger;
+import com.consol.citrus.report.AbstractTestReporter;
+import com.consol.citrus.report.TestReporter;
+import com.consol.citrus.report.TestResults;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,39 +30,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CustomBeanConfig {
 
-    @Bean(name = "customTestListener")
-    public TestListener customTestListener() {
+    @Bean(name = "plusMinusTestReporter")
+    public TestReporter plusMinusTestReporter() {
         return new PlusMinusTestReporter();
     }
 
     /**
      * Sample test reporter.
      */
-    private static class PlusMinusTestReporter extends AbstractTestListener implements TestReporter {
-
-        /** Logger */
-        private Logger log = LoggerFactory.getLogger(CustomBeanConfig.class);
-
-        private StringBuilder testReport = new StringBuilder();
+    private static class PlusMinusTestReporter extends AbstractTestReporter {
 
         @Override
-        public void onTestSuccess(TestCase test) {
-            testReport.append("+");
-        }
+        public void generate(TestResults testResults) {
+            StringBuilder testReport = new StringBuilder();
 
-        @Override
-        public void onTestFailure(TestCase test, Throwable cause) {
-            testReport.append("-");
-        }
+            testResults.doWithResults(result -> {
+                if (result.isSuccess()) {
+                    testReport.append("+");
+                } else if (result.isFailed()) {
+                    testReport.append("-");
+                } else {
+                    testReport.append("o");
+                }
+            });
 
-        @Override
-        public void generateTestResults() {
-            log.info(testReport.toString());
-        }
-
-        @Override
-        public void clearTestResults() {
-            testReport = new StringBuilder();
+            LoggerFactory.getLogger(PlusMinusTestReporter.class).info(testReport.toString());
         }
     }
 }

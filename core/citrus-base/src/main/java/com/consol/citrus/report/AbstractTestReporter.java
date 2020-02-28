@@ -16,58 +16,30 @@
 
 package com.consol.citrus.report;
 
-import com.consol.citrus.TestCase;
-import com.consol.citrus.TestResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.4
  */
-public abstract class AbstractTestReporter extends AbstractTestListener implements TestReporter, TestListener, TestSuiteListener {
+public abstract class AbstractTestReporter implements TestReporter {
 
     /** Logger */
-    private Logger log = LoggerFactory.getLogger(getClass());
-
-    /** Report output directory */
-    @Value("${citrus.report.directory:target/citrus-reports}")
-    private String reportDirectory = "target/citrus-reports";
-
-    /** Should clear test results for each test suite */
-    @Value("${citrus.report.auto.clear:true}")
-    private String autoClear = Boolean.TRUE.toString();
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     /** Should ignore errors when creating test report */
-    @Value("${citrus.report.ignore.errors:true}")
-    private String ignoreErrors = Boolean.TRUE.toString();
+    private boolean ignoreErrors = TestReporterSettings.isIgnoreErrors();
 
-    /** Collect test results for overall result overview at the very end of test execution */
-    private TestResults testResults = new TestResults();
+    /** Report output directory */
+    private String reportDirectory = TestReporterSettings.getReportDirectory();
 
     @Override
-    public void clearTestResults() {
-        testResults = new TestResults();
-    }
-
-    /**
-     * Gets the testResults.
-     * @return
-     */
-    public TestResults getTestResults() {
-        return testResults;
-    }
-
-    /**
-     * Create test report silently just logging errors.
-     */
-    private void createTestReport() {
+    public final void generateReport(TestResults testResults) {
         try {
-            generateTestResults();
+            generate(testResults);
         } catch (Exception e) {
-            if (isIgnoreErrors()) {
+            if (ignoreErrors) {
                 log.error("Failed to create test report", e);
             } else {
                 throw e;
@@ -75,53 +47,14 @@ public abstract class AbstractTestReporter extends AbstractTestListener implemen
         }
     }
 
-    @Override
-    public void onStart() {
-        if (isAutoClear()) {
-            clearTestResults();
-        }
-    }
-
-    @Override
-    public void onFinish() {
-    }
-
-    @Override
-    public void onFinishFailure(Throwable cause) {
-        createTestReport();
-    }
-
-    @Override
-    public void onFinishSuccess() {
-        createTestReport();
-    }
-
-    @Override
-    public void onStartFailure(Throwable cause) {
-    }
-
-    @Override
-    public void onStartSuccess() {
-    }
-
-    @Override
-    public void onTestSuccess(TestCase test) {
-        testResults.addResult(TestResult.success(test.getName(), test.getTestClass().getName()));
-    }
-
-    @Override
-    public void onTestFailure(TestCase test, Throwable cause) {
-        testResults.addResult(TestResult.failed(test.getName(), test.getTestClass().getName(), cause));
-    }
-
-    @Override
-    public void onTestSkipped(TestCase test) {
-        testResults.addResult(TestResult.skipped(test.getName(), test.getTestClass().getName()));
-    }
+    /**
+     * Subclasses must implement this method and generate the test report for given test results.
+     * @param testResults
+     */
+    protected abstract void generate(TestResults testResults);
 
     /**
      * Gets the reportDirectory.
-     *
      * @return
      */
     public String getReportDirectory() {
@@ -130,7 +63,6 @@ public abstract class AbstractTestReporter extends AbstractTestListener implemen
 
     /**
      * Sets the reportDirectory.
-     *
      * @param reportDirectory
      */
     public void setReportDirectory(String reportDirectory) {
@@ -138,38 +70,18 @@ public abstract class AbstractTestReporter extends AbstractTestListener implemen
     }
 
     /**
-     * Gets the autoClear.
-     *
-     * @return
-     */
-    public boolean isAutoClear() {
-        return StringUtils.hasText(autoClear) && autoClear.equalsIgnoreCase(Boolean.TRUE.toString());
-    }
-
-    /**
-     * Sets the autoClear.
-     *
-     * @param autoClear
-     */
-    public void setAutoClear(boolean autoClear) {
-        this.autoClear = String.valueOf(autoClear);
-    }
-
-    /**
-     * Gets the ignoreErrors.
-     *
+     * Obtains the ignoreErrors.
      * @return
      */
     public boolean isIgnoreErrors() {
-        return StringUtils.hasText(ignoreErrors) && ignoreErrors.equalsIgnoreCase(Boolean.TRUE.toString());
+        return ignoreErrors;
     }
 
     /**
-     * Sets the ignoreErrors.
-     *
+     * Specifies the ignoreErrors.
      * @param ignoreErrors
      */
     public void setIgnoreErrors(boolean ignoreErrors) {
-        this.ignoreErrors = String.valueOf(ignoreErrors);
+        this.ignoreErrors = ignoreErrors;
     }
 }

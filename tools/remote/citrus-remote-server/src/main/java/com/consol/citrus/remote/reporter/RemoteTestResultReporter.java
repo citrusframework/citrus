@@ -16,10 +16,11 @@
 
 package com.consol.citrus.remote.reporter;
 
+import java.io.StringWriter;
+
 import com.consol.citrus.report.AbstractTestReporter;
 import com.consol.citrus.report.OutputStreamReporter;
-
-import java.io.StringWriter;
+import com.consol.citrus.report.TestResults;
 
 /**
  * @author Christoph Deppisch
@@ -30,12 +31,15 @@ public class RemoteTestResultReporter extends AbstractTestReporter {
     /** Test report */
     private String testReport;
 
+    /** Latest test results */
+    private TestResults latestResults = new TestResults();
+
     @Override
-    public void generateTestResults() {
+    public void generate(TestResults testResults) {
+        this.latestResults = testResults;
         StringWriter results = new StringWriter();
         OutputStreamReporter reporter = new OutputStreamReporter(results);
-        getTestResults().doWithResults(result -> reporter.getTestResults().addResult(result));
-        reporter.generateTestResults();
+        reporter.generate(testResults);
         this.testReport = results.toString();
     }
 
@@ -45,5 +49,13 @@ public class RemoteTestResultReporter extends AbstractTestReporter {
      */
     public String getTestReport() {
         return testReport;
+    }
+
+    /**
+     * Obtains the latestResults.
+     * @return
+     */
+    public TestResults getLatestResults() {
+        return latestResults;
     }
 }

@@ -19,8 +19,12 @@ package com.consol.citrus;
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.report.MessageListener;
+import com.consol.citrus.report.MessageListenerAware;
 import com.consol.citrus.report.TestListener;
 import com.consol.citrus.report.TestListenerAware;
+import com.consol.citrus.report.TestReporter;
+import com.consol.citrus.report.TestReporterAware;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListenerAware;
 
@@ -31,7 +35,7 @@ import com.consol.citrus.report.TestSuiteListenerAware;
  * @author Christoph Deppisch
  * @since 2.1
  */
-public final class Citrus implements TestListenerAware, TestSuiteListenerAware {
+public final class Citrus implements TestListenerAware, TestSuiteListenerAware, TestReporterAware, MessageListenerAware {
 
     private final CitrusContext citrusContext;
 
@@ -139,6 +143,16 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware {
     @Override
     public void addTestListener(TestListener testListener) {
         citrusContext.addTestListener(testListener);
+    }
+
+    @Override
+    public void addTestReporter(TestReporter testReporter) {
+        citrusContext.addTestReporter(testReporter);
+    }
+
+    @Override
+    public void addMessageListener(MessageListener listener) {
+        citrusContext.addMessageListener(listener);
     }
 
     /**

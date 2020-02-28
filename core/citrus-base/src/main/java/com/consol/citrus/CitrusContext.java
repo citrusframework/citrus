@@ -12,12 +12,16 @@ import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionRegistry;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.report.DefaultTestReporters;
 import com.consol.citrus.report.MessageListener;
 import com.consol.citrus.report.MessageListenerAware;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListener;
 import com.consol.citrus.report.TestListenerAware;
 import com.consol.citrus.report.TestListeners;
+import com.consol.citrus.report.TestReporter;
+import com.consol.citrus.report.TestReporterAware;
+import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListenerAware;
 import com.consol.citrus.report.TestSuiteListeners;
@@ -37,12 +41,13 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
  *
  * @author Christoph Deppisch
  */
-public class CitrusContext implements TestListenerAware, TestSuiteListenerAware, MessageListenerAware, ReferenceRegistry {
+public class CitrusContext implements TestListenerAware, TestSuiteListenerAware, TestReporterAware, MessageListenerAware, ReferenceRegistry {
 
     /** Test context factory **/
     private final TestContextFactory testContextFactory;
     private final TestSuiteListeners testSuiteListeners;
     private final TestListeners testListeners;
+    private final TestReporters testReporters;
 
     private final List<BeforeSuite> beforeSuite;
     private final List<AfterSuite> afterSuite;
@@ -64,6 +69,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     protected CitrusContext(Builder builder) {
         this.testSuiteListeners = builder.testSuiteListeners;
         this.testListeners = builder.testListeners;
+        this.testReporters = builder.testReporters;
 
         this.beforeSuite = builder.beforeSuite;
         this.afterSuite = builder.afterSuite;
@@ -107,6 +113,11 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     @Override
     public void addTestListener(TestListener testListener) {
         this.testListeners.addTestListener(testListener);
+    }
+
+    @Override
+    public void addTestReporter(TestReporter testReporter) {
+        this.testReporters.addTestReporter(testReporter);
     }
 
     @Override
@@ -246,6 +257,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private TestContextFactory testContextFactory;
         private TestSuiteListeners testSuiteListeners = new TestSuiteListeners();
         private TestListeners testListeners = new TestListeners();
+        private TestReporters testReporters = new DefaultTestReporters();
 
         private List<BeforeSuite> beforeSuite = new ArrayList<>();
         private List<AfterSuite> afterSuite = new ArrayList<>();
@@ -282,6 +294,16 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
 
         public Builder testListener(TestListener testListener) {
             this.testListeners.addTestListener(testListener);
+            return this;
+        }
+
+        public Builder testReporters(TestReporters testReporters) {
+            this.testReporters = testReporters;
+            return this;
+        }
+
+        public Builder testReporter(TestReporter testReporter) {
+            this.testReporters.addTestReporter(testReporter);
             return this;
         }
 

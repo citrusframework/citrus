@@ -17,6 +17,7 @@
 package com.consol.citrus.report;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.consol.citrus.TestAction;
@@ -32,7 +33,7 @@ import com.consol.citrus.TestCase;
 public class TestActionListeners implements TestActionListenerAware {
 
     /** List of test action listeners **/
-    private List<TestActionListener> testActionListeners = new ArrayList<>();
+    private final List<TestActionListener> testActionListeners = new ArrayList<>();
 
     public void onTestActionFinish(TestCase testCase, TestAction testAction) {
         for (TestActionListener listener : testActionListeners) {
@@ -55,5 +56,13 @@ public class TestActionListeners implements TestActionListenerAware {
     @Override
     public void addTestActionListener(TestActionListener listener) {
         this.testActionListeners.add(listener);
+    }
+
+    /**
+     * Obtains the testActionListeners.
+     * @return
+     */
+    public List<TestActionListener> getTestActionListeners() {
+        return Collections.unmodifiableList(testActionListeners);
     }
 }

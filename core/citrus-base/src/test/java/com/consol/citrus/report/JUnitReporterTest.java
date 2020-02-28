@@ -21,7 +21,6 @@ import java.io.File;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.util.FileUtils;
 import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -32,15 +31,11 @@ public class JUnitReporterTest {
 
     private JUnitReporter reporter = new JUnitReporter();
 
-    @BeforeMethod
-    public void clearResults() {
-        reporter.clearTestResults();
-    }
-
     @Test
     public void testGenerateTestResults() throws Exception {
-        reporter.getTestResults().addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
-        reporter.generateTestResults();
+        TestResults testResults = new TestResults();
+        testResults.addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
+        reporter.generate(testResults);
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
@@ -58,9 +53,10 @@ public class JUnitReporterTest {
 
     @Test
     public void testGenerateTestResultsMultipleTests() throws Exception {
-        reporter.getTestResults().addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
-        reporter.getTestResults().addResult(TestResult.success("barTest", JUnitReporterTest.class.getName()));
-        reporter.generateTestResults();
+        TestResults testResults = new TestResults();
+        testResults.addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
+        testResults.addResult(TestResult.success("barTest", JUnitReporterTest.class.getName()));
+        reporter.generate(testResults);
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
 
@@ -73,9 +69,10 @@ public class JUnitReporterTest {
 
     @Test
     public void testGenerateTestResultsWithFailedTests() throws Exception {
-        reporter.getTestResults().addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
-        reporter.getTestResults().addResult(TestResult.failed("barTest", JUnitReporterTest.class.getName(), new NullPointerException("Something went wrong!")));
-        reporter.generateTestResults();
+        TestResults testResults = new TestResults();
+        testResults.addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
+        testResults.addResult(TestResult.failed("barTest", JUnitReporterTest.class.getName(), new NullPointerException("Something went wrong!")));
+        reporter.generate(testResults);
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));
@@ -95,9 +92,10 @@ public class JUnitReporterTest {
 
     @Test
     public void testGenerateTestResultsWithSkippedTests() throws Exception {
-        reporter.getTestResults().addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
-        reporter.getTestResults().addResult(TestResult.skipped("barTest", JUnitReporterTest.class.getName()));
-        reporter.generateTestResults();
+        TestResults testResults = new TestResults();
+        testResults.addResult(TestResult.success("fooTest", JUnitReporterTest.class.getName()));
+        testResults.addResult(TestResult.skipped("barTest", JUnitReporterTest.class.getName()));
+        reporter.generate(testResults);
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
 
@@ -110,9 +108,10 @@ public class JUnitReporterTest {
 
     @Test
     public void testGenerateTestResultsWithFailedTestsWithInvalidXMLChars() throws Exception {
-        reporter.getTestResults().addResult(TestResult.success("foo\"Test", JUnitReporterTest.class.getName()));
-        reporter.getTestResults().addResult(TestResult.failed("bar\"Test", JUnitReporterTest.class.getName(), new NullPointerException("Something \"went wrong!")));
-        reporter.generateTestResults();
+        TestResults testResults = new TestResults();
+        testResults.addResult(TestResult.success("foo\"Test", JUnitReporterTest.class.getName()));
+        testResults.addResult(TestResult.failed("bar\"Test", JUnitReporterTest.class.getName(), new NullPointerException("Something \"went wrong!")));
+        reporter.generate(testResults);
 
         String reportFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + reporter.getOutputDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), JUnitReporterTest.class.getName())));
         String testSuiteFile = FileUtils.readToString(new File(reporter.getReportDirectory() + File.separator + String.format(reporter.getReportFileNamePattern(), reporter.getSuiteName())));

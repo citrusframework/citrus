@@ -26,4 +26,9 @@ public class ReporterConfig {
     public JUnitReporter junitReporter() {
         return new JUnitReporter();
     }
+
+    @Bean
+    public TestReportersFactory testReporters() {
+        return new TestReportersFactory();
+    }
 }

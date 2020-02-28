@@ -35,7 +35,6 @@ import com.consol.citrus.util.PropertyUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
@@ -44,43 +43,37 @@ import org.springframework.util.StringUtils;
  *
  * @author Philipp Komninos, Christoph Deppisch
  */
-public class HtmlReporter extends AbstractOutputFileReporter {
+public class HtmlReporter extends AbstractOutputFileReporter implements TestListener {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(HtmlReporter.class);
 
     /** Map holding additional information of test cases */
-    private Map<String, ResultDetail> details = new HashMap<String, ResultDetail>();
+    private Map<String, ResultDetail> details = new HashMap<>();
 
     /** Static resource for the HTML test report template */
-    @Value("${citrus.html.report.template:classpath:com/consol/citrus/report/test-report.html}")
-    private String reportTemplate = "classpath:com/consol/citrus/report/test-report.html";
+    private String reportTemplate = HtmlReporterSettings.getReportTemplate();
 
     /** Test detail template */
-    @Value("${citrus.html.report.detail.template:classpath:com/consol/citrus/report/test-detail.html}")
-    private String testDetailTemplate = "classpath:com/consol/citrus/report/test-detail.html";
+    private String testDetailTemplate = HtmlReporterSettings.getReportDetailTemplate();
 
     /** Output directory */
-    @Value("${citrus.html.report.directory:}")
-    private String outputDirectory = "";
+    private String outputDirectory = HtmlReporterSettings.getReportDirectory();
 
     /** Resulting HTML test report file name */
-    @Value("${citrus.html.report.file:citrus-test-results.html}")
-    private String reportFileName = "citrus-test-results.html";
+    private String reportFileName = HtmlReporterSettings.getReportFile();
 
     /** Format for creation and update date of TestCases */
     private DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
 
     /** Default logo image resource */
-    @Value("${citrus.html.report.logo:classpath:com/consol/citrus/report/citrus_logo.png}")
-    private String logo = "classpath:com/consol/citrus/report/citrus_logo.png";
+    private String logo = HtmlReporterSettings.getReportLogo();
 
     /** Enables/disables report generation */
-    @Value("${citrus.html.report.enabled:true}")
-    private String enabled = Boolean.TRUE.toString();
+    private boolean enabled = HtmlReporterSettings.isReportEnabled();
 
     @Override
-    public String getReportContent() {
+    public String getReportContent(TestResults testResults) {
         final StringBuilder reportDetails = new StringBuilder();
 
         log.debug("Generating HTML test report");
@@ -89,7 +82,7 @@ public class HtmlReporter extends AbstractOutputFileReporter {
             final String testDetails = FileUtils.readToString(FileUtils.getFileResource(testDetailTemplate));
             final String emptyString = "";
 
-            getTestResults().doWithResults(result -> {
+            testResults.doWithResults(result -> {
                 ResultDetail detail = Optional.ofNullable(details.get(result.getTestName())).orElse(new ResultDetail());
 
                 Properties detailProps = new Properties();
@@ -111,13 +104,13 @@ public class HtmlReporter extends AbstractOutputFileReporter {
             });
 
             Properties reportProps = new Properties();
-            reportProps.put("test.cnt", Integer.toString(getTestResults().getSize()));
-            reportProps.put("skipped.test.cnt", Integer.toString(getTestResults().getSkipped()));
-            reportProps.put("skipped.test.pct", getTestResults().getSkippedPercentage());
-            reportProps.put("failed.test.cnt", Integer.toString(getTestResults().getFailed()));
-            reportProps.put("failed.test.pct", getTestResults().getFailedPercentage());
-            reportProps.put("success.test.cnt", Integer.toString(getTestResults().getSuccess()));
-            reportProps.put("success.test.pct", getTestResults().getSuccessPercentage());
+            reportProps.put("test.cnt", Integer.toString(testResults.getSize()));
+            reportProps.put("skipped.test.cnt", Integer.toString(testResults.getSkipped()));
+            reportProps.put("skipped.test.pct", testResults.getSkippedPercentage());
+            reportProps.put("failed.test.cnt", Integer.toString(testResults.getFailed()));
+            reportProps.put("failed.test.pct", testResults.getFailedPercentage());
+            reportProps.put("success.test.cnt", Integer.toString(testResults.getSuccess()));
+            reportProps.put("success.test.pct", testResults.getSuccessPercentage());
             reportProps.put("test.results", reportDetails.toString());
             reportProps.put("logo.data", getLogoImageData());
             return PropertyUtils.replacePropertiesInString(FileUtils.readToString(FileUtils.getFileResource(reportTemplate)), reportProps);
@@ -252,21 +245,28 @@ public class HtmlReporter extends AbstractOutputFileReporter {
     }
 
     @Override
+    public void onTestStart(TestCase test) {
+        // do nothing
+    }
+
+    @Override
+    public void onTestFinish(TestCase test) {
+        // do nothing
+    }
+
+    @Override
     public void onTestSuccess(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
-        super.onTestSuccess(test);
     }
 
     @Override
     public void onTestFailure(TestCase test, Throwable cause) {
         details.put(test.getName(), ResultDetail.build(test));
-        super.onTestFailure(test, cause);
     }
 
     @Override
     public void onTestSkipped(TestCase test) {
         details.put(test.getName(), ResultDetail.build(test));
-        super.onTestSkipped(test);
     }
 
     /**
@@ -348,12 +348,12 @@ public class HtmlReporter extends AbstractOutputFileReporter {
      * @param enabled
      */
     public void setEnabled(boolean enabled) {
-        this.enabled = String.valueOf(enabled);
+        this.enabled = enabled;
     }
 
     @Override
     protected boolean isEnabled() {
-        return StringUtils.hasText(enabled) && enabled.equalsIgnoreCase(Boolean.TRUE.toString());
+        return enabled;
     }
 
     /**

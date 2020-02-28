@@ -35,17 +35,17 @@ public abstract class AbstractOutputFileReporter extends AbstractTestReporter {
     private static Logger log = LoggerFactory.getLogger(AbstractOutputFileReporter.class);
 
     @Override
-    public final void generateTestResults() {
+    public final void generate(TestResults testResults) {
         if (!isEnabled()) {
             return;
         }
 
-        createReportFile(getReportFileName(), getReportContent());
+        createReportFile(getReportFileName(), getReportContent(testResults));
     }
 
     protected abstract boolean isEnabled();
 
-    protected abstract String getReportContent();
+    protected abstract String getReportContent(TestResults testResults);
 
     protected abstract String getReportFileName();
 

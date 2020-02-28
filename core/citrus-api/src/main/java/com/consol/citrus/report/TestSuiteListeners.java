@@ -17,6 +17,7 @@
 package com.consol.citrus.report;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,7 +29,7 @@ import java.util.List;
 public class TestSuiteListeners implements TestSuiteListenerAware {
 
     /** List of testsuite listeners **/
-    private List<TestSuiteListener> testSuiteListeners = new ArrayList<>();
+    private final List<TestSuiteListener> testSuiteListeners = new ArrayList<>();
 
     @Override
     public void addTestSuiteListener(TestSuiteListener testSuiteListener) {
@@ -71,5 +72,13 @@ public class TestSuiteListeners implements TestSuiteListenerAware {
         for (TestSuiteListener listener : testSuiteListeners) {
             listener.onStartSuccess();
         }
+    }
+
+    /**
+     * Obtains the testSuiteListeners.
+     * @return
+     */
+    public List<TestSuiteListener> getTestSuiteListeners() {
+        return Collections.unmodifiableList(testSuiteListeners);
     }
 }

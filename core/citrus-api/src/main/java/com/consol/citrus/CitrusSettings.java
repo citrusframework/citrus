@@ -120,6 +120,11 @@ public final class CitrusSettings {
     public static final String DEFAULT_MESSAGE_TYPE = System.getProperty(DEFAULT_MESSAGE_TYPE_PROPERTY,  System.getenv(DEFAULT_MESSAGE_TYPE_ENV) != null ?
             System.getenv(DEFAULT_MESSAGE_TYPE_ENV) : MessageType.XML.toString());
 
+    /** Default message trace output directory */
+    public static final String MESSAGE_TRACE_DIRECTORY_PROPERTY = "citrus.message.trace.directory";
+    public static final String MESSAGE_TRACE_DIRECTORY_ENV = "CITRUS_MESSAGE_TRACE_DIRECTORY";
+    public static final String MESSAGE_TRACE_DIRECTORY_DEFAULT = "target/citrus-logs/trace/messages";
+
     /**
      * Gets set of file name patterns for XML test files.
      * @return
@@ -134,5 +139,14 @@ public final class CitrusSettings {
      */
     public static Set<String> getJavaTestFileNamePattern() {
         return StringUtils.commaDelimitedListToSet(JAVA_TEST_FILE_NAME_PATTERN);
+    }
+
+    /**
+     * Gets the directory where to put message trace files.
+     * @return
+     */
+    public static String getMessageTraceDirectory() {
+        return System.getProperty(MESSAGE_TRACE_DIRECTORY_PROPERTY,  System.getenv(MESSAGE_TRACE_DIRECTORY_ENV) != null ?
+                System.getenv(MESSAGE_TRACE_DIRECTORY_ENV) : MESSAGE_TRACE_DIRECTORY_DEFAULT);
     }
 }

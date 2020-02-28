@@ -17,6 +17,7 @@
 package com.consol.citrus.report;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.consol.citrus.context.TestContext;
@@ -31,7 +32,7 @@ public class MessageListeners implements MessageListenerAware {
     /**
      * List of message listener known to Spring application context
      */
-    private List<MessageListener> messageListener = new ArrayList<>();
+    private final List<MessageListener> messageListener = new ArrayList<>();
 
     /**
      * Delegate to all known message listener instances.
@@ -77,4 +78,11 @@ public class MessageListeners implements MessageListenerAware {
         }
     }
 
+    /**
+     * Obtains the messageListener.
+     * @return
+     */
+    public List<MessageListener> getMessageListener() {
+        return Collections.unmodifiableList(messageListener);
+    }
 }

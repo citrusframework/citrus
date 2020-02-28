@@ -19,17 +19,13 @@ package com.consol.citrus.report;
 
 /**
  * Interface for test reporters.
- * 
+ *
  * @author Christoph Deppisch
  */
 public interface TestReporter {
+
     /**
      * Test reporter generates a report for several test suite instances.
      */
-    void generateTestResults();
-    
-    /**
-     * Dismiss previous test results for next test run.
-     */
-    void clearTestResults();
+    void generateReport(TestResults testResults);
 }

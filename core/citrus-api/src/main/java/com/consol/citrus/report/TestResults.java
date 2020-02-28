@@ -158,12 +158,12 @@ public class TestResults {
     /**
      * Callback interface for synchronized access to test results in iteration.
      */
-    public static interface ResultCallback {
+    public interface ResultCallback {
         /**
          * Do something with the result.
          * @param result
          */
-        public void doWithResult(TestResult result);
+        void doWithResult(TestResult result);
     }
 
     /**

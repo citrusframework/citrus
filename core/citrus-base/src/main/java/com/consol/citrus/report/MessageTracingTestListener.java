@@ -16,6 +16,16 @@
 
 package com.consol.citrus.report;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -24,24 +34,19 @@ import com.consol.citrus.message.RawMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Value;
-
-import java.io.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 /**
  * Test listener collects all messages sent and received by Citrus during test execution. Listener
  * writes a trace file with all message content per test case to a output directory.
- * 
+ *
  * Note: This class is not thread safe! Parallel test execution leads to behaviour that messages get mixed.
  * Proper correlation to test case is not possible here.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.2
  */
 public class MessageTracingTestListener extends AbstractTestListener implements InitializingBean, MessageListener {
-    
+
     /** File ending for all message trace files */
     private static final String TRACE_FILE_ENDING = ".msgs";
 
@@ -49,18 +54,17 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
     private static final Date TEST_EXECUTION_DATE = new Date();
 
     /** Output directory */
-    @Value("${citrus.message.trace.directory:target/citrus-logs/trace/messages}")
-    private String outputDirectory;
-    
+    private String outputDirectory = CitrusSettings.getMessageTraceDirectory();
+
     /** List of messages to trace */
     private final List<String> messages = new ArrayList<>();
-    
+
     /** Locking object for synchronization */
     private final Object lockObject = new Object();
 
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(MessageTracingTestListener.class);
-            
+
     /**
      * {@inheritDoc}
      */
@@ -70,7 +74,7 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
             messages.clear();
         }
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -82,20 +86,20 @@ public class MessageTracingTestListener extends AbstractTestListener implements 
 
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(getTraceFile(test.getName())))) {
             writer.write(separator() + newLine() + newLine());
-            
+
             synchronized (lockObject) {
                 for (String message : messages) {
                     writer.write(message);
                     writer.write(newLine() + separator() + newLine() + newLine());
                 }
             }
-            
+
             writer.flush();
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to write message trace to filesystem", e);
         }
     }
-    
+
     @Override
     public void onInboundMessage(Message message, TestContext context) {
         if (message instanceof RawMessage) {

@@ -53,7 +53,9 @@ public class LoggingReporterTest {
         reporter.onTestSuccess(test);
         reporter.onFinish();
         reporter.onFinishSuccess();
-        reporter.generateTestResults();
+
+        TestResults testResults = new TestResults();
+        reporter.generate(testResults);
     }
 
     @Test
@@ -68,7 +70,9 @@ public class LoggingReporterTest {
         reporter.onTestFailure(test, new CitrusRuntimeException("Failed!"));
         reporter.onFinish();
         reporter.onFinishSuccess();
-        reporter.generateTestResults();
+
+        TestResults testResults = new TestResults();
+        reporter.generate(testResults);
     }
 
     @Test
@@ -83,7 +87,9 @@ public class LoggingReporterTest {
         reporter.onTestSkipped(new DefaultTestCase());
         reporter.onFinish();
         reporter.onFinishSuccess();
-        reporter.generateTestResults();
+
+        TestResults testResults = new TestResults();
+        reporter.generate(testResults);
     }
 
     @Test
@@ -94,7 +100,9 @@ public class LoggingReporterTest {
         reporter.onStartFailure(new CitrusRuntimeException("Failed!"));
         reporter.onFinish();
         reporter.onFinishSuccess();
-        reporter.generateTestResults();
+
+        TestResults testResults = new TestResults();
+        reporter.generate(testResults);
     }
 
     @Test
@@ -110,6 +118,8 @@ public class LoggingReporterTest {
         reporter.onTestSuccess(test);
         reporter.onFinish();
         reporter.onFinishFailure(new CitrusRuntimeException("Failed!"));
-        reporter.generateTestResults();
+
+        TestResults testResults = new TestResults();
+        reporter.generate(testResults);
     }
 }
