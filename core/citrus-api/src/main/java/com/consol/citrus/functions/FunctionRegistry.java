@@ -19,20 +19,19 @@ package com.consol.citrus.functions;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.NoSuchFunctionLibraryException;
 
 /**
  * Function registry holding all available function libraries.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class FunctionRegistry {
+
     /** list of libraries providing custom functions */
-    @Autowired
-    private List<FunctionLibrary> functionLibraries = new ArrayList<FunctionLibrary>();
-    
+    private List<FunctionLibrary> functionLibraries = new ArrayList<>();
+
     /**
      * Check if variable expression is a custom function.
      * Expression has to start with one of the registered function library prefix.
@@ -43,9 +42,8 @@ public class FunctionRegistry {
         if (variableExpression == null || variableExpression.length() == 0) {
             return false;
         }
-        
-        for (int i = 0; i < functionLibraries.size(); i++) {
-            FunctionLibrary lib = (FunctionLibrary)functionLibraries.get(i);
+
+        for (FunctionLibrary lib : functionLibraries) {
             if (variableExpression.startsWith(lib.getPrefix())) {
                 return true;
             }
@@ -53,22 +51,37 @@ public class FunctionRegistry {
 
         return false;
     }
-    
+
     /**
      * Get library for function prefix.
      * @param functionPrefix to be searched for
      * @return FunctionLibrary instance
      */
     public FunctionLibrary getLibraryForPrefix(String functionPrefix) {
-        for (int i = 0; i < functionLibraries.size(); i++) {
-            if (((FunctionLibrary)functionLibraries.get(i)).getPrefix().equals(functionPrefix)) {
-                return (FunctionLibrary)functionLibraries.get(i);
+        for (FunctionLibrary functionLibrary : functionLibraries) {
+            if (functionLibrary.getPrefix().equals(functionPrefix)) {
+                return functionLibrary;
             }
         }
 
         throw new NoSuchFunctionLibraryException("Can not find function library for prefix " + functionPrefix);
     }
-    
+
+    /**
+     * Adds given function library to this registry.
+     */
+    public void addFunctionLibrary(FunctionLibrary functionLibrary) {
+        boolean prefixAlreadyUsed = this.functionLibraries.stream()
+                .anyMatch(lib -> lib.getPrefix().equals(functionLibrary.getPrefix()));
+
+        if (prefixAlreadyUsed) {
+            throw new CitrusRuntimeException(String.format("Function library prefix '%s' is already bound to another instance. " +
+                    "Please choose another prefix.", functionLibrary.getPrefix()));
+        }
+
+        this.functionLibraries.add(functionLibrary);
+    }
+
     /**
      * @param functionLibraries
      */

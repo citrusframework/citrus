@@ -6,13 +6,11 @@ import java.util.Optional;
 
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
-import com.consol.citrus.spi.ReferenceRegistry;
-import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
+import com.consol.citrus.functions.DefaultFunctionRegistry;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListener;
@@ -21,6 +19,10 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListenerAware;
 import com.consol.citrus.report.TestSuiteListeners;
+import com.consol.citrus.spi.ReferenceRegistry;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
+import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.GlobalMessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -240,7 +242,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private List<BeforeSuite> beforeSuite = new ArrayList<>();
         private List<AfterSuite> afterSuite = new ArrayList<>();
 
-        private FunctionRegistry functionRegistry = new FunctionRegistry();
+        private FunctionRegistry functionRegistry = new DefaultFunctionRegistry();
         private ValidationMatcherRegistry validationMatcherRegistry = new ValidationMatcherRegistry();
         private GlobalVariables globalVariables = new GlobalVariables();
         private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();

@@ -74,7 +74,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         MockitoAnnotations.initMocks(this);
 
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
+        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
         factory.getMessageValidatorRegistry().getMessageValidators().put("header", new DefaultMessageHeaderValidator());

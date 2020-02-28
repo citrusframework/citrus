@@ -84,7 +84,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(validator.supportsMessageType(any(String.class), any(Message.class))).thenReturn(true);
 
         TestContextFactory factory = super.createTestContextFactory();
-        factory.getFunctionRegistry().getFunctionLibraries().add(new DefaultFunctionLibrary());
+        factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
         factory.getMessageValidatorRegistry().getMessageValidators().put("validator", validator);

@@ -29,8 +29,8 @@ public class FunctionConfig {
     private final FunctionLibrary functionLibrary = new DefaultFunctionLibrary();
 
     @Bean(name = "functionRegistry")
-    public FunctionRegistry functionRegistry() {
-        return new FunctionRegistry();
+    public FunctionRegistryFactory functionRegistry() {
+        return new FunctionRegistryFactory();
     }
 
     @Bean(name="citrusFunctionLibrary")
