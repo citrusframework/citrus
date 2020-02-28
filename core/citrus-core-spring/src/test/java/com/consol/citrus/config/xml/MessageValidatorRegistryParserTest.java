@@ -38,8 +38,8 @@ public class MessageValidatorRegistryParserTest extends AbstractBeanDefinitionPa
 
         MessageValidatorRegistry messageValidatorBean = messageValidators.values().iterator().next();
         Assert.assertEquals(messageValidatorBean.getMessageValidators().size(), 3L);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get(DefaultMessageHeaderValidator.class.getName()).getClass(), DefaultMessageHeaderValidator.class);
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get("validator1"), beanDefinitionContext.getBean("validator1"));
-        Assert.assertEquals(messageValidatorBean.getMessageValidators().get("validator2"), beanDefinitionContext.getBean("validator2"));
+        Assert.assertEquals(messageValidatorBean.getMessageValidator(DefaultMessageHeaderValidator.class.getName()).getClass(), DefaultMessageHeaderValidator.class);
+        Assert.assertEquals(messageValidatorBean.getMessageValidator("validator1"), beanDefinitionContext.getBean("validator1"));
+        Assert.assertEquals(messageValidatorBean.getMessageValidator("validator2"), beanDefinitionContext.getBean("validator2"));
     }
 }

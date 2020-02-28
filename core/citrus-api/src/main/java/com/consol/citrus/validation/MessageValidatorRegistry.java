@@ -20,8 +20,10 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.NoSuchMessageValidatorException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.context.ValidationContext;
@@ -119,6 +121,45 @@ public class MessageValidatorRegistry {
         }
 
         return matchingValidators;
+    }
+
+    /**
+     * Try to find validator for given name. Returns optional validator if any with that name present.
+     * @param name to be searched for
+     * @return optional message validator instance
+     */
+    public Optional<MessageValidator<? extends ValidationContext>> findMessageValidator(String name) {
+        if (this.messageValidators.containsKey(name)) {
+            return Optional.of(this.messageValidators.get(name));
+        }
+
+        return Optional.empty();
+    }
+
+    /**
+     * Get validator for given name.
+     * @param name to be searched for
+     * @return message validator instance
+     */
+    public MessageValidator<? extends ValidationContext> getMessageValidator(String name) {
+        if (this.messageValidators.containsKey(name)) {
+            return this.messageValidators.get(name);
+        }
+
+        throw new NoSuchMessageValidatorException(String.format("Unable to find message validator with name '%s'", name));
+    }
+
+    /**
+     * Adds given message validator and allows overwrite of existing message validators in registry with same name.
+     * @param name
+     * @param messageValidator
+     */
+    public void addMessageValidator(String name, MessageValidator<? extends ValidationContext> messageValidator) {
+        if (this.messageValidators.containsKey(name)) {
+            log.warn(String.format("Overwriting message validator '%s' in registry", name));
+        }
+
+        this.messageValidators.put(name, messageValidator);
     }
 
     /**

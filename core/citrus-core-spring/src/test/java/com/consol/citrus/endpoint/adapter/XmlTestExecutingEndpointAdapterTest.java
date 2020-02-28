@@ -65,7 +65,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
     protected TestContextFactory createTestContextFactory() {
         TestContextFactory contextFactory = super.createTestContextFactory();
 
-        contextFactory.getMessageValidatorRegistry().getMessageValidators().put("text", xmlMessageValidator);
+        contextFactory.getMessageValidatorRegistry().addMessageValidator("text", xmlMessageValidator);
 
         return contextFactory;
     }

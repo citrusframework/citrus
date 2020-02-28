@@ -4,6 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Default registry adds default message validators located via resource path lookup. This adds
+ * all validators present on the classpath.
+ *
  * @author Christoph Deppisch
  */
 public class DefaultMessageValidatorRegistry extends MessageValidatorRegistry {
@@ -16,7 +19,7 @@ public class DefaultMessageValidatorRegistry extends MessageValidatorRegistry {
      */
     public DefaultMessageValidatorRegistry() {
         MessageValidator.lookup().forEach((k, v) -> {
-            getMessageValidators().put(k, v);
+            addMessageValidator(k, v);
             if (log.isDebugEnabled()) {
                 log.debug(String.format("Register message validator '%s' as %s", k, v.getClass()));
             }

@@ -89,21 +89,21 @@ public class MessageValidatorRegistryTest {
         when(binaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.BINARY_BASE64.name()));
         when(gzipBinaryBase64MessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.GZIP_BASE64.name()));
 
-        messageValidatorRegistry.getMessageValidators().put("xmlMessageValidator", xmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("xPathMessageValidator", xPathMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("groovyXmlMessageValidator", groovyXmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("jsonTextMessageValidator", jsonTextMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("jsonPathMessageValidator", jsonPathMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("plainTextMessageValidator", plainTextMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("headerMessageValidator", new DefaultMessageHeaderValidator());
-        messageValidatorRegistry.getMessageValidators().put("binaryMessageValidator", binaryMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("binaryBase64MessageValidator", binaryBase64MessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("gzipBinaryBase64MessageValidator", gzipBinaryBase64MessageValidator);
+        messageValidatorRegistry.addMessageValidator("xmlMessageValidator", xmlMessageValidator);
+        messageValidatorRegistry.addMessageValidator("xPathMessageValidator", xPathMessageValidator);
+        messageValidatorRegistry.addMessageValidator("groovyXmlMessageValidator", groovyXmlMessageValidator);
+        messageValidatorRegistry.addMessageValidator("jsonTextMessageValidator", jsonTextMessageValidator);
+        messageValidatorRegistry.addMessageValidator("jsonPathMessageValidator", jsonPathMessageValidator);
+        messageValidatorRegistry.addMessageValidator("plainTextMessageValidator", plainTextMessageValidator);
+        messageValidatorRegistry.addMessageValidator("headerMessageValidator", new DefaultMessageHeaderValidator());
+        messageValidatorRegistry.addMessageValidator("binaryMessageValidator", binaryMessageValidator);
+        messageValidatorRegistry.addMessageValidator("binaryBase64MessageValidator", binaryBase64MessageValidator);
+        messageValidatorRegistry.addMessageValidator("gzipBinaryBase64MessageValidator", gzipBinaryBase64MessageValidator);
 
-        messageValidatorRegistry.getMessageValidators().put("groovyJsonMessageValidator", groovyJsonMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("groovyScriptMessageValidator", groovyScriptMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("xhtmlMessageValidator", xhtmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("xhtmlXpathMessageValidator", xhtmlXpathMessageValidator);
+        messageValidatorRegistry.addMessageValidator("groovyJsonMessageValidator", groovyJsonMessageValidator);
+        messageValidatorRegistry.addMessageValidator("groovyScriptMessageValidator", groovyScriptMessageValidator);
+        messageValidatorRegistry.addMessageValidator("xhtmlMessageValidator", xhtmlMessageValidator);
+        messageValidatorRegistry.addMessageValidator("xhtmlXpathMessageValidator", xhtmlXpathMessageValidator);
     }
 
     @Test
@@ -128,8 +128,8 @@ public class MessageValidatorRegistryTest {
             Assert.assertTrue(e.getMessage().startsWith("Could not find proper message validator for message type"));
         }
 
-        messageValidatorRegistry.getMessageValidators().put("xmlMessageValidator", xmlMessageValidator);
-        messageValidatorRegistry.getMessageValidators().put("groovyScriptMessageValidator", groovyScriptMessageValidator);
+        messageValidatorRegistry.addMessageValidator("xmlMessageValidator", xmlMessageValidator);
+        messageValidatorRegistry.addMessageValidator("groovyScriptMessageValidator", groovyScriptMessageValidator);
 
         matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
 

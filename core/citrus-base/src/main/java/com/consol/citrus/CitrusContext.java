@@ -245,7 +245,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private FunctionRegistry functionRegistry = new DefaultFunctionRegistry();
         private ValidationMatcherRegistry validationMatcherRegistry = new ValidationMatcherRegistry();
         private GlobalVariables globalVariables = new GlobalVariables();
-        private MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
+        private MessageValidatorRegistry messageValidatorRegistry = new DefaultMessageValidatorRegistry();
         private MessageListeners messageListeners = new MessageListeners();
         private EndpointFactory endpointFactory = new DefaultEndpointFactory();
         private ReferenceResolver referenceResolver = new SimpleReferenceResolver();

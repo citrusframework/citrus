@@ -24,7 +24,6 @@ import java.util.Map;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
@@ -87,7 +86,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().put("validator", validator);
+        factory.getMessageValidatorRegistry().addMessageValidator("validator", validator);
 
         factory.getReferenceResolver().bind("mockQueue", mockQueue);
         return factory;

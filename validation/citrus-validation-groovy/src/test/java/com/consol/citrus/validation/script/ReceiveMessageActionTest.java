@@ -77,10 +77,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().put("header", new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("groovyJson", new GroovyJsonMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("groovyText", new GroovyScriptMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("groovyXml", new GroovyXmlMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("groovyJson", new GroovyJsonMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("groovyText", new GroovyScriptMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("groovyXml", new GroovyXmlMessageValidator());
 
         factory.getReferenceResolver().bind("mockQueue", mockQueue);
         return factory;
@@ -244,7 +244,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
 
-        context.getMessageValidatorRegistry().getMessageValidators().put("xml", xmlMessageValidator);
+        context.getMessageValidatorRegistry().addMessageValidator("xml", xmlMessageValidator);
         when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()

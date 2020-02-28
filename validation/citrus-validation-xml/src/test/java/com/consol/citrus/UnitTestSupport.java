@@ -21,11 +21,11 @@ public abstract class UnitTestSupport extends AbstractTestNGUnitTest {
         factory.getFunctionRegistry().addFunctionLibrary(new DefaultFunctionLibrary());
         factory.getValidationMatcherRegistry().getValidationMatcherLibraries().add(new DefaultValidationMatcherLibrary());
 
-        factory.getMessageValidatorRegistry().getMessageValidators().put("header", new DefaultMessageHeaderValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("xml", new DomXmlMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("xpath", new XpathMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("xhtml", new XhtmlMessageValidator());
-        factory.getMessageValidatorRegistry().getMessageValidators().put("xhtmlXpath", new XhtmlXpathMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("header", new DefaultMessageHeaderValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("xml", new DomXmlMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("xpath", new XpathMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("xhtml", new XhtmlMessageValidator());
+        factory.getMessageValidatorRegistry().addMessageValidator("xhtmlXpath", new XhtmlXpathMessageValidator());
 
         return factory;
     }

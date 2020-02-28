@@ -17,6 +17,7 @@
 package com.consol.citrus.ws.validation;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -74,23 +75,27 @@ public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator im
         }
 
         // try to find xml message validator in registry
-        messageValidator = getTestContextFactory().getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_XML_MESSAGE_VALIDATOR);
+        Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = getTestContextFactory().getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (messageValidator == null) {
+        if (!defaultMessageValidator.isPresent()) {
             try {
-                messageValidator = getTestContextFactory().getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class);
+                defaultMessageValidator = Optional.of(getTestContextFactory().getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
                 log.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 
-	    if (messageValidator == null) {
+	    if (!defaultMessageValidator.isPresent()) {
             // try to find xml message validator via resource path lookup
-            messageValidator = MessageValidator.lookup("xml")
-                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project"));
+            defaultMessageValidator = MessageValidator.lookup("xml");
         }
 
-        return messageValidator;
+	    if (defaultMessageValidator.isPresent()) {
+	        messageValidator = defaultMessageValidator.get();
+            return messageValidator;
+        }
+
+	    throw new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project");
     }
 
     @Override

@@ -16,22 +16,22 @@
 
 package com.consol.citrus.validation.matcher;
 
-import com.consol.citrus.exceptions.NoSuchValidationMatcherLibraryException;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.exceptions.NoSuchValidationMatcherLibraryException;
+import org.springframework.beans.factory.annotation.Autowired;
+
 /**
  * ValidationMatcher registry holding all available validation matcher libraries.
- * 
+ *
  * @author Christian Wied
  */
 public class ValidationMatcherRegistry {
     /** list of libraries providing custom validation matchers */
     @Autowired
     private List<ValidationMatcherLibrary> validationMatcherLibraries = new ArrayList<>();
-    
+
     /**
      * Get library for validationMatcher prefix.
      * @param validationMatcherPrefix to be searched for
@@ -46,9 +46,9 @@ public class ValidationMatcherRegistry {
             }
         }
 
-        throw new NoSuchValidationMatcherLibraryException("Can not find validationMatcher library for prefix " + validationMatcherPrefix);
+        throw new NoSuchValidationMatcherLibraryException(String.format("Can not find validationMatcher library for prefix '%s'", validationMatcherPrefix));
     }
-    
+
     /**
      * @param validationMatcherLibraries
      */

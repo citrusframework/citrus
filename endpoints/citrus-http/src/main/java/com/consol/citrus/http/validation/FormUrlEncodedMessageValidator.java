@@ -122,23 +122,27 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
         }
 
         // try to find xml message validator in registry
-        xmlMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_XML_MESSAGE_VALIDATOR);
+        Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (xmlMessageValidator == null) {
+        if (!defaultMessageValidator.isPresent()) {
             try {
-                xmlMessageValidator = context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class);
+                defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
                 log.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 
-        if (xmlMessageValidator == null) {
+        if (!defaultMessageValidator.isPresent()) {
             // try to find xml message validator via resource path lookup
-            xmlMessageValidator = MessageValidator.lookup("xml")
-                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project"));
+            defaultMessageValidator = MessageValidator.lookup("xml");
         }
 
-        return xmlMessageValidator;
+        if (defaultMessageValidator.isPresent()) {
+            xmlMessageValidator = defaultMessageValidator.get();
+            return xmlMessageValidator;
+        }
+
+        throw new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project");
     }
 
     /**

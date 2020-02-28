@@ -19,6 +19,7 @@ package com.consol.citrus.kubernetes.actions;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
@@ -188,23 +189,26 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         }
 
         // try to find json message validator in registry
-        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_MESSAGE_VALIDATOR);
+        Optional<MessageValidator<? extends ValidationContext>> defaultJsonMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_JSON_MESSAGE_VALIDATOR);
 
-        if (defaultJsonMessageValidator == null) {
+        if (!defaultJsonMessageValidator.isPresent()) {
             try {
-                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class);
+                defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
                 log.warn("Unable to find default JSON message validator in message validator registry");
             }
         }
 
-        if (defaultJsonMessageValidator == null) {
+        if (!defaultJsonMessageValidator.isPresent()) {
             // try to find json message validator via resource path lookup
-            defaultJsonMessageValidator = MessageValidator.lookup("json")
-                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper JSON message validator - please add validator to project"));
+            defaultJsonMessageValidator = MessageValidator.lookup("json");
         }
 
-        return defaultJsonMessageValidator;
+        if (defaultJsonMessageValidator.isPresent()) {
+            return defaultJsonMessageValidator.get();
+        }
+
+        throw new CitrusRuntimeException("Unable to locate proper JSON message validator - please add validator to project");
     }
 
     /**
@@ -218,23 +222,26 @@ public class KubernetesExecuteAction extends AbstractTestAction {
         }
 
         // try to find json message validator in registry
-        MessageValidator<? extends ValidationContext> defaultJsonMessageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR);
+        Optional<MessageValidator<? extends ValidationContext>> defaultJsonMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR);
 
-        if (defaultJsonMessageValidator == null) {
+        if (!defaultJsonMessageValidator.isPresent()) {
             try {
-                defaultJsonMessageValidator = context.getReferenceResolver().resolve(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR, MessageValidator.class);
+                defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_PATH_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
                 log.warn("Unable to find default JSON path message validator in message validator registry");
             }
         }
 
-        if (defaultJsonMessageValidator == null) {
+        if (!defaultJsonMessageValidator.isPresent()) {
             // try to find json message validator via resource path lookup
-            defaultJsonMessageValidator = MessageValidator.lookup("json-path")
-                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper JSON path message validator - please add validator to project"));
+            defaultJsonMessageValidator = MessageValidator.lookup("json-path");
         }
 
-        return defaultJsonMessageValidator;
+        if (defaultJsonMessageValidator.isPresent()) {
+            return defaultJsonMessageValidator.get();
+        }
+
+        throw new CitrusRuntimeException("Unable to locate proper JSON path message validator - please add validator to project");
     }
 
     /**

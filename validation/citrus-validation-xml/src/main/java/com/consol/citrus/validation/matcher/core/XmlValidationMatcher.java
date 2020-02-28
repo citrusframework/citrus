@@ -18,6 +18,7 @@ package com.consol.citrus.validation.matcher.core;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -69,23 +70,27 @@ public class XmlValidationMatcher implements ValidationMatcher {
         }
 
         // try to find xml message validator in registry
-        messageValidator = context.getMessageValidatorRegistry().getMessageValidators().get(DEFAULT_XML_MESSAGE_VALIDATOR);
+        Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (messageValidator == null) {
+        if (!defaultMessageValidator.isPresent()) {
             try {
-                messageValidator = context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class);
+                defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
             } catch (CitrusRuntimeException e) {
                 LOG.warn("Unable to find default XML message validator in message validator registry");
             }
         }
 
-        if (messageValidator == null) {
+        if (!defaultMessageValidator.isPresent()) {
             // try to find xml message validator via resource path lookup
-            messageValidator = MessageValidator.lookup("xml")
-                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project"));
+            defaultMessageValidator = MessageValidator.lookup("xml");
         }
 
-        return messageValidator;
+        if (defaultMessageValidator.isPresent()) {
+            messageValidator = defaultMessageValidator.get();
+            return messageValidator;
+        }
+
+        throw new CitrusRuntimeException("Unable to locate proper XML message validator - please add validator to project");
     }
 
     /**

@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.container.AfterSuite;
 import com.consol.citrus.container.BeforeSuite;
-import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestSuiteListeners;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.validation.MessageValidatorRegistry;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -93,6 +94,7 @@ public class CitrusSpringContext extends CitrusContext {
             this.applicationContext = applicationContext;
 
             functionRegistry(applicationContext.getBean(FunctionRegistry.class));
+            messageValidatorRegistry(applicationContext.getBean(MessageValidatorRegistry.class));
             messageListeners(applicationContext.getBean(MessageListeners.class));
             testListeners(applicationContext.getBean(TestListeners.class));
             testSuiteListeners(applicationContext.getBean(TestSuiteListeners.class));
