@@ -16,6 +16,9 @@
 
 package com.consol.citrus.http.client;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessageConverter;
@@ -28,9 +31,6 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -213,7 +213,7 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      */
     public HttpClientBuilder interceptor(ClientHttpRequestInterceptor interceptor) {
         if (endpoint.getEndpointConfiguration().getClientInterceptors() == null) {
-            endpoint.getEndpointConfiguration().setClientInterceptors(new ArrayList<ClientHttpRequestInterceptor>());
+            endpoint.getEndpointConfiguration().setClientInterceptors(new ArrayList<>());
         }
 
         endpoint.getEndpointConfiguration().getClientInterceptors().add(interceptor);

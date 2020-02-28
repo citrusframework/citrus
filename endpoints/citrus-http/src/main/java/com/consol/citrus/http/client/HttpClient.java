@@ -16,6 +16,10 @@
 
 package com.consol.citrus.http.client;
 
+import java.net.URI;
+import java.util.Collections;
+import java.util.Optional;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -24,15 +28,17 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.InvalidMediaTypeException;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
-
-import java.net.URI;
-import java.util.Collections;
-import java.util.Optional;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -74,10 +80,15 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     public void send(Message message, TestContext context) {
         if (CollectionUtils.isEmpty(getEndpointConfiguration().getClientInterceptors())) {
             LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
-            loggingClientInterceptor.setMessageListener(context.getMessageListeners());
-
             getEndpointConfiguration().setClientInterceptors(Collections.singletonList(loggingClientInterceptor));
         }
+
+        getEndpointConfiguration().getClientInterceptors()
+                .stream()
+                .filter(LoggingClientInterceptor.class::isInstance)
+                .map(LoggingClientInterceptor.class::cast)
+                .filter(interceptor -> !interceptor.hasMessageListeners())
+                .forEach(interceptor -> interceptor.setMessageListener(context.getMessageListeners()));
 
         HttpMessage httpMessage;
         if (message instanceof HttpMessage) {

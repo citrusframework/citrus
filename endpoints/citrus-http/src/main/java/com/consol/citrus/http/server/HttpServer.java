@@ -27,10 +27,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
 import com.consol.citrus.http.servlet.GzipServletFilter;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.server.AbstractServer;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -219,6 +221,21 @@ public class HttpServer extends AbstractServer {
             } catch (Exception e) {
                 throw new CitrusRuntimeException(e);
             }
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+
+        if (getApplicationContext() != null && getApplicationContext().getBeansOfType(MessageListeners.class).size() == 1) {
+            MessageListeners messageListeners = getApplicationContext().getBean(MessageListeners.class);
+
+            getInterceptors().stream()
+                    .filter(LoggingHandlerInterceptor.class::isInstance)
+                    .map(LoggingHandlerInterceptor.class::cast)
+                    .filter(interceptor -> !interceptor.hasMessageListeners())
+                    .forEach(interceptor -> interceptor.setMessageListener(messageListeners));
         }
     }
 

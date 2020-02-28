@@ -16,14 +16,22 @@
 
 package com.consol.citrus.ws.client;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.io.IOException;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
@@ -37,9 +45,6 @@ import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
 import org.springframework.xml.transform.StringResult;
-
-import javax.xml.transform.*;
-import java.io.IOException;
 
 /**
  * Client sends SOAP WebService messages to some server endpoint via Http protocol. Client waits for synchronous
@@ -82,10 +87,15 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
 
         if (CollectionUtils.isEmpty(getEndpointConfiguration().getInterceptors()) && getEndpointConfiguration().getInterceptor() == null) {
             LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
-            loggingClientInterceptor.setMessageListener(context.getMessageListeners());
-
             getEndpointConfiguration().setInterceptor(loggingClientInterceptor);
         }
+
+        getEndpointConfiguration().getInterceptors()
+                .stream()
+                .filter(LoggingClientInterceptor.class::isInstance)
+                .map(LoggingClientInterceptor.class::cast)
+                .filter(interceptor -> !interceptor.hasMessageListeners())
+                .forEach(interceptor -> interceptor.setMessageListener(context.getMessageListeners()));
 
         SoapMessage soapMessage;
         if (message instanceof SoapMessage) {

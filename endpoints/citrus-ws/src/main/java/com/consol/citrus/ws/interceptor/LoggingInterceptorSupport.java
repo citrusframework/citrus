@@ -16,36 +16,39 @@
 
 package com.consol.citrus.ws.interceptor;
 
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.stream.StreamResult;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.StringWriter;
+
 import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.util.XMLUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.xml.transform.TransformerObjectSupport;
 
-import javax.xml.transform.*;
-import javax.xml.transform.stream.StreamResult;
-import java.io.*;
-
 /**
  * Abstract logging support class offers basic log methods for SOAP messages.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class LoggingInterceptorSupport extends TransformerObjectSupport {
 
     /** Logger */
     protected final Logger log = LoggerFactory.getLogger(getClass());
-    
-    @Autowired(required = false)
+
     private MessageListeners messageListener;
-    
+
     /**
-     * Prevent instantiation. 
+     * Prevent instantiation.
      */
     protected LoggingInterceptorSupport() {
     }
@@ -53,7 +56,7 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
     /**
      * Logs request message from message context. SOAP messages get logged with envelope transformation
      * other messages with serialization.
-     * 
+     *
      * @param logMessage
      * @param messageContext
      * @param incoming
@@ -66,11 +69,11 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             logWebServiceMessage(logMessage, messageContext.getRequest(), incoming);
         }
     }
-    
+
     /**
      * Logs response message from message context if any. SOAP messages get logged with envelope transformation
      * other messages with serialization.
-     * 
+     *
      * @param logMessage
      * @param messageContext
      * @param incoming
@@ -85,10 +88,10 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             }
         }
     }
-    
+
     /**
      * Log SOAP message with transformer instance.
-     * 
+     *
      * @param logMessage the customized log message.
      * @param soapMessage the message content as SOAP envelope source.
      * @param incoming
@@ -97,22 +100,22 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
     protected void logSoapMessage(String logMessage, SoapMessage soapMessage, boolean incoming) throws TransformerException {
         Transformer transformer = createIndentingTransformer();
         StringWriter writer = new StringWriter();
-        
+
         transformer.transform(soapMessage.getEnvelope().getSource(), new StreamResult(writer));
         logMessage(logMessage, XMLUtils.prettyPrint(writer.toString()), incoming);
     }
-    
+
     /**
      * Log WebService message (other than SOAP) with in memory
      * {@link ByteArrayOutputStream}
-     * 
+     *
      * @param logMessage the customized log message.
      * @param message the message to log.
      * @param incoming
      */
     protected void logWebServiceMessage(String logMessage, WebServiceMessage message, boolean incoming) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        
+
         try {
             message.writeTo(os);
             logMessage(logMessage, os.toString(), incoming);
@@ -120,7 +123,7 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             log.warn("Unable to log WebService message", e);
         }
     }
-    
+
     /**
      * Performs the final logger call with dynamic message.
      *
@@ -129,7 +132,7 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
      * @param incoming
      */
     protected void logMessage(String logMessage, String message, boolean incoming) {
-        if (messageListener != null) {
+        if (hasMessageListeners()) {
             log.debug(logMessage);
 
             if (incoming) {
@@ -143,10 +146,18 @@ public abstract class LoggingInterceptorSupport extends TransformerObjectSupport
             }
         }
     }
-    
+
+    /**
+     * Checks if message listeners are present on this interceptor.
+     * @return
+     */
+    public boolean hasMessageListeners() {
+        return messageListener != null && !messageListener.isEmpty();
+    }
+
     /**
      * Get transformer implementation with output properties set.
-     * 
+     *
      * @return the transformer instance.
      * @throws TransformerConfigurationException
      */

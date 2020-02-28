@@ -21,18 +21,16 @@ import java.util.List;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 /**
  * @author Christoph Deppisch
  */
-public class MessageListeners {
+public class MessageListeners implements MessageListenerAware {
 
     /**
      * List of message listener known to Spring application context
      */
-    @Autowired
     private List<MessageListener> messageListener = new ArrayList<>();
 
     /**
@@ -72,11 +70,7 @@ public class MessageListeners {
         return CollectionUtils.isEmpty(messageListener);
     }
 
-    /**
-     * Adds a new message listener.
-     *
-     * @param listener
-     */
+    @Override
     public void addMessageListener(MessageListener listener) {
         if (!this.messageListener.contains(listener)) {
             this.messageListener.add(listener);

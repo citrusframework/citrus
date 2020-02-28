@@ -78,8 +78,8 @@ public class CitrusSpringConfig {
     }
 
     @Bean
-    public MessageListeners messageListeners() {
-        return new MessageListeners();
+    public MessageListenersFactory messageListeners() {
+        return new MessageListenersFactory();
     }
 
     @Bean

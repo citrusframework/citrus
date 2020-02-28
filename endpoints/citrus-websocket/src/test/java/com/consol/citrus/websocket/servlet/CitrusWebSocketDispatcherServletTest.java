@@ -16,6 +16,10 @@
 
 package com.consol.citrus.websocket.servlet;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.http.controller.HttpMessageController;
@@ -40,9 +44,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.*;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.isA;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -85,7 +89,7 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
 
     @Test
     public void testConfigureHandlerInterceptor() throws Exception {
-        List<Object> interceptors = new ArrayList<Object>();
+        List<Object> interceptors = new ArrayList<>();
         interceptors.add(new LoggingHandlerInterceptor());
 
         reset(httpServer);
@@ -93,7 +97,7 @@ public class CitrusWebSocketDispatcherServletTest extends AbstractTestNGUnitTest
         when(httpServer.getInterceptors()).thenReturn(interceptors);
         when(httpServer.getEndpointAdapter()).thenReturn(null);
         when(httpServer.getMessageConverter()).thenReturn(new HttpMessageConverter());
-        when(httpServer.getWebSockets()).thenReturn(new ArrayList<WebSocketEndpoint>());
+        when(httpServer.getWebSockets()).thenReturn(new ArrayList<>());
 
         servlet.initStrategies(applicationContext);
 

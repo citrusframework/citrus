@@ -16,74 +16,66 @@
 
 package com.consol.citrus.http.interceptor;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Enumeration;
+
 import com.consol.citrus.http.controller.HttpMessageController;
 import com.consol.citrus.message.RawMessage;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.util.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Enumeration;
-
 /**
- * Logging interceptor called by Spring MVC for each controller handling a RESTful Http request 
+ * Logging interceptor called by Spring MVC for each controller handling a RESTful Http request
  * as a server.
- * 
+ *
  * Interceptor is capable of informing message tracing test listener on the request and response
  * messages arriving and leaving Citrus.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.2
  */
 public class LoggingHandlerInterceptor implements HandlerInterceptor {
-    
+
     /** New line characters in log files */
     private static final String NEWLINE = System.getProperty("line.separator");
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(LoggingHandlerInterceptor.class);
-    
-    @Autowired(required = false)
+
     private MessageListeners messageListener;
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean preHandle(HttpServletRequest request, 
+    @Override
+    public boolean preHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler) throws Exception {
         handleRequest(getRequestContent(request));
         return true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void postHandle(HttpServletRequest request,
             HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         handleResponse(getResponseContent(response, handler));
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public void afterCompletion(HttpServletRequest request,
             HttpServletResponse response, Object handler, Exception ex) throws Exception {
     }
-    
+
     /**
      * Handle request message and write request to logger.
      * @param request
      */
     public void handleRequest(String request) {
-        if (messageListener != null) {
+        if (hasMessageListeners()) {
             log.debug("Received Http request");
             messageListener.onInboundMessage(new RawMessage(request), null);
         } else {
@@ -92,13 +84,13 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
             }
         }
     }
-    
+
     /**
      * Handle response message and write content to logger.
      * @param response
      */
     public void handleResponse(String response) {
-        if (messageListener != null) {
+        if (hasMessageListeners()) {
             log.debug("Sending Http response");
             messageListener.onOutboundMessage(new RawMessage(response), null);
         } else {
@@ -107,49 +99,57 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
             }
         }
     }
-    
+
+    /**
+     * Checks if message listeners are present on this interceptor.
+     * @return
+     */
+    public boolean hasMessageListeners() {
+        return messageListener != null && !messageListener.isEmpty();
+    }
+
     /**
      * Builds raw request message content from Http servlet request.
      * @param request
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     private String getRequestContent(HttpServletRequest request) throws IOException {
         StringBuilder builder = new StringBuilder();
-        
+
         builder.append(request.getProtocol());
         builder.append(" ");
         builder.append(request.getMethod());
         builder.append(" ");
         builder.append(request.getRequestURI());
         builder.append(NEWLINE);
-        
+
         Enumeration<?> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement().toString();
-            
+
             builder.append(headerName);
             builder.append(":");
-            
+
             Enumeration<?> headerValues = request.getHeaders(headerName);
             if (headerValues.hasMoreElements()) {
                 builder.append(headerValues.nextElement());
             }
-            
+
             while (headerValues.hasMoreElements()) {
                 builder.append(",");
                 builder.append(headerValues.nextElement());
             }
-            
+
             builder.append(NEWLINE);
         }
-        
+
         builder.append(NEWLINE);
         builder.append(FileUtils.readToString(request.getInputStream()));
-        
+
         return builder.toString();
     }
-    
+
     /**
      * @param response
      * @return
@@ -173,4 +173,11 @@ public class LoggingHandlerInterceptor implements HandlerInterceptor {
         return builder.toString();
     }
 
+    /**
+     * Specifies the message listeners.
+     * @param messageListener
+     */
+    public void setMessageListener(MessageListeners messageListener) {
+        this.messageListener = messageListener;
+    }
 }

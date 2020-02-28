@@ -12,6 +12,8 @@ import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionRegistry;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.report.MessageListener;
+import com.consol.citrus.report.MessageListenerAware;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestListener;
 import com.consol.citrus.report.TestListenerAware;
@@ -35,7 +37,7 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
  *
  * @author Christoph Deppisch
  */
-public class CitrusContext implements TestListenerAware, TestSuiteListenerAware, ReferenceRegistry {
+public class CitrusContext implements TestListenerAware, TestSuiteListenerAware, MessageListenerAware, ReferenceRegistry {
 
     /** Test context factory **/
     private final TestContextFactory testContextFactory;
@@ -105,6 +107,11 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     @Override
     public void addTestListener(TestListener testListener) {
         this.testListeners.addTestListener(testListener);
+    }
+
+    @Override
+    public void addMessageListener(MessageListener listener) {
+        this.messageListeners.addMessageListener(listener);
     }
 
     /**
@@ -320,6 +327,11 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
 
         public Builder messageListeners(MessageListeners messageListeners) {
             this.messageListeners = messageListeners;
+            return this;
+        }
+
+        public Builder messageListener(MessageListener messageListeners) {
+            this.messageListeners.addMessageListener(messageListeners);
             return this;
         }
 

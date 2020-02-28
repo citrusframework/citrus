@@ -16,33 +16,31 @@
 
 package com.consol.citrus.ws.interceptor;
 
+import javax.xml.transform.TransformerException;
+
 import org.springframework.ws.client.WebServiceClientException;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.soap.SoapEnvelopeException;
 
-import javax.xml.transform.TransformerException;
-
 /**
  * Client interceptor implementation logging SOAP requests and responses as well as SOAP faults
  * with logging framework.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class LoggingClientInterceptor extends LoggingInterceptorSupport implements ClientInterceptor {
-    
+
     /**
      * Write SOAP request to logger before sending.
      */
     public boolean handleRequest(MessageContext messageContext) throws WebServiceClientException {
         try {
             logRequest("Sending SOAP request", messageContext, false);
-        } catch (SoapEnvelopeException e) {
-            log.warn("Unable to write SOAP request to logger", e);
-        } catch (TransformerException e) {
+        } catch (SoapEnvelopeException | TransformerException e) {
             log.warn("Unable to write SOAP request to logger", e);
         }
-        
+
         return true;
     }
 
@@ -52,27 +50,23 @@ public class LoggingClientInterceptor extends LoggingInterceptorSupport implemen
     public boolean handleResponse(MessageContext messageContext) throws WebServiceClientException {
         try {
             logResponse("Received SOAP response", messageContext, true);
-        } catch (SoapEnvelopeException e) {
-            log.warn("Unable to write SOAP response to logger", e);
-        } catch (TransformerException e) {
+        } catch (SoapEnvelopeException | TransformerException e) {
             log.warn("Unable to write SOAP response to logger", e);
         }
-        
+
         return true;
     }
-    
+
     /**
      * Write SOAP fault to logger.
      */
     public boolean handleFault(MessageContext messageContext) throws WebServiceClientException {
         try {
             logResponse("Received SOAP fault", messageContext, true);
-        } catch (SoapEnvelopeException e) {
-            log.warn("Unable to write SOAP fault to logger", e);
-        } catch (TransformerException e) {
+        } catch (SoapEnvelopeException | TransformerException e) {
             log.warn("Unable to write SOAP fault to logger", e);
         }
-        
+
         return true;
     }
 

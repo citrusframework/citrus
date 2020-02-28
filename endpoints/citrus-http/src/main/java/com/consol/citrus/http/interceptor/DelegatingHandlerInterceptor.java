@@ -16,13 +16,13 @@
 
 package com.consol.citrus.http.interceptor;
 
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Interceptor implementation delegates to list of other handler interceptors.
@@ -33,7 +33,7 @@ import java.util.List;
 public class DelegatingHandlerInterceptor implements HandlerInterceptor {
 
     /** List of interceptors to delegate to when this interceptor is invoked */
-    private List<HandlerInterceptor> interceptors = new ArrayList<HandlerInterceptor>();
+    private List<HandlerInterceptor> interceptors = new ArrayList<>();
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {

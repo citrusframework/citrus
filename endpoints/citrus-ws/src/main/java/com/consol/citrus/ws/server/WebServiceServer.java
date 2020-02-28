@@ -16,21 +16,40 @@
 
 package com.consol.citrus.ws.server;
 
+import javax.servlet.ServletContext;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.server.AbstractServer;
+import com.consol.citrus.ws.interceptor.LoggingEndpointInterceptor;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import com.consol.citrus.ws.servlet.CitrusMessageDispatcherServlet;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.*;
-import org.eclipse.jetty.servlet.*;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerCollection;
+import org.eclipse.jetty.server.handler.RequestLogHandler;
+import org.eclipse.jetty.servlet.ServletContextHandler;
+import org.eclipse.jetty.servlet.ServletHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
+import org.eclipse.jetty.servlet.ServletMapping;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.*;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.MessageSourceResolvable;
+import org.springframework.context.NoSuchMessageException;
 import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.Resource;
@@ -38,58 +57,53 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 
-import javax.servlet.ServletContext;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.*;
-
 /**
  * Jetty server implementation wrapping a {@link Server} with Citrus server behaviour, so
  * server can be started/stopped by Citrus.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class WebServiceServer extends AbstractServer implements ApplicationContextAware {
 
     /** Server port */
     private int port = 8080;
-    
+
     /** Server resource base */
     private String resourceBase = "src/main/resources";
-    
+
     /** Application context location for payload mappings etc. */
     private String contextConfigLocation = "classpath:com/consol/citrus/ws/citrus-servlet-context.xml";
-    
+
     /** Server instance to be wrapped */
     private Server jettyServer;
 
     /** Application context used as delegate for parent WebApplicationContext in Jetty */
     private ApplicationContext applicationContext;
-    
+
     /** Use root application context as parent to build WebApplicationContext */
     private boolean useRootContextAsParent = false;
-    
+
     /** Do only start one instance after another so we need a static lock object */
     private static Object serverLock = new Object();
-    
+
     /** Set custom connector with custom idle time and other configuration options */
     private Connector connector;
-    
+
     /** Set list of custom connectors with custom configuration options */
     private Connector[] connectors;
-    
+
     /** Servlet mapping path */
     private String servletMappingPath = "/*";
-    
+
     /** Optional servlet name customization */
     private String servletName;
-    
+
     /** Context path */
     private String contextPath = "/";
-    
+
     /** Optional security handler for basic auth */
     private SecurityHandler securityHandler;
-    
+
     /** Optional servlet handler customization */
     private ServletHandler servletHandler;
 
@@ -111,7 +125,7 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
     /** Default SOAP header namespace and prefix */
     private String soapHeaderNamespace;
     private String soapHeaderPrefix = "";
-    
+
     @Override
     protected void shutdown() {
         if (jettyServer != null) {
@@ -137,46 +151,61 @@ public class WebServiceServer extends AbstractServer implements ApplicationConte
             } else {
                 jettyServer = new Server(port);
             }
-            
+
             HandlerCollection handlers = new HandlerCollection();
-            
+
             ContextHandlerCollection contextCollection = new ContextHandlerCollection();
-            
+
             ServletContextHandler contextHandler = new ServletContextHandler();
             contextHandler.setContextPath(contextPath);
             contextHandler.setResourceBase(resourceBase);
-            
+
             //add the root application context as parent to the constructed WebApplicationContext
             if (useRootContextAsParent) {
-                contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, 
+                contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
                         new SimpleDelegatingWebApplicationContext());
             }
-            
+
             if (servletHandler == null) {
                 servletHandler = new ServletHandler();
                 addDispatcherServlet();
             }
-            
+
             contextHandler.setServletHandler(servletHandler);
-            
+
             if (securityHandler != null) {
                 contextHandler.setSecurityHandler(securityHandler);
             }
-            
+
             contextCollection.addHandler(contextHandler);
-            
+
             handlers.addHandler(contextCollection);
-            
+
             handlers.addHandler(new DefaultHandler());
             handlers.addHandler(new RequestLogHandler());
-            
+
             jettyServer.setHandler(handlers);
-            
+
             try {
                 jettyServer.start();
             } catch (Exception e) {
                 throw new CitrusRuntimeException(e);
             }
+        }
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+
+        if (getApplicationContext() != null && getApplicationContext().getBeansOfType(MessageListeners.class).size() == 1) {
+            MessageListeners messageListeners = getApplicationContext().getBean(MessageListeners.class);
+
+            getInterceptors().stream()
+                    .filter(LoggingEndpointInterceptor.class::isInstance)
+                    .map(LoggingEndpointInterceptor.class::cast)
+                    .filter(interceptor -> !interceptor.hasMessageListeners())
+                    .forEach(interceptor -> interceptor.setMessageListener(messageListeners));
         }
     }
 

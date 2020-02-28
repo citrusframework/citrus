@@ -65,7 +65,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     private EndpointAdapter endpointAdapter;
 
     /** Handler interceptors such as security or logging interceptors */
-    private List<Object> interceptors = new ArrayList<Object>();
+    private List<Object> interceptors = new ArrayList<>();
 
     /** Timeout delegated to default endpoint adapter if not set explicitly */
     private long defaultTimeout = 1000;

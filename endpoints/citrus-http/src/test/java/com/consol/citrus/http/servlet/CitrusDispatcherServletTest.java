@@ -16,6 +16,9 @@
 
 package com.consol.citrus.http.servlet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.endpoint.adapter.TimeoutProducingEndpointAdapter;
 import com.consol.citrus.http.controller.HttpMessageController;
@@ -31,10 +34,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -69,7 +70,7 @@ public class CitrusDispatcherServletTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConfigureHandlerInterceptor() throws Exception {
-        List<Object> interceptors = new ArrayList<Object>();
+        List<Object> interceptors = new ArrayList<>();
         interceptors.add(new LoggingHandlerInterceptor());
 
         reset(httpServer);
