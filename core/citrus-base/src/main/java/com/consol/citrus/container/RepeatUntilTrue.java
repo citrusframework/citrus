@@ -18,7 +18,6 @@ package com.consol.citrus.container;
 
 import com.consol.citrus.AbstractIteratingContainerBuilder;
 import com.consol.citrus.context.TestContext;
-import org.hamcrest.Matcher;
 
 /**
  * Typical implementation of repeat iteration loop. Nested test actions are executed until
@@ -76,16 +75,6 @@ public class RepeatUntilTrue extends AbstractIteratingActionContainer {
          */
         public RepeatUntilTrue.Builder until(IteratingConditionExpression condition) {
             condition(condition);
-            return this;
-        }
-
-        /**
-         * Adds a Hamcrest condition expression to this iterate container.
-         * @param conditionMatcher
-         * @return
-         */
-        public RepeatUntilTrue.Builder until(Matcher conditionMatcher) {
-            condition(new HamcrestConditionExpression(conditionMatcher));
             return this;
         }
 

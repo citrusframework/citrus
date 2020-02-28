@@ -23,6 +23,7 @@ import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.lessThan;
 
@@ -112,10 +113,10 @@ public class ConditionalTestRunnerTest extends UnitTestSupport {
                 variable("var", 5);
                 variable("noExecution", "true");
 
-                conditional().when("${var}", is("5"))
+                conditional().when(assertThat("${var}", is("5")))
                         .actions(echo("${var}"), createVariable("execution", "true"));
 
-                conditional().when("${var}", lessThan("5"))
+                conditional().when(assertThat("${var}", lessThan("5")))
                         .actions(echo("${var}"), createVariable("noExecution", "false"));
             }
         };

@@ -18,10 +18,12 @@ package com.consol.citrus.validation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
@@ -31,7 +33,6 @@ import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -43,8 +44,10 @@ import org.springframework.util.CollectionUtils;
 public class DefaultMessageHeaderValidator extends AbstractMessageValidator<HeaderValidationContext> {
 
     /** List of special header validators */
-    @Autowired(required = false)
     private List<HeaderValidator> validators = new ArrayList<>();
+
+    /** Set of default header validators located via resource path lookup */
+    private static final Map<String, HeaderValidator> DEFAULT_VALIDATORS = HeaderValidator.lookup();
 
     @Override
     public void validateMessage(Message receivedMessage, Message controlMessage, TestContext context, HeaderValidationContext validationContext) {
@@ -87,9 +90,10 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
                                     }
                                 })
                                 .filter(Objects::nonNull)
+                                .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
                                 .findFirst()
                                 .orElse(
-                                    validators.stream()
+                                    getHeaderValidators(context).stream()
                                             .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
                                             .findFirst()
                                             .orElse(new DefaultHeaderValidator())
@@ -98,6 +102,30 @@ public class DefaultMessageHeaderValidator extends AbstractMessageValidator<Head
         }
 
         log.info("Message header validation successful: All values OK");
+    }
+
+    /**
+     * Combines header validators from multiple sources. First the manual added validators in this class are added. Then
+     * validators coming from reference resolver and resource path lookup are added.
+     *
+     * At the end a distinct combination of all validators is returned.
+     * @param context
+     * @return
+     */
+    private List<HeaderValidator> getHeaderValidators(TestContext context) {
+        List<HeaderValidator> allValidators = new ArrayList<>(validators);
+
+        // add validators from resource path lookup
+        Map<String, HeaderValidator> validatorMap = new HashMap<>(DEFAULT_VALIDATORS);
+
+        // add validators in reference resolver
+        validatorMap.putAll(context.getReferenceResolver().resolveAll(HeaderValidator.class));
+
+        allValidators.addAll(validatorMap.values());
+
+        return allValidators.stream()
+                        .distinct()
+                        .collect(Collectors.toList());
     }
 
     /**

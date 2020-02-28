@@ -24,6 +24,7 @@ import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertEquals;
 
@@ -135,7 +136,7 @@ public class RepeatOnErrorTestRunnerTest extends UnitTestSupport {
                 repeatOnError().autoSleep(200)
                                 .index("k")
                                 .startsWith(2)
-                                .until(is(5))
+                                .until(assertThat(is(5)))
                         .actions(echo("${var}"));
             }
         };

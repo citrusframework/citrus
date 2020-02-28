@@ -249,7 +249,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 if (validators.parallelStream()
                         .map(Object::getClass)
                         .noneMatch(DefaultMessageHeaderValidator.class::isAssignableFrom)) {
-                    MessageValidator defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
+                    MessageValidator<?extends ValidationContext> defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
                     if (defaultMessageHeaderValidator != null) {
                         defaultMessageHeaderValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
                     }

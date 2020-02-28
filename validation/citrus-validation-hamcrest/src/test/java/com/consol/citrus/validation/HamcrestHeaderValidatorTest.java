@@ -16,21 +16,21 @@
 
 package com.consol.citrus.validation;
 
-import java.util.Collections;
-
-import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import static org.hamcrest.Matchers.is;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.6
  */
-public class DefaultHeaderValidatorTest extends UnitTestSupport {
+public class HamcrestHeaderValidatorTest extends AbstractTestNGUnitTest {
 
-    private DefaultHeaderValidator validator = new DefaultHeaderValidator();
+    private HamcrestHeaderValidator validator = new HamcrestHeaderValidator();
     private HeaderValidationContext validationContext = new HeaderValidationContext();
 
     @Test(dataProvider = "successData")
@@ -41,25 +41,8 @@ public class DefaultHeaderValidatorTest extends UnitTestSupport {
     @DataProvider
     public Object[][] successData() {
         return new Object[][] {
-            new Object[] { "foo", "foo" },
-            new Object[] { null, "" },
-            new Object[] { null, null },
-            new Object[] { new String[] {"foo", "bar"}, new String[] {"foo", "bar"} },
-            new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "value") }
+            new Object[] { "foo", is("foo") }
         };
-    }
-
-    @Test
-    public void testValidateHeaderVariableSupport() {
-        context.setVariable("control", "bar");
-
-        validator.validateHeader("foo", "bar", "${control}", context, validationContext);
-    }
-
-    @Test
-    public void testValidateHeaderValidationMatcherSupport() {
-        validator.validateHeader("foo", "bar", "@ignore@", context, validationContext);
-        validator.validateHeader("foo", "bar", "@hasLength(3)@", context, validationContext);
     }
 
     @Test(dataProvider = "errorData", expectedExceptions = ValidationException.class)
@@ -70,11 +53,7 @@ public class DefaultHeaderValidatorTest extends UnitTestSupport {
     @DataProvider
     public Object[][] errorData() {
         return new Object[][] {
-                new Object[] { "foo", "wrong" },
-                new Object[] { null, "wrong" },
-                new Object[] { "foo", null },
-                new Object[] { new String[] {"foo", "bar"}, new String[] {"foo", "wrong"} },
-                new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "wrong") }
+            new Object[] { "foo", is("wrong") }
         };
     }
 }

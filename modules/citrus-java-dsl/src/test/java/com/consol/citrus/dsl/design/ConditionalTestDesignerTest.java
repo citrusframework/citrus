@@ -22,6 +22,7 @@ import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class ConditionalTestDesignerTest extends UnitTestSupport {
@@ -73,7 +74,7 @@ public class ConditionalTestDesignerTest extends UnitTestSupport {
         MockTestDesigner builder = new MockTestDesigner(context) {
             @Override
             public void configure() {
-                conditional().when("${var}", is("Hello")).actions(echo("${var}"));
+                conditional().when(assertThat("${var}", is("Hello"))).actions(echo("${var}"));
             }
         };
 

@@ -48,6 +48,9 @@ public class MessageValidatorRegistry {
     /** Registered message validators */
     private Map<String, MessageValidator<? extends ValidationContext>> messageValidators = new LinkedHashMap<>();
 
+    /** Default message header validator - gets looked up via resource path */
+    private MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator;
+
     /**
      * Finds matching message validators for this message type.
      *
@@ -64,7 +67,7 @@ public class MessageValidatorRegistry {
             }
         }
 
-        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))) {
+        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(this::isDefaultMessageHeaderValidator)) {
             // try to find fallback message validator for given message payload
             if (message.getPayload() instanceof String &&
                     StringUtils.hasText(message.getPayload(String.class))) {
@@ -80,7 +83,7 @@ public class MessageValidatorRegistry {
             }
         }
 
-        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))) {
+        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(this::isDefaultMessageHeaderValidator)) {
             throw new CitrusRuntimeException("Could not find proper message validator for message type '" +
                     messageType + "', please define a capable message validator for this message type");
         }
@@ -90,6 +93,20 @@ public class MessageValidatorRegistry {
         }
 
         return matchingValidators;
+    }
+
+    /**
+     * Verify if given message validator is a subclass of default message header validator.
+     * @param messageValidator
+     * @return
+     */
+    private boolean isDefaultMessageHeaderValidator(MessageValidator<? extends ValidationContext> messageValidator) {
+        if (defaultMessageHeaderValidator == null) {
+            defaultMessageHeaderValidator = MessageValidator.lookup("header")
+                    .orElseThrow(() -> new CitrusRuntimeException("Unable to locate default message header validator"));
+        }
+
+        return defaultMessageHeaderValidator.getClass().isAssignableFrom(messageValidator.getClass());
     }
 
     private List<MessageValidator<? extends ValidationContext>> findFallbackMessageValidators(String messageType, Message message) {
@@ -125,12 +142,11 @@ public class MessageValidatorRegistry {
      * Gets the default message header validator.
      * @return
      */
-    public DefaultMessageHeaderValidator getDefaultMessageHeaderValidator() {
+    public MessageValidator<? extends ValidationContext> getDefaultMessageHeaderValidator() {
         return messageValidators.values()
                 .stream()
-                .filter(validator -> DefaultMessageHeaderValidator.class.isAssignableFrom(validator.getClass()))
-                .map(DefaultMessageHeaderValidator.class::cast)
+                .filter(this::isDefaultMessageHeaderValidator)
                 .findFirst()
-                .orElse(null);
+                .orElse(defaultMessageHeaderValidator);
     }
 }

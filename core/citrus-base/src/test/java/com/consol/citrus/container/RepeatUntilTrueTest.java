@@ -16,14 +16,13 @@
 
 package com.consol.citrus.container;
 
-import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -95,20 +94,4 @@ public class RepeatUntilTrueTest extends UnitTestSupport {
         verify(action, times(4)).execute(context);
     }
 
-    @Test
-    public void testRepeatHamcrestConditionExpression() {
-        reset(action);
-
-        RepeatUntilTrue repeatUntilTrue = new RepeatUntilTrue.Builder()
-                .condition(new HamcrestConditionExpression(is(5)))
-                .index("i")
-                .actions(() -> action)
-                .build();
-        repeatUntilTrue.execute(context);
-
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "4");
-
-        verify(action, times(4)).execute(context);
-    }
 }

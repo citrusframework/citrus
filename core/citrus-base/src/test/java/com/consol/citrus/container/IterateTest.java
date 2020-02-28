@@ -16,8 +16,8 @@
 
 package com.consol.citrus.container;
 
-import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import org.mockito.Mockito;
@@ -25,7 +25,6 @@ import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -159,20 +158,4 @@ public class IterateTest extends UnitTestSupport {
         verify(action, times(5)).execute(context);
     }
 
-    @Test
-    public void testHamcrestIterationConditionExpression() {
-        reset(action);
-
-        Iterate iterate = new Iterate.Builder()
-                .condition(new HamcrestConditionExpression(lessThanOrEqualTo(5)))
-                .index("i")
-                .actions(() -> action)
-                .build();
-        iterate.execute(context);
-
-        Assert.assertNotNull(context.getVariable("${i}"));
-        Assert.assertEquals(context.getVariable("${i}"), "5");
-
-        verify(action, times(5)).execute(context);
-    }
 }

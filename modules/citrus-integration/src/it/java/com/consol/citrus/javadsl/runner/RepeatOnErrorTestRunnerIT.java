@@ -20,6 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -27,20 +28,20 @@ import static org.hamcrest.Matchers.is;
  */
 @Test
 public class RepeatOnErrorTestRunnerIT extends TestNGCitrusTestRunner {
-    
+
     @CitrusTest
     public void repeatOnErrorContainer() {
         variable("message", "Hello TestFramework");
-        
+
         repeatOnError().until("i = 5").index("i")
                 .actions(echo("${i}. Versuch: ${message}"));
-        
-        repeatOnError().until(is(5)).autoSleep(500)
+
+        repeatOnError().until(assertThat(is(5))).autoSleep(500)
                 .actions(echo("${i}. Versuch: ${message}"));
 
         repeatOnError().until((index, context) -> index == 5).autoSleep(500)
                 .actions(echo("${i}. Versuch: ${message}"));
-        
+
         assertException().when(
                 repeatOnError().until("i = 3").index("i").autoSleep(200)
                     .actions(
@@ -48,6 +49,6 @@ public class RepeatOnErrorTestRunnerIT extends TestNGCitrusTestRunner {
                         fail("")
                     )
         );
-        
+
     }
 }

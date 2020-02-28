@@ -25,7 +25,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
-import org.hamcrest.Matchers;
 import org.springframework.beans.TypeMismatchException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -45,12 +44,12 @@ public class ValidationUtilsTest extends UnitTestSupport {
     }
 
     @Test(dataProvider = "testData")
-    public void testValidateValues(String actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValues(Object actualValue, Object expectedValue, String path) throws Exception {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
     @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
-    public void testValidateValuesFailure(String actualValue, Object expectedValue, String path) throws Exception {
+    public void testValidateValuesFailure(Object actualValue, Object expectedValue, String path) throws Exception {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
@@ -78,9 +77,8 @@ public class ValidationUtilsTest extends UnitTestSupport {
             new Object[] {"foo", "foo".getBytes(), "bytesCompare"},
             new Object[] {null, null, "nullCompare"},
             new Object[] {null, "", "nullEmptyStringCompare"},
-            new Object[] {null, "@assertThat(nullValue())@", "nullValidationMatcherCompare"},
-            new Object[] {null, Matchers.nullValue(), "nullHamcrestMatcherCompare"},
-            new Object[] {"foo", Matchers.allOf(Matchers.not(Matchers.isEmptyString()), Matchers.equalTo("foo")), "hamcrestMatcherCompare"}
+            new Object[] {new FooValueMatcher.FooValue("foo"), new FooValueMatcher.FooValue("foo"), "fooMatcherCompare"},
+            new Object[] {null, "@assertThat(nullValue())@", "nullValidationMatcherCompare"}
         };
     }
 
@@ -106,8 +104,8 @@ public class ValidationUtilsTest extends UnitTestSupport {
                 new Object[] {null, 5, "nullCompare"},
                 new Object[] {"foo", null, "nullCompare"},
                 new Object[] {null, "bar", "nullCompare"},
-                new Object[] {null, "@assertThat(notNullValue())@", "nullValidationMatcherCompare"},
-                new Object[] {"foo", Matchers.allOf(Matchers.isEmptyString(), Matchers.equalTo("bar")), "hamcrestMatcherCompare"}
+                new Object[] {new FooValueMatcher.FooValue("foo"), new FooValueMatcher.FooValue("bar"), "fooMatcherCompare"},
+                new Object[] {null, "@assertThat(notNullValue())@", "nullValidationMatcherCompare"}
         };
     }
 
@@ -129,4 +127,5 @@ public class ValidationUtilsTest extends UnitTestSupport {
             }
         }
     }
+
 }

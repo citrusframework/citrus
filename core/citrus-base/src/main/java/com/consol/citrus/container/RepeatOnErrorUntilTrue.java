@@ -19,7 +19,6 @@ package com.consol.citrus.container;
 import com.consol.citrus.AbstractIteratingContainerBuilder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,16 +132,6 @@ public class RepeatOnErrorUntilTrue extends AbstractIteratingActionContainer {
          */
         public Builder until(IteratingConditionExpression condition) {
             condition(condition);
-            return this;
-        }
-
-        /**
-         * Adds a Hamcrest condition expression to this iterate container.
-         * @param conditionMatcher
-         * @return
-         */
-        public Builder until(Matcher conditionMatcher) {
-            condition(new HamcrestConditionExpression(conditionMatcher));
             return this;
         }
 

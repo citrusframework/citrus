@@ -23,6 +23,7 @@ import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 
 /**
@@ -67,7 +68,7 @@ public class IterateJavaIT extends TestNGCitrusTestDesigner {
         applyBehavior(new AbstractTestBehavior() {
             @Override
             public void apply() {
-                iterate().condition(lessThan(3)).actions(echo("index is: ${i}"));
+                iterate().condition(assertThat(lessThan(3))).actions(echo("index is: ${i}"));
             }
         });
     }

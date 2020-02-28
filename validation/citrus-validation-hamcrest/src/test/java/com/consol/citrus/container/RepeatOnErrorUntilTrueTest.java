@@ -17,13 +17,14 @@
 package com.consol.citrus.container;
 
 import com.consol.citrus.TestAction;
-import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -31,37 +32,16 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Christoph Deppisch
  */
-public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
+public class RepeatOnErrorUntilTrueTest extends AbstractTestNGUnitTest {
 
     private TestAction action = Mockito.mock(TestAction.class);
 
-    @Test(dataProvider = "expressionProvider")
-    public void testSuccessOnFirstIteration(String expression) {
-        reset(action);
-
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
-                .condition(expression)
-                .index("i")
-                .actions(() -> action)
-                .build();
-        repeat.execute(context);
-        verify(action).execute(context);
-    }
-
-    @DataProvider
-    public Object[][] expressionProvider() {
-        return new Object[][] {
-                new Object[] {"i = 5"},
-                new Object[] {"@greaterThan(4)@"}
-        };
-    }
-
     @Test(expectedExceptions=CitrusRuntimeException.class)
-    public void testRepeatOnErrorNoSuccess() {
+    public void testRepeatOnErrorNoSuccessHamcrestConditionExpression() {
         reset(action);
 
         RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
-                .condition("i = 5")
+                .condition(assertThat(is(5)))
                 .index("i")
                 .autoSleep(0L)
                 .actions(() -> action, new FailAction.Builder())
@@ -69,19 +49,4 @@ public class RepeatOnErrorUntilTrueTest extends UnitTestSupport {
         repeat.execute(context);
         verify(action, times(4)).execute(context);
     }
-
-    @Test(expectedExceptions=CitrusRuntimeException.class)
-    public void testRepeatOnErrorNoSuccessConditionExpression() {
-        reset(action);
-
-        RepeatOnErrorUntilTrue repeat = new RepeatOnErrorUntilTrue.Builder()
-                .condition((index, context) -> index == 5)
-                .index("i")
-                .autoSleep(0L)
-                .actions(() -> action, new FailAction.Builder())
-                .build();
-        repeat.execute(context);
-        verify(action, times(4)).execute(context);
-    }
-
 }

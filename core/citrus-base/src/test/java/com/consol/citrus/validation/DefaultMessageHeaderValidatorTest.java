@@ -23,9 +23,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import org.testng.annotations.Test;
 
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.startsWith;
-
 /**
  * @author Christoph Deppisch
  * @since 2.7
@@ -115,19 +112,6 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }
 
-    @Test
-    public void testValidateMessageHeadersHamcrestMatcherSupport() throws Exception {
-        Message receivedMessage = new DefaultMessage("Hello World!")
-                .setHeader("foo", "foo_test")
-                .setHeader("additional", "additional")
-                .setHeader("bar", "bar_test");
-        Message controlMessage = new DefaultMessage("Hello World!")
-                .setHeader("foo", startsWith("foo"))
-                .setHeader("bar", endsWith("_test"));
-
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-    }
-
     @Test(expectedExceptions = ValidationException.class)
     public void testValidateError() throws Exception {
         Message receivedMessage = new DefaultMessage("Hello World!")
@@ -136,18 +120,6 @@ public class DefaultMessageHeaderValidatorTest extends UnitTestSupport {
         Message controlMessage = new DefaultMessage("Hello World!")
                 .setHeader("foo", "foo_test")
                 .setHeader("bar", "bar_test");
-
-        validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testValidateHamcrestMatcherError() throws Exception {
-        Message receivedMessage = new DefaultMessage("Hello World!")
-                .setHeader("foo", "foo_test")
-                .setHeader("bar", "bar_test");
-        Message controlMessage = new DefaultMessage("Hello World!")
-                .setHeader("foo", startsWith("bar"))
-                .setHeader("bar", endsWith("_test"));
 
         validator.validateMessage(receivedMessage, controlMessage, context, validationContext);
     }

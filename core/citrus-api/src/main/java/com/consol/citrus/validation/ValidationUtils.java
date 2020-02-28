@@ -16,7 +16,10 @@
 
 package com.consol.citrus.validation;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -24,7 +27,6 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.apache.commons.codec.binary.Base64;
-import org.hamcrest.Matcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -35,6 +37,9 @@ import org.springframework.util.StringUtils;
  * @since 1.3
  */
 public abstract class ValidationUtils {
+
+    /** Set of default value matchers located via resource path lookup */
+    private static final Map<String, ValueMatcher> DEFAULT_VALUE_MATCHERS = ValueMatcher.lookup();
 
     /**
      * Prevent instantiation.
@@ -59,8 +64,9 @@ public abstract class ValidationUtils {
                         ValidationUtils.buildValueMismatchErrorMessage(
                                 "Values not equal for element '" + pathExpression + "'", null, actualValue));
 
-                if (expectedValue instanceof Matcher) {
-                    Assert.isTrue(((Matcher) expectedValue).matches(actualValue),
+                Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
+                if (matcher.isPresent()) {
+                    Assert.isTrue(matcher.get().validate(actualValue, expectedValue, context),
                             ValidationUtils.buildValueMismatchErrorMessage(
                                     "Values not matching for element '" + pathExpression + "'", expectedValue, actualValue));
                     return;
@@ -118,8 +124,9 @@ public abstract class ValidationUtils {
                     }
                 }
             } else if (expectedValue != null) {
-                if (expectedValue instanceof Matcher) {
-                    Assert.isTrue(((Matcher) expectedValue).matches(null),
+                Optional<ValueMatcher> matcher = getValueMatcher(expectedValue, context);
+                if (matcher.isPresent()) {
+                    Assert.isTrue(matcher.get().validate(actualValue, expectedValue, context),
                             ValidationUtils.buildValueMismatchErrorMessage(
                                     "Values not matching for element '" + pathExpression + "'", expectedValue, null));
                 } else if (expectedValue instanceof String) {
@@ -143,6 +150,27 @@ public abstract class ValidationUtils {
         } catch (IllegalArgumentException | AssertionError e) {
             throw new ValidationException("Validation failed:", e);
         }
+    }
+
+    /**
+     * Combines value matchers from multiple sources. Includes validators coming from reference resolver
+     * and resource path lookup are added.
+     *
+     * Then pick matcher that explicitly supports the given expected value type.
+     * @param expectedValue
+     * @param context
+     * @return
+     */
+    private static Optional<ValueMatcher> getValueMatcher(Object expectedValue, TestContext context) {
+        // add validators from resource path lookup
+        Map<String, ValueMatcher> allMatchers = new HashMap<>(DEFAULT_VALUE_MATCHERS);
+
+        // add validators in reference resolver
+        allMatchers.putAll(context.getReferenceResolver().resolveAll(ValueMatcher.class));
+
+        return allMatchers.values().stream()
+                .filter(matcher -> matcher.supports(expectedValue.getClass()))
+                .findFirst();
     }
 
     /**

@@ -16,14 +16,64 @@
 
 package com.consol.citrus.validation;
 
+import java.util.Map;
+import java.util.Optional;
+
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
 import com.consol.citrus.validation.context.HeaderValidationContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.6
  */
 public interface HeaderValidator {
+
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(MessageValidator.class);
+
+    /** Message validator resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/header/validator";
+
+    /** Type resolver to find custom message validators on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
+     * and instantiates those validators.
+     * @return
+     */
+    static Map<String, HeaderValidator> lookup() {
+        Map<String, HeaderValidator> validators =
+                TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
+
+        if (LOG.isDebugEnabled()) {
+            validators.forEach((k, v) -> LOG.debug(String.format("Found header validator '%s' as %s", k, v.getClass())));
+        }
+        return validators;
+    }
+
+    /**
+     * Resolves validator from resource path lookup with given validator resource name. Scans classpath for validator meta information
+     * with given name and returns instance of validator. Returns optional instead of throwing exception when no validator
+     * could be found.
+     * @param validator
+     * @return
+     */
+    static Optional<HeaderValidator> lookup(String validator) {
+        try {
+            HeaderValidator instance = TYPE_RESOLVER.resolve(validator);
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            LOG.warn(String.format("Failed to resolve header validator from resource '%s/%s'", RESOURCE_PATH, validator));
+        }
+
+        return Optional.empty();
+    }
 
     /**
      * Filter supported headers by name and value type

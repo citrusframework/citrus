@@ -24,6 +24,7 @@ import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.testng.Assert.assertEquals;
 
@@ -98,7 +99,7 @@ public class RepeatTestRunnerTest extends UnitTestSupport {
 
                 repeat().index("i")
                             .startsWith(2)
-                            .until(greaterThan(5))
+                            .until(assertThat(greaterThan(5)))
                         .actions(echo("${var}"), sleep(100), echo("${var}"));
             }
         };

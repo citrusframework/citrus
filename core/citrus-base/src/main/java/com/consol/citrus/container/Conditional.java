@@ -23,7 +23,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.BooleanExpressionParser;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,15 +145,6 @@ public class Conditional extends AbstractActionContainer {
          */
         public Builder when(ConditionExpression expression) {
             this.conditionExpression = expression;
-            return this;
-        }
-
-        /**
-         * Condition which allows execution if evaluates to true.
-         * @param expression
-         */
-        public Builder when(Object value, Matcher expression) {
-            this.conditionExpression = new HamcrestConditionExpression(expression, value);
             return this;
         }
 

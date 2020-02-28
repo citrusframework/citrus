@@ -1,9 +1,7 @@
 package com.consol.citrus;
 
 import com.consol.citrus.container.AbstractIteratingActionContainer;
-import com.consol.citrus.container.HamcrestConditionExpression;
 import com.consol.citrus.container.IteratingConditionExpression;
-import org.hamcrest.Matcher;
 
 /**
  * @author Christoph Deppisch
@@ -33,16 +31,6 @@ public abstract class AbstractIteratingContainerBuilder<T extends AbstractIterat
      */
     public S condition(IteratingConditionExpression condition) {
         this.conditionExpression = condition;
-        return self;
-    }
-
-    /**
-     * Adds a Hamcrest matcher as condition expression.
-     * @param conditionMatcher
-     * @return
-     */
-    public S condition(Matcher conditionMatcher) {
-        this.conditionExpression = new HamcrestConditionExpression(conditionMatcher);
         return self;
     }
 

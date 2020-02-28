@@ -15,12 +15,12 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>citrus-validation-hamcrest</module>
     <module>citrus-validation-json</module>
     <module>citrus-validation-xml</module>
     <module>citrus-validation-text</module>
     <module>citrus-validation-binary</module>
     <module>citrus-validation-groovy</module>
-    <module>citrus-validation-hamcrest</module>
   </modules>
 
 </project>

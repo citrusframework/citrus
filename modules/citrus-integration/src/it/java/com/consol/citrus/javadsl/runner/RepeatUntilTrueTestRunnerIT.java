@@ -21,6 +21,7 @@ import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import org.springframework.util.StringUtils;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -28,32 +29,32 @@ import static org.hamcrest.Matchers.is;
  */
 @Test
 public class RepeatUntilTrueTestRunnerIT extends TestNGCitrusTestRunner {
-    
+
     @CitrusTest
     public void repeatUntilTrueContainer() {
         variable("max", "3");
-        
+
         repeat().until("i gt citrus:randomNumber(1)").index("i")
                 .actions(echo("index is: ${i}"));
 
         repeat().until((index, context) -> index >= 5 && StringUtils.hasText(context.getVariable("max")))
                 .actions(echo("index is: ${i}"));
 
-        repeat().until(is(5))
+        repeat().until(assertThat(is(5)))
                 .actions(echo("index is: ${i}"));
-        
+
         repeat().until("i gt= 5").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         repeat().until("(i gt 5) or (i = 5)").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         repeat().until("(i gt 5) and (i gt 3)").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         repeat().until("i gt 0").index("i")
                 .actions(echo("index is: ${i}"));
-        
+
         repeat().until("${max} lt i").index("i")
                 .actions(echo("index is: ${i}"));
 

@@ -16,6 +16,8 @@
 
 package com.consol.citrus.validation;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
@@ -23,7 +25,6 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
-import org.hamcrest.Matcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -38,12 +39,14 @@ public class DefaultHeaderValidator implements HeaderValidator {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DefaultHeaderValidator.class);
 
+    /** Set of default header validators located via resource path lookup */
+    private static final Map<String, HeaderValidator> DEFAULT_VALIDATORS = HeaderValidator.lookup();
+
     @Override
     public void validateHeader(String headerName, Object receivedValue, Object controlValue, TestContext context, HeaderValidationContext validationContext) {
-        if (controlValue instanceof Matcher) {
-            Assert.isTrue(((Matcher) controlValue).matches(receivedValue),
-                    ValidationUtils.buildValueMismatchErrorMessage(
-                            "Values not matching for header '" + headerName + "'", controlValue, receivedValue));
+        Optional<HeaderValidator> validator = getHeaderValidator(headerName, controlValue, context);
+        if (validator.isPresent()) {
+            validator.get().validateHeader(headerName, receivedValue, controlValue, context, validationContext);
             return;
         }
 
@@ -84,6 +87,29 @@ public class DefaultHeaderValidator implements HeaderValidator {
 
     @Override
     public boolean supports(String headerName, Class<?> type) {
-        return true;
+        return type.isInstance(String.class) || type.isPrimitive();
+    }
+
+    /**
+     * Combines header validators from multiple sources. Includes validators coming from reference resolver
+     * and resource path lookup are added.
+     *
+     * Then pick validator that explicitly supports the given header name or control value and return as optional.
+     * @param headerName
+     * @param controlValue
+     * @param context
+     * @return
+     */
+    private static Optional<HeaderValidator> getHeaderValidator(String headerName, Object controlValue, TestContext context) {
+        // add validators from resource path lookup
+        Map<String, HeaderValidator> allValidators = new HashMap<>(DEFAULT_VALIDATORS);
+
+        // add validators in reference resolver
+        allValidators.putAll(context.getReferenceResolver().resolveAll(HeaderValidator.class));
+
+        return allValidators.values().stream()
+                .filter(validator -> !(validator instanceof DefaultHeaderValidator))
+                .filter(validator -> validator.supports(headerName, Optional.ofNullable(controlValue).map(Object::getClass).orElse(null)))
+                .findFirst();
     }
 }

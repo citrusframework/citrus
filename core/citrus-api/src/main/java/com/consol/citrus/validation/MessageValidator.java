@@ -76,7 +76,7 @@ public interface MessageValidator<T extends ValidationContext> {
             MessageValidator<? extends ValidationMatcher> instance = TYPE_RESOLVER.resolve(validator);
             return Optional.of(instance);
         } catch (CitrusRuntimeException e) {
-            LOG.warn(String.format("Failed to resolve validator with from resource '%s/%s'", RESOURCE_PATH, validator));
+            LOG.warn(String.format("Failed to resolve validator from resource '%s/%s'", RESOURCE_PATH, validator));
         }
 
         return Optional.empty();

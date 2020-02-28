@@ -24,6 +24,7 @@ import com.consol.citrus.dsl.UnitTestSupport;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.container.HamcrestConditionExpression.assertThat;
 import static org.hamcrest.Matchers.lessThan;
 import static org.testng.Assert.assertEquals;
 
@@ -129,7 +130,7 @@ public class IterateTestRunnerTest extends UnitTestSupport {
             public void execute() {
                 iterate().startsWith(0)
                             .step(1)
-                            .condition(lessThan(5))
+                            .condition(assertThat(lessThan(5)))
                     .actions(createVariable("index", "${i}"));
             }
         };
