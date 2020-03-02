@@ -331,45 +331,6 @@
     <citrus-camel:sync-endpoint id="defaultRouteEndpoint" camel-context="camelContext"
                                 endpoint-uri="direct:default-route" timeout="1000"/>
 
-    <!-- SSH setting -->
-    <citrus-ssh:server id="sshServer"
-         allowed-key-path="classpath:com/consol/citrus/ssh/test_user_pub.pem"
-         user="roland"
-         port="9072"
-         auto-start="true"
-         endpoint-adapter="sshEndpointAdapter"/>
-
-    <citrus-jms:endpoint-adapter id="sshEndpointAdapter"
-         destination-name="${jms.queue.ssh.request.forward}"
-         reply-destination-name="${jms.queue.ssh.request.ack}"
-         connection-factory="connectionFactory"
-         timeout="2000"/>
-
-    <citrus-ssh:client id="sshClient"
-         port="9072"
-         user="roland"
-         private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
-         strict-host-checking="false"
-         host="localhost"/>
-
-    <citrus-ssh:client id="sshClientWithWrongPrivateKey"
-         port="9072"
-         user="roland"
-         private-key-path="classpath:com/consol/citrus/ssh/wrong_user.priv"
-         private-key-password="consol"
-         strict-host-checking="false"
-         host="localhost"/>
-
-    <citrus-ssh:client id="sshClientWithWrongUser"
-         port="9072"
-         user="blubber"
-         private-key-path="classpath:com/consol/citrus/ssh/test_user.priv"
-         strict-host-checking="false"
-         host="localhost"/>
-
-    <citrus-jms:endpoint id="sshRequestReceiver" destination-name="${jms.queue.ssh.request.forward}"/>
-    <citrus-jms:endpoint id="sshResponseSender" destination-name="${jms.queue.ssh.request.ack}"/>
-
     <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
