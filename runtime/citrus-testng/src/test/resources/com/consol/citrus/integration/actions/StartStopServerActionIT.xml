@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+              http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="StartStopServerActionIT">
+        <meta-info>
+          <author>Christoph Deppisch</author>
+          <creationdate>2015-04-13</creationdate>
+          <status>FINAL</status>
+          <last-updated-by>Christoph Deppisch</last-updated-by>
+          <last-updated-on>2015-04-13T00:00:00</last-updated-on>
+        </meta-info>
+
+        <description>Test calls starts and stops server instance during test runtime.</description>
+
+        <actions>
+            <echo>
+                <message>Test 1: Start server instance</message>
+            </echo>
+
+            <start>
+                <servers>
+                    <server name="simpleServer"/>
+                </servers>
+            </start>
+
+            <echo>
+                <message>Receive server start event</message>
+            </echo>
+
+            <receive endpoint="statusEndpoint">
+                <message type="plaintext">
+                    <data>SERVER STARTED</data>
+                </message>
+            </receive>
+
+            <echo>
+                <message>Test 1: Stop server instance</message>
+            </echo>
+
+            <stop>
+                <servers>
+                    <server name="simpleServer"/>
+                </servers>
+            </stop>
+
+            <echo>
+                <message>Receive server stop event</message>
+            </echo>
+
+            <receive endpoint="statusEndpoint">
+                <message type="plaintext">
+                    <data>SERVER STOPPED</data>
+                </message>
+            </receive>
+
+            <echo>
+                <message>Test 2: Start server instance</message>
+            </echo>
+
+            <start server="simpleServer"/>
+
+            <echo>
+                <message>Receive server start event</message>
+            </echo>
+
+            <receive endpoint="statusEndpoint">
+                <message type="plaintext">
+                    <data>SERVER STARTED</data>
+                </message>
+            </receive>
+
+            <echo>
+                <message>Test 2: Stop server instance</message>
+            </echo>
+
+            <stop server="simpleServer"/>
+
+            <echo>
+                <message>Receive server stop event</message>
+            </echo>
+
+            <receive endpoint="statusEndpoint">
+                <message type="plaintext">
+                    <data>SERVER STOPPED</data>
+                </message>
+            </receive>
+        </actions>
+    </testcase>
+
+</spring:beans>

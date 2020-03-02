@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+  <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
+
+  <citrus:global-variables>
+      <citrus:variable name="project.name" value="Citrus Integration Testing"/>
+      <citrus:variable name="globalRandomNumber1" value="citrus:randomNumber(5)"/>
+      <citrus:variable name="globalRandomNumber2" value="citrus:randomNumber(5)"/>
+      <citrus:variable name="globalSum1" value="citrus:sum('${globalRandomNumber1}', '${globalRandomNumber2}')"/>
+      <citrus:variable name="globalSum2" value="citrus:sum('${globalRandomNumber1}', '${globalRandomNumber2}')"/>
+      <citrus:file path="classpath:citrus-variable.properties"/>
+  </citrus:global-variables>
+
+  <!-- Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <!-- JDBC data sources -->
+  <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+      <property name="driverClassName">
+          <value>${jdbc.driver}</value>
+      </property>
+      <property name="url">
+          <value>${jdbc.url}</value>
+      </property>
+      <property name="username">
+          <value>${db.user}</value>
+      </property>
+      <property name="password">
+          <value>${db.password}</value>
+      </property>
+      <property name="initialSize">
+          <value>1</value>
+      </property>
+      <property name="maxActive">
+          <value>5</value>
+      </property>
+      <property name="maxIdle">
+          <value>2</value>
+      </property>
+  </bean>
+
+  <bean id="testTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+    <constructor-arg ref="testDataSource"/>
+  </bean>
+
+  <!-- Simple server implementation with status event channel -->
+  <bean id="simpleServer" class="com.consol.citrus.integration.server.SimpleServer">
+    <property name="autoStart" value="false"/>
+    <property name="statusEndpoint" ref="statusEndpoint"/>
+  </bean>
+
+  <citrus:direct-endpoint id="statusEndpoint"
+                          queue-name="statusQueue"/>
+
+  <citrus:queue id="statusQueue"/>
+
+  <citrus:before-suite id="defaultBeforeSuite">
+    <citrus:actions>
+      <citrus-test:sql datasource="testDataSource">
+        <citrus-test:statement>CREATE TABLE ORDERS (ORDER_ID integer, REQUEST_TAG varchar(250), CONVERSATION_ID  varchar(250), CREATION_DATE  varchar(250), DESCRIPTION varchar(250))</citrus-test:statement>
+        <citrus-test:statement>CREATE TABLE CUSTOMERS (CUSTOMER_ID integer, NAME varchar(250), DESCRIPTION varchar(250))</citrus-test:statement>
+        <citrus-test:statement>CREATE TABLE ERRORS (ERROR_ID integer, DESCRIPTION varchar(250))</citrus-test:statement>
+      </citrus-test:sql>
+    </citrus:actions>
+  </citrus:before-suite>
+
+  <citrus:after-suite id="defaultAfterSuite">
+    <citrus:actions>
+      <citrus-test:sql datasource="testDataSource">
+        <citrus-test:statement>DROP TABLE ORDERS</citrus-test:statement>
+        <citrus-test:statement>DROP TABLE CUSTOMERS</citrus-test:statement>
+        <citrus-test:statement>DROP TABLE ERRORS</citrus-test:statement>
+      </citrus-test:sql>
+    </citrus:actions>
+  </citrus:after-suite>
+
+</beans>
