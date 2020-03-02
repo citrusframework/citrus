@@ -483,15 +483,6 @@
                        server-url="platform"
                        timeout="10000"/>
 
-    <!-- Citrus mail components -->
-    <citrus-mail:client id="mailMessageSender"
-         host="localhost"
-         port="25025"/>
-
-    <citrus-mail:server id="smtpMailServer"
-         port="25025"
-         auto-start="true"/>
-
     <!-- Sample data dictionary for hello service messages -->
     <citrus:xml-data-dictionary id="helloServiceDataDictionary" global-scope="false">
       <citrus:mappings>

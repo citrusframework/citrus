@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.mail;
+package com.consol.citrus.mail.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
