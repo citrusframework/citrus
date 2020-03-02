@@ -54,4 +54,14 @@
                            channel="helloSyncRequests"
                            timeout="${default.timeout}"/>
 
+  <citrus-si:channel-endpoint id="greetingEndpoint" channel="greetings"/>
+
+  <citrus-si:channel-endpoint id="channelRequestSender" channel="greetings"/>
+
+  <citrus-si:channel-endpoint id="channelResponseReceiver"
+                              channel="greetings"
+                              timeout="5000"/>
+
+  <citrus-si:channel id="greetings" capacity="5"/>
+
 </beans>
