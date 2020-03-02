@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:ws="http://www.citrusframework.org/schema/ws/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/ws/testcase http://www.citrusframework.org/schema/ws/testcase/citrus-ws-testcase.xsd">
+  <testcase name="SoapRestDocsIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2018-01-11</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2018-01-11T00:00:00</last-updated-on>
+    </meta-info>
+
+    <actions>
+      <ws:send endpoint="soapRestDocInterceptorClient">
+        <message>
+          <data>
+            <![CDATA[
+              <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>1234567890</ns0:MessageId>
+                <ns0:CorrelationId>1000000001</ns0:CorrelationId>
+                <ns0:User>User</ns0:User>
+                <ns0:Text>Hello Citrus</ns0:Text>
+              </ns0:HelloRequest>
+            ]]>
+          </data>
+        </message>
+      </ws:send>
+
+      <ws:receive endpoint="soapRestDocInterceptorClient">
+        <message>
+          <data>
+            <![CDATA[
+              <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>1234567890</ns0:MessageId>
+                <ns0:CorrelationId>1000000001</ns0:CorrelationId>
+                <ns0:User>WebServer</ns0:User>
+                <ns0:Text>Hello User</ns0:Text>
+              </ns0:HelloResponse>
+            ]]>
+          </data>
+        </message>
+      </ws:receive>
+
+      <ws:send endpoint="soapRestDocClient">
+        <message>
+          <data>
+            <![CDATA[
+              <ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>1234567890</ns0:MessageId>
+                <ns0:CorrelationId>1000000001</ns0:CorrelationId>
+                <ns0:User>User</ns0:User>
+                <ns0:Text>Hello Citrus</ns0:Text>
+              </ns0:HelloRequest>
+            ]]>
+          </data>
+        </message>
+      </ws:send>
+
+      <ws:receive endpoint="soapRestDocClient">
+        <message>
+          <data>
+            <![CDATA[
+              <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                <ns0:MessageId>1234567890</ns0:MessageId>
+                <ns0:CorrelationId>1000000001</ns0:CorrelationId>
+                <ns0:User>WebServer</ns0:User>
+                <ns0:Text>Hello User</ns0:Text>
+              </ns0:HelloResponse>
+            ]]>
+          </data>
+        </message>
+      </ws:receive>
+    </actions>
+  </testcase>
+</spring:beans>

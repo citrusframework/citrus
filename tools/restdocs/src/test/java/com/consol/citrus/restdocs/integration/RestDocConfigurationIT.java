@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.restdocs;
+package com.consol.citrus.restdocs.integration;
+
+import java.util.Arrays;
 
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
@@ -26,11 +28,10 @@ import com.consol.citrus.restdocs.http.RestDocClientInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.ManualRestDocumentation;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
 
 import static com.consol.citrus.restdocs.http.CitrusRestDocsSupport.restDocsConfigurer;
 import static com.consol.citrus.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
@@ -53,9 +54,9 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
 
         httpClient = CitrusEndpoints.http()
                                     .client()
-                                    .requestUrl("http://localhost:8073/test")
+                                    .requestUrl("http://localhost:11080/hello")
                                     .requestMethod(HttpMethod.POST)
-                                    .contentType("text/xml")
+                                    .contentType(MediaType.APPLICATION_XML_VALUE)
                                     .interceptors(Arrays.asList(restDocConfigurer, restDocInterceptor))
                                     .build();
 
@@ -68,15 +69,23 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
         http().client(httpClient)
                 .send()
                 .post()
-                .payload("<testRequestMessage>" +
-                            "<text>Hello HttpServer</text>" +
-                        "</testRequestMessage>");
+                .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                    "<MessageId>1234567890</MessageId>" +
+                    "<CorrelationId>1000000001</CorrelationId>" +
+                    "<User>User</User>" +
+                    "<Text>Hello Citrus</Text>" +
+                "</HelloRequest>")
+                .header("Operation", "sayHello");
 
         http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
-                .payload("<testResponseMessage>" +
-                            "<text>Hello TestFramework</text>" +
-                        "</testResponseMessage>");
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                    "<MessageId>1234567890</MessageId>" +
+                    "<CorrelationId>1000000001</CorrelationId>" +
+                    "<User>HelloService</User>" +
+                    "<Text>Hello User</Text>" +
+                "</HelloResponse>")
+                .header("Operation", "sayHello");
     }
 }

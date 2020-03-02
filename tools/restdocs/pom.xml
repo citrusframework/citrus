@@ -50,6 +50,24 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-testng</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-http</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ws</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-validation-xml</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>

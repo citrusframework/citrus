@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
+       xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
+       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+                         http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+                         http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
+                         http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
+                         http://www.citrusframework.org/schema/restdocs/config http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd">
+
+  <!-- Global variables -->
+  <citrus:global-variables>
+    <citrus:variable name="project.name" value="Citrus Restdocs Integration Testing"/>
+  </citrus:global-variables>
+
+  <!-- Test Listeners -->
+  <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
+
+  <!-- SOAP message endpoints -->
+  <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory"/>
+  <citrus-restdocs:documentation id="restDocSoapDocumentation" type="soap" identifier="soap-docs/{method-name}"/>
+
+  <citrus-ws:client id="soapRestDocClient"
+                    request-url="http://localhost:12080/hello"
+                    interceptors="restDocSoapDocumentation"
+                    message-factory="messageFactory"/>
+
+  <citrus-restdocs:configurer id="restDocSoapConfigurer" type="soap" output-directory="target/citrus-docs/generated-snippets"/>
+  <citrus-restdocs:client-interceptor id="restDocSoapClientInterceptor" type="soap" identifier="test-case/{method-name}"/>
+
+  <util:list id="restDocSoapInterceptors">
+    <ref bean="restDocSoapConfigurer"/>
+    <ref bean="restDocSoapClientInterceptor"/>
+  </util:list>
+
+  <citrus-ws:client id="soapRestDocInterceptorClient"
+                    request-url="http://localhost:12080/hello"
+                    interceptors="restDocSoapInterceptors"
+                    message-factory="messageFactory"/>
+
+  <citrus-ws:server id="helloSoapServer"
+                    port="12080"
+                    auto-start="true"
+                    endpoint-adapter="staticSoapResponseAdapter"
+                    resource-base="src/test/resources"/>
+
+  <citrus:static-response-adapter id="staticSoapResponseAdapter">
+    <citrus:payload>
+      <![CDATA[
+      <ns0:HelloResponse xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+        <ns0:MessageId>1234567890</ns0:MessageId>
+        <ns0:CorrelationId>1000000001</ns0:CorrelationId>
+        <ns0:User>WebServer</ns0:User>
+        <ns0:Text>Hello User</ns0:Text>
+      </ns0:HelloResponse>
+    ]]>
+    </citrus:payload>
+    <citrus:header>
+      <citrus:element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Operation" value="sayHello"/>
+      <citrus:element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Request" value="HelloRequest"/>
+      <citrus:element name="citrus_soap_action" value="sayHello"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+  <!-- Http message endpoints -->
+  <citrus-restdocs:documentation id="restDocumentation" identifier="rest-docs/{method-name}"/>
+
+  <citrus-http:client id="httpRestDocClient"
+                      request-url="http://localhost:11080/hello"
+                      request-method="POST"
+                      content-type="application/xml"
+                      interceptors="restDocumentation"/>
+
+  <citrus-restdocs:configurer id="restDocConfigurer" output-directory="target/citrus-docs/generated-snippets"/>
+  <citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="test-case/{method-name}"/>
+
+  <util:list id="restDocInterceptors">
+    <ref bean="restDocConfigurer"/>
+    <ref bean="restDocClientInterceptor"/>
+  </util:list>
+
+  <citrus-http:client id="httpRestDocInterceptorClient"
+                      request-url="http://localhost:11080/hello"
+                      interceptors="restDocInterceptors"
+                      content-type="application/xml"
+                      timeout="5000"/>
+
+  <citrus-http:server id="helloHttpServer"
+                      port="11080"
+                      auto-start="true"
+                      endpoint-adapter="staticHttpResponseAdapter"
+                      resource-base="src/test/resources"/>
+
+  <citrus:static-response-adapter id="staticHttpResponseAdapter">
+    <citrus:payload>
+      <![CDATA[
+        <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+          <MessageId>1234567890</MessageId>
+          <CorrelationId>1000000001</CorrelationId>
+          <User>HelloService</User>
+          <Text>Hello User</Text>
+        </HelloResponse>
+      ]]>
+    </citrus:payload>
+    <citrus:header>
+      <citrus:element name="Operation" value="sayHello"/>
+      <citrus:element name="citrus_http_status_code" value="200"/>
+    </citrus:header>
+  </citrus:static-response-adapter>
+
+
+</beans>

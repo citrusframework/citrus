@@ -8,8 +8,6 @@
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
        xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
-       xmlns:citrus-ssh="http://www.citrusframework.org/schema/ssh/config"
-       xmlns:citrus-mail="http://www.citrusframework.org/schema/mail/config"
        xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
        xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
@@ -26,8 +24,6 @@
            http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
-           http://www.citrusframework.org/schema/ssh/config http://www.citrusframework.org/schema/ssh/config/citrus-ssh-config.xsd
-           http://www.citrusframework.org/schema/mail/config http://www.citrusframework.org/schema/mail/config/citrus-mail-config.xsd
            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
            http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd
@@ -115,13 +111,6 @@
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
 
-    <citrus-restdocs:documentation id="restDocSoapDocumentation" type="soap" identifier="soap-docs/{method-name}"/>
-
-    <citrus-ws:client id="webServiceClient"
-         request-url="http://localhost:8071"
-         interceptors="restDocSoapDocumentation"
-         message-factory="messageFactory"/>
-
     <!-- SOAP test client -->
     <citrus-ws:client id="soapClient"
                       request-url="http://localhost:8091"/>
@@ -138,19 +127,6 @@
     <citrus-jms:endpoint id="webServiceResponseSender"
          use-object-messages="true"
          destination-name="${jms.ws.stub.response}"/>
-
-    <citrus-restdocs:configurer id="restDocSoapConfigurer" type="soap" output-directory="target/citrus-docs/generated-snippets"/>
-    <citrus-restdocs:client-interceptor id="restDocSoapClientInterceptor" type="soap" identifier="test-case/{method-name}"/>
-
-    <util:list id="restDocSoapInterceptors">
-      <ref bean="restDocSoapConfigurer"/>
-      <ref bean="restDocSoapClientInterceptor"/>
-    </util:list>
-
-    <citrus-ws:client id="webServiceHelloClient"
-         request-url="http://localhost:8071/hello"
-         interceptors="restDocSoapInterceptors"
-         message-factory="messageFactory"/>
 
     <citrus-ws:client id="webServiceFaultClient"
          request-url="http://localhost:8071/hello"
@@ -212,19 +188,10 @@
                       handle-cookies="true"
                       content-type="text/xml"/>
 
-    <citrus-restdocs:configurer id="restDocConfigurer" output-directory="target/citrus-docs/generated-snippets"/>
-    <citrus-restdocs:client-interceptor id="restDocClientInterceptor" identifier="test-case/{method-name}"/>
-
-    <util:list id="restDocInterceptors">
-      <ref bean="restDocConfigurer"/>
-      <ref bean="restDocClientInterceptor"/>
-    </util:list>
-
     <citrus-http:client id="httpClient"
          request-url="http://localhost:8072/test"
          request-method="POST"
          content-type="text/xml"
-         interceptors="restDocInterceptors"
          request-factory="basicAuthClientRequestFactory"
          actor="helloClient"/>
 
@@ -251,14 +218,6 @@
         </bean>
       </property>
     </bean>
-
-    <citrus-restdocs:documentation id="restDocumentation" identifier="rest-docs/{method-name}"/>
-
-    <citrus-http:client id="httpRestDocClient"
-         request-url="http://localhost:8073/test"
-         request-method="POST"
-         interceptors="restDocumentation"
-         content-type="text/xml"/>
 
     <citrus-http:client id="httpStandaloneClient"
          request-url="http://localhost:8073/test"

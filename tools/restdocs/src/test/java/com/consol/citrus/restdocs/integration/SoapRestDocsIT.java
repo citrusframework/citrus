@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.restdocs;
+package com.consol.citrus.restdocs.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -23,8 +23,8 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class HttpRestDocsIT extends AbstractTestNGCitrusTest {
+public class SoapRestDocsIT extends AbstractTestNGCitrusTest {
     @Test
-    @CitrusXmlTest(name = "HttpRestDocsIT")
-    public void restDocsIT() {}
+    @CitrusXmlTest(name = "SoapRestDocsIT")
+    public void soapRestDocsIT() {}
 }
