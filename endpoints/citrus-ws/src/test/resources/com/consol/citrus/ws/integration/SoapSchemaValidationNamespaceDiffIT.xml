@@ -5,14 +5,14 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
-  <testcase name="SoapSchemaValidationIT">
+  <testcase name="SoapSchemaValidationNamespaceDiffIT">
     <meta-info>
       <author>Christoph Deppisch</author>
       <creationdate>2015-10-27</creationdate>
       <status>FINAL</status>
     </meta-info>
 
-    <description>Validating SOAP message with special WSDL using imports</description>
+    <description>Validating SOAP message with special WSDL using imports. The WSDL schema and local XSD schema names are different.</description>
 
     <actions>
 
@@ -21,11 +21,11 @@
       </echo>
 
       <parallel>
-        <send endpoint="soapClient">
+        <send endpoint="echoSoapClient">
           <message>
             <data>
               <![CDATA[
-                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                   <command>hello</command>
                   <message>FOO</message>
                 </sample:sampleMessage>
@@ -35,11 +35,11 @@
         </send>
 
         <sequential>
-          <receive endpoint="soapServer">
-            <message schema-repository="sampleServiceSchemaRepository">
+          <receive endpoint="echoSoapServer">
+            <message schema-repository="sampleServiceSchemaNamespaceDiffRepository">
               <data>
                 <![CDATA[
-                  <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                  <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                     <command>hello</command>
                     <message>FOO</message>
                   </sample:sampleMessage>
@@ -48,11 +48,11 @@
             </message>
           </receive>
 
-          <send endpoint="soapServer">
+          <send endpoint="echoSoapServer">
             <message>
               <data>
                 <![CDATA[
-                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                     <response>success</response>
                     <message>BAR</message>
                   </sample:sampleMessageResponse>
@@ -63,11 +63,11 @@
         </sequential>
       </parallel>
 
-      <receive endpoint="soapClient">
-        <message schema-repository="sampleServiceSchemaRepository">
+      <receive endpoint="echoSoapClient">
+        <message schema-repository="sampleServiceSchemaNamespaceDiffRepository">
           <data>
             <![CDATA[
-              <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+              <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                 <response>success</response>
                 <message>BAR</message>
               </sample:sampleMessageResponse>
@@ -81,11 +81,11 @@
       </echo>
 
       <parallel>
-        <send endpoint="soapClient">
+        <send endpoint="echoSoapClient">
           <message>
             <data>
               <![CDATA[
-                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                   <command>hello</command>
                   <message>FOO-wrong</message>
                 </sample:sampleMessage>
@@ -97,11 +97,11 @@
         <sequential>
           <assert exception="com.consol.citrus.exceptions.ValidationException">
             <when>
-              <receive endpoint="soapServer">
-                <message schema-repository="sampleServiceSchemaRepository">
+              <receive endpoint="echoSoapServer">
+                <message schema-repository="sampleServiceSchemaNamespaceDiffRepository">
                   <data>
                     <![CDATA[
-                      <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/">
+                      <sample:sampleMessage xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                         <command>hello</command>
                         <message>FOO-wrong</message>
                       </sample:sampleMessage>
@@ -112,11 +112,11 @@
             </when>
           </assert>
 
-          <send endpoint="soapServer">
+          <send endpoint="echoSoapServer">
             <message>
               <data>
                 <![CDATA[
-                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                     <response>success</response>
                     <message>BAR-wrong</message>
                   </sample:sampleMessageResponse>
@@ -129,11 +129,11 @@
 
       <assert exception="com.consol.citrus.exceptions.ValidationException">
         <when>
-          <receive endpoint="soapClient">
-            <message schema-repository="sampleServiceSchemaRepository">
+          <receive endpoint="echoSoapClient">
+            <message schema-repository="sampleServiceSchemaNamespaceDiffRepository">
               <data>
                 <![CDATA[
-                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/">
+                  <sample:sampleMessageResponse xmlns:sample="http://www.citrusframework.org/SampleService/Commands/">
                     <response>success</response>
                     <message>BAR-wrong</message>
                   </sample:sampleMessageResponse>

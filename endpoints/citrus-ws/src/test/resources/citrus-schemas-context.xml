@@ -6,27 +6,6 @@
        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
 
-  <!-- Common settings -->
-  <bean id="schemaRepository" class="com.consol.citrus.xml.XsdSchemaRepository">
-    <property name="schemas">
-      <list>
-        <bean id="sayHelloSchema" class="org.springframework.xml.xsd.SimpleXsdSchema">
-          <property name="xsd" value="classpath:com/consol/citrus/demo/sayHello.xsd"/>
-        </bean>
-      </list>
-    </property>
-  </bean>
-
-  <citrus:schema id="helloSchema" location="classpath:com/consol/citrus/demo/sayHello.xsd" />
-  <citrus:schema id="helloSchemaExtended" location="classpath:com/consol/citrus/demo/sayHelloExtended.xsd" />
-
-  <citrus:schema-repository id="helloSchemaRepository">
-    <citrus:schemas>
-      <citrus:reference schema="helloSchema" />
-      <citrus:reference schema="helloSchemaExtended" />
-    </citrus:schemas>
-  </citrus:schema-repository>
-
   <citrus:schema-repository id="imageServiceSchemaRepository">
     <citrus:schemas>
       <citrus:schema id="imageServiceSchema" location="classpath:com/consol/citrus/schema/ImageService.wsdl" />

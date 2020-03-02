@@ -35,7 +35,7 @@
         </call-template>
 
         <sequential>
-          <ws:receive endpoint="soapServer">
+          <ws:receive endpoint="echoSoapServer">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -52,7 +52,7 @@
             </ws:attachment>
           </ws:receive>
 
-          <ws:send endpoint="soapServer">
+          <ws:send endpoint="echoSoapServer">
             <message>
               <data>
                 <![CDATA[
@@ -77,7 +77,7 @@
         </call-template>
 
         <sequential>
-          <ws:receive endpoint="soapServer">
+          <ws:receive endpoint="echoSoapServer">
             <message schema-validation="false">
               <data>
                 <![CDATA[
@@ -94,7 +94,7 @@
             </ws:attachment>
           </ws:receive>
 
-          <ws:send endpoint="soapServer">
+          <ws:send endpoint="echoSoapServer">
             <message>
               <data>
                 <![CDATA[
@@ -113,7 +113,7 @@
 
   <!-- Template to upload an image file, parameter {paramImageFile} defines the image -->
   <template name="upload-image-file" global-context="false">
-    <ws:send endpoint="soapClient" mtom-enabled="true">
+    <ws:send endpoint="echoSoapClient" mtom-enabled="true">
       <message>
         <data>
           <![CDATA[
@@ -130,7 +130,7 @@
       </ws:attachment>
     </ws:send>
 
-    <ws:receive endpoint="soapClient">
+    <ws:receive endpoint="echoSoapClient">
       <message schema-repository="imageServiceSchemaRepository">
         <data>
           <![CDATA[

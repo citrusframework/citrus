@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2010 the original author or authors.
+ * Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws;
+package com.consol.citrus.ws.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -22,10 +22,14 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2009
+ * @since 2.4
  */
-public class AssertSoapFaultIT extends AbstractTestNGCitrusTest {
+public class SoapSchemaValidationIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
-    public void AssertSoapFaultIT() {}
+    public void SoapSchemaValidationIT() {}
+
+    @Test
+    @CitrusXmlTest
+    public void SoapSchemaValidationNamespaceDiffIT() {}
 }

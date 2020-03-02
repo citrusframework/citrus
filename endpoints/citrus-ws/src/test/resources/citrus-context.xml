@@ -17,6 +17,8 @@
                          http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
                          http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
+  <import resource="citrus-schemas-context.xml"/>
+
   <context:property-placeholder location="classpath:citrus.properties"
                                 ignore-unresolvable="true"/>
 

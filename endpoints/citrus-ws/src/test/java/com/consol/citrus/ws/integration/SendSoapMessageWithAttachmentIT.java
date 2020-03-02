@@ -28,4 +28,12 @@ public class SendSoapMessageWithAttachmentIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
     public void SendSoapMessageWithAttachmentIT() {}
+
+    @Test
+    @CitrusXmlTest
+    public void SendSoapMessageWithMtomAttachmentIT() {}
+
+    @Test
+    @CitrusXmlTest
+    public void SendSoapMessageWithAttachmentInTemplateIT() {}
 }

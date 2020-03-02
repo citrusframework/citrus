@@ -39,7 +39,6 @@
            http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
 
     <import resource="classpath:com/consol/citrus/demo/hello-demo-ctx.xml"/>
-    <import resource="citrus-schemas-context.xml"/>
 
     <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
 
