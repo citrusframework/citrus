@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2011 the original author or authors.
+ * Copyright 2006-2010 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.container;
+package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -22,9 +22,10 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
+ * @since 2008
  */
-public class TemplateAdvancedIT extends AbstractTestNGCitrusTest {
+public class JmsTopic2IT extends AbstractTestNGCitrusTest {
     @Test
-    @CitrusXmlTest
-    public void TemplateAdvancedIT() {}
+    @CitrusXmlTest(name = "JmsTopic2IT")
+    public void JmsTopic2IT() {}
 }

@@ -33,14 +33,14 @@
         <message>Test 1: Send JMS request and receive async JMS response (inline CDATA payload)</message>
       </echo>
 
-      <send endpoint="helloRequestJmsMessageSender">
+      <send endpoint="helloServiceJmsEndpoint">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
         <message>
           <data>
             <![CDATA[
-               <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+               <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                  <MessageId>${messageId}</MessageId>
                  <CorrelationId>${correlationId}</CorrelationId>
                  <User>${user}</User>
@@ -55,14 +55,14 @@
         </header>
       </send>
 
-      <receive endpoint="helloResponseJmsMessageReceiver">
+      <receive endpoint="helloServiceResponseJmsEndpoint">
         <description>
           Receive asynchronous JMS response: HelloService JmsDemo -> Citrus
         </description>
         <message>
           <data>
             <![CDATA[
-              <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <MessageId>${messageId}</MessageId>
                 <CorrelationId>${correlationId}</CorrelationId>
                 <User>HelloService</User>
@@ -81,12 +81,12 @@
         <message>Test 2: Send JMS request and receive async JMS response (file resource payload)</message>
       </echo>
 
-      <send endpoint="helloRequestJmsMessageSender">
+      <send endpoint="helloServiceJmsEndpoint">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
         <message>
-          <resource file="classpath:com/consol/citrus/jms/helloRequest.xml"/>
+          <resource file="classpath:com/consol/citrus/jms/integration/helloRequest.xml"/>
         </message>
         <header>
           <element name="Operation" value="sayHello"/>
@@ -94,12 +94,12 @@
         </header>
       </send>
 
-      <receive endpoint="helloResponseJmsMessageReceiver">
+      <receive endpoint="helloServiceResponseJmsEndpoint">
         <description>
           Receive asynchronous JMS response: HelloService JmsDemo -> Citrus
         </description>
         <message>
-          <resource file="classpath:com/consol/citrus/jms/helloResponse.xml"/>
+          <resource file="classpath:com/consol/citrus/jms/integration/helloResponse.xml"/>
         </message>
         <header>
           <element name="Operation" value="sayHello"/>
@@ -111,14 +111,14 @@
         <message>Test 3: Send JMS request and receive async JMS response (JMS message selector)</message>
       </echo>
 
-      <send endpoint="helloRequestJmsMessageSender">
+      <send endpoint="helloServiceJmsEndpoint">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
         <message>
           <data>
             <![CDATA[
-              <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <MessageId>${messageIdA}</MessageId>
                 <CorrelationId>${correlationIdA}</CorrelationId>
                 <User>${user}</User>
@@ -133,14 +133,14 @@
         </header>
       </send>
 
-      <send endpoint="helloRequestJmsMessageSender">
+      <send endpoint="helloServiceJmsEndpoint">
         <description>
           Send asynchronous JMS request: Citrus -> HelloService JmsDemo
         </description>
         <message>
           <data>
             <![CDATA[
-              <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+              <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <MessageId>${messageIdB}</MessageId>
                 <CorrelationId>${correlationIdB}</CorrelationId>
                 <User>${user}</User>
@@ -155,7 +155,7 @@
         </header>
       </send>
 
-      <receive endpoint="helloResponseJmsMessageReceiver" timeout="500">
+      <receive endpoint="helloServiceResponseJmsEndpoint" timeout="500">
         <description>
           Receive second JMS response first: HelloService JmsDemo -> Citrus
         </description>
@@ -165,7 +165,7 @@
         <message>
           <data>
             <![CDATA[
-              <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <MessageId>${messageIdB}</MessageId>
                 <CorrelationId>${correlationIdB}</CorrelationId>
                 <User>HelloService</User>
@@ -180,7 +180,7 @@
         </header>
       </receive>
 
-      <receive endpoint="helloResponseJmsMessageReceiver" timeout="500">
+      <receive endpoint="helloServiceResponseJmsEndpoint" timeout="500">
         <description>
           Receive first JMS response: HelloService JmsDemo -> Citrus
         </description>
@@ -190,7 +190,7 @@
         <message>
           <data>
             <![CDATA[
-              <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+              <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                 <MessageId>${messageIdA}</MessageId>
                 <CorrelationId>${correlationIdA}</CorrelationId>
                 <User>HelloService</User>
@@ -211,7 +211,7 @@
 
       <assert exception="com.consol.citrus.exceptions.ActionTimeoutException">
         <when>
-          <receive endpoint="helloResponseJmsMessageReceiver" timeout="300">
+          <receive endpoint="helloServiceResponseJmsEndpoint" timeout="300">
             <description>
               Receive second JMS response first: HelloService JmsDemo -> Citrus
             </description>
@@ -221,7 +221,7 @@
             <message>
               <data>
                 <![CDATA[
-                  <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                  <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                     <MessageId>?</MessageId>
                     <CorrelationId>?</CorrelationId>
                     <User>HelloService</User>

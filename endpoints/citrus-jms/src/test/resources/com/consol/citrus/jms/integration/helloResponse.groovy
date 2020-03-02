@@ -1,4 +1,4 @@
-markupBuilder.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+markupBuilder.HelloResponse(xmlns: 'http://citrusframework.org/schemas/samples/HelloService.xsd'){
     MessageId('${messageId}')
     CorrelationId('${correlationId}')
     User('HelloService')

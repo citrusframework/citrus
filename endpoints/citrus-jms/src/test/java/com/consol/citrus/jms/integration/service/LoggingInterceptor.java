@@ -27,17 +27,17 @@ import org.springframework.messaging.support.ChannelInterceptorAdapter;
  */
 public class LoggingInterceptor extends ChannelInterceptorAdapter {
     private static Logger log = LoggerFactory.getLogger(LoggingInterceptor.class);
-    
+
     @Override
-    public Message preSend(Message message, MessageChannel channel) {
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {
         if (log.isDebugEnabled()) {
             log.debug(channel.toString() + ": " + message.getPayload());
         }
-        
+
         if (message.getPayload() instanceof Throwable) {
             ((Throwable)message.getPayload()).printStackTrace();
         }
-        
+
         return super.preSend(message, channel);
     }
 }

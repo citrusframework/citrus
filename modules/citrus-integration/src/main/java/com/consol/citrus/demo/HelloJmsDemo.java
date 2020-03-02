@@ -25,9 +25,9 @@ import org.springframework.core.task.TaskExecutor;
  */
 public class HelloJmsDemo implements Runnable {
     private static ClassPathXmlApplicationContext ctx;
-    
+
     private static Object contextLock = new Object();
-    
+
     public void start() {
         synchronized (contextLock) {
             if (ctx == null) {
@@ -36,7 +36,7 @@ public class HelloJmsDemo implements Runnable {
             }
         }
     }
-    
+
     public void stop() {
         synchronized (contextLock) {
             if (ctx != null) {
@@ -44,12 +44,18 @@ public class HelloJmsDemo implements Runnable {
             }
         }
     }
-    
+
     public void run() {
         HelloJmsDemo.initApplicationContext();
     }
 
     private static void initApplicationContext() {
         ctx = new ClassPathXmlApplicationContext("hello-jms-demo-context.xml", HelloJmsDemo.class);
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        Thread t = new Thread(new HelloJmsDemo());
+        t.start();
+        t.join();
     }
 }

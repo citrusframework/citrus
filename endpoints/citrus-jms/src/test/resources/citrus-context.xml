@@ -3,13 +3,15 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
+       xmlns:citrus-jms-test="http://www.citrusframework.org/schema/jms/testcase"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
-                         http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd">
+                         http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
+                         http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
+                         http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
   <import resource="classpath:citrus-activemq-context.xml"/>
   <import resource="classpath:com/consol/citrus/service/hello-service-context.xml"/>
@@ -93,6 +95,49 @@
                        durable-subscription="true"
                        pub-sub-domain="true"/>
 
+  <!-- Citrus JMS Endpoints -->
+  <citrus-jms:endpoint id="helloTopicRequestSender"
+                       destination-name="${jms.topic.hello.request}"
+                       pub-sub-domain="true"/>
+
+  <citrus-jms:endpoint id="helloTopicRequestReceiver"
+                       timeout="5000"
+                       destination-name="${jms.topic.hello.request}"
+                       pub-sub-domain="true"/>
+
+  <citrus-jms:sync-endpoint id="syncJmsTopicEndpoint"
+                            destination-name="${jms.topic.hello.sync.request}"
+                            timeout="5000"
+                            pub-sub-domain="true"/>
+
+  <citrus-jms:sync-endpoint id="syncJmsTopicSubscriberEndpoint"
+                            timeout="5000"
+                            destination-name="${jms.topic.hello.sync.request}"
+                            message-correlator="replyMessageCorrelator"
+                            pub-sub-domain="true"/>
+
+  <citrus-jms:sync-endpoint id="syncGetDateRequestSender"
+                            destination-name="${jms.queue.date.sync.request}"
+                            message-correlator="replyMessageCorrelator"
+                            timeout="5000"/>
+
+  <citrus-jms:sync-endpoint id="syncGetDateRequestReceiver"
+                            timeout="5000"
+                            destination-name="${jms.queue.date.sync.request}"
+                            message-correlator="replyMessageCorrelator"/>
+
+  <citrus-jms:endpoint id="testMessageSender" destination-name="${jms.queue.test}"/>
+
+  <citrus-jms:endpoint id="testMessageReceiver" destination-name="${jms.queue.test}"/>
+
+  <citrus-jms:endpoint id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
+
+  <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
+  <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
+  <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
+
+  <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultMessageCorrelator"/>
+
   <bean id="topicConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
     <constructor-arg>
       <bean class="org.apache.activemq.ActiveMQConnectionFactory">
@@ -102,5 +147,22 @@
       </bean>
     </constructor-arg>
   </bean>
+
+  <citrus:before-test id="defaultBeforeTest">
+    <citrus:actions>
+      <citrus-jms-test:purge-jms-queues connection-factory="connectionFactory" receive-timeout="10">
+        <citrus-jms-test:queue name="Citrus.HelloService.Request.Queue"/>
+        <citrus-jms-test:queue name="Citrus.HelloService.Response.Queue"/>
+        <citrus-jms-test:queue name="Citrus.HelloService.InOut.Queue"/>
+        <citrus-jms-test:queue name="Citrus.HelloSoapService.Request.Queue"/>
+        <citrus-jms-test:queue name="Citrus.HelloSoapService.Response.Queue"/>
+        <citrus-jms-test:queue name="${jms.queue.date.sync.request}"/>
+        <citrus-jms-test:queue name="${jms.queue.test}"/>
+        <citrus-jms-test:queue ref="testQueue1"/>
+        <citrus-jms-test:queue ref="testQueue2"/>
+        <citrus-jms-test:queue ref="testQueue3"/>
+      </citrus-jms-test:purge-jms-queues>
+    </citrus:actions>
+  </citrus:before-test>
 
 </beans>

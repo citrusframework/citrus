@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
+package com.consol.citrus.jms.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.testng.AbstractTestNGCitrusTest;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class JmsSendReceiveIIT extends AbstractJmsIT {
+public class JmsSyncSendReceiveIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
-    public void JmsSendReceiveIT() {}
+    public void JmsSyncSendReceiveIT() {}
 }

@@ -8,26 +8,26 @@
             <last-updated-by>Christoph Deppisch</last-updated-by>
             <last-updated-on>2009-09-01T00:00:00</last-updated-on>
         </meta-info>
-        
+
         <variables>
-            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
+            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
             <variable name="messageId" value="citrus:randomNumber(10)"></variable>
             <variable name="user" value="Christoph"></variable>
         </variables>
         <actions>
-            <send endpoint="helloRequestSender">
+            <send endpoint="helloServiceJmsEndpoint">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
                 <message>
                     <data>
                         <![CDATA[
-                           <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello TestFramework</Text>
-                           </HelloRequest>                              
+                           </HelloRequest>
                         ]]>
                     </data>
                 </message>
@@ -36,15 +36,15 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver" timeout="5000">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
                 <message>
                     <data>
                         <![CDATA[
-                            <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                            <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                 <MessageId>${messageId}</MessageId>
                                 <CorrelationId>${correlationId}</CorrelationId>
                                 <User>HelloService</User>
@@ -59,40 +59,40 @@
                 </header>
             </receive>
 
-            <send endpoint="helloRequestSender">
+            <send endpoint="helloServiceJmsEndpoint">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                 </description>
                 <message>
-                    <resource file="classpath:com/consol/citrus/actions/helloRequest.xml"/>
+                    <resource file="classpath:com/consol/citrus/jms/integration/helloRequest.xml"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                 </description>
                 <message>
-                    <resource file="classpath:com/consol/citrus/actions/helloResponse.xml"/>
+                    <resource file="classpath:com/consol/citrus/jms/integration/helloResponse.xml"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
-            
-            <send endpoint="helloRequestSender">
+
+            <send endpoint="helloServiceJmsEndpoint">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
-                <message>                
+                <message>
                     <builder type="groovy">
-                        markupBuilder.HelloRequest(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+                        markupBuilder.HelloRequest(xmlns: 'http://citrusframework.org/schemas/samples/HelloService.xsd'){
                             MessageId('${messageId}')
                             CorrelationId('${correlationId}')
                             User('${user}')
@@ -105,15 +105,15 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver" timeout="5000">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
                     <builder type="groovy">
-                        markupBuilder.HelloResponse(xmlns: 'http://www.consol.de/schemas/samples/sayHello.xsd'){
+                        markupBuilder.HelloResponse(xmlns: 'http://citrusframework.org/schemas/samples/HelloService.xsd'){
                             MessageId('${messageId}')
                             CorrelationId('${correlationId}')
                             User('HelloService')
@@ -127,47 +127,47 @@
                 </header>
             </receive>
 
-            <send endpoint="helloRequestSender">
+            <send endpoint="helloServiceJmsEndpoint">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
-                    <builder type="groovy" file="classpath:com/consol/citrus/actions/helloRequest.groovy"/>
+                    <builder type="groovy" file="classpath:com/consol/citrus/jms/integration/helloRequest.groovy"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver" timeout="5000">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use Groovy MarkupBuilder script for building the XML message
                 </description>
                 <message>
-                    <builder type="groovy" file="classpath:com/consol/citrus/actions/helloResponse.groovy"/>
+                    <builder type="groovy" file="classpath:com/consol/citrus/jms/integration/helloResponse.groovy"/>
                 </message>
                 <header>
                     <element name="Operation" value="sayHello"/>
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
-                        
-            <send endpoint="helloRequestSender">
+
+            <send endpoint="helloServiceJmsEndpoint">
             	<description>
             		Send asynchronous hello request: TestFramework -> HelloService
             	</description>
                 <message>
                     <data>
                         <![CDATA[
-					       <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+					       <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello TestFramework</Text>
-                           </HelloRequest>								
+                           </HelloRequest>
 						]]>
 				    </data>
                 </message>
@@ -176,8 +176,8 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver" timeout="5000">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
             		Use Groovy XmlSlurper validation script for validating the received XML message
@@ -198,20 +198,20 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
-            
-            <send endpoint="helloRequestSender">
+
+            <send endpoint="helloServiceJmsEndpoint">
             	<description>
             		Send asynchronous hello request: TestFramework -> HelloService
             	</description>
                 <message>
                     <data>
                         <![CDATA[
-					       <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+					       <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                <MessageId>${messageId}</MessageId>
                                <CorrelationId>${correlationId}</CorrelationId>
                                <User>${user}</User>
                                <Text>Hello TestFramework</Text>
-                           </HelloRequest>								
+                           </HelloRequest>
 						]]>
 				    </data>
                 </message>
@@ -220,16 +220,16 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver" timeout="5000">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
             		Use Groovy XmlSlurper validation script for validating the received XML message
                 </description>
                 <message>
                     <validate>
-                        <script type="groovy" 
-                                file="classpath:com/consol/citrus/actions/helloValidationScript.groovy"/>
+                        <script type="groovy"
+                                file="classpath:com/consol/citrus/jms/integration/helloValidationScript.groovy"/>
                     </validate>
                 </message>
                 <header>
@@ -237,15 +237,15 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
-            
-            <send endpoint="helloRequestSender">
+
+            <send endpoint="helloServiceJmsEndpoint">
                 <description>
                     Send asynchronous hello request: TestFramework -> HelloService
                     Use payload instead of data element, without CDATA area
                 </description>
                 <message>
                     <payload>
-                        <hlo:HelloRequest xmlns:hlo="http://www.consol.de/schemas/samples/sayHello.xsd">
+                        <hlo:HelloRequest xmlns:hlo="http://citrusframework.org/schemas/samples/HelloService.xsd">
                             <hlo:MessageId>${messageId}</hlo:MessageId>
                             <hlo:CorrelationId>${correlationId}</hlo:CorrelationId>
                             <hlo:User>${user}</hlo:User>
@@ -258,15 +258,15 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </send>
-            
-            <receive endpoint="helloResponseReceiver" timeout="5000">
+
+            <receive endpoint="helloServiceResponseJmsEndpoint" timeout="5000">
                 <description>
                     Receive asynchronous hello response: HelloService -> TestFramework
                     Use payload instead of data element, without CDATA area
                 </description>
                 <message>
                     <payload>
-                        <hlo:HelloResponse xmlns:hlo="http://www.consol.de/schemas/samples/sayHello.xsd">
+                        <hlo:HelloResponse xmlns:hlo="http://citrusframework.org/schemas/samples/HelloService.xsd">
                             <hlo:MessageId>${messageId}</hlo:MessageId>
                             <hlo:CorrelationId>${correlationId}</hlo:CorrelationId>
                             <hlo:User>HelloService</hlo:User>
@@ -279,7 +279,7 @@
                     <element name="CorrelationId" value="${correlationId}"/>
                 </header>
             </receive>
-            
+
             <send endpoint="testMessageSender">
                 <message>
                     <payload>
@@ -289,7 +289,7 @@
                     </payload>
                 </message>
             </send>
-            
+
             <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <data>
@@ -301,7 +301,7 @@
                     </data>
                 </message>
             </receive>
-            
+
             <send endpoint="testMessageSender">
                 <message>
                     <data>
@@ -313,7 +313,7 @@
                     </data>
                 </message>
             </send>
-            
+
             <receive endpoint="testMessageReceiver" timeout="5000">
                 <message schema-validation="false">
                     <payload>

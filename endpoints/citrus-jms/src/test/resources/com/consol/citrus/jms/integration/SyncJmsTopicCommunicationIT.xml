@@ -13,7 +13,7 @@
       JMS topic support in synchronous JMS communication.
     </description>
         <variables>
-            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>      
+            <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
             <variable name="messageId" value="citrus:randomNumber(10)"></variable>
             <variable name="user" value="Christoph"></variable>
         </variables>
@@ -28,7 +28,7 @@
                         <message>
                             <data>
                               <![CDATA[
-                                <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                     <MessageId>${messageId}</MessageId>
                                     <CorrelationId>${correlationId}</CorrelationId>
                                     <User>${user}</User>
@@ -43,7 +43,7 @@
                         </header>
                     </send>
                 </sequential>
-                
+
                 <sequential>
                     <parallel>
                         <receive endpoint="syncJmsTopicSubscriberEndpoint">
@@ -53,7 +53,7 @@
                             <message>
                                 <data>
                                     <![CDATA[
-                                      <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                      <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                           <MessageId>${messageId}</MessageId>
                                           <CorrelationId>${correlationId}</CorrelationId>
                                           <User>${user}</User>
@@ -67,7 +67,7 @@
                                 <element name="CorrelationId" value="${correlationId}"/>
                             </header>
                         </receive>
-                        
+
                         <receive endpoint="syncJmsTopicSubscriberEndpoint">
                             <description>
                                 Receive sync hello request from jms topic
@@ -75,7 +75,7 @@
                             <message>
                                 <data>
                                     <![CDATA[
-                                      <HelloRequest xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                      <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                           <MessageId>${messageId}</MessageId>
                                           <CorrelationId>${correlationId}</CorrelationId>
                                           <User>${user}</User>
@@ -90,7 +90,7 @@
                             </header>
                         </receive>
                     </parallel>
-                    
+
                     <send endpoint="syncJmsTopicSubscriberEndpoint">
                         <description>
                             Send synchronous hello response to jms reply destination
@@ -98,7 +98,7 @@
                         <message>
                             <data>
                                 <![CDATA[
-                                  <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                                  <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                                       <MessageId>${messageId}</MessageId>
                                       <CorrelationId>${correlationId}</CorrelationId>
                                       <User>HelloService</User>
@@ -111,10 +111,10 @@
                             <element name="Operation" value="sayHello"/>
                             <element name="CorrelationId" value="${correlationId}"/>
                         </header>
-                    </send> 
+                    </send>
                 </sequential>
             </parallel>
-            
+
             <receive endpoint="syncJmsTopicEndpoint">
               <description>
                 Receive sync hello response from jms reply destination
@@ -122,7 +122,7 @@
                 <message>
                     <data>
                       <![CDATA[
-                        <HelloResponse xmlns="http://www.consol.de/schemas/samples/sayHello.xsd">
+                        <HelloResponse xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
                             <MessageId>${messageId}</MessageId>
                             <CorrelationId>${correlationId}</CorrelationId>
                             <User>HelloService</User>

@@ -21,9 +21,9 @@ import javax.xml.bind.annotation.*;
 
 /**
  * <p>Java-Klasse für anonymous complex type.
- * 
+ *
  * <p>Das folgende Schemafragment gibt den erwarteten Content an, der in dieser Klasse enthalten ist.
- * 
+ *
  * <pre>
  * &lt;complexType>
  *   &lt;complexContent>
@@ -33,14 +33,14 @@ import javax.xml.bind.annotation.*;
  *         &lt;element name="CorrelationId" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="User" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="Text" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="Fault" type="{http://www.consol.de/schemas/samples/sayHello.xsd}FaultType" minOccurs="0"/>
+ *         &lt;element name="Fault" type="{http://citrusframework.org/schemas/samples/HelloService.xsd}FaultType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
+ *
+ *
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
@@ -66,11 +66,11 @@ public class HelloResponse {
 
     /**
      * Ruft den Wert der messageId-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getMessageId() {
         return messageId;
@@ -78,11 +78,11 @@ public class HelloResponse {
 
     /**
      * Legt den Wert der messageId-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setMessageId(String value) {
         this.messageId = value;
@@ -90,11 +90,11 @@ public class HelloResponse {
 
     /**
      * Ruft den Wert der correlationId-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getCorrelationId() {
         return correlationId;
@@ -102,11 +102,11 @@ public class HelloResponse {
 
     /**
      * Legt den Wert der correlationId-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setCorrelationId(String value) {
         this.correlationId = value;
@@ -114,11 +114,11 @@ public class HelloResponse {
 
     /**
      * Ruft den Wert der user-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getUser() {
         return user;
@@ -126,11 +126,11 @@ public class HelloResponse {
 
     /**
      * Legt den Wert der user-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setUser(String value) {
         this.user = value;
@@ -138,11 +138,11 @@ public class HelloResponse {
 
     /**
      * Ruft den Wert der text-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link String }
-     *     
+     *
      */
     public String getText() {
         return text;
@@ -150,11 +150,11 @@ public class HelloResponse {
 
     /**
      * Legt den Wert der text-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link String }
-     *     
+     *
      */
     public void setText(String value) {
         this.text = value;
@@ -162,11 +162,11 @@ public class HelloResponse {
 
     /**
      * Ruft den Wert der fault-Eigenschaft ab.
-     * 
+     *
      * @return
      *     possible object is
      *     {@link FaultType }
-     *     
+     *
      */
     public FaultType getFault() {
         return fault;
@@ -174,11 +174,11 @@ public class HelloResponse {
 
     /**
      * Legt den Wert der fault-Eigenschaft fest.
-     * 
+     *
      * @param value
      *     allowed object is
      *     {@link FaultType }
-     *     
+     *
      */
     public void setFault(FaultType value) {
         this.fault = value;
