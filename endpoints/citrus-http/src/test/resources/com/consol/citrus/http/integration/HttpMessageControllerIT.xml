@@ -14,23 +14,23 @@
 			<last-updated-by>Christoph Deppisch</last-updated-by>
 			<last-updated-on>2011-10-17T00:00:00</last-updated-on>
 		</meta-info>
-		
+
         <description>
 			The Http message client sends multiple requests to REST message controller with various Http methods, query params and context path variables. Server
             side controller needs to take care on these items so tester can validate those in receiving action.
 		</description>
-		
+
         <variables>
             <variable name="id" value="123456789"/>
         </variables>
-        
+
         <actions>
             <echo>
                 <message>First request without query parameter and context path variables.</message>
             </echo>
-            
+
             <parallel>
-                <http:send-request client="httpClient" uri="http://localhost:8072">
+                <http:send-request client="httpClient" uri="http://localhost:11082">
                     <http:GET>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8"/>
                     </http:GET>
@@ -40,24 +40,24 @@
                     <http:receive-request server="httpServerRequestEndpoint">
                       <http:GET path="/" context-path="">
                         <http:headers version="HTTP/1.1" content-type="text/html" accept="application/xml;charset=UTF-8">
-                            <http:header name="Host" value="localhost:8072"/>
+                            <http:header name="Host" value="localhost:11082"/>
                         </http:headers>
                       </http:GET>
                     </http:receive-request>
                 </sequential>
             </parallel>
-            
+
             <http:receive-response client="httpClient" timeout="2000">
                 <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
             </http:receive-response>
-            
+
             <echo>
                 <message>Use context path variables.</message>
             </echo>
-            
+
             <parallel>
-                <http:send-request client="httpClient" uri="http://localhost:8072/test/user/${id}">
-                    <http:GET>
+                <http:send-request client="httpClient">
+                    <http:GET path="/user/${id}">
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8"/>
                     </http:GET>
                 </http:send-request>
@@ -66,25 +66,25 @@
                     <http:receive-request server="httpServerRequestEndpoint">
                       <http:GET path="/test/user/${id}" context-path="">
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
-                            <http:header name="Host" value="localhost:8072"/>
+                            <http:header name="Host" value="localhost:11082"/>
                         </http:headers>
                         <http:body><http:data></http:data></http:body>
                       </http:GET>
                     </http:receive-request>
                 </sequential>
             </parallel>
-            
+
             <http:receive-response client="httpClient" timeout="2000">
                 <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
             </http:receive-response>
-            
+
             <echo>
                 <message>Use query parameter and context path variables.</message>
             </echo>
-            
+
             <parallel>
-                <http:send-request client="httpClient" uri="http://localhost:8072/test/user">
-                    <http:GET>
+                <http:send-request client="httpClient">
+                    <http:GET path="/user">
                         <http:param name="id" value="${id}"/>
                         <http:param name="name" value="TestUser"/>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8"/>
@@ -97,7 +97,7 @@
                         <http:param name="id" value="${id}"/>
                         <http:param name="name" value="TestUser"/>
                         <http:headers content-type="text/html" accept="application/xml;charset=UTF-8">
-                            <http:header name="Host" value="localhost:8072"/>
+                            <http:header name="Host" value="localhost:11082"/>
                         </http:headers>
                         <http:body><http:data></http:data></http:body>
                       </http:GET>
@@ -108,7 +108,7 @@
             <http:receive-response client="httpClient" timeout="2000">
                 <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
             </http:receive-response>
-            
+
         </actions>
     </testcase>
 </spring:beans>

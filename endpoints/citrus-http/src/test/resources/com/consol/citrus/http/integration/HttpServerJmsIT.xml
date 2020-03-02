@@ -6,7 +6,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
                                   http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
-    <testcase name="HttpServerIT">
+    <testcase name="HttpServerJmsIT">
         <meta-info>
           <author>Unknown</author>
           <creationdate>2008-04-25</creationdate>
@@ -22,12 +22,12 @@
         <variables>
           <variable name="custom_header_id" value="123456789"/>
         </variables>
-    
+
         <actions>
             <echo>
                 <message>Send Http message and respond with 200 OK</message>
             </echo>
-            
+
             <parallel>
               <http:send-request client="httpClient" actor="helloClient">
                 <http:POST>
@@ -107,7 +107,7 @@
             <echo>
                 <message>Send Http request and respond with 404 status code</message>
             </echo>
-            
+
             <parallel>
                 <http:send-request client="httpClient" actor="helloClient">
                   <http:POST>
@@ -146,7 +146,7 @@
                           <http:header name="citrus_jms_messageId" variable="correlation_id"/>
                       </http:extract>
                     </http:receive-request>
-                    
+
                     <http:send-response server="httpServerResponseEndpoint" actor="helloServer">
                         <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1">
                             <http:header name="X-customHeaderId" value="${custom_header_id}"/>
@@ -159,13 +159,13 @@
                     </http:send-response>
                 </sequential>
             </parallel>
-            
+
             <http:receive-response client="httpClient" actor="helloServer">
                 <http:headers status="404" reason-phrase="NOT_FOUND" version="HTTP/1.1">
                     <http:header name="Content-Type" value="text/plain"/>
                 </http:headers>
             </http:receive-response>
-            
+
             <echo>
                 <message>Skip response and use fallback endpoint adapter</message>
             </echo>
@@ -190,7 +190,7 @@
             <http:receive-response client="httpClient" timeout="2000">
               <http:headers status="200" reason-phrase="OK" version="HTTP/1.1"/>
             </http:receive-response>
-            
+
         </actions>
     </testcase>
 </spring:beans>

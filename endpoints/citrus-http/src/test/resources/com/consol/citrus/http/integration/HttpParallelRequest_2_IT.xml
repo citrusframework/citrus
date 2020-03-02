@@ -31,7 +31,7 @@
             <message>Sending request message #${i}</message>
           </echo>
 
-          <http:send-request uri="http://localhost:8074/test?endpointName=echoHttpClient${i}" fork="true">
+          <http:send-request uri="http://localhost:12080/test?endpointName=echoHttpClient${i}" fork="true">
             <http:POST>
               <http:headers content-type="application/xml" accept="application/xml">
                 <http:header name="CustomHeaderId" value="${custom_header_id}"/>
@@ -87,7 +87,7 @@
         </iterate>
 
         <iterate index="j" condition="j lt= ${overallIterations}">
-          <http:receive-response uri="http://localhost:8074/test?endpointName=echoHttpClient${j}">
+          <http:receive-response uri="http://localhost:12080/test?endpointName=echoHttpClient${j}">
             <http:headers status="200" reason-phrase="OK" version="HTTP/1.1">
               <http:header name="CustomHeaderId" value="${custom_header_id}"/>
             </http:headers>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.http;
+package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -24,24 +24,10 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class HttpServerIT extends AbstractTestNGCitrusTest {
+public class HttpServerJmsIT extends AbstractTestNGCitrusTest {
     @Test
-    @CitrusXmlTest(name = "HttpServerIT")
-    public void serverIT() {}
+    @CitrusXmlTest(name = "HttpServerJmsIT")
+    public void serverJmsIT() {}
 
-    @Test
-    @CitrusXmlTest(name = "HttpServerStandaloneIT")
-    public void serverStandaloneIT() {}
 
-    @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_1_IT")
-    public void parallelRequestsIterateIT() {}
-
-    @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_2_IT")
-    public void parallelRequestsEndpointUriIT() {}
-
-    @Test
-    @CitrusXmlTest(name = "HttpParallelRequest_3_IT")
-    public void parallelRequestsIT() {}
 }
