@@ -14,19 +14,22 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
-
-import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
+package com.consol.citrus.junit.jupiter.integration;
 
 import java.util.stream.Stream;
+
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.junit.jupiter.CitrusBaseExtension;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
+@ExtendWith(CitrusBaseExtension.class)
 public class JUnit5AnnotationIT {
 
     @Test
@@ -43,14 +46,14 @@ public class JUnit5AnnotationIT {
     @TestFactory
     public Stream<DynamicTest> JUnit5Annotation_2_IT() {
         return Stream.of(
-                CitrusBaseExtension.dynamicTest("com.consol.citrus.actions", "EchoActionIT"),
-                CitrusBaseExtension.dynamicTest("com.consol.citrus.actions", "FailActionIT"),
-                CitrusBaseExtension.dynamicTest("com.consol.citrus.actions", "CreateVariablesIT")
+                CitrusBaseExtension.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "EchoActionIT"),
+                CitrusBaseExtension.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "FailActionIT"),
+                CitrusBaseExtension.dynamicTest("com.consol.citrus.junit.jupiter.integration.actions", "CreateVariablesIT")
         );
     }
 
     @TestFactory
     public Stream<DynamicTest> JUnit5Annotation_3_IT() {
-        return CitrusBaseExtension.packageScan("com.consol.citrus.functions");
+        return CitrusBaseExtension.packageScan("com.consol.citrus.junit.jupiter.simple");
     }
 }

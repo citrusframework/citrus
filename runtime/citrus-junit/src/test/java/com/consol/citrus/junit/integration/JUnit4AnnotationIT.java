@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.junit.integration;
 
 import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
@@ -40,12 +41,12 @@ public class JUnit4AnnotationIT extends AbstractJUnit4CitrusTest {
     }
 
     @Test
-    @CitrusXmlTest(name = { "EchoActionIT", "FailActionIT", "CreateVariablesIT" }, packageName = "com.consol.citrus.actions")
+    @CitrusXmlTest(name = { "EchoActionIT", "FailActionIT", "CreateVariablesIT" }, packageName = "com.consol.citrus.junit.integration.actions")
     public void JUnit4Annotation_2_IT() {
     }
 
     @Test
-    @CitrusXmlTest(packageScan = "com.consol.citrus.functions")
+    @CitrusXmlTest(packageScan = "com.consol.citrus.junit.simple")
     public void JUnit4Annotation_3_IT() {
     }
 

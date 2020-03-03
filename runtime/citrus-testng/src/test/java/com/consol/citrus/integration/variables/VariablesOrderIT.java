@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus;
+package com.consol.citrus.integration.variables;
 
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.testng.AbstractTestNGCitrusTest;
@@ -24,8 +24,8 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  * @since 2008
  */
-public class MetaInfoIT extends AbstractTestNGCitrusTest {
+public class VariablesOrderIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
-    public void MetaInfoIT() {}
+    public void VariablesOrderIT() {}
 }

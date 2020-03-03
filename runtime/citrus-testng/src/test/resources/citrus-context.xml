@@ -55,6 +55,11 @@
     <constructor-arg ref="testDataSource"/>
   </bean>
 
+  <citrus:direct-endpoint id="helloEndpoint"
+                          queue="helloQueue"/>
+
+  <citrus:queue id="helloQueue"/>
+
   <!-- Simple server implementation with status event channel -->
   <bean id="simpleServer" class="com.consol.citrus.integration.server.SimpleServer">
     <property name="autoStart" value="false"/>

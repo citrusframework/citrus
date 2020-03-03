@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2013 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.junit.integration;
 
+import com.consol.citrus.ShouldFailGroup;
+import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.junit.AbstractJUnit4CitrusTest;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @author Christoph Deppisch
- * @since 1.3
  */
-public class EchoActionJUnit4IT extends AbstractJUnit4CitrusTest {
-    @Test
+public class FailJUnit4IT extends AbstractJUnit4CitrusTest {
+
+    @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     public void doExecute() {
         executeTest();
     }

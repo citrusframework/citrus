@@ -16,11 +16,11 @@
     <variables>
       <variable name="variable" value="1"/>
       <variable name="first" value="${variable}"/>
-      <variable name="second" value="${first}"></variable>
-      <variable name="a" value="${variable}"></variable>
-      <variable name="one" value="1"></variable>
-      <variable name="two" value="2"></variable>
-      <variable name="twelfe" value="${one}${two}"></variable>
+      <variable name="second" value="${first}"/>
+      <variable name="a" value="${variable}"/>
+      <variable name="one" value="1"/>
+      <variable name="two" value="2"/>
+      <variable name="twelfe" value="${one}${two}"/>
     </variables>
 
     <actions>
