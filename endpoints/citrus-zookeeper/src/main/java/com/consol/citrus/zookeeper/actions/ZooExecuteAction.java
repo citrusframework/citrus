@@ -38,6 +38,8 @@ import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.zookeeper.client.ZooClient;
+import com.consol.citrus.zookeeper.command.AbstractZooCommand;
+import com.consol.citrus.zookeeper.command.CommandResultCallback;
 import com.consol.citrus.zookeeper.command.Create;
 import com.consol.citrus.zookeeper.command.Delete;
 import com.consol.citrus.zookeeper.command.Exists;
@@ -46,6 +48,7 @@ import com.consol.citrus.zookeeper.command.GetData;
 import com.consol.citrus.zookeeper.command.Info;
 import com.consol.citrus.zookeeper.command.SetData;
 import com.consol.citrus.zookeeper.command.ZooCommand;
+import com.consol.citrus.zookeeper.command.ZooResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
@@ -351,76 +354,113 @@ public class ZooExecuteAction extends AbstractTestAction {
         /**
          * Adds a create command.
          */
-        public Create create(String path, String data) {
+        public Builder create(String path, String data) {
             Create command = new Create();
             command.path(path);
             command.data(data);
             command.mode(DEFAULT_MODE);
             command.acl(DEFAULT_ACL);
-            command(command);
-            return command;
+            return command(command);
+        }
+
+        /**
+         * Sets the mode parameter.
+         * @param mode
+         * @return
+         */
+        public Builder mode(String mode) {
+            ((Create)command).mode(mode);
+            return this;
+        }
+
+        /**
+         * Sets the acl parameter.
+         * @param acl
+         * @return
+         */
+        public Builder acl(String acl) {
+            ((Create)command).acl(acl);
+            return this;
         }
 
         /**
          * Adds a delete command.
          */
-        public Delete delete(String path) {
+        public Builder delete(String path) {
             Delete command = new Delete();
             command.path(path);
             command.version(DEFAULT_VERSION);
-            command(command);
-            return command;
+            return command(command);
+        }
+
+        /**
+         * Sets the version parameter.
+         * @param version
+         * @return
+         */
+        public Builder version(int version) {
+            if (command instanceof Delete) {
+                ((Delete) command).version(version);
+            } else {
+                ((SetData) command).version(version);
+            }
+            return this;
         }
 
         /**
          * Adds an exists command.
          */
-        public Exists exists(String path) {
+        public Builder exists(String path) {
             Exists command = new Exists();
             command.path(path);
-            command(command);
-            return command;
+            return command(command);
         }
 
         /**
          * Adds an exists command.
          */
-        public GetChildren children(String path) {
+        public Builder children(String path) {
             GetChildren command = new GetChildren();
             command.path(path);
-            command(command);
-            return command;
+            return command(command);
         }
 
         /**
          * Adds a get-data command.
          */
-        public GetData get(String path) {
+        public Builder get(String path) {
             GetData command = new GetData();
             command.path(path);
-            command(command);
-            return command;
+            return command(command);
         }
 
         /**
          * Use an info command.
          */
-        public Info info() {
+        public Builder info() {
             Info command = new Info();
-            command(command);
-            return command;
+            return command(command);
         }
 
         /**
          * Adds a set-data command.
          */
-        public SetData set(String path, String data) {
+        public Builder set(String path, String data) {
             SetData command = new SetData();
             command.path(path);
             command.data(data);
             command.version(0);
-            command(command);
-            return command;
+            return command(command);
+        }
+
+        /**
+         * Adds command result callback.
+         * @param callback
+         * @return
+         */
+        public Builder validateCommandResult(CommandResultCallback<ZooResponse> callback) {
+            ((AbstractZooCommand<ZooResponse>) command).validateCommandResult(callback);
+            return this;
         }
 
         /**

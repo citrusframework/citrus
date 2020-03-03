@@ -1,16 +1,19 @@
-package com.consol.citrus.http;
+package com.consol.citrus.http.integration;
+
+import javax.servlet.http.Cookie;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
 
-import javax.servlet.http.Cookie;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
-public class HttpCookieIT extends TestNGCitrusTestRunner{
+public class HttpHandleCookiesIT extends TestNGCitrusSupport {
 
     @Autowired
     @Qualifier("echoHttpClient")
@@ -21,22 +24,26 @@ public class HttpCookieIT extends TestNGCitrusTestRunner{
     private HttpServer httpServer;
 
     @Test
+    @CitrusXmlTest(name = "HttpCookiesIT")
+    public void testCookies() {}
+
+    @Test
     @CitrusTest
-    public void testCookiesAreTransmittedToServer() {
+    public void testClientSideCookie() {
 
         //GIVEN
         final Cookie aCookie = new Cookie("a", "a");
         final Cookie bCookie = new Cookie("b", "b");
 
         //WHEN
-        http(http -> http.client(httpClient)
+        when(http().client(httpClient)
                 .send()
                 .delete()
                 .cookie(aCookie)
                 .cookie(bCookie));
 
         //THEN
-        http(http -> http.server(httpServer)
+        then(http().server(httpServer)
                 .receive()
                 .delete()
                 .cookie(aCookie)
@@ -45,31 +52,27 @@ public class HttpCookieIT extends TestNGCitrusTestRunner{
 
     @Test
     @CitrusTest
-    public void testClientProcessesReceivedCookiesCorrectly(){
+    public void testServerSideCookie(){
 
         //GIVEN
         final Cookie loginCookie = new Cookie("JSESSIONID", "asd");
 
-        http(http -> http
-                .client(httpClient)
+        given(http().client(httpClient)
                 .send()
                 .get()
                 .fork(true));
 
-        http(http -> http
-                .server(httpServer)
+        given(http().server(httpServer)
                 .receive()
                 .get());
 
-
         //WHEN
-        http(http -> http
-                .server(httpServer)
+        when(http().server(httpServer)
                 .respond()
                 .cookie(loginCookie));
 
         //THEN
-        http(http -> http.client(httpClient)
+        then(http().client(httpClient)
                 .receive()
                 .response()
                 .cookie(loginCookie));

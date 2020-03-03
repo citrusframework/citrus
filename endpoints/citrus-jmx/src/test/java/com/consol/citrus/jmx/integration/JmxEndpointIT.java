@@ -14,75 +14,77 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jmx;
+package com.consol.citrus.jmx.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.message.JmxMessage;
 import com.consol.citrus.jmx.server.JmxServer;
-import com.consol.citrus.rmi.message.RmiMessage;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
+
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
 @Test
-public class JmxEndpointIT extends TestNGCitrusTestDesigner {
+public class JmxEndpointIT extends TestNGCitrusSupport {
 
     @Autowired
-    @Qualifier("jmxClient")
+    @Qualifier("jmxHelloClient")
     private JmxClient jmxClient;
 
     @Autowired
-    @Qualifier("jmxServer")
+    @Qualifier("jmxHelloServer")
     private JmxServer jmxServer;
 
     @CitrusTest
     public void testClient() {
-        send(jmxClient)
+        when(send(jmxClient)
                 .message(JmxMessage.invocation("java.lang:type=Memory")
-                        .attribute("Verbose"));
+                        .attribute("Verbose")));
 
-        receive(jmxClient)
-                .message(JmxMessage.result(false));
+        then(receive(jmxClient)
+                .message(JmxMessage.result(false)));
     }
 
     @CitrusTest
     public void testServer() {
-        send(jmxClient)
-                .message(JmxMessage.invocation("com.consol.citrus.jmx:type=HelloBean")
+        when(send(jmxClient)
+                .message(JmxMessage.invocation("com.consol.citrus.jmx.mbean:type=HelloBean")
                             .operation("hello")
                             .parameter("Hello JMX this is cool!"))
-                .fork(true);
+                .fork(true));
 
-        receive(jmxServer)
-                .message(JmxMessage.invocation("com.consol.citrus.jmx:type=HelloBean")
+        then(receive(jmxServer)
+                .message(JmxMessage.invocation("com.consol.citrus.jmx.mbean:type=HelloBean")
                             .operation("hello")
-                            .parameter("Hello JMX this is cool!"));
+                            .parameter("Hello JMX this is cool!")));
 
-        send(jmxServer)
-                .message(JmxMessage.result("Hello from JMX!"));
+        when(send(jmxServer)
+                .message(JmxMessage.result("Hello from JMX!")));
 
-        receive(jmxClient)
-                .message(JmxMessage.result("Hello from JMX!"));
+        then(receive(jmxClient)
+                .message(JmxMessage.result("Hello from JMX!")));
 
-        send(jmxClient)
-                .message(JmxMessage.invocation("com.consol.citrus.news:name=News")
+        when(send(jmxClient)
+                .message(JmxMessage.invocation("news:name=NewsBean")
                                 .attribute("newsCount"))
-                .fork(true);
+                .fork(true));
 
-        receive(jmxServer)
-                .message(JmxMessage.invocation("com.consol.citrus.news:name=News")
-                                .attribute("newsCount"));
+        then(receive(jmxServer)
+                .message(JmxMessage.invocation("news:name=NewsBean")
+                                .attribute("newsCount")));
 
-        send(jmxServer)
-                .message(JmxMessage.result(100));
+        when(send(jmxServer)
+                .message(JmxMessage.result(100)));
 
-        receive(jmxClient)
-                .message(JmxMessage.result(100));
+        then(receive(jmxClient)
+                .message(JmxMessage.result(100)));
     }
 }

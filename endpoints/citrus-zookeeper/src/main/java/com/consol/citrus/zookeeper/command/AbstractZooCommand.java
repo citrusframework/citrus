@@ -16,21 +16,17 @@
 
 package com.consol.citrus.zookeeper.command;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.variable.VariableExtractor;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author Martin Maher
  * @since 2.5
  */
 public abstract class AbstractZooCommand<R> implements ZooCommand {
-
 
     public static final String DATA = "data";
     public static final String PATH = "path";

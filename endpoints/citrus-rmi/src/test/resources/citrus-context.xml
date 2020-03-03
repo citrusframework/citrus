@@ -4,10 +4,8 @@
        xmlns:citrus="http://www.citrusframework.org/schema/config"
        xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-                         http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
                          http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
                          http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
                          http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd">

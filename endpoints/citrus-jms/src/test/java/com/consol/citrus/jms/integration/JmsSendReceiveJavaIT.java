@@ -14,89 +14,95 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jms;
+package com.consol.citrus.jms.integration;
+
+import java.util.Collections;
 
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.container.Assert.Builder.assertException;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class JmsSendReceiveJavaIT extends AbstractJmsTestDesigner {
-    
+public class JmsSendReceiveJavaIT extends TestNGCitrusSupport {
+
     @CitrusTest
     public void JmsSendReceiveJavaIT() {
         variable("correlationId", "citrus:randomNumber(10)");
         variable("correlationIdA", "citrus:randomNumber(10)");
-        variable("correlationIdB", "citrus:randomNumber(10)");      
+        variable("correlationIdB", "citrus:randomNumber(10)");
         variable("messageId", "citrus:randomNumber(10)");
         variable("messageIdA", "citrus:randomNumber(10)");
         variable("messageIdB", "citrus:randomNumber(10)");
         variable("user", "Christoph");
-        
-        echo("Test 1: Send JMS request and receive async JMS response (inline CDATA payload)");
-        
-        send("helloRequestJmsMessageSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+
+        given(echo("Test 1: Send JMS request and receive async JMS response (inline CDATA payload)"));
+
+        when(send("helloServiceJmsEndpoint")
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageId}</MessageId>" +
                            "<CorrelationId>${correlationId}</CorrelationId>" +
                            "<User>${user}</User>" +
                            "<Text>Hello Citrus</Text>" +
                        "</HelloRequest>")
             .header("Operation", "sayHello")
-            .header("CorrelationId", "${correlationId}");
-        
-        receive("helloResponseJmsMessageReceiver")
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .header("CorrelationId", "${correlationId}"));
+
+        then(receive("helloServiceResponseJmsEndpoint")
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageId}</MessageId>" +
                             "<CorrelationId>${correlationId}</CorrelationId>" +
                             "<User>HelloService</User>" +
                             "<Text>Hello ${user}</Text>" +
                         "</HelloResponse>")
                         .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}");
-        
-        echo("Test 2: Send JMS request and receive async JMS response (file resource payload)");
-        
-        send("helloRequestJmsMessageSender")
-            .payload(new ClassPathResource("com/consol/citrus/jms/helloRequest.xml"))
+                        .header("CorrelationId", "${correlationId}"));
+
+        given(echo("Test 2: Send JMS request and receive async JMS response (file resource payload)"));
+
+        when(send("helloServiceJmsEndpoint")
+            .payload(new ClassPathResource("com/consol/citrus/jms/integration/helloRequest.xml"))
             .header("Operation", "sayHello")
-            .header("CorrelationId", "${correlationId}");
-        
-        receive("helloResponseJmsMessageReceiver")
-            .payload(new ClassPathResource("com/consol/citrus/jms/helloResponse.xml"))
+            .header("CorrelationId", "${correlationId}"));
+
+        then(receive("helloServiceResponseJmsEndpoint")
+            .payload(new ClassPathResource("com/consol/citrus/jms/integration/helloResponse.xml"))
             .header("Operation", "sayHello")
-            .header("CorrelationId", "${correlationId}");
-        
-        echo("Test 3: Send JMS request and receive async JMS response (JMS message selector)");
-        
-        send("helloRequestJmsMessageSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .header("CorrelationId", "${correlationId}"));
+
+        given(echo("Test 3: Send JMS request and receive async JMS response (JMS message selector)"));
+
+        when(send("helloServiceJmsEndpoint")
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageIdA}</MessageId>" +
                            "<CorrelationId>${correlationIdA}</CorrelationId>" +
                            "<User>${user}</User>" +
                            "<Text>Hello Citrus first time</Text>" +
                        "</HelloRequest>")
             .header("Operation", "sayHello")
-            .header("CorrelationId", "${correlationIdA}");
-        
-        send("helloRequestJmsMessageSender")
-            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .header("CorrelationId", "${correlationIdA}"));
+
+        when(send("helloServiceJmsEndpoint")
+            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                            "<MessageId>${messageIdB}</MessageId>" +
                            "<CorrelationId>${correlationIdB}</CorrelationId>" +
                            "<User>${user}</User>" +
                            "<Text>Hello Citrus second time</Text>" +
                        "</HelloRequest>")
             .header("Operation", "sayHello")
-            .header("CorrelationId", "${correlationIdB}");
-        
-        receive("helloResponseJmsMessageReceiver")
+            .header("CorrelationId", "${correlationIdB}"));
+
+        then(receive("helloServiceResponseJmsEndpoint")
             .selector(Collections.singletonMap("CorrelationId", "${correlationIdB}"))
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageIdB}</MessageId>" +
                             "<CorrelationId>${correlationIdB}</CorrelationId>" +
                             "<User>HelloService</User>" +
@@ -104,11 +110,11 @@ public class JmsSendReceiveJavaIT extends AbstractJmsTestDesigner {
                         "</HelloResponse>")
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationIdB}")
-            .timeout(500);
-        
-        receive("helloResponseJmsMessageReceiver")
+            .timeout(500));
+
+        then(receive("helloServiceResponseJmsEndpoint")
             .selector(Collections.singletonMap("CorrelationId", "${correlationIdA}"))
-            .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+            .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                             "<MessageId>${messageIdA}</MessageId>" +
                             "<CorrelationId>${correlationIdA}</CorrelationId>" +
                             "<User>HelloService</User>" +
@@ -116,21 +122,21 @@ public class JmsSendReceiveJavaIT extends AbstractJmsTestDesigner {
                         "</HelloResponse>")
             .header("Operation", "sayHello")
             .header("CorrelationId", "${correlationIdA}")
-            .timeout(500);
-        
-        echo("Test 4: Receive JMS message timeout response");
-        
-        assertException()
+            .timeout(500));
+
+        given(echo("Test 4: Receive JMS message timeout response"));
+
+        then(assertException()
             .exception(com.consol.citrus.exceptions.ActionTimeoutException.class)
-            .when(receive("helloResponseJmsMessageReceiver")
+            .when(receive("helloServiceResponseJmsEndpoint")
                 .selector(Collections.singletonMap("CorrelationId", "doesNotExist"))
-                .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                               "<MessageId>?</MessageId>" +
                               "<CorrelationId>?</CorrelationId>" +
                               "<User>HelloService</User>" +
                               "<Text>Hello ?</Text>" +
                           "</HelloResponse>")
                 .header("Operation", "sayHello")
-                .timeout(300));
+                .timeout(300)));
     }
 }

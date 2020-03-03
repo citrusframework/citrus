@@ -3,11 +3,11 @@
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:zookeeper="http://www.citrusframework.org/schema/zookeeper/testcase"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/zookeeper/testcase
                                   http://www.citrusframework.org/schema/zookeeper/testcase/citrus-zookeeper-testcase.xsd
-                                  http://www.citrusframework.org/schema/testcase 
+                                  http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
   <testcase name="ZooExecuteIT">
@@ -22,7 +22,7 @@
     <description>Test zookeeper container command execution with zookeeper client.</description>
 
     <variables>
-      <variable name="randomString" value="citrus:randomString(10)"></variable>
+      <variable name="randomString" value="citrus:randomString(10)"/>
     </variables>
     <actions>
 

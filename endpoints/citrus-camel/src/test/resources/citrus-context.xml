@@ -25,6 +25,19 @@
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
   <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
+    <route id="sampleInRoute" trace="true">
+      <from uri="direct:in-route"/>
+      <choice>
+        <when>
+          <simple>${in.header.operation} != null</simple>
+          <to uri="direct:out-route" pattern="InOut"/>
+        </when>
+        <otherwise>
+          <to uri="direct:default-route" pattern="InOut" />
+        </otherwise>
+      </choice>
+    </route>
+
     <route id="newsRoute">
       <from uri="direct:news"/>
       <to uri="log:com.consol.citrus.camel?level=INFO"/>
@@ -58,5 +71,18 @@
   <citrus-camel:sync-endpoint id="camelHelloEndpoint"
                          camel-context="camelContext"
                          endpoint-uri="seda:sayHello"/>
+
+  <citrus-camel:sync-endpoint id="inRouteEndpoint"
+                              camel-context="camelContext"
+                              endpoint-uri="direct:in-route"
+                              timeout="1000"/>
+  <citrus-camel:sync-endpoint id="outRouteEndpoint"
+                              camel-context="camelContext"
+                              endpoint-uri="direct:out-route"
+                              timeout="1000"/>
+  <citrus-camel:sync-endpoint id="defaultRouteEndpoint"
+                              camel-context="camelContext"
+                              endpoint-uri="direct:default-route"
+                              timeout="1000"/>
 
 </beans>

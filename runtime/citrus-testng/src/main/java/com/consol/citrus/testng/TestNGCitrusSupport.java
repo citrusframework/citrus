@@ -17,6 +17,7 @@
 package com.consol.citrus.testng;
 
 import java.lang.reflect.Method;
+import java.util.Date;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
@@ -27,6 +28,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.TestCaseMetaInfo;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
@@ -161,5 +163,29 @@ public class TestNGCitrusSupport extends AbstractTestNGCitrusTest implements Ghe
     @Override
     public <T extends TestAction> T run(TestActionBuilder<T> builder) {
         return testCaseBuilder.run(builder);
+    }
+
+    public <T> T variable(String name, T value) {
+        return testCaseBuilder.variable(name, value);
+    }
+
+    public void name(String name) {
+        testCaseBuilder.name(name);
+    }
+
+    public void description(String description) {
+        testCaseBuilder.description(description);
+    }
+
+    public void author(String author) {
+        testCaseBuilder.author(author);
+    }
+
+    public void status(TestCaseMetaInfo.Status status) {
+        testCaseBuilder.status(status);
+    }
+
+    public void creationDate(Date date) {
+        testCaseBuilder.creationDate(date);
     }
 }

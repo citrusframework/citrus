@@ -14,45 +14,49 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.camel;
+package com.consol.citrus.camel.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
+
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.ReceiveTimeoutAction.Builder.receiveTimeout;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class CamelRouteIT extends TestNGCitrusTestDesigner {
+public class CamelRouteIT extends TestNGCitrusSupport {
 
     @Test
     @CitrusTest(name = "CamelRoute_01_IT")
     public void camelRoute01IT() {
-        send("inRouteEndpoint")
+        when(send("inRouteEndpoint")
                 .fork(true)
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<News><Message>Citrus rocks!</Message></News>");
+                .payload("<News><Message>Citrus rocks!</Message></News>"));
 
-        receive("defaultRouteEndpoint")
+        then(receive("defaultRouteEndpoint")
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<News><Message>Citrus rocks!</Message></News>");
+                .payload("<News><Message>Citrus rocks!</Message></News>"));
     }
 
     @Test
     @CitrusTest(name = "CamelRoute_02_IT")
     public void camelRoute02IT() {
-        send("inRouteEndpoint")
+        when(send("inRouteEndpoint")
                 .fork(true)
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<News><Message>Citrus rocks!</Message></News>");
+                .payload("<News><Message>Citrus rocks!</Message></News>"));
 
-        receiveTimeout("outRouteEndpoint").timeout(500);
+        then(receiveTimeout("outRouteEndpoint").timeout(500));
 
-        receive("defaultRouteEndpoint")
+        and(receive("defaultRouteEndpoint")
                 .messageType(MessageType.PLAINTEXT)
-                .payload("<News><Message>Citrus rocks!</Message></News>");
+                .payload("<News><Message>Citrus rocks!</Message></News>"));
     }
 
 }

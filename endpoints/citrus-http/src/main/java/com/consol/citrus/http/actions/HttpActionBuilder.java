@@ -38,6 +38,14 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	private TestActionBuilder<?> delegate;
 
 	/**
+	 * Static entrance method for the Http fluent action builder.
+	 * @return
+	 */
+	public static HttpActionBuilder http() {
+		return new HttpActionBuilder();
+	}
+
+	/**
 	 * Initiate http client action.
 	 */
 	public HttpClientActionBuilder client(HttpClient httpClient) {

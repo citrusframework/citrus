@@ -14,24 +14,28 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.rmi;
+package com.consol.citrus.rmi.integration;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.rmi.client.RmiClient;
 import com.consol.citrus.rmi.message.RmiMessage;
+import com.consol.citrus.rmi.remote.HelloService;
 import com.consol.citrus.rmi.server.RmiServer;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
+
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
 @Test
-public class RmiEndpointIT extends TestNGCitrusTestDesigner {
+public class RmiEndpointJavaIT extends TestNGCitrusSupport {
 
     @Autowired
     @Qualifier("rmiNewsClient")
@@ -43,54 +47,54 @@ public class RmiEndpointIT extends TestNGCitrusTestDesigner {
 
     @CitrusTest
     public void testClient() {
-        send(rmiNewsClient)
-                .message(RmiMessage.invocation("getNews"));
+        when(send(rmiNewsClient)
+                .message(RmiMessage.invocation("getNews")));
 
-        receive(rmiNewsClient)
-                .message(RmiMessage.result("This is news from RMI!"));
+        then(receive(rmiNewsClient)
+                .message(RmiMessage.result("This is news from RMI!")));
 
-        send(rmiNewsClient)
+        when(send(rmiNewsClient)
                 .message(RmiMessage.invocation("setNews")
-                                .argument("This is breaking news!"));
+                                .argument("This is breaking news!")));
 
-        receive(rmiNewsClient)
-                .message(RmiMessage.result());
+        then(receive(rmiNewsClient)
+                .message(RmiMessage.result()));
 
-        send(rmiNewsClient)
-                .message(RmiMessage.invocation("getNews"));
+        when(send(rmiNewsClient)
+                .message(RmiMessage.invocation("getNews")));
 
-        receive(rmiNewsClient)
-                .message(RmiMessage.result("This is breaking news!"));
+        then(receive(rmiNewsClient)
+                .message(RmiMessage.result("This is breaking news!")));
 
-        doFinally().actions(
+        then(doFinally().actions(
             send(rmiNewsClient)
                     .message(RmiMessage.invocation("setNews")
                             .argument("This is news from RMI!")),
             receive(rmiNewsClient)
                     .message(RmiMessage.result())
-        );
+        ));
     }
 
     @CitrusTest
     public void testServer() {
-        send("camel:direct:hello")
+        given(send("camel:direct:hello")
                 .payload("Hello RMI this is cool!")
-                .fork(true);
+                .fork(true));
 
-        receive(rmiHelloServer)
+        when(receive(rmiHelloServer)
                 .message(RmiMessage.invocation(HelloService.class, "sayHello")
-                                    .argument("Hello RMI this is cool!"));
+                                    .argument("Hello RMI this is cool!")));
 
-        send(rmiHelloServer)
-                .message(RmiMessage.result());
+        then(send(rmiHelloServer)
+                .message(RmiMessage.result()));
 
-        send("camel:direct:helloCount")
-                .fork(true);
+        given(send("camel:direct:helloCount")
+                .fork(true));
 
-        receive(rmiHelloServer)
-                .message(RmiMessage.invocation(HelloService.class, "getHelloCount"));
+        when(receive(rmiHelloServer)
+                .message(RmiMessage.invocation(HelloService.class, "getHelloCount")));
 
-        send(rmiHelloServer)
-                .message(RmiMessage.result(100));
+        then(send(rmiHelloServer)
+                .message(RmiMessage.result(100)));
     }
 }

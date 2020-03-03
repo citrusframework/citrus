@@ -39,6 +39,10 @@
                 </http:GET>
             </http:receive-request>
 
+            <http:send-response server="echoHttpServer">
+                <http:headers status="200" reason-phrase="OK"/>
+            </http:send-response>
+
             <call-template name="httpClient">
                 <parameter name="id" value="456" />
             </call-template>
@@ -49,6 +53,9 @@
                 </http:GET>
             </http:receive-request>
 
+            <http:send-response server="echoHttpServer">
+                <http:headers status="200" reason-phrase="OK"/>
+            </http:send-response>
         </actions>
 
     </testcase>
