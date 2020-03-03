@@ -52,10 +52,10 @@
   <modules>
     <module>core</module>
     <module>utils</module>
-    <module>validation</module>
     <module>runtime</module>
-    <module>connectors</module>
+    <module>validation</module>
     <module>endpoints</module>
+    <module>connectors</module>
     <module>tools</module>
     <module>modules/citrus-java-dsl</module>
     <module>catalog</module>

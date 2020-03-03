@@ -19,6 +19,9 @@
     <citrus:variable name="project.name" value="Citrus Integration Tests"/>
   </citrus:global-variables>
 
+  <!-- Text equals message validator -->
+  <bean id="textEqualsMessageValidator" class="com.consol.citrus.cucumber.integration.TextEqualsMessageValidator"/>
+
   <citrus-si:channel-endpoint id="fooEndpoint"
                            channel="foo"/>
 

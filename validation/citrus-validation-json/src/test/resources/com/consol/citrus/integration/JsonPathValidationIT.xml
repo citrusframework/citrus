@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="JsonPathValidationIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2015-07-21</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-07-21T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>Send plain text as message payload. Here we use custom data format to send it over HTTP to a server and receive simple plain text as response.</description>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "type": "read",
+              "mbean": "java.lang:type=Memory",
+              "attribute": "HeapMemoryUsage",
+              "path": "used",
+              "lastModified": null,
+              "test_array": [
+                {
+                  "key_with_identical_values": "identical_value",
+                  "key_with_unique_values": "unique_value"
+                },
+                {
+                  "key_with_identical_values": "identical_value",
+                  "key_with_unique_values": "different_unique_value"
+                }
+              ]
+            }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <validate>
+            <json-path expression="$.type" value="read"/>
+            <json-path expression="$.mbean" value="java.lang:type=Memory"/>
+            <json-path expression="$..attribute" value="HeapMemoryUsage"/>
+            <json-path expression="$.path" value="@equalsIgnoreCase('USED')@"/>
+            <json-path expression="$.lastModified" value="@assertThat(nullValue())@"/>
+            <json-path expression="$..key_with_identical_values" value="@assertThat(hasSize(2))@"/>
+            <json-path expression="$..key_with_unique_values" value="@assertThat(hasSize(2))@"/>
+          </validate>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "timestamp" : "2011-01-01",
+              "status" : 200,
+              "request" :
+                  {
+                    "mbean" : "java.lang:type=Memory",
+                    "path" : "used",
+                    "attribute" : "HeapMemoryUsage",
+                    "type" : "read"
+                  },
+              "value" : "512",
+              "lastModified": null
+            }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "timestamp" : "@matchesDatePattern('yyyy-MM-dd')@",
+              "status" : 200,
+              "request" :
+                  {
+                    "mbean" : "java.lang:type=Memory",
+                    "path" : "@matches('u*s*e*d*')@",
+                    "attribute" : "HeapMemoryUsage",
+                    "type" : "read"
+                  },
+              "value" : "@isNumber()@",
+              "lastModified": "@assertThat(nullValue())@"
+            }
+          </data>
+          <validate>
+            <json-path expression="$.timestamp" value="@matchesDatePattern('yyyy-MM-dd')@"/>
+            <json-path expression="$.request.path" value="@matches('u*s*e*d*')@"/>
+            <json-path expression="$..attribute" value="HeapMemoryUsage"/>
+            <json-path expression="$.value" value="@isNumber()@"/>
+            <json-path expression="$.lastModified" value=""/>
+          </validate>
+        </message>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="InlineVariablesIT">
+    <meta-info>
+      <author>Unknown</author>
+      <creationdate>2008-04-25</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Unknown</last-updated-by>
+      <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      This test shows the usage of inline test variables. In xml data definition you can
+      use the escape sequence ${variable_name} to add variable values to the xml template.
+
+      The parameter "variable_name" will be the name of a valid test variable or a test function.
+    </description>
+
+    <variables>
+      <variable name="text" value="Hallo"/>
+      <variable name="text2" value="Test Framework"/>
+    </variables>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <xml>
+                <message>${text}</message>
+                <message>${text2}</message>
+                <message>citrus:concat(${text}, ' Test', ' Framework!')</message>
+                <message>citrus:upperCase('klein')</message>
+                <message>Text is: citrus:lowerCase('GROSS')</message>
+                <message>${text} ${text2}</message>
+              </xml>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="operation" value="Greetings"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <xml>
+                <message>Hallo</message>
+                <message>Test Framework</message>
+                <message>Hallo Test Framework!</message>
+                <message>KLEIN</message>
+                <message>Text is: gross</message>
+                <message>Hallo Test Framework</message>
+              </xml>
+						]]>
+          </data>
+        </message>
+        <header>
+          <element name="operation" value="Greetings"/>
+        </header>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <xml>
+                <message>Hallo</message>
+                <message>Test Framework</message>
+                <message>Hallo Test Framework!</message>
+                <message>KLEIN</message>
+                <message>Text is: gross</message>
+                <message>Hallo Test Framework</message>
+              </xml>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="operation" value="Greetings"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              <xml>
+                <message>${text}</message>
+                <message>${text2}</message>
+                <message>citrus:concat(${text}, ' Test', ' Framework!')</message>
+                <message>citrus:upperCase('klein')</message>
+                <message>Text is: citrus:lowerCase('GROSS')</message>
+                <message>${text} ${text2}</message>
+              </xml>
+            ]]>
+          </data>
+        </message>
+        <header>
+          <element name="operation" value="Greetings"/>
+        </header>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

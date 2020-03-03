@@ -37,21 +37,9 @@
         <fail message="${failMessage}"/>
       </conditional>
 
-      <conditional expression="@assertThat('${shouldExecute}', 'is(false)')@">
-        <fail message="${failMessage}"/>
-      </conditional>
-
       <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
         <when>
           <conditional expression="${number} = 10">
-            <fail message="${failMessage}"/>
-          </conditional>
-        </when>
-      </assert>
-
-      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <when>
-          <conditional expression="@assertThat('${number}', 'is(10)')@">
             <fail message="${failMessage}"/>
           </conditional>
         </when>

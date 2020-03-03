@@ -37,17 +37,6 @@
           </repeat-onerror-until-true>
         </when>
       </assert>
-
-      <assert exception="com.consol.citrus.exceptions.CitrusRuntimeException">
-        <when>
-          <repeat-onerror-until-true auto-sleep="250" condition="@assertThat(is(3))@" index="i">
-            <echo>
-              <message>${i}. Versuch: ${message}</message>
-            </echo>
-            <fail />
-          </repeat-onerror-until-true>
-        </when>
-      </assert>
     </actions>
   </testcase>
 </spring:beans>

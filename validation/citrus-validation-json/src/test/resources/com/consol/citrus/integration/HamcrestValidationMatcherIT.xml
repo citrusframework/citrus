@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:http="http://www.citrusframework.org/schema/http/testcase"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
+                                  http://www.citrusframework.org/schema/http/testcase http://www.citrusframework.org/schema/http/testcase/citrus-http-testcase.xsd">
+  <testcase name="HamcrestValidationMatcherIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2015-12-14</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2015-12-14T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Tests the @assertThat()@ validator
+    </description>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "nothing": null,
+                "boolean": false,
+                "numeric": 10,
+                "map": { "a": "b", "c": "d" },
+                "array": [ "a", "b", "c", "d" ],
+              }
+            ]]>
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            <![CDATA[
+              {
+                "nothing": "@assertThat(nullValue())@",
+                "boolean": "@assertThat(not(true))@",
+                "numeric": "@assertThat(allOf(notNullValue(), greaterThan(0), lessThan(15)))@",
+                "map": "@assertThat(hasEntry('a','b'))@",
+                "array": "@assertThat(hasItems('a','c'))@",
+              }
+            ]]>
+          </data>
+          <validate path="$.array.size()" value="@assertThat(is(4))@"/>
+          <validate path="$.array" value="@assertThat(contains(a,b,c,d))@"/>
+          <validate path="$.numeric" value="@assertThat(greaterThan(0))@" result-type="number"/>
+          <validate path="$.map" value="@assertThat(hasKey(a))@"/>
+          <validate path="$.map.keySet()" value="@assertThat(contains(a,c))@"/>
+        </message>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

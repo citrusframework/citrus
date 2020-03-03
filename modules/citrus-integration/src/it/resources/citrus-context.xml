@@ -10,15 +10,12 @@
        xmlns:citrus-camel="http://www.citrusframework.org/schema/camel/config"
        xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
        xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
-       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
        xmlns:citrus-zookeeper="http://www.citrusframework.org/schema/zookeeper/config"
        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
-           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
            http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
            http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
@@ -28,7 +25,6 @@
            http://www.citrusframework.org/schema/camel/config http://www.citrusframework.org/schema/camel/config/citrus-camel-config.xsd
            http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd
            http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd
-           http://www.citrusframework.org/schema/restdocs/config http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd
            http://www.citrusframework.org/schema/zookeeper/config http://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config.xsd
            http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd
            http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
@@ -402,19 +398,6 @@
     <citrus-jmx:client id="jmxClient"
                        server-url="platform"
                        timeout="10000"/>
-
-    <!-- Sample data dictionary for hello service messages -->
-    <citrus:xml-data-dictionary id="helloServiceDataDictionary" global-scope="false">
-      <citrus:mappings>
-        <citrus:mapping path="HelloRequest.MessageId" value="${messageId}"/>
-        <citrus:mapping path="HelloRequest.CorrelationId" value="${correlationId}"/>
-        <citrus:mapping path="HelloRequest.User" value="Christoph"/>
-        <citrus:mapping path="HelloResponse.MessageId" value="${messageId}"/>
-        <citrus:mapping path="HelloResponse.CorrelationId" value="${correlationId}"/>
-        <citrus:mapping path="HelloResponse.User" value="HelloService"/>
-        <citrus:mapping path="HelloResponse.Text" value="Hello Christoph"/>
-      </citrus:mappings>
-    </citrus:xml-data-dictionary>
 
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>

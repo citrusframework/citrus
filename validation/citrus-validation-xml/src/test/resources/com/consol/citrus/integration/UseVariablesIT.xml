@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" xmlns:spring="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="UseVariablesIT">
+        <meta-info>
+          <author>Christoph Deppisch</author>
+          <creationdate>2008-04-25</creationdate>
+          <status>FINAL</status>
+          <last-updated-by>Christoph Deppisch</last-updated-by>
+          <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+        </meta-info>
+
+        <description>
+          This test shows how to use test variables.
+
+          First of all two variables are set in the testVariables property. Note that the key defines the name of the variable,
+          that from now on is valid for the whole test. Feel free to specify any name you can think of. You only have to fit the
+          Java variable naming conventions (e.g. no whitespaces, no special characters).
+
+          Once the request tag and conversation id are defined they will be used when sending the first message. Have a look at
+          the setMessageValues of the first sending bean. Here the variables are referenced by their name and the common
+          variables prefix "${" and suffix "}". The test suite will here get the variable value and assign it to the respectiv message part.
+
+          This is the first basic usage of variables in the test writing process. The advantage of this behaviour is obvious.
+          The conversation id is defined once in the whole test case and can be referenced many times.
+
+          The second bean in this test receives a message and uses test variables to store some header values. Have a look at
+          the getHeaderValues property. Here header values of the received message are stored in new test variables. The key
+          specifies the header value to be stored. The value simply defines new variables by new names and their prefix "${" and suffix "}".
+
+          The new defined variables are now valid for the rest of the test workflow. This means, that these variables can be
+          referenced in the already known way using the variables prefix as shown in the last bean in this test.
+
+          This strategy is very usefull when storing dynamically generated transaction ids into variables and using these dynamic
+          values for later sending beans.
+        </description>
+
+        <variables>
+            <variable name="correlationId" value="citrus:randomNumber(10)"/>
+            <variable name="messageId" value="citrus:randomNumber(10)"/>
+        </variables>
+
+        <actions>
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>Christoph</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+              <message>
+                <validate path="HelloRequest.CorrelationId" value="${correlationId}"/>
+              </message>
+              <extract>
+                <header name="Operation" variable="${operation}"/>
+                <header name="CorrelationId" variable="${id}"/>
+                <message path="//:HelloRequest/:User" variable="${user}"/>
+              </extract>
+            </receive>
+
+            <echo>
+              <message>${operation}</message>
+            </echo>
+
+            <trace-variables>
+              <variable name="${id}"/>
+              <variable name="${correlationId}"/>
+              <variable name="${operation}"/>
+              <variable name="${messageId}"/>
+              <variable name="${user}"/>
+            </trace-variables>
+        </actions>
+    </testcase>
+</spring:beans>

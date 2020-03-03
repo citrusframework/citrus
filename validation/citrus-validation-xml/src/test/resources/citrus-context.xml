@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+
+    <citrus:direct-endpoint id="helloEndpoint"
+                            queue="helloQueue"/>
+
+    <citrus:queue id="helloQueue"/>
+
+    <!-- Default namespace mappings used in XPath expression evaluations -->
+    <citrus:namespace-context>
+        <citrus:namespace prefix="def" uri="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+    </citrus:namespace-context>
+
+    <!-- Xsd schema resources and definitions -->
+    <citrus:schema-repository id="helloSchemaRepository">
+        <citrus:schemas>
+            <citrus:schema id="helloSchema" location="classpath:schemas/HelloService.xsd" />
+        </citrus:schemas>
+    </citrus:schema-repository>
+
+    <!-- Sample data dictionary for hello service messages -->
+    <citrus:xml-data-dictionary id="helloServiceDataDictionary" global-scope="false">
+        <citrus:mappings>
+            <citrus:mapping path="HelloRequest.MessageId" value="${messageId}"/>
+            <citrus:mapping path="HelloRequest.CorrelationId" value="${correlationId}"/>
+            <citrus:mapping path="HelloRequest.User" value="Citrus"/>
+            <citrus:mapping path="HelloRequest.Text" value="Hello ${user}"/>
+        </citrus:mappings>
+    </citrus:xml-data-dictionary>
+
+</beans>

@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.consol.citrus.context.TestContextFactory;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.hamcrest.CustomMatcher;
 import org.hamcrest.Matcher;
@@ -130,7 +131,7 @@ public class HamcrestValidationMatcherTest extends AbstractTestNGUnitTest {
         };
     }
 
-    @Test(dataProvider = "testDataFailed", expectedExceptions = AssertionError.class)
+    @Test(dataProvider = "testDataFailed", expectedExceptions = ValidationException.class)
     public void testValidateFailed(String path, String value, List<String> params) throws Exception {
         validationMatcher.validate( path, value, params, context);
     }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+  <testcase name="JsonTextValidationIT">
+    <meta-info>
+      <author>Christoph Deppisch</author>
+      <creationdate>2010-01-12</creationdate>
+      <status>FINAL</status>
+      <last-updated-by>Christoph Deppisch</last-updated-by>
+      <last-updated-on>2010-01-12T00:00:00</last-updated-on>
+    </meta-info>
+
+    <description>
+      Send plain text as message payload. Here we use custom data format to send it over
+      HTTP to a server and receive simple plain text as response.
+    </description>
+
+    <actions>
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "type" : "read",
+              "mbean" : "java.lang:type=Memory",
+              "attribute" : "HeapMemoryUsage",
+              "path" : "used"
+            }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "type" : "read",
+              "mbean" : "java.lang:type=Memory",
+              "attribute" : "HeapMemoryUsage",
+              "path" : "@equalsIgnoreCase('USED')@"
+            }
+          </data>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "timestamp" : "2011-01-01",
+              "status" : 200,
+              "request" :
+                {
+                  "mbean" : "java.lang:type=Memory",
+                  "path" : "used",
+                  "attribute" : "HeapMemoryUsage",
+                  "type" : "read"
+                },
+              "value" : "512"
+            }
+          </data>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "timestamp" : "@matchesDatePattern('yyyy-MM-dd')@",
+              "status" : 200,
+              "request" :
+                {
+                  "mbean" : "java.lang:type=Memory",
+                  "path" : "@matches('u*s*e*d*')@",
+                  "attribute" : "HeapMemoryUsage",
+                  "type" : "read"
+                },
+              "value" : "@isNumber()@"
+            }
+          </data>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data/>
+        </message>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="json">
+          <data/>
+        </message>
+      </receive>
+
+      <send endpoint="helloEndpoint">
+        <message>
+          <data>
+            {
+              "type" : "read",
+              "mbean" : "java.lang:type=Memory",
+              "attribute" : "HeapMemoryUsage",
+              "path" : "used"
+            }
+          </data>
+        </message>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </send>
+
+      <receive endpoint="helloEndpoint">
+        <message type="json"/>
+        <header>
+          <element name="Operation" value="sayHello"/>
+        </header>
+      </receive>
+    </actions>
+  </testcase>
+</spring:beans>

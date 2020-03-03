@@ -22,18 +22,6 @@
         </echo>
       </iterate>
 
-      <iterate condition="@assertThat(lessThan(5))@" index="i">
-        <echo>
-          <message>index is: ${i}</message>
-        </echo>
-      </iterate>
-
-      <iterate condition="@assertThat('${i}', 'lessThan(5)')@" index="i">
-        <echo>
-          <message>index is: ${i}</message>
-        </echo>
-      </iterate>
-
       <iterate condition="i lt 20" index="i">
         <echo>
           <message>index is: ${i}</message>

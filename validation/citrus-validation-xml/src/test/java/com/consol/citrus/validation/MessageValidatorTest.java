@@ -18,7 +18,7 @@ public class MessageValidatorTest {
     @Test
     public void testLookup() {
         Map<String, MessageValidator<? extends ValidationContext>> validators = MessageValidator.lookup();
-        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertEquals(validators.size(), 8L);
         Assert.assertNotNull(validators.get("defaultMessageHeaderValidator"));
         Assert.assertEquals(validators.get("defaultMessageHeaderValidator").getClass(), DefaultMessageHeaderValidator.class);
         Assert.assertNotNull(validators.get("defaultXmlMessageValidator"));

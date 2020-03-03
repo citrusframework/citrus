@@ -31,9 +31,6 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
-import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
-import com.consol.citrus.validation.script.GroovyScriptMessageValidator;
-import com.consol.citrus.validation.script.GroovyXmlMessageValidator;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -130,12 +127,9 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
         Assert.assertTrue(validationMatcherRegistry.getValidationMatcherLibraries().stream().anyMatch(CustomConfig.validationMatcherLibrary::equals));
         Assert.assertTrue(validationMatcherRegistry.getValidationMatcherLibraries().stream().anyMatch(DefaultValidationMatcherLibrary.class::isInstance));
 
-        Assert.assertEquals(messageValidatorRegistry.getMessageValidators().size(), 5);
+        Assert.assertEquals(messageValidatorRegistry.getMessageValidators().size(), 2);
         Assert.assertTrue(messageValidatorRegistry.getMessageValidators().values().stream().anyMatch(CustomConfig.messageValidator::equals));
         Assert.assertTrue(messageValidatorRegistry.getMessageValidators().values().stream().anyMatch(DefaultMessageHeaderValidator.class::isInstance));
-        Assert.assertTrue(messageValidatorRegistry.getMessageValidators().values().stream().anyMatch(GroovyXmlMessageValidator.class::isInstance));
-        Assert.assertTrue(messageValidatorRegistry.getMessageValidators().values().stream().anyMatch(GroovyJsonMessageValidator.class::isInstance));
-        Assert.assertTrue(messageValidatorRegistry.getMessageValidators().values().stream().anyMatch(GroovyScriptMessageValidator.class::isInstance));
 
         Assert.assertEquals(endpointFactory.getClass(), DefaultEndpointFactory.class);
 

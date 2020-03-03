@@ -90,23 +90,30 @@ public class HamcrestValidationMatcher implements ValidationMatcher, ControlExpr
             matcherParameter[i] = VariableUtils.cutOffSingleQuotes(matcherParameter[i].trim());
         }
 
-        Matcher matcher = getMatcher(matcherName, matcherParameter, context);
-        if (noArgumentCollectionMatchers.contains(matcherName) ||
-                collectionMatchers.contains(matcherName) ||
-                matcherName.equals("everyItem")) {
-            assertThat(getCollection(matcherValue), matcher);
-        } else if (mapMatchers.contains(matcherName)) {
-            assertThat(getMap(matcherValue), matcher);
-        } else if (numericMatchers.contains(matcherName)) {
-            if (matcherName.equals("closeTo")) {
-                assertThat(Double.valueOf(matcherValue), matcher);
-            } else {
+        try {
+            Matcher matcher = getMatcher(matcherName, matcherParameter, context);
+            if (noArgumentCollectionMatchers.contains(matcherName) ||
+                    collectionMatchers.contains(matcherName) ||
+                    matcherName.equals("everyItem")) {
+                assertThat(getCollection(matcherValue), matcher);
+            } else if (mapMatchers.contains(matcherName)) {
+                assertThat(getMap(matcherValue), matcher);
+            } else if (numericMatchers.contains(matcherName)) {
+                if (matcherName.equals("closeTo")) {
+                    assertThat(Double.valueOf(matcherValue), matcher);
+                } else {
+                    assertThat(new NumericComparable(matcherValue), matcher);
+                }
+            } else if (iterableMatchers.contains(matcherName) && containsNumericMatcher(matcherExpression)) {
                 assertThat(new NumericComparable(matcherValue), matcher);
+            } else {
+                assertThat(matcherValue, matcher);
             }
-        } else if (iterableMatchers.contains(matcherName) && containsNumericMatcher(matcherExpression)) {
-            assertThat(new NumericComparable(matcherValue), matcher);
-        } else {
-            assertThat(matcherValue, matcher);
+        } catch (AssertionError e) {
+            throw new ValidationException(this.getClass().getSimpleName()
+                    + " failed for field '" + fieldName
+                    + "'. Received value is '" + value
+                    + "' and did not match '" + matcherExpression + "'.", e);
         }
     }
 

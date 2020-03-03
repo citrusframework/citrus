@@ -22,18 +22,6 @@
         </echo>
       </repeat-until-true>
 
-      <repeat-until-true condition="@assertThat(greaterThanOrEqualTo(5))@" index="i">
-        <echo>
-          <message>index is: ${i}</message>
-        </echo>
-      </repeat-until-true>
-
-      <repeat-until-true condition="@assertThat('${i}', 'greaterThanOrEqualTo(5)')@" index="i">
-        <echo>
-          <message>index is: ${i}</message>
-        </echo>
-      </repeat-until-true>
-
       <repeat-until-true condition="i gt= 5" index="i">
         <echo>
           <message>index is: ${i}</message>

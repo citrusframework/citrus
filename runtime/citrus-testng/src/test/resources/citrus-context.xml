@@ -23,6 +23,9 @@
   <!-- Listeners -->
   <bean class="com.consol.citrus.report.MessageTracingTestListener"/>
 
+  <!-- Text equals message validator -->
+  <bean id="textEqualsMessageValidator" class="com.consol.citrus.integration.TextEqualsMessageValidator"/>
+
   <!-- JDBC data sources -->
   <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
       <property name="driverClassName">

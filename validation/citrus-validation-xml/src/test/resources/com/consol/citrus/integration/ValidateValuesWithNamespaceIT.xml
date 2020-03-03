@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+    <testcase name="ValidateValuesWithNamespaceIT">
+        <meta-info>
+          <author>Christoph Deppisch</author>
+          <creationdate>2009-06-24</creationdate>
+          <status>FINAL</status>
+          <last-updated-by>Christoph Deppisch</last-updated-by>
+          <last-updated-on>2008-06-24T00:00:00</last-updated-on>
+        </meta-info>
+
+        <variables>
+            <variable name="correlationId" value="citrus:randomNumber(10)"/>
+            <variable name="messageId" value="citrus:randomNumber(10)"/>
+            <variable name="user" value="Citrus"/>
+        </variables>
+
+        <actions>
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="//ns0:HelloRequest/ns0:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns0:HelloRequest/ns0:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns0:HelloRequest/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="ns0" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="//ns1:HelloRequest/ns1:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns1:HelloRequest/ns1:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns1:HelloRequest/ns1:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="ns1" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="//:HelloRequest/:MessageId" value="${messageId}"/>
+                        <xpath expression="//:HelloRequest/:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//:HelloRequest/:Text" value="citrus:concat('Hello ', ${user})"/>
+                        <namespace prefix="" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                    </validate>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <echo>
+                <message>Now using xpath validation elements</message>
+            </echo>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="//ns0:HelloRequest/ns0:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns0:HelloRequest/ns0:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns0:HelloRequest/ns0:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="ns0" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="//ns1:HelloRequest/ns1:MessageId" value="${messageId}"/>
+                        <xpath expression="//ns1:HelloRequest/ns1:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//ns1:HelloRequest/ns1:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="ns1" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="//:HelloRequest/:MessageId" value="${messageId}"/>
+                        <xpath expression="//:HelloRequest/:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="//:HelloRequest/:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                    <namespace prefix="" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <echo>
+                <message>Test: Default namespace mapping</message>
+            </echo>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <validate>
+                        <xpath expression="/def:HelloRequest/def:MessageId" value="${messageId}"/>
+                        <xpath expression="/def:HelloRequest/def:CorrelationId" value="${correlationId}"/>
+                        <xpath expression="/def:HelloRequest/def:Text" value="citrus:concat('Hello ', ${user})"/>
+                    </validate>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+                <extract>
+                    <message path="/def:HelloRequest/def:Text" variable="extractedText"></message>
+                </extract>
+            </receive>
+
+            <groovy>
+                assert context.getVariable('extractedText') == 'Hello ${user}'
+            </groovy>
+
+            <echo>
+              <message>Test: Validation matcher value extraction</message>
+            </echo>
+
+            <send endpoint="helloEndpoint">
+              <description>
+                Send asynchronous hello request: Citrus -> HelloService
+              </description>
+              <message>
+                <data>
+                  <![CDATA[
+                     <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                         <MessageId>${messageId}</MessageId>
+                         <CorrelationId>${correlationId}</CorrelationId>
+                         <User>${user}</User>
+                         <Text>Hello Citrus</Text>
+                     </HelloRequest>
+                  ]]>
+                </data>
+              </message>
+              <header>
+                <element name="Operation" value="sayHello"/>
+                <element name="CorrelationId" value="${correlationId}"/>
+              </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+              <message>
+                <data>
+                  <![CDATA[
+                      <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                         <MessageId>${messageId}</MessageId>
+                         <CorrelationId>${correlationId}</CorrelationId>
+                         <User>@variable('serviceName')@</User>
+                         <Text>@variable('extractedText')@</Text>
+                     </HelloRequest>
+                  ]]>
+                </data>
+              </message>
+              <header>
+                <element name="Operation" value="@variable()@"/>
+                <element name="CorrelationId" value="${correlationId}"/>
+              </header>
+            </receive>
+
+            <groovy>
+              assert context.getVariable('Operation') == 'sayHello'
+              assert context.getVariable('serviceName') == 'Citrus'
+              assert context.getVariable('extractedText') == 'Hello ${user}'
+            </groovy>
+        </actions>
+    </testcase>
+</spring:beans>

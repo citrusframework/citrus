@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                                  http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
+
+    <testcase name="ValidateXMLDataIT">
+        <meta-info>
+            <author>Christoph Deppisch</author>
+            <creationdate>2008-04-25</creationdate>
+            <status>FINAL</status>
+            <last-updated-by>Christoph Deppisch</last-updated-by>
+            <last-updated-on>2008-04-25T00:00:00</last-updated-on>
+        </meta-info>
+
+        <variables>
+            <variable name="correlationId" value="citrus:randomNumber(10)"/>
+            <variable name="messageId" value="citrus:randomNumber(10)"/>
+            <variable name="user" value="Citrus"/>
+        </variables>
+        <actions>
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+							<HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                                <MessageId>_</MessageId>
+                                <CorrelationId>_</CorrelationId>
+                                <User>@equalsIgnoreCase('Citrus')@</User>
+                                <Text>xxx</Text>
+                            </HelloRequest>
+						]]>
+                    </data>
+                    <element path="HelloRequest.MessageId" value="${messageId}"/>
+                    <element path="CorrelationId" value="${correlationId}"/>
+                    <ignore path="HelloRequest.Text"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message>
+                    <data>
+                        <![CDATA[
+							<ns0:HelloRequest xmlns:ns0="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                                <ns0:MessageId>_</ns0:MessageId>
+                                <ns0:CorrelationId>_</ns0:CorrelationId>
+                                <ns0:User>@containsIgnoreCase('ITRU')@</ns0:User>
+                                <ns0:Text>xxx</ns0:Text>
+                            </ns0:HelloRequest>
+					    ]]>
+                    </data>
+                    <element path="//ns0:HelloRequest/ns0:MessageId" value="${messageId}"/>
+                    <element path="//ns0:HelloRequest/ns0:CorrelationId" value="${correlationId}"/>
+                    <ignore path="//ns0:HelloRequest/ns0:Text"/>
+                    <namespace prefix="ns0" value="http://citrusframework.org/schemas/samples/HelloService.xsd"/>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message schema="helloSchema">
+                    <data>
+                        <![CDATA[
+                            <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                                <MessageId>${messageId}</MessageId>
+                                <CorrelationId>${correlationId}</CorrelationId>
+                                <User>@equalsIgnoreCase('Citrus')@</User>
+                                <Text>@ignore@</Text>
+                            </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+
+            <send endpoint="helloEndpoint">
+                <description>
+                    Send asynchronous hello request: Citrus -> HelloService
+                </description>
+                <message>
+                    <data>
+                        <![CDATA[
+                           <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                               <MessageId>${messageId}</MessageId>
+                               <CorrelationId>${correlationId}</CorrelationId>
+                               <User>${user}</User>
+                               <Text>Hello Citrus</Text>
+                           </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </send>
+
+            <receive endpoint="helloEndpoint">
+                <message schema-repository="helloSchemaRepository">
+                    <data>
+                        <![CDATA[
+                            <HelloRequest xmlns="http://citrusframework.org/schemas/samples/HelloService.xsd">
+                                <MessageId>${messageId}</MessageId>
+                                <CorrelationId>${correlationId}</CorrelationId>
+                                <User>@equalsIgnoreCase('Citrus')@</User>
+                                <Text>@ignore@</Text>
+                            </HelloRequest>
+                        ]]>
+                    </data>
+                </message>
+                <header>
+                    <element name="Operation" value="sayHello"/>
+                    <element name="CorrelationId" value="${correlationId}"/>
+                </header>
+            </receive>
+        </actions>
+    </testcase>
+</spring:beans>
