@@ -185,6 +185,11 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
+    public void groups(String[] groups) {
+        testDesigner.groups(groups);
+    }
+
+    @Override
     public <T> T variable(String name, T value) {
         return testDesigner.variable(name, value);
     }

@@ -182,6 +182,11 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
+    public void groups(String[] groups) {
+        testCase.setGroups(groups);
+    }
+
+    @Override
     public <T> T variable(String name, T value) {
         testCase.getVariableDefinitions().put(name, value);
         return value;
@@ -711,7 +716,7 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public HttpActionBuilder http() {
-        HttpActionBuilder builder = new HttpActionBuilder()
+        HttpActionBuilder builder = HttpActionBuilder.http()
                 .withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;

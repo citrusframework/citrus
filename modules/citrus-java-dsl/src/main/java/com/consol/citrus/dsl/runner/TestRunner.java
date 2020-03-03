@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCaseBuilder;
 import com.consol.citrus.actions.AntRunAction;
 import com.consol.citrus.actions.CreateVariablesAction;
@@ -52,8 +53,10 @@ import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.container.Sequence;
 import com.consol.citrus.container.Template;
+import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.dsl.builder.BuilderSupport;
 import com.consol.citrus.http.actions.HttpActionBuilder;
@@ -100,6 +103,20 @@ public interface TestRunner extends TestCaseBuilder {
      * @return
      */
     <T extends TestActionBuilder<?>> T run(T builder);
+
+    /**
+     * Prepare and add a custom container implementation.
+     * @param container
+     * @return
+     */
+    <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container);
+
+    /**
+     * Prepare and add a custom container implementation.
+     * @param builder
+     * @return
+     */
+    <T extends TestActionContainerBuilder<? extends TestActionContainer, ?>> T container(T builder);
 
     /**
      * Apply test apply with all test actions, finally actions and test
@@ -483,4 +500,10 @@ public interface TestRunner extends TestCaseBuilder {
      * @return
      */
     FinallySequence.Builder doFinally();
+
+    /**
+     * Sets the test context.
+     * @param context
+     */
+    void setTestContext(TestContext context);
 }

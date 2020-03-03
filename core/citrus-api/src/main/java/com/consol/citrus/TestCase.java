@@ -81,10 +81,22 @@ public interface TestCase extends TestActionContainer, TestActionListenersAware 
     Class<?> getTestClass();
 
     /**
+     * Set the test class type.
+     * @param type
+     */
+    void setTestClass(final Class<?> type);
+
+    /**
      * Get the package name
      * @return the packageName
      */
     String getPackageName();
+
+    /**
+     * Set the package name
+     * @param packageName the packageName to set
+     */
+    void setPackageName(final String packageName);
 
     /**
      * Get the test name.
@@ -128,5 +140,13 @@ public interface TestCase extends TestActionContainer, TestActionListenersAware 
      * Adds action to finally action chain.
      * @param action
      */
-    void addFinalAction(TestAction action);
+    default void addFinalAction(TestAction action) {
+        addFinalAction(() -> action);
+    }
+
+    /**
+     * Adds action to finally action chain.
+     * @param builder
+     */
+    void addFinalAction(TestActionBuilder<?> builder);
 }

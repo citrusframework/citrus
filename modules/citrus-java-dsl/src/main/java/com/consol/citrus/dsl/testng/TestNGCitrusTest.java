@@ -22,7 +22,6 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseBuilder;
-import com.consol.citrus.TestGroupAware;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
@@ -95,14 +94,15 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
                 TestCaseBuilder testBuilder;
                 if (isDesignerMethod(method)) {
                     testBuilder = createTestDesigner(method, ctx);
+                    testBuilder.groups(testResult.getMethod().getGroups());
                     testResult.setAttribute(DESIGNER_ATTRIBUTE, testBuilder);
                 } else if (isRunnerMethod(method)) {
                     testBuilder = createTestRunner(method, ctx);
+                    testBuilder.groups(testResult.getMethod().getGroups());
                     testResult.setAttribute(RUNNER_ATTRIBUTE, testBuilder);
                 } else {
                     throw new CitrusRuntimeException("Missing designer or runner method parameter");
                 }
-
 
                 CitrusAnnotations.injectAll(this, citrus, ctx);
 
@@ -116,10 +116,6 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
     @Override
     protected void invokeTestMethod(ITestResult testResult, Method method, TestCase testCase, TestContext context, int invocationCount) {
-        if (testCase instanceof TestGroupAware) {
-            ((TestGroupAware) testCase).setGroups(testResult.getMethod().getGroups());
-        }
-
         if (testResult.getAttribute(DESIGNER_ATTRIBUTE) != null) {
             super.invokeTestMethod(testResult, method, testCase, context, invocationCount);
         } else if (testResult.getAttribute(RUNNER_ATTRIBUTE) != null) {

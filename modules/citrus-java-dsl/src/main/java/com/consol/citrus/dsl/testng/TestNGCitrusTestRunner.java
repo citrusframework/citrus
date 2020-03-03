@@ -144,6 +144,11 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
+    public void groups(String[] groups) {
+        testRunner.groups(groups);
+    }
+
+    @Override
     public void start() {
         testRunner.start();
     }

@@ -185,6 +185,11 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
+    public void groups(String[] groups) {
+        this.testCase.setGroups(groups);
+    }
+
+    @Override
     public void start() {
         testCase.start(context);
     }
@@ -672,7 +677,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public HttpActionBuilder http(BuilderSupport<HttpActionBuilder> configurer) {
-        HttpActionBuilder builder = new HttpActionBuilder()
+        HttpActionBuilder builder = HttpActionBuilder.http()
                     .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);

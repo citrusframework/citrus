@@ -2,13 +2,20 @@ package com.consol.citrus;
 
 import java.util.Date;
 
-import com.consol.citrus.container.TestActionContainer;
-import com.consol.citrus.context.TestContext;
-
 /**
  * @author Christoph Deppisch
  */
 public interface TestCaseBuilder {
+
+    /**
+     * Starts the test case execution.
+     */
+    void start();
+
+    /**
+     * Stops test case execution.
+     */
+    void stop();
 
     /**
      * Builds the test case.
@@ -63,6 +70,11 @@ public interface TestCaseBuilder {
     void creationDate(Date date);
 
     /**
+     * Sets the test group names for this test.
+     */
+    void groups(String[] groups);
+
+    /**
      * Adds a new variable definition to the set of test variables
      * for this test case and return its value.
      *
@@ -71,24 +83,4 @@ public interface TestCaseBuilder {
      * @return
      */
     <T> T variable(String name, T value);
-
-    /**
-     * Prepare and add a custom container implementation.
-     * @param container
-     * @return
-     */
-    <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container);
-
-    /**
-     * Prepare and add a custom container implementation.
-     * @param builder
-     * @return
-     */
-    <T extends TestActionContainerBuilder<? extends TestActionContainer, ?>> T container(T builder);
-
-    /**
-     * Sets the test context.
-     * @param context
-     */
-    void setTestContext(TestContext context);
 }

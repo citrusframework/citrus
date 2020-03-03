@@ -308,14 +308,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     @Override
-    public void addFinalAction(final TestAction testAction) {
-        this.finalActions.add(() -> testAction);
-    }
-
-    /**
-     * Adds action to finally action chain.
-     * @param testAction
-     */
     public void addFinalAction(final TestActionBuilder<?> testAction) {
         this.finalActions.add(testAction);
     }
@@ -348,10 +340,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         }
     }
 
-    /**
-     * Set the package name
-     * @param packageName the packageName to set
-     */
+    @Override
     public void setPackageName(final String packageName) {
         this.packageName = packageName;
     }
@@ -361,10 +350,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         return packageName;
     }
 
-    /**
-     * Set the test class type.
-     * @param type
-     */
+    @Override
     public void setTestClass(final Class<?> type) {
         this.testClass = type;
     }

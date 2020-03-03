@@ -144,6 +144,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
+    public void groups(String[] groups) {
+        testRunner.groups(groups);
+    }
+
+    @Override
     public void start() {
         testRunner.start();
     }

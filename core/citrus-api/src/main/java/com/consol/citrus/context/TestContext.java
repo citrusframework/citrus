@@ -29,6 +29,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.TestAction;
+import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseMetaInfo;
@@ -871,10 +872,6 @@ public class TestContext implements ReferenceResolverAware {
         }
 
         @Override
-        public void setActiveAction(TestAction action) {
-        }
-
-        @Override
         public TestAction getActiveAction() {
             return null;
         }
@@ -945,7 +942,7 @@ public class TestContext implements ReferenceResolverAware {
         }
 
         @Override
-        public void addFinalAction(TestAction action) {
+        public void addFinalAction(TestActionBuilder<?> action) {
             // do nothing
         }
 
@@ -961,6 +958,21 @@ public class TestContext implements ReferenceResolverAware {
 
         @Override
         public void setAfterTest(List<AfterTest> afterTest) {
+            // do nothing
+        }
+
+        @Override
+        public void setPackageName(String packageName) {
+            // do nothing
+        }
+
+        @Override
+        public void setActiveAction(TestAction action) {
+            // do nothing
+        }
+
+        @Override
+        public void setTestClass(Class<?> type) {
             // do nothing
         }
 
