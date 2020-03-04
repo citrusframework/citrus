@@ -14,50 +14,88 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation;
+package com.consol.citrus.http.integration;
 
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
-import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.config.annotation.HttpClientConfig;
 import com.consol.citrus.http.config.annotation.HttpServerConfig;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XpathMessageValidator;
+import org.springframework.http.HttpStatus;
 import org.testng.annotations.Test;
+
+import static com.consol.citrus.actions.StopServerAction.Builder.stop;
+import static com.consol.citrus.container.Assert.Builder.assertException;
+import static com.consol.citrus.container.FinallySequence.Builder.doFinally;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
  */
-public class CustomMessageValidatorIT extends TestNGCitrusTestRunner {
+public class CustomMessageValidatorIT extends TestNGCitrusSupport {
 
     @CitrusEndpoint
     @HttpClientConfig(requestUrl = "http://localhost:7177")
-    private HttpClient wsClient;
+    private HttpClient httpClient;
 
     @CitrusEndpoint
     @HttpServerConfig(port = 7177, autoStart = true)
-    private HttpServer wsServer;
+    private HttpServer httpServer;
 
-    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
+    @Test
     @CitrusTest
     public void test() {
-        http(action -> action.client(wsClient)
+        when(http().client(httpClient)
                 .send()
                 .post("/")
                 .contentType("application/xml")
                 .payload("<doc text=\"hello\"/>")
                 .fork(true));
 
-        http(action -> action.server(wsServer)
+        then(http().server(httpServer)
                 .receive()
                 .post("/")
                 .contentType("application/xml")
                 .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
-                .validate("//doc/@text", "nothello"));
+                .validate("//doc/@text", "hello"));
+
+        then(http().server(httpServer)
+                .send()
+                .response(HttpStatus.OK));
+
+        then(doFinally().actions(
+                stop(httpServer)
+        ));
+    }
+
+    @Test
+    @CitrusTest
+    public void testFailure() {
+        when(http().client(httpClient)
+                .send()
+                .post("/")
+                .contentType("application/xml")
+                .payload("<doc text=\"hello\"/>")
+                .fork(true));
+
+        then(assertException()
+            .exception(ValidationException.class)
+            .when(http().server(httpServer)
+                .receive()
+                .post("/")
+                .contentType("application/xml")
+                .validators(new DomXmlMessageValidator(), new XpathMessageValidator())
+                .validate("//doc/@text", "nothello")));
+
+        then(doFinally().actions(
+                stop(httpServer)
+        ));
     }
 
 }
