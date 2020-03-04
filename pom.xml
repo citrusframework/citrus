@@ -170,7 +170,7 @@
     <junit.platform.version>1.0.3</junit.platform.version>
     <slf4j.version>1.7.25</slf4j.version>
     <jaxb.version>2.3.0</jaxb.version>
-    <jackson.version>2.9.8</jackson.version>
+    <jackson.version>2.10.3</jackson.version>
     <arquillian.version>1.4.0.Final</arquillian.version>
     <cucumber.version>3.0.2</cucumber.version>
     <zookeeper.version>3.4.12</zookeeper.version>
