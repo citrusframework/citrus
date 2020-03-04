@@ -7,38 +7,31 @@
        xmlns:citrus-jms="http://www.citrusframework.org/schema/jms/config"
        xmlns:citrus-ws="http://www.citrusframework.org/schema/ws/config"
        xmlns:citrus-http="http://www.citrusframework.org/schema/http/config"
-       xmlns:citrus-rmi="http://www.citrusframework.org/schema/rmi/config"
-       xmlns:citrus-jmx="http://www.citrusframework.org/schema/jmx/config"
-       xmlns:citrus-zookeeper="http://www.citrusframework.org/schema/zookeeper/config"
+       xmlns:citrus-restdocs="http://www.citrusframework.org/schema/restdocs/config"
        xmlns:citrus-si="http://www.citrusframework.org/schema/spring-integration/config"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
        xmlns:amq="http://activemq.apache.org/schema/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
            http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
            http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd
            http://www.citrusframework.org/schema/jms/testcase http://www.citrusframework.org/schema/jms/testcase/citrus-jms-testcase.xsd
            http://www.citrusframework.org/schema/jms/config http://www.citrusframework.org/schema/jms/config/citrus-jms-config.xsd
            http://www.citrusframework.org/schema/ws/config http://www.citrusframework.org/schema/ws/config/citrus-ws-config.xsd
            http://www.citrusframework.org/schema/http/config http://www.citrusframework.org/schema/http/config/citrus-http-config.xsd
-           http://www.citrusframework.org/schema/rmi/config http://www.citrusframework.org/schema/rmi/config/citrus-rmi-config.xsd
-           http://www.citrusframework.org/schema/jmx/config http://www.citrusframework.org/schema/jmx/config/citrus-jmx-config.xsd
-           http://www.citrusframework.org/schema/zookeeper/config http://www.citrusframework.org/schema/zookeeper/config/citrus-zookeeper-config.xsd
-           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd
-           http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd">
+           http://www.citrusframework.org/schema/restdocs/config http://www.citrusframework.org/schema/restdocs/config/citrus-restdocs-config.xsd
+           http://www.citrusframework.org/schema/spring-integration/config http://www.citrusframework.org/schema/spring-integration/config/citrus-spring-integration-config.xsd
+           http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
 
     <import resource="classpath:com/consol/citrus/demo/hello-demo-ctx.xml"/>
+    <import resource="citrus-schemas-context.xml"/>
 
     <context:property-placeholder location="classpath:citrus.properties" ignore-unresolvable="true"/>
 
     <!-- Scan before and after suite Java DSL components -->
     <context:component-scan base-package="com.consol.citrus.javadsl.suite"/>
-
-    <!-- RMI local service registry -->
-    <bean class="org.springframework.beans.factory.config.MethodInvokingBean">
-      <property name="staticMethod" value="java.rmi.registry.LocateRegistry.createRegistry"/>
-      <property name="arguments" value="1099"/>
-    </bean>
 
     <!-- Embedded ActiveMQ JMS broker -->
     <amq:broker useJmx="false" persistent="false">
@@ -104,15 +97,9 @@
     <bean id="soapFaultValidator" class="com.consol.citrus.ws.validation.SimpleSoapFaultValidator"/>
     <bean id="xmlSoapFaultValidator" class="com.consol.citrus.ws.validation.XmlSoapFaultValidator"/>
 
-    <!-- SOAP test client -->
-    <citrus-ws:client id="soapClient"
-                      request-url="http://localhost:8091"/>
-
-    <!-- SOAP test server -->
-    <citrus-ws:server id="soapServer"
-                      port="8091"
-                      auto-start="true"
-                      resource-base="src/it/resources"/>
+    <citrus-ws:client id="webServiceClient"
+         request-url="http://localhost:8071"
+         message-factory="messageFactory"/>
 
     <citrus-jms:endpoint id="webServiceRequestReceiver"
                              destination-name="${jms.ws.stub.request}"/>
@@ -120,6 +107,10 @@
     <citrus-jms:endpoint id="webServiceResponseSender"
          use-object-messages="true"
          destination-name="${jms.ws.stub.response}"/>
+
+    <citrus-ws:client id="webServiceHelloClient"
+         request-url="http://localhost:8071/hello"
+         message-factory="messageFactory"/>
 
     <citrus-ws:client id="webServiceFaultClient"
          request-url="http://localhost:8071/hello"
@@ -223,24 +214,6 @@
          destination-name="${jms.queue.http.request.ack}"
          actor="helloServer"/>
 
-    <!-- Citrus RMI -->
-    <bean id="helloServiceClient" class="com.consol.citrus.rmi.HelloServiceClient"/>
-    <bean id="newsServiceBean" class="com.consol.citrus.rmi.NewsServiceImpl"/>
-
-    <!-- RMI server -->
-    <citrus-rmi:server id="rmiHelloServer"
-                       interface="com.consol.citrus.rmi.HelloService"
-                       binding="helloService"
-                       timeout="10000"
-                       auto-start="true"/>
-
-    <!-- RMI client -->
-    <citrus-rmi:client id="rmiNewsClient"
-                       host="localhost"
-                       port="1099"
-                       binding="newsService"
-                       timeout="10000"/>
-
     <!-- JDBC data sources -->
     <bean id="testDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName">
@@ -271,16 +244,6 @@
     </bean>
 
     <!-- Citrus JMS Endpoints -->
-    <citrus-jms:endpoint id="helloRequestJmsMessageSender" destination-name="Citrus.Hello.Request.Queue"/>
-
-    <citrus-jms:endpoint id="helloResponseJmsMessageReceiver"
-         timeout="5000"
-         destination-name="Citrus.Hello.Response.Queue"/>
-
-    <citrus-jms:sync-endpoint id="helloSyncJmsEndpoint"
-         destination-name="Citrus.Hello.Sync.Request.Queue"
-         timeout="5000"/>
-
     <citrus-jms:endpoint id="helloRequestSender" destination-name="${jms.queue.hello.request}"/>
 
     <citrus-jms:endpoint id="helloResponseReceiver"
@@ -327,8 +290,6 @@
 
     <citrus-jms:endpoint id="dummyMessageReceiver" destination-name="${jms.queue.test}"/>
 
-    <citrus-si:channel-endpoint id="greetingEndpoint" channel="greetings"/>
-
     <citrus-si:channel-endpoint id="channelRequestSender" channel="greetings"/>
 
     <citrus-si:channel-endpoint id="channelResponseReceiver"
@@ -340,10 +301,6 @@
     <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
     <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
     <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
-
-    <bean class="com.consol.citrus.zookeeper.server.ZooServer" init-method="startup" destroy-method="shutdown"/>
-
-    <citrus-zookeeper:client id="zookeeperClient" timeout="2000" url="localhost:21181"/>
 
     <citrus:before-suite id="defaultBeforeSuite">
       <citrus:actions>
