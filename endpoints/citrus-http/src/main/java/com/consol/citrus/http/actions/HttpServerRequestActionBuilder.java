@@ -17,6 +17,7 @@
 package com.consol.citrus.http.actions;
 
 import javax.servlet.http.Cookie;
+import java.util.Optional;
 
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.http.message.HttpMessage;
@@ -24,7 +25,6 @@ import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.http.message.HttpQueryParamHeaderValidator;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
 
@@ -45,7 +45,6 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
         staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
         messageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
 
-        messageType(MessageType.XML);
         headerNameIgnoreCase(true);
         headerValidator(new HttpQueryParamHeaderValidator());
     }
@@ -149,7 +148,16 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
     }
 
     @Override
-    public ReceiveMessageAction build() {
+    public ReceiveMessageAction doBuild() {
         return new ReceiveMessageAction(this);
+    }
+
+    @Override
+    protected Optional<String> getMessagePayload() {
+        if (httpMessage.getPayload() instanceof String) {
+            return Optional.of(httpMessage.getPayload(String.class));
+        }
+
+        return super.getMessagePayload();
     }
 }

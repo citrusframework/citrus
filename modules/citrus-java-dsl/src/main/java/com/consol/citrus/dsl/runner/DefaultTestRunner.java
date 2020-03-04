@@ -79,7 +79,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.actions.HttpActionBuilder;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
@@ -368,7 +367,6 @@ public class DefaultTestRunner implements TestRunner {
     @Override
     public ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer) {
         ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder()
-                .messageType(MessageType.XML)
                 .withReferenceResolver(context.getReferenceResolver());
         configurer.configure(builder);
         return run(builder);

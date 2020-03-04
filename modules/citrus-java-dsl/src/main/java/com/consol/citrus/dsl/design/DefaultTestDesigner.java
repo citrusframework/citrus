@@ -76,7 +76,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.actions.HttpActionBuilder;
 import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
 import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
@@ -378,7 +377,6 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public ReceiveMessageAction.Builder receive(Endpoint messageEndpoint) {
         ReceiveMessageAction.Builder builder = ReceiveMessageAction.Builder.receive(messageEndpoint)
-                .messageType(MessageType.XML)
                 .withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;
@@ -387,7 +385,6 @@ public class DefaultTestDesigner implements TestDesigner {
     @Override
     public ReceiveMessageAction.Builder receive(String messageEndpointUri) {
         ReceiveMessageAction.Builder builder = ReceiveMessageAction.Builder.receive(messageEndpointUri)
-                .messageType(MessageType.XML)
                 .withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;

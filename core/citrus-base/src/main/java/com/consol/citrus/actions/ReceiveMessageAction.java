@@ -29,8 +29,6 @@ import java.util.stream.Stream;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -40,6 +38,8 @@ import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.HeaderValidator;
@@ -443,7 +443,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         @Override
-        public ReceiveMessageAction build() {
+        public ReceiveMessageAction doBuild() {
             return new ReceiveMessageAction(this);
         }
     }
@@ -454,7 +454,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private long receiveTimeout = 0L;
         private Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
-        private MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        private AbstractMessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         private List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
         private DataDictionary<?> dataDictionary;
         private ValidationCallback validationCallback;
@@ -463,9 +463,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
         /** Validation context used in this action builder */
-        private HeaderValidationContext headerValidationContext = new HeaderValidationContext();
-        private XmlMessageValidationContext xmlMessageValidationContext = new XmlMessageValidationContext();
-        private JsonMessageValidationContext jsonMessageValidationContext = new JsonMessageValidationContext();
+        private HeaderValidationContext headerValidationContext;
+        private XmlMessageValidationContext xmlMessageValidationContext;
+        private JsonMessageValidationContext jsonMessageValidationContext;
 
         /** JSON validation context used in this action builder */
         private JsonPathMessageValidationContext jsonPathValidationContext;
@@ -521,7 +521,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param messageBuilder
          * @return
          */
-        public B messageBuilder(MessageContentBuilder messageBuilder) {
+        public B messageBuilder(AbstractMessageContentBuilder messageBuilder) {
             this.messageBuilder = messageBuilder;
             return self;
         }
@@ -842,7 +842,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B headerNameIgnoreCase(final boolean value) {
-            headerValidationContext.setHeaderNameIgnoreCase(value);
+            getHeaderValidationContext().setHeaderNameIgnoreCase(value);
             return self;
         }
 
@@ -854,7 +854,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B validateScript(final String validationScript) {
             getScriptValidationContext().setValidationScript(validationScript);
-
             return self;
         }
 
@@ -927,10 +926,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B messageType(final String messageType) {
             this.messageType = messageType;
 
-            if (this.validationContexts.isEmpty()) {
-                validationContext(headerValidationContext);
-                validationContext(xmlMessageValidationContext);
-                validationContext(jsonMessageValidationContext);
+            if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+                getJsonMessageValidationContext();
+            }
+
+            if (MessageType.XML.name().equalsIgnoreCase(messageType)
+                || MessageType.XHTML.name().equalsIgnoreCase(messageType)) {
+                getXmlMessageValidationContext();
             }
 
             if (scriptValidationContext != null) {
@@ -967,8 +969,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B schemaValidation(final boolean enabled) {
-            xmlMessageValidationContext.setSchemaValidation(enabled);
-            jsonMessageValidationContext.setSchemaValidation(enabled);
+            getXmlMessageValidationContext().setSchemaValidation(enabled);
+            getJsonMessageValidationContext().setSchemaValidation(enabled);
             return self;
         }
 
@@ -980,7 +982,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B validateNamespace(final String prefix, final String namespaceUri) {
-            xmlMessageValidationContext.getControlNamespaces().put(prefix, namespaceUri);
+            getXmlMessageValidationContext().getControlNamespaces().put(prefix, namespaceUri);
             return self;
         }
 
@@ -1023,9 +1025,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B ignore(final String path) {
             if (messageType.equalsIgnoreCase(MessageType.XML.name())
                     || messageType.equalsIgnoreCase(MessageType.XHTML.name())) {
-                xmlMessageValidationContext.getIgnoreExpressions().add(path);
+                getXmlMessageValidationContext().getIgnoreExpressions().add(path);
             } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
-                jsonMessageValidationContext.getIgnoreExpressions().add(path);
+                getJsonMessageValidationContext().getIgnoreExpressions().add(path);
             }
             return self;
         }
@@ -1061,7 +1063,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B xsd(final String schemaName) {
-            xmlMessageValidationContext.setSchema(schemaName);
+            getXmlMessageValidationContext().setSchema(schemaName);
             return self;
         }
 
@@ -1071,7 +1073,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param schemaName The name of the schema bean
          */
         public B jsonSchema(final String schemaName) {
-            jsonMessageValidationContext.setSchema(schemaName);
+            getJsonMessageValidationContext().setSchema(schemaName);
             return self;
         }
 
@@ -1082,7 +1084,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B xsdSchemaRepository(final String schemaRepository) {
-            xmlMessageValidationContext.setSchemaRepository(schemaRepository);
+            getXmlMessageValidationContext().setSchemaRepository(schemaRepository);
             return self;
         }
 
@@ -1093,7 +1095,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B jsonSchemaRepository(final String schemaRepository) {
-            jsonMessageValidationContext.setSchemaRepository(schemaRepository);
+            getJsonMessageValidationContext().setSchemaRepository(schemaRepository);
             return self;
         }
 
@@ -1106,7 +1108,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B namespace(final String prefix, final String namespaceUri) {
             getXpathVariableExtractor().getNamespaces().put(prefix, namespaceUri);
-            xmlMessageValidationContext.getNamespaces().put(prefix, namespaceUri);
+            getXmlMessageValidationContext().getNamespaces().put(prefix, namespaceUri);
             return self;
         }
 
@@ -1119,7 +1121,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B namespaces(final Map<String, String> namespaceMappings) {
             getXpathVariableExtractor().getNamespaces().putAll(namespaceMappings);
 
-            xmlMessageValidationContext.getNamespaces().putAll(namespaceMappings);
+            getXmlMessageValidationContext().getNamespaces().putAll(namespaceMappings);
             return self;
         }
 
@@ -1201,7 +1203,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B headerValidator(final HeaderValidator... validators) {
-            Stream.of(validators).forEach(headerValidationContext::addHeaderValidator);
+            Stream.of(validators).forEach(getHeaderValidationContext()::addHeaderValidator);
             return self;
         }
 
@@ -1215,7 +1217,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             validateApplicationContext();
 
             for (final String validatorName : validatorNames) {
-                headerValidationContext.addHeaderValidator(referenceResolver.resolve(validatorName, HeaderValidator.class));
+                getHeaderValidationContext().addHeaderValidator(referenceResolver.resolve(validatorName, HeaderValidator.class));
             }
 
             return self;
@@ -1314,19 +1316,29 @@ public class ReceiveMessageAction extends AbstractTestAction {
             return self;
         }
 
+        @Override
+        public final T build() {
+            reconcileValidationContexts();
+            return doBuild();
+        }
+
+        /**
+         * Build method implemented by subclasses.
+         * @return
+         */
+        protected abstract T doBuild();
+
         /**
          * Get message builder, if already registered or create a new message builder and register it
          *
          * @return the message builder in use
          */
         private AbstractMessageContentBuilder getMessageContentBuilder() {
-            if (this.messageBuilder instanceof AbstractMessageContentBuilder) {
-                return (AbstractMessageContentBuilder) this.messageBuilder;
-            } else {
-                final PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder(messageBuilder);
-                return messageBuilder;
+            if (this.messageBuilder == null) {
+                messageBuilder(new PayloadTemplateMessageBuilder());
             }
+
+            return messageBuilder;
         }
 
         /**
@@ -1362,24 +1374,63 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         private XpathMessageValidationContext getXPathValidationContext() {
-            if (xmlMessageValidationContext instanceof XpathMessageValidationContext) {
-                return ((XpathMessageValidationContext) xmlMessageValidationContext);
+            if (getXmlMessageValidationContext() instanceof XpathMessageValidationContext) {
+                return ((XpathMessageValidationContext) getXmlMessageValidationContext());
             } else {
                 final XpathMessageValidationContext xPathContext = new XpathMessageValidationContext();
-                xPathContext.setNamespaces(xmlMessageValidationContext.getNamespaces());
-                xPathContext.setControlNamespaces(xmlMessageValidationContext.getControlNamespaces());
-                xPathContext.setIgnoreExpressions(xmlMessageValidationContext.getIgnoreExpressions());
-                xPathContext.setSchema(xmlMessageValidationContext.getSchema());
-                xPathContext.setSchemaRepository(xmlMessageValidationContext.getSchemaRepository());
-                xPathContext.setSchemaValidation(xmlMessageValidationContext.isSchemaValidationEnabled());
-                xPathContext.setDTDResource(xmlMessageValidationContext.getDTDResource());
+                xPathContext.setNamespaces(getXmlMessageValidationContext().getNamespaces());
+                xPathContext.setControlNamespaces(getXmlMessageValidationContext().getControlNamespaces());
+                xPathContext.setIgnoreExpressions(getXmlMessageValidationContext().getIgnoreExpressions());
+                xPathContext.setSchema(getXmlMessageValidationContext().getSchema());
+                xPathContext.setSchemaRepository(getXmlMessageValidationContext().getSchemaRepository());
+                xPathContext.setSchemaValidation(getXmlMessageValidationContext().isSchemaValidationEnabled());
+                xPathContext.setDTDResource(getXmlMessageValidationContext().getDTDResource());
 
-                this.validationContexts.remove(xmlMessageValidationContext);
+                this.validationContexts.remove(getXmlMessageValidationContext());
                 validationContext(xPathContext);
 
                 xmlMessageValidationContext = xPathContext;
                 return xPathContext;
             }
+        }
+
+        /**
+         * Creates new xml validation context if not done before and gets the xml validation context.
+         */
+        private XmlMessageValidationContext getXmlMessageValidationContext() {
+            if (xmlMessageValidationContext == null) {
+                xmlMessageValidationContext = new XmlMessageValidationContext();
+
+                validationContext(xmlMessageValidationContext);
+            }
+
+            return xmlMessageValidationContext;
+        }
+
+        /**
+         * Creates new json validation context if not done before and gets the json validation context.
+         */
+        private JsonMessageValidationContext getJsonMessageValidationContext() {
+            if (jsonMessageValidationContext == null) {
+                jsonMessageValidationContext = new JsonMessageValidationContext();
+
+                validationContext(jsonMessageValidationContext);
+            }
+
+            return jsonMessageValidationContext;
+        }
+
+        /**
+         * Creates new header validation context if not done before and gets the header validation context.
+         */
+        private HeaderValidationContext getHeaderValidationContext() {
+            if (headerValidationContext == null) {
+                headerValidationContext = new HeaderValidationContext();
+
+                validationContext(headerValidationContext);
+            }
+
+            return headerValidationContext;
         }
 
         /**
@@ -1414,6 +1465,67 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         private void validateApplicationContext() {
             Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
+        }
+
+        /**
+         * Revisit configured validation context list and automatically add context based on message payload and path
+         * expression contexts if any.
+         *
+         * This method makes sure that validation contexts are configured. If no validation context has been set yet the method
+         * automatically adds proper validation contexts for Json and XML message payloads.
+         *
+         * In case a path expression (JsonPath, XPath) context is set but no proper message validation context (Json, Xml) the
+         * method automatically adds the proper message validation context.
+         *
+         * Only when validation contexts are set properly according to the message type and content the message validation
+         * steps will execute later on.
+         */
+        protected void reconcileValidationContexts() {
+            if (validationContexts.isEmpty()
+                    || validationContexts.stream().allMatch(HeaderValidationContext.class::isInstance)) {
+                getXmlMessageValidationContext();
+                getJsonMessageValidationContext();
+            }
+
+            if (validationContexts.stream().noneMatch(HeaderValidationContext.class::isInstance)) {
+                getHeaderValidationContext();
+            }
+
+            if (validationContexts.stream().anyMatch(JsonPathMessageValidationContext.class::isInstance)
+                    && validationContexts.stream().noneMatch(JsonMessageValidationContext.class::isInstance)) {
+                getJsonMessageValidationContext();
+            }
+
+            // if still no Json or Xml message validation context is set check the message payload and set proper context
+            if (validationContexts.stream().noneMatch(XmlMessageValidationContext.class::isInstance)
+                && validationContexts.stream().noneMatch(JsonMessageValidationContext.class::isInstance)) {
+                Optional<String> payload = getMessagePayload();
+                if (payload.isPresent()) {
+                    if (payload.get().startsWith("<")) {
+                        getXmlMessageValidationContext();
+                    } else if ((payload.get().startsWith("{") || payload.get().startsWith("["))) {
+                        getJsonMessageValidationContext();
+                    }
+                }
+            }
+        }
+
+        /**
+         * Gets message payload String representation from configured message builder.
+         * @return
+         */
+        protected Optional<String> getMessagePayload() {
+            final MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
+            if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
+                return Optional.ofNullable(((PayloadTemplateMessageBuilder) messageContentBuilder).getPayloadData());
+            } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
+                Message message = ((StaticMessageContentBuilder) messageContentBuilder).getMessage();
+                if (message.getPayload() instanceof String) {
+                    return Optional.of(message.getPayload(String.class));
+                }
+            }
+
+            return Optional.empty();
         }
     }
 }

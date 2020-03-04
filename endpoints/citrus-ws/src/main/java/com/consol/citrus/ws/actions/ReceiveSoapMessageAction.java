@@ -26,7 +26,6 @@ import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.ws.message.SoapAttachment;
@@ -113,7 +112,6 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
 
         public Builder() {
             messageBuilder(new StaticMessageContentBuilder(soapMessage));
-            messageType(MessageType.XML);
             headerNameIgnoreCase(true);
         }
 
@@ -263,7 +261,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
         }
 
         @Override
-        public ReceiveSoapMessageAction build() {
+        public ReceiveSoapMessageAction doBuild() {
             return new ReceiveSoapMessageAction(this);
         }
     }

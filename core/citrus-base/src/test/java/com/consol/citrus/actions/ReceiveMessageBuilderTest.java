@@ -808,7 +808,9 @@ class ReceiveMessageBuilderTest {
 		assertSame(copy, builder);
 		assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
 		assertEquals(messageType, builder.build().getMessageType());
-		assertEquals(3, builder.build().getValidationContexts().size());
+		assertEquals(2, builder.build().getValidationContexts().size());
+		assertTrue(builder.build().getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+		assertTrue(builder.build().getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 	}
 
 	@Test

@@ -129,9 +129,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
     }
 
     @Test
@@ -161,9 +161,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
         Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
@@ -209,9 +209,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
@@ -247,9 +247,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -293,9 +293,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -330,9 +330,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -369,9 +369,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -659,9 +659,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
@@ -699,9 +699,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
@@ -747,9 +747,9 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getHeaderData().size(), 1L);
@@ -1419,13 +1419,15 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 4L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
+        ScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(ScriptValidationContext.class::isInstance).findFirst()
+                .map(ScriptValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1473,13 +1475,15 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 4L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
+        ScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(ScriptValidationContext.class::isInstance).findFirst()
+                .map(ScriptValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "");
@@ -1526,13 +1530,15 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 4L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
+        ScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(ScriptValidationContext.class::isInstance).findFirst()
+                .map(ScriptValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1580,13 +1586,15 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 4L);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), ScriptValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
-        ScriptValidationContext validationContext = (ScriptValidationContext) action.getValidationContexts().get(3);
+        ScriptValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(ScriptValidationContext.class::isInstance).findFirst()
+                .map(ScriptValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
         Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
@@ -1627,12 +1635,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
+        XmlMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(XmlMessageValidationContext.class::isInstance).findFirst()
+                .map(XmlMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(),
@@ -1671,12 +1681,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), XpathMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XpathMessageValidationContext.class::isInstance));
 
-        XpathMessageValidationContext validationContext = (XpathMessageValidationContext) action.getValidationContexts().get(2);
+        XpathMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(XpathMessageValidationContext.class::isInstance).findFirst()
+                .map(XpathMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(validationContext.getXpathExpressions().size(), 2L);
@@ -1719,13 +1731,15 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 4);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(3).getClass(), JsonPathMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonPathMessageValidationContext.class::isInstance));
 
-        JsonPathMessageValidationContext validationContext = (JsonPathMessageValidationContext) action.getValidationContexts().get(3);
+        JsonPathMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(JsonPathMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonPathMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(validationContext.getJsonPathExpressions().size(), 5L);
@@ -1811,12 +1825,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
+        XmlMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(XmlMessageValidationContext.class::isInstance).findFirst()
+                .map(XmlMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest><Message>?</Message></TestRequest>");
@@ -1857,12 +1873,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(2);
+        JsonMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}");
@@ -1913,12 +1931,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
+        XmlMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(XmlMessageValidationContext.class::isInstance).findFirst()
+                .map(XmlMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");
@@ -1970,12 +1990,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
 
-        XmlMessageValidationContext validationContext = (XmlMessageValidationContext) action.getValidationContexts().get(1);
+        XmlMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(XmlMessageValidationContext.class::isInstance).findFirst()
+                .map(XmlMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>");
@@ -2013,12 +2035,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(2);
+        JsonMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "{}");
@@ -2056,12 +2080,14 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        JsonMessageValidationContext validationContext = (JsonMessageValidationContext) action.getValidationContexts().get(2);
+        JsonMessageValidationContext validationContext = action.getValidationContexts().stream()
+                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
         Assert.assertEquals(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData(), "{}");
@@ -2104,16 +2130,20 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        XmlMessageValidationContext xmlMessageValidationContext =
-                (XmlMessageValidationContext) action.getValidationContexts().get(1);
+        XmlMessageValidationContext xmlMessageValidationContext = action.getValidationContexts().stream()
+                        .filter(XmlMessageValidationContext.class::isInstance).findFirst()
+                        .map(XmlMessageValidationContext.class::cast)
+                        .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertTrue(xmlMessageValidationContext.isSchemaValidationEnabled());
 
-        JsonMessageValidationContext jsonMessageValidationContext =
-                (JsonMessageValidationContext) action.getValidationContexts().get(2);
+        JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
+                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertTrue(jsonMessageValidationContext.isSchemaValidationEnabled());
 
     }
@@ -2148,16 +2178,20 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
-        Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(1).getClass(), XmlMessageValidationContext.class);
-        Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
-        XmlMessageValidationContext xmlMessageValidationContext =
-                (XmlMessageValidationContext) action.getValidationContexts().get(1);
+        XmlMessageValidationContext xmlMessageValidationContext = action.getValidationContexts().stream()
+                .filter(XmlMessageValidationContext.class::isInstance).findFirst()
+                .map(XmlMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertFalse(xmlMessageValidationContext.isSchemaValidationEnabled());
 
-        JsonMessageValidationContext jsonMessageValidationContext =
-                (JsonMessageValidationContext) action.getValidationContexts().get(2);
+        JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
+                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
 
     }

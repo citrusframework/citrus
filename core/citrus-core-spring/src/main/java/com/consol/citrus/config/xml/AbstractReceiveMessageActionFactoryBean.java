@@ -6,7 +6,7 @@ import java.util.Map;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
@@ -121,7 +121,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      *
      * @param messageBuilder the messageBuilder to set
      */
-    public void setMessageBuilder(MessageContentBuilder messageBuilder) {
+    public void setMessageBuilder(AbstractMessageContentBuilder messageBuilder) {
         getBuilder().messageBuilder(messageBuilder);
     }
 
