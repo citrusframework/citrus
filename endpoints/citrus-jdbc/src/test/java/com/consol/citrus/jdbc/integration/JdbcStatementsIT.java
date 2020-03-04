@@ -14,28 +14,34 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jdbc;
+package com.consol.citrus.jdbc.integration;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
+import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import java.sql.*;
-import java.util.Properties;
-
-import static org.junit.Assert.assertNotNull;
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.container.Async.Builder.async;
 
 @Test
-public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
+public class JdbcStatementsIT extends TestNGCitrusSupport {
 
     @CitrusEndpoint
     @JdbcServerConfig(
@@ -58,7 +64,7 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
         String sql = "SELECT whatever FROM table";
 
         //GIVEN
-        async().actions(new AbstractTestAction() {
+        given(async().actions(new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
@@ -66,23 +72,23 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
 
                         //WHEN
                         PreparedStatement preparedStatement = connection.prepareStatement(sql);
-                        assertNotNull(preparedStatement);
+                        Assert.assertNotNull(preparedStatement);
                     } catch (SQLException e) {
                         throw new CitrusRuntimeException(e);
                     }
                 }
             }
-        );
+        ));
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.createPreparedStatement(sql));
+        then(receive(jdbcServer)
+                .message(JdbcMessage.createPreparedStatement(sql)));
     }
 
     @CitrusTest
     public void testCreateStatement() {
         //GIVEN
-        async().actions(new AbstractTestAction() {
+        given(async().actions(new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
@@ -90,30 +96,30 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
 
                         //WHEN
                         Statement statement = connection.createStatement();
-                        assertNotNull(statement);
+                        Assert.assertNotNull(statement);
                     } catch (SQLException e) {
                         throw new CitrusRuntimeException(e);
                     }
                 }
             }
-        );
+        ));
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.createStatement());
+        then(receive(jdbcServer)
+                .message(JdbcMessage.createStatement()));
     }
 
     @CitrusTest
     public void testCloseStatement() {
         //GIVEN
-        async().actions(new AbstractTestAction() {
+        given(async().actions(new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
                         Connection connection = jdbcDriver.connect(serverUrl, new Properties());
 
                         Statement statement = connection.createStatement();
-                        assertNotNull(statement);
+                        Assert.assertNotNull(statement);
                         //WHEN
                         statement.close();
                     } catch (SQLException e) {
@@ -121,13 +127,14 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
                     }
                 }
             }
-        );
-        receive(jdbcServer)
-                .message(JdbcMessage.createStatement());
+        ));
+
+        then(receive(jdbcServer)
+                .message(JdbcMessage.createStatement()));
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.closeStatement());
+        then(receive(jdbcServer)
+                .message(JdbcMessage.closeStatement()));
     }
 
     @CitrusTest
@@ -135,7 +142,7 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
         String sql = "SELECT whatever FROM table";
 
         //GIVEN
-        async().actions(new AbstractTestAction() {
+        given(async().actions(new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
@@ -143,16 +150,16 @@ public class JdbcStatementsIT extends TestNGCitrusTestDesigner{
 
                         //WHEN
                         CallableStatement callableStatement = connection.prepareCall(sql);
-                        assertNotNull(callableStatement);
+                        Assert.assertNotNull(callableStatement);
                     } catch (SQLException e) {
                         throw new CitrusRuntimeException(e);
                     }
                 }
             }
-        );
+        ));
 
         //THEN
-        receive(jdbcServer)
-                .message(JdbcMessage.createCallableStatement(sql));
+        then(receive(jdbcServer)
+                .message(JdbcMessage.createCallableStatement(sql)));
     }
 }

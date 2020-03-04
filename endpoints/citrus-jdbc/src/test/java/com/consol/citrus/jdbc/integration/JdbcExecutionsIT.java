@@ -14,32 +14,37 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.jdbc;
+package com.consol.citrus.jdbc.integration;
+
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
 
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.db.driver.JdbcDriver;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jdbc.config.annotation.JdbcServerConfig;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-import java.sql.*;
-import java.util.Properties;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.container.Async.Builder.async;
 
 @SuppressWarnings("SqlNoDataSourceInspection")
 @Test
-public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
+public class JdbcExecutionsIT extends TestNGCitrusSupport {
 
     @CitrusEndpoint
     @JdbcServerConfig(
@@ -60,7 +65,7 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
     public void textExecuteQuery() {
         String sql = "SELECT whatever FROM somewhere";
 
-        async().actions(
+        given(async().actions(
             new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
@@ -71,28 +76,28 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                         Statement statement = connection.createStatement();
                         ResultSet resultSet  = statement.executeQuery(sql);
 
-                        assertTrue(resultSet.next());
-                        assertEquals(resultSet.getString("foo"), "bar");
+                        Assert.assertTrue(resultSet.next());
+                        Assert.assertEquals(resultSet.getString("foo"), "bar");
                     } catch (SQLException e) {
                         e.printStackTrace();
                     }
                 }
             }
-        );
+        ));
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sql));
+        then(receive(jdbcServer)
+                .message(JdbcMessage.execute(sql)));
 
-        send(jdbcServer)
+        then(send(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]"));
+                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]")));
     }
 
     @CitrusTest
     public void textExecuteStatement() {
         String sql = "{CALL someFunction(?)}";
 
-        async().actions(new AbstractTestAction() {
+        given(async().actions(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
                 try {
@@ -104,28 +109,28 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
                     boolean isResultSet  = statement.execute();
                     ResultSet resultSet = statement.getResultSet();
 
-                    assertTrue(isResultSet);
-                    assertTrue(resultSet.next());
-                    assertEquals(resultSet.getString("foo"), "bar");
+                    Assert.assertTrue(isResultSet);
+                    Assert.assertTrue(resultSet.next());
+                    Assert.assertEquals(resultSet.getString("foo"), "bar");
                 } catch (SQLException e) {
                     throw new CitrusRuntimeException(e);
                 }
             }
-        });
+        }));
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sql + " - (5)"));
+        then(receive(jdbcServer)
+                .message(JdbcMessage.execute(sql + " - (5)")));
 
-        send(jdbcServer)
+        then(send(jdbcServer)
                 .messageType(MessageType.JSON)
-                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]"));
+                .message(JdbcMessage.success().dataSet("[ { \"foo\": \"bar\" } ]")));
     }
 
     @CitrusTest
     public void textExecuteUpdate() {
         String sql = "UPDATE something WHERE condition";
 
-        async().actions(new AbstractTestAction() {
+        given(async().actions(new AbstractTestAction() {
                 @Override
                 public void doExecute(TestContext context) {
                     try {
@@ -134,18 +139,18 @@ public class JdbcExecutionsIT extends TestNGCitrusTestDesigner{
 
                         Statement statement = connection.createStatement();
                         int updatedRows = statement.executeUpdate(sql);
-                        assertEquals(updatedRows, 42);
+                        Assert.assertEquals(updatedRows, 42);
                     } catch (SQLException e) {
                         throw new CitrusRuntimeException(e);
                     }
                 }
             }
-        );
+        ));
 
-        receive(jdbcServer)
-                .message(JdbcMessage.execute(sql));
+        then(receive(jdbcServer)
+                .message(JdbcMessage.execute(sql)));
 
-        send(jdbcServer)
-                .message(JdbcMessage.success().rowsUpdated(42));
+        then(send(jdbcServer)
+                .message(JdbcMessage.success().rowsUpdated(42)));
     }
 }
