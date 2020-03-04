@@ -19,7 +19,11 @@ package com.consol.citrus.annotations;
 import java.lang.reflect.Field;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.GherkinTestActionRunner;
+import com.consol.citrus.TestActionRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -104,6 +108,87 @@ public abstract class CitrusAnnotations {
 
                 return false;
             }
+        });
+    }
+
+    /**
+     * Inject test runner instance to the test class fields with {@link CitrusResource} annotation.
+     * @param target
+     * @param runner
+     */
+    public static void injectTestRunner(final Object target, final TestCaseRunner runner) {
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            Class<?> type = field.getType();
+            if (TestCaseRunner.class.isAssignableFrom(type)) {
+                log.debug(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
+                ReflectionUtils.setField(field, target, runner);
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
+            }
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && TestCaseRunner.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
+                }
+
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * Inject test action runner instance to the test class fields with {@link CitrusResource} annotation.
+     * @param target
+     * @param runner
+     */
+    public static void injectTestActionRunner(final Object target, final TestActionRunner runner) {
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            Class<?> type = field.getType();
+            if (TestActionRunner.class.isAssignableFrom(type)) {
+                log.debug(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
+                ReflectionUtils.setField(field, target, runner);
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
+            }
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && TestActionRunner.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
+                }
+
+                return true;
+            }
+
+            return false;
+        });
+    }
+
+    /**
+     * Inject test action runner instance to the test class fields with {@link CitrusResource} annotation.
+     * @param target
+     * @param runner
+     */
+    public static void injectTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            Class<?> type = field.getType();
+            if (GherkinTestActionRunner.class.isAssignableFrom(type)) {
+                log.debug(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
+                ReflectionUtils.setField(field, target, runner);
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
+            }
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && GherkinTestActionRunner.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
+                }
+
+                return true;
+            }
+
+            return false;
         });
     }
 }

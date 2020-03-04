@@ -1,5 +1,5 @@
 /*
- * Copyright 2006-2016 the original author or authors.
+ * Copyright 2006-2017 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.junit.integration;
 
-import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.junit.JUnit4CitrusTestRunner;
+import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.junit.JUnit4CitrusSupport;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
 /**
  * @author Christoph Deppisch
- * @since 2.5
  */
-public class ContextInjectionJUnit4RunnerIT extends JUnit4CitrusTestRunner {
+public class FailJUnit4JavaIT extends JUnit4CitrusSupport {
 
-    @Test
+    @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     @CitrusTest
-    @SuppressWarnings("squid:S2699")
-    public void contextInjection(@CitrusResource TestContext context) {
-        context.setVariable("message", "Injection worked!");
-
-        echo("${message}");
+    public void failTest() {
+        run(echo("This test should fail because of unknown variable ${foo}"));
     }
 }

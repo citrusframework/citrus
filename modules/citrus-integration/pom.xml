@@ -46,53 +46,6 @@
         </plugin>
 
         <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-failsafe-plugin</artifactId>
-          <version>${surefire.version}</version>
-          <executions>
-            <execution>
-              <id>failure-tests</id>
-              <phase>integration-test</phase>
-              <goals>
-                <goal>integration-test</goal>
-              </goals>
-              <configuration>
-                <groups>com.consol.citrus.ShouldFailGroup</groups>
-                <excludedGroups>NonExisting</excludedGroups>
-              </configuration>
-            </execution>
-          </executions>
-          <configuration>
-            <excludedGroups>com.consol.citrus.ShouldFailGroup</excludedGroups>
-            <properties>
-              <property>
-                <name>junit</name>
-                <value>false</value>
-              </property>
-            </properties>
-            <forkCount>1</forkCount>
-            <threadCount>1</threadCount>
-          </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>org.junit.platform</groupId>
-              <artifactId>junit-platform-surefire-provider</artifactId>
-              <version>${junit.platform.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-junit47</artifactId>
-              <version>${surefire.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-testng</artifactId>
-              <version>${surefire.version}</version>
-            </dependency>
-          </dependencies>
-        </plugin>
-
-        <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jaxb2-maven-plugin</artifactId>
           <executions>

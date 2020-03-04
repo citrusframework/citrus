@@ -14,31 +14,24 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.junit.integration;
 
-import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import com.consol.citrus.exceptions.TestCaseFailedException;
+import com.consol.citrus.junit.JUnit4CitrusSupport;
+import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
-public class ContextInjectionJUnit5IT {
+public class FailJUnit4RuntimeExceptionIT extends JUnit4CitrusSupport {
 
-    @CitrusResource
-    private TestDesigner designer;
-
-    @Test
+    @Test(expected = TestCaseFailedException.class)
+    @Category( ShouldFailGroup.class )
     @CitrusTest
-    @SuppressWarnings("squid:S2699")
-    void contextInjection(@CitrusResource TestContext context) {
-        context.setVariable("message", "Injection worked!");
-
-        designer.echo("${message}");
+    public void failTest() {
+        throw new RuntimeException("This test should fail because of runtime exception");
     }
 }

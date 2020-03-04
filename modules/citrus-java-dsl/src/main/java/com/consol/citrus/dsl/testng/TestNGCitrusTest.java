@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusTest;
@@ -91,7 +91,7 @@ public class TestNGCitrusTest extends AbstractTestNGCitrusTest {
 
                 TestContext ctx = prepareTestContext(citrus.getCitrusContext().createTestContext());
 
-                TestCaseBuilder testBuilder;
+                TestCaseRunner testBuilder;
                 if (isDesignerMethod(method)) {
                     testBuilder = createTestDesigner(method, ctx);
                     testBuilder.groups(testResult.getMethod().getGroups());

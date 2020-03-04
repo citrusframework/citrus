@@ -14,24 +14,26 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.junit.jupiter.integration;
 
+import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
+@ExtendWith(CitrusSupport.class)
 public class ContextInjectionJUnit5RunnerIT {
 
     @CitrusResource
-    private TestRunner runner;
+    private GherkinTestActionRunner runner;
 
     @Test
     @CitrusTest
@@ -39,6 +41,6 @@ public class ContextInjectionJUnit5RunnerIT {
     void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
-        runner.echo("${message}");
+        runner.given(echo("${message}"));
     }
 }

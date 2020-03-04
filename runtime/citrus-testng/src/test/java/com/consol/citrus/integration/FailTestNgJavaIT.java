@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.integration;
 
-import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import com.consol.citrus.dsl.runner.TestRunner;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.testng.annotations.Test;
+
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
-public class EchoActionJUnit5RunnerIT {
+public class FailTestNgJavaIT extends TestNGCitrusSupport {
 
-    @Test
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = CitrusRuntimeException.class)
     @CitrusTest
-    public void echoJavaTest(@CitrusResource TestRunner runner) {
-        runner.variable("time", "citrus:currentDate()");
-
-        runner.echo("Hello Citrus!");
-
-        runner.echo("CurrentTime is: ${time}");
+    public void shouldFail() {
+        run(echo("This test should fail because of unknown variable ${foo}"));
     }
 }

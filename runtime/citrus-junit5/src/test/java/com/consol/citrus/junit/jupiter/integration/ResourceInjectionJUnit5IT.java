@@ -14,45 +14,51 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.junit.jupiter.integration;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.GherkinTestActionRunner;
+import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.actions.AbstractTestAction;
-import com.consol.citrus.annotations.*;
+import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.annotations.CitrusFramework;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.functions.Functions;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.jms.config.annotation.JmsEndpointConfig;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfig;
+import com.consol.citrus.functions.Functions;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static com.consol.citrus.actions.CreateVariablesAction.Builder.createVariable;
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
+
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
+@ExtendWith(CitrusSupport.class)
 public class ResourceInjectionJUnit5IT {
 
     @CitrusFramework
     private Citrus citrus;
 
     @CitrusEndpoint
-    @JmsEndpointConfig(destinationName = "FOO.test.queue")
-    private Endpoint jmsEndpoint;
+    @DirectEndpointConfig(queueName = "FOO.test.queue")
+    private Endpoint directEndpoint;
 
     @Test
     @CitrusTest
-    public void injectResourceDesigner(@CitrusResource TestDesigner testDesigner, @CitrusResource TestContext context) {
+    public void injectResourceActionRunner(@CitrusResource TestActionRunner runner, @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
         context.setVariable("message", "Injection worked!");
 
-        testDesigner.echo("${message}");
-        testDesigner.createVariable("random", number);
+        runner.run(echo("${message}"));
+        runner.run(createVariable("random", number));
 
-        testDesigner.action(new AbstractTestAction() {
+        runner.run(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
                 Assertions.assertEquals(context.getVariable("random"), number);
@@ -60,19 +66,19 @@ public class ResourceInjectionJUnit5IT {
         });
 
         Assertions.assertNotNull(citrus);
-        Assertions.assertNotNull(jmsEndpoint);
+        Assertions.assertNotNull(directEndpoint);
     }
 
     @Test
     @CitrusTest
-    public void injectResourceRunner(@CitrusResource TestRunner testRunner, @CitrusResource TestContext context) {
+    public void injectResourceGherkinRunner(@CitrusResource GherkinTestActionRunner runner, @CitrusResource TestContext context) {
         final String number = Functions.randomNumber(10L, context);
         context.setVariable("message", "Injection worked!");
 
-        testRunner.echo("${message}");
-        testRunner.createVariable("random", number);
+        runner.given(echo("${message}"));
+        runner.when(createVariable("random", number));
 
-        testRunner.run(new AbstractTestAction() {
+        runner.then(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
                 Assertions.assertEquals(context.getVariable("random"), number);
@@ -80,6 +86,6 @@ public class ResourceInjectionJUnit5IT {
         });
 
         Assertions.assertNotNull(citrus);
-        Assertions.assertNotNull(jmsEndpoint);
+        Assertions.assertNotNull(directEndpoint);
     }
 }

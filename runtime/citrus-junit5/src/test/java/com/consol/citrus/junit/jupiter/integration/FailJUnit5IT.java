@@ -14,31 +14,37 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.junit.jupiter.integration;
 
-import com.consol.citrus.annotations.*;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
-import com.consol.citrus.dsl.runner.TestRunner;
+import com.consol.citrus.TestActionRunner;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.TestExecutionExceptionHandler;
+
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith({CitrusExtension.class, FailJUnit5IT.ShouldFailExtension.class})
+@ExtendWith({CitrusSupport.class, FailJUnit5IT.ShouldFailExtension.class})
 public class FailJUnit5IT {
 
     @Test
     @CitrusTest
-    public void failTest(@CitrusResource TestRunner runner) {
+    public void failTest(@CitrusResource TestActionRunner runner) {
         ShouldFailExtension.message = "Unknown variable 'foo'";
-        runner.echo("This test should fail because of unknown variable ${foo}");
+        runner.run(echo("This test should fail because of unknown variable ${foo}"));
     }
 
     @Test
     @CitrusTest
-    public void failRuntimeTest(@CitrusResource TestRunner runner) {
+    public void failRuntimeTest(@CitrusResource TestActionRunner runner) {
         ShouldFailExtension.message = "This test should fail because of runtime exception";
         throw new RuntimeException("This test should fail because of runtime exception");
     }

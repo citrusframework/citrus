@@ -14,38 +14,33 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit.jupiter;
+package com.consol.citrus.junit.jupiter.integration;
 
+import com.consol.citrus.TestActionRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.junit.jupiter.CitrusExtension;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.junit.jupiter.CitrusSupport;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
 /**
  * @author Christoph Deppisch
  */
-@ExtendWith(CitrusExtension.class)
-public class EchoActionJUnit5JavaIT {
+@ExtendWith(CitrusSupport.class)
+public class ContextInjectionJUnit5IT {
+
+    @CitrusResource
+    private TestActionRunner runner;
 
     @Test
     @CitrusTest
-    void echoJavaTest(@CitrusResource TestDesigner designer) {
-        designer.variable("time", "citrus:currentDate()");
+    @SuppressWarnings("squid:S2699")
+    void contextInjection(@CitrusResource TestContext context) {
+        context.setVariable("message", "Injection worked!");
 
-        designer.echo("Hello Citrus!");
-
-        designer.echo("CurrentTime is: ${time}");
-    }
-
-    @Test
-    @CitrusTest(name = "EchoSampleTest")
-    void echoTest(@CitrusResource TestDesigner designer) {
-        designer.variable("time", "citrus:currentDate()");
-
-        designer.echo("Hello Citrus!");
-
-        designer.echo("CurrentTime is: ${time}");
+        runner.run(echo("${message}"));
     }
 }

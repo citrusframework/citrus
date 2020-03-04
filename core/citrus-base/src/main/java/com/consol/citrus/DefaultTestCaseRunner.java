@@ -8,7 +8,7 @@ import com.consol.citrus.context.TestContext;
 /**
  * @author Christoph Deppisch
  */
-public class DefaultTestCaseRunner implements TestCaseBuilder, GherkinTestActionRunner {
+public class DefaultTestCaseRunner implements TestCaseRunner, GherkinTestActionRunner {
 
     /** The test case */
     private final TestCase testCase;

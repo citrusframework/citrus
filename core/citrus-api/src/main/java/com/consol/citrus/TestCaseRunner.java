@@ -5,7 +5,7 @@ import java.util.Date;
 /**
  * @author Christoph Deppisch
  */
-public interface TestCaseBuilder {
+public interface TestCaseRunner {
 
     /**
      * Starts the test case execution.

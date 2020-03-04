@@ -38,10 +38,10 @@ import java.security.PrivilegedAction;
  * @since 2009
  */
 public final class GroovyTestCaseParser implements ApplicationContextAware {
-   
+
     /** Application context */
     private ApplicationContext applicationContext;
-    
+
     /**
      * Logger
      */
@@ -51,7 +51,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
     public interface TestCaseBuilder {
         TestCase build(ApplicationContext applicationContext);
     }
-    
+
     /**
      * Parse the groovy script.
      * @param groovyScript
@@ -61,7 +61,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
     public TestCase parse(Resource groovyScript) {
         BufferedReader templateReader = null;
         BufferedReader bodyReader = null;
-        
+
         try {
             GroovyClassLoader loader = AccessController.doPrivileged(new PrivilegedAction<GroovyClassLoader>() {
                 public GroovyClassLoader run() {
@@ -79,23 +79,23 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
                     script.append(line);
                     script.append("\n");
                 } else {
-                    String bodyLine;                
+                    String bodyLine;
                     while ((bodyLine = bodyReader.readLine()) != null) {
                         script.append(bodyLine);
                         script.append("\n");
                     }
                 }
             }
-            
+
             Class<?> groovyClass = loader.parseClass(script.toString());
-    
+
             GroovyObject groovyObject;
             groovyObject = (GroovyObject) groovyClass.newInstance();
-            
+
             if (groovyObject instanceof TestCaseBuilder) {
                 return ((TestCaseBuilder)groovyObject).build(applicationContext);
             } else {
-                throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseBuilder.");
+                throw new CitrusRuntimeException("Unable to parse groovy script. Script must implement TestCaseRunner.");
             }
         } catch (InstantiationException e) {
             throw new CitrusRuntimeException(e);
@@ -113,7 +113,7 @@ public final class GroovyTestCaseParser implements ApplicationContextAware {
             } catch (IOException e) {
                 log.error("Failed to close stream for groovy template resource", e);
             }
-            
+
             try {
                 if (bodyReader != null) {
                     bodyReader.close();

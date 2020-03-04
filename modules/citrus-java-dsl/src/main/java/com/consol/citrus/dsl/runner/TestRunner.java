@@ -19,7 +19,7 @@ package com.consol.citrus.dsl.runner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
-import com.consol.citrus.TestCaseBuilder;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.actions.AntRunAction;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.actions.EchoAction;
@@ -76,7 +76,7 @@ import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
  * @author Christoph Deppisch
  * @since 2.3
  */
-public interface TestRunner extends TestCaseBuilder {
+public interface TestRunner extends TestCaseRunner {
 
     /**
      * Starts the test case execution.

@@ -14,35 +14,21 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.junit;
+package com.consol.citrus.integration;
 
-import com.consol.citrus.ShouldFailGroup;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.junit.JUnit4CitrusTestDesigner;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
+import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  */
-public class FailJUnit4JavaIT extends JUnit4CitrusTestDesigner {
+public class FailTestNgRuntimeExceptionIT extends TestNGCitrusSupport {
 
-    @Override
-    protected void configure() {
-        echo("This test should fail because of unknown variable ${foo}");
-    }
-
-    @Test(expected = TestCaseFailedException.class)
-    @Category( ShouldFailGroup.class )
-    public void doExecute() {
-        executeTest();
-    }
-
-    @Test(expected = TestCaseFailedException.class)
-    @Category( ShouldFailGroup.class )
+    @Test(groups = "com.consol.citrus.ShouldFailGroup", expectedExceptions = TestCaseFailedException.class)
     @CitrusTest
-    public void failTest() {
-        echo("This test should fail because of unknown variable ${foo}");
+    public void shouldFail() {
+        throw new RuntimeException("This test should fail because of runtime exception");
     }
 }
