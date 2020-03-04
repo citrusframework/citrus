@@ -86,10 +86,18 @@ public abstract class TestUtils {
         try {
             final CompletableFuture<Boolean> finished = new CompletableFuture<>();
             scheduledExecutor.scheduleAtFixedRate(() -> {
-                if (container.isDone(context)) {
-                    finished.complete(true);
-                } else {
-                    log.debug("Wait for test container to finish properly ...");
+                try {
+                    if (container.isDone(context)) {
+                        finished.complete(true);
+                    } else {
+                        log.debug("Wait for test container to finish properly ...");
+                    }
+                } catch (Exception e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Failed to wait for completion of nested test actions", e);
+                    } else {
+                        log.warn(String.format("Failed to wait for completion of nested test actions because of %s",  e.getMessage()));
+                    }
                 }
             }, 100L, timeout / 10, TimeUnit.MILLISECONDS);
 

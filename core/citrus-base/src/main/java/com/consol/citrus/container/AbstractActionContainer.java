@@ -19,6 +19,7 @@ package com.consol.citrus.container;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -28,6 +29,8 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for all containers holding several embedded test actions.
@@ -35,6 +38,9 @@ import com.consol.citrus.context.TestContext;
  * @author Christoph Deppisch
  */
 public abstract class AbstractActionContainer extends AbstractTestAction implements TestActionContainer, Completable {
+
+    /** Logger */
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     /** List of nested actions */
     protected List<TestActionBuilder<?>> actions = new ArrayList<>();
@@ -73,9 +79,21 @@ public abstract class AbstractActionContainer extends AbstractTestAction impleme
 
     @Override
     public boolean isDone(TestContext context) {
-        return isDisabled(context) || executedActions.stream().filter(action -> action instanceof Completable)
-                                .map(Completable.class::cast)
-                                .allMatch(action -> action.isDone(context));
+        if (isDisabled(context)) {
+            return true;
+        }
+
+        for (TestAction action : executedActions) {
+            if (action instanceof Completable && !((Completable) action).isDone(context)) {
+                if (log.isDebugEnabled()) {
+                    log.debug(Optional.ofNullable(action.getName()).filter(name -> name.trim().length() > 0)
+                            .orElse(action.getClass().getName()) + " not completed yet");
+                }
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override
