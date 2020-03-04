@@ -254,7 +254,7 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public CreateVariablesAction.Builder createVariable(String variableName, String value) {
-        CreateVariablesAction.Builder builder = CreateVariablesAction.Builder.createVariables(variableName, value);
+        CreateVariablesAction.Builder builder = CreateVariablesAction.Builder.createVariable(variableName, value);
         action(builder);
         return builder;
     }

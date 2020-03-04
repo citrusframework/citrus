@@ -276,8 +276,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public CreateVariablesAction.Builder createVariable(String variableName, String value) {
-        CreateVariablesAction.Builder builder = new CreateVariablesAction.Builder()
-                .variable(variableName, value);
+        CreateVariablesAction.Builder builder = CreateVariablesAction.Builder.createVariable(variableName, value);
         return run(builder);
     }
 
