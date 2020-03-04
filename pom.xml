@@ -59,7 +59,6 @@
     <module>tools</module>
     <module>modules/citrus-java-dsl</module>
     <module>catalog</module>
-    <module>modules/citrus-integration</module>
   </modules>
 
   <developers>
