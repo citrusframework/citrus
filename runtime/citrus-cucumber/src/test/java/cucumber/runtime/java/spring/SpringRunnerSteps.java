@@ -16,9 +16,10 @@
 
 package cucumber.runtime.java.spring;
 
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.config.CitrusSpringConfig;
-import com.consol.citrus.dsl.runner.TestRunner;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -29,14 +30,14 @@ import org.springframework.test.context.ContextConfiguration;
 public class SpringRunnerSteps {
 
     @CitrusResource
-    private TestRunner testRunner;
+    private DefaultTestCaseRunner testRunner;
 
     /**
      * Gets the value of the testRunner property.
      *
      * @return the testRunner
      */
-    public TestRunner getTestRunner() {
+    public TestCaseRunner getTestRunner() {
         return testRunner;
     }
 }

@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,5 +42,15 @@ public class Info extends AbstractDockerCommand<com.github.dockerjava.api.model.
     public void execute(DockerClient dockerClient, TestContext context) {
         setCommandResult(dockerClient.getEndpointConfiguration().getDockerClient().infoCmd().exec());
         log.debug(getCommandResult().toString());
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<com.github.dockerjava.api.model.Info, Info, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new Info());
+        }
     }
 }

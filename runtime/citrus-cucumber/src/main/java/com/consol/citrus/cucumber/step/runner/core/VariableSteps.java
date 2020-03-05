@@ -16,12 +16,12 @@
 
 package com.consol.citrus.cucumber.step.runner.core;
 
+import java.util.Map;
+
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.api.java.en.Given;
 import io.cucumber.datatable.DataTable;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -30,7 +30,7 @@ import java.util.Map;
 public class VariableSteps {
 
     @CitrusResource
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     @Given("^variable ([^\\s]+) is \"([^\"]*)\"$")
     public void variable(String name, String value) {

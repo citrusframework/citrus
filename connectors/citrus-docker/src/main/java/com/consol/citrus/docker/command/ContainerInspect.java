@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.InspectContainerCmd;
 import com.github.dockerjava.api.command.InspectContainerResponse;
@@ -57,5 +58,25 @@ public class ContainerInspect extends AbstractDockerCommand<InspectContainerResp
     public ContainerInspect container(String id) {
         getParameters().put(CONTAINER_ID, id);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<InspectContainerResponse, ContainerInspect, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ContainerInspect());
+        }
+
+        /**
+         * Sets the container id parameter.
+         * @param id
+         * @return
+         */
+        public Builder container(String id) {
+            command.container(id);
+            return this;
+        }
     }
 }

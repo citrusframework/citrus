@@ -19,6 +19,7 @@ package com.consol.citrus.cucumber.step.runner.docker;
 import java.io.File;
 import java.util.UUID;
 
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.cucumber.UnitTestSupport;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
@@ -31,9 +32,6 @@ import com.consol.citrus.docker.command.ContainerStart;
 import com.consol.citrus.docker.command.ContainerStop;
 import com.consol.citrus.docker.command.ImageBuild;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
-import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
@@ -61,7 +59,7 @@ public class DockerStepsTest extends UnitTestSupport {
 
     private DockerSteps steps;
 
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     @Autowired
     private DockerClient dockerClient;
@@ -69,9 +67,9 @@ public class DockerStepsTest extends UnitTestSupport {
     @BeforeMethod
     public void injectResources() {
         steps = new DockerSteps();
-        runner = new DefaultTestRunner(context);
+        runner = new DefaultTestCaseRunner(context);
         CitrusAnnotations.injectAll(steps, citrus, context);
-        CitrusDslAnnotations.injectTestRunner(steps, runner);
+        CitrusAnnotations.injectTestRunner(steps, runner);
     }
 
     @Test

@@ -16,18 +16,12 @@
 
 package cucumber.runtime.java.spring;
 
-import com.consol.citrus.CitrusVersion;
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.runtime.CucumberException;
 import cucumber.runtime.java.CitrusBackend;
-import cucumber.runtime.java.CitrusObjectFactory;
-import cucumber.runtime.java.InjectionMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,20 +34,14 @@ public class CitrusSpringObjectFactory extends SpringFactory {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(CitrusSpringObjectFactory.class);
 
-    /** Test designer */
-    private TestDesigner designer;
-
     /** Test runner */
-    private TestRunner runner;
+    private TestCaseRunner runner;
 
     /** Test context */
     private TestContext context;
 
     /** Static self reference */
     private static CitrusSpringObjectFactory selfReference;
-
-    /** Mode to use for injection */
-    private InjectionMode mode = null;
 
     /**
      * Default constructor with static self reference initialization.
@@ -63,44 +51,10 @@ public class CitrusSpringObjectFactory extends SpringFactory {
     }
 
     @Override
-    public boolean addClass(Class<?> clazz) {
-        InjectionMode fallback;
-        if (mode == null) {
-            log.info("Initializing injection mode for Citrus " + CitrusVersion.version());
-            fallback = InjectionMode.valueOf(System.getProperty(CitrusObjectFactory.INJECTION_MODE_PROPERTY, System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) != null ?
-                    System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
-        } else {
-            fallback = mode;
-        }
-
-        InjectionMode requiredMode = InjectionMode.analyseMode(clazz, fallback);
-        if (mode == null) {
-            mode = requiredMode;
-        } else if (!mode.equals(requiredMode)) {
-            log.warn(String.format("Ignoring class of injection type '%s' as current injection mode is '%s'", requiredMode, mode));
-            return false;
-        }
-
-        return super.addClass(clazz);
-    }
-
-    @Override
     public void start() {
         super.start();
         context = getInstance(TestContext.class);
-
-        if (mode == null) {
-            mode = InjectionMode.valueOf(System.getProperty(CitrusObjectFactory.INJECTION_MODE_PROPERTY, System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) != null ?
-                    System.getenv(CitrusObjectFactory.INJECTION_MODE_ENV) : InjectionMode.DESIGNER.name()));
-        }
-
-        if (InjectionMode.DESIGNER.equals(mode)) {
-            designer = new DefaultTestDesigner(context);
-        }
-
-        if (InjectionMode.RUNNER.equals(mode)) {
-            runner = new DefaultTestRunner(context);
-        }
+        runner = new DefaultTestCaseRunner(context);
     }
 
     @Override
@@ -125,14 +79,7 @@ public class CitrusSpringObjectFactory extends SpringFactory {
 
         T instance = super.getInstance(type);
         CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus());
-
-        if (InjectionMode.DESIGNER.equals(mode)) {
-            CitrusDslAnnotations.injectTestDesigner(instance, designer);
-        }
-
-        if (InjectionMode.RUNNER.equals(mode)) {
-            CitrusDslAnnotations.injectTestRunner(instance, runner);
-        }
+        CitrusAnnotations.injectTestRunner(instance, runner);
 
         return instance;
     }

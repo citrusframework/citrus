@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.RemoveImageCmd;
 import com.github.dockerjava.api.model.ResponseItem;
@@ -67,6 +68,36 @@ public class ImageRemove extends AbstractDockerCommand<ResponseItem> {
     public ImageRemove force(Boolean force) {
         getParameters().put("force", force);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<ResponseItem, ImageRemove, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ImageRemove());
+        }
+
+        /**
+         * Sets the image id parameter.
+         * @param id
+         * @return
+         */
+        public Builder image(String id) {
+            command.image(id);
+            return this;
+        }
+
+        /**
+         * Sets the force parameter.
+         * @param force
+         * @return
+         */
+        public Builder force(Boolean force) {
+            command.force(force);
+            return this;
+        }
     }
 
 }

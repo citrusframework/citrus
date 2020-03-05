@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.VersionCmd;
 import org.slf4j.Logger;
@@ -44,5 +45,15 @@ public class Version extends AbstractDockerCommand<com.github.dockerjava.api.mod
         setCommandResult(command.exec());
 
         log.debug(getCommandResult().toString());
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<com.github.dockerjava.api.model.Version, Version, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new Version());
+        }
     }
 }

@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.selenium.actions.FindElementAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
@@ -39,6 +39,8 @@ import cucumber.api.java.en.When;
 import io.cucumber.datatable.DataTable;
 import org.springframework.util.StringUtils;
 
+import static com.consol.citrus.selenium.actions.SeleniumActionBuilder.selenium;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7
@@ -46,7 +48,7 @@ import org.springframework.util.StringUtils;
 public class SeleniumSteps {
 
     @CitrusResource
-    protected TestRunner runner;
+    protected DefaultTestCaseRunner runner;
 
     @CitrusFramework
     protected Citrus citrus;
@@ -115,46 +117,46 @@ public class SeleniumSteps {
 
     @When("^(?:user )?starts? browser$")
     public void start() {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .start());
     }
 
     @When("^(?:user )?stops? browser$")
     public void stop() {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .stop());
     }
 
     @When("^(?:user )?navigates? to \"([^\"]+)\"$")
     public void navigate(String url) {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .navigate(url));
     }
 
     @When("^(?:user )?clicks? (?:element|button|link) with ([^\"]+)=\"([^\"]+)\"$")
     public void click(String property, String value) {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .click()
                 .element(property, value));
     }
 
     @When("^(?:user )?(?:sets?|puts?) text \"([^\"]+)\" to (?:element|input|textfield) with ([^\"]+)=\"([^\"]+)\"$")
     public void setInput(String text, String property, String value) {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .setInput(text)
                 .element(property, value));
     }
 
     @When("^(?:user )?(checks?|unchecks?) checkbox with ([^\"]+)=\"([^\"]+)\"$")
     public void checkInput(String type, String property, String value) {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .checkInput(type.equals("check") || type.equals("checks"))
                 .element(property, value));
     }
 
     @Then("^(?:page )?should (?:display|have) (?:element|button|link|input|textfield|form|heading) with (id|name|class-name|link-text|css-selector|tag-name|xpath)=\"([^\"]+)\"$")
     public void should_display(String property, String value) {
-        runner.selenium(action ->action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .find()
                 .enabled(true)
                 .displayed(true)
@@ -165,45 +167,45 @@ public class SeleniumSteps {
     public void should_display(String property, String value, DataTable dataTable) {
         Map<String, String> elementProperties = dataTable.asMap(String.class, String.class);
 
-        runner.selenium(action -> {
-            FindElementAction.Builder elementBuilder = action.browser(browser)
-                    .find()
-                    .element(property, value);
+        FindElementAction.Builder elementBuilder = selenium().browser(browser)
+                .find()
+                .element(property, value);
 
-            for (Map.Entry<String, String> propertyEntry : elementProperties.entrySet()) {
-                if (propertyEntry.getKey().equals("tag-name")) {
-                    elementBuilder.tagName(propertyEntry.getValue());
-                }
+        for (Map.Entry<String, String> propertyEntry : elementProperties.entrySet()) {
+            if (propertyEntry.getKey().equals("tag-name")) {
+                elementBuilder.tagName(propertyEntry.getValue());
+            }
 
-                if (propertyEntry.getKey().equals("text")) {
-                    elementBuilder.text(propertyEntry.getValue());
-                }
+            if (propertyEntry.getKey().equals("text")) {
+                elementBuilder.text(propertyEntry.getValue());
+            }
 
-                if (propertyEntry.getKey().equals("enabled")) {
-                    elementBuilder.enabled(Boolean.parseBoolean(propertyEntry.getValue()));
-                }
+            if (propertyEntry.getKey().equals("enabled")) {
+                elementBuilder.enabled(Boolean.parseBoolean(propertyEntry.getValue()));
+            }
 
-                if (propertyEntry.getKey().equals("displayed")) {
-                    elementBuilder.displayed(Boolean.parseBoolean(propertyEntry.getValue()));
-                }
+            if (propertyEntry.getKey().equals("displayed")) {
+                elementBuilder.displayed(Boolean.parseBoolean(propertyEntry.getValue()));
+            }
 
-                if (propertyEntry.getKey().equals("styles") || propertyEntry.getKey().equals("style")) {
-                    String[] propertyExpressions = StringUtils.delimitedListToStringArray(propertyEntry.getValue(), ";");
-                    for (String propertyExpression : propertyExpressions) {
-                        String[] keyValue = propertyExpression.split("=");
-                        elementBuilder.style(keyValue[0].trim(), VariableUtils.cutOffDoubleQuotes(keyValue[1].trim()));
-                    }
-                }
-
-                if (propertyEntry.getKey().equals("attributes") || propertyEntry.getKey().equals("attribute")) {
-                    String[] propertyExpressions = StringUtils.commaDelimitedListToStringArray(propertyEntry.getValue());
-                    for (String propertyExpression : propertyExpressions) {
-                        String[] keyValue = propertyExpression.split("=");
-                        elementBuilder.attribute(keyValue[0].trim(), VariableUtils.cutOffDoubleQuotes(keyValue[1].trim()));
-                    }
+            if (propertyEntry.getKey().equals("styles") || propertyEntry.getKey().equals("style")) {
+                String[] propertyExpressions = StringUtils.delimitedListToStringArray(propertyEntry.getValue(), ";");
+                for (String propertyExpression : propertyExpressions) {
+                    String[] keyValue = propertyExpression.split("=");
+                    elementBuilder.style(keyValue[0].trim(), VariableUtils.cutOffDoubleQuotes(keyValue[1].trim()));
                 }
             }
-        });
+
+            if (propertyEntry.getKey().equals("attributes") || propertyEntry.getKey().equals("attribute")) {
+                String[] propertyExpressions = StringUtils.commaDelimitedListToStringArray(propertyEntry.getValue());
+                for (String propertyExpression : propertyExpressions) {
+                    String[] keyValue = propertyExpression.split("=");
+                    elementBuilder.attribute(keyValue[0].trim(), VariableUtils.cutOffDoubleQuotes(keyValue[1].trim()));
+                }
+            }
+        }
+
+        runner.run(elementBuilder);
     }
 
     @When("^(?:page )?([^\\s]+) performs ([^\\s]+)$")
@@ -215,17 +217,15 @@ public class SeleniumSteps {
     public void page_action_with_arguments(String pageId, String method, DataTable dataTable) {
         verifyPage(pageId);
 
-        runner.selenium(action -> {
-            List<String> arguments = new ArrayList<>();
-            if (dataTable != null) {
-                arguments = dataTable.asList(String.class);
-            }
+        List<String> arguments = new ArrayList<>();
+        if (dataTable != null) {
+            arguments = dataTable.asList(String.class);
+        }
 
-            action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .page(pages.get(pageId))
                 .execute(method)
-                .arguments(arguments);
-        });
+                .arguments(arguments));
     }
 
     @Then("^(?:page )?([^\\s]+) should validate$")
@@ -237,17 +237,15 @@ public class SeleniumSteps {
     public void page_should_validate_with_validator(String pageId, String validatorId) {
         verifyPage(pageId);
 
-        runner.selenium(action -> {
-            PageValidator<?> pageValidator = null;
-            if (validators.containsKey(validatorId)) {
-                pageValidator = validators.get(validatorId);
-            }
+        PageValidator<?> pageValidator = null;
+        if (validators.containsKey(validatorId)) {
+            pageValidator = validators.get(validatorId);
+        }
 
-            action.browser(browser)
+        runner.run(selenium().browser(browser)
                 .page(pages.get(pageId))
                 .validator(pageValidator)
-                .validate();
-        });
+                .validate());
     }
 
     /**

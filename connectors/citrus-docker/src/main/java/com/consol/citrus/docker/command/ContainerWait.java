@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.github.dockerjava.api.command.WaitContainerCmd;
@@ -62,5 +63,25 @@ public class ContainerWait extends AbstractDockerCommand<WaitResponse> {
     public ContainerWait container(String id) {
         getParameters().put(CONTAINER_ID, id);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<WaitResponse, ContainerWait, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ContainerWait());
+        }
+
+        /**
+         * Sets the container id parameter.
+         * @param id
+         * @return
+         */
+        public Builder container(String id) {
+            command.container(id);
+            return this;
+        }
     }
 }

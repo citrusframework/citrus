@@ -16,9 +16,11 @@
 
 package com.consol.citrus.cucumber.step.runner.core;
 
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.api.java.en.Then;
+
+import static com.consol.citrus.actions.SleepAction.Builder.sleep;
 
 /**
  * @author Christoph Deppisch
@@ -27,15 +29,15 @@ import cucumber.api.java.en.Then;
 public class SleepSteps {
 
     @CitrusResource
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     @Then("^sleep$")
-    public void sleep() {
-        runner.sleep();
+    public void doSleep() {
+        runner.then(sleep());
     }
 
     @Then("^sleep (\\d+) ms$")
-    public void sleep(long milliseconds) {
-        runner.sleep(milliseconds);
+    public void doSleep(long milliseconds) {
+        runner.then(sleep().milliseconds(milliseconds));
     }
 }

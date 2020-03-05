@@ -420,6 +420,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder receive() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
          *
          * @param messageEndpoint
          * @return

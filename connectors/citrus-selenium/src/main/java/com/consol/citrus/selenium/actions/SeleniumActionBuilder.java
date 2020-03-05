@@ -60,7 +60,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Start browser instance.
      */
     public StartBrowserAction.Builder start() {
-        StartBrowserAction.Builder builder = new StartBrowserAction.Builder();
+        StartBrowserAction.Builder builder = new StartBrowserAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -80,7 +81,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Stop browser instance.
      */
     public StopBrowserAction.Builder stop() {
-        StopBrowserAction.Builder builder = new StopBrowserAction.Builder();
+        StopBrowserAction.Builder builder = new StopBrowserAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -100,7 +102,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Alert element.
      */
     public AlertAction.Builder alert() {
-        AlertAction.Builder builder = new AlertAction.Builder();
+        AlertAction.Builder builder = new AlertAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -110,7 +113,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public NavigateAction.Builder navigate(String page) {
         NavigateAction.Builder builder = new NavigateAction.Builder()
-                .page(page);
+                .page(page)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -120,7 +124,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public PageAction.Builder page(WebPage page) {
         PageAction.Builder builder = new PageAction.Builder()
-            .page(page);
+                .page(page)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -130,7 +135,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public PageAction.Builder page(Class<? extends WebPage> pageType) {
         PageAction.Builder builder = new PageAction.Builder()
-                .type(pageType);
+                .type(pageType)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -139,7 +145,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Finds element.
      */
     public FindElementAction.Builder find() {
-		FindElementAction.Builder builder = new FindElementAction.Builder();
+		FindElementAction.Builder builder = new FindElementAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -149,7 +156,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public DropDownSelectAction.Builder select(String option) {
         DropDownSelectAction.Builder builder = new DropDownSelectAction.Builder()
-                .option(option);
+                .option(option)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -159,7 +167,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public DropDownSelectAction.Builder select(String ... options) {
         DropDownSelectAction.Builder builder = new DropDownSelectAction.Builder()
-                .options(options);
+                .options(options)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -169,7 +178,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public SetInputAction.Builder setInput(String value) {
 		SetInputAction.Builder builder = new SetInputAction.Builder()
-                .value(value);
+                .value(value)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -179,7 +189,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public CheckInputAction.Builder checkInput(boolean checked) {
 		CheckInputAction.Builder builder = new CheckInputAction.Builder()
-                .checked(checked);
+                .checked(checked)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -188,7 +199,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Clicks element.
      */
     public ClickAction.Builder click() {
-		ClickAction.Builder builder = new ClickAction.Builder();
+		ClickAction.Builder builder = new ClickAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -197,7 +209,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Hover element.
      */
     public HoverAction.Builder hover() {
-        HoverAction.Builder builder = new HoverAction.Builder();
+        HoverAction.Builder builder = new HoverAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -206,7 +219,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Clear browser cache.
      */
     public ClearBrowserCacheAction.Builder clearCache() {
-        ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder();
+        ClearBrowserCacheAction.Builder builder = new ClearBrowserCacheAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -215,7 +229,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Make screenshot.
      */
     public MakeScreenshotAction.Builder screenshot() {
-        MakeScreenshotAction.Builder builder = new MakeScreenshotAction.Builder();
+        MakeScreenshotAction.Builder builder = new MakeScreenshotAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -225,7 +240,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public MakeScreenshotAction.Builder screenshot(String outputDir) {
         MakeScreenshotAction.Builder builder = new MakeScreenshotAction.Builder()
-                .outputDir(outputDir);
+                .outputDir(outputDir)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -236,7 +252,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public StoreFileAction.Builder store(String filePath) {
         StoreFileAction.Builder builder = new StoreFileAction.Builder()
-                .filePath(filePath);
+                .filePath(filePath)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -247,7 +264,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public GetStoredFileAction.Builder getStored(String fileName) {
         GetStoredFileAction.Builder builder = new GetStoredFileAction.Builder()
-                .fileName(fileName);
+                .fileName(fileName)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -256,7 +274,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Wait until element meets condition.
      */
     public WaitUntilAction.Builder waitUntil() {
-        WaitUntilAction.Builder builder = new WaitUntilAction.Builder();
+        WaitUntilAction.Builder builder = new WaitUntilAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -266,7 +285,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      */
     public JavaScriptAction.Builder javascript(String script) {
         JavaScriptAction.Builder builder = new JavaScriptAction.Builder()
-                .script(script);
+                .script(script)
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -284,7 +304,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
     public JavaScriptAction.Builder javascript(Resource scriptResource, Charset charset) {
         try {
             JavaScriptAction.Builder builder = new JavaScriptAction.Builder()
-                    .script(FileUtils.readToString(scriptResource, charset));
+                    .script(FileUtils.readToString(scriptResource, charset))
+                    .browser(seleniumBrowser);
             this.delegate = builder;
             return builder;
         } catch (IOException e) {
@@ -296,7 +317,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Open window.
      */
     public OpenWindowAction.Builder open() {
-        OpenWindowAction.Builder builder = new OpenWindowAction.Builder();
+        OpenWindowAction.Builder builder = new OpenWindowAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -305,7 +327,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Close window.
      */
     public CloseWindowAction.Builder close() {
-        CloseWindowAction.Builder builder = new CloseWindowAction.Builder();
+        CloseWindowAction.Builder builder = new CloseWindowAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }
@@ -314,7 +337,8 @@ public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestAc
      * Switch window.
      */
     public SwitchWindowAction.Builder focus() {
-        SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder();
+        SwitchWindowAction.Builder builder = new SwitchWindowAction.Builder()
+                .browser(seleniumBrowser);
         this.delegate = builder;
         return builder;
     }

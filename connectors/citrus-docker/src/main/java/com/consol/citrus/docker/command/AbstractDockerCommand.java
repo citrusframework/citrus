@@ -141,7 +141,7 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand<R> {
      * @param value
      * @return
      */
-    public AbstractDockerCommand withParam(String name, String value) {
+    public AbstractDockerCommand<R> withParam(String name, String value) {
         parameters.put(name, value);
         return this;
     }
@@ -151,7 +151,7 @@ public abstract class AbstractDockerCommand<R> implements DockerCommand<R> {
      * @param callback
      * @return
      */
-    public AbstractDockerCommand validateCommandResult(CommandResultCallback<R> callback) {
+    public AbstractDockerCommand<R> validateCommandResult(CommandResultCallback<R> callback) {
         this.resultCallback = callback;
         return this;
     }

@@ -22,6 +22,7 @@ public class TextEqualsMessageValidator extends DefaultMessageValidator {
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
+        return messageType.equalsIgnoreCase(MessageType.XML.toString())
+                || messageType.equalsIgnoreCase(MessageType.PLAINTEXT.toString());
     }
 }

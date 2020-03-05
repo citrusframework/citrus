@@ -17,16 +17,18 @@
 package com.consol.citrus.cucumber.step.runner.docker;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.*;
 import org.springframework.util.Assert;
+
+import static com.consol.citrus.docker.actions.DockerExecuteAction.Builder.docker;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +37,7 @@ import org.springframework.util.Assert;
 public class DockerSteps {
 
     @CitrusResource
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     @CitrusFramework
     private Citrus citrus;
@@ -60,7 +62,7 @@ public class DockerSteps {
 
     @When("^create container \"([^\"]+)\" from \"([^\"]+)\"$")
     public void createContainer(String containerName, String imageTag) {
-        runner.docker(builder -> builder.client(dockerClient)
+        runner.when(docker().client(dockerClient)
                 .create(imageTag)
                 .name(containerName)
                 .validateCommandResult((result, context) -> context.setVariable(DockerMessageHeaders.CONTAINER_ID, result.getId())));
@@ -68,7 +70,7 @@ public class DockerSteps {
 
     @When("^build image \"([^\"]+)\" from file \"([^\"]+)\"$")
     public void buildImage(String imageTag, String fileName) {
-        runner.docker(builder -> builder.client(dockerClient)
+        runner.when(docker().client(dockerClient)
                 .buildImage()
                 .tag(imageTag)
                 .dockerFile(fileName)
@@ -77,7 +79,7 @@ public class DockerSteps {
 
     @Then("^start container \"([^\"]+)\"$")
     public void startContainer(String containerId) {
-        runner.docker(builder -> builder.client(dockerClient)
+        runner.then(docker().client(dockerClient)
                 .start(containerId)
                 .validateCommandResult((result, context) ->
                         Assert.isTrue(!result.isErrorIndicated(), String.format("Failed to start container '%s' - %s", containerId, result.getErrorDetail()))));
@@ -85,7 +87,7 @@ public class DockerSteps {
 
     @Then("^stop container \"([^\"]+)\"$")
     public void stopContainer(String containerId) {
-        runner.docker(builder -> builder.client(dockerClient)
+        runner.then(docker().client(dockerClient)
                 .stop(containerId)
                 .validateCommandResult((result, context) ->
                         Assert.isTrue(!result.isErrorIndicated(), String.format("Failed to stop container '%s' - %s", containerId, result.getErrorDetail()))));
@@ -93,7 +95,7 @@ public class DockerSteps {
 
     @Then("^(?:the )?container \"([^\"]+)\" should be running$")
     public void containerIsRunning(String containerId) {
-        runner.docker(builder -> builder.client(dockerClient)
+        runner.then(docker().client(dockerClient)
                 .inspectContainer(containerId)
                 .validateCommandResult((result, context) ->
                         Assert.isTrue(result.getState().getRunning(), "Failed to validate container state, expected running but was stopped")));
@@ -101,7 +103,7 @@ public class DockerSteps {
 
     @Then("^(?:the )?container \"([^\"]+)\" should be stopped")
     public void containerIsStopped(String containerId) {
-        runner.docker(builder -> builder.client(dockerClient)
+        runner.then(docker().client(dockerClient)
                 .inspectContainer(containerId)
                 .validateCommandResult((result, context) ->
                         Assert.isTrue(!result.getState().getRunning(), "Failed to validate container state, expected stopped but was running")));

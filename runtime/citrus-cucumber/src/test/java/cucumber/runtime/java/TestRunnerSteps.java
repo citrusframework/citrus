@@ -16,8 +16,9 @@
 
 package cucumber.runtime.java;
 
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.runner.TestRunner;
 
 /**
  * @author Christoph Deppisch
@@ -26,14 +27,14 @@ import com.consol.citrus.dsl.runner.TestRunner;
 public class TestRunnerSteps {
 
     @CitrusResource
-    private TestRunner testRunner;
+    private DefaultTestCaseRunner testRunner;
 
     /**
      * Gets the value of the testRunner property.
      *
      * @return the testRunner
      */
-    public TestRunner getTestRunner() {
+    public TestCaseRunner getTestRunner() {
         return testRunner;
     }
 }

@@ -20,12 +20,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.actions.HttpActionBuilder;
 import com.consol.citrus.http.actions.HttpClientActionBuilder;
 import com.consol.citrus.http.actions.HttpClientRequestActionBuilder;
 import com.consol.citrus.http.actions.HttpClientResponseActionBuilder;
@@ -43,6 +41,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+
 /**
  * @author Christoph Deppisch
  * @since 2.7
@@ -50,7 +50,7 @@ import org.springframework.util.StringUtils;
 public class HttpSteps {
 
     @CitrusResource
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     @CitrusFramework
     private Citrus citrus;
@@ -220,36 +220,34 @@ public class HttpSteps {
      * @param request
      */
     protected void sendClientRequest(HttpMessage request) {
-        BuilderSupport<HttpActionBuilder> action = builder -> {
-            HttpClientActionBuilder.HttpClientSendActionBuilder sendBuilder = builder.client(httpClient).send();
-            HttpClientRequestActionBuilder requestBuilder;
+        HttpClientActionBuilder.HttpClientSendActionBuilder sendBuilder = http().client(httpClient).send();
+        HttpClientRequestActionBuilder requestBuilder;
 
-            if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
-                requestBuilder = sendBuilder.post().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.GET)) {
-                requestBuilder = sendBuilder.get().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.PUT)) {
-                requestBuilder = sendBuilder.put().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.DELETE)) {
-                requestBuilder = sendBuilder.delete().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.HEAD)) {
-                requestBuilder = sendBuilder.head().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.TRACE)) {
-                requestBuilder = sendBuilder.trace().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.PATCH)) {
-                requestBuilder = sendBuilder.patch().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.OPTIONS)) {
-                requestBuilder = sendBuilder.options().message(request);
-            } else {
-                requestBuilder = sendBuilder.post().message(request);
-            }
+        if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
+            requestBuilder = sendBuilder.post().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.GET)) {
+            requestBuilder = sendBuilder.get().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.PUT)) {
+            requestBuilder = sendBuilder.put().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.DELETE)) {
+            requestBuilder = sendBuilder.delete().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.HEAD)) {
+            requestBuilder = sendBuilder.head().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.TRACE)) {
+            requestBuilder = sendBuilder.trace().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.PATCH)) {
+            requestBuilder = sendBuilder.patch().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.OPTIONS)) {
+            requestBuilder = sendBuilder.options().message(request);
+        } else {
+            requestBuilder = sendBuilder.post().message(request);
+        }
 
-            if (StringUtils.hasText(url)) {
-                requestBuilder.uri(url);
-            }
-        };
+        if (StringUtils.hasText(url)) {
+            requestBuilder.uri(url);
+        }
 
-        runner.http(action);
+        runner.run(requestBuilder);
     }
 
     @Then("^(?:http-client )?receives? status (\\d+)(?: [^\\s]+)?$")
@@ -278,16 +276,16 @@ public class HttpSteps {
      * @param response
      */
     protected void receiveClientResponse(HttpMessage response) {
-        runner.http(action -> {
-            HttpClientResponseActionBuilder responseBuilder = action.client(httpClient).receive()
+        HttpClientResponseActionBuilder responseBuilder = http().client(httpClient).receive()
                 .response(response.getStatusCode())
                 .message(response);
 
-            for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
-                responseBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
-            }
-            pathValidations.clear();
-        });
+        for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
+            responseBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
+        }
+        pathValidations.clear();
+
+        runner.run(responseBuilder);
     }
 
     @When("^(?:http-server )?receives? (GET|HEAD|POST|PUT|PATCH|DELETE|OPTIONS|TRACE)$")
@@ -325,37 +323,35 @@ public class HttpSteps {
      * @param request
      */
     protected void receiveServerRequest(HttpMessage request) {
-        BuilderSupport<HttpActionBuilder> action = builder -> {
-            HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = builder.server(httpServer).receive();
-            HttpServerRequestActionBuilder requestBuilder;
+        HttpServerActionBuilder.HttpServerReceiveActionBuilder receiveBuilder = http().server(httpServer).receive();
+        HttpServerRequestActionBuilder requestBuilder;
 
-            if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
-                requestBuilder = receiveBuilder.post().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.GET)) {
-                requestBuilder = receiveBuilder.get().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.PUT)) {
-                requestBuilder = receiveBuilder.put().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.DELETE)) {
-                requestBuilder = receiveBuilder.delete().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.HEAD)) {
-                requestBuilder = receiveBuilder.head().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.TRACE)) {
-                requestBuilder = receiveBuilder.trace().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.PATCH)) {
-                requestBuilder = receiveBuilder.patch().message(request);
-            } else if (request.getRequestMethod().equals(HttpMethod.OPTIONS)) {
-                requestBuilder = receiveBuilder.options().message(request);
-            } else {
-                requestBuilder = receiveBuilder.post().message(request);
-            }
+        if (request.getRequestMethod() == null || request.getRequestMethod().equals(HttpMethod.POST)) {
+            requestBuilder = receiveBuilder.post().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.GET)) {
+            requestBuilder = receiveBuilder.get().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.PUT)) {
+            requestBuilder = receiveBuilder.put().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.DELETE)) {
+            requestBuilder = receiveBuilder.delete().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.HEAD)) {
+            requestBuilder = receiveBuilder.head().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.TRACE)) {
+            requestBuilder = receiveBuilder.trace().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.PATCH)) {
+            requestBuilder = receiveBuilder.patch().message(request);
+        } else if (request.getRequestMethod().equals(HttpMethod.OPTIONS)) {
+            requestBuilder = receiveBuilder.options().message(request);
+        } else {
+            requestBuilder = receiveBuilder.post().message(request);
+        }
 
-            for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
-                requestBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
-            }
-            pathValidations.clear();
-        };
+        for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
+            requestBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
+        }
+        pathValidations.clear();
 
-        runner.http(action);
+        runner.run(requestBuilder);
     }
 
     @Then("^(?:http-server )?sends? status (\\d+)(?: [^\\s]+)?$")
@@ -384,7 +380,7 @@ public class HttpSteps {
      * @param response
      */
     protected void sendServerResponse(HttpMessage response) {
-        runner.http(action -> action.server(httpServer).send()
+        runner.run(http().server(httpServer).send()
                 .response(response.getStatusCode())
                 .message(response));
     }

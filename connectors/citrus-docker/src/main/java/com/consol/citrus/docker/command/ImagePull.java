@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.PullImageCmd;
 import com.github.dockerjava.api.model.PullResponseItem;
@@ -101,5 +102,55 @@ public class ImagePull extends AbstractDockerCommand<PullResponseItem> {
     public ImagePull registry(String registry) {
         getParameters().put("registry", registry);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<PullResponseItem, ImagePull, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ImagePull());
+        }
+
+        /**
+         * Sets the image id parameter.
+         * @param id
+         * @return
+         */
+        public Builder image(String id) {
+            command.image(id);
+            return this;
+        }
+
+        /**
+         * Sets the tag parameter.
+         * @param tag
+         * @return
+         */
+        public Builder tag(String tag) {
+            command.tag(tag);
+            return this;
+        }
+
+        /**
+         * Sets the repository command parameter.
+         * @param repository
+         * @return
+         */
+        public Builder repository(String repository) {
+            command.repository(repository);
+            return this;
+        }
+
+        /**
+         * Sets the registry command parameter.
+         * @param registry
+         * @return
+         */
+        public Builder registry(String registry) {
+            command.registry(registry);
+            return this;
+        }
     }
 }

@@ -18,12 +18,10 @@ package com.consol.citrus.cucumber.step.runner.selenium;
 
 import java.net.URL;
 
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.cucumber.UnitTestSupport;
-import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.selenium.actions.CheckInputAction;
 import com.consol.citrus.selenium.actions.ClickAction;
 import com.consol.citrus.selenium.actions.FindElementAction;
@@ -57,7 +55,7 @@ public class SeleniumStepsTest extends UnitTestSupport {
 
     private SeleniumSteps steps;
 
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     @Autowired
     private SeleniumBrowser seleniumBrowser;
@@ -67,9 +65,9 @@ public class SeleniumStepsTest extends UnitTestSupport {
     @BeforeMethod
     public void injectResources() {
         steps = new SeleniumSteps();
-        runner = new DefaultTestRunner(context);
+        runner = new DefaultTestCaseRunner(context);
         CitrusAnnotations.injectAll(steps, citrus, context);
-        CitrusDslAnnotations.injectTestRunner(steps, runner);
+        CitrusAnnotations.injectTestRunner(steps, runner);
     }
 
     @Test

@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.InspectImageCmd;
 import com.github.dockerjava.api.command.InspectImageResponse;
@@ -56,5 +57,25 @@ public class ImageInspect extends AbstractDockerCommand<InspectImageResponse> {
     public ImageInspect image(String id) {
         getParameters().put(IMAGE_ID, id);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<InspectImageResponse, ImageInspect, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ImageInspect());
+        }
+
+        /**
+         * Sets the image id parameter.
+         * @param id
+         * @return
+         */
+        public Builder image(String id) {
+            command.image(id);
+            return this;
+        }
     }
 }

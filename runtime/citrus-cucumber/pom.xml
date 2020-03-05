@@ -100,13 +100,6 @@
 
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-java-dsl</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-docker</artifactId>
       <version>${project.version}</version>
       <optional>true</optional>
@@ -140,17 +133,11 @@
 
     <!-- Test scoped dependencies -->
     <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-camel</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.cucumber</groupId>
       <artifactId>cucumber-junit</artifactId>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>org.junit.vintage</groupId>
       <artifactId>junit-vintage-engine</artifactId>
@@ -165,7 +152,7 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-spring-integration</artifactId>
+      <artifactId>citrus-camel</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

@@ -14,27 +14,35 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.cucumber.step.designer.http;
+package com.consol.citrus.cucumber.step.runner.http;
 
 import java.io.IOException;
 
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.cucumber.UnitTestSupport;
-import com.consol.citrus.dsl.annotations.CitrusDslAnnotations;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpEndpointConfiguration;
+import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
+import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -44,7 +52,7 @@ public class HttpStepsTest extends UnitTestSupport {
 
     private HttpSteps steps;
 
-    private TestDesigner designer;
+    private DefaultTestCaseRunner runner;
 
     @Autowired
     private HttpClient httpClient;
@@ -52,9 +60,14 @@ public class HttpStepsTest extends UnitTestSupport {
     @BeforeMethod
     public void injectResources() {
         steps = new HttpSteps();
-        designer = new DefaultTestDesigner(context);
+        runner = new DefaultTestCaseRunner(context);
         CitrusAnnotations.injectAll(steps, citrus, context);
-        CitrusDslAnnotations.injectTestDesigner(steps, designer);
+        CitrusAnnotations.injectTestRunner(steps, runner);
+
+        reset(httpClient);
+        when(httpClient.getEndpointConfiguration()).thenReturn(new HttpEndpointConfiguration());
+        when(httpClient.createProducer()).thenReturn(httpClient);
+        when(httpClient.createConsumer()).thenReturn(httpClient);
     }
 
     @Test
@@ -62,7 +75,7 @@ public class HttpStepsTest extends UnitTestSupport {
         steps.setClient("httpClient");
         steps.sendClientRequestFull(FileUtils.readToString(new ClassPathResource("data/request.txt")));
 
-        TestCase testCase = designer.getTestCase();
+        TestCase testCase = runner.getTestCase();
         Assert.assertEquals(testCase.getActionCount(), 1L);
         Assert.assertTrue(testCase.getTestAction(0) instanceof SendMessageAction);
         SendMessageAction action = (SendMessageAction) testCase.getTestAction(0);
@@ -75,14 +88,25 @@ public class HttpStepsTest extends UnitTestSupport {
         Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), "POST");
         Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader("Accept-Charset"), "utf-8");
         Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), "<TestRequestMessage>\n  <text>Hello server</text>\n</TestRequestMessage>");
+
+        verify(httpClient).send(any(Message.class), eq(context));
     }
 
     @Test
     public void testReceiveClientResponseRaw() throws IOException {
+        String body = String.format("<TestResponseMessage>%n  <text>Hello Citrus</text>%n</TestResponseMessage>");
+        when(httpClient.receive(eq(context), eq(5000L))).thenReturn(new HttpMessage(body)
+                .header("Date", "Thu, 02 Mar 2017 16")
+                .header("Accept-Charset", "utf-8")
+                .header("Server", "Jetty(9.4.1.v20170120)")
+                .contentType("text/plain;charset=utf-8")
+                .version("HTTP/1.1")
+                .status(HttpStatus.OK));
+
         steps.setClient("httpClient");
         steps.receiveClientResponseFull(FileUtils.readToString(new ClassPathResource("data/response.txt")));
 
-        TestCase testCase = designer.getTestCase();
+        TestCase testCase = runner.getTestCase();
         Assert.assertEquals(testCase.getActionCount(), 1L);
         Assert.assertTrue(testCase.getTestAction(0) instanceof ReceiveMessageAction);
         ReceiveMessageAction action = (ReceiveMessageAction) testCase.getTestAction(0);
@@ -92,7 +116,7 @@ public class HttpStepsTest extends UnitTestSupport {
         Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_STATUS_CODE), 200);
         Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader(HttpMessageHeaders.HTTP_CONTENT_TYPE), "text/plain;charset=utf-8");
         Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getHeader("Accept-Charset"), "utf-8");
-        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), "<TestResponseMessage>\n  <text>Hello Citrus</text>\n</TestResponseMessage>");
+        Assert.assertEquals(((HttpMessageContentBuilder) action.getMessageBuilder()).getMessage().getPayload(String.class), body);
     }
 
 }

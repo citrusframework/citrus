@@ -16,17 +16,25 @@
 
 package com.consol.citrus.cucumber.step.runner.core;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.cucumber.message.MessageCreators;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
-import cucumber.api.Scenario;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.*;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.cucumber.message.MessageCreators;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import cucumber.api.Scenario;
+import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 
 /**
  * @author Christoph Deppisch
@@ -35,7 +43,7 @@ import java.util.Map;
 public class MessagingSteps {
 
     @CitrusResource
-    private TestRunner runner;
+    private DefaultTestCaseRunner runner;
 
     /** Available message creator POJO objects */
     private MessageCreators messageCreators;
@@ -62,10 +70,10 @@ public class MessagingSteps {
     @When("^<([^>]+)> sends message <([^>]+)>$")
     public void sendMessage(final String endpoint, final String messageId) {
         if (messages.containsKey(messageId)) {
-            runner.send(builder -> builder.endpoint(endpoint)
+            runner.when(send().endpoint(endpoint)
                     .message(new DefaultMessage(messages.get(messageId))));
         } else {
-            runner.send(builder -> builder.endpoint(endpoint)
+            runner.when(send().endpoint(endpoint)
                     .message(messageCreators.createMessage(messageId)));
         }
     }
@@ -76,47 +84,47 @@ public class MessagingSteps {
     }
 
     @When("^<([^>]+)> sends$")
-    public void send(final String endpoint, final String payload) {
-        runner.send(builder -> builder.endpoint(endpoint)
+    public void doSendMessage(final String endpoint, final String payload) {
+        runner.when(send().endpoint(endpoint)
                 .payload(payload));
     }
 
     @When("^<([^>]+)> sends \"([^\"]*)\"$")
     public void sendPayload(String endpoint, String payload) {
-        send(endpoint, payload);
+        doSendMessage(endpoint, payload);
     }
 
     @Then("^<([^>]+)> should send \"([^\"]*)\"$")
     public void shouldSend(String endpoint, String payload) {
-        send(endpoint, payload);
+        doSendMessage(endpoint, payload);
     }
 
     @Then("^<([^>]+)> should send$")
     public void shouldSendPayload(String endpoint, String payload) {
-        send(endpoint, payload);
+        doSendMessage(endpoint, payload);
     }
 
     @When("^<([^>]+)> receives message <([^>]+)>$")
-    public void receiveXmlMessage(final String endpoint, final String messageName) {
-        receiveMessage(endpoint, MessageType.XML.name(), messageName);
+    public void receiveDefaultMessage(final String endpoint, final String messageName) {
+        receiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, messageName);
     }
 
     @When("^<([^>]+)> receives ([^\\s]+) message <([^>]+)>$")
     public void receiveMessage(final String endpoint, final String type, final String messageId) {
         if (messages.containsKey(messageId)) {
-            runner.receive(builder -> builder.endpoint(endpoint)
+            runner.when(receive().endpoint(endpoint)
                     .messageType(type)
                     .message(new DefaultMessage(messages.get(messageId))));
         } else {
-            runner.receive(builder -> builder.endpoint(endpoint)
+            runner.when(receive().endpoint(endpoint)
                     .messageType(type)
                     .message(messageCreators.createMessage(messageId)));
         }
     }
 
     @Then("^<([^>]+)> should receive message <([^>]+)>$")
-    public void shouldReceiveXmlMessage(String endpoint, String messageName) {
-        receiveMessage(endpoint, MessageType.XML.name(), messageName);
+    public void shouldReceiveDefaultMessage(String endpoint, String messageName) {
+        receiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, messageName);
     }
 
     @Then("^<([^>]+)> should receive ([^\\s]+) message <([^>]+)>$")
@@ -125,45 +133,45 @@ public class MessagingSteps {
     }
 
     @When("^<([^>]+)> receives ([^\\s]+) \"([^\"]*)\"$")
-    public void receive(final String endpoint, final String type, final String payload) {
-        runner.receive(builder -> builder.endpoint(endpoint)
+    public void doReceiveMessage(final String endpoint, final String type, final String payload) {
+        runner.when(receive().endpoint(endpoint)
         .messageType(type)
         .payload(payload));
     }
 
     @When("^<([^>]+)> receives \"([^\"]*)\"$")
-    public void receiveXml(String endpoint, String payload) {
-        receive(endpoint, MessageType.XML.name(), payload);
+    public void receiveDefault(String endpoint, String payload) {
+        doReceiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, payload);
     }
 
     @When("^<([^>]+)> receives$")
-    public void receiveXmlPayload(String endpoint, String payload) {
-        receive(endpoint, MessageType.XML.name(), payload);
+    public void receiveDefaultPayload(String endpoint, String payload) {
+        doReceiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, payload);
     }
 
     @When("^<([^>]+)> receives ([^\\s\"]+)$")
     public void receivePayload(String endpoint, String type, String payload) {
-        receive(endpoint, type, payload);
+        doReceiveMessage(endpoint, type, payload);
     }
 
     @Then("^<([^>]+)> should receive ([^\\s]+) \"([^\"]*)\"$")
     public void shouldReceive(String endpoint, String type, String payload) {
-        receive(endpoint, type, payload);
+        doReceiveMessage(endpoint, type, payload);
     }
 
     @Then("^<([^>]+)> should receive \"([^\"]*)\"$")
-    public void shouldReceiveXml(String endpoint, String payload) {
-        receive(endpoint, MessageType.XML.name(), payload);
+    public void shouldReceiveDefault(String endpoint, String payload) {
+        doReceiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, payload);
     }
 
     @Then("^<([^>]+)> should receive$")
-    public void shouldReceiveXmlPayload(String endpoint, String payload) {
-        receive(endpoint, MessageType.XML.name(), payload);
+    public void shouldReceiveDefaultPayload(String endpoint, String payload) {
+        doReceiveMessage(endpoint, CitrusSettings.DEFAULT_MESSAGE_TYPE, payload);
     }
 
     @Then("^<([^>]+)> should receive ([^\\s\"]+)$")
     public void shouldReceivePayload(String endpoint, String type, String payload) {
-        receive(endpoint, type, payload);
+        doReceiveMessage(endpoint, type, payload);
     }
 
     @And("^<([^>]+)> header ([^\\s]+)(?: is |=)\"([^\"]*)\"$")

@@ -32,30 +32,6 @@ public class CitrusSpringObjectFactoryTest {
     }
 
     @Test
-    public void testDesignerInject() throws Exception {
-        CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
-        factory.addClass(SpringDesignerSteps.class);
-
-        // Scenario 1
-        factory.start();
-        final SpringDesignerSteps steps = factory.getInstance(SpringDesignerSteps.class);
-        Assert.assertNotNull(steps.getTestDesigner());
-        factory.stop();
-    }
-
-    @Test
-    public void testDesignerInjectWithDefaultContext() throws Exception {
-        CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
-        factory.addClass(DefaultSpringDesignerSteps.class);
-
-        // Scenario 1
-        factory.start();
-        final DefaultSpringDesignerSteps steps = factory.getInstance(DefaultSpringDesignerSteps.class);
-        Assert.assertNotNull(steps.getTestDesigner());
-        factory.stop();
-    }
-
-    @Test
     public void testRunnerInject() throws Exception {
         CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
         factory.addClass(SpringRunnerSteps.class);

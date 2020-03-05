@@ -16,14 +16,22 @@
 
 package com.consol.citrus.docker.command;
 
+import java.util.stream.Stream;
+
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
-import com.github.dockerjava.api.command.*;
-import com.github.dockerjava.api.model.*;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerCmd;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.model.Capability;
+import com.github.dockerjava.api.model.ExposedPort;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports;
+import com.github.dockerjava.api.model.Volume;
 import org.springframework.util.StringUtils;
-
-import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -417,5 +425,196 @@ public class ContainerCreate extends AbstractDockerCommand<CreateContainerRespon
     public ContainerCreate workingDir(String workingDir) {
         getParameters().put("working-dir", workingDir);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<CreateContainerResponse, ContainerCreate, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ContainerCreate());
+        }
+
+        /**
+         * Sets the image id parameter.
+         * @param id
+         * @return
+         */
+        public Builder image(String id) {
+            command.image(id);
+            return this;
+        }
+
+        /**
+         * Sets the image name parameter.
+         * @param name
+         * @return
+         */
+        public Builder name(String name) {
+            command.name(name);
+            return this;
+        }
+
+        /**
+         * Sets the attach-stderr parameter.
+         * @param attachStderr
+         * @return
+         */
+        public Builder attachStdErr(Boolean attachStderr) {
+            command.attachStdErr(attachStderr);
+            return this;
+        }
+
+        /**
+         * Sets the attach-stdin parameter.
+         * @param attachStdin
+         * @return
+         */
+        public Builder attachStdIn(Boolean attachStdin) {
+            command.attachStdIn(attachStdin);
+            return this;
+        }
+
+        /**
+         * Sets the attach-stdout parameter.
+         * @param attachStdout
+         * @return
+         */
+        public Builder attachStdOut(Boolean attachStdout) {
+            command.attachStdOut(attachStdout);
+            return this;
+        }
+
+        /**
+         * Adds capabilities as command parameter.
+         * @param capabilities
+         * @return
+         */
+        public Builder addCapability(Capability ... capabilities) {
+            command.addCapability(capabilities);
+            return this;
+        }
+
+        /**
+         * Drops capabilities as command parameter.
+         * @param capabilities
+         * @return
+         */
+        public Builder dropCapability(Capability ... capabilities) {
+            command.dropCapability(capabilities);
+            return this;
+        }
+
+        /**
+         * Sets the domain-name parameter.
+         * @param domainName
+         * @return
+         */
+        public Builder domainName(String domainName) {
+            command.domainName(domainName);
+            return this;
+        }
+
+        /**
+         * Adds commands as command parameter.
+         * @param commands
+         * @return
+         */
+        public Builder cmd(String ... commands) {
+            command.cmd(commands);
+            return this;
+        }
+
+        /**
+         * Adds environment variables as command parameter.
+         * @param envVars
+         * @return
+         */
+        public Builder env(String ... envVars) {
+            command.env(envVars);
+            return this;
+        }
+
+        /**
+         * Sets the entrypoint parameter.
+         * @param entrypoint
+         * @return
+         */
+        public Builder entryPoint(String entrypoint) {
+            command.entryPoint(entrypoint);
+            return this;
+        }
+
+        /**
+         * Sets the hostname parameter.
+         * @param hostname
+         * @return
+         */
+        public Builder hostName(String hostname) {
+            command.hostName(hostname);
+            return this;
+        }
+
+        /**
+         * Adds port-specs variables as command parameter.
+         * @param portSpecs
+         * @return
+         */
+        public Builder portSpecs(String ... portSpecs) {
+            command.portSpecs(portSpecs);
+            return this;
+        }
+
+        /**
+         * Adds exposed-ports variables as command parameter.
+         * @param exposedPorts
+         * @return
+         */
+        public Builder exposedPorts(ExposedPort ... exposedPorts) {
+            command.exposedPorts(exposedPorts);
+            return this;
+        }
+
+        /**
+         * Adds explicit port bindings as command parameter.
+         * @param portBindings
+         * @return
+         */
+        public Builder portBindings(Ports ... portBindings) {
+            command.portBindings(portBindings);
+            return this;
+        }
+
+        /**
+         * Adds explicit port bindings as command parameter.
+         * @param portBindings
+         * @return
+         */
+        public Builder portBindings(PortBinding ... portBindings) {
+            command.portBindings(portBindings);
+            return this;
+        }
+
+
+        /**
+         * Adds volumes variables as command parameter.
+         * @param volumes
+         * @return
+         */
+        public Builder volumes(Volume ... volumes) {
+            command.volumes(volumes);
+            return this;
+        }
+
+        /**
+         * Sets the working-dir parameter.
+         * @param workingDir
+         * @return
+         */
+        public Builder workingDir(String workingDir) {
+            command.workingDir(workingDir);
+            return this;
+        }
     }
 }

@@ -23,6 +23,8 @@ import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.client.DockerClient;
+import com.consol.citrus.docker.command.AbstractDockerCommand;
+import com.consol.citrus.docker.command.AbstractDockerCommandBuilder;
 import com.consol.citrus.docker.command.ContainerCreate;
 import com.consol.citrus.docker.command.ContainerInspect;
 import com.consol.citrus.docker.command.ContainerStart;
@@ -31,6 +33,8 @@ import com.consol.citrus.docker.command.ContainerWait;
 import com.consol.citrus.docker.command.DockerCommand;
 import com.consol.citrus.docker.command.ImageBuild;
 import com.consol.citrus.docker.command.ImageInspect;
+import com.consol.citrus.docker.command.ImagePull;
+import com.consol.citrus.docker.command.ImageRemove;
 import com.consol.citrus.docker.command.Info;
 import com.consol.citrus.docker.command.Ping;
 import com.consol.citrus.docker.command.Version;
@@ -81,7 +85,7 @@ public class DockerExecuteAction extends AbstractTestAction {
         super("docker-execute", builder);
 
         this.dockerClient = builder.dockerClient;
-        this.command = builder.command;
+        this.command = builder.commandBuilder.command();
         this.expectedCommandResult = builder.expectedCommandResult;
         this.jsonMapper = builder.jsonMapper;
         this.jsonMessageValidator = builder.validator;
@@ -195,10 +199,10 @@ public class DockerExecuteAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<DockerExecuteAction, Builder> {
+    public static class Builder extends AbstractTestActionBuilder<DockerExecuteAction, Builder> {
 
         private DockerClient dockerClient = new DockerClient();
-        private DockerCommand<?> command;
+        private AbstractDockerCommandBuilder<?, ?, ?> commandBuilder;
         private String expectedCommandResult;
         private ObjectMapper jsonMapper = new ObjectMapper();
         private MessageValidator<? extends ValidationContext> validator;
@@ -230,107 +234,118 @@ public class DockerExecuteAction extends AbstractTestAction {
         }
 
         /**
-         * Use a info command.
+         * Adds some command via abstract command builder.
          */
-        public Builder command(DockerCommand<?> command) {
-            this.command = command;
+        public <R, S extends AbstractDockerCommandBuilder<R, AbstractDockerCommand<R>, S>> Builder command(final DockerCommand<R> dockerCommand) {
+            this.commandBuilder = new AbstractDockerCommandBuilder<R, AbstractDockerCommand<R>, S>(this, null) {
+                public AbstractDockerCommand<R> command() {
+                    return (AbstractDockerCommand<R>) dockerCommand;
+                }
+            };
             return this;
+        }
+
+        /**
+         * Sets the command builder.
+         * @param builder
+         * @param <T>
+         * @return
+         */
+        private <T extends AbstractDockerCommandBuilder<?, ?, ?>> T commandBuilder(T builder) {
+            this.commandBuilder = builder;
+            return builder;
         }
 
         /**
          * Use a info command.
          */
-        public Info info() {
-            Info command = new Info();
-            this.command = command;
-            return command;
+        public Info.Builder info() {
+            return commandBuilder(new Info.Builder(this));
         }
 
         /**
          * Adds a ping command.
          */
-        public Ping ping() {
-            Ping command = new Ping();
-            this.command = command;
-            return command;
+        public Ping.Builder ping() {
+            return commandBuilder(new Ping.Builder(this));
         }
 
         /**
          * Adds a version command.
          */
-        public Version version() {
-            Version command = new Version();
-            this.command = command;
-            return command;
+        public Version.Builder version() {
+            return commandBuilder(new Version.Builder(this));
         }
 
         /**
          * Adds a create command.
          */
-        public ContainerCreate create(String imageId) {
-            ContainerCreate command = new ContainerCreate();
-            command.image(imageId);
-            this.command = command;
-            return command;
+        public ContainerCreate.Builder create(String imageId) {
+            return commandBuilder(new ContainerCreate.Builder(this))
+                    .image(imageId);
         }
 
         /**
          * Adds a start command.
          */
-        public ContainerStart start(String containerId) {
-            ContainerStart command = new ContainerStart();
-            command.container(containerId);
-            this.command = command;
-            return command;
+        public ContainerStart.Builder start(String containerId) {
+            return commandBuilder(new ContainerStart.Builder(this))
+                    .container(containerId);
         }
 
         /**
          * Adds a stop command.
          */
-        public ContainerStop stop(String containerId) {
-            ContainerStop command = new ContainerStop();
-            command.container(containerId);
-            this.command = command;
-            return command;
+        public ContainerStop.Builder stop(String containerId) {
+            return commandBuilder(new ContainerStop.Builder(this))
+                    .container(containerId);
         }
 
         /**
          * Adds a wait command.
          */
-        public ContainerWait wait(String containerId) {
-            ContainerWait command = new ContainerWait();
-            command.container(containerId);
-            this.command = command;
-            return command;
+        public ContainerWait.Builder wait(String containerId) {
+            return commandBuilder(new ContainerWait.Builder(this))
+                    .container(containerId);
         }
 
         /**
          * Adds a inspect container command.
          */
-        public ContainerInspect inspectContainer(String containerId) {
-            ContainerInspect command = new ContainerInspect();
-            command.container(containerId);
-            this.command = command;
-            return command;
+        public ContainerInspect.Builder inspectContainer(String containerId) {
+            return commandBuilder(new ContainerInspect.Builder(this))
+                    .container(containerId);
         }
 
         /**
-         * Adds a inspect container command.
+         * Adds a inspect image command.
          */
-        public ImageInspect inspectImage(String imageId) {
-            ImageInspect command = new ImageInspect();
-            command.image(imageId);
-            this.command = command;
-            return command;
+        public ImageInspect.Builder inspectImage(String imageId) {
+            return commandBuilder(new ImageInspect.Builder(this))
+                    .image(imageId);
         }
 
         /**
-         * Adds a inspect container command.
+         * Adds a build image command.
          */
-        public ImageBuild buildImage() {
-            ImageBuild command = new ImageBuild();
-            this.command = command;
-            return command;
+        public ImageBuild.Builder buildImage() {
+            return commandBuilder(new ImageBuild.Builder(this));
+        }
+
+        /**
+         * Adds a pull image command.
+         */
+        public ImagePull.Builder pullImage(String imageId) {
+            return commandBuilder(new ImagePull.Builder(this))
+                    .image(imageId);
+        }
+
+        /**
+         * Adds a remove image command.
+         */
+        public ImageRemove.Builder removeImage(String imageId) {
+            return commandBuilder(new ImageRemove.Builder(this))
+                    .image(imageId);
         }
 
         /**

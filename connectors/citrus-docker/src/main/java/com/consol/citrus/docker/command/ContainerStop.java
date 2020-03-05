@@ -17,6 +17,7 @@
 package com.consol.citrus.docker.command;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.github.dockerjava.api.command.StopContainerCmd;
 import com.github.dockerjava.api.model.ResponseItem;
@@ -51,5 +52,25 @@ public class ContainerStop extends AbstractDockerCommand<ResponseItem> {
     public ContainerStop container(String id) {
         getParameters().put(CONTAINER_ID, id);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<ResponseItem, ContainerStop, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ContainerStop());
+        }
+
+        /**
+         * Sets the container id parameter.
+         * @param id
+         * @return
+         */
+        public Builder container(String id) {
+            command.container(id);
+            return this;
+        }
     }
 }

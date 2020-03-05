@@ -5,7 +5,7 @@ package com.consol.citrus;
  */
 public abstract class AbstractTestActionBuilder<T extends TestAction, S extends TestActionBuilder<T>> implements TestActionBuilder<T> {
 
-    protected S self;
+    protected final S self;
 
     private String name;
     private String description;

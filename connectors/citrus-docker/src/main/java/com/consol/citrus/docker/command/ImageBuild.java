@@ -16,7 +16,10 @@
 
 package com.consol.citrus.docker.command;
 
+import java.io.IOException;
+
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.docker.actions.DockerExecuteAction;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -25,8 +28,6 @@ import com.github.dockerjava.api.command.BuildImageCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
 import org.springframework.core.io.Resource;
-
-import java.io.IOException;
 
 /**
  * @author Christoph Deppisch
@@ -163,5 +164,85 @@ public class ImageBuild extends AbstractDockerCommand<BuildResponseItem> {
     public ImageBuild dockerFile(Resource fileResource) {
         getParameters().put("dockerfile", fileResource);
         return this;
+    }
+
+    /**
+     * Command builder.
+     */
+    public static final class Builder extends AbstractDockerCommandBuilder<BuildResponseItem, ImageBuild, Builder> {
+
+        public Builder(DockerExecuteAction.Builder parent) {
+            super(parent, new ImageBuild());
+        }
+
+        /**
+         * Sets the noCache parameter.
+         * @param noCache
+         * @return
+         */
+        public Builder noCache(Boolean noCache) {
+            command.noCache(noCache);
+            return this;
+        }
+
+        /**
+         * Sets the basedir parameter.
+         * @param basedir
+         * @return
+         */
+        public Builder basedir(String basedir) {
+            command.basedir(basedir);
+            return this;
+        }
+
+        /**
+         * Sets the tag parameter.
+         * @param tag
+         * @return
+         */
+        public Builder tag(String tag) {
+            command.tag(tag);
+            return this;
+        }
+
+        /**
+         * Sets the remove parameter.
+         * @param remove
+         * @return
+         */
+        public Builder remove(Boolean remove) {
+            command.remove(remove);
+            return this;
+        }
+
+        /**
+         * Sets the quiet parameter.
+         * @param quiet
+         * @return
+         */
+        public Builder quiet(Boolean quiet) {
+            command.quiet(quiet);
+            return this;
+        }
+
+        /**
+         * Sets the docker file parameter.
+         * @param filePath
+         * @return
+         */
+        public Builder dockerFile(String filePath) {
+            command.dockerFile(filePath);
+            return this;
+        }
+
+        /**
+         * Sets the docker file parameter.
+         * @param fileResource
+         * @return
+         */
+        public Builder dockerFile(Resource fileResource) {
+            command.dockerFile(fileResource);
+            return this;
+        }
     }
 }

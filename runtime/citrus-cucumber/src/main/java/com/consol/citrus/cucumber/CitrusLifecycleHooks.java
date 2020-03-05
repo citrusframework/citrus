@@ -17,11 +17,9 @@
 package com.consol.citrus.cucumber;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
@@ -36,18 +34,10 @@ public class CitrusLifecycleHooks {
     protected Citrus citrus;
 
     @CitrusResource
-    protected TestDesigner designer;
-
-    @CitrusResource
-    protected TestRunner runner;
+    protected TestCaseRunner runner;
 
     @Before
     public void before(Scenario scenario) {
-        if (designer != null) {
-            designer.name(scenario.getId());
-            designer.description(scenario.getName());
-        }
-
         if (runner != null) {
             runner.name(scenario.getId());
             runner.description(scenario.getName());
@@ -57,15 +47,6 @@ public class CitrusLifecycleHooks {
 
     @After
     public void after(Scenario scenario) {
-        if (!scenario.isFailed()) {
-            if (designer != null) {
-                TestCase testCase = designer.getTestCase();
-                if (testCase.getActionCount() > 0) {
-                    citrus.run(testCase);
-                }
-            }
-        }
-
         if (runner != null) {
             runner.stop();
         }

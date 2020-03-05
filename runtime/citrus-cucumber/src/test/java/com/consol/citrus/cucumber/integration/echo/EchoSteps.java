@@ -16,10 +16,15 @@
 
 package com.consol.citrus.cucumber.integration.echo;
 
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.message.MessageType;
-import cucumber.api.java.en.*;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 
 /**
  * @author Christoph Deppisch
@@ -28,32 +33,32 @@ import cucumber.api.java.en.*;
 public class EchoSteps {
 
     @CitrusResource
-    protected TestDesigner designer;
+    protected DefaultTestCaseRunner runner;
 
     @Given("^My name is (.*)$")
     public void my_name_is(String name) {
-        designer.variable("username", name);
+        runner.variable("username", name);
     }
 
     @When("^I say hello.*$")
     public void say_hello() {
-        designer.send("echoEndpoint")
+        runner.when(send("echoEndpoint")
             .messageType(MessageType.PLAINTEXT)
-            .payload("Hello, my name is ${username}!");
+            .payload("Hello, my name is ${username}!"));
     }
 
     @When("^I say goodbye.*$")
     public void say_goodbye() {
-        designer.send("echoEndpoint")
+        runner.when(send("echoEndpoint")
             .messageType(MessageType.PLAINTEXT)
-            .payload("Goodbye from ${username}!");
+            .payload("Goodbye from ${username}!"));
     }
 
     @Then("^the service should return: \"([^\"]*)\"$")
     public void verify_return(final String body) {
-        designer.receive("echoEndpoint")
+        runner.then(receive("echoEndpoint")
             .messageType(MessageType.PLAINTEXT)
-            .payload("You just said: " + body);
+            .payload("You just said: " + body));
     }
 
 }

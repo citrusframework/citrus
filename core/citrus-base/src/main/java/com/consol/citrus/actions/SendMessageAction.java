@@ -275,6 +275,14 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder send() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
          * @param messageEndpoint
          * @return
          */
