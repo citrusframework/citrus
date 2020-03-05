@@ -16,15 +16,16 @@
 
 package com.consol.citrus.generate.javadsl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.consol.citrus.actions.EchoAction;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.generate.UnitFramework;
 import com.squareup.javapoet.AnnotationSpec;
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.CodeBlock;
-import com.squareup.javapoet.TypeName;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * @author Christoph Deppisch
@@ -38,28 +39,23 @@ public class JavaDslTestGenerator<T extends JavaDslTestGenerator> extends JavaTe
     }
 
     @Override
-    protected TypeName getBaseType() {
-        if (getFramework().equals(UnitFramework.TESTNG)) {
-            return ClassName.get("com.consol.citrus.dsl.testng", "TestNGCitrusTestRunner");
-        } else if (getFramework().equals(UnitFramework.JUNIT4)) {
-            return ClassName.get("com.consol.citrus.dsl.junit", "JUnit4CitrusTestRunner");
-
-        }
-
-        return super.getBaseType();
+    protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
+        return super.createJavaFileBuilder(testTypeBuilder)
+                .addStaticImport(EchoAction.Builder.class, "echo");
     }
 
     @Override
     protected AnnotationSpec getBaseExtension() {
-        return AnnotationSpec.builder(ClassName.get("org.junit.jupiter.api.extension","ExtendWith"))
-                .addMember("value", "com.consol.citrus.dsl.junit.jupiter.CitrusExtension.class")
+        ClassName extension = ClassName.get("com.consol.citrus.junit.jupiter", "CitrusSupport");
+        return createAnnotationBuilder("org.junit.jupiter.api.extension","ExtendWith")
+                .addMember("value", "$T.class", extension)
                 .build();
     }
 
     @Override
     protected List<CodeBlock> getActions() {
         List<CodeBlock> codeBlocks = new ArrayList<>();
-        codeBlocks.add(CodeBlock.builder().add("testRunner.echo(\"TODO: Code the test $L\");", getName()).build());
+        codeBlocks.add(CodeBlock.builder().add("runner.run(echo(\"TODO: Code the test $L\"));", getName()).build());
         return codeBlocks;
     }
 }

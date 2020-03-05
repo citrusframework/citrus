@@ -71,7 +71,7 @@ public class WsdlJavaTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("public class " + name));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusTestRunner"));
+        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
         Assert.assertTrue(javaContent.contains(requestName));
         Assert.assertTrue(javaContent.contains(responseName));
     }

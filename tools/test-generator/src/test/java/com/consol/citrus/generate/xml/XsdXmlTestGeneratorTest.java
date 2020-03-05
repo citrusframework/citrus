@@ -60,7 +60,7 @@ public class XsdXmlTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
-        Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
+        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));
@@ -109,7 +109,7 @@ public class XsdXmlTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
-        Assert.assertTrue(javaContent.contains("extends AbstractTestNGCitrusTest"));
+        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
 
         String xmlContent = FileUtils.readToString(new FileSystemResource(xmlFile));
         Assert.assertTrue(xmlContent.contains("<author>Christoph</author>"));

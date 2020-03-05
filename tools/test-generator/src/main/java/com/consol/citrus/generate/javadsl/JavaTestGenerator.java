@@ -16,19 +16,28 @@
 
 package com.consol.citrus.generate.javadsl;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusXmlTest;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.generate.AbstractTestGenerator;
-import com.consol.citrus.generate.UnitFramework;
-import com.squareup.javapoet.*;
-
 import javax.lang.model.element.Modifier;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
+
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusXmlTest;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.generate.AbstractTestGenerator;
+import com.consol.citrus.generate.UnitFramework;
+import com.squareup.javapoet.AnnotationSpec;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.CodeBlock;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterSpec;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * @since 2.7.4
@@ -66,15 +75,18 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
             testTypeBuilder.superclass(getBaseType());
         }
 
-        final JavaFile javaFile = JavaFile.builder(getTargetPackage(), testTypeBuilder.build())
-                .indent("    ")
-                .build();
+        final JavaFile javaFile = createJavaFileBuilder(testTypeBuilder).build();
 
         try {
             javaFile.writeTo(new File(getSrcDirectory()));
         } catch (final IOException e) {
             throw new CitrusRuntimeException("Failed to write java class file", e);
         }
+    }
+
+    protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
+        return JavaFile.builder(getTargetPackage(), testTypeBuilder.build())
+                .indent("    ");
     }
 
     /**
@@ -95,10 +107,9 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
      */
     protected TypeName getBaseType() {
         if (getFramework().equals(UnitFramework.TESTNG)) {
-            return ClassName.get("com.consol.citrus.testng", "AbstractTestNGCitrusTest");
+            return ClassName.get("com.consol.citrus.testng", "TestNGCitrusSupport");
         } else if (getFramework().equals(UnitFramework.JUNIT4)) {
-            return ClassName.get("com.consol.citrus.junit", "AbstractJUnit4CitrusTest");
-
+            return ClassName.get("com.consol.citrus.junit", "JUnit4CitrusSupport");
         }
 
         throw new CitrusRuntimeException("Unsupported framework: " + getFramework());
@@ -109,8 +120,9 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
      * @return The AnnotationSpec of the Junit5 extension
      */
     protected AnnotationSpec getBaseExtension() {
+        ClassName extension = ClassName.get("com.consol.citrus.junit.jupiter", "CitrusBaseExtension");
         return createAnnotationBuilder("org.junit.jupiter.api.extension", "ExtendWith")
-                .addMember("value", "com.consol.citrus.junit.jupiter.CitrusBaseExtension")
+                .addMember("value", "$T.class", extension)
                 .build();
     }
 
@@ -121,7 +133,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
      */
     private MethodSpec getTestMethod(final String name) {
         final ParameterSpec.Builder methodParamBuilder = ParameterSpec
-                .builder(TestRunner.class, "testRunner")
+                .builder(DefaultTestCaseRunner.class, "runner")
                 .addAnnotation(CitrusResource.class);
 
         if(getFramework().equals(UnitFramework.TESTNG)){
@@ -225,7 +237,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
         }
 
         final AnnotationSpec.Builder parametersBuilder = createTestNgAnnotationBuilder("Parameters");
-        parametersBuilder.addMember("value","$S", "testRunner");
+        parametersBuilder.addMember("value","$S", "runner");
 
         return new AnnotationSpec[] { testAnnotationBuilder.build(), parametersBuilder.build() };
     }
@@ -246,7 +258,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
         return AnnotationSpec.builder(getTestNgAnnotation(parameters));
     }
 
-    private AnnotationSpec.Builder createAnnotationBuilder(final String packageName, final String simpleName) {
+    protected AnnotationSpec.Builder createAnnotationBuilder(final String packageName, final String simpleName) {
         return AnnotationSpec.builder(ClassName.get(packageName, simpleName));
     }
 }

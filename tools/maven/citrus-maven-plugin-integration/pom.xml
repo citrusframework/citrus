@@ -36,10 +36,30 @@
       <artifactId>citrus-base</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-java-dsl</artifactId>
+      <artifactId>citrus-core-spring</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-testng</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-junit</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-junit5</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
@@ -50,6 +70,7 @@
   </dependencies>
 
   <build>
+    <testSourceDirectory>${project.build.directory}/generated/citrus/java</testSourceDirectory>
     <plugins>
       <plugin>
         <groupId>com.consol.citrus.mvn</groupId>
@@ -58,7 +79,7 @@
         <executions>
           <execution>
             <id>generate-tests-junit4</id>
-            <phase>generate-test-sources</phase>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>generate-tests</goal>
             </goals>
@@ -67,14 +88,14 @@
               <framework>junit4</framework>
               <tests>
                 <test>
-                  <name>JUnit4Test</name>
+                  <name>JUnit4IT</name>
                 </test>
               </tests>
             </configuration>
           </execution>
           <execution>
             <id>generate-tests-testng</id>
-            <phase>generate-test-sources</phase>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>generate-tests</goal>
             </goals>
@@ -83,14 +104,14 @@
               <framework>testng</framework>
               <tests>
                 <test>
-                  <name>TestNgTest</name>
+                  <name>TestNgIT</name>
                 </test>
               </tests>
             </configuration>
           </execution>
           <execution>
             <id>generate-tests-junit5</id>
-            <phase>generate-test-sources</phase>
+            <phase>pre-integration-test</phase>
             <goals>
               <goal>generate-tests</goal>
             </goals>
@@ -99,7 +120,7 @@
               <framework>junit5</framework>
               <tests>
                 <test>
-                  <name>JUnit5Test</name>
+                  <name>JUnit5IT</name>
                 </test>
               </tests>
             </configuration>
@@ -107,27 +128,56 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.0.0</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
         <executions>
           <execution>
-            <id>add-test-sources</id>
-            <phase>generate-test-sources</phase>
+            <phase>pre-integration-test</phase>
             <goals>
-              <goal>add-test-source</goal>
+              <goal>testCompile</goal>
             </goals>
             <configuration>
-              <sources>
-                <source>${project.build.directory}/generated/citrus/java</source>
-              </sources>
             </configuration>
           </execution>
         </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>add-test-resources</id>
+            <phase>pre-integration-test</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.testOutputDirectory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/src/test/resources</directory>
+                  <includes>
+                    <include>log4j.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${surefire.version}</version>
+        <executions>
+          <execution>
+            <id>failure-tests</id>
+            <phase>integration-test</phase>
+            <goals>
+              <goal>integration-test</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
           <properties>
             <property>
@@ -135,13 +185,14 @@
               <value>false</value>
             </property>
           </properties>
+          <forkCount>1</forkCount>
           <threadCount>1</threadCount>
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>org.apache.maven.surefire</groupId>
-            <artifactId>surefire-junit-platform</artifactId>
-            <version>${surefire.version}</version>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>${junit.platform.version}</version>
           </dependency>
           <dependency>
             <groupId>org.apache.maven.surefire</groupId>

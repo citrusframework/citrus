@@ -57,7 +57,7 @@ public class XsdJavaTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusTestRunner"));
+        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
     }
 
     @DataProvider
@@ -96,7 +96,7 @@ public class XsdJavaTestGeneratorTest {
         Assert.assertTrue(javaContent.contains("public class HelloIT"));
         Assert.assertTrue(javaContent.contains("* This is a sample test"));
         Assert.assertTrue(javaContent.contains("package com.consol.citrus;"));
-        Assert.assertTrue(javaContent.contains("extends TestNGCitrusTestRunner"));
+        Assert.assertTrue(javaContent.contains("extends TestNGCitrusSupport"));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "Unable to find element with name 'HiRequest'.*")

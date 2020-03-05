@@ -13,7 +13,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 
-
 public class JavaDslTestGeneratorTest {
 
     private JavaDslTestGenerator generatorUnderTest = new JavaDslTestGenerator();
@@ -42,9 +41,9 @@ public class JavaDslTestGeneratorTest {
 
         //THEN
         String javaContent = loadTestFile();
-        checkMethodParameter(javaContent, "@CitrusResource TestRunner testRunner");
-        assertContains(javaContent, "@ExtendWith(com.consol.citrus.dsl.junit.jupiter.CitrusExtension.class)");
-        assertContains(javaContent, "testRunner.echo(\"TODO: Code the test FooTest\");");
+        checkMethodParameter(javaContent, "@CitrusResource DefaultTestCaseRunner runner");
+        assertContains(javaContent, "@ExtendWith(CitrusSupport.class)");
+        assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
 
     @Test
@@ -61,10 +60,10 @@ public class JavaDslTestGeneratorTest {
 
         //THEN
         String javaContent = loadTestFile();
-        checkExtension(javaContent, "JUnit4CitrusTestRunner");
+        checkExtension(javaContent, "JUnit4CitrusSupport");
         checkAnnotations(javaContent);
-        checkMethodParameter(javaContent, "@CitrusResource TestRunner testRunner");
-        assertContains(javaContent, "testRunner.echo(\"TODO: Code the test FooTest\");");
+        checkMethodParameter(javaContent, "@CitrusResource DefaultTestCaseRunner runner");
+        assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
 
 
@@ -83,11 +82,11 @@ public class JavaDslTestGeneratorTest {
 
         //THEN
         String javaContent = loadTestFile();
-        checkExtension(javaContent, "TestNGCitrusTestRunner");
+        checkExtension(javaContent, "TestNGCitrusSupport");
         checkAnnotations(javaContent);
-        checkMethodParameter(javaContent, "@CitrusResource @Optional TestRunner testRunner");
-        assertContains(javaContent, "@Parameters(\"testRunner\")");
-        assertContains(javaContent, "testRunner.echo(\"TODO: Code the test FooTest\");");
+        checkMethodParameter(javaContent, "@CitrusResource @Optional DefaultTestCaseRunner runner");
+        assertContains(javaContent, "@Parameters(\"runner\")");
+        assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
@@ -105,7 +104,6 @@ public class JavaDslTestGeneratorTest {
     private void assertContains(String haystack, String needle){
         Assert.assertTrue(haystack.contains(needle));
     }
-
 
     private void checkExtension(String javaContent, String extension) {
         assertContains(javaContent, "public class FooTest extends " + extension);
