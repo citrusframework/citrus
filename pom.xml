@@ -57,7 +57,6 @@
     <module>endpoints</module>
     <module>connectors</module>
     <module>tools</module>
-    <module>modules/citrus-java-dsl</module>
     <module>catalog</module>
   </modules>
 
@@ -1530,6 +1529,13 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+
+    <profile>
+      <id>vintage</id>
+      <modules>
+        <module>vintage</module>
+      </modules>
     </profile>
   </profiles>
 </project>

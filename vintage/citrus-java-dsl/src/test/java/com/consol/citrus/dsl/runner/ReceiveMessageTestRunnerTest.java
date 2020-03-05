@@ -1430,7 +1430,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
+        Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
 
     }
@@ -1541,7 +1541,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
+        Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
     }
 
@@ -1597,7 +1597,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
 
         Assert.assertEquals(validationContext.getScriptType(), ScriptTypes.GROOVY);
-        Assert.assertEquals(validationContext.getValidationScript(), "assert json.message == 'Hello Citrus!'");
+        Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
 
         Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);

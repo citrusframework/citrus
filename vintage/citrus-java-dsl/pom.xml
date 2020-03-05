@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>citrus-java-dsl</artifactId>
-  <name>citrus-java-dsl</name>
+  <name>Citrus :: Vintage :: Java DSL</name>
 
   <dependencies>
     <dependency>
