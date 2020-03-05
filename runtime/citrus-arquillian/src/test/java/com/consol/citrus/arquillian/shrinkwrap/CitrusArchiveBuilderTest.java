@@ -44,7 +44,7 @@ public class CitrusArchiveBuilderTest {
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 21);
+        Assert.assertEquals(artifactResources.length, 22);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");
@@ -63,6 +63,7 @@ public class CitrusArchiveBuilderTest {
         verifyArtifact(artifactResources, "citrus-selenium-.*jar");
         verifyArtifact(artifactResources, "citrus-cucumber-.*jar");
         verifyArtifact(artifactResources, "citrus-zookeeper-.*jar");
+        verifyArtifact(artifactResources, "citrus-spring-integration-.*jar");
         verifyArtifact(artifactResources, "citrus-rmi-.*jar");
         verifyArtifact(artifactResources, "citrus-jmx-.*jar");
         verifyArtifact(artifactResources, "citrus-restdocs-.*jar");
@@ -78,7 +79,7 @@ public class CitrusArchiveBuilderTest {
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 21);
+        Assert.assertEquals(artifactResources.length, 22);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");
@@ -97,6 +98,7 @@ public class CitrusArchiveBuilderTest {
         verifyArtifact(artifactResources, "citrus-selenium-.*jar");
         verifyArtifact(artifactResources, "citrus-cucumber-.*jar");
         verifyArtifact(artifactResources, "citrus-zookeeper-.*jar");
+        verifyArtifact(artifactResources, "citrus-spring-integration-.*jar");
         verifyArtifact(artifactResources, "citrus-rmi-.*jar");
         verifyArtifact(artifactResources, "citrus-jmx-.*jar");
         verifyArtifact(artifactResources, "citrus-restdocs-.*jar");

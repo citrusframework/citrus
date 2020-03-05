@@ -110,6 +110,7 @@ public final class CitrusArchiveBuilder {
         selenium();
         cucumber();
         zookeeper();
+        springIntegration();
         rmi();
         jmx();
         restdocs();
@@ -241,6 +242,15 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder zookeeper() {
         artifactCoordinates.add(getCoordinates("citrus-zookeeper"));
+        return this;
+    }
+
+    /**
+     * Gets the Spring integration Citrus artifact as resolved Maven dependency set.
+     * @return
+     */
+    public CitrusArchiveBuilder springIntegration() {
+        artifactCoordinates.add(getCoordinates("citrus-spring-integration"));
         return this;
     }
 
