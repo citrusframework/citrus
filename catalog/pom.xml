@@ -16,6 +16,7 @@
 
   <modules>
     <module>citrus-core</module>
+    <module>citrus-endpoint-catalog</module>
     <module>citrus-bom</module>
   </modules>
 

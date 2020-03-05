@@ -1,0 +1,166 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <artifactId>citrus-catalog</artifactId>
+    <groupId>com.consol.citrus</groupId>
+    <version>3.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>citrus-endpoint-catalog</artifactId>
+  <name>Citrus :: Catalog :: Endpoints</name>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-base</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-spring-integration</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jms</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-kafka</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ws</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-http</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-docker</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-kubernetes</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-selenium</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-camel</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jmx</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-rmi</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-mail</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ftp</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ssh</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-vertx</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-websocket</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-zookeeper</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jdbc</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+</project>
