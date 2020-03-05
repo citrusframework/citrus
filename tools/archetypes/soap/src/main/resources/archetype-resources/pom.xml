@@ -22,11 +22,6 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-java-dsl</artifactId>
-      <version>${citrus.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jms</artifactId>
       <version>${citrus.version}</version>
     </dependency>
