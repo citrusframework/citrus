@@ -19,12 +19,12 @@ package com.consol.citrus.restdocs.integration;
 import java.util.Arrays;
 
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.restdocs.http.CitrusRestDocConfigurer;
 import com.consol.citrus.restdocs.http.RestDocClientInterceptor;
+import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -33,6 +33,7 @@ import org.springframework.restdocs.ManualRestDocumentation;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 import static com.consol.citrus.restdocs.http.CitrusRestDocsSupport.restDocsConfigurer;
 import static com.consol.citrus.restdocs.http.CitrusRestDocsSupport.restDocsInterceptor;
 
@@ -40,7 +41,7 @@ import static com.consol.citrus.restdocs.http.CitrusRestDocsSupport.restDocsInte
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
+public class RestDocConfigurationIT extends TestNGCitrusSupport {
 
     @Autowired
     private TestListeners testListeners;
@@ -52,8 +53,7 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
         CitrusRestDocConfigurer restDocConfigurer = restDocsConfigurer(new ManualRestDocumentation("target/generated-snippets"));
         RestDocClientInterceptor restDocInterceptor = restDocsInterceptor("rest-docs/{method-name}");
 
-        httpClient = CitrusEndpoints.http()
-                                    .client()
+        httpClient = new HttpClientBuilder()
                                     .requestUrl("http://localhost:11080/hello")
                                     .requestMethod(HttpMethod.POST)
                                     .contentType(MediaType.APPLICATION_XML_VALUE)
@@ -66,7 +66,7 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
     @Test
     @CitrusTest
     public void testRestDocs() {
-        http().client(httpClient)
+        when(http().client(httpClient)
                 .send()
                 .post()
                 .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -75,9 +75,9 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
                     "<User>User</User>" +
                     "<Text>Hello Citrus</Text>" +
                 "</HelloRequest>")
-                .header("Operation", "sayHello");
+                .header("Operation", "sayHello"));
 
-        http().client(httpClient)
+        then(http().client(httpClient)
                 .receive()
                 .response(HttpStatus.OK)
                 .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
@@ -86,6 +86,6 @@ public class RestDocConfigurationIT extends TestNGCitrusTestDesigner {
                     "<User>HelloService</User>" +
                     "<Text>Hello User</Text>" +
                 "</HelloResponse>")
-                .header("Operation", "sayHello");
+                .header("Operation", "sayHello"));
     }
 }
