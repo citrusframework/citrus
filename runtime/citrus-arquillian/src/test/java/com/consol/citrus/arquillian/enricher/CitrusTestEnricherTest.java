@@ -20,11 +20,9 @@ import java.net.URL;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import org.jboss.arquillian.core.api.Instance;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -64,12 +62,12 @@ public class CitrusTestEnricherTest {
         testEnricher.enrich(testInstance);
 
         Assert.assertNotNull(testInstance.getCitrus());
-        Assert.assertNotNull(testInstance.getJmsEndpoint());
-        Assert.assertEquals(testInstance.getJmsEndpoint().getName(), "jmsEndpoint");
+        Assert.assertNotNull(testInstance.getDirectEndpoint());
+        Assert.assertEquals(testInstance.getDirectEndpoint().getName(), "directEndpoint");
         Assert.assertNotNull(testInstance.getSomeEndpoint());
         Assert.assertEquals(testInstance.getSomeEndpoint().getName(), "someEndpoint");
-        Assert.assertNotNull(testInstance.getJmsSyncEndpoint());
-        Assert.assertEquals(testInstance.getJmsSyncEndpoint().getName(), "jmsSyncEndpoint");
+        Assert.assertNotNull(testInstance.getDirectSyncEndpoint());
+        Assert.assertEquals(testInstance.getDirectSyncEndpoint().getName(), "directSyncEndpoint");
     }
 
     @Test
@@ -78,32 +76,18 @@ public class CitrusTestEnricherTest {
         when(citrusInstance.get()).thenReturn(citrusFramework);
 
         InjectionHelper.inject(testEnricher, "citrusInstance", citrusInstance);
-        Object[] resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestDesigner.class));
+        Object[] resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestCaseRunner.class));
         Assert.assertEquals(resolvedParameter.length, 1L);
-        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestDesigner.class);
+        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestCaseRunner.class);
 
-        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", URL.class, TestDesigner.class));
+        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", URL.class, TestCaseRunner.class));
         Assert.assertEquals(resolvedParameter.length, 2L);
         Assert.assertNull(resolvedParameter[0]);
-        Assert.assertEquals(resolvedParameter[1].getClass(), DefaultTestDesigner.class);
+        Assert.assertEquals(resolvedParameter[1].getClass(), DefaultTestCaseRunner.class);
 
-        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestDesigner.class, URL.class));
+        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestCaseRunner.class, URL.class));
         Assert.assertEquals(resolvedParameter.length, 2L);
-        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestDesigner.class);
-        Assert.assertNull(resolvedParameter[1]);
-
-        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestRunner.class));
-        Assert.assertEquals(resolvedParameter.length, 1L);
-        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestRunner.class);
-
-        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", URL.class, TestRunner.class));
-        Assert.assertEquals(resolvedParameter.length, 2L);
-        Assert.assertNull(resolvedParameter[0]);
-        Assert.assertEquals(resolvedParameter[1].getClass(), DefaultTestRunner.class);
-
-        resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", TestRunner.class, URL.class));
-        Assert.assertEquals(resolvedParameter.length, 2L);
-        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestRunner.class);
+        Assert.assertEquals(resolvedParameter[0].getClass(), DefaultTestCaseRunner.class);
         Assert.assertNull(resolvedParameter[1]);
 
         resolvedParameter = testEnricher.resolve(ReflectionUtils.findMethod(ArquillianTest.class, "testMethod", URL.class));

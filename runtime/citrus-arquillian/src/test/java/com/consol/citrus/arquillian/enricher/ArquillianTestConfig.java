@@ -16,11 +16,10 @@
 
 package com.consol.citrus.arquillian.enricher;
 
-import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.jms.endpoint.JmsEndpoint;
-import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
+import com.consol.citrus.endpoint.direct.DirectEndpoint;
+import com.consol.citrus.endpoint.direct.DirectSyncEndpoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -33,16 +32,16 @@ public class ArquillianTestConfig extends CitrusSpringConfig {
 
     @Bean(name = "someEndpoint")
     public Endpoint someEndpoint() {
-        return new ChannelEndpoint();
+        return new DirectEndpoint();
     }
 
-    @Bean(name ="jmsEndpoint")
-    public JmsEndpoint jmsEndpoint() {
-        return new JmsEndpoint();
+    @Bean(name ="directEndpoint")
+    public DirectEndpoint jmsEndpoint() {
+        return new DirectEndpoint();
     }
 
-    @Bean(name ="jmsSyncEndpoint")
-    public JmsSyncEndpoint otherEndpoint() {
-        return new JmsSyncEndpoint();
+    @Bean(name ="directSyncEndpoint")
+    public DirectSyncEndpoint otherEndpoint() {
+        return new DirectSyncEndpoint();
     }
 }

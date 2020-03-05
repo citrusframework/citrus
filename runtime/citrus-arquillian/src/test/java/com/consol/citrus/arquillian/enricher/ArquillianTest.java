@@ -16,16 +16,18 @@
 
 package com.consol.citrus.arquillian.enricher;
 
-import com.consol.citrus.Citrus;
-import com.consol.citrus.annotations.*;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.jms.endpoint.JmsEndpoint;
-import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
-import org.jboss.arquillian.test.api.ArquillianResource;
-
 import java.net.URL;
+
+import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.annotations.CitrusFramework;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.direct.DirectEndpoint;
+import com.consol.citrus.endpoint.direct.DirectSyncEndpoint;
+import org.jboss.arquillian.test.api.ArquillianResource;
 
 /**
  * @author Christoph Deppisch
@@ -39,34 +41,22 @@ public class ArquillianTest {
     @CitrusEndpoint(name = "someEndpoint")
     private Endpoint someEndpoint;
 
-    @CitrusEndpoint(name = "jmsEndpoint")
-    private JmsEndpoint jmsEndpoint;
+    @CitrusEndpoint(name = "directEndpoint")
+    private DirectEndpoint directEndpoint;
 
     @CitrusEndpoint
-    private JmsSyncEndpoint jmsSyncEndpoint;
+    private DirectSyncEndpoint directSyncEndpoint;
 
     @CitrusTest
-    public void testMethod(@CitrusResource TestDesigner designer) {
+    public void testMethod(@CitrusResource TestCaseRunner runner) {
     }
 
     @CitrusTest
-    public void testMethod(@ArquillianResource URL url, @CitrusResource TestDesigner designer) {
+    public void testMethod(@ArquillianResource URL url, @CitrusResource TestCaseRunner runner) {
     }
 
     @CitrusTest
-    public void testMethod(@CitrusResource TestDesigner designer, @ArquillianResource URL url) {
-    }
-
-    @CitrusTest
-    public void testMethod(@CitrusResource TestRunner runner) {
-    }
-
-    @CitrusTest
-    public void testMethod(@ArquillianResource URL url, @CitrusResource TestRunner runner) {
-    }
-
-    @CitrusTest
-    public void testMethod(@CitrusResource TestRunner runner, @ArquillianResource URL url) {
+    public void testMethod(@CitrusResource TestCaseRunner runner, @ArquillianResource URL url) {
     }
 
     @CitrusTest
@@ -84,11 +74,11 @@ public class ArquillianTest {
         return someEndpoint;
     }
 
-    public JmsEndpoint getJmsEndpoint() {
-        return jmsEndpoint;
+    public DirectEndpoint getDirectEndpoint() {
+        return directEndpoint;
     }
 
-    public JmsSyncEndpoint getJmsSyncEndpoint() {
-        return jmsSyncEndpoint;
+    public DirectSyncEndpoint getDirectSyncEndpoint() {
+        return directSyncEndpoint;
     }
 }

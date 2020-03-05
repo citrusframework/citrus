@@ -16,21 +16,24 @@
 
 package com.consol.citrus.arquillian.enricher;
 
+import java.util.Properties;
+
 import com.consol.citrus.Citrus;
 import com.consol.citrus.arquillian.configuration.CitrusConfiguration;
 import com.consol.citrus.arquillian.helper.InjectionHelper;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.InstanceProducer;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import java.util.Properties;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 public class CitrusRemoteInstanceProducerTest {
 
@@ -38,8 +41,15 @@ public class CitrusRemoteInstanceProducerTest {
 
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
-    private InstanceProducer<Citrus> instanceProducer = Mockito.mock(InstanceProducer.class);
-    private Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
+    @Mock
+    private InstanceProducer<Citrus> instanceProducer;
+    @Mock
+    private Instance<CitrusConfiguration> configurationInstance;
+
+    @BeforeClass
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testCreateInstance() throws Exception {
@@ -47,13 +57,10 @@ public class CitrusRemoteInstanceProducerTest {
 
         when(configurationInstance.get()).thenReturn(configuration);
 
-        doAnswer(new Answer() {
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                Citrus citrus = (Citrus) invocation.getArguments()[0];
-                Assert.assertNotNull(citrus);
-                return null;
-            }
+        doAnswer(invocation -> {
+            Citrus citrus = (Citrus) invocation.getArguments()[0];
+            Assert.assertNotNull(citrus);
+            return null;
         }).when(instanceProducer).set(any(Citrus.class));
 
         InjectionHelper.inject(citrusInstanceProducer, "citrusInstance", instanceProducer);

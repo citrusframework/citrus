@@ -20,13 +20,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
-import com.consol.citrus.dsl.design.DefaultTestDesigner;
-import com.consol.citrus.dsl.design.TestDesigner;
-import com.consol.citrus.dsl.runner.DefaultTestRunner;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -76,14 +74,8 @@ public class CitrusTestEnricher implements TestEnricher {
                 for (Annotation annotation : parameterAnnotations) {
                     if (annotation instanceof CitrusResource) {
                         Class<?> type = parameterTypes[i];
-                        if (TestDesigner.class.isAssignableFrom(type)) {
-                            TestDesigner testDesigner = new DefaultTestDesigner(citrusInstance.get().getCitrusContext().createTestContext());
-                            testDesigner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-
-                            log.debug("Injecting Citrus test designer on method parameter");
-                            values[i] = testDesigner;
-                        } else if (TestRunner.class.isAssignableFrom(type)) {
-                            TestRunner testRunner = new DefaultTestRunner(citrusInstance.get().getCitrusContext().createTestContext());
+                        if (TestCaseRunner.class.isAssignableFrom(type)) {
+                            TestCaseRunner testRunner = new DefaultTestCaseRunner(citrusInstance.get().getCitrusContext().createTestContext());
                             testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                             log.debug("Injecting Citrus test runner on method parameter");
