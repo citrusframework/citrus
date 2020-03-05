@@ -14,43 +14,49 @@
   <moduleSets>
     <moduleSet>
       <includes>
+        <include>com.consol.citrus:citrus-api</include>
+        <include>com.consol.citrus:citrus-base</include>
         <include>com.consol.citrus:citrus-core</include>
+        <include>com.consol.citrus:citrus-core-spring</include>
+
+        <include>com.consol.citrus:citrus-cucumber</include>
+        <include>com.consol.citrus:citrus-testng</include>
+        <include>com.consol.citrus:citrus-junit</include>
+        <include>com.consol.citrus:citrus-junit5</include>
+        <include>com.consol.citrus:citrus-main</include>
+        <include>com.consol.citrus:citrus-arquillian</include>
+
+        <include>com.consol.citrus:citrus-camel</include>
+        <include>com.consol.citrus:citrus-ftp</include>
+        <include>com.consol.citrus:citrus-http</include>
+        <include>com.consol.citrus:citrus-jdbc</include>
         <include>com.consol.citrus:citrus-jms</include>
         <include>com.consol.citrus:citrus-kafka</include>
-        <include>com.consol.citrus:citrus-jdbc</include>
-        <include>com.consol.citrus:citrus-ws</include>
-        <include>com.consol.citrus:citrus-http</include>
-        <include>com.consol.citrus:citrus-websocket</include>
-        <include>com.consol.citrus:citrus-ssh</include>
-        <include>com.consol.citrus:citrus-mail</include>
-        <include>com.consol.citrus:citrus-camel</include>
-        <include>com.consol.citrus:citrus-docker</include>
-        <include>com.consol.citrus:citrus-kubernetes</include>
-        <include>com.consol.citrus:citrus-selenium</include>
-        <include>com.consol.citrus:citrus-cucumber</include>
-        <include>com.consol.citrus:citrus-zookeeper</include>
-        <include>com.consol.citrus:citrus-rmi</include>
         <include>com.consol.citrus:citrus-jmx</include>
+        <include>com.consol.citrus:citrus-mail</include>
+        <include>com.consol.citrus:citrus-rmi</include>
+        <include>com.consol.citrus:citrus-ssh</include>
         <include>com.consol.citrus:citrus-vertx</include>
-        <include>com.consol.citrus:citrus-ftp</include>
-        <include>com.consol.citrus:citrus-java-dsl</include>
-        <include>com.consol.citrus:citrus-arquillian</include>
+        <include>com.consol.citrus:citrus-websocket</include>
+        <include>com.consol.citrus:citrus-ws</include>
+        <include>com.consol.citrus:citrus-zookeeper</include>
+        <include>com.consol.citrus:citrus-spring-integration</include>
+
+        <include>com.consol.citrus:citrus-validation-xml</include>
+        <include>com.consol.citrus:citrus-validation-json</include>
+        <include>com.consol.citrus:citrus-validation-text</include>
+        <include>com.consol.citrus:citrus-validation-binary</include>
+        <include>com.consol.citrus:citrus-validation-groovy</include>
+        <include>com.consol.citrus:citrus-validation-hamcrest</include>
+
+        <include>com.consol.citrus:citrus-docker</include>
+        <include>com.consol.citrus:citrus-selenium</include>
+        <include>com.consol.citrus:citrus-kubernetes</include>
+
         <include>com.consol.citrus:citrus-restdocs</include>
-        <include>com.consol.citrus.model:citrus-model-core</include>
-        <include>com.consol.citrus.model:citrus-model-jms</include>
-        <include>com.consol.citrus.model:citrus-model-http</include>
-        <include>com.consol.citrus.model:citrus-model-websocket</include>
-        <include>com.consol.citrus.model:citrus-model-ws</include>
-        <include>com.consol.citrus.model:citrus-model-ssh</include>
-        <include>com.consol.citrus.model:citrus-model-mail</include>
-        <include>com.consol.citrus.model:citrus-model-camel</include>
-        <include>com.consol.citrus.model:citrus-model-docker</include>
-        <include>com.consol.citrus.model:citrus-model-cucumber</include>
-        <include>com.consol.citrus.model:citrus-model-zookeeper</include>
-        <include>com.consol.citrus.model:citrus-model-rmi</include>
-        <include>com.consol.citrus.model:citrus-model-jmx</include>
-        <include>com.consol.citrus.model:citrus-model-vertx</include>
-        <include>com.consol.citrus.model:citrus-model-ftp</include>
+        <include>com.consol.citrus:citrus-maven-plugin</include>
+
+        <include>com.consol.citrus:citrus-endpoint-catalog</include>
       </includes>
       <binaries>
         <outputDirectory>lib</outputDirectory>

@@ -7,7 +7,7 @@
   <fileSets>
     <fileSet>
       <directory>${project.basedir}</directory>
-      <outputDirectory></outputDirectory>
+      <outputDirectory/>
       <includes>
         <include>README.md</include>
         <include>LICENSE.txt</include>
@@ -15,274 +15,266 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-core/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-api/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-http/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-base/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-websocket/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-core/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-ws/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-core-spring/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>core/citrus-cucumber/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-ssh/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-testng/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-mail/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-junit/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-camel/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-junit5/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-docker/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>core/citrus-main/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-kubernetes/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>runtime/citrus-arquillian/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>endpoints/citrus-camel/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-selenium/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-ftp/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-cucumber/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-http/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-rmi/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-jdbc/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-vertx/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-jms/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-model/model-ftp/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-kafka/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-core/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-jmx/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-jms/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-mail/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-kafka/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-rmi/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-jdbc/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-ssh/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-http/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-vertx/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-websocket/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-websocket/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-ws/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-ws/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-mail/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-zookeeper/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-ssh/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>endpoints/citrus-spring-integration/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>validation/citrus-validation-xml/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-camel/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>validation/citrus-validation-json/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-docker/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>validation/citrus-validation-text/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-kubernetes/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>validation/citrus-validation-binary/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-selenium/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>validation/citrus-validation-groovy/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-zookeeper/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>validation/citrus-validation-hamcrest/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>connectors/citrus-docker/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-cucumber/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>connectors/citrus-selenium/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-rmi/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>connectors/citrus-kubernetes/target</directory>
+      <outputDirectory/>
+      <includes>
+        <include>*sources.jar</include>
+      </includes>
+    </fileSet>
+
+    <fileSet>
+      <directory>tools/citrus-restdocs/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>modules/citrus-jmx/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>tools/citrus-maven-plugin/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
     </fileSet>
+
     <fileSet>
-      <directory>modules/citrus-vertx/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-ftp/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-java-dsl/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-jms/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-kafka/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-jdbc/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-arquillian/target</directory>
-      <outputDirectory></outputDirectory>
-      <includes>
-        <include>*sources.jar</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <directory>modules/citrus-restdocs/target</directory>
-      <outputDirectory></outputDirectory>
+      <directory>catalog/citrus-endpoint-catalog/target</directory>
+      <outputDirectory/>
       <includes>
         <include>*sources.jar</include>
       </includes>
