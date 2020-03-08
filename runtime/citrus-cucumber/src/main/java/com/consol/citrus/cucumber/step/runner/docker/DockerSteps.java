@@ -17,7 +17,7 @@
 package com.consol.citrus.cucumber.step.runner.docker;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.docker.client.DockerClient;
@@ -25,7 +25,9 @@ import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.*;
+import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 import org.springframework.util.Assert;
 
 import static com.consol.citrus.docker.actions.DockerExecuteAction.Builder.docker;
@@ -37,7 +39,7 @@ import static com.consol.citrus.docker.actions.DockerExecuteAction.Builder.docke
 public class DockerSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @CitrusFramework
     private Citrus citrus;

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -48,7 +48,7 @@ import static com.consol.citrus.selenium.actions.SeleniumActionBuilder.selenium;
 public class SeleniumSteps {
 
     @CitrusResource
-    protected DefaultTestCaseRunner runner;
+    protected TestCaseRunner runner;
 
     @CitrusFramework
     protected Citrus citrus;

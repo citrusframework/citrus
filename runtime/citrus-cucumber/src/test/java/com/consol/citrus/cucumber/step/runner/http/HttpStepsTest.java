@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.annotations.CitrusAnnotations;
@@ -52,7 +53,7 @@ public class HttpStepsTest extends UnitTestSupport {
 
     private HttpSteps steps;
 
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @Autowired
     private HttpClient httpClient;

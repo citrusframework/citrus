@@ -16,7 +16,7 @@
 
 package com.consol.citrus.cucumber.step.runner.core;
 
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import cucumber.api.java.en.Then;
 
@@ -29,7 +29,7 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
 public class EchoSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @Then("^echo \"([^\"]*)\"$")
     public void print(String message) {

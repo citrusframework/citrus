@@ -18,7 +18,7 @@ package com.consol.citrus.cucumber.step.runner.core;
 
 import java.util.Map;
 
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import cucumber.api.java.en.Given;
 import io.cucumber.datatable.DataTable;
@@ -30,7 +30,7 @@ import io.cucumber.datatable.DataTable;
 public class VariableSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @Given("^variable ([^\\s]+) is \"([^\"]*)\"$")
     public void variable(String name, String value) {

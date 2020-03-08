@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.Citrus;
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -50,7 +50,7 @@ import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 public class HttpSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @CitrusFramework
     private Citrus citrus;

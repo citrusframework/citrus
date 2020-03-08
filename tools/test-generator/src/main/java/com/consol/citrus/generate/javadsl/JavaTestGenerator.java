@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusXmlTest;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -133,7 +133,7 @@ public class JavaTestGenerator<T extends JavaTestGenerator> extends AbstractTest
      */
     private MethodSpec getTestMethod(final String name) {
         final ParameterSpec.Builder methodParamBuilder = ParameterSpec
-                .builder(DefaultTestCaseRunner.class, "runner")
+                .builder(TestCaseRunner.class, "runner")
                 .addAnnotation(CitrusResource.class);
 
         if(getFramework().equals(UnitFramework.TESTNG)){

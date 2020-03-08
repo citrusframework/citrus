@@ -19,6 +19,7 @@ package com.consol.citrus.integration;
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
@@ -54,7 +55,7 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests {
 
     private Citrus citrus;
 
-    private DefaultTestCaseRunner test;
+    private TestCaseRunner test;
 
     @Autowired
     private DirectEndpoint endpoint;

@@ -44,7 +44,7 @@ public class JUnit4CitrusSupport extends AbstractJUnit4CitrusTest implements Ghe
     private static final String BUILDER_ATTRIBUTE = "builder";
 
     /** Test builder delegate */
-    private DefaultTestCaseRunner testCaseRunner;
+    private TestCaseRunner testCaseRunner;
 
     @Override
     protected void run(CitrusJUnit4Runner.CitrusFrameworkMethod frameworkMethod) {

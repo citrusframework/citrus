@@ -20,6 +20,7 @@ import java.net.URL;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.cucumber.UnitTestSupport;
 import com.consol.citrus.selenium.actions.CheckInputAction;
@@ -55,7 +56,7 @@ public class SeleniumStepsTest extends UnitTestSupport {
 
     private SeleniumSteps steps;
 
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @Autowired
     private SeleniumBrowser seleniumBrowser;

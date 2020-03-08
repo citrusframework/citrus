@@ -20,6 +20,7 @@ import java.io.File;
 import java.util.UUID;
 
 import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.cucumber.UnitTestSupport;
 import com.consol.citrus.docker.actions.DockerExecuteAction;
@@ -59,7 +60,7 @@ public class DockerStepsTest extends UnitTestSupport {
 
     private DockerSteps steps;
 
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     @Autowired
     private DockerClient dockerClient;

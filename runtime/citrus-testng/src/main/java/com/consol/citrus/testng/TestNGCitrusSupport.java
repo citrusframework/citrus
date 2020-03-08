@@ -56,7 +56,7 @@ public class TestNGCitrusSupport extends AbstractTestNGCitrusTest implements Ghe
     private static final String BUILDER_ATTRIBUTE = "builder";
 
     /** Test builder delegate */
-    private DefaultTestCaseRunner testCaseRunner;
+    private TestCaseRunner testCaseRunner;
 
     @Override
     public void run(final IHookCallBack callBack, ITestResult testResult) {

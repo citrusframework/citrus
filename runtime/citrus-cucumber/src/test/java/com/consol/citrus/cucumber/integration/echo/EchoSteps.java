@@ -16,7 +16,7 @@
 
 package com.consol.citrus.cucumber.integration.echo;
 
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.message.MessageType;
 import cucumber.api.java.en.Given;
@@ -33,7 +33,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 public class EchoSteps {
 
     @CitrusResource
-    protected DefaultTestCaseRunner runner;
+    protected TestCaseRunner runner;
 
     @Given("^My name is (.*)$")
     public void my_name_is(String name) {

@@ -16,7 +16,6 @@
 
 package cucumber.runtime.java.spring;
 
-import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 
@@ -27,7 +26,7 @@ import com.consol.citrus.annotations.CitrusResource;
 public class DefaultSpringRunnerSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner testRunner;
+    private TestCaseRunner testRunner;
 
     /**
      * Gets the value of the testRunner property.

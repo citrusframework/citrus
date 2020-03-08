@@ -16,7 +16,7 @@
 
 package com.consol.citrus.cucumber.step.xml;
 
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.cucumber.container.StepTemplate;
@@ -30,7 +30,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 public class XmlSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     /**
      * Run template within designer.

@@ -41,7 +41,7 @@ public class JavaDslTestGeneratorTest {
 
         //THEN
         String javaContent = loadTestFile();
-        checkMethodParameter(javaContent, "@CitrusResource DefaultTestCaseRunner runner");
+        checkMethodParameter(javaContent, "@CitrusResource TestCaseRunner runner");
         assertContains(javaContent, "@ExtendWith(CitrusSupport.class)");
         assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
@@ -62,7 +62,7 @@ public class JavaDslTestGeneratorTest {
         String javaContent = loadTestFile();
         checkExtension(javaContent, "JUnit4CitrusSupport");
         checkAnnotations(javaContent);
-        checkMethodParameter(javaContent, "@CitrusResource DefaultTestCaseRunner runner");
+        checkMethodParameter(javaContent, "@CitrusResource TestCaseRunner runner");
         assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }
 
@@ -84,7 +84,7 @@ public class JavaDslTestGeneratorTest {
         String javaContent = loadTestFile();
         checkExtension(javaContent, "TestNGCitrusSupport");
         checkAnnotations(javaContent);
-        checkMethodParameter(javaContent, "@CitrusResource @Optional DefaultTestCaseRunner runner");
+        checkMethodParameter(javaContent, "@CitrusResource @Optional TestCaseRunner runner");
         assertContains(javaContent, "@Parameters(\"runner\")");
         assertContains(javaContent, "runner.run(echo(\"TODO: Code the test FooTest\"));");
     }

@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.DefaultTestCaseRunner;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.cucumber.message.MessageCreators;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -43,7 +43,7 @@ import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 public class MessagingSteps {
 
     @CitrusResource
-    private DefaultTestCaseRunner runner;
+    private TestCaseRunner runner;
 
     /** Available message creator POJO objects */
     private MessageCreators messageCreators;
