@@ -1281,13 +1281,13 @@ class ReceiveMessageBuilderTest {
 		doReturn(validator3).when(referenceResolver).resolve(name3, HeaderValidator.class);
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
-
 		//WHEN
 		final ReceiveMessageAction.Builder copy = builder.headerValidator(name1, name2, name3);
 
 		//THEN
 		assertSame(copy, builder);
 
+		builder.build();
 		final HeaderValidationContext headerValidationContext =
 				getFieldFromBuilder(builder, HeaderValidationContext.class, "headerValidationContext");
 		assertEquals(3, headerValidationContext.getValidators().size());
@@ -1455,10 +1455,10 @@ class ReceiveMessageBuilderTest {
     }
 
 	private <T> T getFieldFromBuilder(ReceiveMessageAction.Builder builder, final Class<T> targetClass, final String fieldName) {
-		final T scriptValidationContext = targetClass.cast(
+		final T validationContext = targetClass.cast(
 				ReflectionTestUtils.getField(builder, fieldName));
-		assertNotNull(scriptValidationContext);
-		return scriptValidationContext;
+		assertNotNull(validationContext);
+		return validationContext;
 	}
 
 	private String getPayloadData(ReceiveMessageAction.Builder builder) {
