@@ -18,7 +18,6 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.ws.client.WebServiceClient;
@@ -37,6 +36,14 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	private ReferenceResolver referenceResolver;
 
 	private TestActionBuilder<?> delegate;
+
+	/**
+	 * Static entrance method for the SOAP fluent action builder.
+	 * @return
+	 */
+	public static SoapActionBuilder soap() {
+		return new SoapActionBuilder();
+	}
 
 	/**
 	 * Initiate soap client action.
@@ -72,8 +79,7 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 * Initiate soap server action.
 	 */
 	public SoapServerActionBuilder server(String soapServer) {
-		Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(referenceResolver.resolve(soapServer, Endpoint.class))
+		SoapServerActionBuilder serverActionBuilder = new SoapServerActionBuilder(soapServer)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;

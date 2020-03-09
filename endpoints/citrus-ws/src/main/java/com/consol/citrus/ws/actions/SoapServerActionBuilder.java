@@ -35,7 +35,8 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
     private ReferenceResolver referenceResolver;
 
     /** Target soap client instance */
-    private final Endpoint soapServer;
+    private Endpoint soapServer;
+    private String soapServerUri;
 
     private TestActionBuilder<?> delegate;
 
@@ -47,13 +48,25 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
     }
 
     /**
+     * Default constructor.
+     */
+    public SoapServerActionBuilder(String soapServerUri) {
+        this.soapServerUri = soapServerUri;
+    }
+
+    /**
      * Generic request builder for receiving SOAP messages on server.
      * @return
      */
     public ReceiveSoapMessageAction.Builder receive() {
-        ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder()
-                .endpoint(soapServer)
-                .withReferenceResolver(referenceResolver);
+        ReceiveSoapMessageAction.Builder builder = new ReceiveSoapMessageAction.Builder();
+        if (soapServer != null) {
+            builder.endpoint(soapServer);
+        } else {
+            builder.endpoint(soapServerUri);
+        }
+
+        builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
@@ -63,9 +76,14 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
      * @return
      */
     public SendSoapMessageAction.Builder send() {
-        SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder()
-                .endpoint(soapServer)
-                .withReferenceResolver(referenceResolver);
+        SendSoapMessageAction.Builder builder = new SendSoapMessageAction.Builder();
+        if (soapServer != null) {
+            builder.endpoint(soapServer);
+        } else {
+            builder.endpoint(soapServerUri);
+        }
+
+        builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }
@@ -75,9 +93,14 @@ public class SoapServerActionBuilder implements TestActionBuilder.DelegatingTest
      * @return
      */
     public SendSoapFaultAction.Builder sendFault() {
-        SendSoapFaultAction.Builder builder = new SendSoapFaultAction.Builder()
-                .endpoint(soapServer)
-                .withReferenceResolver(referenceResolver);
+        SendSoapFaultAction.Builder builder = new SendSoapFaultAction.Builder();
+        if (soapServer != null) {
+            builder.endpoint(soapServer);
+        } else {
+            builder.endpoint(soapServerUri);
+        }
+
+        builder.withReferenceResolver(referenceResolver);
         this.delegate = builder;
         return builder;
     }

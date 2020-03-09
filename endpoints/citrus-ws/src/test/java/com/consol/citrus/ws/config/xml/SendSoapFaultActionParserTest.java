@@ -31,7 +31,7 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
     public void testSendSoapFaultActionParser() {
         assertActionCount(2);
         assertActionClassAndName(SendSoapFaultAction.class, "send-fault");
-        
+
         // 1st action
         SendSoapFaultAction action = getNextTestActionFromTest();
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
@@ -46,15 +46,15 @@ public class SendSoapFaultActionParserTest extends AbstractActionParserTest<Send
         Assert.assertEquals(action.getFaultCode(), "{http://www.citrusframework.org/faults}citrus-ns:FAULT-1000");
         Assert.assertEquals(action.getFaultString(), "FaultString");
         Assert.assertEquals(action.getFaultDetails().size(), 1);
-        Assert.assertTrue(action.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://www.consol.de/schemas/samples/sayHello.xsd\">"));
+        Assert.assertTrue(action.getFaultDetails().get(0).startsWith("<ns0:FaultDetail xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">"));
         Assert.assertNull(action.getFaultActor());
-        
+
         // 2nd action
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("soapServer"));
         Assert.assertNotNull(action.getMessageBuilder());
         Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
-        
+
         messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertNull(messageBuilder.getPayloadResourcePath());

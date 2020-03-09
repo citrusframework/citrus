@@ -80,8 +80,8 @@
       ]]>
     </citrus:payload>
     <citrus:header>
-      <citrus:element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Operation" value="sayHelloResponse"/>
-      <citrus:element name="{http://www.consol.de/schemas/samples/sayHello.xsd}ns0:Request" value="HelloRequest"/>
+      <citrus:element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Operation" value="sayHelloResponse"/>
+      <citrus:element name="{http://citrusframework.org/schemas/samples/HelloService.xsd}ns0:Request" value="HelloRequest"/>
       <citrus:element name="citrus_soap_action" value="sayHello"/>
     </citrus:header>
   </citrus:static-response-adapter>
