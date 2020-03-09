@@ -34,6 +34,7 @@ import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.support.JmsUtils;
@@ -252,13 +253,15 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
     /**
      * Action builder.
      */
-    public static final class Builder extends AbstractTestActionBuilder<PurgeJmsQueuesAction, Builder> {
+    public static final class Builder extends AbstractTestActionBuilder<PurgeJmsQueuesAction, Builder> implements ReferenceResolverAware {
 
         private List<String> queueNames = new ArrayList<>();
         private List<Queue> queues = new ArrayList<>();
         private ConnectionFactory connectionFactory;
         private long receiveTimeout = 100;
         private long sleepTime = 350;
+
+        private ReferenceResolver referenceResolver;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -356,16 +359,23 @@ public class PurgeJmsQueuesAction extends AbstractTestAction {
          * @param referenceResolver
          */
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
-            if (referenceResolver.isResolvable("connectionFactory")) {
-                connectionFactory(referenceResolver.resolve("connectionFactory", ConnectionFactory.class));
-            }
-
+            this.referenceResolver = referenceResolver;
             return this;
         }
 
         @Override
         public PurgeJmsQueuesAction build() {
+            if (referenceResolver != null
+                    && referenceResolver.isResolvable("connectionFactory")) {
+                connectionFactory(referenceResolver.resolve("connectionFactory", ConnectionFactory.class));
+            }
+
             return new PurgeJmsQueuesAction(this);
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
     }
 
