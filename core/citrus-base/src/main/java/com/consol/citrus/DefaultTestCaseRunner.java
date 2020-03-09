@@ -4,6 +4,7 @@ import java.util.Date;
 
 import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.spi.ReferenceResolverAware;
 
 /**
  * @author Christoph Deppisch
@@ -102,6 +103,10 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
 
     @Override
     public <T extends TestAction> T run(TestActionBuilder<T> builder) {
+        if (builder instanceof ReferenceResolverAware) {
+            ((ReferenceResolverAware) builder).setReferenceResolver(context.getReferenceResolver());
+        }
+
         T action = builder.build();
 
         if (builder instanceof FinallySequence.Builder) {

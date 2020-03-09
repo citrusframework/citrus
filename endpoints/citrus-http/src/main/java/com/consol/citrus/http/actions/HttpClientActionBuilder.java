@@ -20,6 +20,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
@@ -31,7 +32,7 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
+public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
@@ -271,5 +272,20 @@ public class HttpClientActionBuilder implements TestActionBuilder.DelegatingTest
     @Override
     public TestActionBuilder<?> getDelegate() {
         return delegate;
+    }
+
+    /**
+     * Specifies the referenceResolver.
+     * @param referenceResolver
+     */
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        if (referenceResolver == null) {
+            this.referenceResolver = referenceResolver;
+
+            if (delegate instanceof ReferenceResolverAware) {
+                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+            }
+        }
     }
 }

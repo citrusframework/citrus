@@ -62,7 +62,7 @@
                       port="11080"
                       auto-start="true"
                       context-config-location="classpath:com/consol/citrus/http/citrus-http-servlet.xml"
-                      resource-base="src/it/resources"/>
+                      resource-base="src/test/resources"/>
 
   <citrus-http:client id="echoHttpClient"
                       request-url="http://localhost:12080/echo"
@@ -76,7 +76,7 @@
                       handle-cookies="true"
                       handle-header-attributes="true"
                       root-parent-context="true"
-                      resource-base="src/it/resources"/>
+                      resource-base="src/test/resources"/>
 
   <!-- Test Actors -->
   <citrus:actor id="helloClient"

@@ -18,8 +18,9 @@ package com.consol.citrus.ws.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.server.WebServiceServer;
 import org.springframework.util.Assert;
@@ -30,7 +31,7 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class SoapActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
+public class SoapActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
 	/** Bean reference resolver */
 	private ReferenceResolver referenceResolver;
@@ -96,5 +97,20 @@ public class SoapActionBuilder implements TestActionBuilder.DelegatingTestAction
 	@Override
 	public TestActionBuilder<?> getDelegate() {
 		return delegate;
+	}
+
+	/**
+	 * Specifies the referenceResolver.
+	 * @param referenceResolver
+	 */
+	@Override
+	public void setReferenceResolver(ReferenceResolver referenceResolver) {
+		if (referenceResolver == null) {
+			this.referenceResolver = referenceResolver;
+
+			if (delegate instanceof ReferenceResolverAware) {
+				((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+			}
+		}
 	}
 }

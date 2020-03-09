@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelCamelContext;
 import org.springframework.util.Assert;
@@ -13,7 +14,7 @@ import org.springframework.util.Assert;
 /**
  * Action builder.
  */
-public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AbstractCamelRouteAction> {
+public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AbstractCamelRouteAction>, ReferenceResolverAware {
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
@@ -194,5 +195,20 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     @Override
     public TestActionBuilder<?> getDelegate() {
         return delegate;
+    }
+
+    /**
+     * Specifies the referenceResolver.
+     * @param referenceResolver
+     */
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        if (referenceResolver == null) {
+            this.referenceResolver = referenceResolver;
+
+            if (delegate instanceof ReferenceResolverAware) {
+                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+            }
+        }
     }
 }

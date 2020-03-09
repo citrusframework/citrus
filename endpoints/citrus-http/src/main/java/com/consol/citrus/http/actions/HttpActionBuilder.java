@@ -18,10 +18,10 @@ package com.consol.citrus.http.actions;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
-import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.util.Assert;
 
 /**
@@ -30,7 +30,7 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
+public class HttpActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
 	/** Bean reference resolver */
 	private ReferenceResolver referenceResolver;
@@ -79,8 +79,7 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	 * Initiate http server action.
 	 */
 	public HttpServerActionBuilder server(String httpServer) {
-		Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(referenceResolver.resolve(httpServer, Endpoint.class))
+		HttpServerActionBuilder serverActionBuilder = new HttpServerActionBuilder(httpServer)
 				.withReferenceResolver(referenceResolver);
 		this.delegate = serverActionBuilder;
 		return serverActionBuilder;
@@ -104,5 +103,20 @@ public class HttpActionBuilder implements TestActionBuilder.DelegatingTestAction
 	@Override
 	public TestActionBuilder<?> getDelegate() {
 		return delegate;
+	}
+
+	/**
+	 * Specifies the referenceResolver.
+	 * @param referenceResolver
+	 */
+	@Override
+	public void setReferenceResolver(ReferenceResolver referenceResolver) {
+		if (referenceResolver == null) {
+			this.referenceResolver = referenceResolver;
+
+			if (delegate instanceof ReferenceResolverAware) {
+				((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+			}
+		}
 	}
 }

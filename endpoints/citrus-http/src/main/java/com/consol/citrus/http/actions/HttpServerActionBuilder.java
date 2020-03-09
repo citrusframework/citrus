@@ -20,6 +20,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
@@ -31,13 +32,14 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.4
  */
-public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction> {
+public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
 
     /** Target http client instance */
-    private final Endpoint httpServer;
+    private Endpoint httpServer;
+    private String httpServerUri;
 
     private TestActionBuilder<?> delegate;
 
@@ -47,6 +49,15 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
     public HttpServerActionBuilder(Endpoint httpServer) {
         this.httpServer = httpServer;
     }
+
+    /**
+     * Default constructor.
+     */
+    public HttpServerActionBuilder(String httpServerUri) {
+        this.httpServerUri = httpServerUri;
+    }
+
+
 
     /**
      * Generic response builder for sending response messages to client.
@@ -85,10 +96,15 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
      * @return
      */
     private HttpServerRequestActionBuilder request(HttpMethod method, String path) {
-        HttpServerRequestActionBuilder builder = new HttpServerRequestActionBuilder()
-                .endpoint(httpServer)
-                .withReferenceResolver(referenceResolver)
-                .method(method);
+        HttpServerRequestActionBuilder builder = new HttpServerRequestActionBuilder();
+        if (httpServer != null) {
+            builder.endpoint(httpServer);
+        } else {
+            builder.endpoint(httpServerUri);
+        }
+
+        builder.withReferenceResolver(referenceResolver);
+        builder.method(method);
 
         if (StringUtils.hasText(path)) {
             builder.path(path);
@@ -116,9 +132,14 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
          * @return
          */
         public HttpServerResponseActionBuilder response() {
-            HttpServerResponseActionBuilder builder =  new HttpServerResponseActionBuilder()
-                    .endpoint(httpServer)
-                    .withReferenceResolver(referenceResolver);
+            HttpServerResponseActionBuilder builder =  new HttpServerResponseActionBuilder();
+            if (httpServer != null) {
+                builder.endpoint(httpServer);
+            } else {
+                builder.endpoint(httpServerUri);
+            }
+
+            builder.withReferenceResolver(referenceResolver);
 
             HttpServerActionBuilder.this.delegate = builder;
             return builder;
@@ -129,10 +150,15 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
          * @return
          */
         public HttpServerResponseActionBuilder response(HttpStatus status) {
-            HttpServerResponseActionBuilder builder = new HttpServerResponseActionBuilder()
-                    .endpoint(httpServer)
-                    .withReferenceResolver(referenceResolver)
-                    .status(status);
+            HttpServerResponseActionBuilder builder = new HttpServerResponseActionBuilder();
+            if (httpServer != null) {
+                builder.endpoint(httpServer);
+            } else {
+                builder.endpoint(httpServerUri);
+            }
+
+            builder.withReferenceResolver(referenceResolver);
+            builder.status(status);
 
             HttpServerActionBuilder.this.delegate = builder;
             return builder;
@@ -265,5 +291,20 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
     @Override
     public TestActionBuilder<?> getDelegate() {
         return delegate;
+    }
+
+    /**
+     * Specifies the referenceResolver.
+     * @param referenceResolver
+     */
+    @Override
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        if (referenceResolver == null) {
+            this.referenceResolver = referenceResolver;
+
+            if (delegate instanceof ReferenceResolverAware) {
+                ((ReferenceResolverAware) delegate).setReferenceResolver(referenceResolver);
+            }
+        }
     }
 }
