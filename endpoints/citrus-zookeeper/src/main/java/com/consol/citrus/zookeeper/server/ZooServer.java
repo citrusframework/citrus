@@ -16,13 +16,16 @@
 
 package com.consol.citrus.zookeeper.server;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.server.AbstractServer;
-import org.apache.zookeeper.server.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.server.AbstractServer;
+import org.apache.zookeeper.server.NIOServerCnxnFactory;
+import org.apache.zookeeper.server.ServerCnxnFactory;
+import org.apache.zookeeper.server.ZooKeeperServer;
+import org.apache.zookeeper.server.persistence.FileTxnSnapLog;
 
 /**
  * Simple ZooKeeper server standalone instance.
@@ -84,6 +87,7 @@ public class ZooServer extends AbstractServer {
      */
     public ZooKeeperServer getZooKeeperServer() {
         if (zooKeeperServer == null) {
+            System.setProperty(FileTxnSnapLog.ZOOKEEPER_SNAPSHOT_TRUST_EMPTY, Boolean.TRUE.toString());
             String dataDirectory = System.getProperty("java.io.tmpdir");
             File dir = new File(dataDirectory, "zookeeper").getAbsoluteFile();
             try {

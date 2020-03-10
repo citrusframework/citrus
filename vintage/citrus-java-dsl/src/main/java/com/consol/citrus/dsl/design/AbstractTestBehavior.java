@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.design;
 
 import java.util.Stack;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.container.FinallySequence;
@@ -57,6 +58,11 @@ public abstract class AbstractTestBehavior extends DefaultTestDesigner implement
     @Override
     public <T> T variable(String name, T value) {
         return target.variable(name, value);
+    }
+
+    @Override
+    public void action(TestAction testAction) {
+        target.action(testAction);
     }
 
     @Override

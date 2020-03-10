@@ -135,32 +135,35 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <spring.version>5.0.8.RELEASE</spring.version>
-    <spring.ws.version>3.0.7.RELEASE</spring.ws.version>
-    <spring.integration.version>5.0.6.RELEASE</spring.integration.version>
-    <spring.restdocs.version>2.0.1.RELEASE</spring.restdocs.version>
-    <kafka.version>2.0.0</kafka.version>
-    <apache.camel.version>2.23.2</apache.camel.version>
+    <spring.version>5.2.4.RELEASE</spring.version>
+    <spring.ws.version>3.0.8.RELEASE</spring.ws.version>
+    <spring.integration.version>5.2.4.RELEASE</spring.integration.version>
+    <spring.restdocs.version>2.0.4.RELEASE</spring.restdocs.version>
+    <kafka.version>2.4.0</kafka.version>
+    <apache.camel.version>3.1.0</apache.camel.version>
     <javatuples.version>1.2</javatuples.version>
-    <activemq.version>5.15.4</activemq.version>
-    <vertx.version>3.5.4</vertx.version>
+    <activemq.version>5.15.11</activemq.version>
+    <vertx.version>3.8.5</vertx.version>
     <groovy.version>2.5.0</groovy.version>
-    <jetty.version>9.4.18.v20190429</jetty.version>
-    <testng.version>6.11</testng.version>
-    <junit.version>4.12</junit.version>
-    <junit.jupiter.version>5.3.2</junit.jupiter.version>
-    <junit.platform.version>1.0.3</junit.platform.version>
-    <slf4j.version>1.7.25</slf4j.version>
+    <jetty.version>9.4.27.v20200227</jetty.version>
+    <testng.version>7.1.0</testng.version>
+    <junit.version>4.13</junit.version>
+    <junit.jupiter.version>5.6.0</junit.jupiter.version>
+    <slf4j.version>1.7.30</slf4j.version>
     <jaxb.version>2.3.0</jaxb.version>
-    <jackson.version>2.9.8</jackson.version>
-    <arquillian.version>1.4.0.Final</arquillian.version>
+    <jackson.version>2.10.3</jackson.version>
+    <arquillian.version>1.6.0.Final</arquillian.version>
     <cucumber.version>3.0.2</cucumber.version>
-    <zookeeper.version>3.4.12</zookeeper.version>
-    <sshd.version>2.0.0</sshd.version>
-    <json.schema.validator.version>2.2.10</json.schema.validator.version>
+    <zookeeper.version>3.5.6</zookeeper.version>
+    <sshd.version>2.4.0</sshd.version>
+    <json.schema.validator.version>2.2.13</json.schema.validator.version>
     <citrus.db.version>0.1.4</citrus.db.version>
-    <surefire.version>2.22.1</surefire.version>
-    <mockito.version>2.19.0</mockito.version>
+    <selenium.version>3.141.59</selenium.version>
+    <htmlunit.version>2.38.0</htmlunit.version>
+    <byte.buddy.version>1.10.8</byte.buddy.version>
+    <google.guava.version>28.2-jre</google.guava.version>
+    <surefire.version>2.22.2</surefire.version>
+    <mockito.version>2.28.2</mockito.version>
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
@@ -668,7 +671,7 @@
       <dependency>
         <groupId>org.seleniumhq.selenium</groupId>
         <artifactId>selenium-java</artifactId>
-        <version>3.13.0</version>
+        <version>${selenium.version}</version>
         <exclusions>
           <exclusion>
             <groupId>org.eclipse.jetty.websocket</groupId>
@@ -690,32 +693,31 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>net.bytebuddy</groupId>
+            <artifactId>byte-buddy</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
         <groupId>org.seleniumhq.selenium</groupId>
         <artifactId>htmlunit-driver</artifactId>
-        <version>2.31.0</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sourceforge.htmlunit</groupId>
-        <artifactId>htmlunit</artifactId>
-        <version>2.31</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sourceforge.htmlunit</groupId>
-        <artifactId>htmlunit-core-js</artifactId>
-        <version>2.31</version>
-      </dependency>
-      <dependency>
-        <groupId>net.sourceforge.htmlunit</groupId>
-        <artifactId>neko-htmlunit</artifactId>
-        <version>2.31</version>
+        <version>${htmlunit.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>23.0</version>
+        <version>${google.guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>${byte.buddy.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy-agent</artifactId>
+        <version>${byte.buddy.version}</version>
       </dependency>
 
       <!-- JaxB Bindings (API and implementation) -->
@@ -764,8 +766,8 @@
         <version>${json.schema.validator.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>javax.mail</groupId>
-            <artifactId>mailapi</artifactId>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1062,6 +1064,8 @@
               <configuration>
                 <failIfNoTests>false</failIfNoTests>
                 <skipTests>${skip.integration.tests}</skipTests>
+                <forkCount>1</forkCount>
+                <threadCount>1</threadCount>
               </configuration>
             </execution>
           </executions>

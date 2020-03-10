@@ -170,7 +170,7 @@ public abstract class CitrusAnnotations {
      * @param target
      * @param runner
      */
-    public static void injectTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
+    public static void injectGherkinTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (GherkinTestActionRunner.class.isAssignableFrom(type)) {

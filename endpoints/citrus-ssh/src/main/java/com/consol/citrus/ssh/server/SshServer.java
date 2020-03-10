@@ -16,6 +16,15 @@
 
 package com.consol.citrus.ssh.server;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.server.AbstractServer;
@@ -23,22 +32,19 @@ import com.consol.citrus.ssh.SshCommand;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.util.FileUtils;
-import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.scp.AbstractScpTransferEventListenerAdapter;
 import org.apache.sshd.common.scp.ScpTransferEventListener;
-import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.scp.ScpCommandFactory;
-import org.apache.sshd.server.subsystem.sftp.*;
+import org.apache.sshd.server.subsystem.SubsystemFactory;
+import org.apache.sshd.server.subsystem.sftp.AbstractSftpEventListenerAdapter;
+import org.apache.sshd.server.subsystem.sftp.SftpEventListener;
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
 
 /**
  * SSH Server implemented with Apache SSHD (http://mina.apache.org/sshd/).
@@ -170,13 +176,13 @@ public class SshServer extends AbstractServer {
 
         // Setup endpoint adapter
         ScpCommandFactory commandFactory = new ScpCommandFactory.Builder()
-                .withDelegate(command -> new SshCommand(command, getEndpointAdapter(), endpointConfiguration))
+                .withDelegate((session, command) -> new SshCommand(command, getEndpointAdapter(), endpointConfiguration))
                 .build();
 
         commandFactory.addEventListener(getScpTransferEventListener());
         sshd.setCommandFactory(commandFactory);
 
-        ArrayList<NamedFactory<Command>> subsystemFactories = new ArrayList<>();
+        List<SubsystemFactory> subsystemFactories = new ArrayList<>();
         SftpSubsystemFactory sftpSubsystemFactory = new SftpSubsystemFactory.Builder().build();
         sftpSubsystemFactory.addSftpEventListener(getSftpEventListener());
 

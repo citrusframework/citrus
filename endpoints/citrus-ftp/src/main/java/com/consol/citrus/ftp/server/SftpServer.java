@@ -16,6 +16,12 @@
 
 package com.consol.citrus.ftp.server;
 
+import java.nio.file.Path;
+import java.nio.file.attribute.PosixFilePermission;
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.Set;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.client.SftpEndpointConfiguration;
@@ -26,16 +32,13 @@ import com.consol.citrus.ssh.server.SshServer;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.DataType;
 import org.apache.sshd.common.scp.ScpTransferEventListener;
+import org.apache.sshd.common.session.Session;
 import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.subsystem.sftp.FileHandle;
 import org.apache.sshd.server.subsystem.sftp.SftpEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.xml.transform.StringResult;
-
-import java.nio.file.Path;
-import java.nio.file.attribute.PosixFilePermission;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -89,12 +92,12 @@ public class SftpServer extends SshServer implements ScpTransferEventListener, S
     }
 
     @Override
-    public void startFileEvent(FileOperation op, Path file, long length, Set<PosixFilePermission> perms) {
-        startFolderEvent(op, file, perms);
+    public void startFileEvent(Session session, FileOperation op, Path file, long length, Set<PosixFilePermission> perms) {
+        startFolderEvent(session, op, file, perms);
     }
 
     @Override
-    public void startFolderEvent(FileOperation op, Path file, Set<PosixFilePermission> perms) {
+    public void startFolderEvent(Session session, FileOperation op, Path file, Set<PosixFilePermission> perms) {
         if (op.equals(FileOperation.SEND)) {
             FtpMessage response = handleMessage(FtpMessage.get(file.toString()));
             if (response.hasException()) {

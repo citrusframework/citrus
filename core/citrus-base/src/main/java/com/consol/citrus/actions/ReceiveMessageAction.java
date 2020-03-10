@@ -1298,11 +1298,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
                     ((ReferenceResolverAware) validationCallback).setReferenceResolver(referenceResolver);
                 }
 
-                for (final String validatorName : validatorNames) {
+                while (!validatorNames.isEmpty()) {
+                    final String validatorName = validatorNames.remove(0);
                     this.validators.add(referenceResolver.resolve(validatorName, MessageValidator.class));
                 }
 
-                for (final String validatorName : headerValidatorNames) {
+                while (!headerValidatorNames.isEmpty()) {
+                    final String validatorName = headerValidatorNames.remove(0);
                     getHeaderValidationContext().addHeaderValidator(referenceResolver.resolve(validatorName, HeaderValidator.class));
                 }
 
@@ -1324,6 +1326,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         }
                     }
                 }
+                headerFragmentMappers.clear();
 
                 for (Map.Entry<String, List<Object>> mapperEntry : payloadMappers.entrySet()) {
                     String mapperName = mapperEntry.getKey();
@@ -1339,6 +1342,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         }
                     }
                 }
+                payloadMappers.clear();
             }
 
             return doBuild();

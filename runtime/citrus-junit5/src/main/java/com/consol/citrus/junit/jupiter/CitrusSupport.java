@@ -85,12 +85,8 @@ public class CitrusSupport extends CitrusBaseExtension implements TestExecutionE
 
         TestCaseRunner testRunner = getTestRunner(extensionContext);
         CitrusAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), testRunner);
-
-        if (testRunner instanceof GherkinTestActionRunner) {
-            CitrusAnnotations.injectTestActionRunner(extensionContext.getRequiredTestInstance(), (GherkinTestActionRunner) testRunner);
-        } else if (testRunner instanceof TestActionRunner) {
-            CitrusAnnotations.injectTestActionRunner(extensionContext.getRequiredTestInstance(), (TestActionRunner) testRunner);
-        }
+        CitrusAnnotations.injectTestActionRunner(extensionContext.getRequiredTestInstance(), testRunner);
+        CitrusAnnotations.injectGherkinTestActionRunner(extensionContext.getRequiredTestInstance(), testRunner);
     }
 
     @Override

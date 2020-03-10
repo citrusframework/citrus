@@ -18,6 +18,7 @@ package com.consol.citrus.camel.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,8 @@ public class RemoveCamelRouteAction extends AbstractCamelRouteAction {
             String route = context.replaceDynamicContentInString(routeId);
 
             try {
-                if (!camelContext.getRouteStatus(route).isStopped()) {
+                if (camelContext instanceof AbstractCamelContext
+                        && !((AbstractCamelContext) camelContext).getRouteStatus(route).isStopped()) {
                     throw new CitrusRuntimeException("Camel routes must be stopped before removal!");
                 }
 

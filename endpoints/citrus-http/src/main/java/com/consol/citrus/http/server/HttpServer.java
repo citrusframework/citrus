@@ -17,16 +17,13 @@
 package com.consol.citrus.http.server;
 
 import javax.servlet.Filter;
-import javax.servlet.ServletContext;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.http.context.ParentDelegatingWebApplicationContext;
 import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.servlet.CitrusDispatcherServlet;
@@ -47,17 +44,6 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.servlet.ServletMapping;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.MessageSourceResolvable;
-import org.springframework.context.NoSuchMessageException;
-import org.springframework.core.ResolvableType;
-import org.springframework.core.env.Environment;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.CollectionUtils;
@@ -175,7 +161,7 @@ public class HttpServer extends AbstractServer {
             //add the root application context as parent to the constructed WebApplicationContext
             if (useRootContextAsParent) {
                 contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                        new SimpleDelegatingWebApplicationContext());
+                        new ParentDelegatingWebApplicationContext(getApplicationContext()));
             }
 
             if (servletHandler == null) {
@@ -300,151 +286,6 @@ public class HttpServer extends AbstractServer {
             return servletName;
         } else {
             return getName() + "-servlet";
-        }
-    }
-
-    /**
-     * WebApplicationContext implementation that delegates method calls to parent ApplicationContext.
-     */
-    private final class SimpleDelegatingWebApplicationContext implements WebApplicationContext {
-        public Resource getResource(String location) {
-            return getApplicationContext().getResource(location);
-        }
-        public ClassLoader getClassLoader() {
-            return getApplicationContext().getClassLoader();
-        }
-        public Resource[] getResources(String locationPattern) throws IOException {
-            return getApplicationContext().getResources(locationPattern);
-        }
-        public void publishEvent(ApplicationEvent event) {
-            getApplicationContext().publishEvent(event);
-        }
-        public void publishEvent(Object event) { getApplicationContext().publishEvent(event); }
-        public String getMessage(String code, Object[] args, String defaultMessage,
-                Locale locale) {
-            return getApplicationContext().getMessage(code, args, defaultMessage, locale);
-        }
-        public String getMessage(String code, Object[] args, Locale locale)
-                throws NoSuchMessageException {
-            return getApplicationContext().getMessage(code, args, locale);
-        }
-        public String getMessage(MessageSourceResolvable resolvable, Locale locale)
-                throws NoSuchMessageException {
-            return getApplicationContext().getMessage(resolvable, locale);
-        }
-        public BeanFactory getParentBeanFactory() {
-            return getApplicationContext().getParentBeanFactory();
-        }
-        public boolean containsLocalBean(String name) {
-            return getApplicationContext().containsBean(name);
-        }
-        public boolean isSingleton(String name)
-                throws NoSuchBeanDefinitionException {
-            return getApplicationContext().isSingleton(name);
-        }
-        public boolean isPrototype(String name)
-                throws NoSuchBeanDefinitionException {
-            return getApplicationContext().isPrototype(name);
-        }
-        public Object getBean(String name) throws BeansException {
-            return getApplicationContext().getBean(name);
-        }
-        public String[] getAliases(String name) {
-            return getApplicationContext().getAliases(name);
-        }
-        public boolean containsBean(String name) {
-            return getApplicationContext().containsBean(name);
-        }
-        public String[] getBeanDefinitionNames() {
-            return getApplicationContext().getBeanDefinitionNames();
-        }
-        public String[] getBeanNamesForType(ResolvableType type) {
-            return getApplicationContext().getBeanNamesForType(type);
-        }
-        public int getBeanDefinitionCount() {
-            return getApplicationContext().getBeanDefinitionCount();
-        }
-        public boolean containsBeanDefinition(String beanName) {
-            return getApplicationContext().containsBeanDefinition(beanName);
-        }
-        public long getStartupDate() {
-            return getApplicationContext().getStartupDate();
-        }
-        public ApplicationContext getParent() {
-            return getApplicationContext().getParent();
-        }
-        public String getId() {
-            return getApplicationContext().getId();
-        }
-        public String getApplicationName() {
-            return getApplicationContext().getApplicationName();
-        }
-        public String getDisplayName() {
-            return getApplicationContext().getDisplayName();
-        }
-        public AutowireCapableBeanFactory getAutowireCapableBeanFactory()
-                throws IllegalStateException {
-            return getApplicationContext().getAutowireCapableBeanFactory();
-        }
-        public <T> Map<String, T> getBeansOfType(Class<T> type)
-                throws BeansException {
-            return getApplicationContext().getBeansOfType(type);
-        }
-        public <T> Map<String, T> getBeansOfType(Class<T> type,
-                boolean includeNonSingletons, boolean allowEagerInit)
-                throws BeansException {
-            return getApplicationContext().getBeansOfType(type, includeNonSingletons, allowEagerInit);
-        }
-        public String[] getBeanNamesForAnnotation(Class<? extends Annotation> annotationType) {
-            return getApplicationContext().getBeanNamesForAnnotation(annotationType);
-        }
-        public Map<String, Object> getBeansWithAnnotation(
-                Class<? extends Annotation> annotationType)
-                throws BeansException {
-            return getApplicationContext().getBeansWithAnnotation(annotationType);
-        }
-        public <A extends Annotation> A findAnnotationOnBean(String beanName,
-                Class<A> annotationType) {
-            return getApplicationContext().findAnnotationOnBean(beanName, annotationType);
-        }
-        public <T> T getBean(String name, Class<T> requiredType)
-                throws BeansException {
-            return getApplicationContext().getBean(name, requiredType);
-        }
-        public <T> T getBean(Class<T> requiredType) throws BeansException {
-            return getApplicationContext().getBean(requiredType);
-        }
-        public String[] getBeanNamesForType(Class<?> type) {
-            return getApplicationContext().getBeanNamesForType(type);
-        }
-        public String[] getBeanNamesForType(Class<?> type,
-                boolean includeNonSingletons, boolean allowEagerInit) {
-            return getApplicationContext().getBeanNamesForType(type, includeNonSingletons, allowEagerInit);
-        }
-        public Object getBean(String name, Object... args)
-                throws BeansException {
-            return getApplicationContext().getBean(name, args);
-        }
-        public <T> T getBean(Class<T> requiredType, Object... args) throws BeansException {
-            return getApplicationContext().getBean(requiredType, args);
-        }
-        public boolean isTypeMatch(String name, Class<?> targetType)
-                throws NoSuchBeanDefinitionException {
-            return getApplicationContext().isTypeMatch(name, targetType);
-        }
-        public boolean isTypeMatch(String name, ResolvableType targetType)
-                throws NoSuchBeanDefinitionException {
-            return getApplicationContext().isTypeMatch(name, targetType);
-        }
-        public Class<?> getType(String name)
-                throws NoSuchBeanDefinitionException {
-            return getApplicationContext().getType(name);
-        }
-        public ServletContext getServletContext() {
-            return null;
-        }
-        public Environment getEnvironment() {
-            return getApplicationContext().getEnvironment();
         }
     }
 

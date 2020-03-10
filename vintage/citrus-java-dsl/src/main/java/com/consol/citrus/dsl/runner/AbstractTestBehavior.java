@@ -18,6 +18,7 @@ package com.consol.citrus.dsl.runner;
 
 import java.util.Stack;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.container.FinallySequence;
@@ -54,6 +55,11 @@ public abstract class AbstractTestBehavior extends DefaultTestRunner implements 
     @Override
     public <T> T variable(String name, T value) {
         return target.variable(name, value);
+    }
+
+    @Override
+    public <A extends TestAction> TestActionBuilder<A> run(A testAction) {
+        return target.run(testAction);
     }
 
     @Override

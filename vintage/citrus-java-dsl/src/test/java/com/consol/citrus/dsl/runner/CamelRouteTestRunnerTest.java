@@ -217,7 +217,7 @@ public class CamelRouteTestRunnerTest extends UnitTestSupport {
     @Test
     public void testDefaultCamelContextBuilder() {
         CamelContext defaultContext = applicationContext.getBean(CamelContext.class);
-        Assert.assertEquals(defaultContext.getRouteDefinitions().size(), 1);
+        Assert.assertEquals(defaultContext.getRoutes().size(), 1);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
@@ -248,7 +248,7 @@ public class CamelRouteTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "create-routes");
         Assert.assertEquals(action.getRoutes().size(), 2);
 
-        Assert.assertEquals(defaultContext.getRouteDefinitions().size(), 3);
+        Assert.assertEquals(defaultContext.getRoutes().size(), 3);
     }
 
     @Test

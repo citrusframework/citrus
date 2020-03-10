@@ -21,15 +21,28 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.*;
-import org.apache.camel.impl.*;
+import org.apache.camel.CamelExchangeException;
+import org.apache.camel.ConsumerTemplate;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.impl.engine.AbstractCamelContext;
+import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
+import org.apache.camel.impl.engine.JavaUuidGenerator;
+import org.apache.camel.support.DefaultExchange;
+import org.apache.camel.support.DefaultMessage;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -37,7 +50,7 @@ import static org.mockito.Mockito.*;
  */
 public class CamelEndpointTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
     private ConsumerTemplate consumerTemplate = Mockito.mock(ConsumerTemplate.class);
     private Exchange exchange = Mockito.mock(Exchange.class);

@@ -20,8 +20,8 @@ import java.util.Collections;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.CamelContext;
 import org.apache.camel.FailedToStartRouteException;
+import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 
 public class StartCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
 
     @Test
     public void testStartRoute() throws Exception {

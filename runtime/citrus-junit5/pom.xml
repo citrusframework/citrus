@@ -30,6 +30,12 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 
@@ -54,14 +60,12 @@
         </executions>
         <configuration>
           <excludedGroups>com.consol.citrus.ShouldFailGroup</excludedGroups>
-          <forkCount>1</forkCount>
-          <threadCount>1</threadCount>
         </configuration>
         <dependencies>
           <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>${junit.platform.version}</version>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit-platform</artifactId>
+            <version>${surefire.version}</version>
           </dependency>
         </dependencies>
       </plugin>

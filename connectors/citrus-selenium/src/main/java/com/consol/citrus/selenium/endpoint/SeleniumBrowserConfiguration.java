@@ -16,14 +16,14 @@
 
 package com.consol.citrus.selenium.endpoint;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.support.events.WebDriverEventListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Tamer Erdogan, Christoph Deppisch
@@ -44,7 +44,7 @@ public class SeleniumBrowserConfiguration extends AbstractEndpointConfiguration 
     private String remoteServerUrl;
 
     /** Browser version */
-    private String version = "FIREFOX_38";
+    private String version = "FIREFOX";
 
     /** Web driver event listeners */
     private List<WebDriverEventListener> eventListeners = new ArrayList<>();

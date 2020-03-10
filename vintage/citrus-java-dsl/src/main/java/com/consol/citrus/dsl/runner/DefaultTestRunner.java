@@ -23,6 +23,7 @@ import java.util.Stack;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.DefaultTestCase;
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -210,6 +211,11 @@ public class DefaultTestRunner implements TestRunner {
             context.setVariable(name, value);
             return value;
         }
+    }
+
+    @Override
+    public <A extends TestAction> TestActionBuilder<A> run(A testAction) {
+        return run((TestActionBuilder<A>)() -> testAction);
     }
 
     @Override

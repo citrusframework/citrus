@@ -35,6 +35,7 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -63,7 +64,7 @@ public class DockerTestRunnerTest extends UnitTestSupport {
         when(infoCmd.exec()).thenReturn(new Info());
 
         when(dockerClient.pingCmd()).thenReturn(pingCmd);
-        when(pingCmd.exec()).thenReturn(null);
+        doNothing().when(pingCmd).exec();
 
         when(dockerClient.versionCmd()).thenReturn(versionCmd);
         when(versionCmd.exec()).thenReturn(new Version());

@@ -20,9 +20,9 @@ import java.util.Collections;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.CamelContext;
 import org.apache.camel.CamelException;
 import org.apache.camel.ServiceStatus;
+import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -33,7 +33,7 @@ import static org.mockito.Mockito.when;
 
 public class RemoveCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
 
     @Test
     public void testRemoveRoute() throws Exception {

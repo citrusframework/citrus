@@ -24,6 +24,7 @@ import java.util.Stack;
 
 import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.DefaultTestCase;
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -189,6 +190,11 @@ public class DefaultTestDesigner implements TestDesigner {
     public <T> T variable(String name, T value) {
         testCase.getVariableDefinitions().put(name, value);
         return value;
+    }
+
+    @Override
+    public void action(TestAction testAction) {
+        this.action(() -> testAction);
     }
 
     @Override

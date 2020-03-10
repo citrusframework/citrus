@@ -94,7 +94,7 @@ public class XPathUtilsTest {
         Assert.assertFalse(XPathUtils.evaluateAsBoolean(personNode, "/person/unknown", namespaceContext));
         Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/name", namespaceContext), "foo");
         Assert.assertEquals(XPathUtils.evaluateAsObject(personNode, "/person/name", namespaceContext, new QName("http://www.w3.org/1999/XSL/Transform", "STRING")), "foo");
-        Assert.assertEquals(XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext), 23.0D);
+        Assert.assertEquals(XPathUtils.evaluateAsNumber(personNode, "/person/age", namespaceContext), new Double(23.0D));
         Assert.assertEquals(XPathUtils.evaluateAsString(personNode, "/person/@status", namespaceContext), "single");
     }
 

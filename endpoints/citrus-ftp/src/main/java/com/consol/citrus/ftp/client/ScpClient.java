@@ -16,13 +16,23 @@
 
 package com.consol.citrus.ftp.client;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
-import com.consol.citrus.ftp.model.*;
+import com.consol.citrus.ftp.model.CommandType;
+import com.consol.citrus.ftp.model.DeleteCommand;
+import com.consol.citrus.ftp.model.GetCommand;
+import com.consol.citrus.ftp.model.ListCommand;
+import com.consol.citrus.ftp.model.PutCommand;
 import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.client.SshClient;
-import org.apache.sshd.client.keyverifier.*;
+import org.apache.sshd.client.keyverifier.AcceptAllServerKeyVerifier;
+import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
+import org.apache.sshd.client.keyverifier.RejectAllServerKeyVerifier;
 import org.apache.sshd.client.scp.DefaultScpClientCreator;
 import org.apache.sshd.client.session.ClientSession;
 import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
@@ -31,10 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch
@@ -129,9 +135,9 @@ public class ScpClient extends SftpClient {
             Resource privateKey = FileUtils.getFileResource(getPrivateKeyPath());
 
             if (privateKey instanceof ClassPathResource) {
-                new ClassLoadableResourceKeyPairProvider(privateKey.getFile().getPath()).loadKeys().forEach(session::addPublicKeyIdentity);
+                new ClassLoadableResourceKeyPairProvider(privateKey.getFile().getPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
             } else {
-                new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys().forEach(session::addPublicKeyIdentity);
+                new FileKeyPairProvider(privateKey.getFile().toPath()).loadKeys(session).forEach(session::addPublicKeyIdentity);
             }
 
             session.auth().verify(getEndpointConfiguration().getTimeout());

@@ -19,14 +19,26 @@
 
     <description>Test RMI client server communication.</description>
 
+    <variables>
+      <variable name="randomCount" value="citrus:randomNumber(4)"/>
+    </variables>
+
     <actions>
       <echo>
         <message>Test 1: Receive RMI service call as server and return null result</message>
       </echo>
 
-      <send endpoint="camel:direct:hello" fork="true">
-        <message type="plaintext">
-          <data>Hello RMI this is cool!</data>
+      <send endpoint="rmiHelloClient" fork="true">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.HelloService</rmi:remote>
+              <rmi:method>sayHello</rmi:method>
+              <rmi:args>
+                <rmi:arg value="Hello RMI this is cool!"/>
+              </rmi:args>
+            </rmi:service-invocation>
+          </payload>
         </message>
       </send>
 
@@ -52,12 +64,27 @@
         </message>
       </send>
 
+      <receive endpoint="rmiHelloClient">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message"/>
+          </payload>
+        </message>
+      </receive>
+
       <echo>
         <message>Test 2: Receive RMI service call return some result object</message>
       </echo>
 
-      <send endpoint="camel:direct:helloCount" fork="true">
-        <message><data/></message>
+      <send endpoint="rmiHelloClient" fork="true">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.HelloService</rmi:remote>
+              <rmi:method>getHelloCount</rmi:method>
+            </rmi:service-invocation>
+          </payload>
+        </message>
       </send>
 
       <receive endpoint="rmiHelloServer">
@@ -75,11 +102,21 @@
         <message>
           <payload>
             <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
-              <rmi:object type="java.lang.Integer" value="citrus:randomNumber(4)"/>
+              <rmi:object type="java.lang.Integer" value="${randomCount}"/>
             </rmi:service-result>
           </payload>
         </message>
       </send>
+
+      <receive endpoint="rmiHelloClient">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.Integer" value="${randomCount}"/>
+            </rmi:service-result>
+          </payload>
+        </message>
+      </receive>
 
     </actions>
   </testcase>

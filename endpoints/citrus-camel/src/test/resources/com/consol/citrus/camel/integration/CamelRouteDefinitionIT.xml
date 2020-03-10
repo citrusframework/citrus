@@ -29,7 +29,7 @@
           <route id="myRoute">
             <from uri="direct:dynamic-news"/>
             <to uri="log:com.consol.citrus.camel?level=INFO"/>
-            <setHeader headerName="headline">
+            <setHeader name="headline">
               <simple>This is BIG news!</simple>
             </setHeader>
             <to uri="seda:big-news"/>

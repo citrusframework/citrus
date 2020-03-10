@@ -16,21 +16,29 @@
 
 package com.consol.citrus.ssh.server;
 
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.security.GeneralSecurityException;
+import java.security.KeyPair;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ssh.SshCommand;
 import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
 import org.apache.sshd.common.keyprovider.KeyPairProvider;
+import org.apache.sshd.common.session.SessionContext;
+import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.apache.sshd.server.command.CommandFactory;
+import org.mockito.Mockito;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
-import java.net.*;
-import java.security.KeyPair;
-
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Roland Huss
@@ -72,21 +80,7 @@ public class SshServerTest {
     public void startupAndShutdownWithPassword() throws IOException {
         prepareServer(true);
         server.start();
-        
-        try {
-            assertTrue(server.isRunning());
-            new Socket("127.0.0.1", port); // throws exception if it can't connect
-        } finally {
-            server.stop();
-            assertFalse(server.isRunning());
-        }
-    }
-    
-    @Test
-    public void startupAndShutdown() throws IOException {
-        prepareServer(false);
-        server.start();
-        
+
         try {
             assertTrue(server.isRunning());
             new Socket("127.0.0.1", port); // throws exception if it can't connect
@@ -97,15 +91,30 @@ public class SshServerTest {
     }
 
     @Test
-    public void wrongHostKey() {
+    public void startupAndShutdown() throws IOException {
+        prepareServer(false);
+        server.start();
+
+        try {
+            assertTrue(server.isRunning());
+            new Socket("127.0.0.1", port); // throws exception if it can't connect
+        } finally {
+            server.stop();
+            assertFalse(server.isRunning());
+        }
+    }
+
+    @Test
+    public void wrongHostKey() throws IOException, GeneralSecurityException {
         prepareServer(true);
         server.setHostKeyPath("file:/never/existing/directory");
         server.start();
         try {
+            SessionContext sessionContext = Mockito.mock(SessionContext.class);
             org.apache.sshd.server.SshServer sshd = (org.apache.sshd.server.SshServer) ReflectionTestUtils.getField(server, "sshd");
             KeyPairProvider prov = sshd.getKeyPairProvider();
             assertTrue(prov instanceof FileKeyPairProvider);
-            Iterable<KeyPair> keys = prov.loadKeys();
+            Iterable<KeyPair> keys = prov.loadKeys(sessionContext);
             assertFalse(keys.iterator().hasNext());
         } finally {
             server.stop();
@@ -113,13 +122,14 @@ public class SshServerTest {
     }
 
     @Test
-    public void sshCommandFactory() {
+    public void sshCommandFactory() throws IOException {
         prepareServer(true);
         server.start();
         try {
+            ChannelSession session = Mockito.mock(ChannelSession.class);
             org.apache.sshd.server.SshServer sshd = (org.apache.sshd.server.SshServer) ReflectionTestUtils.getField(server, "sshd");
             CommandFactory fact = sshd.getCommandFactory();
-            Command cmd = fact.createCommand("shutdown now");
+            Command cmd = fact.createCommand(session, "shutdown now");
             assertTrue(cmd instanceof SshCommand);
             assertEquals(((SshCommand) cmd).getCommand(),"shutdown now");
         } finally {
@@ -163,7 +173,7 @@ public class SshServerTest {
                 return port;
             }
         }
-        
+
         throw new IllegalStateException("No free port between 2234 and 3000 found");
     }
 

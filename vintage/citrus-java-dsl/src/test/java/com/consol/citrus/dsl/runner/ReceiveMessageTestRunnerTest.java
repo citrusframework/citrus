@@ -80,6 +80,7 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
@@ -1375,7 +1376,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getPayloadData(), "TestMessage");
         Assert.assertTrue(((PayloadTemplateMessageBuilder) action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
 
-        verify(callback).setReferenceResolver(context.getReferenceResolver());
+        verify(callback, atLeastOnce()).setReferenceResolver(context.getReferenceResolver());
         verify(callback).validate(any(Message.class), any(TestContext.class));
     }
 

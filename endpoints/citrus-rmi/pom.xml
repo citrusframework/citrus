@@ -38,17 +38,6 @@
     </plugins>
   </build>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-rmi</artifactId>
-        <version>2.21.1</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
     <!-- Citrus -->
     <dependency>
@@ -64,17 +53,6 @@
     </dependency>
 
     <!-- Test scoped dependencies -->
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-camel</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-rmi</artifactId>
-      <scope>test</scope>
-    </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-test-support</artifactId>

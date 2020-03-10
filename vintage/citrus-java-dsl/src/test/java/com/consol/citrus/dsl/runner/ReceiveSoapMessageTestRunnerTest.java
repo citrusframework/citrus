@@ -367,12 +367,12 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
 
         ReceiveSoapMessageAction action = ((ReceiveSoapMessageAction)test.getActions().get(0));
         Assert.assertEquals(action.getName(), "receive");
-        Assert.assertEquals(action.getEndpoint(), server);
+        Assert.assertEquals(action.getEndpointUri(), "replyMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
 
         action = ((ReceiveSoapMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "receive");
-        Assert.assertEquals(action.getEndpoint(), server);
+        Assert.assertEquals(action.getEndpointUri(), "fooMessageEndpoint");
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
     }
 

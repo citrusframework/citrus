@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -207,6 +208,11 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     public CreateVariablesAction.Builder createVariable(String variableName, String value) {
         return testDesigner.createVariable(variableName, value);
+    }
+
+    @Override
+    public void action(TestAction testAction) {
+        testDesigner.action(testAction);
     }
 
     @Override

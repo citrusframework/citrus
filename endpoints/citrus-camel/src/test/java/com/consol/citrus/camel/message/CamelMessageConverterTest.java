@@ -16,20 +16,22 @@
 
 package com.consol.citrus.camel.message;
 
+import java.util.UUID;
+
 import com.consol.citrus.camel.endpoint.CamelEndpointConfiguration;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.*;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultHeadersMapFactory;
+import org.apache.camel.Exchange;
+import org.apache.camel.ExchangePattern;
+import org.apache.camel.impl.engine.AbstractCamelContext;
+import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
+import org.apache.camel.support.DefaultExchange;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
-import java.util.UUID;
 
 import static org.mockito.Mockito.when;
 
@@ -39,7 +41,7 @@ import static org.mockito.Mockito.when;
  */
 public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private CamelMessageConverter messageConverter = new CamelMessageConverter();
     private CamelEndpointConfiguration endpointConfiguration = new CamelEndpointConfiguration();
 
@@ -76,7 +78,7 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConvertInbound() {
-        Exchange exchange = new DefaultExchange(camelContext);
+        DefaultExchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
         exchange.setFromRouteId("helloRoute");
         exchange.getIn().setBody("Hello from Citrus!");
@@ -94,7 +96,7 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConvertInboundWithProperties() {
-        Exchange exchange = new DefaultExchange(camelContext);
+        DefaultExchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
         exchange.setFromRouteId("helloRoute");
         exchange.getIn().setBody("Hello from Citrus!");
@@ -117,7 +119,7 @@ public class CamelMessageConverterTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConvertInboundWithException() {
-        Exchange exchange = new DefaultExchange(camelContext);
+        DefaultExchange exchange = new DefaultExchange(camelContext);
         exchange.setExchangeId(UUID.randomUUID().toString());
         exchange.setFromRouteId("helloRoute");
         exchange.getIn().setBody("Hello from Citrus!");

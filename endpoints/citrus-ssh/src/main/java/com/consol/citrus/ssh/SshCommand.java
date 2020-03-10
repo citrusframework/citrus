@@ -16,6 +16,10 @@
 
 package com.consol.citrus.ssh;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
@@ -25,11 +29,10 @@ import com.consol.citrus.util.FileUtils;
 import org.apache.sshd.common.util.io.IoUtils;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
+import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
 
 /**
  * A command for delegation to a endpoint adapter
@@ -74,7 +77,7 @@ public class SshCommand implements Command, Runnable {
     }
 
     @Override
-    public void start(Environment env) throws IOException {
+    public void start(ChannelSession session, Environment env) throws IOException {
         user = env.getEnv().get(Environment.ENV_USER);
         new Thread(this, "CitrusSshCommand: " + command).start();
     }
@@ -102,7 +105,7 @@ public class SshCommand implements Command, Runnable {
     }
 
     @Override
-    public void destroy() {
+    public void destroy(ChannelSession session) {
         log.warn("Destroy has been called");
     }
 

@@ -18,15 +18,15 @@ package com.consol.citrus.camel.actions;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.SimpleBuilder;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultHeadersMapFactory;
-import org.apache.camel.impl.DefaultMessage;
-import org.apache.camel.impl.JavaUuidGenerator;
+import org.apache.camel.impl.engine.AbstractCamelContext;
+import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
+import org.apache.camel.impl.engine.JavaUuidGenerator;
+import org.apache.camel.support.DefaultExchange;
+import org.apache.camel.support.DefaultMessage;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
 public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private ProducerTemplate producerTemplate = Mockito.mock(ProducerTemplate.class);
 
     @Test

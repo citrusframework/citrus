@@ -16,26 +16,38 @@
 
 package com.consol.citrus.ftp.client;
 
-import com.consol.citrus.ftp.message.FtpMessage;
-import com.consol.citrus.ftp.model.*;
-import com.consol.citrus.util.FileUtils;
-import org.apache.sshd.common.NamedFactory;
-import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
-import org.apache.sshd.server.SshServer;
-import org.apache.sshd.server.command.Command;
-import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.testng.Assert;
-import org.testng.annotations.*;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import static org.apache.commons.net.ftp.FTPReply.*;
+import com.consol.citrus.ftp.message.FtpMessage;
+import com.consol.citrus.ftp.model.DeleteCommand;
+import com.consol.citrus.ftp.model.DeleteCommandResult;
+import com.consol.citrus.ftp.model.GetCommandResult;
+import com.consol.citrus.ftp.model.ListCommandResult;
+import com.consol.citrus.ftp.model.PutCommandResult;
+import com.consol.citrus.util.FileUtils;
+import org.apache.sshd.common.keyprovider.ClassLoadableResourceKeyPairProvider;
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.subsystem.SubsystemFactory;
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
+import org.springframework.core.io.ClassPathResource;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+
+import static org.apache.commons.net.ftp.FTPReply.CLOSING_DATA_CONNECTION;
+import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
+import static org.apache.commons.net.ftp.FTPReply.FILE_STATUS_OK;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -205,7 +217,7 @@ public class SftpClientTest extends AbstractFtpClientTest {
 
         sshd.setPasswordAuthenticator((username, password, session) -> true);
 
-        ArrayList<NamedFactory<Command>> subsystemFactories = new ArrayList<>();
+        List<SubsystemFactory> subsystemFactories = new ArrayList<>();
         SftpSubsystemFactory sftpSubsystemFactory = new SftpSubsystemFactory.Builder().build();
 
         subsystemFactories.add(sftpSubsystemFactory);

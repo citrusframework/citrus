@@ -26,38 +26,28 @@
     <property name="arguments" value="1099"/>
   </bean>
 
-  <camelContext id="camelContext" xmlns="http://camel.apache.org/schema/spring">
-    <route id="newsRoute">
-      <from uri="rmi://localhost:1099/newsService?remoteInterfaces=com.consol.citrus.rmi.remote.NewsService"/>
-      <to uri="log:com.consol.citrus.camel?level=INFO"/>
-      <to uri="bean:newsServiceBean"/>
-    </route>
-
-    <route id="helloRoute">
-      <from uri="direct:hello"/>
-      <to uri="bean:helloServiceClient?method=sayHello"/>
-      <to uri="rmi://localhost:1099/helloService"/>
-    </route>
-
-    <route id="helloCntRoute">
-      <from uri="direct:helloCount"/>
-      <to uri="bean:helloServiceClient?method=getHelloCount"/>
-      <to uri="rmi://localhost:1099/helloService"/>
-      <to uri="log:com.consol.citrus.camel?level=INFO"/>
-    </route>
-  </camelContext>
-
-  <bean id="helloServiceClient" class="com.consol.citrus.rmi.remote.HelloServiceClient"/>
-  <bean id="newsServiceBean" class="com.consol.citrus.rmi.remote.NewsServiceImpl"/>
-
   <!-- RMI server -->
   <citrus-rmi:server id="rmiHelloServer"
                        interface="com.consol.citrus.rmi.remote.HelloService"
                        binding="helloService"
+                       create-registry="false"
+                       timeout="10000"
+                       auto-start="true"/>
+
+  <citrus-rmi:server id="rmiNewsServer"
+                       interface="com.consol.citrus.rmi.remote.NewsService"
+                       binding="newsService"
+                       create-registry="false"
                        timeout="10000"
                        auto-start="true"/>
 
   <!-- RMI client -->
+  <citrus-rmi:client id="rmiHelloClient"
+                       host="localhost"
+                       port="1099"
+                       binding="helloService"
+                       timeout="10000"/>
+
   <citrus-rmi:client id="rmiNewsClient"
                        host="localhost"
                        port="1099"

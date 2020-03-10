@@ -24,7 +24,6 @@ import java.util.List;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.spring.CamelRouteContextFactoryBean;
 import org.apache.camel.spring.SpringModelJAXBContextFactory;
@@ -61,29 +60,42 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
     @Override
     public void doExecute(TestContext context) {
-        List<RouteDefinition> routesToUse = routes;
+        final List<RouteDefinition> routesToUse;
 
         if (StringUtils.hasText(routeContext)) {
             // now lets parse the routes with JAXB
             try {
                 Object value = getJaxbContext().createUnmarshaller().unmarshal(new StringSource(context.replaceDynamicContentInString(routeContext)));
-
                 if (value instanceof CamelRouteContextFactoryBean) {
                     CamelRouteContextFactoryBean factoryBean = (CamelRouteContextFactoryBean) value;
                     routesToUse = factoryBean.getRoutes();
+                } else {
+                    throw new CitrusRuntimeException(String.format("Failed to parse routes from given route context - expected %s but found %s",
+                            CamelRouteContextFactoryBean.class, value.getClass()));
                 }
             } catch (JAXBException e) {
                 throw new BeanDefinitionStoreException("Failed to create the JAXB unmarshaller", e);
             }
+        } else {
+            routesToUse = routes;
         }
 
-        for (RouteDefinition routeDefinition : routesToUse) {
-            try {
-                camelContext.addRouteDefinition(routeDefinition);
-                log.info(String.format("Created new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
-            } catch (Exception e) {
-                throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
-            }
+        try {
+            camelContext.addRoutes(new RouteBuilder(camelContext) {
+                @Override
+                public void configure() throws Exception {
+                    for (RouteDefinition routeDefinition : routesToUse) {
+                        try {
+                            getRouteCollection().getRoutes().add(routeDefinition);
+                            log.info(String.format("Created new Camel route '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()));
+                        } catch (Exception e) {
+                            throw new CitrusRuntimeException(String.format("Failed to create route definition '%s' in context '%s'", routeDefinition.getId(), camelContext.getName()), e);
+                        }
+                    }
+                }
+            });
+        } catch (Exception e) {
+            throw new CitrusRuntimeException(String.format("Failed to create route definitions in context '%s'", camelContext.getName()), e);
         }
     }
 
@@ -123,8 +135,9 @@ public class CreateCamelRouteAction extends AbstractCamelRouteAction {
 
         public Builder route(RouteBuilder routeBuilder) {
             try {
-                if (!routeBuilder.getContext().equals(camelContext) && camelContext instanceof ModelCamelContext) {
-                    routeBuilder.configureRoutes((ModelCamelContext) camelContext);
+                if (routeBuilder.getContext() != null
+                        && !routeBuilder.getContext().equals(camelContext)) {
+                    routeBuilder.configureRoutes(camelContext);
                 } else {
                     routeBuilder.configure();
                 }

@@ -87,9 +87,7 @@ public interface TestDesigner extends TestCaseBuilder {
      *
      * @param testAction
      */
-    default void action(TestAction testAction) {
-        this.action(() -> testAction);
-    }
+    void action(TestAction testAction);
 
     /**
      * Adds a custom test action implementation.

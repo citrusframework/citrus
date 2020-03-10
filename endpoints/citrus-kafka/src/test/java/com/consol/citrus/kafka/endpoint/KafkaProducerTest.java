@@ -16,25 +16,31 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import java.util.Collections;
+import java.util.concurrent.Future;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kafka.message.KafkaMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.*;
+import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.clients.producer.internals.FutureRecordMetadata;
 import org.apache.kafka.clients.producer.internals.ProduceRequestResult;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.utils.Time;
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 import org.springframework.util.SocketUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-import java.util.concurrent.Future;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -66,7 +72,7 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
             ProduceRequestResult result = new ProduceRequestResult(new TopicPartition("default", 0));
             result.set(0, 0, null);
             result.done();
-            return new FutureRecordMetadata(result, 0L, System.currentTimeMillis(), 0L, 1, message.getPayload(byte[].class).length);
+            return new FutureRecordMetadata(result, 0L, System.currentTimeMillis(), 0L, 1, message.getPayload(byte[].class).length, Time.SYSTEM);
         });
 
         endpoint.createProducer().send(message, context);
@@ -98,7 +104,7 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
             ProduceRequestResult result = new ProduceRequestResult(new TopicPartition("foo", 0));
             result.set(0, 0, null);
             result.done();
-            return new FutureRecordMetadata(result, 0L, System.currentTimeMillis(), 0L, 2, message.getPayload(byte[].class).length);
+            return new FutureRecordMetadata(result, 0L, System.currentTimeMillis(), 0L, 2, message.getPayload(byte[].class).length, Time.SYSTEM);
         });
 
         endpoint.createProducer().send(message, context);
@@ -130,15 +136,15 @@ public class KafkaProducerTest extends AbstractTestNGUnitTest {
         KafkaEndpoint endpoint = new KafkaEndpoint();
         endpoint.getEndpointConfiguration().setServer("localhost:9092");
         endpoint.getEndpointConfiguration().setTopic("test");
-        
+
         try {
             endpoint.createProducer().send(null, context);
         } catch(IllegalArgumentException e) {
             Assert.assertEquals(e.getMessage(), "Message is empty - unable to send empty message");
             return;
         }
-        
+
         Assert.fail("Missing " + CitrusRuntimeException.class + " because of sending empty message");
     }
-    
+
 }

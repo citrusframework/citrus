@@ -137,7 +137,7 @@ public class SendSoapFaultTestRunnerTest extends UnitTestSupport {
         SendSoapFaultAction action = (SendSoapFaultAction)test.getActions().get(0);
         Assert.assertEquals(action.getName(), "send");
 
-        Assert.assertEquals(action.getEndpoint(), soapServer);
+        Assert.assertEquals(action.getEndpointUri(), "soapServer");
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();

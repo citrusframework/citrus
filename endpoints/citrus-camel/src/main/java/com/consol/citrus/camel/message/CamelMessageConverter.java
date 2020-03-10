@@ -16,13 +16,15 @@
 
 package com.consol.citrus.camel.message;
 
+import java.util.Map;
+
 import com.consol.citrus.camel.endpoint.CamelEndpointConfiguration;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
 import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultExchange;
-
-import java.util.Map;
+import org.apache.camel.support.DefaultExchange;
 
 /**
  * Message converter able to read Camel exchange and create proper Spring Integration message

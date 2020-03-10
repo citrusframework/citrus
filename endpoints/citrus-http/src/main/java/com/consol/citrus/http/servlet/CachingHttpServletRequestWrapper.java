@@ -61,11 +61,7 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
     @Override
     public Map<String, String[]> getParameterMap() {
-        if (body == null) {
-            return super.getParameterMap();
-        }
-
-        final Map<String, String[]> params = new HashMap<>();
+        final Map<String, String[]> params = new HashMap<>(super.getParameterMap());
 
         MediaType contentType = Optional.ofNullable(getContentType())
                 .map(mediaType -> {
@@ -84,9 +80,11 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
 
         if (RequestMethod.POST.name().equals(getMethod()) || RequestMethod.PUT.name().equals(getMethod())) {
             if (new MediaType(contentType.getType(), contentType.getSubtype()).equals(MediaType.APPLICATION_FORM_URLENCODED)) {
-                fillParams(params, new String(body, charset), charset);
-            } else {
-                return super.getParameterMap();
+                try {
+                    fillParams(params, new String(FileCopyUtils.copyToByteArray(getInputStream()), charset), charset);
+                } catch (IOException e) {
+                    throw new CitrusRuntimeException("Failed to read request body", e);
+                }
             }
         } else {
             fillParams(params, getQueryString(), charset);
@@ -119,14 +117,26 @@ public class CachingHttpServletRequestWrapper extends HttpServletRequestWrapper 
             while (tokenizer.hasMoreTokens()) {
                 final String[] nameValuePair = tokenizer.nextToken().split("=");
 
+                String paramName = nameValuePair[0];
+                if (params.containsKey(paramName)) {
+                    continue;
+                }
+
+                String paramValue;
+                if (nameValuePair.length > 1) {
+                    paramValue = nameValuePair[1];
+                } else {
+                    paramValue = "";
+                }
+
                 try {
-                    params.put(URLDecoder.decode(nameValuePair[0], charset.name()),
-                            new String[] { URLDecoder.decode(nameValuePair[1], charset.name()) });
+                    params.put(URLDecoder.decode(paramName, charset.name()),
+                            new String[] { URLDecoder.decode(paramValue, charset.name()) });
                 } catch (final UnsupportedEncodingException e) {
                     throw new CitrusRuntimeException(String.format(
                             "Failed to decode query param value '%s=%s'",
-                            nameValuePair[0],
-                            nameValuePair[1]), e);
+                            paramName,
+                            paramValue), e);
                 }
             }
         }

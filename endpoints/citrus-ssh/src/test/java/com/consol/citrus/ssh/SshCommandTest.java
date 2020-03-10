@@ -16,24 +16,33 @@
 
 package com.consol.citrus.ssh;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
-import com.consol.citrus.ssh.model.*;
+import com.consol.citrus.ssh.model.SshMarshaller;
+import com.consol.citrus.ssh.model.SshRequest;
+import com.consol.citrus.ssh.model.SshResponse;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
+import org.apache.sshd.server.channel.ChannelSession;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
 import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.testng.AssertJUnit.assertEquals;
 
 /**
@@ -66,7 +75,7 @@ public class SshCommandTest {
 
         marshaller = new SshMarshaller();
     }
-    
+
     @Test
     public void base() throws IOException {
         String input = "Hello world";
@@ -86,11 +95,12 @@ public class SshCommandTest {
     @Test
     public void start() throws IOException {
         Environment env = Mockito.mock(Environment.class);
-        Map<String,String> map = new HashMap<String,String>();
+        ChannelSession session = Mockito.mock(ChannelSession.class);
+        Map<String,String> map = new HashMap<>();
         map.put(Environment.ENV_USER,"roland");
         when(env.getEnv()).thenReturn(map);
         prepare("input","output",null,0);
-        cmd.start(env);
+        cmd.start(session, env);
     }
 
     @Test
@@ -104,7 +114,7 @@ public class SshCommandTest {
 
         cmd.run();
     }
-    
+
     /**
      * Prepare actions.
      * @param pInput

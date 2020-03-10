@@ -16,6 +16,13 @@
 
 package com.consol.citrus.selenium.endpoint;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -33,7 +40,11 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.*;
+import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.remote.CapabilityType;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.events.WebDriverEventListener;
@@ -41,14 +52,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Selenium browser provides access to web driver and initializes Selenium environment from endpoint configuration.
@@ -221,22 +226,23 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
             case BrowserType.HTMLUNIT:
                 BrowserVersion browserVersion = null;
                 if (getEndpointConfiguration().getVersion().equals("FIREFOX")) {
-                    browserVersion = BrowserVersion.FIREFOX_45;
+                    browserVersion = BrowserVersion.FIREFOX;
+                } else if (getEndpointConfiguration().getVersion().equals("FIREFOX_60")) {
+                    browserVersion = BrowserVersion.FIREFOX_60;
+                } else if (getEndpointConfiguration().getVersion().equals("FIREFOX_68")) {
+                    browserVersion = BrowserVersion.FIREFOX_68;
                 } else if (getEndpointConfiguration().getVersion().equals("INTERNET_EXPLORER")) {
                     browserVersion = BrowserVersion.INTERNET_EXPLORER;
-                } else if (getEndpointConfiguration().getVersion().equals("EDGE")) {
-                    browserVersion = BrowserVersion.EDGE;
                 } else if (getEndpointConfiguration().getVersion().equals("CHROME")) {
                     browserVersion = BrowserVersion.CHROME;
                 }
 
                 HtmlUnitDriver htmlUnitDriver;
                 if (browserVersion != null) {
-                    htmlUnitDriver = new HtmlUnitDriver(browserVersion);
+                    htmlUnitDriver = new HtmlUnitDriver(browserVersion, getEndpointConfiguration().isJavaScript());
                 } else {
-                    htmlUnitDriver = new HtmlUnitDriver();
+                    htmlUnitDriver = new HtmlUnitDriver(getEndpointConfiguration().isJavaScript());
                 }
-                htmlUnitDriver.setJavascriptEnabled(getEndpointConfiguration().isJavaScript());
                 return htmlUnitDriver;
             default:
                 throw new CitrusRuntimeException("Unsupported local browser type: " + browserType);

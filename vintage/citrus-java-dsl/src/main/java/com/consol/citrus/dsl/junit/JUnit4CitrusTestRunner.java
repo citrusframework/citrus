@@ -19,6 +19,7 @@ package com.consol.citrus.dsl.junit;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionContainerBuilder;
 import com.consol.citrus.TestCase;
@@ -161,6 +162,11 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     @Override
     public <T> T variable(String name, T value) {
         return testRunner.variable(name, value);
+    }
+
+    @Override
+    public <A extends TestAction> TestActionBuilder<A> run(A testAction) {
+        return testRunner.run(testAction);
     }
 
     @Override

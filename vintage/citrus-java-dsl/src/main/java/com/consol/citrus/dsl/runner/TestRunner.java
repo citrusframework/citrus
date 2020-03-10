@@ -93,9 +93,7 @@ public interface TestRunner extends TestCaseBuilder {
      * @param testAction
      * @return
      */
-    default <A extends TestAction> TestActionBuilder<A> run(A testAction) {
-        return run((TestActionBuilder<A>)() -> testAction);
-    }
+    <A extends TestAction> TestActionBuilder<A> run(A testAction);
 
     /**
      * Runs test action and returns same action after execution.

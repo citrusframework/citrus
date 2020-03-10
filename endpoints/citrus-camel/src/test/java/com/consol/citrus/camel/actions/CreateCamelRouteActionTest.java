@@ -20,8 +20,9 @@ import java.util.Collections;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.camel.CamelContext;
 import org.apache.camel.FailedToStartRouteException;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.apache.camel.model.RouteDefinition;
 import org.mockito.Mockito;
 import org.testng.Assert;
@@ -31,14 +32,13 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
 public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
-    private CamelContext camelContext = Mockito.mock(CamelContext.class);
+    private AbstractCamelContext camelContext = Mockito.mock(AbstractCamelContext.class);
     private RouteDefinition route = Mockito.mock(RouteDefinition.class);
 
     @Test
@@ -48,15 +48,13 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getName()).thenReturn("camel_context");
 
         doAnswer(invocation -> {
-            RouteDefinition routeDefinition = invocation.getArgument(0);
-            Assert.assertEquals(routeDefinition.getId(), "route_1");
+            RouteBuilder routesBuilder = invocation.getArgument(0);
+            routesBuilder.configure();
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().size(), 2L);
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().get(0).getId(), "route_1");
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().get(1).getId(), "route_2");
             return null;
-        })
-        .doAnswer(invocation -> {
-            RouteDefinition routeDefinition = invocation.getArgument(0);
-            Assert.assertEquals(routeDefinition.getId(), "route_2");
-            return null;
-        }).when(camelContext).addRouteDefinition(any(RouteDefinition.class));
+        }).when(camelContext).addRoutes(any(RouteBuilder.class));
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
@@ -73,7 +71,7 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
                 .build();
         action.execute(context);
 
-        verify(camelContext, times(2)).addRouteDefinition(any(RouteDefinition.class));
+        verify(camelContext).addRoutes(any(RouteBuilder.class));
     }
 
     @Test
@@ -86,10 +84,12 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getName()).thenReturn("camel_context");
 
         doAnswer(invocation -> {
-            RouteDefinition routeDefinition = invocation.getArgument(0);
-            Assert.assertEquals(routeDefinition.getId(), "route_1");
+            RouteBuilder routesBuilder = invocation.getArgument(0);
+            routesBuilder.configure();
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().size(), 1L);
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().get(0).getId(), "route_1");
             return null;
-        }).when(camelContext).addRouteDefinition(any(RouteDefinition.class));
+        }).when(camelContext).addRoutes(any(RouteBuilder.class));
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
@@ -103,7 +103,7 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
 
         action.execute(context);
 
-        verify(camelContext).addRouteDefinition(any(RouteDefinition.class));
+        verify(camelContext).addRoutes(any(RouteBuilder.class));
     }
 
     @Test
@@ -113,13 +113,21 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getName()).thenReturn("camel_context");
         when(route.getId()).thenReturn("route_1");
 
+        doAnswer(invocation -> {
+            RouteBuilder routesBuilder = invocation.getArgument(0);
+            routesBuilder.configure();
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().size(), 1L);
+            Assert.assertEquals(routesBuilder.getRouteCollection().getRoutes().get(0), route);
+            return null;
+        }).when(camelContext).addRoutes(any(RouteBuilder.class));
+
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)
                 .routes(Collections.singletonList(route))
                 .build();
         action.execute(context);
 
-        verify(camelContext).addRouteDefinition(route);
+        verify(camelContext).addRoutes(any(RouteBuilder.class));
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
@@ -129,7 +137,7 @@ public class CreateCamelRouteActionTest extends AbstractTestNGUnitTest {
         when(camelContext.getName()).thenReturn("camel_context");
         when(route.getId()).thenReturn("route_1");
 
-        doThrow(new FailedToStartRouteException("routeId", "Failed to start route")).when(camelContext).addRouteDefinition(route);
+        doThrow(new FailedToStartRouteException("routeId", "Failed to start route")).when(camelContext).addRoutes(any(RouteBuilder.class));
 
         CreateCamelRouteAction action = new CreateCamelRouteAction.Builder()
                 .context(camelContext)

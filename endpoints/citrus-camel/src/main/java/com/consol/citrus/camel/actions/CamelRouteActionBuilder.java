@@ -7,6 +7,7 @@ import java.util.List;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
+import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ModelCamelContext;
 import org.springframework.util.Assert;
@@ -19,7 +20,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
     /** Bean reference resolver */
     private ReferenceResolver referenceResolver;
 
-    private ModelCamelContext camelContext;
+    private CamelContext camelContext;
     private List<String> routeIds = new ArrayList<>();
 
     private TestActionBuilder<? extends AbstractCamelRouteAction> delegate;
@@ -48,7 +49,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      * @param camelContext
      * @return
      */
-    public CamelRouteActionBuilder context(ModelCamelContext camelContext) {
+    public CamelRouteActionBuilder context(CamelContext camelContext) {
         this.camelContext = camelContext;
         return this;
     }
@@ -172,7 +173,7 @@ public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTest
      * context from Spring application context.
      * @return
      */
-    protected ModelCamelContext getCamelContext() {
+    protected CamelContext getCamelContext() {
         if (camelContext == null) {
             Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
 

@@ -18,6 +18,7 @@ package com.consol.citrus.camel.actions;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +44,7 @@ public class StopCamelRouteAction extends AbstractCamelRouteAction {
             String route = context.replaceDynamicContentInString(routeId);
 
             try {
-                camelContext.stopRoute(route);
+                ((AbstractCamelContext) camelContext).stopRoute(route);
                 log.info(String.format("Stopped Camel route '%s' on context '%s'", route, camelContext.getName()));
             } catch (Exception e) {
                 throw new CitrusRuntimeException("Failed to stop Camel route: " + route, e);

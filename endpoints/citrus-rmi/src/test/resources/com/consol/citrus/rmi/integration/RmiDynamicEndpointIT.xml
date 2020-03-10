@@ -20,13 +20,34 @@
         <message>Test: Receive RMI request via server instance and send back response.</message>
       </echo>
 
-      <send endpoint="rmi://localhost:1099/newsService">
+      <send endpoint="rmi://localhost:1099/newsService" fork="true">
         <message>
           <payload>
             <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
               <rmi:remote>com.consol.citrus.rmi.remote.NewsService</rmi:remote>
               <rmi:method>getNews</rmi:method>
             </rmi:service-invocation>
+          </payload>
+        </message>
+      </send>
+
+      <receive endpoint="rmiNewsServer">
+        <message>
+          <payload>
+            <rmi:service-invocation xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:remote>com.consol.citrus.rmi.remote.NewsService</rmi:remote>
+              <rmi:method>getNews</rmi:method>
+            </rmi:service-invocation>
+          </payload>
+        </message>
+      </receive>
+
+      <send endpoint="rmiNewsServer">
+        <message>
+          <payload>
+            <rmi:service-result xmlns:rmi="http://www.citrusframework.org/schema/rmi/message">
+              <rmi:object type="java.lang.String" value="This is news from RMI!"/>
+            </rmi:service-result>
           </payload>
         </message>
       </send>
