@@ -32,11 +32,10 @@ import com.consol.citrus.http.actions.HttpServerRequestActionBuilder;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.server.HttpServer;
-import cucumber.api.Scenario;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
@@ -70,7 +69,7 @@ public class HttpSteps {
     private String url;
 
     @Before
-    public void before(Scenario scenario) {
+    public void before() {
         if (httpClient == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(HttpClient.class).size() == 1L) {
             httpClient = citrus.getCitrusContext().getReferenceResolver().resolve(HttpClient.class);
         }

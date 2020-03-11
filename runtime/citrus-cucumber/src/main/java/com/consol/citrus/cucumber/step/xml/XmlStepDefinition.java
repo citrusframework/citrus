@@ -16,13 +16,16 @@
 
 package com.consol.citrus.cucumber.step.xml;
 
-import com.consol.citrus.cucumber.container.StepTemplate;
-import cucumber.api.java.ObjectFactory;
-import cucumber.runtime.StepDefinition;
-import gherkin.pickles.PickleStep;
-import io.cucumber.stepexpression.*;
-
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import com.consol.citrus.cucumber.container.StepTemplate;
+import io.cucumber.core.backend.CucumberBackendException;
+import io.cucumber.core.backend.CucumberInvocationTargetException;
+import io.cucumber.core.backend.Lookup;
+import io.cucumber.core.backend.ParameterInfo;
+import io.cucumber.core.backend.StepDefinition;
 
 /**
  * Special step definition that runs a XML step definition template on execution.
@@ -31,37 +34,27 @@ import java.util.List;
  */
 public class XmlStepDefinition implements StepDefinition {
 
-    private final ExpressionArgumentMatcher argumentMatcher;
-
-    private final ObjectFactory objectFactory;
-
+    private final Lookup lookup;
     private final StepTemplate stepTemplate;
 
-    public XmlStepDefinition(StepTemplate stepTemplate, ObjectFactory objectFactory, TypeRegistry typeRegistry) {
-        this.objectFactory = objectFactory;
+    public XmlStepDefinition(StepTemplate stepTemplate, Lookup lookup) {
+        this.lookup = lookup;
         this.stepTemplate = stepTemplate;
-
-        this.argumentMatcher = new ExpressionArgumentMatcher(new StepExpressionFactory(typeRegistry).createExpression(stepTemplate.getPattern().pattern()));
     }
 
     @Override
-    public List<Argument> matchedArguments(PickleStep step) {
-        return argumentMatcher.argumentsFrom(step);
-    }
-
-    @Override
-    public String getLocation(boolean detail) {
+    public String getLocation() {
         return stepTemplate.getName();
     }
 
     @Override
-    public Integer getParameterCount() {
-        return stepTemplate.getParameterTypes().length;
+    public List<ParameterInfo> parameterInfos() {
+        return Stream.of(stepTemplate.getParameterTypes()).map(XmlStepParameterInfo::new).collect(Collectors.toList());
     }
 
     @Override
-    public void execute(String language, Object[] args) throws Throwable {
-        objectFactory.getInstance(XmlSteps.class).execute(stepTemplate, args);
+    public void execute(Object[] args) throws CucumberBackendException, CucumberInvocationTargetException {
+        lookup.getInstance(XmlSteps.class).execute(stepTemplate, args);
     }
 
     @Override
@@ -72,10 +65,5 @@ public class XmlStepDefinition implements StepDefinition {
     @Override
     public String getPattern() {
         return stepTemplate.getPattern().pattern();
-    }
-
-    @Override
-    public boolean isScenarioScoped() {
-        return false;
     }
 }

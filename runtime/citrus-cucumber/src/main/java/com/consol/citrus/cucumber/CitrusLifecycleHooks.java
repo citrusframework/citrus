@@ -20,9 +20,9 @@ import com.consol.citrus.Citrus;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
+import com.consol.citrus.cucumber.backend.Scenario;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 
 /**
  * @author Christoph Deppisch

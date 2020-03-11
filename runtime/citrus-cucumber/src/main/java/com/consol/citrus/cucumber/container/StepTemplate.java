@@ -76,9 +76,7 @@ public class StepTemplate extends Template {
      */
     public Type[] getParameterTypes() {
         Type[] types = new Type[parameterNames.size()];
-        for (int i = 0; i < types.length; i++) {
-            types[i] = String.class;
-        }
+        Arrays.fill(types, String.class);
 
         return types;
     }

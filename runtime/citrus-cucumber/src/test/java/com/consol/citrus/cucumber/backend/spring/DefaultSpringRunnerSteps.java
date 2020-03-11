@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java;
+package com.consol.citrus.cucumber.backend.spring;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -23,7 +23,7 @@ import com.consol.citrus.annotations.CitrusResource;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class TestRunnerSteps {
+public class DefaultSpringRunnerSteps {
 
     @CitrusResource
     private TestCaseRunner testRunner;

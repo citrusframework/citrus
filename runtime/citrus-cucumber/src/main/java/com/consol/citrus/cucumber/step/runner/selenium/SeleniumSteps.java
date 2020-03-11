@@ -31,12 +31,11 @@ import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.model.PageValidator;
 import com.consol.citrus.selenium.model.WebPage;
 import com.consol.citrus.variable.VariableUtils;
-import cucumber.api.Scenario;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
 import io.cucumber.datatable.DataTable;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.springframework.util.StringUtils;
 
 import static com.consol.citrus.selenium.actions.SeleniumActionBuilder.selenium;
@@ -63,7 +62,7 @@ public class SeleniumSteps {
     protected SeleniumBrowser browser;
 
     @Before
-    public void before(Scenario scenario) {
+    public void before() {
         if (browser == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(SeleniumBrowser.class).size() == 1L) {
             browser = citrus.getCitrusContext().getReferenceResolver().resolve(SeleniumBrowser.class);
         }

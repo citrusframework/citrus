@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java.spring;
+package com.consol.citrus.cucumber.backend.spring;
 
-import cucumber.runtime.java.CitrusBackend;
+import com.consol.citrus.cucumber.backend.CitrusBackend;
 import org.testng.Assert;
 import org.testng.annotations.*;
 

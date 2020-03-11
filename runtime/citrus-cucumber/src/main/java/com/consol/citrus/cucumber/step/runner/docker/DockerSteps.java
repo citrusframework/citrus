@@ -23,11 +23,10 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.message.DockerMessageHeaders;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import cucumber.api.Scenario;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 import org.springframework.util.Assert;
 
 import static com.consol.citrus.docker.actions.DockerExecuteAction.Builder.docker;
@@ -47,7 +46,7 @@ public class DockerSteps {
     protected DockerClient dockerClient;
 
     @Before
-    public void before(Scenario scenario) {
+    public void before() {
         if (dockerClient == null && citrus.getCitrusContext().getReferenceResolver().resolveAll(DockerClient.class).size() == 1L) {
             dockerClient = citrus.getCitrusContext().getReferenceResolver().resolve(DockerClient.class);
         }

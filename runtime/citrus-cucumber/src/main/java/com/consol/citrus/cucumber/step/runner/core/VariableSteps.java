@@ -20,7 +20,7 @@ import java.util.Map;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
-import cucumber.api.java.en.Given;
+import io.cucumber.java.en.Given;
 import io.cucumber.datatable.DataTable;
 
 /**

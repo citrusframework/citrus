@@ -26,12 +26,11 @@ import com.consol.citrus.cucumber.message.MessageCreators;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import cucumber.api.Scenario;
-import cucumber.api.java.Before;
-import cucumber.api.java.en.And;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
+import io.cucumber.java.Before;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
@@ -52,7 +51,7 @@ public class MessagingSteps {
     private Map<String, Message> messages;
 
     @Before
-    public void before(Scenario scenario) {
+    public void before() {
         messageCreators = new MessageCreators();
         messages = new HashMap<>();
     }

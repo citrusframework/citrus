@@ -51,7 +51,7 @@ In order to enable Citrus Cucumber support we need to specify a special object f
 
 [source,xml]
 ----
-cucumber.api.java.ObjectFactory=cucumber.runtime.java.CitrusObjectFactory
+cucumber.object-factory=com.consol.citrus.cucumber.backend.CitrusObjectFactory
 ----
 
 This special object factory takes care on creating all step definition instances. The object factory is able to inject *@CitrusResource* annotated fields in step classes. We will see this later on in the examples. The usage of this special object factory is mandatory in order to combine Citrus and Cucumber capabilities.
@@ -263,7 +263,7 @@ The Citrus Cucumber extension has to handle things different when Cucumber Sprin
 
 [source,xml]
 ----
-cucumber.api.java.ObjectFactory=cucumber.runtime.java.spring.CitrusSpringObjectFactory
+cucumber.object-factory=com.consol.citrus.cucumber.backend.spring.CitrusSpringObjectFactory
 ----
 
 Now we are ready to add *@Autowired* Spring bean dependency injection to step definition classes:

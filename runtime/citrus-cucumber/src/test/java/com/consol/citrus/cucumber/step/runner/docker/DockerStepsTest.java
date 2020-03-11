@@ -42,7 +42,6 @@ import com.github.dockerjava.api.command.StartContainerCmd;
 import com.github.dockerjava.api.command.StopContainerCmd;
 import com.github.dockerjava.api.model.BuildResponseItem;
 import com.github.dockerjava.core.command.BuildImageResultCallback;
-import cucumber.api.Scenario;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.Assert;
@@ -262,7 +261,7 @@ public class DockerStepsTest extends UnitTestSupport {
     @Test
     public void testDefaultClientInitialization() {
         Assert.assertNull(steps.dockerClient);
-        steps.before(Mockito.mock(Scenario.class));
+        steps.before();
         Assert.assertNotNull(steps.dockerClient);
     }
 
@@ -270,7 +269,7 @@ public class DockerStepsTest extends UnitTestSupport {
     public void testClientInitialization() {
         Assert.assertNull(steps.dockerClient);
         steps.setClient("dockerClient");
-        steps.before(Mockito.mock(Scenario.class));
+        steps.before();
         Assert.assertNotNull(steps.dockerClient);
     }
 

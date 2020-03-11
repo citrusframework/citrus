@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java;
+package com.consol.citrus.cucumber.backend;
 
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -28,21 +29,15 @@ import com.consol.citrus.cucumber.CitrusLifecycleHooks;
 import com.consol.citrus.cucumber.CitrusReporter;
 import com.consol.citrus.cucumber.container.StepTemplate;
 import com.consol.citrus.cucumber.step.xml.XmlStepDefinition;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import cucumber.api.Scenario;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
-import cucumber.api.java.ObjectFactory;
-import cucumber.runtime.Backend;
-import cucumber.runtime.CucumberException;
-import cucumber.runtime.Env;
-import cucumber.runtime.Glue;
-import cucumber.runtime.io.ResourceLoader;
-import cucumber.runtime.io.ResourceLoaderClassFinder;
-import cucumber.runtime.java.spring.CitrusSpringObjectFactory;
-import cucumber.runtime.snippets.FunctionNameGenerator;
-import gherkin.pickles.PickleStep;
-import io.cucumber.stepexpression.TypeRegistry;
+import io.cucumber.core.backend.Backend;
+import io.cucumber.core.backend.Container;
+import io.cucumber.core.backend.Glue;
+import io.cucumber.core.backend.Lookup;
+import io.cucumber.core.backend.Snippet;
+import io.cucumber.core.exception.CucumberException;
+import io.cucumber.core.resource.ClasspathSupport;
+import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -61,41 +56,51 @@ public class CitrusBackend implements Backend {
     private static Logger log = LoggerFactory.getLogger(CitrusBackend.class);
 
     /** Basic resource loader */
-    private ResourceLoader resourceLoader;
-    private TypeRegistry typeRegistry;
+    private final Lookup lookup;
+    private final Container container;
 
     /**
      * Constructor using resource loader.
-     * @param resourceLoader
+     * @param lookup
+     * @param container
      */
-    public CitrusBackend(ResourceLoader resourceLoader, TypeRegistry typeRegistry) {
-        this.resourceLoader = resourceLoader;
-        this.typeRegistry = typeRegistry;
+    public CitrusBackend(Lookup lookup, Container container) {
+        this.lookup = lookup;
+        this.container = container;
 
         CitrusInstanceManager.addInstanceProcessor(instance -> instance.beforeSuite(CitrusReporter.SUITE_NAME));
     }
 
     @Override
-    public void loadGlue(Glue glue, List<String> gluePaths) {
-        try {
-            CitrusInstanceManager.addInstanceProcessor(new XmlStepInstanceProcessor(glue, gluePaths, getObjectFactory(), typeRegistry));
-        } catch (IllegalAccessException e) {
-            throw new CitrusRuntimeException("Failed to add XML step definition", e);
+    public void loadGlue(Glue glue, List<URI> gluePaths) {
+        if (citrus != null) {
+            new XmlStepInstanceProcessor(glue, gluePaths, lookup).process(citrus);
+        } else {
+            CitrusInstanceManager.addInstanceProcessor(new XmlStepInstanceProcessor(glue, gluePaths, lookup));
         }
 
         try {
-            if (!gluePaths.contains(CitrusLifecycleHooks.class.getPackage().getName()) && getObjectFactory().addClass(CitrusLifecycleHooks.class)) {
+            if (!gluePaths.contains(getLifecycleHooksGluePath()) && container.addClass(CitrusLifecycleHooks.class)) {
                 Method beforeMethod = CitrusLifecycleHooks.class.getMethod("before", Scenario.class);
                 Before beforeAnnotation = beforeMethod.getAnnotation(Before.class);
-                glue.addBeforeHook(new JavaHookDefinition(beforeMethod, beforeAnnotation.value(), beforeAnnotation.order(), beforeAnnotation.timeout(), getObjectFactory()));
+                glue.addBeforeHook(new CitrusHookDefinition(beforeMethod, beforeAnnotation.value(), beforeAnnotation.order(), lookup));
 
                 Method afterMethod = CitrusLifecycleHooks.class.getMethod("after", Scenario.class);
                 After afterAnnotation = afterMethod.getAnnotation(After.class);
-                glue.addAfterHook(new JavaHookDefinition(afterMethod, afterAnnotation.value(), afterAnnotation.order(), afterAnnotation.timeout(), getObjectFactory()));
+                glue.addAfterHook(new CitrusHookDefinition(afterMethod, afterAnnotation.value(), afterAnnotation.order(), lookup));
             }
-        } catch (NoSuchMethodException | IllegalAccessException e) {
+        } catch (NoSuchMethodException e) {
             throw new CucumberException("Unable to add Citrus lifecylce hooks");
         }
+    }
+
+    /**
+     * Helper to create proper URI pointing to {@link CitrusLifecycleHooks}.
+     * @return
+     */
+    private static URI getLifecycleHooksGluePath() {
+        return URI.create(ClasspathSupport.CLASSPATH_SCHEME_PREFIX +
+                ClasspathSupport.resourceNameOfPackageName(CitrusLifecycleHooks.class.getPackage().getName()));
     }
 
     @Override
@@ -107,23 +112,8 @@ public class CitrusBackend implements Backend {
     }
 
     @Override
-    public String getSnippet(PickleStep step, String keyword, FunctionNameGenerator functionNameGenerator) {
-        return "";
-    }
-
-    /**
-     * Gets the object factory instance that is configured in environment.
-     * @return
-     */
-    private ObjectFactory getObjectFactory() throws IllegalAccessException {
-        if (Env.INSTANCE.get(ObjectFactory.class.getName()).equals(CitrusObjectFactory.class.getName())) {
-            return CitrusObjectFactory.instance();
-        } else if (Env.INSTANCE.get(ObjectFactory.class.getName()).equals(CitrusSpringObjectFactory.class.getName())) {
-            return CitrusSpringObjectFactory.instance();
-        }
-
-        return ObjectFactoryLoader.loadObjectFactory(new ResourceLoaderClassFinder(resourceLoader, Thread.currentThread().getContextClassLoader()),
-                Env.INSTANCE.get(ObjectFactory.class.getName()));
+    public Snippet getSnippet() {
+        return new NoopSnippet();
     }
 
     /**
@@ -173,21 +163,19 @@ public class CitrusBackend implements Backend {
     private static class XmlStepInstanceProcessor implements CitrusInstanceProcessor {
 
         private final Glue glue;
-        private final List<String> gluePaths;
-        private final ObjectFactory objectFactory;
-        private TypeRegistry typeRegistry;
+        private final List<URI> gluePaths;
+        private final Lookup lookup;
 
-        XmlStepInstanceProcessor(Glue glue, List<String> gluePaths, ObjectFactory objectFactory, TypeRegistry typeRegistry) {
+        XmlStepInstanceProcessor(Glue glue, List<URI> gluePaths, Lookup lookup) {
             this.glue = glue;
             this.gluePaths = gluePaths;
-            this.objectFactory = objectFactory;
-            this.typeRegistry = typeRegistry;
+            this.lookup = lookup;
         }
 
         @Override
         public void process(Citrus instance) {
-            for (String gluePath : gluePaths) {
-                String xmlStepConfigLocation = "classpath*:" + gluePath.replaceAll("\\.", "/").replaceAll("^classpath:", "") + "/**/*Steps.xml";
+            for (URI gluePath : gluePaths) {
+                String xmlStepConfigLocation = "classpath*:" + ClasspathSupport.resourceNameOfPackageName(ClasspathSupport.packageName(gluePath)) + "/**/*Steps.xml";
 
                 log.info(String.format("Loading XML step definitions %s", xmlStepConfigLocation));
 
@@ -204,7 +192,7 @@ public class CitrusBackend implements Backend {
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Found XML step definition: %s %s", stepTemplate.getName(), stepTemplate.getPattern().pattern()));
                     }
-                    glue.addStepDefinition(new XmlStepDefinition(stepTemplate, objectFactory, typeRegistry));
+                    glue.addStepDefinition(new XmlStepDefinition(stepTemplate, lookup));
                 }
             }
         }

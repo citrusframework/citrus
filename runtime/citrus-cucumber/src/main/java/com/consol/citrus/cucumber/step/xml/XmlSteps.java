@@ -38,13 +38,10 @@ public class XmlSteps {
      * @param args
      */
     public void execute(StepTemplate stepTemplate, Object[] args) {
-        Template steps = new Template.Builder()
-                .actions(stepTemplate.getActions())
-                .actor(stepTemplate.getActor())
-                .build();
-
         Template.Builder templateBuilder = new Template.Builder()
             .name(stepTemplate.getName())
+            .actions(stepTemplate.getActions())
+            .actor(stepTemplate.getActor())
             .globalContext(stepTemplate.isGlobalContext());
 
         if (stepTemplate.getParameterNames().size() != args.length) {

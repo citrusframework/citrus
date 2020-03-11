@@ -33,7 +33,6 @@ import com.consol.citrus.selenium.actions.StartBrowserAction;
 import com.consol.citrus.selenium.actions.StopBrowserAction;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserConfiguration;
-import cucumber.api.Scenario;
 import org.mockito.Mockito;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -274,7 +273,7 @@ public class SeleniumStepsTest extends UnitTestSupport {
     @Test
     public void testDefaultBrowserInitialization() {
         Assert.assertNull(steps.browser);
-        steps.before(Mockito.mock(Scenario.class));
+        steps.before();
         Assert.assertNotNull(steps.browser);
     }
 
@@ -282,7 +281,7 @@ public class SeleniumStepsTest extends UnitTestSupport {
     public void testBrowserInitialization() {
         Assert.assertNull(steps.browser);
         steps.setBrowser("seleniumBrowser");
-        steps.before(Mockito.mock(Scenario.class));
+        steps.before();
         Assert.assertNotNull(steps.browser);
     }
 

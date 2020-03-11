@@ -136,6 +136,9 @@ public abstract class CitrusAnnotations {
 
             return false;
         });
+
+        injectTestActionRunner(target, runner);
+        injectGherkinTestActionRunner(target, runner);
     }
 
     /**
@@ -143,7 +146,7 @@ public abstract class CitrusAnnotations {
      * @param target
      * @param runner
      */
-    public static void injectTestActionRunner(final Object target, final TestActionRunner runner) {
+    private static void injectTestActionRunner(final Object target, final TestActionRunner runner) {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestActionRunner.class.isAssignableFrom(type)) {
@@ -170,7 +173,7 @@ public abstract class CitrusAnnotations {
      * @param target
      * @param runner
      */
-    public static void injectGherkinTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
+    private static void injectGherkinTestActionRunner(final Object target, final GherkinTestActionRunner runner) {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (GherkinTestActionRunner.class.isAssignableFrom(type)) {

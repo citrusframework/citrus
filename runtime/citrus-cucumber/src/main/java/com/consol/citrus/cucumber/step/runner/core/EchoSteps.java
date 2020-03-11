@@ -18,7 +18,7 @@ package com.consol.citrus.cucumber.step.runner.core;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
-import cucumber.api.java.en.Then;
+import io.cucumber.java.en.Then;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 

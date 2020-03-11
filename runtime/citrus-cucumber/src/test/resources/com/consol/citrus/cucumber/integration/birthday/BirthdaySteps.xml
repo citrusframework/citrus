@@ -6,7 +6,7 @@
               xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/cucumber/testcase http://www.citrusframework.org/schema/cucumber/testcase/citrus-cucumber-testcase.xsd">
 
-  <step given="It is my (\d+). birthday" parameter-names="birthday">
+  <step given="^It is my (\d+). birthday$" parameter-names="birthday">
     <citrus:echo>
       <citrus:message>This is my ${birthday}. birthday</citrus:message>
     </citrus:echo>
@@ -18,7 +18,7 @@
     </citrus:echo>
   </step>
 
-  <step then="I will get best wishes to my (\d+). birthday" parameter-names="birthday">
+  <step then="^I will get best wishes to my (\d+). birthday$" parameter-names="birthday">
     <citrus:echo>
       <citrus:message>Best wishes to you! It is your ${birthday}. birthday!</citrus:message>
     </citrus:echo>

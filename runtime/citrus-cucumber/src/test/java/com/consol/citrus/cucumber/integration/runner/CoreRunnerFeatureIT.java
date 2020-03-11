@@ -16,8 +16,8 @@
 
 package com.consol.citrus.cucumber.integration.runner;
 
-import cucumber.api.CucumberOptions;
-import cucumber.api.junit.Cucumber;
+import io.cucumber.junit.Cucumber;
+import io.cucumber.junit.CucumberOptions;
 import org.junit.runner.RunWith;
 
 /**
@@ -26,6 +26,7 @@ import org.junit.runner.RunWith;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions(
+        strict = true,
         glue = { "com.consol.citrus.cucumber.step.runner.core" },
         plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
 public class CoreRunnerFeatureIT {

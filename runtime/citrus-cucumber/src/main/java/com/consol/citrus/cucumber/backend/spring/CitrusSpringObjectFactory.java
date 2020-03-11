@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-package cucumber.runtime.java;
+package com.consol.citrus.cucumber.backend.spring;
 
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.cucumber.backend.CitrusBackend;
+import io.cucumber.core.backend.CucumberBackendException;
+import io.cucumber.core.backend.ObjectFactory;
+import io.cucumber.spring.SpringFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +31,10 @@ import org.slf4j.LoggerFactory;
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class CitrusObjectFactory extends DefaultJavaObjectFactory {
+public class CitrusSpringObjectFactory implements ObjectFactory {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusObjectFactory.class);
+    private static Logger log = LoggerFactory.getLogger(CitrusSpringObjectFactory.class);
 
     /** Test runner */
     private TestCaseRunner runner;
@@ -39,40 +43,67 @@ public class CitrusObjectFactory extends DefaultJavaObjectFactory {
     private TestContext context;
 
     /** Static self reference */
-    private static CitrusObjectFactory selfReference;
+    private static CitrusSpringObjectFactory selfReference;
+
+    /** Delegate object factory */
+    private final SpringFactory delegate = new SpringFactory();
 
     /**
      * Default constructor with static self reference initialization.
      */
-    public CitrusObjectFactory() {
+    public CitrusSpringObjectFactory() {
         selfReference = this;
     }
 
     @Override
     public void start() {
-        super.start();
-        context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
+        delegate.start();
+        context = getInstance(TestContext.class);
         runner = new DefaultTestCaseRunner(context);
     }
 
     @Override
+    public void stop() {
+        delegate.stop();
+    }
+
+    @Override
     public <T> T getInstance(Class<T> type) {
-        if (CitrusObjectFactory.class.isAssignableFrom(type)) {
+        if (context == null) {
+            try {
+                context = delegate.getInstance(TestContext.class);
+                CitrusBackend.initializeCitrus(context.getApplicationContext());
+            } catch (CucumberBackendException e) {
+                log.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
+                context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
+            }
+        }
+
+        if (TestContext.class.isAssignableFrom(type)) {
+            return (T) context;
+        }
+
+        if (CitrusSpringObjectFactory.class.isAssignableFrom(type)) {
             return (T) this;
         }
 
-        T instance = super.getInstance(type);
+        T instance = delegate.getInstance(type);
         CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus());
         CitrusAnnotations.injectTestRunner(instance, runner);
 
         return instance;
     }
 
+    @Override
+    public boolean addClass(Class<?> glueClass) {
+        return delegate.addClass(glueClass);
+    }
+
     /**
      * Static access to self reference.
      * @return
      */
-    public static CitrusObjectFactory instance() throws IllegalAccessException {
+    public static CitrusSpringObjectFactory instance() throws IllegalAccessException {
         if (selfReference == null) {
             throw new IllegalAccessException("Illegal access to self reference - not available yet");
         }
