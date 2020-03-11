@@ -113,18 +113,15 @@
   <citrus-jms:sync-endpoint id="syncJmsTopicSubscriberEndpoint"
                             timeout="5000"
                             destination-name="${jms.topic.hello.sync.request}"
-                            message-correlator="replyMessageCorrelator"
                             pub-sub-domain="true"/>
 
   <citrus-jms:sync-endpoint id="syncGetDateRequestSender"
                             destination-name="${jms.queue.date.sync.request}"
-                            message-correlator="replyMessageCorrelator"
                             timeout="5000"/>
 
   <citrus-jms:sync-endpoint id="syncGetDateRequestReceiver"
                             timeout="5000"
-                            destination-name="${jms.queue.date.sync.request}"
-                            message-correlator="replyMessageCorrelator"/>
+                            destination-name="${jms.queue.date.sync.request}"/>
 
   <citrus-jms:endpoint id="testMessageSender" destination-name="${jms.queue.test}"/>
 
@@ -135,8 +132,6 @@
   <amq:queue id="testQueue1" physicalName="Citrus.TestQueue1"/>
   <amq:queue id="testQueue2" physicalName="Citrus.TestQueue2"/>
   <amq:queue id="testQueue3" physicalName="Citrus.TestQueue3"/>
-
-  <bean id="replyMessageCorrelator" class="com.consol.citrus.message.DefaultMessageCorrelator"/>
 
   <bean id="topicConnectionFactory" class="org.springframework.jms.connection.SingleConnectionFactory">
     <constructor-arg>

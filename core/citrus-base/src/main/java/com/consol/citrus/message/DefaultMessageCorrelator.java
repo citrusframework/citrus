@@ -17,9 +17,9 @@
 package com.consol.citrus.message;
 
 /**
- * Default message correlator implementation using the Spring integration message id
+ * Default message correlator implementation using the Citrus message id
  * as correlation key.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class DefaultMessageCorrelator implements MessageCorrelator {

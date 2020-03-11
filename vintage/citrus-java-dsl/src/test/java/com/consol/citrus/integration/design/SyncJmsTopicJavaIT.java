@@ -34,7 +34,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
 
         parallel().actions(
             sequential().actions(
-                sleep(1000L),
+                sleep(2000L),
                 send("syncJmsTopicEndpoint")
                     .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
@@ -56,15 +56,18 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusTestDesigner {
                                "</HelloRequest>")
                         .header("Operation", "sayHello")
                         .header("CorrelationId", "${correlationId}"),
-                    receive("syncJmsTopicSubscriberEndpoint")
-                        .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
-                                   "<MessageId>${messageId}</MessageId>" +
-                                   "<CorrelationId>${correlationId}</CorrelationId>" +
-                                   "<User>${user}</User>" +
-                                   "<Text>Hello TestFramework</Text>" +
-                               "</HelloRequest>")
-                        .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}")
+                    sequential().actions(
+                        sleep().milliseconds(500L),
+                        receive("syncJmsTopicSubscriberEndpoint")
+                            .payload("<HelloRequest xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +
+                                       "<MessageId>${messageId}</MessageId>" +
+                                       "<CorrelationId>${correlationId}</CorrelationId>" +
+                                       "<User>${user}</User>" +
+                                       "<Text>Hello TestFramework</Text>" +
+                                   "</HelloRequest>")
+                            .header("Operation", "sayHello")
+                            .header("CorrelationId", "${correlationId}")
+                    )
                 ),
                 send("syncJmsTopicSubscriberEndpoint")
                     .payload("<HelloResponse xmlns=\"http://www.consol.de/schemas/samples/sayHello.xsd\">" +

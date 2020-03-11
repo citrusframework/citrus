@@ -40,7 +40,7 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusSupport {
 
         given(parallel().actions(
             sequential().actions(
-                sleep().milliseconds(1000L),
+                sleep().milliseconds(2000L),
                 send("syncJmsTopicEndpoint")
                     .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                    "<MessageId>${messageId}</MessageId>" +
@@ -62,15 +62,18 @@ public class SyncJmsTopicJavaIT extends TestNGCitrusSupport {
                                "</HelloRequest>")
                         .header("Operation", "sayHello")
                         .header("CorrelationId", "${correlationId}"),
-                    receive("syncJmsTopicSubscriberEndpoint")
-                        .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
-                                   "<MessageId>${messageId}</MessageId>" +
-                                   "<CorrelationId>${correlationId}</CorrelationId>" +
-                                   "<User>${user}</User>" +
-                                   "<Text>Hello TestFramework</Text>" +
-                               "</HelloRequest>")
-                        .header("Operation", "sayHello")
-                        .header("CorrelationId", "${correlationId}")
+                    sequential().actions(
+                        sleep().milliseconds(500L),
+                        receive("syncJmsTopicSubscriberEndpoint")
+                            .payload("<HelloRequest xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
+                                       "<MessageId>${messageId}</MessageId>" +
+                                       "<CorrelationId>${correlationId}</CorrelationId>" +
+                                       "<User>${user}</User>" +
+                                       "<Text>Hello TestFramework</Text>" +
+                                   "</HelloRequest>")
+                            .header("Operation", "sayHello")
+                            .header("CorrelationId", "${correlationId}")
+                    )
                 ),
                 send("syncJmsTopicSubscriberEndpoint")
                     .payload("<HelloResponse xmlns=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
