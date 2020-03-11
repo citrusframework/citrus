@@ -15,6 +15,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>citrus-arquillian</module>
     <module>citrus-java-dsl</module>
   </modules>
 

@@ -10,7 +10,7 @@
   </parent>
 
   <artifactId>citrus-arquillian</artifactId>
-  <name>Citrus :: Runtime :: Arquillian</name>
+  <name>Citrus :: Vintage :: Arquillian</name>
   <description>Citrus Arquillian framework integration</description>
 
   <dependencies>

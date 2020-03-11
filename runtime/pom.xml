@@ -18,7 +18,6 @@
     <module>citrus-junit</module>
     <module>citrus-junit5</module>
     <module>citrus-testng</module>
-    <module>citrus-arquillian</module>
     <module>citrus-cucumber</module>
     <module>citrus-main</module>
   </modules>
