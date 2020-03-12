@@ -31,7 +31,7 @@ public class ReceiveCodeProvider implements CodeProvider<Message> {
     public CodeBlock getCode(final String endpoint, final Message message) {
         final CodeBlock.Builder code = CodeBlock.builder();
 
-        code.add("receive(action -> action.endpoint($S)\n", endpoint);
+        code.add("runner.run(receive().endpoint($S)\n", endpoint);
         code.indent();
         messageCodeProvider.provideHeaderAndPayload(code, message);
         code.unindent();

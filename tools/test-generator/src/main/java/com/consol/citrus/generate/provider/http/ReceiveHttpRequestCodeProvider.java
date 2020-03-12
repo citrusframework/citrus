@@ -31,7 +31,7 @@ public class ReceiveHttpRequestCodeProvider implements CodeProvider<HttpMessage>
     public CodeBlock getCode(final String endpoint, final HttpMessage message) {
         final CodeBlock.Builder code = CodeBlock.builder();
 
-        code.add("http(action -> action.server($S)\n", endpoint);
+        code.add("runner.run(http().server($S)\n", endpoint);
         code.indent();
         code.add(".receive()\n");
         httpCodeProvider.provideRequestConfiguration(code, message);

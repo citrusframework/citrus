@@ -33,7 +33,7 @@ class SendCodeProviderTest {
 
         //GIVEN
         final String endpoint = "foo";
-        final String expectedString = "send(action -> action.endpoint(\"foo\")\n);";
+        final String expectedString = "runner.run(send().endpoint(\"foo\")\n);";
 
         //WHEN
         final CodeBlock code = sendCodeProvider.getCode(endpoint, message);

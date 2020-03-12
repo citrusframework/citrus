@@ -16,15 +16,24 @@
 
 package com.consol.citrus.generate.javadsl;
 
-import com.consol.citrus.generate.provider.*;
-import com.consol.citrus.generate.provider.http.*;
+import java.util.List;
+import java.util.Optional;
+
+import com.consol.citrus.actions.ReceiveMessageAction;
+import com.consol.citrus.actions.SendMessageAction;
+import com.consol.citrus.generate.provider.CodeProvider;
+import com.consol.citrus.generate.provider.ReceiveCodeProvider;
+import com.consol.citrus.generate.provider.SendCodeProvider;
+import com.consol.citrus.generate.provider.http.ReceiveHttpRequestCodeProvider;
+import com.consol.citrus.generate.provider.http.ReceiveHttpResponseCodeProvider;
+import com.consol.citrus.generate.provider.http.SendHttpRequestCodeProvider;
+import com.consol.citrus.generate.provider.http.SendHttpResponseCodeProvider;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.squareup.javapoet.CodeBlock;
-
-import java.util.List;
-import java.util.Optional;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.TypeSpec;
 
 /**
  * @author Christoph Deppisch
@@ -40,6 +49,13 @@ public class MessagingJavaTestGenerator<T extends MessagingJavaTestGenerator> ex
 
     /** Sample response */
     private Message response;
+
+    @Override
+    protected JavaFile.Builder createJavaFileBuilder(TypeSpec.Builder testTypeBuilder) {
+        return super.createJavaFileBuilder(testTypeBuilder)
+                .addStaticImport(SendMessageAction.Builder.class, "send")
+                .addStaticImport(ReceiveMessageAction.Builder.class, "receive");
+    }
 
     @Override
     protected List<CodeBlock> getActions() {

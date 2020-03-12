@@ -31,7 +31,7 @@ public class SendHttpRequestCodeProvider implements CodeProvider<HttpMessage>{
     public CodeBlock getCode(final String endpoint, final HttpMessage message) {
         final CodeBlock.Builder code = CodeBlock.builder();
 
-        code.add("http(action -> action.client($S)\n", endpoint);
+        code.add("runner.run(http().client($S)\n", endpoint);
         code.indent();
         code.add(".send()\n");
 
