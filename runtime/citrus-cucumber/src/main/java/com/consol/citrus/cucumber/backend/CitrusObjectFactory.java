@@ -27,17 +27,12 @@ import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.core.exception.CucumberException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
 public class CitrusObjectFactory implements ObjectFactory {
-
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(CitrusObjectFactory.class);
 
     /** Test runner */
     private TestCaseRunner runner;
