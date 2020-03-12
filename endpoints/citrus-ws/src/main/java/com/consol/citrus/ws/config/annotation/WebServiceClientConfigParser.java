@@ -16,12 +16,15 @@
 
 package com.consol.citrus.ws.config.annotation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.client.WebServiceClientBuilder;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
@@ -79,10 +82,14 @@ public class WebServiceClientConfigParser extends AbstractAnnotationConfigParser
             builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), WebServiceMessageConverter.class));
         }
 
-        builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientInterceptor.class));
+        if (annotation.interceptors().length > 0) {
+            builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientInterceptor.class));
+        }
 
         if (StringUtils.hasText(annotation.interceptor())) {
-            builder.interceptor(getReferenceResolver().resolve(annotation.interceptor(), ClientInterceptor.class));
+            List<ClientInterceptor> interceptors = new ArrayList<>();
+            interceptors.add(getReferenceResolver().resolve(annotation.interceptor(), ClientInterceptor.class));
+            builder.interceptors(interceptors);
         }
 
         if (StringUtils.hasText(annotation.correlator())) {

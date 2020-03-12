@@ -17,7 +17,6 @@
 package com.consol.citrus.http.client;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
@@ -38,7 +37,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 
 /**
  * Http client sends messages via Http protocol to some Http server instance, defined by a request endpoint url. Synchronous response
@@ -78,11 +76,6 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
 
     @Override
     public void send(Message message, TestContext context) {
-        if (CollectionUtils.isEmpty(getEndpointConfiguration().getClientInterceptors())) {
-            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
-            getEndpointConfiguration().setClientInterceptors(Collections.singletonList(loggingClientInterceptor));
-        }
-
         getEndpointConfiguration().getClientInterceptors()
                 .stream()
                 .filter(LoggingClientInterceptor.class::isInstance)

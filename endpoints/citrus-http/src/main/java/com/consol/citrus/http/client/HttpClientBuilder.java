@@ -16,7 +16,6 @@
 
 package com.consol.citrus.http.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.endpoint.AbstractEndpointBuilder;
@@ -212,10 +211,6 @@ public class HttpClientBuilder extends AbstractEndpointBuilder<HttpClient> {
      * @return
      */
     public HttpClientBuilder interceptor(ClientHttpRequestInterceptor interceptor) {
-        if (endpoint.getEndpointConfiguration().getClientInterceptors() == null) {
-            endpoint.getEndpointConfiguration().setClientInterceptors(new ArrayList<>());
-        }
-
         endpoint.getEndpointConfiguration().getClientInterceptors().add(interceptor);
         return this;
     }

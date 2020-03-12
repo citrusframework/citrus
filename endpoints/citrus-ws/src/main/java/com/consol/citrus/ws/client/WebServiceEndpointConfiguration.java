@@ -16,19 +16,25 @@
 
 package com.consol.citrus.ws.client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import org.springframework.ws.client.support.interceptor.ClientInterceptor;
 import org.springframework.ws.transport.WebServiceMessageSender;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -49,10 +55,7 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
     private WebServiceMessageConverter messageConverter = new SoapMessageConverter();
 
     /** List of client interceptors */
-    private List<ClientInterceptor> interceptors = new ArrayList<ClientInterceptor>();
-
-    /* Single client interceptor */
-    private ClientInterceptor interceptor;
+    private List<ClientInterceptor> interceptors;
 
     /** Default uri */
     private String defaultUri;
@@ -74,6 +77,15 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
 
     /** Should keep soap envelope when creating internal message */
     private boolean keepSoapEnvelope = false;
+
+    /**
+     * Default constructor initializes with default logging interceptor.
+     */
+    public WebServiceEndpointConfiguration() {
+        List<ClientInterceptor> interceptors = new ArrayList<>();
+        interceptors.add(new LoggingClientInterceptor());
+        setInterceptors(interceptors);
+    }
 
     /**
      * Creates default web service template with settings in this configuration.
@@ -140,6 +152,18 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
             webServiceTemplate = createWebServiceTemplate();
         }
 
+        if (this.messageFactory != null) {
+            webServiceTemplate.setMessageFactory(messageFactory);
+        }
+
+        if (this.messageSender != null) {
+            webServiceTemplate.setMessageSender(messageSender);
+        }
+
+        if (defaultUri != null) {
+            webServiceTemplate.setDefaultUri(defaultUri);
+        }
+
         return webServiceTemplate;
     }
 
@@ -148,7 +172,9 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      * @param webServiceTemplate
      */
     public void setWebServiceTemplate(WebServiceTemplate webServiceTemplate) {
+        interceptors.addAll(Optional.ofNullable(webServiceTemplate.getInterceptors()).map(Arrays::asList).orElse(Collections.emptyList()));
         this.webServiceTemplate = webServiceTemplate;
+        webServiceTemplate.setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
     }
 
     /**
@@ -165,7 +191,6 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public void setMessageFactory(WebServiceMessageFactory messageFactory) {
         this.messageFactory = messageFactory;
-        getWebServiceTemplate().setMessageFactory(messageFactory);
     }
 
     /**
@@ -182,7 +207,6 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public void setMessageSender(WebServiceMessageSender messageSender) {
         this.messageSender = messageSender;
-        getWebServiceTemplate().setMessageSender(messageSender);
     }
 
     /**
@@ -199,7 +223,6 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public void setDefaultUri(String defaultUri) {
         this.defaultUri = defaultUri;
-        getWebServiceTemplate().setDefaultUri(defaultUri);
     }
 
     /**
@@ -216,15 +239,7 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      */
     public void setInterceptors(List<ClientInterceptor> interceptors) {
         this.interceptors = interceptors;
-        getWebServiceTemplate().setInterceptors(interceptors.toArray(new ClientInterceptor[interceptors.size()]));
-    }
-
-    /**
-     * Gets the single client interceptor.
-     * @return
-     */
-    public ClientInterceptor getInterceptor() {
-        return interceptor;
+        getWebServiceTemplate().setInterceptors(interceptors.toArray(new ClientInterceptor[0]));
     }
 
     /**
@@ -232,8 +247,9 @@ public class WebServiceEndpointConfiguration extends AbstractPollableEndpointCon
      * @param interceptor
      */
     public void setInterceptor(ClientInterceptor interceptor) {
-        this.interceptor = interceptor;
-        getWebServiceTemplate().setInterceptors(new ClientInterceptor[] { interceptor });
+        List<ClientInterceptor> interceptors = new ArrayList<>();
+        interceptors.add(interceptor);
+        setInterceptors(interceptors);
     }
 
     /**

@@ -16,21 +16,30 @@
 
 package com.consol.citrus.http.client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.consol.citrus.endpoint.AbstractPollableEndpointConfiguration;
 import com.consol.citrus.endpoint.resolver.DynamicEndpointUriResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
-import com.consol.citrus.message.*;
-import org.springframework.http.*;
-import org.springframework.http.client.*;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.MessageCorrelator;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.integration.mapping.HeaderMapper;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -98,6 +107,15 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
                                                                 MediaType.valueOf("application/zip"));
 
     /**
+     * Default constructor initializes with default logging interceptor.
+     */
+    public HttpEndpointConfiguration() {
+        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+        interceptors.add(new LoggingClientInterceptor());
+        setClientInterceptors(interceptors);
+    }
+
+    /**
      * Get the complete request URL.
      * @return the urlPath
      */
@@ -126,6 +144,8 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
      * @param restTemplate the restTemplate to set
      */
     public void setRestTemplate(RestTemplate restTemplate) {
+        clientInterceptors.addAll(restTemplate.getInterceptors());
+        restTemplate.setInterceptors(clientInterceptors);
         this.restTemplate = restTemplate;
     }
 
@@ -208,17 +228,16 @@ public class HttpEndpointConfiguration extends AbstractPollableEndpointConfigura
     public RestTemplate getRestTemplate() {
         if (restTemplate == null) {
             restTemplate = new RestTemplate();
-            restTemplate.setRequestFactory(getRequestFactory());
         }
 
+        restTemplate.setRequestFactory(getRequestFactory());
         restTemplate.setErrorHandler(getErrorHandler());
 
         if (!defaultAcceptHeader) {
-            for (org.springframework.http.converter.HttpMessageConverter messageConverter: restTemplate.getMessageConverters()) {
-                if (messageConverter instanceof StringHttpMessageConverter) {
-                    ((StringHttpMessageConverter) messageConverter).setWriteAcceptCharset(defaultAcceptHeader);
-                }
-            }
+            restTemplate.getMessageConverters().stream()
+                    .filter(StringHttpMessageConverter.class::isInstance)
+                    .map(StringHttpMessageConverter.class::cast)
+                    .forEach(converter -> converter.setWriteAcceptCharset(defaultAcceptHeader));
         }
 
         return restTemplate;

@@ -39,7 +39,6 @@ import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
@@ -84,11 +83,6 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     @Override
     public void send(Message message, TestContext context) {
         Assert.notNull(message, "Message is empty - unable to send empty message");
-
-        if (CollectionUtils.isEmpty(getEndpointConfiguration().getInterceptors()) && getEndpointConfiguration().getInterceptor() == null) {
-            LoggingClientInterceptor loggingClientInterceptor = new LoggingClientInterceptor();
-            getEndpointConfiguration().setInterceptor(loggingClientInterceptor);
-        }
 
         getEndpointConfiguration().getInterceptors()
                 .stream()

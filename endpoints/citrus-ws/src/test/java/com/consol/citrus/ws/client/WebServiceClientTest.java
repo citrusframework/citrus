@@ -46,13 +46,13 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
 
         reset(webServiceTemplate);
 
-        when(webServiceTemplate.sendAndReceive(eq("http://localhost:8081/request"), (WebServiceMessageCallback)any(),
-                (WebServiceMessageCallback)any())).thenReturn(true);
+        when(webServiceTemplate.sendAndReceive(eq("http://localhost:8081/request"), any(WebServiceMessageCallback.class),
+                any(WebServiceMessageCallback.class))).thenReturn(true);
 
         client.getEndpointConfiguration().setDefaultUri("http://localhost:8081/request");
         client.send(requestMessage, context);
 
-        verify(webServiceTemplate).setDefaultUri("http://localhost:8081/request");
+        verify(webServiceTemplate, atLeastOnce()).setDefaultUri("http://localhost:8081/request");
         verify(webServiceTemplate).setFaultMessageResolver(any(FaultMessageResolver.class));
     }
 
@@ -69,8 +69,8 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
 
         reset(webServiceTemplate, correlator);
 
-        when(webServiceTemplate.sendAndReceive(eq("http://localhost:8080/request"), (WebServiceMessageCallback)any(),
-                (WebServiceMessageCallback)any())).thenReturn(true);
+        when(webServiceTemplate.sendAndReceive(eq("http://localhost:8080/request"), any(WebServiceMessageCallback.class),
+                any(WebServiceMessageCallback.class))).thenReturn(true);
 
         when(correlator.getCorrelationKey(requestMessage)).thenReturn("correlationKey");
         when(correlator.getCorrelationKeyName(any(String.class))).thenReturn("correlationKeyName");
@@ -78,7 +78,7 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
         client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
         client.send(requestMessage, context);
 
-        verify(webServiceTemplate).setDefaultUri("http://localhost:8080/request");
+        verify(webServiceTemplate, atLeastOnce()).setDefaultUri("http://localhost:8080/request");
         verify(webServiceTemplate).setFaultMessageResolver(any(FaultMessageResolver.class));
     }
 
@@ -97,12 +97,12 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
         when(endpointUriResolver.resolveEndpointUri(requestMessage, "http://localhost:8080/request")).thenReturn("http://localhost:8081/new");
 
         when(webServiceTemplate.sendAndReceive(eq("http://localhost:8081/new"),
-                (WebServiceMessageCallback)any(), (WebServiceMessageCallback)any())).thenReturn(true);
+                any(WebServiceMessageCallback.class), any(WebServiceMessageCallback.class))).thenReturn(true);
 
         client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
         client.send(requestMessage, context);
 
-        verify(webServiceTemplate).setDefaultUri("http://localhost:8080/request");
+        verify(webServiceTemplate, atLeastOnce()).setDefaultUri("http://localhost:8080/request");
         verify(webServiceTemplate).setFaultMessageResolver(any(FaultMessageResolver.class));
     }
 
@@ -126,15 +126,15 @@ public class WebServiceClientTest extends AbstractTestNGUnitTest {
         when(soapFaultMessage.getFaultReason()).thenReturn("Internal server error");
         when(soapBody.getFault()).thenReturn(soapFault);
 
-        doThrow(new SoapFaultClientException(soapFaultMessage)).when(webServiceTemplate).sendAndReceive(eq("http://localhost:8080/request"), (WebServiceMessageCallback)any(),
-                (WebServiceMessageCallback)any());
+        doThrow(new SoapFaultClientException(soapFaultMessage)).when(webServiceTemplate).sendAndReceive(eq("http://localhost:8080/request"), any(WebServiceMessageCallback.class),
+                any(WebServiceMessageCallback.class));
 
         try {
             client.getEndpointConfiguration().setDefaultUri("http://localhost:8080/request");
             client.send(requestMessage, context);
             Assert.fail("Missing exception due to soap fault");
         } catch (SoapFaultClientException e) {
-            verify(webServiceTemplate).setDefaultUri("http://localhost:8080/request");
+            verify(webServiceTemplate, atLeastOnce()).setDefaultUri("http://localhost:8080/request");
             verify(webServiceTemplate).setFaultMessageResolver(any(FaultMessageResolver.class));
         }
 

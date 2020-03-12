@@ -28,6 +28,7 @@ import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
@@ -138,7 +139,8 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(client1.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client1.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertEquals(client1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertNull(client1.getEndpointConfiguration().getInterceptor());
+        Assert.assertEquals(client1.getEndpointConfiguration().getInterceptors().size(), 1L);
+        Assert.assertEquals(client1.getEndpointConfiguration().getInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
         Assert.assertTrue(client1.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
         Assert.assertEquals(client1.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client1.getEndpointConfiguration().getTimeout(), 5000L);
@@ -168,8 +170,8 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(client4.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertNotNull(client4.getEndpointConfiguration().getMessageSender());
         Assert.assertEquals(client4.getEndpointConfiguration().getMessageSender(), messageSender);
-        Assert.assertNotNull(client4.getEndpointConfiguration().getInterceptor());
-        Assert.assertEquals(client4.getEndpointConfiguration().getInterceptor(), clientInterceptor1);
+        Assert.assertEquals(client4.getEndpointConfiguration().getInterceptors().size(), 1L);
+        Assert.assertEquals(client4.getEndpointConfiguration().getInterceptors().get(0), clientInterceptor1);
         Assert.assertNotNull(client4.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client4.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 1L);
         Assert.assertTrue(client4.getEndpointConfiguration().getMessageConverter() instanceof WsAddressingMessageConverter);

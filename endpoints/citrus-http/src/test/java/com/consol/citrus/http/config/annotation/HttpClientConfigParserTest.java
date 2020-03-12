@@ -21,14 +21,15 @@ import java.util.Collections;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpResponseErrorHandler;
+import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,7 +37,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
@@ -131,8 +131,9 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 1st message sender
         Assert.assertNotNull(httpClient1.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient1.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
-        Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().size(), 0L);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().size(), 1L);
+        Assert.assertEquals(httpClient1.getEndpointConfiguration().getClientInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getRequestMethod(), HttpMethod.POST);
         Assert.assertTrue(httpClient1.getEndpointConfiguration().isDefaultAcceptHeader());
         Assert.assertEquals(httpClient1.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
@@ -145,7 +146,7 @@ public class HttpClientConfigParserTest extends AbstractTestNGUnitTest {
         // 2nd message sender
         Assert.assertNotNull(httpClient2.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertEquals(httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory(), requestFactory);
+        Assert.assertEquals(httpClient2.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getRequestMethod(), HttpMethod.GET);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient2.getEndpointConfiguration().getContentType(), "text/xml");

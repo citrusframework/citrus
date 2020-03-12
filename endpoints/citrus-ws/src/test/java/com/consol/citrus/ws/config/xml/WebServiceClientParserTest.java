@@ -16,19 +16,20 @@
 
 package com.consol.citrus.ws.config.xml;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import com.consol.citrus.ws.client.WebServiceClient;
+import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.converter.SoapMessageConverter;
 import com.consol.citrus.ws.message.converter.WsAddressingMessageConverter;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.ws.soap.SoapMessageFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -46,7 +47,8 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getDefaultUri(), "http://localhost:8080/test");
         Assert.assertTrue(client.getEndpointConfiguration().getMessageFactory() instanceof SoapMessageFactory);
         Assert.assertEquals(client.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
-        Assert.assertNull(client.getEndpointConfiguration().getInterceptor());
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().size(), 1L);
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
         Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof SoapMessageConverter);
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(client.getEndpointConfiguration().getTimeout(), 5000L);
@@ -79,8 +81,8 @@ public class WebServiceClientParserTest extends AbstractBeanDefinitionParserTest
         Assert.assertEquals(client.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertNotNull(client.getEndpointConfiguration().getMessageSender());
         Assert.assertEquals(client.getEndpointConfiguration().getMessageSender(), beanDefinitionContext.getBean("wsMessageSender"));
-        Assert.assertNotNull(client.getEndpointConfiguration().getInterceptor());
-        Assert.assertEquals(client.getEndpointConfiguration().getInterceptor(), beanDefinitionContext.getBean("singleInterceptor"));
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().size(), 1L);
+        Assert.assertEquals(client.getEndpointConfiguration().getInterceptors().get(0), beanDefinitionContext.getBean("singleInterceptor"));
         Assert.assertNotNull(client.getEndpointConfiguration().getWebServiceTemplate());
         Assert.assertEquals(client.getEndpointConfiguration().getWebServiceTemplate().getInterceptors().length, 1L);
         Assert.assertTrue(client.getEndpointConfiguration().getMessageConverter() instanceof WsAddressingMessageConverter);

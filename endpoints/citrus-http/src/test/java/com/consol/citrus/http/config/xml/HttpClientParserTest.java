@@ -17,17 +17,18 @@
 package com.consol.citrus.http.config.xml;
 
 import java.util.Map;
+import java.util.Objects;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpResponseErrorHandler;
+import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.testng.AbstractBeanDefinitionParserTest;
 import org.springframework.beans.factory.parsing.BeanDefinitionParsingException;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.InterceptingClientHttpRequestFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -47,8 +48,9 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         HttpClient httpClient = clients.get("httpClient1");
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertTrue(HttpComponentsClientHttpRequestFactory.class.isInstance(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory()));
-        Assert.assertNull(httpClient.getEndpointConfiguration().getClientInterceptors());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors().size(), 1L);
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors().get(0).getClass(), LoggingClientInterceptor.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getBinaryMediaTypes().size(), 6L);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler().getClass(), HttpResponseErrorHandler.class);
@@ -62,7 +64,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         httpClient = clients.get("httpClient2");
         Assert.assertNotNull(httpClient.getEndpointConfiguration().getRestTemplate());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestUrl(), "http://localhost:8080/test");
-        Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory(), beanDefinitionContext.getBean("soapRequestFactory"));
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRequestMethod(), HttpMethod.GET);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getCorrelator().getClass(), DefaultMessageCorrelator.class);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getContentType(), "text/xml");
@@ -70,8 +72,8 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertEquals(httpClient.getEndpointConfiguration().getMessageConverter(), beanDefinitionContext.getBean("messageConverter"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getEndpointUriResolver(), beanDefinitionContext.getBean("endpointResolver"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getTimeout(), 10000L);
-        Assert.assertEquals(httpClient.getEndpointConfiguration().isDefaultAcceptHeader(), false);
-        Assert.assertEquals(httpClient.getEndpointConfiguration().isHandleCookies(), true);
+        Assert.assertFalse(httpClient.getEndpointConfiguration().isDefaultAcceptHeader());
+        Assert.assertTrue(httpClient.getEndpointConfiguration().isHandleCookies());
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.THROWS_EXCEPTION);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getErrorHandler(), beanDefinitionContext.getBean("errorHandler"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getBinaryMediaTypes().size(), 2L);
@@ -90,7 +92,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
         Assert.assertNotNull(httpClient.getActor());
         Assert.assertEquals(httpClient.getActor(), beanDefinitionContext.getBean("testActor", TestActor.class));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getRestTemplate().getRequestFactory().getClass(), InterceptingClientHttpRequestFactory.class);
-        Assert.assertNotNull(httpClient.getEndpointConfiguration().getClientInterceptors());
+        Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors().size(), 1L);
         Assert.assertEquals(httpClient.getEndpointConfiguration().getClientInterceptors().get(0), beanDefinitionContext.getBean("clientInterceptor"));
         Assert.assertEquals(httpClient.getEndpointConfiguration().getPollingInterval(), 250L);
     }
@@ -101,7 +103,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
             createApplicationContext("failed1");
             Assert.fail("Missing bean creation exception due to rest template and request factory property set");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(e.getMessage().contains("no 'request-factory' should be set"), e.getMessage());
+            Assert.assertTrue(Objects.requireNonNull(e.getMessage()).contains("no 'request-factory' should be set"), e.getMessage());
         }
     }
 
@@ -111,7 +113,7 @@ public class HttpClientParserTest extends AbstractBeanDefinitionParserTest {
             createApplicationContext("failed2");
             Assert.fail("Missing bean creation exception due to missing request url or endpoint resolver");
         } catch (BeanDefinitionParsingException e) {
-            Assert.assertTrue(e.getMessage().contains("One of the properties 'request-url' or 'endpoint-resolver' is required"));
+            Assert.assertTrue(Objects.requireNonNull(e.getMessage()).contains("One of the properties 'request-url' or 'endpoint-resolver' is required"));
         }
     }
 

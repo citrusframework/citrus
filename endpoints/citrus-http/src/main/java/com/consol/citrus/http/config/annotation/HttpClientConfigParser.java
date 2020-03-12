@@ -16,15 +16,18 @@
 
 package com.consol.citrus.http.config.annotation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -32,9 +35,6 @@ import org.springframework.integration.http.support.DefaultHttpHeaderMapper;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -107,7 +107,9 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
             builder.binaryMediaTypes(binaryMediaTypes);
         }
 
-        builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
+        if (annotation.interceptors().length > 0) {
+            builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
+        }
 
         // Set outbound header mapper
         builder.headerMapper(DefaultHttpHeaderMapper.outboundMapper());

@@ -16,28 +16,47 @@
 
 package com.consol.citrus.http.client;
 
-import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
-import com.consol.citrus.http.message.HttpMessage;
-import com.consol.citrus.http.message.HttpMessageHeaders;
-import com.consol.citrus.message.*;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.http.entity.ContentType;
-import org.mockito.Mockito;
-import org.mockito.stubbing.Answer;
-import org.springframework.http.*;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.net.URI;
 import java.nio.charset.Charset;
 import java.util.Collections;
 import java.util.Random;
 
-import static org.mockito.Mockito.*;
+import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.message.HttpMessageHeaders;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import org.apache.http.entity.ContentType;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.mockito.stubbing.Answer;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyList;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -47,7 +66,13 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
     private final String requestBody = "<TestRequest><Message>Hello Citrus!</Message></TestRequest>";
     private final String responseBody = "<TestResponse><Message>Hello World!</Message></TestResponse>";
 
-    private RestTemplate restTemplate = Mockito.mock(RestTemplate.class);
+    @Mock
+    private RestTemplate restTemplate;
+
+    @BeforeMethod
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testHttpPostRequest() {
@@ -61,8 +86,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Message requestMessage = new DefaultMessage(requestBody);
 
         endpointConfiguration.setRestTemplate(restTemplate);
-
-        reset(restTemplate);
 
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
@@ -100,8 +123,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
                 .setHeader("Operation", "foo");
 
         endpointConfiguration.setRestTemplate(restTemplate);
-
-        reset(restTemplate);
 
         doAnswer((Answer<ResponseEntity>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
@@ -141,8 +162,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
                 .setHeader("Operation", "foo");
 
         endpointConfiguration.setRestTemplate(restTemplate);
-
-        reset(restTemplate);
 
         StringHttpMessageConverter messageConverter = Mockito.mock(StringHttpMessageConverter.class);
         when(restTemplate.getMessageConverters()).thenReturn(Collections.<HttpMessageConverter<?>>singletonList(messageConverter));
@@ -187,8 +206,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate);
-
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
@@ -225,8 +242,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate);
-
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
@@ -261,8 +276,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate);
-
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
@@ -296,8 +309,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Message requestMessage = new DefaultMessage(requestBody);
 
         endpointConfiguration.setRestTemplate(restTemplate);
-
-        reset(restTemplate);
 
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
@@ -336,7 +347,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate, correlator);
+        reset(correlator);
 
         when(restTemplate.exchange(eq(URI.create(requestUrl)), eq(HttpMethod.GET), any(HttpEntity.class), eq(String.class)))
                 .thenReturn(new ResponseEntity<>(responseBody, HttpStatus.OK));
@@ -370,7 +381,7 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate, endpointUriResolver);
+        reset(endpointUriResolver);
 
         when(endpointUriResolver.resolveEndpointUri(requestMessage, "http://localhost:8088/test")).thenReturn("http://localhost:8081/new");
 
@@ -402,8 +413,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate);
-
         doThrow(new HttpErrorPropagatingException(HttpStatus.FORBIDDEN, "Not allowed", new HttpHeaders(), responseBody.getBytes(), Charset.forName("UTF-8"))).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
 
         httpClient.send(requestMessage, context);
@@ -430,8 +439,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate);
-
         doThrow(new HttpClientErrorException(HttpStatus.FORBIDDEN)).when(restTemplate).exchange(eq(URI.create(requestUrl)), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class));
 
         try {
@@ -457,8 +464,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
         Message requestMessage = new DefaultMessage(requestBody);
 
         endpointConfiguration.setRestTemplate(restTemplate);
-
-        reset(restTemplate);
 
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
@@ -502,8 +507,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
 
         endpointConfiguration.setRestTemplate(restTemplate);
 
-        reset(restTemplate);
-
         doAnswer((Answer<ResponseEntity<?>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
 
@@ -539,8 +542,6 @@ public class HttpClientTest extends AbstractTestNGUnitTest {
                 .contentType("foo");
 
         endpointConfiguration.setRestTemplate(restTemplate);
-
-        reset(restTemplate);
 
         doAnswer((Answer<ResponseEntity<String>>) invocation -> {
             HttpEntity<?> httpRequest = (HttpEntity<?>)invocation.getArguments()[2];
