@@ -18,17 +18,18 @@ package com.consol.citrus.dsl.endpoint;
 
 import com.consol.citrus.channel.endpoint.builder.MessageChannelEndpoints;
 import com.consol.citrus.docker.endpoint.builder.DockerEndpoints;
-import com.consol.citrus.jdbc.endpoint.builder.JdbcEndpoints;
-import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
 import com.consol.citrus.ftp.endpoint.builder.FtpEndpoints;
+import com.consol.citrus.ftp.endpoint.builder.ScpEndpoints;
 import com.consol.citrus.ftp.endpoint.builder.SftpEndpoints;
 import com.consol.citrus.http.endpoint.builder.HttpEndpoints;
+import com.consol.citrus.jdbc.endpoint.builder.JdbcEndpoints;
 import com.consol.citrus.jms.endpoint.JmsEndpoints;
 import com.consol.citrus.jmx.endpoint.builder.JmxEndpoints;
 import com.consol.citrus.kafka.endpoint.builder.KafkaEndpoints;
 import com.consol.citrus.kubernetes.endpoint.builder.KubernetesEndpoints;
 import com.consol.citrus.mail.endpoint.builder.MailEndpoints;
 import com.consol.citrus.rmi.endpoint.builder.RmiEndpoints;
+import com.consol.citrus.selenium.endpoint.builder.SeleniumEndpoints;
 import com.consol.citrus.ssh.endpoint.builder.SshEndpoints;
 import com.consol.citrus.vertx.endpoint.builder.VertxEndpoints;
 import com.consol.citrus.websocket.endpoint.builder.WebSocketEndpoints;
@@ -123,8 +124,8 @@ public abstract class CitrusEndpoints {
      * Creates new ScpClient or SftpServer builder.
      * @return
      */
-    public static SshEndpoints scp() {
-        return SshEndpoints.scp();
+    public static ScpEndpoints scp() {
+        return ScpEndpoints.scp();
     }
 
     /**

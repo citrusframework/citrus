@@ -23,11 +23,4 @@ public final class SshEndpoints extends ClientServerEndpointBuilder<SshClientBui
         return new SshEndpoints();
     }
 
-    /**
-     * Static entry method for scp endpoints.
-     * @return
-     */
-    public static SshEndpoints scp() {
-        return new SshEndpoints();
-    }
 }
