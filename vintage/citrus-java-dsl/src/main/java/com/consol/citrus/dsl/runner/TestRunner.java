@@ -30,7 +30,6 @@ import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -41,7 +40,6 @@ import com.consol.citrus.actions.StopTimeAction;
 import com.consol.citrus.actions.StopTimerAction;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
@@ -57,17 +55,19 @@ import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
 import com.consol.citrus.dsl.builder.BuilderSupport;
-import com.consol.citrus.http.actions.HttpActionBuilder;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
+import com.consol.citrus.dsl.builder.CamelRouteActionBuilder;
+import com.consol.citrus.dsl.builder.DockerExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.HttpActionBuilder;
+import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SoapActionBuilder;
+import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.actions.SoapActionBuilder;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 
 /**
  * Test builder interface defines builder pattern methods for creating a new
@@ -214,7 +214,7 @@ public interface TestRunner extends TestCaseBuilder {
      * @param configurer
      * @return
      */
-    PurgeJmsQueuesAction.Builder purgeQueues(BuilderSupport<PurgeJmsQueuesAction.Builder> configurer);
+    PurgeJmsQueuesActionBuilder purgeQueues(BuilderSupport<PurgeJmsQueuesActionBuilder> configurer);
 
     /**
      * Creates a new purge message channel action definition
@@ -223,7 +223,7 @@ public interface TestRunner extends TestCaseBuilder {
      * @param configurer
      * @return
      */
-    PurgeMessageChannelAction.Builder purgeChannels(BuilderSupport<PurgeMessageChannelAction.Builder> configurer);
+    PurgeMessageChannelActionBuilder purgeChannels(BuilderSupport<PurgeMessageChannelActionBuilder> configurer);
 
     /**
      * Creates a new purge message endpoint action definition
@@ -380,7 +380,7 @@ public interface TestRunner extends TestCaseBuilder {
      * Assert SOAP fault during action execution.
      * @return
      */
-    AssertSoapFault.Builder assertSoapFault();
+    AssertSoapFaultBuilder assertSoapFault();
 
     /**
      * Adds conditional container with nested test actions.
@@ -447,13 +447,13 @@ public interface TestRunner extends TestCaseBuilder {
      * Run docker command action.
      * @return
      */
-    DockerExecuteAction.Builder docker(BuilderSupport<DockerExecuteAction.Builder> configurer);
+    DockerExecuteActionBuilder docker(BuilderSupport<DockerExecuteActionBuilder> configurer);
 
     /**
      * Run kubernetes command action.
      * @return
      */
-    KubernetesExecuteAction.Builder kubernetes(BuilderSupport<KubernetesExecuteAction.Builder> configurer);
+    KubernetesExecuteActionBuilder kubernetes(BuilderSupport<KubernetesExecuteActionBuilder> configurer);
 
     /**
      * Run selenium command action.
@@ -483,7 +483,7 @@ public interface TestRunner extends TestCaseBuilder {
      * Run zookeeper command action.
      * @return
      */
-    ZooExecuteAction.Builder zookeeper(BuilderSupport<ZooExecuteAction.Builder> configurer);
+    ZooExecuteActionBuilder zookeeper(BuilderSupport<ZooExecuteActionBuilder> configurer);
 
     /**
      * Adds template container with nested test actions.

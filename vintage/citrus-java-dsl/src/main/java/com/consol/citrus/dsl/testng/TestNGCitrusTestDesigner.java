@@ -36,7 +36,6 @@ import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.JavaAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -47,7 +46,6 @@ import com.consol.citrus.actions.StopTimeAction;
 import com.consol.citrus.actions.StopTimerAction;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
@@ -63,20 +61,22 @@ import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
+import com.consol.citrus.dsl.builder.CamelRouteActionBuilder;
+import com.consol.citrus.dsl.builder.DockerExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.HttpActionBuilder;
+import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SoapActionBuilder;
+import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.dsl.design.ApplyTestBehaviorAction;
 import com.consol.citrus.dsl.design.TestBehavior;
 import com.consol.citrus.dsl.design.TestDesigner;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.http.actions.HttpActionBuilder;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.actions.SoapActionBuilder;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.springframework.core.io.Resource;
 import org.springframework.util.ReflectionUtils;
 import org.testng.ITestNGMethod;
@@ -291,12 +291,12 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public PurgeJmsQueuesAction.Builder purgeQueues() {
+    public PurgeJmsQueuesActionBuilder purgeQueues() {
         return testDesigner.purgeQueues();
     }
 
     @Override
-    public PurgeMessageChannelAction.Builder purgeChannels() {
+    public PurgeMessageChannelActionBuilder purgeChannels() {
         return testDesigner.purgeChannels();
     }
 
@@ -416,7 +416,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public AssertSoapFault.Builder assertSoapFault() {
+    public AssertSoapFaultBuilder assertSoapFault() {
         return testDesigner.assertSoapFault();
     }
 
@@ -471,12 +471,12 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public DockerExecuteAction.Builder docker() {
+    public DockerExecuteActionBuilder docker() {
         return testDesigner.docker();
     }
 
     @Override
-    public KubernetesExecuteAction.Builder kubernetes() {
+    public KubernetesExecuteActionBuilder kubernetes() {
         return testDesigner.kubernetes();
     }
 
@@ -501,7 +501,7 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public ZooExecuteAction.Builder zookeeper() {
+    public ZooExecuteActionBuilder zookeeper() {
         return testDesigner.zookeeper();
     }
 

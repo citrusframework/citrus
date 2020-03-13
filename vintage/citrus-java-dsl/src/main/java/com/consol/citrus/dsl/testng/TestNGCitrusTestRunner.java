@@ -34,7 +34,6 @@ import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -45,7 +44,6 @@ import com.consol.citrus.actions.StopTimeAction;
 import com.consol.citrus.actions.StopTimerAction;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
 import com.consol.citrus.container.Catch;
@@ -61,20 +59,22 @@ import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
 import com.consol.citrus.dsl.builder.BuilderSupport;
+import com.consol.citrus.dsl.builder.CamelRouteActionBuilder;
+import com.consol.citrus.dsl.builder.DockerExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.HttpActionBuilder;
+import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SoapActionBuilder;
+import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.dsl.runner.ApplyTestBehaviorAction;
 import com.consol.citrus.dsl.runner.TestBehavior;
 import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.http.actions.HttpActionBuilder;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.actions.SoapActionBuilder;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -240,12 +240,12 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
-    public PurgeJmsQueuesAction.Builder purgeQueues(BuilderSupport<PurgeJmsQueuesAction.Builder> configurer) {
+    public PurgeJmsQueuesActionBuilder purgeQueues(BuilderSupport<PurgeJmsQueuesActionBuilder> configurer) {
         return testRunner.purgeQueues(configurer);
     }
 
     @Override
-    public PurgeMessageChannelAction.Builder purgeChannels(BuilderSupport<PurgeMessageChannelAction.Builder> configurer) {
+    public PurgeMessageChannelActionBuilder purgeChannels(BuilderSupport<PurgeMessageChannelActionBuilder> configurer) {
         return testRunner.purgeChannels(configurer);
     }
 
@@ -345,7 +345,7 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
-    public AssertSoapFault.Builder assertSoapFault() {
+    public AssertSoapFaultBuilder assertSoapFault() {
         return testRunner.assertSoapFault();
     }
 
@@ -400,12 +400,12 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
-    public DockerExecuteAction.Builder docker(BuilderSupport<DockerExecuteAction.Builder> configurer) {
+    public DockerExecuteActionBuilder docker(BuilderSupport<DockerExecuteActionBuilder> configurer) {
         return testRunner.docker(configurer);
     }
 
     @Override
-    public KubernetesExecuteAction.Builder kubernetes(BuilderSupport<KubernetesExecuteAction.Builder> configurer) {
+    public KubernetesExecuteActionBuilder kubernetes(BuilderSupport<KubernetesExecuteActionBuilder> configurer) {
         return testRunner.kubernetes(configurer);
     }
 
@@ -430,7 +430,7 @@ public class TestNGCitrusTestRunner extends TestNGCitrusTest implements TestRunn
     }
 
     @Override
-    public ZooExecuteAction.Builder zookeeper(BuilderSupport<ZooExecuteAction.Builder> configurer) {
+    public ZooExecuteActionBuilder zookeeper(BuilderSupport<ZooExecuteActionBuilder> configurer) {
         return testRunner.zookeeper(configurer);
     }
 

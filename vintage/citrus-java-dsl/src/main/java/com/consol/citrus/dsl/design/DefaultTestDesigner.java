@@ -40,7 +40,6 @@ import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.JavaAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.PurgeMessageChannelAction;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
 import com.consol.citrus.actions.SendMessageAction;
@@ -51,7 +50,6 @@ import com.consol.citrus.actions.StopTimeAction;
 import com.consol.citrus.actions.StopTimerAction;
 import com.consol.citrus.actions.TraceVariablesAction;
 import com.consol.citrus.actions.TransformAction;
-import com.consol.citrus.camel.actions.CamelRouteActionBuilder;
 import com.consol.citrus.condition.ActionCondition;
 import com.consol.citrus.container.Assert;
 import com.consol.citrus.container.Async;
@@ -71,19 +69,21 @@ import com.consol.citrus.container.Timer;
 import com.consol.citrus.container.Wait;
 import com.consol.citrus.container.WaitActionConditionBuilder;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.docker.actions.DockerExecuteAction;
+import com.consol.citrus.dsl.builder.AssertSoapFaultBuilder;
+import com.consol.citrus.dsl.builder.CamelRouteActionBuilder;
+import com.consol.citrus.dsl.builder.DockerExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.HttpActionBuilder;
+import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
+import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SoapActionBuilder;
+import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.actions.HttpActionBuilder;
-import com.consol.citrus.jms.actions.PurgeJmsQueuesAction;
-import com.consol.citrus.kubernetes.actions.KubernetesExecuteAction;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
-import com.consol.citrus.selenium.actions.SeleniumActionBuilder;
 import com.consol.citrus.server.Server;
-import com.consol.citrus.ws.actions.AssertSoapFault;
-import com.consol.citrus.ws.actions.SoapActionBuilder;
-import com.consol.citrus.zookeeper.actions.ZooExecuteAction;
 import org.springframework.core.io.Resource;
 
 /**
@@ -357,16 +357,16 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public PurgeJmsQueuesAction.Builder purgeQueues() {
-        PurgeJmsQueuesAction.Builder builder = PurgeJmsQueuesAction.Builder.purgeQueues()
-                .withReferenceResolver(context.getReferenceResolver());
+    public PurgeJmsQueuesActionBuilder purgeQueues() {
+        PurgeJmsQueuesActionBuilder builder = new PurgeJmsQueuesActionBuilder();
+        builder.withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;
     }
 
     @Override
-    public PurgeMessageChannelAction.Builder purgeChannels() {
-        PurgeMessageChannelAction.Builder builder = PurgeMessageChannelAction.Builder.purgeChannels();
+    public PurgeMessageChannelActionBuilder purgeChannels() {
+        PurgeMessageChannelActionBuilder builder = new PurgeMessageChannelActionBuilder();
         builder.channelResolver(context.getReferenceResolver());
         action(builder);
         return builder;
@@ -566,15 +566,16 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public AssertSoapFault.Builder assertSoapFault() {
-        AssertSoapFault.Builder builder = new AssertSoapFault.Builder() {
+    public AssertSoapFaultBuilder assertSoapFault() {
+        AssertSoapFaultBuilder builder = new AssertSoapFaultBuilder() {
             @Override
-            public AssertSoapFault.Builder actions(TestActionBuilder<?>... actions) {
-                AssertSoapFault.Builder builder = super.actions(actions);
+            public AssertSoapFaultBuilder actions(TestActionBuilder<?>... actions) {
+                AssertSoapFaultBuilder builder = super.actions(actions);
                 DefaultTestDesigner.this.action(builder);
                 return builder;
             }
-        }.withReferenceResolver(context.getReferenceResolver());
+        };
+        builder.withReferenceResolver(context.getReferenceResolver());
         return container(builder);
     }
 
@@ -697,15 +698,15 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public DockerExecuteAction.Builder docker() {
-        DockerExecuteAction.Builder builder = DockerExecuteAction.Builder.docker();
+    public DockerExecuteActionBuilder docker() {
+        DockerExecuteActionBuilder builder = new DockerExecuteActionBuilder();
         action(builder);
         return builder;
     }
 
     @Override
-    public KubernetesExecuteAction.Builder kubernetes() {
-        KubernetesExecuteAction.Builder builder = KubernetesExecuteAction.Builder.kubernetes();
+    public KubernetesExecuteActionBuilder kubernetes() {
+        KubernetesExecuteActionBuilder builder = new KubernetesExecuteActionBuilder();
         action(builder);
         return builder;
     }
@@ -719,32 +720,32 @@ public class DefaultTestDesigner implements TestDesigner {
 
     @Override
     public HttpActionBuilder http() {
-        HttpActionBuilder builder = HttpActionBuilder.http()
-                .withReferenceResolver(context.getReferenceResolver());
+        HttpActionBuilder builder = new HttpActionBuilder();
+        builder.withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;
     }
 
     @Override
     public SoapActionBuilder soap() {
-        SoapActionBuilder builder = new SoapActionBuilder()
-                .withReferenceResolver(context.getReferenceResolver());
+        SoapActionBuilder builder = new SoapActionBuilder();
+        builder.withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;
     }
 
     @Override
     public CamelRouteActionBuilder camel() {
-        CamelRouteActionBuilder builder = CamelRouteActionBuilder.camel()
-                .withReferenceResolver(context.getReferenceResolver());
+        CamelRouteActionBuilder builder = new CamelRouteActionBuilder();
+        builder.withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;
     }
 
     @Override
-    public ZooExecuteAction.Builder zookeeper() {
-        ZooExecuteAction.Builder builder = ZooExecuteAction.Builder.zookeeper()
-                .withReferenceResolver(context.getReferenceResolver());
+    public ZooExecuteActionBuilder zookeeper() {
+        ZooExecuteActionBuilder builder = new ZooExecuteActionBuilder();
+        builder.withReferenceResolver(context.getReferenceResolver());
         action(builder);
         return builder;
     }
