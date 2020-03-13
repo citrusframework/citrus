@@ -57,7 +57,7 @@ public class DirectEndpointAdapterParser extends AbstractBeanDefinitionParser {
     /**
      * Factory bean for endpoint adapter.
      */
-    private static class DirectEndpointAdapterFactory implements FactoryBean<DirectEndpointAdapter>, BeanNameAware {
+    public static class DirectEndpointAdapterFactory implements FactoryBean<DirectEndpointAdapter>, BeanNameAware {
 
         @Autowired(required = false)
         private TestContextFactoryBean testContextFactory;

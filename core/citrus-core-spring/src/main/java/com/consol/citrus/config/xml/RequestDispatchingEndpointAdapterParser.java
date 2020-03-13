@@ -53,7 +53,7 @@ public class RequestDispatchingEndpointAdapterParser extends AbstractBeanDefinit
     /**
      * Factory bean for endpoint adapter.
      */
-    private static class RequestDispatchingEndpointAdapterFactory implements FactoryBean<RequestDispatchingEndpointAdapter>, BeanNameAware {
+    public static class RequestDispatchingEndpointAdapterFactory implements FactoryBean<RequestDispatchingEndpointAdapter>, BeanNameAware {
 
         @Autowired(required = false)
         private TestContextFactoryBean testContextFactory;

@@ -87,7 +87,7 @@ public class StaticResponseEndpointAdapterParser extends AbstractBeanDefinitionP
     /**
      * Factory bean for endpoint adapter.
      */
-    private static class StaticResponseEndpointAdapterFactory implements FactoryBean<StaticResponseEndpointAdapter>, BeanNameAware {
+    public static class StaticResponseEndpointAdapterFactory implements FactoryBean<StaticResponseEndpointAdapter>, BeanNameAware {
 
         @Autowired(required = false)
         private TestContextFactoryBean testContextFactory;

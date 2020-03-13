@@ -42,7 +42,7 @@ public class EmptyResponseEndpointAdapterParser extends AbstractBeanDefinitionPa
     /**
      * Factory bean for endpoint adapter.
      */
-    private static class EmptyResponseEndpointAdapterFactory implements FactoryBean<EmptyResponseEndpointAdapter>, BeanNameAware {
+    public static class EmptyResponseEndpointAdapterFactory implements FactoryBean<EmptyResponseEndpointAdapter>, BeanNameAware {
 
         @Autowired(required = false)
         private TestContextFactoryBean testContextFactory;

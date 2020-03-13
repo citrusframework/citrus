@@ -42,7 +42,7 @@ public class TimeoutProducingEndpointAdapterParser extends AbstractBeanDefinitio
     /**
      * Factory bean for endpoint adapter.
      */
-    private static class TimeoutProducingEndpointAdapterFactory implements FactoryBean<TimeoutProducingEndpointAdapter>, BeanNameAware {
+    public static class TimeoutProducingEndpointAdapterFactory implements FactoryBean<TimeoutProducingEndpointAdapter>, BeanNameAware {
 
         @Autowired(required = false)
         private TestContextFactoryBean testContextFactory;
