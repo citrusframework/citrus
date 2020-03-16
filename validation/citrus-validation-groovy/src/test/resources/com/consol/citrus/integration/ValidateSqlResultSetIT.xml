@@ -39,5 +39,11 @@
         </validate-script>
       </sql>
     </actions>
+    <finally>
+      <sql datasource="testDataSource">
+        <description>Cleanup test data for other tests</description>
+        <statement>DELETE FROM ORDERS</statement>
+      </sql>
+    </finally>
   </testcase>
 </spring:beans>
