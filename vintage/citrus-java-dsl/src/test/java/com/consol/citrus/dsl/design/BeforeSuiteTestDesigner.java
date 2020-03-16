@@ -25,16 +25,16 @@ import com.consol.citrus.context.TestContext;
  */
 public class BeforeSuiteTestDesigner extends TestDesignerBeforeSuiteSupport {
 
-    private CounterTestAction counterTestAction = new CounterTestAction();
+    private static final CounterTestAction COUNTER = new CounterTestAction();
 
     @Override
     public void beforeSuite(TestDesigner designer) {
         designer.echo("This action should be executed before suite");
-        designer.action(counterTestAction);
+        designer.action(COUNTER);
     }
 
     public int getExecutionCount() {
-        return counterTestAction.getCounter();
+        return COUNTER.getCounter();
     }
 
     private static class CounterTestAction extends AbstractTestAction {

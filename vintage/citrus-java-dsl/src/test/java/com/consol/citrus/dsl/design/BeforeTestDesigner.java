@@ -29,7 +29,7 @@ public class BeforeTestDesigner extends TestDesignerBeforeTestSupport {
 
     @Override
     public void beforeTest(TestDesigner designer) {
-        designer.echo("This action should be executed before suite");
+        designer.echo("This action should be executed before test");
         designer.action(counterTestAction);
     }
 
