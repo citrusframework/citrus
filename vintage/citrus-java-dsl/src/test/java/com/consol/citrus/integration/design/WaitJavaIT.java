@@ -20,16 +20,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
-import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.design.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestDesigner;
-import com.consol.citrus.http.config.annotation.HttpServerConfig;
+import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.integration.common.FileHelper;
 import com.consol.citrus.message.MessageType;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
@@ -37,9 +38,17 @@ import org.testng.annotations.Test;
 @Test
 public class WaitJavaIT extends TestNGCitrusTestDesigner {
 
-    @CitrusEndpoint(name = "waitHttpServer")
-    @HttpServerConfig
-    private HttpServer httpServer;
+    private final int serverPort = SocketUtils.findAvailableTcpPort();
+
+    private HttpServer httpServer = new HttpServerBuilder()
+            .port(serverPort)
+            .timeout(500L)
+            .build();
+
+    private HttpClient client = new HttpClientBuilder()
+            .requestUrl(String.format("http://localhost:%s/test", serverPort))
+            .requestMethod(HttpMethod.GET)
+            .build();
 
     @CitrusTest
     public void waitMessage() {
@@ -78,24 +87,21 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
 
     @CitrusTest
     public void waitHttpAsAction() {
-
         //GIVEN
-        String server = startHttpServerAndGetUrl();
+        start(httpServer);
 
-        parallel().actions(
-                sequential().actions(
-                        //WHEN
-                        waitFor()
-                                .execution()
-                                .action(send(server))
-                ),
-                sequential().actions(
-                        //THEN
-                        http().server(httpServer).receive().post(),
-                        http().server(httpServer).receive().post(),
-                        http().server(httpServer).respond(HttpStatus.OK)
-                )
-        );
+        //WHEN
+        waitFor()
+            .execution()
+            .action(send(client));
+
+        //THEN
+        receive(client);
+
+        //THEN
+        waitFor()
+            .execution()
+            .action(send(String.format("http://localhost:%s", serverPort)));
 
         doFinally().actions(stop(httpServer));
     }
@@ -104,23 +110,12 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
     public void waitHttp() {
 
         //GIVEN
-        String server = startHttpServerAndGetUrl();
+        start(httpServer);
 
-        parallel().actions(
-                sequential().actions(
-                        //WHEN
-                        waitFor()
-                                .http()
-                                .url(server)
-                ),
-                sequential().actions(
-                        //THEN
-                        http().server(httpServer).receive().head(),
-                        http().server(httpServer).respond(HttpStatus.NOT_FOUND),
-                        http().server(httpServer).receive().head(),
-                        http().server(httpServer).respond(HttpStatus.OK)
-                )
-        );
+        //WHEN
+        waitFor()
+                .http()
+                .url(String.format("http://localhost:%s", serverPort));
 
         doFinally().actions(stop(httpServer));
     }
@@ -162,11 +157,4 @@ public class WaitJavaIT extends TestNGCitrusTestDesigner {
         });
     }
 
-    private String startHttpServerAndGetUrl() {
-        final int serverPort = SocketUtils.findAvailableTcpPort();
-        String server = String.format("http://localhost:%s", serverPort);
-        httpServer.setPort(serverPort);
-        start(httpServer);
-        return server;
-    }
 }

@@ -41,7 +41,7 @@ public class PurgeMessageChannelActionBuilder extends AbstractTestActionBuilder<
 
     public PurgeMessageChannelActionBuilder channelNames(String... channelNames) {
         delegate.channelNames(channelNames);
-        return channelNames(Arrays.asList(channelNames));
+        return this;
     }
 
     public PurgeMessageChannelActionBuilder channel(String name) {

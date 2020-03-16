@@ -19,25 +19,34 @@ package com.consol.citrus.integration.runner;
 import java.io.File;
 import java.io.IOException;
 
-import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.runner.AbstractTestBehavior;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.http.config.annotation.HttpServerConfig;
+import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.integration.common.FileHelper;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpMethod;
 import org.springframework.util.SocketUtils;
 import org.testng.annotations.Test;
 
 @Test
 public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
 
-    @CitrusEndpoint(name = "waitHttpServer")
-    @HttpServerConfig
-    private HttpServer httpServer;
+    private final int serverPort = SocketUtils.findAvailableTcpPort();
+
+    private HttpServer httpServer = new HttpServerBuilder()
+            .port(serverPort)
+            .timeout(500L)
+            .build();
+
+    private HttpClient client = new HttpClientBuilder()
+            .requestUrl(String.format("http://localhost:%s/test", serverPort))
+            .requestMethod(HttpMethod.GET)
+            .build();
 
     @CitrusTest
     public void waitFile() throws IOException {
@@ -48,49 +57,34 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
 
     @CitrusTest
     public void waitHttpAsAction() {
-
         //GIVEN
-        String server = startHttpServerAndGetUrl();
+        start(httpServer);
 
-        parallel().actions(
-                sequential().actions(
-                        //WHEN
-                        waitFor()
-                                .execution()
-                                .action(send(http -> http.endpoint(server)))
-                ),
-                sequential().actions(
-                        //THEN
-                        http(http -> http.server(httpServer).receive().post()),
-                        http(http -> http.server(httpServer).receive().post()),
-                        http(http -> http.server(httpServer).respond(HttpStatus.OK))
-                )
-        );
+        //WHEN
+        waitFor()
+            .execution()
+            .action(send(action -> action.endpoint(client)));
+
+        //THEN
+        receive(action -> action.endpoint(client));
+
+        //THEN
+        waitFor()
+            .execution()
+            .action(send(http -> http.endpoint(String.format("http://localhost:%s/test", serverPort))));
 
         doFinally().actions(stop(httpServer));
     }
 
     @CitrusTest
     public void waitHttp() {
-
         //GIVEN
-        String server = startHttpServerAndGetUrl();
+        start(httpServer);
 
-        parallel().actions(
-                sequential().actions(
-                        //WHEN
-                        waitFor()
-                                .http()
-                                .url(server)
-                ),
-                sequential().actions(
-                        //THEN
-                        http(http -> http.server(httpServer).receive().head()),
-                        http(http -> http.server(httpServer).respond(HttpStatus.NOT_FOUND)),
-                        http(http -> http.server(httpServer).receive().head()),
-                        http(http -> http.server(httpServer).respond(HttpStatus.OK))
-                )
-        );
+        //THEN
+        waitFor()
+            .http()
+            .url(String.format("http://localhost:%s", serverPort));
 
         doFinally().actions(stop(httpServer));
     }
@@ -132,13 +126,5 @@ public class WaitTestRunnerIT extends TestNGCitrusTestRunner {
                         .path(file.toURI().toString());
             }
         });
-    }
-
-    private String startHttpServerAndGetUrl() {
-        final int serverPort = SocketUtils.findAvailableTcpPort();
-        String server = String.format("http://localhost:%s", serverPort);
-        httpServer.setPort(serverPort);
-        start(httpServer);
-        return server;
     }
 }
