@@ -88,4 +88,24 @@ public abstract class AbstractTestContainerBuilder<T extends TestActionContainer
     public List<TestActionBuilder<?>> getActions() {
         return actions;
     }
+
+    /**
+     * Static Java DSL container builder using generics.
+     * @param container
+     * @param <T>
+     * @param <B>
+     * @return
+     */
+    public static <T extends TestActionContainer, B extends TestActionContainerBuilder<T, B>> TestActionContainerBuilder<T, B> container(T container)  {
+        return new AbstractTestContainerBuilder<T, B>() {
+            @Override
+            public T build() {
+                if (container.getActions().size() > 0) {
+                    return container;
+                }
+
+                return build(container);
+            }
+        };
+    }
 }
