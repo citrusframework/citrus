@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.SimpleReferenceResolver;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.context.ApplicationContext;
@@ -34,6 +35,8 @@ import org.springframework.context.ApplicationContextAware;
 public class SpringBeanReferenceResolver implements ReferenceResolver, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
+
+    private SimpleReferenceResolver fallback = new SimpleReferenceResolver();
 
     /**
      * Default constructor.
@@ -64,6 +67,9 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         try {
             return applicationContext.getBean(name, type);
         } catch (NoSuchBeanDefinitionException e) {
+            if (fallback.isResolvable(name)) {
+                return fallback.resolve(name, type);
+            }
             throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e);
         }
     }
@@ -73,6 +79,9 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         try {
             return applicationContext.getBean(name);
         } catch (NoSuchBeanDefinitionException e) {
+            if (fallback.isResolvable(name)) {
+                return fallback.resolve(name);
+            }
             throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name), e);
         }
     }
@@ -88,13 +97,12 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
 
     @Override
     public boolean isResolvable(String name) {
-        return applicationContext.containsBean(name);
+        return applicationContext.containsBean(name) || fallback.isResolvable(name);
     }
 
     @Override
     public void bind(String name, Object value) {
-        throw new UnsupportedOperationException("Spring bean reference resolver does not support manual reference bindings - " +
-                "please add proper bean reference to the Spring application context instead");
+        fallback.bind(name, value);
     }
 
     @Override
