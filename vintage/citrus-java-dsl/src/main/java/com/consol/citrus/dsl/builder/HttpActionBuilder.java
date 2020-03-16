@@ -12,7 +12,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 /**
  * @author Christoph Deppisch
  */
-public class HttpActionBuilder implements TestActionBuilder<TestAction>, ReferenceResolverAware {
+public class HttpActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private final com.consol.citrus.http.actions.HttpActionBuilder delegate = new com.consol.citrus.http.actions.HttpActionBuilder();
 
@@ -48,5 +48,10 @@ public class HttpActionBuilder implements TestActionBuilder<TestAction>, Referen
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         delegate.setReferenceResolver(referenceResolver);
+    }
+
+    @Override
+    public TestActionBuilder<?> getDelegate() {
+        return delegate;
     }
 }

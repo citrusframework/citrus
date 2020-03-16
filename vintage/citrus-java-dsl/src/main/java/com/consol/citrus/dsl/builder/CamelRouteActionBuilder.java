@@ -18,7 +18,7 @@ import org.apache.camel.builder.RouteBuilder;
 /**
  * @author Christoph Deppisch
  */
-public class CamelRouteActionBuilder implements TestActionBuilder<AbstractCamelRouteAction>, ReferenceResolverAware {
+public class CamelRouteActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<AbstractCamelRouteAction>, ReferenceResolverAware {
 
     private final com.consol.citrus.camel.actions.CamelRouteActionBuilder delegate = new com.consol.citrus.camel.actions.CamelRouteActionBuilder();
 
@@ -79,5 +79,10 @@ public class CamelRouteActionBuilder implements TestActionBuilder<AbstractCamelR
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         delegate.setReferenceResolver(referenceResolver);
+    }
+
+    @Override
+    public TestActionBuilder<?> getDelegate() {
+        return delegate;
     }
 }

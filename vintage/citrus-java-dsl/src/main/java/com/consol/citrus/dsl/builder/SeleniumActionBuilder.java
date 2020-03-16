@@ -32,7 +32,7 @@ import org.springframework.core.io.Resource;
 /**
  * @author Christoph Deppisch
  */
-public class SeleniumActionBuilder implements TestActionBuilder<SeleniumAction> {
+public class SeleniumActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<SeleniumAction> {
 
     private final com.consol.citrus.selenium.actions.SeleniumActionBuilder delegate = new com.consol.citrus.selenium.actions.SeleniumActionBuilder();
 
@@ -152,5 +152,10 @@ public class SeleniumActionBuilder implements TestActionBuilder<SeleniumAction> 
     @Override
     public SeleniumAction build() {
         return delegate.build();
+    }
+
+    @Override
+    public TestActionBuilder<?> getDelegate() {
+        return delegate;
     }
 }

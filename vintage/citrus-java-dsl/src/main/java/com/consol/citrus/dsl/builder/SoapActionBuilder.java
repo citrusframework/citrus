@@ -12,7 +12,7 @@ import com.consol.citrus.ws.server.WebServiceServer;
 /**
  * @author Christoph Deppisch
  */
-public class SoapActionBuilder implements TestActionBuilder<TestAction>, ReferenceResolverAware {
+public class SoapActionBuilder implements TestActionBuilder.DelegatingTestActionBuilder<TestAction>, ReferenceResolverAware {
 
     private final com.consol.citrus.ws.actions.SoapActionBuilder delegate = new com.consol.citrus.ws.actions.SoapActionBuilder();
 
@@ -45,5 +45,10 @@ public class SoapActionBuilder implements TestActionBuilder<TestAction>, Referen
     @Override
     public void setReferenceResolver(ReferenceResolver referenceResolver) {
         delegate.setReferenceResolver(referenceResolver);
+    }
+
+    @Override
+    public TestActionBuilder<?> getDelegate() {
+        return delegate;
     }
 }
