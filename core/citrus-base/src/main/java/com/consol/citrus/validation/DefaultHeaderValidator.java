@@ -87,7 +87,7 @@ public class DefaultHeaderValidator implements HeaderValidator {
 
     @Override
     public boolean supports(String headerName, Class<?> type) {
-        return type.isInstance(String.class) || type.isPrimitive();
+        return type == null || type.isInstance(String.class) || type.isPrimitive();
     }
 
     /**

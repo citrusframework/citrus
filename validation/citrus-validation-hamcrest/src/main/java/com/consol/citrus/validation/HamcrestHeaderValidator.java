@@ -58,6 +58,6 @@ public class HamcrestHeaderValidator implements HeaderValidator {
 
     @Override
     public boolean supports(String headerName, Class<?> type) {
-        return Matcher.class.isAssignableFrom(type);
+        return type != null && Matcher.class.isAssignableFrom(type);
     }
 }
