@@ -17,6 +17,7 @@
 package com.consol.citrus.endpoint.direct;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -32,30 +33,34 @@ public class DirectEndpointComponentTest {
 
     @BeforeMethod
     public void setupMocks() {
-        context = new TestContext();
+        context = TestContextFactory.newInstance().getObject();
     }
 
     @Test
     public void testCreateDirectEndpoint() throws Exception {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
+        Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
         Endpoint endpoint = component.createEndpoint("direct:queueName", context);
 
         Assert.assertEquals(endpoint.getClass(), DirectEndpoint.class);
 
         Assert.assertEquals(((DirectEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
         Assert.assertEquals(((DirectEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
     }
 
     @Test
     public void testCreateSyncDirectEndpoint() throws Exception {
         DirectEndpointComponent component = new DirectEndpointComponent();
 
+        Assert.assertFalse(context.getReferenceResolver().isResolvable("queueName"));
         Endpoint endpoint = component.createEndpoint("direct:sync:queueName", context);
 
         Assert.assertEquals(endpoint.getClass(), DirectSyncEndpoint.class);
 
         Assert.assertEquals(((DirectSyncEndpoint)endpoint).getEndpointConfiguration().getQueueName(), "queueName");
+        Assert.assertTrue(context.getReferenceResolver().isResolvable("queueName"));
     }
 
     @Test
