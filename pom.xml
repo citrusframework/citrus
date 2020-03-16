@@ -58,6 +58,7 @@
     <module>connectors</module>
     <module>tools</module>
     <module>catalog</module>
+    <module>vintage</module>
   </modules>
 
   <developers>
@@ -1534,13 +1535,6 @@
           </plugin>
         </plugins>
       </build>
-    </profile>
-
-    <profile>
-      <id>vintage</id>
-      <modules>
-        <module>vintage</module>
-      </modules>
     </profile>
   </profiles>
 </project>
