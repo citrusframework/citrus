@@ -63,6 +63,8 @@ public class CitrusArchiveProcessorTest {
     public void prepareConfiguration() throws IllegalAccessException {
         configuration = CitrusConfiguration.from(new Properties());
 
+        configuration.getExcludedDependencies().add("org.apache.logging.log4j:log4j-api:jar:2.5");
+
         reset(configurationInstance);
         when(configurationInstance.get()).thenReturn(configuration);
 

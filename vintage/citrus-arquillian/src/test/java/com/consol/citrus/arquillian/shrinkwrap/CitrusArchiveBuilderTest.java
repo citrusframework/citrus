@@ -44,14 +44,14 @@ public class CitrusArchiveBuilderTest {
                 .latestVersion()
                 .transitivity(false)
                 .all()
-                .addDependency(new MavenDependencyImpl(
+                .excludeDependency(new MavenDependencyImpl(
                         MavenCoordinates.createCoordinate("org.apache.logging.log4j:log4j-api:jar:2.5"),
                         ScopeType.PROVIDED,
-                        true))
+                        false))
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 23);
+        Assert.assertEquals(artifactResources.length, 22);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");

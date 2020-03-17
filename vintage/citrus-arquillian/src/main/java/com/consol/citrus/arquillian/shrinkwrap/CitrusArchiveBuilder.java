@@ -27,6 +27,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
 import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependency;
+import org.jboss.shrinkwrap.resolver.api.maven.strategy.RejectDependenciesStrategy;
 
 /**
  * Resolves Citrus artifacts with transitive dependencies to file set which can be used as library resource in
@@ -51,6 +52,9 @@ public final class CitrusArchiveBuilder {
 
     /** Additional dependencies to load with this builder */
     private List<MavenDependency> additionalDependencies = new ArrayList<>();
+
+    /** Additional dependencies to explicitly exclude with this builder */
+    private List<MavenDependency> excludedDependencies = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -368,12 +372,36 @@ public final class CitrusArchiveBuilder {
     }
 
     /**
+     * Add additional dependency to explicitly exclude.
+     * @param dependency
+     * @return
+     */
+    public CitrusArchiveBuilder excludeDependency(MavenDependency dependency) {
+        this.excludedDependencies.add(dependency);
+        return this;
+    }
+
+    /**
+     * Add additional dependencies to explicitly exclude.
+     * @param dependencies
+     * @return
+     */
+    public CitrusArchiveBuilder excludeDependency(MavenDependency... dependencies) {
+        Stream.of(dependencies).forEach(this::excludeDependency);
+        return this;
+    }
+
+    /**
      * Based on transitivity setting apply transitivity to Maven strategy.
      * @param maven
      * @return
      */
     private FormatStage applyTransitivity(MavenStrategyStage maven) {
-        if (transitivity) {
+        if (!excludedDependencies.isEmpty()) {
+            return maven.using(new RejectDependenciesStrategy(excludedDependencies.stream()
+                                                                    .map(MavenDependency::toCanonicalForm)
+                                                                    .toArray(String[]::new)));
+        } else if (transitivity) {
             return maven.withTransitivity();
         } else {
             return maven.withoutTransitivity();

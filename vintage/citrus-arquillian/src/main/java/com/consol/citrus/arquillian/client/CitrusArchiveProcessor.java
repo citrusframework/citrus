@@ -25,6 +25,8 @@ import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
+import org.jboss.shrinkwrap.resolver.impl.maven.coordinate.MavenDependencyImpl;
 
 /**
  * Archive processor automatically adds Citrus libraries to deployable archive. According to extension configuration
@@ -58,6 +60,13 @@ public class CitrusArchiveProcessor implements ApplicationArchiveProcessor {
             archiveBuilder = CitrusArchiveBuilder.version(version);
         } else {
             archiveBuilder = CitrusArchiveBuilder.latestVersion();
+        }
+
+        if (!getConfiguration().getExcludedDependencies().isEmpty()) {
+            getConfiguration().getExcludedDependencies()
+                    .stream()
+                    .map(excluded -> new MavenDependencyImpl(MavenCoordinates.createCoordinate(excluded), null, false))
+                    .forEach(archiveBuilder::excludeDependency);
         }
 
         if (archive instanceof EnterpriseArchive) {

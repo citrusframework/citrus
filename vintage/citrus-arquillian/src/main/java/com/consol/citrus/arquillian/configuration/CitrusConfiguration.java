@@ -16,6 +16,16 @@
 
 package com.consol.citrus.arquillian.configuration;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -23,9 +33,7 @@ import org.jboss.arquillian.config.descriptor.api.ArquillianDescriptor;
 import org.jboss.arquillian.config.descriptor.api.ExtensionDef;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.*;
-import java.util.Properties;
+import org.springframework.util.StringUtils;
 
 /**
  * Citrus extension configuration. User can customize properties either by setting extension properties in Arquillian descriptor or
@@ -50,6 +58,8 @@ public final class CitrusConfiguration implements Serializable {
 
     /** Configuration class loaded when creating Spring application context */
     private Class<? extends CitrusSpringConfig> configurationClass = CitrusSpringConfig.class;
+
+    private List<String> excludedDependencies = new ArrayList<>();
 
     /** Property set this configuration was created from */
     private final Properties extensionProperties;
@@ -77,11 +87,17 @@ public final class CitrusConfiguration implements Serializable {
         configuration.setCitrusVersion(getProperty(extensionProperties, "citrusVersion"));
 
         if (extensionProperties.containsKey("autoPackage")) {
-            configuration.setAutoPackage(Boolean.valueOf(getProperty(extensionProperties, "autoPackage")));
+            configuration.setAutoPackage(Boolean.parseBoolean(getProperty(extensionProperties, "autoPackage")));
         }
 
         if (extensionProperties.containsKey("suiteName")) {
             configuration.setSuiteName(getProperty(extensionProperties, "suiteName"));
+        }
+
+        if (extensionProperties.containsKey("excludedDependencies")) {
+            configuration.setExcludedDependencies(Stream.of(StringUtils.commaDelimitedListToStringArray(
+                    Optional.ofNullable(getProperty(extensionProperties, "excludedDependencies")).orElse("")))
+                    .collect(Collectors.toList()));
         }
 
         if (extensionProperties.containsKey("configurationClass")) {
@@ -212,5 +228,21 @@ public final class CitrusConfiguration implements Serializable {
      */
     public void setConfigurationClass(Class<? extends CitrusSpringConfig> configurationClass) {
         this.configurationClass = configurationClass;
+    }
+
+    /**
+     * Obtains the excludedDependencies.
+     * @return
+     */
+    public List<String> getExcludedDependencies() {
+        return excludedDependencies;
+    }
+
+    /**
+     * Specifies the excludedDependencies.
+     * @param excludedDependencies
+     */
+    public void setExcludedDependencies(List<String> excludedDependencies) {
+        this.excludedDependencies = excludedDependencies;
     }
 }
