@@ -21,6 +21,9 @@ import java.lang.reflect.Field;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusVersion;
+import org.jboss.shrinkwrap.resolver.api.maven.ScopeType;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenCoordinates;
+import org.jboss.shrinkwrap.resolver.impl.maven.coordinate.MavenDependencyImpl;
 import org.springframework.util.ReflectionUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -41,10 +44,14 @@ public class CitrusArchiveBuilderTest {
                 .latestVersion()
                 .transitivity(false)
                 .all()
+                .addDependency(new MavenDependencyImpl(
+                        MavenCoordinates.createCoordinate("org.apache.logging.log4j:log4j-api:jar:2.5"),
+                        ScopeType.PROVIDED,
+                        true))
                 .build();
 
         Assert.assertNotNull(artifactResources);
-        Assert.assertEquals(artifactResources.length, 22);
+        Assert.assertEquals(artifactResources.length, 23);
 
         verifyArtifact(artifactResources, "citrus-core-.*jar");
         verifyArtifact(artifactResources, "citrus-jms-.*jar");

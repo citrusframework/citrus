@@ -19,11 +19,14 @@ package com.consol.citrus.arquillian.shrinkwrap;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import com.consol.citrus.CitrusVersion;
 import org.jboss.shrinkwrap.resolver.api.FormatStage;
+import org.jboss.shrinkwrap.resolver.api.maven.ConfigurableMavenResolverSystem;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenStrategyStage;
+import org.jboss.shrinkwrap.resolver.api.maven.coordinate.MavenDependency;
 
 /**
  * Resolves Citrus artifacts with transitive dependencies to file set which can be used as library resource in
@@ -45,6 +48,9 @@ public final class CitrusArchiveBuilder {
 
     /** List of Citrus artifact names to resolve */
     private List<String> artifactCoordinates = new ArrayList<>();
+
+    /** Additional dependencies to load with this builder */
+    private List<MavenDependency> additionalDependencies = new ArrayList<>();
 
     /**
      * Default constructor.
@@ -81,10 +87,14 @@ public final class CitrusArchiveBuilder {
      * @return
      */
     public File[] build() {
-        MavenStrategyStage maven = Maven.configureResolver()
-                .workOffline(offline)
-                .resolve(artifactCoordinates);
+        ConfigurableMavenResolverSystem resolver = Maven.configureResolver()
+                .workOffline(offline);
 
+        if (!additionalDependencies.isEmpty()) {
+            resolver.addDependencies(additionalDependencies.toArray(new MavenDependency[0]));
+        }
+
+        MavenStrategyStage maven = resolver.resolve(artifactCoordinates);
         return applyTransitivity(maven).asFile();
     }
 
@@ -334,6 +344,26 @@ public final class CitrusArchiveBuilder {
      */
     public CitrusArchiveBuilder workOffline(boolean offlineMode) {
         this.offline = offlineMode;
+        return this;
+    }
+
+    /**
+     * Add additional dependency to load.
+     * @param dependency
+     * @return
+     */
+    public CitrusArchiveBuilder addDependency(MavenDependency dependency) {
+        this.additionalDependencies.add(dependency);
+        return this;
+    }
+
+    /**
+     * Add additional dependencies to load.
+     * @param dependencies
+     * @return
+     */
+    public CitrusArchiveBuilder addDependency(MavenDependency... dependencies) {
+        Stream.of(dependencies).forEach(this::addDependency);
         return this;
     }
 
