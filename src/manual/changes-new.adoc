@@ -1,18 +1,560 @@
 [[changes-new]]
-= What's new in Citrus 2.9.x?
+= What's new in Citrus 3.0.0?
 
-[[changes-2-9-0]]
-== Since Citrus 2.9.0
-Beside all bug fixes included in 2.7.10, version 2.9.0 of Citrus contains a lot of new features for the jdbc integration
-as well as deprecations concerning the XML DSL and the Java TestDesigner and improvements to the logging functionality
-and documentation.
+[[changes-3-0-0]]
+== Since Citrus 3.0.0
+YAY, we have started to work on Citrus 3!
 
-[[changes-2-9-0-enhancements]]
-== Enhancements
+In the following sections you find our strategy, ideas and all major changes that are part of Citrus 3.0.0!
 
-=== Validate received messages by map
-https://github.com/citrusframework/citrus/issues/571
+[[changes-3-0-0-objectives]]
+== Objectives
 
-It is now possible to validate received messages based on a map containing xpath or json path expressions as keys with
-their corresponding values for validation. For an example of this enhancement, please have a look at the
-link:#validate-with-jsonpath[JSON path validation] or link:#xpath-validation[XPath validation] section.
+Citrus 3.0.0 is a major release and we want to take that as an opportunity to follow up with some improvements and refactoring that we are eager to do for quite some time. That being said we try to comply with your need to migrate older version to that new major release. So we take extra care to provide some migration guide and keep the breaking changes to a required level.
+
+Here are the main objectives we have in Citrus 3.0.0
+
+- link:#changes-3-0-0-modularize[Modularize Citrus]
+- link:#changes-3-0-0-java-dsl[Java DSL refactoring] (Designer vs. Runner)
+- link:#changes-3-0-0-optional-spring[Make Spring optional]
+- link:#changes-3-0-0-integration-tests[Refactor internal integration tests]
+- link:#changes-3-0-0-dependencies[Update dependencies] to new major versions (Cucumber, Apache Camel, Spring Framework, ...)
+
+[[changes-3-0-0-modularize]]
+== Modularize Citrus
+
+The `citrus-core` module is the heart of the framework and contains all capabilities that Citrus has to offer. So if you include `citrus-core` as a dependency in your project you will load a lot of artifacts as transitive dependencies (e.g. from Maven central). Loading that huge amount of libraries is not a good thing especially when you do not need all features provided by Citrus (e.g. Groovy script support, Xhtml, XML validation and so on).
+
+With `citrus-core` it is all or nothing. So we want to modularize the core module into several smaller pieces. The user can then choose which of the Citrus modules to include into the project or even overwrite or substitute pieces with own implementations as one likes.
+
+[[changes-3-0-0-model-modules]]
+=== What happened to citrus-*-model modules?
+
+Each module in former Citrus versions has had a little brother that generated model classes from XSD schema files. The XSD schemas are used for custom Spring bean definition parsing and were located in the `citrus-*-model` modules (e.g. citrus-config.xsd). The initial idea behind that separate model module was to separate model classes from implementations in order to use that model in a user interface called `citrus-admin`. With Citrus 3.x we included the XSD schemas into the implementation modules so we do not have to maintain all the `citrus-*-model` modules.
+
+[[changes-3-0-0-module-categories]]
+=== Module categories and structure
+
+In Citrus 3.0.0 we end up with following module categories:
+
+- [Core modules](https://github.com/citrusframework/citrus/tree/3.x/core)
+
+API and base implementations of core Citrus features. There will be a separate `citrus-base` and `citrus-core-spring` module where latter encapsulates the Spring Framework support in Citrus.
+
+|===
+|Module | Description
+
+|citrus-api         | Interfaces, enums, constants
+|citrus-base        | Default implementation of `citrus-api`
+|citrus-core-spring | Adds Spring Framework support to `citrus-base` (Bean definition parsers, Application context configuration, Autowiring in factory beans
+|===
+
+- [Runtime modules](https://github.com/citrusframework/citrus/tree/3.x/runtime)
+
+Test execution modules such as JUnit, TestNG and Cucumber representing different ways to run Citrus tests.
+
+|===
+|Module | Description
+
+|citrus-cucumber   | Run Citrus tests as Cucumber BDD feature files
+|citrus-testng     | Run tests via TestNG unit test framework
+|citrus-junit      | Run tests via JUnit4 unit test framework
+|citrus-junit5     | Run tests via JUnit5 unit test framework
+|citrus-main       | Run tests via Java main CLI
+|citrus-arquillian | Run Citrus tests with Arquillian framework
+|===
+
+- [Endpoint modules](https://github.com/citrusframework/citrus/tree/3.x/endpoints)
+
+Endpoints connect Citrus to a message transport like JMS, Http REST, FTP, Mail and many more. Each endpoint may provide client and/or server side implementation to exchange messages via a messaging transport.
+
+|===
+|Module | Description
+
+|citrus-camel              | Interact with Apache Camel context, routes and control bus
+|citrus-ftp                | Connect to and simulate FTP/SFTP servers
+|citrus-http               | Http REST support
+|citrus-jdbc               | Simulate JDBC drivers, connections and transactions
+|citrus-jms                | Publish/consume messages on a JMS message broker
+|citrus-kafka              | Exchange data via Kafka messaging
+|citrus-jmx                | Call MBean operations and simulate MBeans
+|citrus-mail               | Client and server side SMTP mail support
+|citrus-rmi                | Call RMI via JNDI registry lookup and simulate RMI services
+|citrus-ssh                | Connect to servers via SSH and simulate SSH servers
+|citrus-vertx              | Exchange messages on the Vert.x event bus
+|citrus-websocket          | Websocket support
+|citrus-ws                 | SOAP WebServices support including SOAP envelope handling, WSDL, WS-Security, ...
+|citrus-zookeeper          | Connect with Zookeeper servers
+|citrus-spring-integration | Exchange messages on Spring Integration message channels
+|===
+
+- [Validation modules](https://github.com/citrusframework/citrus/tree/3.x/validation)
+
+When Citrus receives message content the test case is eager to verify the message content. Validation modules implement message validators and mechanisms to validate different data formats such as Json, XML, Plaintext, Binary and so on. Some validation modules also add support for verification tools such as Groovy script validation, Hamcrest and AssertJ.
+
+|===
+|Module | Description
+
+|citrus-validation-xml      | XML, Xpath and Xhtml message validation
+|citrus-validation-json     | Json and JsonPath message validation
+|citrus-validation-text     | Plain text message validation
+|citrus-validation-binary   | Validate binary message content using input streams or `base64` encoding
+|citrus-validation-groovy   | Adds Groovy script validation for XML, Json, SQL result set
+|citrus-validation-hamcrest | Hamcrest matcher support like `assertThat(oneOf(is(foo), is(foobar)))`
+|===
+
+- [Connector modules](https://github.com/citrusframework/citrus/tree/3.x/connectors)
+
+Connectors are similar to endpoints connecting Citrus to a foreign technology or framework though rather than implementing a message transport like endpoint usually do. Connectors typically provide a client side only implementation that enable Citrus to interact with a service or framework (e.g. Docker deamon, Selenium web driver).
+
+|===
+|Module | Description
+
+|citrus-docker     | Connect with Docker deamon to manage images and containers
+|citrus-selenium   | Connect with web driver to run web-based UI tests
+|citrus-kubernetes | Connect to Kubernetes cluster managing PODs services and other resources
+|===
+
+- [Tools](https://github.com/citrusframework/citrus/tree/3.x/tools)
+
+Tooling is important and the modules in this category provide little helpers and plugins for different use cases where the usage of Citrus needs to be simplified (e.g. Maven plugins, test generators, etc.)
+
+|===
+|Module | Description
+
+|citrus-restdocs       | Auto generate request/response documentation for Http REST and SOAP communication
+|citrus-maven-plugin   | Maven plugins to create tests
+|citrus-test-generator | Create and auto generate test cases (e.g. from Swagger OpenAPI specifications)
+|===
+
+- [Catalog modules](https://github.com/citrusframework/citrus/tree/3.x/catalog)
+
+A catalog in Citrus combines several other modules into a set of modules that usually get used together. The `citrus-core` module for instance combines all available validation modules, runtimes and the Citrus Spring support into a single artifact. So the user just needs to add `citrus-core` to the project and can use everything Citrus has to offer.
+
+|===
+|Module | Description
+
+|citrus-bom              | Bill of material holding all modules for imports
+|citrus-core             |Default Citrus capabilities (validation, runtime, Spring support) combined into one single module (exactly the same what you have had with previous versions)
+|citrus-endpoint-catalog | Combine all endpoints to a single source for endpoint builders
+|===
+
+- [Vintage modules](https://github.com/citrusframework/citrus/tree/3.x/vintage)
+
+We are about to take a major step in Citrus and this implies some backward incompatibilities that _"vintage"_ modules try to solve for users that still need to stick with an older version of Citrus for some reason. With these _"vintage"_ modules you can still run older test cases prior to 3.x with the new 3.x code base.
+
+|===
+|Module | Description
+
+|citrus-java-dsl    | Old Java DSL implementation (designer vs. runner) to be used for 2.x Java tests
+|===
+
+- [Utility modules](https://github.com/citrusframework/citrus/tree/3.x/utils)
+
+Module in the utility category provide tooling for internal usage only. For instance this is a shared test library that is used in unit testing by several other modules. The modules are only used when building the Citrus modules. Utility modules usually are not included in a release so they won't be pushed to Maven central.
+
+|===
+|Module | Description
+
+|citrus-test-support    | Internal helper library added as test scoped dependency for unit testing in other modules. Holds shared unit testing helpers.
+|===
+
+[[changes-3-0-0-module-structure]]
+=== How to use the new module structure
+
+Users that do not want to change much in their project regarding the dependency setup just continue to add `citrus-core` dependency.
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-core</artifactId>
+  <version>${project.version}</version>
+</dependency>
+----
+
+This will get you the same capabilities as in 2.x with all validation modules, runtime and Spring support enabled. The `citrus-core` is a catalog module combining several other modules that get automatically added to your project.
+
+The downside of this approach is that you get a lot of features and transitive dependencies that you might not need in your project. Fortunately you can exclude some features from `citrus-core` with the new module structure in 3.x.
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-core</artifactId>
+  <version>${project.version}</version>
+  <exclusions>
+    <exclusion>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-groovy</artifactId>
+    </exclusion>
+    <exclusion>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-testng</artifactId>
+    </exclusion>
+  </exclusions>
+</dependency>
+----
+
+The example above excludes the Groovy validation capabilities and the TestNG runtime from the project. The features will not be added to your project and less artifacts get downloaded.
+
+Of course there is a lot more to exclude and you might end up having a more complicated configuration for all those exclusions. For people trying to operate with just what they need in their project the pull approach might be the way to go. Here you add just `citrus-base` as dependency.
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-base</artifactId>
+  <version>${project.version}</version>
+</dependency>
+----
+
+If you want to use Spring Framework support you may also add:
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-core-spring</artifactId>
+  <version>${project.version}</version>
+</dependency>
+----
+
+As you write and execute tests in your project you might then run into errors because you are using a Citrus feature that has not yet been added to your project. Something like:
+
+[source]
+----
+FAILURE: Caused by: NoSuchValidationMatcherException: Can not find validation matcher "assertThat" in library citrusValidationMatcherLibrary ()
+	at com/consol/citrus/jms/integration/JmsTopicDurableSubscriberIT(iterate:26-48)
+----
+
+With that error given you need to add the Hamcrest validation matcher feature to the project:
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-validation-hamcrest</artifactId>
+  <version>${project.version}</version>
+</dependency>
+----
+
+Cool thing about it is that in case you prefer to use AssertJ matcher implementation instead you can add this dependency (we still need to add AssertJ support in Citrus so we would love a contribution doing that!).
+
+[[changes-3-0-0-java-dsl]]
+== Java DSL refactoring
+
+Citrus provides a Java DSL to write integration tests with a fluent API. The API makes use of fluent builder pattern to specify test actions. All test action builder were combined in a single `citrus-java-dsl` module. For better maintainability the test action builders have been moved into the individual modules where the test action implementation is located. In fact the builder are not inner classes of the respective test action.
+
+In former releases users had to choose from two different approaches to write tests with this fluent API: Test Designer and Test Runner. We have a separate chapters in user guide describing the two different approaches for [designer](https://citrusframework.org/citrus/reference/2.8.0/html/index.html#java-dsl-test-designer) and [runner](https://citrusframework.org/citrus/reference/2.8.0/html/index.html#java-dsl-test-runner).
+
+As many things in life both approaches have some advantages and of course downsides to offer. Citrus 3.x will only have one way to write Java test cases using one single fluent API. We try to combine both approaches designer and runner into a single approach that hopefully combines only the advantages and minimizes downsides.
+
+[[changes-3-0-0-vintage-designer]]
+=== Test Designer approach
+
+The _"old"_ designer approach has a nice fluent API that people tend to understand intuitively. Yet the designer separates test design time and runtime which leads to unexpected behavior when someone needs to mix custom code with Java DSL execution. Also debugging is not really an option as the whole test gets built first and then executed at the very end. Setting a break point at design time of the test does not really help.
+
+[[changes-3-0-0-vintage-runner]]
+=== Test Runner approach
+
+The _"old"_ test runner avoids the separation of design time and runtime and executes each test action immediately. This enables better debugging options and behaves like you would expect when writing custom Java code in your test. On the downside the test runner fluent API makes use of lots of lambda expressions which is not a problem in general but still many people struggle to understand the concept and the boundaries of lambdas in Java.
+
+[[changes-3-0-0-test-runner]]
+=== The TestCaseRunner/TestActionRunner solution
+
+In Citrus 3.x we end put in a simplified Java DSL that uses the look and feel of the former designer API but executes each step immediately to keep debugging options and the capability to add custom code between steps.
+
+The separation between designer and runner has been removed completely. So there is only one single source of truth the `TestCaseRunner` which also implements `TestActionRunner`. This simplifies the implementation in other modules (Cucumber, TestNG, JUnit) a lot.
+
+This is how a new Java DSL test looks like:
+
+[source,java]
+----
+public class HelloServiceIT extends TestNGCitrusSupport {
+
+    @Autowired
+    private HttpClient httpClient;
+
+    @Autowired
+    private HttpServer httpServer;
+
+    @Test
+    @CitrusTest
+    public void test() {
+        given(http().client(httpClient)
+                .send()
+                .get("/hello")
+                .fork(true));
+
+        when(http().server(httpServer)
+                .receive()
+                .get("/hello"));
+
+        then(http().server(httpServer)
+                .send()
+                .response(HttpStatus.OK)
+                .payload("Hello from Citrus!"));
+
+        then(http().client(httpClient)
+                .receive()
+                .response(HttpStatus.OK)
+                .payload("Hello from Citrus!"));
+
+        then(doFinally().actions(
+                stop(httpServer)
+        ));
+    }
+}
+----
+
+The test extends `TestNGCitrusSupport`. This gives you the annotation support for `@CitrusTest` so the test is added to the Citrus test reporting. The base class also gives you the test action execution methods `given()`, `when()`, `then()` and `and()`. This relates to the BDD Gherkin language and is widely known to a lot of people out there. If you do not want to use this BDD approach in your test you can also use the basic `run()` method instead.
+
+[source,java]
+----
+run(http().client(httpClient)
+      .send()
+      .get("/hello")
+      .fork(true));
+----
+
+`TestNGCitrusSupport` now is the single base class for all tests that use TestNG as base framework to run tests. This includes XML and Java DSL tests. Former Citrus versions used several different base classes which confused users.
+
+Same approach applies to `JUnit4CitrusSupport` for using JUnit 4. The JUnit 5 support provides a `CitrusSupport` extension.
+
+[[changes-3-0-0-action-builder]]
+=== TestActionBuilder
+
+The Java DSL in Citrus consists of many actions that a user can choose from. In former Citrus versions all action methods were combined into a single class named `TestDesigner` or `TestRunner`. All action methods followed the fluent Java builder pattern style. The implementation of these builders have been moved from `citrus-java-dsl` to its individual modules.
+
+Each TestAction implementation now provides also a fluent Java builder that can be used in the Java DSL. Also the action builder provides a static entry method for users to enter a builder pattern style configuration using that builder.
+
+[source,java]
+----
+public class EchoAction extends AbstractTestAction {
+
+    /** Log message */
+    private final String message;
+
+    /** Logger */
+    private static Logger log = LoggerFactory.getLogger(EchoAction.class);
+
+    /**
+     * Default constructor using the builder.
+     * @param builder
+     */
+    private EchoAction(EchoAction.Builder builder) {
+        super("echo", builder);
+
+        this.message = builder.message;
+    }
+
+    @Override
+    public void doExecute(TestContext context) {
+        if (message == null) {
+            log.info("Citrus test " + new Date(System.currentTimeMillis()));
+        } else {
+            log.info(context.replaceDynamicContentInString(message));
+
+        }
+    }
+
+    /**
+     * Gets the message.
+     * @return the message
+     */
+    public String getMessage() {
+        return message;
+    }
+
+    /**
+     * Action builder.
+     */
+    public static final class Builder extends AbstractTestActionBuilder<EchoAction, Builder> {
+
+        private String message;
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
+         * @param message
+         * @return
+         */
+        public static Builder echo(String message) {
+            Builder builder = new Builder();
+            builder.message(message);
+            return builder;
+        }
+
+        public Builder message(String message) {
+            this.message = message;
+            return this;
+        }
+
+        @Override
+        public EchoAction build() {
+            return new EchoAction(this);
+        }
+    }
+}
+----
+
+In this refactoring all test actions are now immutable and can only instantiate via the builder.
+
+[[changes-3-0-0-factory-beans]]
+=== Spring factory beans
+
+The new test action fluent Java builder design requires us to introduce Spring factory beans that add `Autowiring` and connect the action builder to a bean definition parser. The factory beans live directly in the respective bean definition parser and take care on injecting dependencies to the action builder.
+
+[source,java]
+----
+public class EchoActionParser implements BeanDefinitionParser {
+
+    @Override
+    public BeanDefinition parse(Element element, ParserContext parserContext) {
+        BeanDefinitionBuilder beanDefinition = BeanDefinitionBuilder.rootBeanDefinition(EchoActionFactoryBean.class);
+
+        DescriptionElementParser.doParse(element, beanDefinition);
+
+        Element messageElement = DomUtils.getChildElementByTagName(element, "message");
+        if (messageElement != null) {
+            beanDefinition.addPropertyValue("message", DomUtils.getTextValue(messageElement));
+        }
+
+        return beanDefinition.getBeanDefinition();
+    }
+
+    /**
+     * Test action factory bean.
+     */
+    public static class EchoActionFactoryBean extends AbstractTestActionFactoryBean<EchoAction, EchoAction.Builder> {
+
+        private final EchoAction.Builder builder = new EchoAction.Builder();
+
+        public void setMessage(String message) {
+            builder.message(message);
+        }
+
+        @Override
+        public EchoAction getObject() throws Exception {
+            return builder.build();
+        }
+
+        @Override
+        public Class<?> getObjectType() {
+            return EchoAction.class;
+        }
+
+        /**
+         * Obtains the builder.
+         * @return the builder implementation.
+         */
+        @Override
+        public EchoAction.Builder getBuilder() {
+            return builder;
+        }
+    }
+}
+----
+
+The factory beans can use `@Autowired` and bean lifecylce hooks such as `InitializingBean` or `ApplicationContextAware`. These Spring related features were moved to the factory beans. This way we can decouple `citrus-api` and `citrus-base` from Spring making it an optional library to use in Citrus.
+
+[[changes-3-0-0-optional-spring]]
+== Make Spring optional
+
+The Spring framework provides an awesome set of projects, libraries and tools and is a wide spread and well appreciated framework for Java. The dependency injection and IoC concepts introduced with Spring are still awesome.
+
+Some people prefer to choose other approaches though to work with dependency injection. Others do struggle with mastering Citrus and Spring as new frameworks at the same time. Both frameworks Spring and Citrus are very powerful and newbies sometimes feel overwhelmed with having to deal with so many new stuff at a time.
+
+In former releases Citrus has been very tied to Spring and in some cases this has been a show stopper to work with Citrus for mentioned reasons.
+
+In Citrus 3.x we make Spring optional in `core` modules so people can choose how to work with the framework. In particular this affects the way Citrus components are started and linked to each other.
+
+[[changes-3-0-0-direct-endpoint]]
+=== Direct endpoint
+
+By default Citrus server endpoints (e.g. Http server, Mail server, ...) are using some in memory message channel for incoming requests. This internal message channel used Spring integration as implementation. In Citrus 3.x we changed this to a custom in memory message queue implementation called DirectEndpoint. This was done to decouple Citrus core from the Spring integration library.
+
+The DirectEndpoint lives in the `citrus-base` module and replaces the Spring integration message channel implementation as a default for all server endpoints.
+
+The Spring integration message channel endpoint is not lost though. Users can still use this implementation as the endpoint was extracted from `citrus-core` to a separate endpoint module named `citrus-spring-integration`.
+
+[[changes-3-0-0-spring]]
+=== Citrus with Spring
+
+When Spring is enabled for Citrus all components are loaded with a Spring application context. This enables autowiring and bean definition parsing. Latter bean definition parsing for custom components is mandatory when using XML based configuration and XML test cases in Citrus.
+
+Users enable the Spring support in Citrus by adding:
+
+[source,xml]
+----
+<dependency>
+  <groupId>com.consol.citrus</groupId>
+  <artifactId>citrus-core-spring</artifactId>
+  <version>${project.version}</version>
+</dependency>
+----
+
+When using `citrus-core` dependency this Spring support is enabled by default in order to adjust with what has been configured in previous Citrus versions.
+
+[[changes-3-0-0-standalone]]
+=== Citrus standalone
+
+In case you exclude the `citrus-core-spring` module for Citrus you will load the same components and features but only without Spring framework support. Keep in mind only the XML based configuration and XML test cases continue to require Spring.
+
+In non-Spring mode custom components can be directly configured in the Citrus context then. Also Citrus uses a resource common path lookup mechanism to identify common components that get loaded automatically.
+
+[[changes-3-0-0-resource-path-lookup]]
+==== Resource path lookup
+
+The resource path lookup is a mechanism to identify components in Citrus that should be loaded automatically when the Citrus application is started. You only need to add components to the classpath (e.g. by adding a Maven dependency) and the resource gets loaded automatically. This mechanism is used to decouple modules and to provide a non-Spring mode for Citrus.
+
+The resource path lookup is enabled for these component types:
+
+|===
+|Type | Resource Path
+
+|_**HeaderValidator**_ | `META-INF/citrus/header/validator`
+|_**MessageValidator**_ | `META-INF/citrus/message/validator`
+|_**ValueMatcher**_ | `META-INF/citrus/value/matcher`
+|_**ValidationMatcher**_ | `META-INF/citrus/validation/matcher`
+|_**SqlResultSetScriptValidator**_ | `META-INF/citrus/sql/result-set/validator`
+|_**HamcrestMatcherProvider**_ | `META-INF/citrus/hamcrest/matcher/provider`
+|===
+
+Also following _org.springframework.beans.factory.xml.BeanDefinitionParser_ add additional parsers via resource path lookup:
+
+|===
+|Parser | Resource Path
+
+|_**TestActionRegistry**_ | `META-INF/citrus/action/parser`
+|_**CitrusConfigNamespaceHandler**_ | `META-INF/citrus/config/parser/core`
+|_**SchemaParser**_ | `META-INF/citrus/schema/parser`
+|_**SchemaRepositoryParser**_ | `META-INF/citrus/schema-repository/parser`
+|===
+
+The bean definition parsers mentioned above are now able to dynamically lookup element parsers that live in other modules. For instance the `SchemaParser` loads and delegates the bean definition parsing to `.xsd` or `.json` related schema parser implementations that live in `citrus-validation-xml` or `citrus-validation-json` modules. The user needs to add these modules to the classpath when using a XML or Json schema in a schema repository.
+
+Also the test action registry is now able to load parser implementation from other modules using the resource lookup mechanism. This way we can delegate to data dictionary parser implementations for `XML` or `Json` when they are present on the classpath.
+
+[[changes-3-0-0-integration-tests]]
+== Refactor internal integration tests
+
+The module `citrus-integration` combined hundreds of internal integration tests that verified the Citrus features. The tests have been moved to its individual implementation modules. For instance XML validation related integration tests are now located in `citrus-validation-xml` module.
+
+[[changes-3-0-0-dependencies]]
+== Update dependencies
+
+We have updated the Citrus dependencies to latest versions:
+
+- Spring framework 5.2
+- Apache Camel 3.1
+- TestNG
+- JUnit 4 & 5
+- Jetty
+- Arquillian
+- Zookeeper
+- Kafka
+- Selenium
+- Ssh/Ftp
+- Log4J2
+- Cucumber 5.4

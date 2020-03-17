@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
  * Copyright 2006-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -22,7 +22,7 @@
      attributeFormDefault="unqualified">
 
     <xs:import namespace="http://www.citrusframework.org/schema/testcase"
-               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-2.9.0.xsd" />
+               schemaLocation="http://www.citrusframework.org/schema/testcase/citrus-testcase-3.0.0-M1.xsd" />
 
     <xs:complexType name="SoapAttachmentType">
         <xs:choice>
