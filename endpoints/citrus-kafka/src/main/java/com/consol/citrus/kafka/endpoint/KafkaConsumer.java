@@ -94,7 +94,7 @@ public class KafkaConsumer extends AbstractMessageConsumer {
      */
     public void stop() {
         try {
-            if (CollectionUtils.isEmpty(consumer.subscription())) {
+            if (!CollectionUtils.isEmpty(consumer.subscription())) {
                 consumer.unsubscribe();
             }
         } finally {
