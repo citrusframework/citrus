@@ -19,13 +19,16 @@ package com.consol.citrus.jms.endpoint;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import java.util.Collections;
+import java.util.Map;
 
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.channel.ChannelEndpointComponent;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -182,5 +185,22 @@ public class JmsEndpointComponentTest {
         } catch (CitrusRuntimeException e) {
             Assert.assertTrue(e.getMessage().startsWith("Unable to find parameter"), e.getMessage());
         }
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 3L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("channel"));
+        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
+        Assert.assertNotNull(validators.get("jms"));
+        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("jms").isPresent());
     }
 }

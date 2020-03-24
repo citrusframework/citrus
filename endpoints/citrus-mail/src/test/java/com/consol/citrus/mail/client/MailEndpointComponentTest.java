@@ -16,10 +16,14 @@
 
 package com.consol.citrus.mail.client;
 
-import com.consol.citrus.spi.ReferenceResolver;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
 import com.consol.citrus.mail.model.MailMarshaller;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -90,5 +94,23 @@ public class MailEndpointComponentTest {
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getMarshaller(), marshaller);
         Assert.assertEquals(((MailClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 3L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("mail"));
+        Assert.assertEquals(validators.get("mail").getClass(), MailEndpointComponent.class);
+        Assert.assertNotNull(validators.get("smtp"));
+        Assert.assertEquals(validators.get("smtp").getClass(), MailEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("mail").isPresent());
+        Assert.assertTrue(EndpointComponent.lookup("smtp").isPresent());
     }
 }

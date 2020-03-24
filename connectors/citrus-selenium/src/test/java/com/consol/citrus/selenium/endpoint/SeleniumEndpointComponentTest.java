@@ -16,9 +16,15 @@
 
 package com.consol.citrus.selenium.endpoint;
 
-import com.consol.citrus.spi.ReferenceResolver;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
+import com.consol.citrus.http.client.HttpEndpointComponent;
+import com.consol.citrus.http.client.HttpsEndpointComponent;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.BrowserType;
@@ -77,6 +83,25 @@ public class SeleniumEndpointComponentTest {
         Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getStartPageUrl(), "https://localhost:8080");
         Assert.assertEquals(((SeleniumBrowser)endpoint).getEndpointConfiguration().getRemoteServerUrl(), "https://localhost:8081");
         Assert.assertEquals(((SeleniumBrowser) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http"));
+        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
+        Assert.assertNotNull(validators.get("https"));
+        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("selenium"));
+        Assert.assertEquals(validators.get("selenium").getClass(), SeleniumEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("selenium").isPresent());
     }
 
 }

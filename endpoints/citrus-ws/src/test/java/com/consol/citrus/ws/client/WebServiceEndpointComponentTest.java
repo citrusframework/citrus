@@ -16,10 +16,17 @@
 
 package com.consol.citrus.ws.client;
 
-import com.consol.citrus.spi.ReferenceResolver;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
+import com.consol.citrus.http.client.HttpEndpointComponent;
+import com.consol.citrus.http.client.HttpsEndpointComponent;
+import com.consol.citrus.jms.endpoint.JmsEndpointComponent;
 import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.springframework.ws.WebServiceMessageFactory;
 import org.testng.Assert;
@@ -74,6 +81,26 @@ public class WebServiceEndpointComponentTest {
         Assert.assertEquals(((WebServiceClient) endpoint).getEndpointConfiguration().getMessageFactory(), messageFactory);
         Assert.assertEquals(((WebServiceClient) endpoint).getEndpointConfiguration().getErrorHandlingStrategy(), ErrorHandlingStrategy.PROPAGATE);
         Assert.assertEquals(((WebServiceClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
 
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("jms"));
+        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http"));
+        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
+        Assert.assertNotNull(validators.get("https"));
+        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("soap"));
+        Assert.assertEquals(validators.get("soap").getClass(), WebServiceEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("soap").isPresent());
     }
 }

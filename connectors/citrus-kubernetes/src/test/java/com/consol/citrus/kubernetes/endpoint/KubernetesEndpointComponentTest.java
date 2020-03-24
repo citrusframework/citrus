@@ -16,8 +16,14 @@
 
 package com.consol.citrus.kubernetes.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
+import com.consol.citrus.http.client.HttpEndpointComponent;
+import com.consol.citrus.http.client.HttpsEndpointComponent;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -59,6 +65,25 @@ public class KubernetesEndpointComponentTest {
         Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl(), "https://localhost:8443");
         Assert.assertEquals(((KubernetesClient)endpoint).getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "myNamespace");
         Assert.assertEquals(((KubernetesClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http"));
+        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
+        Assert.assertNotNull(validators.get("https"));
+        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("k8s"));
+        Assert.assertEquals(validators.get("k8s").getClass(), KubernetesEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("k8s").isPresent());
     }
 
 }
