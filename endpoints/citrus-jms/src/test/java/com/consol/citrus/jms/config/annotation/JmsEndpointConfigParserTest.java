@@ -25,14 +25,20 @@ import javax.jms.TopicConnection;
 import javax.jms.TopicConnectionFactory;
 import javax.jms.TopicSession;
 import javax.jms.TopicSubscriber;
+import java.util.Map;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.config.annotation.ChannelEndpointConfigParser;
+import com.consol.citrus.config.annotation.ChannelSyncEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.message.JmsMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -191,5 +197,28 @@ public class JmsEndpointConfigParserTest extends AbstractTestNGUnitTest {
         // 5th message receiver
         Assert.assertNotNull(jmsEndpoint5.getActor());
         Assert.assertEquals(jmsEndpoint5.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 6L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jms.async"));
+        Assert.assertEquals(validators.get("jms.async").getClass(), JmsEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jms.sync"));
+        Assert.assertEquals(validators.get("jms.sync").getClass(), JmsSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("channel.async"));
+        Assert.assertEquals(validators.get("channel.async").getClass(), ChannelEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("channel.sync"));
+        Assert.assertEquals(validators.get("channel.sync").getClass(), ChannelSyncEndpointConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("jms.async").isPresent());
     }
 }

@@ -21,12 +21,13 @@ import java.util.Properties;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
 import com.consol.citrus.mail.server.MailServer;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -122,5 +123,10 @@ public class MailServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(mailServer3.getMessageConverter(), messageConverter);
         Assert.assertEquals(mailServer3.getMarshaller(), marshaller);
         Assert.assertFalse(mailServer3.getJavaMailProperties().isEmpty());
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("mail.server").isPresent());
     }
 }

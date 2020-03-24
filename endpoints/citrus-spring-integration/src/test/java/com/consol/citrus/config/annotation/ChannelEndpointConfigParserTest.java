@@ -16,13 +16,17 @@
 
 package com.consol.citrus.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.channel.ChannelEndpoint;
 import com.consol.citrus.channel.ChannelMessageConverter;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -120,5 +124,24 @@ public class ChannelEndpointConfigParserTest extends AbstractTestNGUnitTest {
         // 4th message receiver
         Assert.assertNotNull(channelEndpoint4.getActor());
         Assert.assertEquals(channelEndpoint4.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("channel.async"));
+        Assert.assertEquals(validators.get("channel.async").getClass(), ChannelEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("channel.sync"));
+        Assert.assertEquals(validators.get("channel.sync").getClass(), ChannelSyncEndpointConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("channel.async").isPresent());
     }
 }

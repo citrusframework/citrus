@@ -21,11 +21,12 @@ import java.rmi.registry.Registry;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
 import com.consol.citrus.rmi.remote.HelloService;
 import com.consol.citrus.rmi.remote.NewsService;
 import com.consol.citrus.rmi.server.RmiServer;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -111,5 +112,10 @@ public class RmiServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(rmiServer3.getRemoteInterfaces().size(), 1L);
         Assert.assertEquals(rmiServer3.getRemoteInterfaces().get(0), HelloService.class);
         Assert.assertEquals(rmiServer3.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("rmi.server").isPresent());
     }
 }

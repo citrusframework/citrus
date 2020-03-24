@@ -16,14 +16,17 @@
 
 package com.consol.citrus.endpoint.direct.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointAnnotations;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.direct.DirectEndpoint;
 import com.consol.citrus.message.MessageQueue;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -101,5 +104,18 @@ public class DirectEndpointConfigParserTest {
         // 4th message receiver
         Assert.assertNotNull(directEndpoint4.getActor());
         Assert.assertEquals(directEndpoint4.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 2L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("direct.async").isPresent());
     }
 }

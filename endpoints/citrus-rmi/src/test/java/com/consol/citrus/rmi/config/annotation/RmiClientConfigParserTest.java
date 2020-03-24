@@ -17,14 +17,18 @@
 package com.consol.citrus.rmi.config.annotation;
 
 import java.rmi.registry.Registry;
+import java.util.Map;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.client.RmiClient;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -107,5 +111,24 @@ public class RmiClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(rmiClient3.getActor());
         Assert.assertNull(rmiClient3.getEndpointConfiguration().getMethod());
         Assert.assertEquals(rmiClient3.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("rmi.client"));
+        Assert.assertEquals(validators.get("rmi.client").getClass(), RmiClientConfigParser.class);
+        Assert.assertNotNull(validators.get("rmi.server"));
+        Assert.assertEquals(validators.get("rmi.server").getClass(), RmiServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("rmi.client").isPresent());
     }
 }

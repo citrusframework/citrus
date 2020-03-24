@@ -19,11 +19,12 @@ package com.consol.citrus.ftp.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.ftp.client.ScpClient;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -128,5 +129,10 @@ public class ScpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(scpClient4.getActor(), testActor);
         Assert.assertEquals(scpClient4.getEndpointConfiguration().getPort(), new Integer(22224));
         Assert.assertEquals(scpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("scp.client").isPresent());
     }
 }

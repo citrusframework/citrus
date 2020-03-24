@@ -17,17 +17,24 @@
 package com.consol.citrus.http.config.annotation;
 
 import javax.servlet.Filter;
-
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.config.annotation.ChannelEndpointConfigParser;
+import com.consol.citrus.config.annotation.ChannelSyncEndpointConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.jms.config.annotation.JmsEndpointConfigParser;
+import com.consol.citrus.jms.config.annotation.JmsSyncEndpointConfigParser;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
@@ -261,5 +268,32 @@ public class HttpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertFalse(httpServer6.isAutoStart());
         Assert.assertFalse(httpServer6.isUseRootContextAsParent());
         Assert.assertEquals(httpServer6.getServletName(), "httpServer6-servlet");
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 8L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jms.async"));
+        Assert.assertEquals(validators.get("jms.async").getClass(), JmsEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jms.sync"));
+        Assert.assertEquals(validators.get("jms.sync").getClass(), JmsSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("channel.async"));
+        Assert.assertEquals(validators.get("channel.async").getClass(), ChannelEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("channel.sync"));
+        Assert.assertEquals(validators.get("channel.sync").getClass(), ChannelSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("http.client"));
+        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        Assert.assertNotNull(validators.get("http.server"));
+        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("http.server").isPresent());
     }
 }

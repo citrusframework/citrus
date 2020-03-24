@@ -17,14 +17,18 @@
 package com.consol.citrus.jmx.config.annotation;
 
 import javax.management.NotificationFilter;
+import java.util.Map;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -113,5 +117,24 @@ public class JmxClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmxClient2.getEndpointConfiguration().getTimeout(), 10000L);
         Assert.assertEquals(jmxClient2.getEndpointConfiguration().getPollingInterval(), 100L);
         Assert.assertEquals(jmxClient2.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jmx.client"));
+        Assert.assertEquals(validators.get("jmx.client").getClass(), JmxClientConfigParser.class);
+        Assert.assertNotNull(validators.get("jmx.server"));
+        Assert.assertEquals(validators.get("jmx.server").getClass(), JmxServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("jmx.client").isPresent());
     }
 }

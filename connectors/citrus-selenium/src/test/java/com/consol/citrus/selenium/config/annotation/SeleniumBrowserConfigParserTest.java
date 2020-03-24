@@ -17,11 +17,17 @@
 package com.consol.citrus.selenium.config.annotation;
 
 import java.util.Collections;
+import java.util.Map;
 
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
+import com.consol.citrus.http.config.annotation.HttpClientConfigParser;
+import com.consol.citrus.http.config.annotation.HttpServerConfigParser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -136,6 +142,27 @@ public class SeleniumBrowserConfigParserTest extends AbstractTestNGUnitTest {
 
         Assert.assertNotNull(browserWithDeprecatedConfig);
         Assert.assertEquals(browserWithDeprecatedConfig.getEndpointConfiguration().getBrowserType(), BrowserType.HTMLUNIT);
-  }
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("http.client"));
+        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        Assert.assertNotNull(validators.get("http.server"));
+        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        Assert.assertNotNull(validators.get("selenium.browser"));
+        Assert.assertEquals(validators.get("selenium.browser").getClass(), SeleniumBrowserConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("selenium.browser").isPresent());
+    }
 
 }

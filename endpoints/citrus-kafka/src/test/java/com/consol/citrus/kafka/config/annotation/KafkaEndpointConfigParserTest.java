@@ -16,14 +16,19 @@
 
 package com.consol.citrus.kafka.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.kafka.endpoint.KafkaEndpoint;
 import com.consol.citrus.kafka.message.KafkaMessageConverter;
 import com.consol.citrus.kafka.message.KafkaMessageHeaderMapper;
 import com.consol.citrus.kafka.message.KafkaMessageHeaders;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
@@ -141,5 +146,22 @@ public class KafkaEndpointConfigParserTest extends AbstractTestNGUnitTest {
         // 3rd endpoint
         Assert.assertNotNull(kafkaEndpoint3.getActor());
         Assert.assertEquals(kafkaEndpoint3.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 3L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("kafka.type"));
+        Assert.assertEquals(validators.get("kafka.type").getClass(), KafkaEndpointConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("kafka").isPresent());
     }
 }
