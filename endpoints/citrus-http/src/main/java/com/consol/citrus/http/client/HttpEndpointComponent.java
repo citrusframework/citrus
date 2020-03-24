@@ -16,13 +16,13 @@
 
 package com.consol.citrus.http.client;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.springframework.http.HttpMethod;
-
-import java.util.Map;
 
 /**
  * Component creates proper HTTP client endpoint from endpoint uri resource and parameters.
@@ -31,6 +31,20 @@ import java.util.Map;
  * @since 1.4.1
  */
 public class HttpEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public HttpEndpointComponent() {
+        this("http");
+    }
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public HttpEndpointComponent(String name) {
+        super(name);
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

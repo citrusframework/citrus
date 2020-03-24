@@ -16,11 +16,11 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
-
-import java.util.Map;
 
 /**
  * Kafka endpoint component is able to create kafka endpoint from endpoint uri with parameters. Depending on uri creates a
@@ -32,6 +32,13 @@ import java.util.Map;
  * @since 2.8
  */
 public class KafkaEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public KafkaEndpointComponent() {
+        super("kafka");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

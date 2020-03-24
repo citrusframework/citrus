@@ -16,34 +16,30 @@
 
 package com.consol.citrus.jmx.config.annotation;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
-import com.consol.citrus.jmx.model.*;
+import com.consol.citrus.jmx.model.ManagedBeanDefinition;
+import com.consol.citrus.jmx.model.ManagedBeanInvocation;
+import com.consol.citrus.jmx.model.OperationParam;
 import com.consol.citrus.jmx.server.JmxServer;
 import com.consol.citrus.jmx.server.JmxServerBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxServerConfigParser extends AbstractAnnotationConfigParser<JmxServerConfig, JmxServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public JmxServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class JmxServerConfigParser implements AnnotationConfigParser<JmxServerConfig, JmxServer> {
 
     @Override
-    public JmxServer parse(JmxServerConfig annotation) {
+    public JmxServer parse(JmxServerConfig annotation, ReferenceResolver referenceResolver) {
         JmxServerBuilder builder = new JmxServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -69,11 +65,11 @@ public class JmxServerConfigParser extends AbstractAnnotationConfigParser<JmxSer
         builder.createRegistry(annotation.createRegistry());
 
         if (StringUtils.hasText(annotation.environmentProperties())) {
-            builder.environmentProperties(getReferenceResolver().resolve(annotation.environmentProperties(), Properties.class));
+            builder.environmentProperties(referenceResolver.resolve(annotation.environmentProperties(), Properties.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), JmxMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), JmxMessageConverter.class));
         }
 
         builder.timeout(annotation.timeout());
@@ -126,7 +122,7 @@ public class JmxServerConfigParser extends AbstractAnnotationConfigParser<JmxSer
         builder.mbeans(managedBeans);
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

@@ -17,9 +17,9 @@
 package com.consol.citrus.ssh.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ssh.client.SshClient;
 import com.consol.citrus.ssh.client.SshClientBuilder;
 import com.consol.citrus.ssh.message.SshMessageConverter;
@@ -29,18 +29,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class SshClientConfigParser extends AbstractAnnotationConfigParser<SshClientConfig, SshClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public SshClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class SshClientConfigParser implements AnnotationConfigParser<SshClientConfig, SshClient> {
 
     @Override
-    public SshClient parse(SshClientConfig annotation) {
+    public SshClient parse(SshClientConfig annotation, ReferenceResolver referenceResolver) {
         SshClientBuilder builder = new SshClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
@@ -75,11 +67,11 @@ public class SshClientConfigParser extends AbstractAnnotationConfigParser<SshCli
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), SshMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), SshMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -87,7 +79,7 @@ public class SshClientConfigParser extends AbstractAnnotationConfigParser<SshCli
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

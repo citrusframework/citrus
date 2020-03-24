@@ -1,0 +1,2 @@
+async=com.consol.citrus.config.annotation.ChannelEndpointConfigParser
+sync=com.consol.citrus.config.annotation.ChannelSyncEndpointConfigParser

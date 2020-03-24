@@ -16,33 +16,25 @@
 
 package com.consol.citrus.mail.config.annotation;
 
+import java.util.Properties;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.mail.client.MailClient;
 import com.consol.citrus.mail.client.MailClientBuilder;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
-
-import java.util.Properties;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class MailClientConfigParser extends AbstractAnnotationConfigParser<MailClientConfig, MailClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public MailClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class MailClientConfigParser implements AnnotationConfigParser<MailClientConfig, MailClient> {
 
     @Override
-    public MailClient parse(MailClientConfig annotation) {
+    public MailClient parse(MailClientConfig annotation, ReferenceResolver referenceResolver) {
         MailClientBuilder builder = new MailClientBuilder();
 
         builder.host(annotation.host());
@@ -59,21 +51,21 @@ public class MailClientConfigParser extends AbstractAnnotationConfigParser<MailC
         }
 
         if (StringUtils.hasText(annotation.javaMailProperties())) {
-            builder.javaMailProperties(getReferenceResolver().resolve(annotation.javaMailProperties(), Properties.class));
+            builder.javaMailProperties(referenceResolver.resolve(annotation.javaMailProperties(), Properties.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), MailMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), MailMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.marshaller())) {
-            builder.marshaller(getReferenceResolver().resolve(annotation.marshaller(), MailMarshaller.class));
+            builder.marshaller(referenceResolver.resolve(annotation.marshaller(), MailMarshaller.class));
         }
 
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

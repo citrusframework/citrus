@@ -16,10 +16,13 @@
 
 package com.consol.citrus.ftp.config.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 import com.consol.citrus.message.ErrorHandlingStrategy;
-
-import java.lang.annotation.*;
 
 /**
  * @author Christoph Deppisch
@@ -27,7 +30,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.scp.client")
+@CitrusEndpointConfig(qualifier = "scp.client")
 public @interface ScpClientConfig {
 
     /**

@@ -32,6 +32,13 @@ import org.springframework.messaging.MessageChannel;
  */
 public class ChannelEndpointComponent extends AbstractEndpointComponent {
 
+    /**
+     * Default constructor using the name for this component.
+     */
+    public ChannelEndpointComponent() {
+        super("channel");
+    }
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         ChannelEndpoint endpoint;

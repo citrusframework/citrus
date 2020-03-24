@@ -16,39 +16,33 @@
 
 package com.consol.citrus.websocket.config.annotation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.message.HttpMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
 import com.consol.citrus.websocket.message.WebSocketMessageConverter;
-import com.consol.citrus.websocket.server.*;
+import com.consol.citrus.websocket.server.WebSocketServer;
+import com.consol.citrus.websocket.server.WebSocketServerBuilder;
+import com.consol.citrus.websocket.server.WebSocketServerEndpointConfiguration;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<WebSocketServerConfig, WebSocketServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public WebSocketServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class WebSocketServerConfigParser implements AnnotationConfigParser<WebSocketServerConfig, WebSocketServer> {
 
     @Override
-    public WebSocketServer parse(WebSocketServerConfig annotation) {
+    public WebSocketServer parse(WebSocketServerConfig annotation, ReferenceResolver referenceResolver) {
         WebSocketServerBuilder builder = new WebSocketServerBuilder();
 
         List<WebSocketEndpoint> webSockets = new ArrayList<>();
@@ -58,7 +52,7 @@ public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<
             webSocketConfiguration.setEndpointUri(webSocketConfig.path());
 
             if (StringUtils.hasText(webSocketConfig.messageConverter())) {
-                webSocketConfiguration.setMessageConverter(getReferenceResolver().resolve(webSocketConfig.messageConverter(), WebSocketMessageConverter.class));
+                webSocketConfiguration.setMessageConverter(referenceResolver.resolve(webSocketConfig.messageConverter(), WebSocketMessageConverter.class));
             }
 
             webSocketConfiguration.setTimeout(webSocketConfig.timeout());
@@ -76,13 +70,13 @@ public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
-        builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), HandlerInterceptor.class));
+        builder.interceptors(referenceResolver.resolve(annotation.interceptors(), HandlerInterceptor.class));
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         builder.port(annotation.port());
@@ -97,10 +91,10 @@ public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<
 
         builder.rootParentContext(annotation.rootParentContext());
 
-        builder.connectors(getReferenceResolver().resolve(annotation.connectors(), Connector.class));
+        builder.connectors(referenceResolver.resolve(annotation.connectors(), Connector.class));
 
         if (StringUtils.hasText(annotation.connector())) {
-            builder.connector(getReferenceResolver().resolve(annotation.connector(), Connector.class));
+            builder.connector(referenceResolver.resolve(annotation.connector(), Connector.class));
         }
 
         if (StringUtils.hasText(annotation.servletName())) {
@@ -116,15 +110,15 @@ public class WebSocketServerConfigParser extends AbstractAnnotationConfigParser<
         }
 
         if (StringUtils.hasText(annotation.servletHandler())) {
-            builder.servletHandler(getReferenceResolver().resolve(annotation.servletHandler(), ServletHandler.class));
+            builder.servletHandler(referenceResolver.resolve(annotation.servletHandler(), ServletHandler.class));
         }
 
         if (StringUtils.hasText(annotation.securityHandler())) {
-            builder.securityHandler(getReferenceResolver().resolve(annotation.securityHandler(), SecurityHandler.class));
+            builder.securityHandler(referenceResolver.resolve(annotation.securityHandler(), SecurityHandler.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), HttpMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), HttpMessageConverter.class));
         }
 
         builder.initialize();

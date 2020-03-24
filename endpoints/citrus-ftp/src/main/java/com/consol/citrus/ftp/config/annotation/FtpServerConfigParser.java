@@ -17,11 +17,11 @@
 package com.consol.citrus.ftp.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.ftp.server.FtpServer;
 import com.consol.citrus.ftp.server.FtpServerBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
@@ -30,18 +30,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class FtpServerConfigParser extends AbstractAnnotationConfigParser<FtpServerConfig, FtpServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public FtpServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class FtpServerConfigParser implements AnnotationConfigParser<FtpServerConfig, FtpServer> {
 
     @Override
-    public FtpServer parse(FtpServerConfig annotation) {
+    public FtpServer parse(FtpServerConfig annotation, ReferenceResolver referenceResolver) {
         FtpServerBuilder builder = new FtpServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -55,15 +47,15 @@ public class FtpServerConfigParser extends AbstractAnnotationConfigParser<FtpSer
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
         if (StringUtils.hasText(annotation.server())) {
-            builder.server(getReferenceResolver().resolve(annotation.server(), org.apache.ftpserver.FtpServer.class));
+            builder.server(referenceResolver.resolve(annotation.server(), org.apache.ftpserver.FtpServer.class));
         }
 
         if (StringUtils.hasText(annotation.userManager())) {
-            builder.userManager(getReferenceResolver().resolve(annotation.userManager(), UserManager.class));
+            builder.userManager(referenceResolver.resolve(annotation.userManager(), UserManager.class));
         }
 
         if (StringUtils.hasText(annotation.userManagerProperties())) {
@@ -71,7 +63,7 @@ public class FtpServerConfigParser extends AbstractAnnotationConfigParser<FtpSer
         }
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

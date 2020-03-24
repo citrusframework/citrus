@@ -25,13 +25,13 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.message.HttpMessageConverter;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
@@ -43,18 +43,10 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpServerConfig, HttpServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public HttpServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class HttpServerConfigParser implements AnnotationConfigParser<HttpServerConfig, HttpServer> {
 
     @Override
-    public HttpServer parse(HttpServerConfig annotation) {
+    public HttpServer parse(HttpServerConfig annotation, ReferenceResolver referenceResolver) {
         HttpServerBuilder builder = new HttpServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -65,13 +57,13 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
-        builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), HandlerInterceptor.class));
+        builder.interceptors(referenceResolver.resolve(annotation.interceptors(), HandlerInterceptor.class));
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         builder.port(annotation.port());
@@ -86,10 +78,10 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
 
         builder.rootParentContext(annotation.rootParentContext());
 
-        builder.connectors(getReferenceResolver().resolve(annotation.connectors(), Connector.class));
+        builder.connectors(referenceResolver.resolve(annotation.connectors(), Connector.class));
 
         if (annotation.filters().length > 0) {
-            builder.filters(getReferenceResolver().resolveAll(Filter.class)
+            builder.filters(referenceResolver.resolveAll(Filter.class)
                     .entrySet()
                     .stream()
                     .filter(entry -> Stream.of(annotation.filters()).anyMatch(f -> f.equals(entry.getKey())))
@@ -116,7 +108,7 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
         }
 
         if (StringUtils.hasText(annotation.connector())) {
-            builder.connector(getReferenceResolver().resolve(annotation.connector(), Connector.class));
+            builder.connector(referenceResolver.resolve(annotation.connector(), Connector.class));
         }
 
         if (StringUtils.hasText(annotation.servletName())) {
@@ -132,15 +124,15 @@ public class HttpServerConfigParser extends AbstractAnnotationConfigParser<HttpS
         }
 
         if (StringUtils.hasText(annotation.servletHandler())) {
-            builder.servletHandler(getReferenceResolver().resolve(annotation.servletHandler(), ServletHandler.class));
+            builder.servletHandler(referenceResolver.resolve(annotation.servletHandler(), ServletHandler.class));
         }
 
         if (StringUtils.hasText(annotation.securityHandler())) {
-            builder.securityHandler(getReferenceResolver().resolve(annotation.securityHandler(), SecurityHandler.class));
+            builder.securityHandler(referenceResolver.resolve(annotation.securityHandler(), SecurityHandler.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), HttpMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), HttpMessageConverter.class));
         }
 
         builder.defaultStatus(annotation.defaultStatus());

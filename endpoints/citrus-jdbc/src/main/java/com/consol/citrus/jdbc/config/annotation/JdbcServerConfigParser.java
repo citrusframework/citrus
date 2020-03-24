@@ -17,30 +17,22 @@
 package com.consol.citrus.jdbc.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.server.JdbcServer;
 import com.consol.citrus.jdbc.server.JdbcServerBuilder;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.3
  */
-public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcServerConfig, JdbcServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public JdbcServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class JdbcServerConfigParser implements AnnotationConfigParser<JdbcServerConfig, JdbcServer> {
 
     @Override
-    public JdbcServer parse(JdbcServerConfig annotation) {
+    public JdbcServer parse(JdbcServerConfig annotation, ReferenceResolver referenceResolver) {
         JdbcServerBuilder builder = new JdbcServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -54,7 +46,7 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
         if (StringUtils.hasText(annotation.databaseName())) {
@@ -68,7 +60,7 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
         builder.autoHandleQueries(annotation.autoHandleQueries());
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.maxConnections(annotation.maxConnections());
@@ -78,7 +70,7 @@ public class JdbcServerConfigParser extends AbstractAnnotationConfigParser<JdbcS
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

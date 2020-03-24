@@ -46,7 +46,15 @@ import org.springframework.util.StringUtils;
 public abstract class AbstractEndpointComponent implements EndpointComponent {
 
     /** Component name usually the Spring bean id */
-    private String name;
+    private final String name;
+
+    /**
+     * Default constructor using the name for this component.
+     * @param name
+     */
+    public AbstractEndpointComponent(String name) {
+        this.name = name;
+    }
 
     @Override
     public Endpoint createEndpoint(String endpointUri, TestContext context) {
@@ -203,15 +211,4 @@ public abstract class AbstractEndpointComponent implements EndpointComponent {
     public String getName() {
         return name;
     }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public void setBeanName(String name) {
-        this.name = name;
-    }
-
 }

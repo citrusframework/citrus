@@ -17,9 +17,9 @@
 package com.consol.citrus.vertx.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpoint;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
@@ -30,18 +30,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class VertxSyncEndpointConfigParser extends AbstractAnnotationConfigParser<VertxSyncEndpointConfig, VertxSyncEndpoint> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public VertxSyncEndpointConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class VertxSyncEndpointConfigParser implements AnnotationConfigParser<VertxSyncEndpointConfig, VertxSyncEndpoint> {
 
     @Override
-    public VertxSyncEndpoint parse(VertxSyncEndpointConfig annotation) {
+    public VertxSyncEndpoint parse(VertxSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
         VertxSyncEndpointBuilder builder = new VertxSyncEndpointBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
@@ -56,14 +48,14 @@ public class VertxSyncEndpointConfigParser extends AbstractAnnotationConfigParse
 
         builder.pubSubDomain(annotation.pubSubDomain());
 
-        builder.vertxFactory(getReferenceResolver().resolve(annotation.vertxFactory(), VertxInstanceFactory.class));
+        builder.vertxFactory(referenceResolver.resolve(annotation.vertxFactory(), VertxInstanceFactory.class));
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), VertxMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), VertxMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -71,7 +63,7 @@ public class VertxSyncEndpointConfigParser extends AbstractAnnotationConfigParse
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

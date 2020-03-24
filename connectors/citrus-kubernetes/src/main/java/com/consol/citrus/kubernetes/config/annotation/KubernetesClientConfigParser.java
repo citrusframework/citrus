@@ -16,11 +16,11 @@
 
 package com.consol.citrus.kubernetes.config.annotation;
 
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.client.KubernetesClientBuilder;
 import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 
@@ -28,18 +28,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class KubernetesClientConfigParser extends AbstractAnnotationConfigParser<KubernetesClientConfig, KubernetesClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public KubernetesClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class KubernetesClientConfigParser implements AnnotationConfigParser<KubernetesClientConfig, KubernetesClient> {
 
     @Override
-    public KubernetesClient parse(KubernetesClientConfig annotation) {
+    public KubernetesClient parse(KubernetesClientConfig annotation, ReferenceResolver referenceResolver) {
         KubernetesClientBuilder builder = new KubernetesClientBuilder();
 
         if (StringUtils.hasText(annotation.url())) {
@@ -67,11 +59,11 @@ public class KubernetesClientConfigParser extends AbstractAnnotationConfigParser
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), KubernetesMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), KubernetesMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.objectMapper())) {
-            builder.objectMapper(getReferenceResolver().resolve(annotation.objectMapper(), ObjectMapper.class));
+            builder.objectMapper(referenceResolver.resolve(annotation.objectMapper(), ObjectMapper.class));
         }
 
         return builder.build();

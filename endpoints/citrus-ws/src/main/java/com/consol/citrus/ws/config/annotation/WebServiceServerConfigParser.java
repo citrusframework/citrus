@@ -17,9 +17,9 @@
 package com.consol.citrus.ws.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import com.consol.citrus.ws.server.WebServiceServer;
 import com.consol.citrus.ws.server.WebServiceServerBuilder;
@@ -33,18 +33,10 @@ import org.springframework.ws.server.EndpointInterceptor;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser<WebServiceServerConfig, WebServiceServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public WebServiceServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class WebServiceServerConfigParser implements AnnotationConfigParser<WebServiceServerConfig, WebServiceServer> {
 
     @Override
-    public WebServiceServer parse(WebServiceServerConfig annotation) {
+    public WebServiceServer parse(WebServiceServerConfig annotation, ReferenceResolver referenceResolver) {
         WebServiceServerBuilder builder = new WebServiceServerBuilder();
 
         builder.handleMimeHeaders(annotation.handleMimeHeaders());
@@ -75,10 +67,10 @@ public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser
             builder.contextConfigLocation(annotation.contextConfigLocation());
         }
 
-        builder.connectors(getReferenceResolver().resolve(annotation.connectors(), Connector.class));
+        builder.connectors(referenceResolver.resolve(annotation.connectors(), Connector.class));
 
         if (StringUtils.hasText(annotation.connector())) {
-            builder.connector(getReferenceResolver().resolve(annotation.connector(), Connector.class));
+            builder.connector(referenceResolver.resolve(annotation.connector(), Connector.class));
         }
 
         builder.rootParentContext(annotation.rootParentContext());
@@ -96,27 +88,27 @@ public class WebServiceServerConfigParser extends AbstractAnnotationConfigParser
         }
 
         if (StringUtils.hasText(annotation.servletHandler())) {
-            builder.servletHandler(getReferenceResolver().resolve(annotation.servletHandler(), ServletHandler.class));
+            builder.servletHandler(referenceResolver.resolve(annotation.servletHandler(), ServletHandler.class));
         }
 
         if (StringUtils.hasText(annotation.securityHandler())) {
-            builder.securityHandler(getReferenceResolver().resolve(annotation.securityHandler(), SecurityHandler.class));
+            builder.securityHandler(referenceResolver.resolve(annotation.securityHandler(), SecurityHandler.class));
         }
 
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
-        builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), EndpointInterceptor.class));
+        builder.interceptors(referenceResolver.resolve(annotation.interceptors(), EndpointInterceptor.class));
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), WebServiceMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), WebServiceMessageConverter.class));
         }
 
         return builder.initialize().build();

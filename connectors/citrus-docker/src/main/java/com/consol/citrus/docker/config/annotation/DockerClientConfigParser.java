@@ -16,28 +16,20 @@
 
 package com.consol.citrus.docker.config.annotation;
 
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.docker.client.DockerClient;
 import com.consol.citrus.docker.client.DockerClientBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class DockerClientConfigParser extends AbstractAnnotationConfigParser<DockerClientConfig, DockerClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public DockerClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class DockerClientConfigParser implements AnnotationConfigParser<DockerClientConfig, DockerClient> {
 
     @Override
-    public DockerClient parse(DockerClientConfig annotation) {
+    public DockerClient parse(DockerClientConfig annotation, ReferenceResolver referenceResolver) {
         DockerClientBuilder builder = new DockerClientBuilder();
 
         if (StringUtils.hasText(annotation.url())) {

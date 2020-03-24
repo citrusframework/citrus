@@ -16,9 +16,12 @@
 
 package com.consol.citrus.ftp.config.annotation;
 
-import com.consol.citrus.annotations.CitrusEndpointConfig;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.*;
+import com.consol.citrus.annotations.CitrusEndpointConfig;
 
 /**
  * @author Christoph Deppisch
@@ -26,7 +29,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.ftp.server")
+@CitrusEndpointConfig(qualifier = "ftp.server")
 public @interface FtpServerConfig {
 
     /**

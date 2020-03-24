@@ -16,12 +16,12 @@
 
 package com.consol.citrus.ws.client;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.ErrorHandlingStrategy;
-
-import java.util.Map;
 
 /**
  * Component creates proper web service client from endpoint uri resource and parameters.
@@ -30,6 +30,13 @@ import java.util.Map;
  * @since 1.4.1
  */
 public class WebServiceEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public WebServiceEndpointComponent() {
+        super("soap");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

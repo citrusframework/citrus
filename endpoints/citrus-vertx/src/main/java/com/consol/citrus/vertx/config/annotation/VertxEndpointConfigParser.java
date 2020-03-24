@@ -17,7 +17,7 @@
 package com.consol.citrus.vertx.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.vertx.endpoint.VertxEndpoint;
 import com.consol.citrus.vertx.endpoint.VertxEndpointBuilder;
@@ -29,18 +29,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class VertxEndpointConfigParser extends AbstractAnnotationConfigParser<VertxEndpointConfig, VertxEndpoint> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public VertxEndpointConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class VertxEndpointConfigParser implements AnnotationConfigParser<VertxEndpointConfig, VertxEndpoint> {
 
     @Override
-    public VertxEndpoint parse(VertxEndpointConfig annotation) {
+    public VertxEndpoint parse(VertxEndpointConfig annotation, ReferenceResolver referenceResolver) {
         VertxEndpointBuilder builder = new VertxEndpointBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
@@ -53,12 +45,12 @@ public class VertxEndpointConfigParser extends AbstractAnnotationConfigParser<Ve
             builder.address(annotation.address());
         }
 
-        builder.vertxFactory(getReferenceResolver().resolve(annotation.vertxFactory(), VertxInstanceFactory.class));
+        builder.vertxFactory(referenceResolver.resolve(annotation.vertxFactory(), VertxInstanceFactory.class));
 
         builder.pubSubDomain(annotation.pubSubDomain());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), VertxMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), VertxMessageConverter.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -66,7 +58,7 @@ public class VertxEndpointConfigParser extends AbstractAnnotationConfigParser<Ve
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

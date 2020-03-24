@@ -16,11 +16,14 @@
 
 package com.consol.citrus.http.config.annotation;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import org.springframework.http.HttpMethod;
-
-import java.lang.annotation.*;
 
 /**
  * @author Christoph Deppisch
@@ -28,7 +31,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.http.client")
+@CitrusEndpointConfig(qualifier = "http.client")
 public @interface HttpClientConfig {
 
     /**

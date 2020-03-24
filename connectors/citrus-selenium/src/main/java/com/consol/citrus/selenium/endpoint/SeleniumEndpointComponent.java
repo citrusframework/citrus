@@ -16,18 +16,25 @@
 
 package com.consol.citrus.selenium.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import org.springframework.util.StringUtils;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7
  */
 public class SeleniumEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public SeleniumEndpointComponent() {
+        super("selenium");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

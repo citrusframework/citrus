@@ -16,37 +16,29 @@
 
 package com.consol.citrus.jms.config.annotation;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpoint;
 import com.consol.citrus.jms.endpoint.JmsEndpointBuilder;
 import com.consol.citrus.jms.message.JmsMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.StringUtils;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmsEndpointConfigParser extends AbstractAnnotationConfigParser<JmsEndpointConfig, JmsEndpoint> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public JmsEndpointConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class JmsEndpointConfigParser implements AnnotationConfigParser<JmsEndpointConfig, JmsEndpoint> {
 
     @Override
-    public JmsEndpoint parse(JmsEndpointConfig annotation) {
+    public JmsEndpoint parse(JmsEndpointConfig annotation, ReferenceResolver referenceResolver) {
         JmsEndpointBuilder builder = new JmsEndpointBuilder();
 
         String jmsTemplate = annotation.jmsTemplate();
@@ -65,11 +57,11 @@ public class JmsEndpointConfigParser extends AbstractAnnotationConfigParser<JmsE
                 throw new CitrusRuntimeException("Required connection-factory is missing for jms configuration");
             }
 
-            builder.connectionFactory(getReferenceResolver().resolve(connectionFactory, ConnectionFactory.class));
+            builder.connectionFactory(referenceResolver.resolve(connectionFactory, ConnectionFactory.class));
 
             //destination
             if (StringUtils.hasText(destination)) {
-                builder.destination(getReferenceResolver().resolve(annotation.destination(), Destination.class));
+                builder.destination(referenceResolver.resolve(annotation.destination(), Destination.class));
             } else {
                 builder.destination(annotation.destinationName());
             }
@@ -81,7 +73,7 @@ public class JmsEndpointConfigParser extends AbstractAnnotationConfigParser<JmsE
                         "connection-factory, destination, or destination-name should be provided");
             }
 
-            builder.jmsTemplate(getReferenceResolver().resolve(jmsTemplate, JmsTemplate.class));
+            builder.jmsTemplate(referenceResolver.resolve(jmsTemplate, JmsTemplate.class));
         } else {
             throw new CitrusRuntimeException("Either a jms-template reference " +
                     "or one of destination or destination-name must be provided");
@@ -107,21 +99,21 @@ public class JmsEndpointConfigParser extends AbstractAnnotationConfigParser<JmsE
         builder.useObjectMessages(annotation.useObjectMessages());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), JmsMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), JmsMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.destinationResolver())) {
-            builder.destinationResolver(getReferenceResolver().resolve(annotation.destinationResolver(), DestinationResolver.class));
+            builder.destinationResolver(referenceResolver.resolve(annotation.destinationResolver(), DestinationResolver.class));
         }
 
         if (StringUtils.hasText(annotation.destinationNameResolver())) {
-            builder.destinationNameResolver(getReferenceResolver().resolve(annotation.destinationNameResolver(), EndpointUriResolver.class));
+            builder.destinationNameResolver(referenceResolver.resolve(annotation.destinationNameResolver(), EndpointUriResolver.class));
         }
 
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

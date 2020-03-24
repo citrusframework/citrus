@@ -34,7 +34,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.kafka")
+@CitrusEndpointConfig(qualifier = "kafka")
 public @interface KafkaEndpointConfig {
 
     /**

@@ -1,0 +1,2 @@
+client=com.consol.citrus.rmi.config.annotation.RmiClientConfigParser
+server=com.consol.citrus.rmi.config.annotation.RmiServerConfigParser

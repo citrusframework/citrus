@@ -16,9 +16,12 @@
 
 package com.consol.citrus.selenium.config.annotation;
 
-import com.consol.citrus.annotations.CitrusEndpointConfig;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import java.lang.annotation.*;
+import com.consol.citrus.annotations.CitrusEndpointConfig;
 
 /**
  * @author Christoph Deppisch
@@ -26,7 +29,7 @@ import java.lang.annotation.*;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.selenium.browser")
+@CitrusEndpointConfig(qualifier = "selenium.browser")
 public @interface SeleniumBrowserConfig {
 
     /**

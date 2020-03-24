@@ -11,6 +11,9 @@ public interface TypeResolver {
     /** Property name that holds the type information to resolve */
     String DEFAULT_TYPE_PROPERTY = "type";
 
+    /** Property name to mark that multiple types will be present all types are loaded */
+    String TYPE_PROPERTY_WILDCARD = "*";
+
     /**
      * Resolve resource path property file with given name and load given property.
      * @param resourcePath
