@@ -19,7 +19,6 @@ package com.consol.citrus.config.annotation;
 import java.lang.annotation.Annotation;
 import java.util.Map;
 import java.util.Optional;
-import java.util.StringTokenizer;
 
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -45,6 +44,14 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
+     * Parse given annotation to a proper endpoint instance.
+     * @param annotation
+     * @param referenceResolver
+     * @return
+     */
+    T parse(A annotation, ReferenceResolver referenceResolver);
+
+    /**
      * Resolves all available annotation config parsers from resource path lookup. Scans classpath for annotation config parser meta information
      * and instantiates those parsers.
      * @return
@@ -63,6 +70,8 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
      * Resolves annotation config parser from resource path lookup with given resource name. Scans classpath for annotation config parser meta information
      * with given name and returns instance of the parser. Returns optional instead of throwing exception when no annotation config parser
      * could be found.
+     *
+     * Given parser name is a combination of resource file name and type property separated by '.' character.
      * @param parser
      * @return
      */
@@ -70,8 +79,8 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
         try {
             AnnotationConfigParser instance;
             if (parser.contains(".")) {
-                StringTokenizer stringTokenizer = new StringTokenizer(parser, ".");
-                instance = TYPE_RESOLVER.resolve(stringTokenizer.nextToken(), stringTokenizer.nextToken());
+                int separatorIndex = parser.lastIndexOf('.');
+                instance = TYPE_RESOLVER.resolve(parser.substring(0, separatorIndex), parser.substring(separatorIndex + 1));
             } else {
                 instance = TYPE_RESOLVER.resolve(parser);
             }
@@ -83,12 +92,4 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
 
         return Optional.empty();
     }
-
-    /**
-     * Parse given annotation to a proper endpoint instance.
-     * @param annotation
-     * @param referenceResolver
-     * @return
-     */
-    T parse(A annotation, ReferenceResolver referenceResolver);
 }

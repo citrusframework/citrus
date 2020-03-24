@@ -1,0 +1,2 @@
+async=com.consol.citrus.endpoint.direct.DirectEndpointBuilder
+sync=com.consol.citrus.endpoint.direct.DirectSyncEndpointBuilder

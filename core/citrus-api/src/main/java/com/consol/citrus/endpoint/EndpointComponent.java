@@ -47,6 +47,27 @@ public interface EndpointComponent {
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
+     * Creates proper endpoint instance from endpoint uri.
+     * @param endpointUri
+     * @param context
+     * @return
+     */
+    Endpoint createEndpoint(String endpointUri, TestContext context);
+
+    /**
+     * Gets the name of this endpoint component.
+     * @return
+     */
+    String getName();
+
+    /**
+     * Construct endpoint name from endpoint uri.
+     * @param endpointUri
+     * @return
+     */
+    Map<String, String> getParameters(String endpointUri);
+
+    /**
      * Resolves all available endpoint components from resource path lookup. Scans classpath for endpoint component meta information
      * and instantiates those components.
      * @return
@@ -77,25 +98,4 @@ public interface EndpointComponent {
 
         return Optional.empty();
     }
-
-    /**
-     * Creates proper endpoint instance from endpoint uri.
-     * @param endpointUri
-     * @param context
-     * @return
-     */
-    Endpoint createEndpoint(String endpointUri, TestContext context);
-
-    /**
-     * Gets the name of this endpoint component.
-     * @return
-     */
-    String getName();
-
-    /**
-     * Construct endpoint name from endpoint uri.
-     * @param endpointUri
-     * @return
-     */
-    Map<String, String> getParameters(String endpointUri);
 }

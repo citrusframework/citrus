@@ -1,0 +1,2 @@
+client=com.consol.citrus.rmi.client.RmiClientBuilder
+server=com.consol.citrus.rmi.server.RmiServerBuilder

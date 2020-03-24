@@ -1,0 +1,2 @@
+client=com.consol.citrus.ftp.client.FtpClientBuilder
+server=com.consol.citrus.ftp.server.FtpServerBuilder

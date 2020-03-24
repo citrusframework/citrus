@@ -22,6 +22,7 @@ import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.context.TestContext;
@@ -52,20 +53,46 @@ public class DefaultEndpointFactory implements EndpointFactory {
     @Override
     public Endpoint create(String endpointName, Annotation endpointConfig, TestContext context) {
         String qualifier = endpointConfig.annotationType().getAnnotation(CitrusEndpointConfig.class).qualifier();
-        Optional<AnnotationConfigParser> parser = Optional.ofNullable(getAnnotationParser(context.getReferenceResolver()).get(qualifier));
+        Optional<AnnotationConfigParser> parser = Optional.ofNullable(context.getReferenceResolver().resolveAll(AnnotationConfigParser.class).get(qualifier));
 
         if (!parser.isPresent()) {
             // try to get parser from default Citrus modules
             parser = AnnotationConfigParser.lookup(qualifier);
         }
 
-        if (!parser.isPresent()) {
-            throw new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier));
+        if (parser.isPresent()) {
+            Endpoint endpoint = parser.get().parse(endpointConfig, context.getReferenceResolver());
+            endpoint.setName(endpointName);
+            return endpoint;
         }
 
-        Endpoint endpoint = parser.get().parse(endpointConfig, context.getReferenceResolver());
-        endpoint.setName(endpointName);
-        return endpoint;
+        throw new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier));
+    }
+
+    @Override
+    public Endpoint create(String endpointName, CitrusEndpoint endpointConfig, Class<?> endpointType, TestContext context) {
+        Optional<EndpointBuilder> builder = context.getReferenceResolver().resolveAll(EndpointBuilder.class)
+                .values()
+                .stream()
+                .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
+                .findFirst();
+
+        if (!builder.isPresent()) {
+            // try to get builder from default Citrus modules
+            builder = EndpointBuilder.lookup()
+                    .values()
+                    .stream()
+                    .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
+                    .findFirst();
+        }
+
+        if (builder.isPresent()) {
+            Endpoint endpoint = builder.get().build(endpointConfig, context.getReferenceResolver());
+            endpoint.setName(endpointName);
+            return endpoint;
+        }
+
+        throw new CitrusRuntimeException(String.format("Unable to create endpoint builder for type '%s'", endpointType.getName()));
     }
 
     @Override
@@ -116,9 +143,5 @@ public class DefaultEndpointFactory implements EndpointFactory {
 
     private Map<String, EndpointComponent> getEndpointComponents(ReferenceResolver referenceResolver) {
         return referenceResolver.resolveAll(EndpointComponent.class);
-    }
-
-    private Map<String, AnnotationConfigParser> getAnnotationParser(ReferenceResolver referenceResolver) {
-        return referenceResolver.resolveAll(AnnotationConfigParser.class);
     }
 }
