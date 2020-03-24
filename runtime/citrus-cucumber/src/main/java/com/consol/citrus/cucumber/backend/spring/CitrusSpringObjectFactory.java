@@ -88,7 +88,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
         }
 
         T instance = delegate.getInstance(type);
-        CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus());
+        CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus(), context);
         CitrusAnnotations.injectTestRunner(instance, runner);
 
         return instance;

@@ -20,6 +20,7 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.testng.TestNGCitrusSupport;
+import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
@@ -33,12 +34,16 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  */
 public class ContextInjectionJavaIT extends TestNGCitrusSupport {
 
+    @CitrusResource
+    private TestContext globalContext;
+
     @Test
     @Parameters("context")
     @CitrusTest
     public void contextInjection(@Optional @CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
+        Assert.assertEquals(context, globalContext);
         run(echo("${message}"));
     }
 
@@ -48,6 +53,7 @@ public class ContextInjectionJavaIT extends TestNGCitrusSupport {
     public void contextInjectionCombinedWithParameters(String data, @CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
+        Assert.assertEquals(context, globalContext);
         run(echo("${message}"));
         run(echo("${data}"));
     }

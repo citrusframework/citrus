@@ -18,6 +18,7 @@ package com.consol.citrus.cucumber.integration.echo;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.MessageType;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -35,9 +36,12 @@ public class EchoSteps {
     @CitrusResource
     protected TestCaseRunner runner;
 
+    @CitrusResource
+    protected TestContext context;
+
     @Given("^My name is (.*)$")
     public void my_name_is(String name) {
-        runner.variable("username", name);
+        context.setVariable("username", name);
     }
 
     @When("^I say hello.*$")

@@ -85,6 +85,8 @@ public class CitrusSupport extends CitrusBaseExtension implements TestExecutionE
 
         TestCaseRunner testRunner = getTestRunner(extensionContext);
         CitrusAnnotations.injectTestRunner(extensionContext.getRequiredTestInstance(), testRunner);
+        CitrusAnnotations.injectTestContext(extensionContext.getRequiredTestInstance(), getTestContext(extensionContext));
+        CitrusAnnotations.injectEndpoints(extensionContext.getRequiredTestInstance(), getTestContext(extensionContext));
     }
 
     @Override

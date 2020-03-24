@@ -21,6 +21,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.junit.JUnit4CitrusSupport;
 import org.junit.Test;
+import org.junit.Assert;
 
 import static com.consol.citrus.actions.EchoAction.Builder.echo;
 
@@ -30,12 +31,15 @@ import static com.consol.citrus.actions.EchoAction.Builder.echo;
  */
 public class ContextInjectionJUnit4IT extends JUnit4CitrusSupport {
 
+    @CitrusResource
+    private TestContext globalContext;
+
     @Test
     @CitrusTest
     @SuppressWarnings("squid:S2699")
     public void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
-
+        Assert.assertEquals(globalContext, context);
         run(echo("${message}"));
     }
 }

@@ -25,6 +25,7 @@ import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -68,18 +69,21 @@ public class CitrusTestEnricher implements TestEnricher {
 
         try {
             Class<?>[] parameterTypes = method.getParameterTypes();
-
+            TestContext context = citrusInstance.get().getCitrusContext().createTestContext();
             for (int i = 0; i < parameterTypes.length; i++) {
                 final Annotation[] parameterAnnotations = method.getParameterAnnotations()[i];
                 for (Annotation annotation : parameterAnnotations) {
                     if (annotation instanceof CitrusResource) {
                         Class<?> type = parameterTypes[i];
                         if (TestCaseRunner.class.isAssignableFrom(type)) {
-                            TestCaseRunner testRunner = new DefaultTestCaseRunner(citrusInstance.get().getCitrusContext().createTestContext());
+                            TestCaseRunner testRunner = new DefaultTestCaseRunner(context);
                             testRunner.name(method.getDeclaringClass().getSimpleName() + "." + method.getName());
 
                             log.debug("Injecting Citrus test runner on method parameter");
                             values[i] = testRunner;
+                        } else if (TestContext.class.isAssignableFrom(type)) {
+                            log.debug("Injecting Citrus test context on method parameter");
+                            values[i] = context;
                         } else {
                             throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
                         }

@@ -48,6 +48,9 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSupport {
     @DirectEndpointConfig(queueName = "FOO.test.queue")
     private Endpoint directEndpoint;
 
+    @CitrusResource
+    private TestContext globalContext;
+
     @Test
     @CitrusTest
     public void injectActionRunner(@CitrusResource TestActionRunner runner, @CitrusResource TestContext context) {
@@ -59,12 +62,15 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSupport {
         runner.run(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
+                Assert.assertEquals(globalContext, context);
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(globalContext, context);
     }
 
     @Test
@@ -79,11 +85,14 @@ public class ResourceInjectionJUnit4IT extends JUnit4CitrusSupport {
         runner.run(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
+                Assert.assertEquals(globalContext, context);
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(directEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(globalContext, context);
     }
 }

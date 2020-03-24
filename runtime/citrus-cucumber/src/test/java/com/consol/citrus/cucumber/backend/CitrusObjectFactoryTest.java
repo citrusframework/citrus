@@ -50,6 +50,7 @@ public class CitrusObjectFactoryTest extends AbstractTestNGUnitTest {
         factory.start();
         final TestRunnerSteps steps = factory.getInstance(TestRunnerSteps.class);
         Assert.assertNotNull(steps.getTestRunner());
+        Assert.assertNotNull(steps.getTestContext());
         factory.stop();
     }
 }

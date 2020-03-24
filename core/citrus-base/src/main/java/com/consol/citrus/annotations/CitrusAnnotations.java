@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
 
 /**
- * Dependency injection support for {@link CitrusFramework} and {@link CitrusEndpoint} annotations.
+ * Dependency injection support for {@link CitrusFramework}, {@link CitrusResource} and {@link CitrusEndpoint} annotations.
  *
  * @author Christoph Deppisch
  * @since 2.5
@@ -69,6 +69,7 @@ public abstract class CitrusAnnotations {
     public static void injectAll(final Object target, final Citrus citrusFramework, final TestContext context) {
         injectCitrusFramework(target, citrusFramework);
         injectEndpoints(target, context);
+        injectTestContext(target, context);
     }
 
     /**
@@ -108,6 +109,33 @@ public abstract class CitrusAnnotations {
 
                 return false;
             }
+        });
+    }
+
+    /**
+     * Inject test context instance to the test class fields with {@link CitrusResource} annotation.
+     * @param target
+     * @param context
+     */
+    public static void injectTestContext(final Object target, final TestContext context) {
+        ReflectionUtils.doWithFields(target.getClass(), field -> {
+            Class<?> type = field.getType();
+            if (TestContext.class.isAssignableFrom(type)) {
+                log.debug(String.format("Injecting test context instance on test class field '%s'", field.getName()));
+                ReflectionUtils.setField(field, target, context);
+            } else {
+                throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
+            }
+        }, field -> {
+            if (field.isAnnotationPresent(CitrusResource.class) && TestContext.class.isAssignableFrom(field.getType())) {
+                if (!field.isAccessible()) {
+                    ReflectionUtils.makeAccessible(field);
+                }
+
+                return true;
+            }
+
+            return false;
         });
     }
 

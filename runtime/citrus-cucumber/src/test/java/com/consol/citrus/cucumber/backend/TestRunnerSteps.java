@@ -18,6 +18,7 @@ package com.consol.citrus.cucumber.backend;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.context.TestContext;
 
 /**
  * @author Christoph Deppisch
@@ -28,6 +29,9 @@ public class TestRunnerSteps {
     @CitrusResource
     private TestCaseRunner testRunner;
 
+    @CitrusResource
+    private TestContext context;
+
     /**
      * Gets the value of the testRunner property.
      *
@@ -35,5 +39,13 @@ public class TestRunnerSteps {
      */
     public TestCaseRunner getTestRunner() {
         return testRunner;
+    }
+
+    /**
+     * Obtains the test context.
+     * @return
+     */
+    public TestContext getTestContext() {
+        return context;
     }
 }

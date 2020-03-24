@@ -43,6 +43,9 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
     @JmsEndpointConfig(destinationName = "FOO.test.queue")
     private Endpoint jmsEndpoint;
 
+    @CitrusResource
+    private TestContext globalContext;
+
     @Test
     @Parameters( { "designer", "context" })
     @CitrusTest
@@ -56,12 +59,15 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
         testDesigner.action(new AbstractTestAction() {
             @Override
             public void doExecute(TestContext context) {
+                Assert.assertEquals(context, globalContext);
                 Assert.assertEquals(context.getVariable("random"), number);
             }
         });
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(jmsEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(context, globalContext);
     }
 
     @Test
@@ -83,6 +89,8 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(jmsEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(context, globalContext);
     }
 
     @Test(dataProvider = "testData")
@@ -105,6 +113,8 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(jmsEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(context, globalContext);
     }
 
     @Test(dataProvider = "testDataObjects")
@@ -127,6 +137,8 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(jmsEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(context, globalContext);
     }
 
     @Test(dataProvider = "testData")
@@ -149,6 +161,8 @@ public class ResourceInjectionJavaIT extends TestNGCitrusTest {
 
         Assert.assertNotNull(citrus);
         Assert.assertNotNull(jmsEndpoint);
+        Assert.assertNotNull(globalContext);
+        Assert.assertEquals(context, globalContext);
     }
 
     @DataProvider
