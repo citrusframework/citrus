@@ -14,8 +14,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.util.TestUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.BeanNameAware;
 
 /**
@@ -62,9 +60,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     /** Time to wait for nested actions to finish */
     private long timeout = 10000L;
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TestCase.class);
-
     @Override
     public void start(final TestContext context) {
         context.getTestListeners().onTestStart(this);
@@ -74,46 +69,10 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
                 log.debug("Initializing test case");
             }
 
-            /* Debug print global variables */
-            if (context.hasVariables() && log.isDebugEnabled()) {
-                log.debug("Global variables:");
-                for (final Map.Entry<String, Object> entry : context.getVariables().entrySet()) {
-                    log.debug(entry.getKey() + " = " + entry.getValue());
-                }
-            }
-
-            // add default variables for test
-            context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, getName());
-            context.setVariable(CitrusSettings.TEST_PACKAGE_VARIABLE, packageName);
-
-            for (final Map.Entry<String, Object> paramEntry : parameters.entrySet()) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
-                }
-                context.setVariable(paramEntry.getKey(), paramEntry.getValue());
-            }
-
-            /* build up the global test variables in TestContext by
-             * getting the names and the current values of all variables */
-            for (final Map.Entry<String, Object> entry : variableDefinitions.entrySet()) {
-                final String key = entry.getKey();
-                final Object value = entry.getValue();
-
-                if (value instanceof String) {
-                    //check if value is a variable or function (and resolve it accordingly)
-                    context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
-                } else {
-                    context.setVariable(key, value);
-                }
-            }
-
-            /* Debug print all variables */
-            if (context.hasVariables() && log.isDebugEnabled()) {
-                log.debug("Test variables:");
-                for (final Map.Entry<String, Object> entry : context.getVariables().entrySet()) {
-                    log.debug(entry.getKey() + " = " + entry.getValue());
-                }
-            }
+            debugVariables("Global", context);
+            initializeTestParameters(parameters, context);
+            initializeTestVariables(variableDefinitions, context);
+            debugVariables("Test", context);
 
             beforeTest(context);
         } catch (final Exception | AssertionError e) {
@@ -219,27 +178,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
 
             context.getTestListeners().onTestFinish(this);
-
-            if (!finalActions.isEmpty()) {
-                log.debug("Entering finally block in test case");
-
-                /* walk through the finally chain and execute the actions in there */
-                for (final TestActionBuilder<?> actionBuilder : finalActions) {
-                    TestAction action = actionBuilder.build();
-                    if (!action.isDisabled(context)) {
-                        testActionListeners.onTestActionStart(this, action);
-                        action.execute(context);
-                        testActionListeners.onTestActionFinish(this, action);
-                    } else {
-                        testActionListeners.onTestActionSkipped(this, action);
-                    }
-                }
-            }
-
-            if (testResult.isSuccess() && context.hasExceptions()) {
-                contextException = context.getExceptions().remove(0);
-                testResult = TestResult.failed(getName(), testClass.getName(), contextException);
-            }
+            executeFinalActions(context);
 
             if (contextException != null) {
                 throw new TestCaseFailedException(contextException);
@@ -259,6 +198,88 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             }
 
             afterTest(context);
+        }
+    }
+
+    /**
+     * Run final test actions.
+     * @param context
+     */
+    private void executeFinalActions(TestContext context) {
+        if (!finalActions.isEmpty()) {
+            log.debug("Entering finally block in test case");
+
+            /* walk through the finally chain and execute the actions in there */
+            for (final TestActionBuilder<?> actionBuilder : finalActions) {
+                TestAction action = actionBuilder.build();
+                if (!action.isDisabled(context)) {
+                    testActionListeners.onTestActionStart(this, action);
+                    action.execute(context);
+                    testActionListeners.onTestActionFinish(this, action);
+                } else {
+                    testActionListeners.onTestActionSkipped(this, action);
+                }
+            }
+        }
+
+        if (testResult.isSuccess() && context.hasExceptions()) {
+            CitrusRuntimeException contextException = context.getExceptions().remove(0);
+            testResult = TestResult.failed(getName(), testClass.getName(), contextException);
+            throw new TestCaseFailedException(contextException);
+        }
+    }
+
+    /**
+     * Print variables in given test context.
+     * @param scope
+     * @param context
+     */
+    private void debugVariables(String scope, TestContext context) {
+        /* Debug print global variables */
+        if (context.hasVariables() && log.isDebugEnabled()) {
+            log.debug(String.format("%s variables:", scope));
+            for (final Map.Entry<String, Object> entry : context.getVariables().entrySet()) {
+                log.debug(String.format("%s = %s", entry.getKey(), entry.getValue()));
+            }
+        }
+    }
+
+    /**
+     * Sets test parameters as test variables.
+     * @param parameters
+     * @param context
+     */
+    private void initializeTestParameters(Map<String, Object> parameters, TestContext context) {
+        // add default variables for test
+        context.setVariable(CitrusSettings.TEST_NAME_VARIABLE, getName());
+        context.setVariable(CitrusSettings.TEST_PACKAGE_VARIABLE, packageName);
+
+        for (final Map.Entry<String, Object> paramEntry : parameters.entrySet()) {
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Initializing test parameter '%s' as variable", paramEntry.getKey()));
+            }
+            context.setVariable(paramEntry.getKey(), paramEntry.getValue());
+        }
+    }
+
+    /**
+     * Initialize the test variables in the given test context.
+     * @param variableDefinitions
+     * @param context
+     */
+    private void initializeTestVariables(Map<String, Object> variableDefinitions, TestContext context) {
+        /* build up the global test variables in TestContext by
+         * getting the names and the current values of all variables */
+        for (final Map.Entry<String, Object> entry : variableDefinitions.entrySet()) {
+            final String key = entry.getKey();
+            final Object value = entry.getValue();
+
+            if (value instanceof String) {
+                //check if value is a variable or function (and resolve it accordingly)
+                context.setVariable(key, context.replaceDynamicContentInString(value.toString()));
+            } else {
+                context.setVariable(key, value);
+            }
         }
     }
 
@@ -402,10 +423,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         this.testRunner = testRunner;
     }
 
-    /**
-     * Gets the test runner flag.
-     * @return
-     */
+    @Override
     public boolean isTestRunner() {
         return testRunner;
     }
