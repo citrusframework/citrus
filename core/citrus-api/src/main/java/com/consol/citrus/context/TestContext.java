@@ -200,9 +200,9 @@ public class TestContext implements ReferenceResolverAware {
         } else if (variables.containsKey(variableName)) {
             return variables.get(variableName);
         } else if (variableName.contains(".")) {
-            String objectName = variableName.substring(0, variableName.indexOf("."));
+            String objectName = variableName.substring(0, variableName.indexOf('.'));
             if (variables.containsKey(objectName)) {
-                return getVariable(variables.get(objectName), variableName.substring(variableName.indexOf(".") + 1));
+                return getVariable(variables.get(objectName), variableName.substring(variableName.indexOf('.') + 1));
             }
         }
 
@@ -220,8 +220,8 @@ public class TestContext implements ReferenceResolverAware {
         String leftOver = null;
         String fieldName;
         if (pathExpression.contains(".")) {
-            fieldName = pathExpression.substring(0, pathExpression.indexOf("."));
-            leftOver = pathExpression.substring(pathExpression.indexOf(".") + 1);
+            fieldName = pathExpression.substring(0, pathExpression.indexOf('.'));
+            leftOver = pathExpression.substring(pathExpression.indexOf('.') + 1);
         } else {
             fieldName = pathExpression;
         }
@@ -260,7 +260,7 @@ public class TestContext implements ReferenceResolverAware {
         }
 
         if (log.isDebugEnabled()) {
-            log.debug("Setting variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + " with value: '" + value + "'");
+            log.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
@@ -713,13 +713,7 @@ public class TestContext implements ReferenceResolverAware {
      * @param receivedMessage
      */
     public void onInboundMessage(Message receivedMessage) {
-        if (messageListeners != null && !messageListeners.isEmpty()) {
-            messageListeners.onInboundMessage(receivedMessage, this);
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Received message:" + System.getProperty("line.separator") + (receivedMessage != null ? receivedMessage.toString() : ""));
-            }
-        }
+        logMessage("Receive", receivedMessage);
     }
 
     /**
@@ -728,11 +722,20 @@ public class TestContext implements ReferenceResolverAware {
      * @param message
      */
     public void onOutboundMessage(Message message) {
+        logMessage("Send", message);
+    }
+
+    /**
+     * Informs message listeners if present that new outbound message is about to be sent.
+     *
+     * @param message
+     */
+    private void logMessage(String operation, Message message) {
         if (messageListeners != null && !messageListeners.isEmpty()) {
             messageListeners.onOutboundMessage(message, this);
         } else {
             if (log.isDebugEnabled()) {
-                log.debug("Sent message:" + System.getProperty("line.separator") + message.toString());
+                log.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
             }
         }
     }
@@ -939,6 +942,11 @@ public class TestContext implements ReferenceResolverAware {
         @Override
         public void setTestResult(TestResult testResult) {
             // do nothing
+        }
+
+        @Override
+        public TestResult getTestResult() {
+            return null;
         }
 
         @Override

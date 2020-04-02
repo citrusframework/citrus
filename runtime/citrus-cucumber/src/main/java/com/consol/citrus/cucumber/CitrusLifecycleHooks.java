@@ -17,10 +17,14 @@
 package com.consol.citrus.cucumber;
 
 import com.consol.citrus.Citrus;
+import com.consol.citrus.TestCase;
 import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusFramework;
 import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.cucumber.backend.Scenario;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 
@@ -36,6 +40,9 @@ public class CitrusLifecycleHooks {
     @CitrusResource
     protected TestCaseRunner runner;
 
+    @CitrusResource
+    private TestContext context;
+
     @Before
     public void before(Scenario scenario) {
         if (runner != null) {
@@ -48,6 +55,15 @@ public class CitrusLifecycleHooks {
     @After
     public void after(Scenario scenario) {
         if (runner != null) {
+            if (context != null && scenario.isFailed()) {
+                TestCase testCase = runner.getTestCase();
+                TestResult testResult = testCase.getTestResult();
+                if (testResult == null || !testResult.isFailed()) {
+                    runner.getTestCase().setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(),
+                            new CitrusRuntimeException(String.format("Scenario %s status %s", scenario.getId(), scenario.getStatus().name()))));
+                }
+            }
+
             runner.stop();
         }
     }
