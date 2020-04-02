@@ -9,7 +9,7 @@ import com.consol.citrus.annotations.CitrusEndpointConfig;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.direct.sync")
+@CitrusEndpointConfig(qualifier = "direct.sync")
 public @interface DirectSyncEndpointConfig {
 
     /**

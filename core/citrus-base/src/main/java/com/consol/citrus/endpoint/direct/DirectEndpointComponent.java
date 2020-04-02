@@ -16,6 +16,13 @@ import com.consol.citrus.message.DefaultMessageQueue;
  */
 public class DirectEndpointComponent extends AbstractEndpointComponent {
 
+    /**
+     * Default constructor using the name for this component.
+     */
+    public DirectEndpointComponent() {
+        super("direct");
+    }
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         DirectEndpoint endpoint;

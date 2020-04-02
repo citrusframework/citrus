@@ -19,9 +19,10 @@ package com.consol.citrus.vertx.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.vertx.endpoint.VertxSyncEndpoint;
 import com.consol.citrus.vertx.factory.VertxInstanceFactory;
@@ -123,5 +124,10 @@ public class VertxSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(vertxEndpoint4.getActor());
         Assert.assertEquals(vertxEndpoint4.getEndpointConfiguration().getAddress(), "news-feed4");
         Assert.assertEquals(vertxEndpoint4.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("vertx.sync").isPresent());
     }
 }

@@ -56,21 +56,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
 
     @Override
     public String resolveProperty(String resourcePath, String property) {
-        String path = getFullResourcePath(resourcePath);
-
-        InputStream in = ResourcePathTypeResolver.class.getClassLoader().getResourceAsStream(path);
-        if (in == null) {
-            throw new CitrusRuntimeException(String.format("Failed to locate resource path '%s'", path));
-        }
-
-        try {
-            Properties config = new Properties();
-            config.load(in);
-
-            return config.getProperty(property);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(String.format("Unable to load properties from resource path configuration at '%s'", path), e);
-        }
+        return readAsProperties(resourcePath).getProperty(property);
     }
 
     @Override
@@ -92,16 +78,25 @@ public class ResourcePathTypeResolver implements TypeResolver {
             Stream.of(new PathMatchingResourcePatternResolver().getResources(ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX + path + "/*"))
                     .forEach(file -> {
                         Optional<String> resourceName = Optional.ofNullable(file.getFilename());
-                        if (resourceName.isPresent()) {
-                            T resource = resolve(path + "/" + resourceName.get());
+                        if (!resourceName.isPresent()) {
+                            log.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
+                            return;
+                        }
+
+                        if (property.equals(TYPE_PROPERTY_WILDCARD)) {
+                            Properties properties = readAsProperties(path + "/" + resourceName.get());
+                            for (Map.Entry<Object, Object> prop : properties.entrySet()) {
+                                T resource = resolve(path + "/" + resourceName.get(), prop.getKey().toString());
+                                resources.put(resourceName.get() + "." + prop.getKey().toString(), resource);
+                            }
+                        } else {
+                            T resource = resolve(path + "/" + resourceName.get(), property);
 
                             if (keyProperty != null) {
                                 resources.put(resolveProperty(path + "/" + resourceName.get(), keyProperty), resource);
                             } else {
                                 resources.put(resourceName.get(), resource);
                             }
-                        } else {
-                            log.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
                         }
                     });
         } catch (IOException e) {
@@ -109,6 +104,29 @@ public class ResourcePathTypeResolver implements TypeResolver {
         }
 
         return resources;
+    }
+
+    /**
+     * Read resource from classpath and load content as properties.
+     * @param resourcePath
+     * @return
+     */
+    private Properties readAsProperties(String resourcePath) {
+        String path = getFullResourcePath(resourcePath);
+
+        InputStream in = ResourcePathTypeResolver.class.getClassLoader().getResourceAsStream(path);
+        if (in == null) {
+            throw new CitrusRuntimeException(String.format("Failed to locate resource path '%s'", path));
+        }
+
+        try {
+            Properties config = new Properties();
+            config.load(in);
+
+            return config;
+        } catch (IOException e) {
+            throw new CitrusRuntimeException(String.format("Unable to load properties from resource path configuration at '%s'", path), e);
+        }
     }
 
     /**

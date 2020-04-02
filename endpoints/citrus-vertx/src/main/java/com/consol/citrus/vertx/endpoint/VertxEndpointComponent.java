@@ -36,6 +36,13 @@ public class VertxEndpointComponent extends AbstractEndpointComponent {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(VertxEndpointComponent.class);
 
+    /**
+     * Default constructor using the name for this component.
+     */
+    public VertxEndpointComponent() {
+        super("vertx");
+    }
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         VertxEndpoint endpoint;

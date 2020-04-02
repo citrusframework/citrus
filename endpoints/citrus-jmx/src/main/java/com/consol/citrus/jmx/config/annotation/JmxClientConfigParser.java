@@ -16,33 +16,25 @@
 
 package com.consol.citrus.jmx.config.annotation;
 
+import javax.management.NotificationFilter;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.jmx.client.JmxClient;
 import com.consol.citrus.jmx.client.JmxClientBuilder;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
-
-import javax.management.NotificationFilter;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmxClientConfigParser extends AbstractAnnotationConfigParser<JmxClientConfig, JmxClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public JmxClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class JmxClientConfigParser implements AnnotationConfigParser<JmxClientConfig, JmxClient> {
 
     @Override
-    public JmxClient parse(JmxClientConfig annotation) {
+    public JmxClient parse(JmxClientConfig annotation, ReferenceResolver referenceResolver) {
         JmxClientBuilder builder = new JmxClientBuilder();
 
         builder.serverUrl(annotation.serverUrl());
@@ -59,15 +51,15 @@ public class JmxClientConfigParser extends AbstractAnnotationConfigParser<JmxCli
         builder.reconnectDelay(annotation.reconnectDelay());
 
         if (StringUtils.hasText(annotation.notificationFilter())) {
-            builder.notificationFilter(getReferenceResolver().resolve(annotation.notificationFilter(), NotificationFilter.class));
+            builder.notificationFilter(referenceResolver.resolve(annotation.notificationFilter(), NotificationFilter.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), JmxMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), JmxMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -75,7 +67,7 @@ public class JmxClientConfigParser extends AbstractAnnotationConfigParser<JmxCli
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

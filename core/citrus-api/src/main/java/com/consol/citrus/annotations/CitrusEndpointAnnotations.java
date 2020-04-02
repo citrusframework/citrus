@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ReflectionUtils;
@@ -48,14 +49,14 @@ public abstract class CitrusEndpointAnnotations {
                     }
                 }
 
-                Endpoint endpoint;
-                if (StringUtils.hasText(endpointAnnotation.name())) {
-                    endpoint = context.getReferenceResolver().resolve(endpointAnnotation.name(), (Class<Endpoint>) field.getType());
+                ReferenceResolver referenceResolver = context.getReferenceResolver();
+                if (endpointAnnotation.properties().length > 0) {
+                    ReflectionUtils.setField(field, target, context.getEndpointFactory().create(getEndpointName(field), endpointAnnotation, field.getType(), context));
+                } else if (StringUtils.hasText(endpointAnnotation.name()) && referenceResolver.isResolvable(endpointAnnotation.name())) {
+                    ReflectionUtils.setField(field, target, referenceResolver.resolve(endpointAnnotation.name(), field.getType()));
                 } else {
-                    endpoint = context.getReferenceResolver().resolve((Class<Endpoint>) field.getType());
+                    ReflectionUtils.setField(field, target, referenceResolver.resolve(field.getType()));
                 }
-
-                ReflectionUtils.setField(field, target, endpoint);
             }
         }, new ReflectionUtils.FieldFilter() {
             @Override

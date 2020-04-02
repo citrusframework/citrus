@@ -22,12 +22,13 @@ import javax.jms.Destination;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -204,5 +205,10 @@ public class JmsSyncEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmsSyncEndpoint8.getEndpointConfiguration().getPollingInterval(), 250L);
         Assert.assertNotNull(jmsSyncEndpoint8.getActor());
         Assert.assertEquals(jmsSyncEndpoint8.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("jms.sync").isPresent());
     }
 }

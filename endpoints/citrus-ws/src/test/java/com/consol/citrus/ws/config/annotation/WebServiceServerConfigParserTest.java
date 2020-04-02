@@ -21,6 +21,7 @@ import java.util.Arrays;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
@@ -225,5 +226,10 @@ public class WebServiceServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(soapServer6.getConnector());
         Assert.assertNotNull(soapServer6.getServletHandler());
         Assert.assertEquals(soapServer6.getServletHandler(), servletHandler);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("soap.server").isPresent());
     }
 }

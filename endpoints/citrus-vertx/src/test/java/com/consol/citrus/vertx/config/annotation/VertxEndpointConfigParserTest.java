@@ -16,9 +16,14 @@
 
 package com.consol.citrus.vertx.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.vertx.endpoint.VertxEndpoint;
@@ -114,5 +119,24 @@ public class VertxEndpointConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNotNull(vertxEndpoint4.getActor());
         Assert.assertEquals(vertxEndpoint4.getEndpointConfiguration().getAddress(), "news-feed4");
         Assert.assertEquals(vertxEndpoint4.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("vertx.async"));
+        Assert.assertEquals(validators.get("vertx.async").getClass(), VertxEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("vertx.sync"));
+        Assert.assertEquals(validators.get("vertx.sync").getClass(), VertxSyncEndpointConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("vertx.async").isPresent());
     }
 }

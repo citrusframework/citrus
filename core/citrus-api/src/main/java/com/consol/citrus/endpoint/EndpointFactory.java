@@ -18,6 +18,7 @@ package com.consol.citrus.endpoint;
 
 import java.lang.annotation.Annotation;
 
+import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.context.TestContext;
 
 /**
@@ -34,7 +35,7 @@ public interface EndpointFactory {
 
     /**
      * Finds endpoint by parsing the given endpoint uri. The test context helps to create endpoints
-     * by providing the Spring application context so registered beans and bean references can be set as
+     * by providing the reference resolver so registered beans and bean references can be set as
      * configuration properties.
      *
      * @param endpointUri
@@ -45,7 +46,7 @@ public interface EndpointFactory {
 
     /**
      * Finds endpoint by parsing the given endpoint annotation. The test context helps to create endpoints
-     * by providing the Spring application context so registered beans and bean references can be set as
+     * by providing the reference resolver so registered beans and bean references can be set as
      * configuration properties.
      *
      * @param endpointName
@@ -54,4 +55,17 @@ public interface EndpointFactory {
      * @return
      */
     Endpoint create(String endpointName, Annotation endpointConfig, TestContext context);
+
+    /**
+     * Finds endpoint by parsing the given endpoint properties. The test context helps to create endpoints
+     * by providing the reference resolver so registered beans and bean references can be set as
+     * configuration properties.
+     *
+     * @param endpointName
+     * @param endpointConfig
+     * @param endpointType
+     * @param context
+     * @return
+     */
+    Endpoint create(String endpointName, CitrusEndpoint endpointConfig, Class<?> endpointType, TestContext context);
 }

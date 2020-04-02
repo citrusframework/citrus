@@ -16,11 +16,14 @@
 
 package com.consol.citrus.rmi.config.annotation;
 
-import com.consol.citrus.annotations.CitrusEndpointConfig;
-
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.rmi.Remote;
 import java.rmi.registry.Registry;
+
+import com.consol.citrus.annotations.CitrusEndpointConfig;
 
 /**
  * @author Christoph Deppisch
@@ -28,7 +31,7 @@ import java.rmi.registry.Registry;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.rmi.server")
+@CitrusEndpointConfig(qualifier = "rmi.server")
 public @interface RmiServerConfig {
 
     /**

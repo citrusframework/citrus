@@ -1,0 +1,2 @@
+async=com.consol.citrus.jms.endpoint.JmsEndpointBuilder
+sync=com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder

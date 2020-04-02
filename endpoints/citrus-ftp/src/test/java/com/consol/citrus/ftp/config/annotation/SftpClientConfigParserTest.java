@@ -22,11 +22,12 @@ import java.util.Map;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.ftp.client.SftpClient;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -145,5 +146,10 @@ public class SftpClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sftpClient4.getActor(), testActor);
         Assert.assertEquals(sftpClient4.getEndpointConfiguration().getPort(), new Integer(22224));
         Assert.assertEquals(sftpClient4.getEndpointConfiguration().getPollingInterval(), 250L);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("sftp.client").isPresent());
     }
 }

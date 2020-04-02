@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.MessageCorrelator;
@@ -38,18 +38,10 @@ import org.springframework.ws.transport.WebServiceMessageSender;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class WebServiceClientConfigParser extends AbstractAnnotationConfigParser<WebServiceClientConfig, WebServiceClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public WebServiceClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class WebServiceClientConfigParser implements AnnotationConfigParser<WebServiceClientConfig, WebServiceClient> {
 
     @Override
-    public WebServiceClient parse(WebServiceClientConfig annotation) {
+    public WebServiceClient parse(WebServiceClientConfig annotation, ReferenceResolver referenceResolver) {
         WebServiceClientBuilder builder = new WebServiceClientBuilder();
 
         builder.defaultUri(annotation.requestUrl());
@@ -65,39 +57,39 @@ public class WebServiceClientConfigParser extends AbstractAnnotationConfigParser
         }
 
         if (StringUtils.hasText(annotation.webServiceTemplate())) {
-            builder.webServiceTemplate(getReferenceResolver().resolve(annotation.webServiceTemplate(), WebServiceTemplate.class));
+            builder.webServiceTemplate(referenceResolver.resolve(annotation.webServiceTemplate(), WebServiceTemplate.class));
         }
 
         if (StringUtils.hasText(annotation.messageFactory())) {
-            builder.messageFactory(getReferenceResolver().resolve(annotation.messageFactory(), WebServiceMessageFactory.class));
+            builder.messageFactory(referenceResolver.resolve(annotation.messageFactory(), WebServiceMessageFactory.class));
         } else {
-            builder.messageFactory(getReferenceResolver().resolve("messageFactory", WebServiceMessageFactory.class));
+            builder.messageFactory(referenceResolver.resolve("messageFactory", WebServiceMessageFactory.class));
         }
 
         if (StringUtils.hasText(annotation.messageSender())) {
-            builder.messageSender(getReferenceResolver().resolve(annotation.messageSender(), WebServiceMessageSender.class));
+            builder.messageSender(referenceResolver.resolve(annotation.messageSender(), WebServiceMessageSender.class));
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), WebServiceMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), WebServiceMessageConverter.class));
         }
 
         if (annotation.interceptors().length > 0) {
-            builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientInterceptor.class));
+            builder.interceptors(referenceResolver.resolve(annotation.interceptors(), ClientInterceptor.class));
         }
 
         if (StringUtils.hasText(annotation.interceptor())) {
             List<ClientInterceptor> interceptors = new ArrayList<>();
-            interceptors.add(getReferenceResolver().resolve(annotation.interceptor(), ClientInterceptor.class));
+            interceptors.add(referenceResolver.resolve(annotation.interceptor(), ClientInterceptor.class));
             builder.interceptors(interceptors);
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         if (StringUtils.hasText(annotation.endpointResolver())) {
-            builder.endpointResolver(getReferenceResolver().resolve(annotation.endpointResolver(), EndpointUriResolver.class));
+            builder.endpointResolver(referenceResolver.resolve(annotation.endpointResolver(), EndpointUriResolver.class));
         }
 
         builder.faultStrategy(annotation.faultStrategy());
@@ -106,7 +98,7 @@ public class WebServiceClientConfigParser extends AbstractAnnotationConfigParser
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

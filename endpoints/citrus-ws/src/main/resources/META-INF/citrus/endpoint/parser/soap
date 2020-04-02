@@ -1,0 +1,2 @@
+client=com.consol.citrus.ws.config.annotation.WebServiceClientConfigParser
+server=com.consol.citrus.ws.config.annotation.WebServiceServerConfigParser

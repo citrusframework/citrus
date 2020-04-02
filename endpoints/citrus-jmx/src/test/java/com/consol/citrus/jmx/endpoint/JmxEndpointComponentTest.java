@@ -16,8 +16,12 @@
 
 package com.consol.citrus.jmx.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
 import com.consol.citrus.jmx.client.JmxClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -67,6 +71,21 @@ public class JmxEndpointComponentTest {
         Assert.assertEquals(((JmxClient)endpoint).getEndpointConfiguration().getServerUrl(), "platform");
         Assert.assertTrue(((JmxClient) endpoint).getEndpointConfiguration().isAutoReconnect());
         Assert.assertEquals(((JmxClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 2L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("jmx"));
+        Assert.assertEquals(validators.get("jmx").getClass(), JmxEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("jmx").isPresent());
     }
 
 }

@@ -16,10 +16,12 @@
 
 package com.consol.citrus.endpoint.direct.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointAnnotations;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.direct.DirectSyncEndpoint;
@@ -27,6 +29,7 @@ import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.message.MessageQueue;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.Assert;
@@ -157,5 +160,18 @@ public class DirectSyncEndpointConfigParserTest {
         Assert.assertEquals(directSyncEndpoint8.getEndpointConfiguration().getPollingInterval(), 250L);
         Assert.assertNotNull(directSyncEndpoint8.getActor());
         Assert.assertEquals(directSyncEndpoint8.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 2L);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("direct.sync").isPresent());
     }
 }

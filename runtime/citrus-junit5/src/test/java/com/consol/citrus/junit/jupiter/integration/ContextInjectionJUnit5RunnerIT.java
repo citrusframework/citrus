@@ -21,6 +21,7 @@ import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.junit.jupiter.CitrusSupport;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -35,12 +36,16 @@ public class ContextInjectionJUnit5RunnerIT {
     @CitrusResource
     private GherkinTestActionRunner runner;
 
+    @CitrusResource
+    private TestContext globalContext;
+
     @Test
     @CitrusTest
     @SuppressWarnings("squid:S2699")
     void contextInjection(@CitrusResource TestContext context) {
         context.setVariable("message", "Injection worked!");
 
+        Assertions.assertEquals(context, globalContext);
         runner.given(echo("${message}"));
     }
 }

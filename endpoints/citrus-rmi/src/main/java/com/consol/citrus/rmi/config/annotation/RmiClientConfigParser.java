@@ -17,30 +17,22 @@
 package com.consol.citrus.rmi.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.client.RmiClient;
 import com.consol.citrus.rmi.client.RmiClientBuilder;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class RmiClientConfigParser extends AbstractAnnotationConfigParser<RmiClientConfig, RmiClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public RmiClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class RmiClientConfigParser implements AnnotationConfigParser<RmiClientConfig, RmiClient> {
 
     @Override
-    public RmiClient parse(RmiClientConfig annotation) {
+    public RmiClient parse(RmiClientConfig annotation, ReferenceResolver referenceResolver) {
         RmiClientBuilder builder = new RmiClientBuilder();
 
         if (StringUtils.hasText(annotation.serverUrl())) {
@@ -62,11 +54,11 @@ public class RmiClientConfigParser extends AbstractAnnotationConfigParser<RmiCli
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), RmiMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), RmiMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -74,7 +66,7 @@ public class RmiClientConfigParser extends AbstractAnnotationConfigParser<RmiCli
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

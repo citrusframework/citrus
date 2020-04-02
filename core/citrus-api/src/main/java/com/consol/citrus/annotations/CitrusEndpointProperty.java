@@ -42,5 +42,5 @@ public @interface CitrusEndpointProperty {
      * Property type.
      * @return
      */
-    Class type() default String.class;
+    Class<?> type() default String.class;
 }

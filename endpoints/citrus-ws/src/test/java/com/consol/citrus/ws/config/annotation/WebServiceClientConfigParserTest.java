@@ -17,15 +17,23 @@
 package com.consol.citrus.ws.config.annotation;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.http.config.annotation.HttpClientConfigParser;
+import com.consol.citrus.http.config.annotation.HttpServerConfigParser;
+import com.consol.citrus.jms.config.annotation.JmsEndpointConfigParser;
+import com.consol.citrus.jms.config.annotation.JmsSyncEndpointConfigParser;
 import com.consol.citrus.message.DefaultMessageCorrelator;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.ws.client.WebServiceClient;
 import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
@@ -190,5 +198,32 @@ public class WebServiceClientConfigParserTest extends AbstractTestNGUnitTest {
         // 5th message sender
         Assert.assertNotNull(client6.getActor());
         Assert.assertEquals(client6.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 8L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jms.async"));
+        Assert.assertEquals(validators.get("jms.async").getClass(), JmsEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("jms.sync"));
+        Assert.assertEquals(validators.get("jms.sync").getClass(), JmsSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("http.client"));
+        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        Assert.assertNotNull(validators.get("http.server"));
+        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        Assert.assertNotNull(validators.get("soap.client"));
+        Assert.assertEquals(validators.get("soap.client").getClass(), WebServiceClientConfigParser.class);
+        Assert.assertNotNull(validators.get("soap.server"));
+        Assert.assertEquals(validators.get("soap.server").getClass(), WebServiceServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("soap.client").isPresent());
     }
 }

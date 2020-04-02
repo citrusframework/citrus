@@ -16,8 +16,12 @@
 
 package com.consol.citrus.ssh.client;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -68,5 +72,20 @@ public class SshEndpointComponentTest {
         Assert.assertEquals(((SshClient)endpoint).getEndpointConfiguration().getPassword(), "12345678");
         Assert.assertTrue(((SshClient) endpoint).getEndpointConfiguration().isStrictHostChecking());
         Assert.assertEquals(((SshClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 2L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("ssh"));
+        Assert.assertEquals(validators.get("ssh").getClass(), SshEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("ssh").isPresent());
     }
 }

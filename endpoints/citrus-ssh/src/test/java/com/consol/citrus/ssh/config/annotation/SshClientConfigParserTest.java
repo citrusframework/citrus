@@ -16,9 +16,14 @@
 
 package com.consol.citrus.ssh.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ssh.client.SshClient;
 import com.consol.citrus.ssh.message.SshMessageConverter;
@@ -105,5 +110,24 @@ public class SshClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(sshClient2.getEndpointConfiguration().getConnectionTimeout(), 5000);
         Assert.assertTrue(sshClient2.getEndpointConfiguration().isStrictHostChecking());
         Assert.assertEquals(sshClient2.getEndpointConfiguration().getMessageConverter(), messageConverter);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("ssh.client"));
+        Assert.assertEquals(validators.get("ssh.client").getClass(), SshClientConfigParser.class);
+        Assert.assertNotNull(validators.get("ssh.server"));
+        Assert.assertEquals(validators.get("ssh.server").getClass(), SshServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("ssh.client").isPresent());
     }
 }

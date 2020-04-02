@@ -1,0 +1,2 @@
+async=com.consol.citrus.vertx.endpoint.VertxEndpointBuilder
+sync=com.consol.citrus.vertx.endpoint.VertxSyncEndpointBuilder

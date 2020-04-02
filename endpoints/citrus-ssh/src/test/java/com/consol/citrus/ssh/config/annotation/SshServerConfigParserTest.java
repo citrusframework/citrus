@@ -19,9 +19,10 @@ package com.consol.citrus.ssh.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -125,5 +126,10 @@ public class SshServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(sshServer3.getPassword());
         Assert.assertEquals(sshServer3.getEndpointAdapter(), endpointAdapter);
         Assert.assertEquals(sshServer3.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("ssh.server").isPresent());
     }
 }

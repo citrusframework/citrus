@@ -16,11 +16,18 @@
 
 package com.consol.citrus.kubernetes.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
+import com.consol.citrus.http.config.annotation.HttpClientConfigParser;
+import com.consol.citrus.http.config.annotation.HttpServerConfigParser;
 import com.consol.citrus.kubernetes.client.KubernetesClient;
 import com.consol.citrus.kubernetes.message.KubernetesMessageConverter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.mockito.Mock;
@@ -87,5 +94,26 @@ public class KubernetesClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(client2.getEndpointConfiguration().getKubernetesClientConfig().getNamespace(), "user_namespace");
         Assert.assertEquals(client2.getEndpointConfiguration().getMessageConverter(), messageConverter);
         Assert.assertEquals(client2.getEndpointConfiguration().getObjectMapper(), objectMapper);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("http.client"));
+        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        Assert.assertNotNull(validators.get("http.server"));
+        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        Assert.assertNotNull(validators.get("k8s.client"));
+        Assert.assertEquals(validators.get("k8s.client").getClass(), KubernetesClientConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("k8s.client").isPresent());
     }
 }

@@ -16,11 +16,18 @@
 
 package com.consol.citrus.websocket.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.http.config.annotation.HttpClientConfigParser;
+import com.consol.citrus.http.config.annotation.HttpServerConfigParser;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.websocket.client.WebSocketClient;
 import com.consol.citrus.websocket.message.WebSocketMessageConverter;
@@ -97,5 +104,28 @@ public class WebSocketClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(webSocketClient3.getActor(), testActor);
         Assert.assertEquals(webSocketClient3.getEndpointConfiguration().getEndpointUri(), "ws://localhost:8080/test");
         Assert.assertEquals(webSocketClient3.getEndpointConfiguration().getPollingInterval(), 250L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 6L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("http.client"));
+        Assert.assertEquals(validators.get("http.client").getClass(), HttpClientConfigParser.class);
+        Assert.assertNotNull(validators.get("http.server"));
+        Assert.assertEquals(validators.get("http.server").getClass(), HttpServerConfigParser.class);
+        Assert.assertNotNull(validators.get("websocket.client"));
+        Assert.assertEquals(validators.get("websocket.client").getClass(), WebSocketClientConfigParser.class);
+        Assert.assertNotNull(validators.get("websocket.server"));
+        Assert.assertEquals(validators.get("websocket.server").getClass(), WebSocketServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("websocket.client").isPresent());
     }
 }

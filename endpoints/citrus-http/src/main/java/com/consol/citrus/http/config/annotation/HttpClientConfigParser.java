@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.client.HttpClient;
@@ -40,18 +40,10 @@ import org.springframework.web.client.RestTemplate;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpClientConfig, HttpClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public HttpClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class HttpClientConfigParser implements AnnotationConfigParser<HttpClientConfig, HttpClient> {
 
     @Override
-    public HttpClient parse(HttpClientConfig annotation) {
+    public HttpClient parse(HttpClientConfig annotation, ReferenceResolver referenceResolver) {
         HttpClientBuilder builder = new HttpClientBuilder();
 
         if (StringUtils.hasText(annotation.restTemplate()) && StringUtils.hasText(annotation.requestFactory())) {
@@ -65,26 +57,26 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         }
 
         if (StringUtils.hasText(annotation.restTemplate())) {
-            builder.restTemplate(getReferenceResolver().resolve(annotation.restTemplate(), RestTemplate.class));
+            builder.restTemplate(referenceResolver.resolve(annotation.restTemplate(), RestTemplate.class));
         }
 
         if (StringUtils.hasText(annotation.requestFactory())) {
-            builder.requestFactory(getReferenceResolver().resolve(annotation.requestFactory(), ClientHttpRequestFactory.class));
+            builder.requestFactory(referenceResolver.resolve(annotation.requestFactory(), ClientHttpRequestFactory.class));
         }
 
         builder.requestUrl(annotation.requestUrl());
         builder.requestMethod(annotation.requestMethod());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), HttpMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), HttpMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         if (StringUtils.hasText(annotation.endpointResolver())) {
-            builder.endpointResolver(getReferenceResolver().resolve(annotation.endpointResolver(), EndpointUriResolver.class));
+            builder.endpointResolver(referenceResolver.resolve(annotation.endpointResolver(), EndpointUriResolver.class));
         }
 
         builder.defaultAcceptHeader(annotation.defaultAcceptHeader());
@@ -95,7 +87,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
 
         builder.errorHandlingStrategy(annotation.errorStrategy());
         if (StringUtils.hasText(annotation.errorHandler())) {
-            builder.errorHandler(getReferenceResolver().resolve(annotation.errorHandler(), ResponseErrorHandler.class));
+            builder.errorHandler(referenceResolver.resolve(annotation.errorHandler(), ResponseErrorHandler.class));
         }
 
         List<MediaType> binaryMediaTypes = new ArrayList<>();
@@ -108,7 +100,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         }
 
         if (annotation.interceptors().length > 0) {
-            builder.interceptors(getReferenceResolver().resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
+            builder.interceptors(referenceResolver.resolve(annotation.interceptors(), ClientHttpRequestInterceptor.class));
         }
 
         // Set outbound header mapper
@@ -117,7 +109,7 @@ public class HttpClientConfigParser extends AbstractAnnotationConfigParser<HttpC
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

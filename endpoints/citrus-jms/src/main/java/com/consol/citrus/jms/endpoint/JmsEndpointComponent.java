@@ -34,6 +34,13 @@ import com.consol.citrus.endpoint.Endpoint;
  */
 public class JmsEndpointComponent extends AbstractEndpointComponent {
 
+    /**
+     * Default constructor using the name for this component.
+     */
+    public JmsEndpointComponent() {
+        super("jms");
+    }
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         JmsEndpoint endpoint;

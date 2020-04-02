@@ -16,18 +16,25 @@
 
 package com.consol.citrus.jmx.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.jmx.client.JmxClient;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
 public class JmxEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public JmxEndpointComponent() {
+        super("jmx");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

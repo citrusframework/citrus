@@ -28,25 +28,17 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7.6
  */
-public class ChannelEndpointConfigParser extends AbstractAnnotationConfigParser<ChannelEndpointConfig, ChannelEndpoint> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public ChannelEndpointConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class ChannelEndpointConfigParser implements AnnotationConfigParser<ChannelEndpointConfig, ChannelEndpoint> {
 
     @Override
-    public ChannelEndpoint parse(ChannelEndpointConfig annotation) {
+    public ChannelEndpoint parse(ChannelEndpointConfig annotation, ReferenceResolver referenceResolver) {
         ChannelEndpointBuilder builder = new ChannelEndpointBuilder();
 
         String channel = annotation.channel();
         String channelName = annotation.channelName();
 
         if (StringUtils.hasText(channel)) {
-            builder.channel(getReferenceResolver().resolve(annotation.channel(), MessageChannel.class));
+            builder.channel(referenceResolver.resolve(annotation.channel(), MessageChannel.class));
         }
 
         if (StringUtils.hasText(channelName)) {
@@ -61,23 +53,23 @@ public class ChannelEndpointConfigParser extends AbstractAnnotationConfigParser<
                 messagingTemplate = annotation.messagingTemplate();
             }
 
-            builder.messagingTemplate(getReferenceResolver().resolve(messagingTemplate, MessagingTemplate.class));
+            builder.messagingTemplate(referenceResolver.resolve(messagingTemplate, MessagingTemplate.class));
         }
 
         builder.useObjectMessages(annotation.useObjectMessages());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), ChannelMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), ChannelMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.channelResolver())) {
-            builder.channelResolver(getReferenceResolver().resolve(annotation.channelResolver(), DestinationResolver.class));
+            builder.channelResolver(referenceResolver.resolve(annotation.channelResolver(), DestinationResolver.class));
         }
 
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

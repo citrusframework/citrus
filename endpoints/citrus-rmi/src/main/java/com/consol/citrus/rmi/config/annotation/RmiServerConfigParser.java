@@ -17,31 +17,23 @@
 package com.consol.citrus.rmi.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.message.MessageCorrelator;
 import com.consol.citrus.rmi.message.RmiMessageConverter;
 import com.consol.citrus.rmi.server.RmiServer;
 import com.consol.citrus.rmi.server.RmiServerBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class RmiServerConfigParser extends AbstractAnnotationConfigParser<RmiServerConfig, RmiServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public RmiServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class RmiServerConfigParser implements AnnotationConfigParser<RmiServerConfig, RmiServer> {
 
     @Override
-    public RmiServer parse(RmiServerConfig annotation) {
+    public RmiServer parse(RmiServerConfig annotation, ReferenceResolver referenceResolver) {
         RmiServerBuilder builder = new RmiServerBuilder();
 
         builder.autoStart(annotation.autoStart());
@@ -59,7 +51,7 @@ public class RmiServerConfigParser extends AbstractAnnotationConfigParser<RmiSer
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
         if (StringUtils.hasText(annotation.binding())) {
@@ -71,11 +63,11 @@ public class RmiServerConfigParser extends AbstractAnnotationConfigParser<RmiSer
         builder.remoteInterfaces(annotation.remoteInterfaces());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), RmiMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), RmiMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -83,7 +75,7 @@ public class RmiServerConfigParser extends AbstractAnnotationConfigParser<RmiSer
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

@@ -105,7 +105,7 @@ public class CitrusBaseExtension implements BeforeAllCallback,
 
     @Override
     public void postProcessTestInstance(Object testInstance, ExtensionContext extensionContext) throws Exception {
-        CitrusAnnotations.injectAll(testInstance, getCitrus(extensionContext));
+        CitrusAnnotations.injectCitrusFramework(testInstance, getCitrus(extensionContext));
     }
 
     @Override

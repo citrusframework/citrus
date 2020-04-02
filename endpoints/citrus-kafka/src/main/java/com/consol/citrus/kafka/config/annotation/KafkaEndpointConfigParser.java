@@ -16,34 +16,26 @@
 
 package com.consol.citrus.kafka.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kafka.endpoint.KafkaEndpoint;
 import com.consol.citrus.kafka.endpoint.KafkaEndpointBuilder;
 import com.consol.citrus.kafka.message.KafkaMessageConverter;
 import com.consol.citrus.kafka.message.KafkaMessageHeaderMapper;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.8
  */
-public class KafkaEndpointConfigParser extends AbstractAnnotationConfigParser<KafkaEndpointConfig, KafkaEndpoint> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public KafkaEndpointConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class KafkaEndpointConfigParser implements AnnotationConfigParser<KafkaEndpointConfig, KafkaEndpoint> {
 
     @Override
-    public KafkaEndpoint parse(KafkaEndpointConfig annotation) {
+    public KafkaEndpoint parse(KafkaEndpointConfig annotation, ReferenceResolver referenceResolver) {
         KafkaEndpointBuilder builder = new KafkaEndpointBuilder();
 
         String server = annotation.server();
@@ -67,11 +59,11 @@ public class KafkaEndpointConfigParser extends AbstractAnnotationConfigParser<Ka
         builder.consumerGroup(annotation.consumerGroup());
 
         if (StringUtils.hasText(annotation.producerProperties())) {
-            builder.producerProperties(getReferenceResolver().resolve(annotation.producerProperties(), Map.class));
+            builder.producerProperties(referenceResolver.resolve(annotation.producerProperties(), Map.class));
         }
 
         if (StringUtils.hasText(annotation.consumerProperties())) {
-            builder.consumerProperties(getReferenceResolver().resolve(annotation.consumerProperties(), Map.class));
+            builder.consumerProperties(referenceResolver.resolve(annotation.consumerProperties(), Map.class));
         }
 
         builder.keySerializer(annotation.keySerializer());
@@ -81,17 +73,17 @@ public class KafkaEndpointConfigParser extends AbstractAnnotationConfigParser<Ka
         builder.valueDeserializer(annotation.valueDeserializer());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), KafkaMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), KafkaMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.headerMapper())) {
-            builder.headerMapper(getReferenceResolver().resolve(annotation.headerMapper(), KafkaMessageHeaderMapper.class));
+            builder.headerMapper(referenceResolver.resolve(annotation.headerMapper(), KafkaMessageHeaderMapper.class));
         }
 
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

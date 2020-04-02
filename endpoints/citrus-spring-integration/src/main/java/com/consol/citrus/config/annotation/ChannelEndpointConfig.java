@@ -29,7 +29,7 @@ import com.consol.citrus.annotations.CitrusEndpointConfig;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-@CitrusEndpointConfig(qualifier = "endpoint.parser.channel")
+@CitrusEndpointConfig(qualifier = "channel.async")
 public @interface ChannelEndpointConfig {
 
     /**

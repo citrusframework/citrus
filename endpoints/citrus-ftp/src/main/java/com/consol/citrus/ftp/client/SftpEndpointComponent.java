@@ -16,18 +16,25 @@
 
 package com.consol.citrus.ftp.client;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
  */
 public class SftpEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public SftpEndpointComponent() {
+        super("sftp");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

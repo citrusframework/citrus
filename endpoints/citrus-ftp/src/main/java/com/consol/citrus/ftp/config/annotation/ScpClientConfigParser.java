@@ -17,28 +17,21 @@
 package com.consol.citrus.ftp.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.ftp.client.*;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.ftp.client.ScpClient;
+import com.consol.citrus.ftp.client.ScpClientBuilder;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.6
  */
-public class ScpClientConfigParser extends AbstractAnnotationConfigParser<ScpClientConfig, ScpClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public ScpClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class ScpClientConfigParser implements AnnotationConfigParser<ScpClientConfig, ScpClient> {
 
     @Override
-    public ScpClient parse(ScpClientConfig annotation) {
+    public ScpClient parse(ScpClientConfig annotation, ReferenceResolver referenceResolver) {
         ScpClientBuilder builder = new ScpClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
@@ -65,7 +58,7 @@ public class ScpClientConfigParser extends AbstractAnnotationConfigParser<ScpCli
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.errorHandlingStrategy(annotation.errorStrategy());
@@ -75,7 +68,7 @@ public class ScpClientConfigParser extends AbstractAnnotationConfigParser<ScpCli
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

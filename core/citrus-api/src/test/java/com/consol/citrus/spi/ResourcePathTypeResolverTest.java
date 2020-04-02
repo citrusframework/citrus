@@ -53,5 +53,12 @@ public class ResourcePathTypeResolverTest {
         Assert.assertEquals(resolved.get("fooMock").getClass(), Foo.class);
         Assert.assertNotNull(resolved.get("barMock"));
         Assert.assertEquals(resolved.get("barMock").getClass(), Bar.class);
+
+        resolved = new ResourcePathTypeResolver().resolveAll("all", TypeResolver.TYPE_PROPERTY_WILDCARD);
+        Assert.assertEquals(resolved.size(), 2L);
+        Assert.assertNotNull(resolved.get("mocks.foo"));
+        Assert.assertEquals(resolved.get("mocks.foo").getClass(), Foo.class);
+        Assert.assertNotNull(resolved.get("mocks.bar"));
+        Assert.assertEquals(resolved.get("mocks.bar").getClass(), Bar.class);
     }
 }

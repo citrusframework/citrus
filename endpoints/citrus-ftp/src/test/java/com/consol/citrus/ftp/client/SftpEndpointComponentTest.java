@@ -16,8 +16,15 @@
 
 package com.consol.citrus.ftp.client;
 
+import java.util.Map;
+
+import com.consol.citrus.channel.ChannelEndpointComponent;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
+import com.consol.citrus.jms.endpoint.JmsEndpointComponent;
+import com.consol.citrus.ssh.client.SshEndpointComponent;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -65,5 +72,28 @@ public class SftpEndpointComponentTest {
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getPassword(), "consol");
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);
 
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 6L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("jms"));
+        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("channel"));
+        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
+        Assert.assertNotNull(validators.get("ssh"));
+        Assert.assertEquals(validators.get("ssh").getClass(), SshEndpointComponent.class);
+        Assert.assertNotNull(validators.get("ftp"));
+        Assert.assertEquals(validators.get("ftp").getClass(), FtpEndpointComponent.class);
+        Assert.assertNotNull(validators.get("sftp"));
+        Assert.assertEquals(validators.get("sftp").getClass(), SftpEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("sftp").isPresent());
     }
 }

@@ -1,0 +1,2 @@
+client=com.consol.citrus.ssh.config.annotation.SshClientConfigParser
+server=com.consol.citrus.ssh.config.annotation.SshServerConfigParser

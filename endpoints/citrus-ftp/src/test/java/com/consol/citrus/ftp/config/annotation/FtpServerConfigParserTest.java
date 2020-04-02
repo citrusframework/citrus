@@ -21,9 +21,10 @@ import java.io.IOException;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.ftp.server.FtpServer;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.apache.ftpserver.ftplet.UserManager;
 import org.mockito.Mock;
@@ -142,5 +143,10 @@ public class FtpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(ftpServer5.getEndpointConfiguration().getPort(), new Integer(22225));
         Assert.assertNotNull(ftpServer5.getEndpointAdapter());
         Assert.assertEquals(ftpServer5.getEndpointAdapter(), endpointAdapter);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("ftp.server").isPresent());
     }
 }

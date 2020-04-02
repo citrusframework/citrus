@@ -24,6 +24,10 @@ package com.consol.citrus.http.client;
  */
 public class HttpsEndpointComponent extends HttpEndpointComponent {
 
+    public HttpsEndpointComponent() {
+        super("https");
+    }
+
     @Override
     protected String getScheme() {
         return "https://";

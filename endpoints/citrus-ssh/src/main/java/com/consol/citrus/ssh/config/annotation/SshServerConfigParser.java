@@ -17,9 +17,9 @@
 package com.consol.citrus.ssh.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.ssh.message.SshMessageConverter;
 import com.consol.citrus.ssh.server.SshServer;
 import com.consol.citrus.ssh.server.SshServerBuilder;
@@ -29,18 +29,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class SshServerConfigParser extends AbstractAnnotationConfigParser<SshServerConfig, SshServer> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public SshServerConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class SshServerConfigParser implements AnnotationConfigParser<SshServerConfig, SshServer> {
 
     @Override
-    public SshServer parse(SshServerConfig annotation) {
+    public SshServer parse(SshServerConfig annotation, ReferenceResolver referenceResolver) {
         SshServerBuilder builder = new SshServerBuilder();
 
         builder.port(annotation.port());
@@ -66,7 +58,7 @@ public class SshServerConfigParser extends AbstractAnnotationConfigParser<SshSer
         }
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), SshMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), SshMessageConverter.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -74,14 +66,14 @@ public class SshServerConfigParser extends AbstractAnnotationConfigParser<SshSer
         builder.debugLogging(annotation.debugLogging());
 
         if (StringUtils.hasText(annotation.endpointAdapter())) {
-            builder.endpointAdapter(getReferenceResolver().resolve(annotation.endpointAdapter(), EndpointAdapter.class));
+            builder.endpointAdapter(referenceResolver.resolve(annotation.endpointAdapter(), EndpointAdapter.class));
         }
 
         builder.autoStart(annotation.autoStart());
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

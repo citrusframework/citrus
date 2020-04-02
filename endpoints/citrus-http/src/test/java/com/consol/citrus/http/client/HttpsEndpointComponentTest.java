@@ -16,10 +16,16 @@
 
 package com.consol.citrus.http.client;
 
-import com.consol.citrus.spi.ReferenceResolver;
+import java.util.Map;
+
+import com.consol.citrus.channel.ChannelEndpointComponent;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
+import com.consol.citrus.jms.endpoint.JmsEndpointComponent;
 import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -87,5 +93,26 @@ public class HttpsEndpointComponentTest {
         Assert.assertEquals(((HttpClient)endpoint).getEndpointConfiguration().getRequestUrl(), "https://localhost:8088/test?customParam=foo");
         Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getRequestMethod(), HttpMethod.DELETE);
         Assert.assertEquals(((HttpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("jms"));
+        Assert.assertEquals(validators.get("jms").getClass(), JmsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("channel"));
+        Assert.assertEquals(validators.get("channel").getClass(), ChannelEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http"));
+        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
+        Assert.assertNotNull(validators.get("https"));
+        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("https").isPresent());
     }
 }

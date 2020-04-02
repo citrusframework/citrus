@@ -16,32 +16,24 @@
 
 package com.consol.citrus.ftp.config.annotation;
 
+import java.util.Map;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.ftp.client.SftpClient;
 import com.consol.citrus.ftp.client.SftpClientBuilder;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.util.StringUtils;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.7.5
  */
-public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpClientConfig, SftpClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public SftpClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class SftpClientConfigParser implements AnnotationConfigParser<SftpClientConfig, SftpClient> {
 
     @Override
-    public SftpClient parse(SftpClientConfig annotation) {
+    public SftpClient parse(SftpClientConfig annotation, ReferenceResolver referenceResolver) {
         SftpClientBuilder builder = new SftpClientBuilder();
 
         if (StringUtils.hasText(annotation.host())) {
@@ -79,11 +71,11 @@ public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpC
         }
 
         if (StringUtils.hasText(annotation.sessionConfigs())) {
-            builder.sessionConfigs(getReferenceResolver().resolve(annotation.sessionConfigs(), Map.class));
+            builder.sessionConfigs(referenceResolver.resolve(annotation.sessionConfigs(), Map.class));
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.errorHandlingStrategy(annotation.errorStrategy());
@@ -93,7 +85,7 @@ public class SftpClientConfigParser extends AbstractAnnotationConfigParser<SftpC
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

@@ -16,12 +16,12 @@
 
 package com.consol.citrus.ssh.client;
 
+import java.util.Map;
+import java.util.StringTokenizer;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
-
-import java.util.Map;
-import java.util.StringTokenizer;
 
 /**
  * Component creates proper ssh client from endpoint uri resource and parameters.
@@ -30,6 +30,13 @@ import java.util.StringTokenizer;
  * @since 1.4.1
  */
 public class SshEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public SshEndpointComponent() {
+        super("ssh");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

@@ -16,18 +16,25 @@
 
 package com.consol.citrus.rmi.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.rmi.client.RmiClient;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
 public class RmiEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public RmiEndpointComponent() {
+        super("rmi");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

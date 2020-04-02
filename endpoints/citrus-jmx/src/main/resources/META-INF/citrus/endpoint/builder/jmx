@@ -1,0 +1,2 @@
+client=com.consol.citrus.jmx.client.JmxClientBuilder
+server=com.consol.citrus.jmx.server.JmxServerBuilder

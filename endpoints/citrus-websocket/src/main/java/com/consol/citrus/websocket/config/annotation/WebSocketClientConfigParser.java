@@ -17,9 +17,9 @@
 package com.consol.citrus.websocket.config.annotation;
 
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.websocket.client.WebSocketClient;
 import com.consol.citrus.websocket.client.WebSocketClientBuilder;
 import com.consol.citrus.websocket.message.WebSocketMessageConverter;
@@ -29,28 +29,20 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class WebSocketClientConfigParser extends AbstractAnnotationConfigParser<WebSocketClientConfig, WebSocketClient> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public WebSocketClientConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class WebSocketClientConfigParser implements AnnotationConfigParser<WebSocketClientConfig, WebSocketClient> {
 
     @Override
-    public WebSocketClient parse(WebSocketClientConfig annotation) {
+    public WebSocketClient parse(WebSocketClientConfig annotation, ReferenceResolver referenceResolver) {
         WebSocketClientBuilder builder = new WebSocketClientBuilder();
 
         builder.requestUrl(annotation.requestUrl());
 
         if (StringUtils.hasText(annotation.messageConverter())) {
-            builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), WebSocketMessageConverter.class));
+            builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), WebSocketMessageConverter.class));
         }
 
         if (StringUtils.hasText(annotation.endpointResolver())) {
-            builder.endpointResolver(getReferenceResolver().resolve(annotation.endpointResolver(), EndpointUriResolver.class));
+            builder.endpointResolver(referenceResolver.resolve(annotation.endpointResolver(), EndpointUriResolver.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());
@@ -58,7 +50,7 @@ public class WebSocketClientConfigParser extends AbstractAnnotationConfigParser<
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         return builder.initialize().build();

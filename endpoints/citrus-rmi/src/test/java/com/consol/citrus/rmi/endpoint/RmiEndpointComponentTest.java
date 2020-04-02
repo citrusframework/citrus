@@ -16,8 +16,12 @@
 
 package com.consol.citrus.rmi.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
 import com.consol.citrus.rmi.client.RmiClient;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -99,6 +103,21 @@ public class RmiEndpointComponentTest {
         Assert.assertEquals(((RmiClient)endpoint).getEndpointConfiguration().getPort(), 2099);
         Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getBinding(), "rmiBinding");
         Assert.assertEquals(((RmiClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 2L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("rmi"));
+        Assert.assertEquals(validators.get("rmi").getClass(), RmiEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("rmi").isPresent());
     }
 
 }

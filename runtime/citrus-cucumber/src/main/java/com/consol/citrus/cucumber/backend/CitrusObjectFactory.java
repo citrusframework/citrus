@@ -37,6 +37,9 @@ public class CitrusObjectFactory implements ObjectFactory {
     /** Test runner */
     private TestCaseRunner runner;
 
+    /** Test context */
+    private TestContext context;
+
     /** Static self reference */
     private static CitrusObjectFactory selfReference;
 
@@ -52,8 +55,7 @@ public class CitrusObjectFactory implements ObjectFactory {
 
     @Override
     public void start() {
-        /** Test context */
-        TestContext context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
+        context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
         runner = new DefaultTestCaseRunner(context);
     }
 
@@ -70,6 +72,7 @@ public class CitrusObjectFactory implements ObjectFactory {
 
         T instance = type.cast(Optional.ofNullable(instances.get(type))
                                         .orElseGet(() -> this.createNewInstance(type)));
+        CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus(), context);
         CitrusAnnotations.injectTestRunner(instance, runner);
 
         return instance;
@@ -80,7 +83,6 @@ public class CitrusObjectFactory implements ObjectFactory {
             Constructor<T> constructor = type.getConstructor();
             T instance = constructor.newInstance();
             instances.put(type, instance);
-            CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus());
             return instance;
         } catch (NoSuchMethodException e) {
             throw new CucumberException(String.format("%s doesn't have an empty constructor", type), e);

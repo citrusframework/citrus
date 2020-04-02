@@ -16,12 +16,12 @@
 
 package com.consol.citrus.websocket.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpointComponent;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.websocket.client.WebSocketClientEndpointConfiguration;
-
-import java.util.Map;
 
 /**
  * Web Socket endpoint component is able to create Web Socket client endpoint from endpoint uri with parameters.
@@ -30,6 +30,13 @@ import java.util.Map;
  * @since 2.3
  */
 public class WebSocketEndpointComponent extends AbstractEndpointComponent {
+
+    /**
+     * Default constructor using the name for this component.
+     */
+    public WebSocketEndpointComponent() {
+        super("websocket");
+    }
 
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {

@@ -16,23 +16,20 @@
 
 package com.consol.citrus.endpoint;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.consol.citrus.annotations.CitrusEndpoint;
 import com.consol.citrus.annotations.CitrusEndpointConfig;
 import com.consol.citrus.config.annotation.AnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 /**
  * Default endpoint factory implementation uses registered endpoint components in Spring application context to create endpoint
@@ -50,48 +47,52 @@ public class DefaultEndpointFactory implements EndpointFactory {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(DefaultEndpointFactory.class);
 
-    /** Default Citrus endpoint components from classpath resource properties */
-    private static Properties endpointComponentProperties;
-
-    /** Default Citrus endpoint annotation parsers from classpath resource properties */
-    private static Properties endpointParserProperties;
-
     /** Endpoint cache for endpoint reuse */
-    private Map<String, Endpoint> endpointCache = new ConcurrentHashMap<>();
-
-    static {
-        try {
-            // Loads property file from classpath holding default endpoint component definitions in Citrus.
-            endpointComponentProperties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("com/consol/citrus/endpoint/endpoint.components"));
-        } catch (IOException e) {
-            log.warn("Unable to laod default endpoint components from resource '%s'", e);
-        }
-
-        try {
-            // Loads property file from classpath holding default endpoint annotation parser definitions in Citrus.
-            endpointParserProperties = PropertiesLoaderUtils.loadProperties(new ClassPathResource("com/consol/citrus/endpoint/endpoint.parser"));
-        } catch (IOException e) {
-            log.warn("Unable to laod default endpoint annotation parsers from resource '%s'", e);
-        }
-    }
+    private final Map<String, Endpoint> endpointCache = new ConcurrentHashMap<>();
 
     @Override
     public Endpoint create(String endpointName, Annotation endpointConfig, TestContext context) {
         String qualifier = endpointConfig.annotationType().getAnnotation(CitrusEndpointConfig.class).qualifier();
-        AnnotationConfigParser<Annotation, ? extends Endpoint> parser = getAnnotationParser(context.getReferenceResolver()).get(qualifier);
+        Optional<AnnotationConfigParser> parser = Optional.ofNullable(context.getReferenceResolver().resolveAll(AnnotationConfigParser.class).get(qualifier));
 
-        if (parser == null) {
+        if (!parser.isPresent()) {
             // try to get parser from default Citrus modules
-            parser = resolveDefaultAnnotationParser(qualifier, context.getReferenceResolver());
+            parser = AnnotationConfigParser.lookup(qualifier);
         }
 
-        if (parser == null) {
-            throw new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier));
+        if (parser.isPresent()) {
+            Endpoint endpoint = parser.get().parse(endpointConfig, context.getReferenceResolver());
+            endpoint.setName(endpointName);
+            return endpoint;
         }
 
-        Endpoint endpoint = parser.parse(endpointConfig);
-        endpoint.setName(endpointName);
-        return endpoint;
+        throw new CitrusRuntimeException(String.format("Unable to create endpoint annotation parser with name '%s'", qualifier));
+    }
+
+    @Override
+    public Endpoint create(String endpointName, CitrusEndpoint endpointConfig, Class<?> endpointType, TestContext context) {
+        Optional<EndpointBuilder> builder = context.getReferenceResolver().resolveAll(EndpointBuilder.class)
+                .values()
+                .stream()
+                .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
+                .findFirst();
+
+        if (!builder.isPresent()) {
+            // try to get builder from default Citrus modules
+            builder = EndpointBuilder.lookup()
+                    .values()
+                    .stream()
+                    .filter(endpointBuilder -> endpointBuilder.supports(endpointType))
+                    .findFirst();
+        }
+
+        if (builder.isPresent()) {
+            Endpoint endpoint = builder.get().build(endpointConfig, context.getReferenceResolver());
+            endpoint.setName(endpointName);
+            return endpoint;
+        }
+
+        throw new CitrusRuntimeException(String.format("Unable to create endpoint builder for type '%s'", endpointType.getName()));
     }
 
     @Override
@@ -107,18 +108,18 @@ public class DefaultEndpointFactory implements EndpointFactory {
         }
 
         String componentName = tok.nextToken();
-        EndpointComponent component = getEndpointComponents(context.getReferenceResolver()).get(componentName);
+        Optional<EndpointComponent> component = Optional.ofNullable(getEndpointComponents(context.getReferenceResolver()).get(componentName));
 
-        if (component == null) {
+        if (!component.isPresent()) {
             // try to get component from default Citrus modules
-            component = resolveDefaultComponent(componentName);
+            component = EndpointComponent.lookup(componentName);
         }
 
-        if (component == null) {
+        if (!component.isPresent()) {
             throw new CitrusRuntimeException(String.format("Unable to create endpoint component with name '%s'", componentName));
         }
 
-        Map<String, String> parameters = component.getParameters(endpointUri);
+        Map<String, String> parameters = component.get().getParameters(endpointUri);
         String cachedEndpointName;
         if (parameters.containsKey(EndpointComponent.ENDPOINT_NAME)) {
             cachedEndpointName = parameters.remove(EndpointComponent.ENDPOINT_NAME);
@@ -133,7 +134,7 @@ public class DefaultEndpointFactory implements EndpointFactory {
                 }
                 return endpointCache.get(cachedEndpointName);
             } else {
-                Endpoint endpoint = component.createEndpoint(endpointUri, context);
+                Endpoint endpoint = component.get().createEndpoint(endpointUri, context);
                 endpointCache.put(cachedEndpointName, endpoint);
                 return endpoint;
             }
@@ -142,49 +143,5 @@ public class DefaultEndpointFactory implements EndpointFactory {
 
     private Map<String, EndpointComponent> getEndpointComponents(ReferenceResolver referenceResolver) {
         return referenceResolver.resolveAll(EndpointComponent.class);
-    }
-
-    private EndpointComponent resolveDefaultComponent(String componentName) {
-        String endpointComponentClassName = endpointComponentProperties.getProperty(componentName);
-
-        try {
-            if (endpointComponentClassName != null) {
-                Class<EndpointComponent> endpointComponentClass = (Class<EndpointComponent>) Class.forName(endpointComponentClassName);
-                EndpointComponent endpointComponent = endpointComponentClass.newInstance();
-                endpointComponent.setName(componentName);
-                return endpointComponent;
-            }
-        } catch (ClassNotFoundException e) {
-            log.warn(String.format("Unable to find default Citrus endpoint component '%s' in classpath", endpointComponentClassName), e);
-        } catch (InstantiationException e) {
-            log.warn(String.format("Unable to instantiate Citrus endpoint component '%s'", endpointComponentClassName), e);
-        } catch (IllegalAccessException e) {
-            log.warn(String.format("Unable to access Citrus endpoint component '%s'", endpointComponentClassName), e);
-        }
-
-        return null;
-    }
-
-    private Map<String, AnnotationConfigParser> getAnnotationParser(ReferenceResolver referenceResolver) {
-        return referenceResolver.resolveAll(AnnotationConfigParser.class);
-    }
-
-    private AnnotationConfigParser<Annotation, ? extends Endpoint> resolveDefaultAnnotationParser(String qualifier, ReferenceResolver referenceResolver) {
-        String annotationParserClassName = endpointParserProperties.getProperty(qualifier);
-
-        try {
-            if (annotationParserClassName != null) {
-                Class<AnnotationConfigParser<Annotation, Endpoint>> annotationParserClass = (Class<AnnotationConfigParser<Annotation, Endpoint>>) Class.forName(annotationParserClassName);
-                return annotationParserClass.getConstructor(ReferenceResolver.class).newInstance(referenceResolver);
-            }
-        } catch (ClassNotFoundException e) {
-            log.warn(String.format("Unable to find default Citrus endpoint parser '%s' in classpath", annotationParserClassName), e);
-        } catch (InstantiationException | NoSuchMethodException | InvocationTargetException e) {
-            log.warn(String.format("Unable to instantiate Citrus endpoint parser '%s'", annotationParserClassName), e);
-        } catch (IllegalAccessException e) {
-            log.warn(String.format("Unable to access Citrus endpoint parser '%s'", annotationParserClassName), e);
-        }
-
-        return null;
     }
 }

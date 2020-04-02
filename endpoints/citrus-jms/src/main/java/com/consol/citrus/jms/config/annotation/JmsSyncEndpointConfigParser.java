@@ -16,38 +16,30 @@
 
 package com.consol.citrus.jms.config.annotation;
 
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+
 import com.consol.citrus.TestActor;
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpoint;
 import com.consol.citrus.jms.endpoint.JmsSyncEndpointBuilder;
 import com.consol.citrus.jms.message.JmsMessageConverter;
 import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.support.destination.DestinationResolver;
 import org.springframework.util.StringUtils;
-
-import javax.jms.ConnectionFactory;
-import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<JmsSyncEndpointConfig, JmsSyncEndpoint> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public JmsSyncEndpointConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class JmsSyncEndpointConfigParser implements AnnotationConfigParser<JmsSyncEndpointConfig, JmsSyncEndpoint> {
 
     @Override
-    public JmsSyncEndpoint parse(JmsSyncEndpointConfig annotation) {
+    public JmsSyncEndpoint parse(JmsSyncEndpointConfig annotation, ReferenceResolver referenceResolver) {
         JmsSyncEndpointBuilder builder = new JmsSyncEndpointBuilder();
 
         String jmsTemplate = annotation.jmsTemplate();
@@ -66,11 +58,11 @@ public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<
                 throw new CitrusRuntimeException("Required connection-factory is missing for jms configuration");
             }
 
-            builder.connectionFactory(getReferenceResolver().resolve(connectionFactory, ConnectionFactory.class));
+            builder.connectionFactory(referenceResolver.resolve(connectionFactory, ConnectionFactory.class));
 
             //destination
             if (StringUtils.hasText(destination)) {
-                builder.destination(getReferenceResolver().resolve(annotation.destination(), Destination.class));
+                builder.destination(referenceResolver.resolve(annotation.destination(), Destination.class));
             } else {
                 builder.destination(annotation.destinationName());
             }
@@ -82,7 +74,7 @@ public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<
                         "connection-factory, destination, or destination-name should be provided");
             }
 
-            builder.jmsTemplate(getReferenceResolver().resolve(jmsTemplate, JmsTemplate.class));
+            builder.jmsTemplate(referenceResolver.resolve(jmsTemplate, JmsTemplate.class));
         } else {
             throw new CitrusRuntimeException("Either a jms-template reference " +
                     "or one of destination or destination-name must be provided");
@@ -90,24 +82,24 @@ public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<
 
         builder.pubSubDomain(annotation.pubSubDomain());
         builder.useObjectMessages(annotation.useObjectMessages());
-        builder.messageConverter(getReferenceResolver().resolve(annotation.messageConverter(), JmsMessageConverter.class));
+        builder.messageConverter(referenceResolver.resolve(annotation.messageConverter(), JmsMessageConverter.class));
 
         if (StringUtils.hasText(annotation.destinationResolver())) {
-            builder.destinationResolver(getReferenceResolver().resolve(annotation.destinationResolver(), DestinationResolver.class));
+            builder.destinationResolver(referenceResolver.resolve(annotation.destinationResolver(), DestinationResolver.class));
         }
 
         if (StringUtils.hasText(annotation.destinationNameResolver())) {
-            builder.destinationNameResolver(getReferenceResolver().resolve(annotation.destinationNameResolver(), EndpointUriResolver.class));
+            builder.destinationNameResolver(referenceResolver.resolve(annotation.destinationNameResolver(), EndpointUriResolver.class));
         }
 
         builder.timeout(annotation.timeout());
 
         if (StringUtils.hasText(annotation.actor())) {
-            builder.actor(getReferenceResolver().resolve(annotation.actor(), TestActor.class));
+            builder.actor(referenceResolver.resolve(annotation.actor(), TestActor.class));
         }
 
         if (StringUtils.hasText(annotation.replyDestination())) {
-            builder.replyDestination(getReferenceResolver().resolve(annotation.replyDestination(), Destination.class));
+            builder.replyDestination(referenceResolver.resolve(annotation.replyDestination(), Destination.class));
         }
 
         if (StringUtils.hasText(annotation.replyDestinationName())) {
@@ -115,7 +107,7 @@ public class JmsSyncEndpointConfigParser extends AbstractAnnotationConfigParser<
         }
 
         if (StringUtils.hasText(annotation.correlator())) {
-            builder.correlator(getReferenceResolver().resolve(annotation.correlator(), MessageCorrelator.class));
+            builder.correlator(referenceResolver.resolve(annotation.correlator(), MessageCorrelator.class));
         }
 
         builder.pollingInterval(annotation.pollingInterval());

@@ -16,10 +16,10 @@
 
 package com.consol.citrus.selenium.config.annotation;
 
-import com.consol.citrus.config.annotation.AbstractAnnotationConfigParser;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowser;
 import com.consol.citrus.selenium.endpoint.SeleniumBrowserBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.WebDriverEventListener;
@@ -29,18 +29,10 @@ import org.springframework.util.StringUtils;
  * @author Christoph Deppisch
  * @since 2.7
  */
-public class SeleniumBrowserConfigParser extends AbstractAnnotationConfigParser<SeleniumBrowserConfig, SeleniumBrowser> {
-
-    /**
-     * Constructor matching super.
-     * @param referenceResolver
-     */
-    public SeleniumBrowserConfigParser(ReferenceResolver referenceResolver) {
-        super(referenceResolver);
-    }
+public class SeleniumBrowserConfigParser implements AnnotationConfigParser<SeleniumBrowserConfig, SeleniumBrowser> {
 
     @Override
-    public SeleniumBrowser parse(SeleniumBrowserConfig annotation) {
+    public SeleniumBrowser parse(SeleniumBrowserConfig annotation, ReferenceResolver referenceResolver) {
         SeleniumBrowserBuilder builder = new SeleniumBrowserBuilder();
 
         if (StringUtils.hasText(annotation.startPage())) {
@@ -64,14 +56,14 @@ public class SeleniumBrowserConfigParser extends AbstractAnnotationConfigParser<
         }
 
         if (StringUtils.hasText(annotation.webDriver())) {
-            builder.webDriver(getReferenceResolver().resolve(annotation.webDriver(), WebDriver.class));
+            builder.webDriver(referenceResolver.resolve(annotation.webDriver(), WebDriver.class));
         }
 
         if (StringUtils.hasText(annotation.firefoxProfile())) {
-            builder.profile(getReferenceResolver().resolve(annotation.firefoxProfile(), FirefoxProfile.class));
+            builder.profile(referenceResolver.resolve(annotation.firefoxProfile(), FirefoxProfile.class));
         }
 
-        builder.eventListeners(getReferenceResolver().resolve(annotation.eventListeners(), WebDriverEventListener.class));
+        builder.eventListeners(referenceResolver.resolve(annotation.eventListeners(), WebDriverEventListener.class));
 
         builder.javaScript(annotation.javaScript());
 

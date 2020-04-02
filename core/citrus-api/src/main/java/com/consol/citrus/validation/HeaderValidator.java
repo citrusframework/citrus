@@ -34,9 +34,9 @@ import org.slf4j.LoggerFactory;
 public interface HeaderValidator {
 
     /** Logger */
-    Logger LOG = LoggerFactory.getLogger(MessageValidator.class);
+    Logger LOG = LoggerFactory.getLogger(HeaderValidator.class);
 
-    /** Message validator resource lookup path */
+    /** Header validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/header/validator";
 
     /** Type resolver to find custom message validators on classpath via resource path lookup */

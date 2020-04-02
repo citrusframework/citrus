@@ -40,6 +40,7 @@ public class CitrusSpringObjectFactoryTest {
         factory.start();
         final SpringRunnerSteps steps = factory.getInstance(SpringRunnerSteps.class);
         Assert.assertNotNull(steps.getTestRunner());
+        Assert.assertNotNull(steps.getTestContext());
         factory.stop();
     }
 
@@ -52,6 +53,7 @@ public class CitrusSpringObjectFactoryTest {
         factory.start();
         final DefaultSpringRunnerSteps steps = factory.getInstance(DefaultSpringRunnerSteps.class);
         Assert.assertNotNull(steps.getTestRunner());
+        Assert.assertNotNull(steps.getTestContext());
         factory.stop();
     }
 }

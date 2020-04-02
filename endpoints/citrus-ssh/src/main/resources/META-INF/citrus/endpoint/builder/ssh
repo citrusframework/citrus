@@ -1,0 +1,2 @@
+client=com.consol.citrus.ssh.client.SshClientBuilder
+server=com.consol.citrus.ssh.server.SshServerBuilder

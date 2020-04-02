@@ -17,8 +17,16 @@
 package com.consol.citrus.config.annotation;
 
 import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
@@ -26,5 +34,62 @@ import com.consol.citrus.endpoint.Endpoint;
  */
 public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint> {
 
-    T parse(A annotation);
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(AnnotationConfigParser.class);
+
+    /** Endpoint parser resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/endpoint/parser";
+
+    /** Default Citrus annotation config parsers from classpath resource properties */
+    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    /**
+     * Parse given annotation to a proper endpoint instance.
+     * @param annotation
+     * @param referenceResolver
+     * @return
+     */
+    T parse(A annotation, ReferenceResolver referenceResolver);
+
+    /**
+     * Resolves all available annotation config parsers from resource path lookup. Scans classpath for annotation config parser meta information
+     * and instantiates those parsers.
+     * @return
+     */
+    static Map<String, AnnotationConfigParser> lookup() {
+        Map<String, AnnotationConfigParser> parsers =
+                TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD);
+
+        if (LOG.isDebugEnabled()) {
+            parsers.forEach((k, v) -> LOG.debug(String.format("Found annotation config parser '%s' as %s", k, v.getClass())));
+        }
+        return parsers;
+    }
+
+    /**
+     * Resolves annotation config parser from resource path lookup with given resource name. Scans classpath for annotation config parser meta information
+     * with given name and returns instance of the parser. Returns optional instead of throwing exception when no annotation config parser
+     * could be found.
+     *
+     * Given parser name is a combination of resource file name and type property separated by '.' character.
+     * @param parser
+     * @return
+     */
+    static Optional<AnnotationConfigParser> lookup(String parser) {
+        try {
+            AnnotationConfigParser instance;
+            if (parser.contains(".")) {
+                int separatorIndex = parser.lastIndexOf('.');
+                instance = TYPE_RESOLVER.resolve(parser.substring(0, separatorIndex), parser.substring(separatorIndex + 1));
+            } else {
+                instance = TYPE_RESOLVER.resolve(parser);
+            }
+
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            LOG.warn(String.format("Failed to resolve annotation config parser from resource '%s/%s'", RESOURCE_PATH, parser));
+        }
+
+        return Optional.empty();
+    }
 }

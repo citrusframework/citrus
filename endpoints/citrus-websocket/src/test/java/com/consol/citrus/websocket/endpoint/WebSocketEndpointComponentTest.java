@@ -16,8 +16,14 @@
 
 package com.consol.citrus.websocket.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointComponent;
+import com.consol.citrus.endpoint.direct.DirectEndpointComponent;
+import com.consol.citrus.http.client.HttpEndpointComponent;
+import com.consol.citrus.http.client.HttpsEndpointComponent;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -69,5 +75,27 @@ public class WebSocketEndpointComponentTest {
 
         Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getEndpointUri(), "ws://localhost:8088/test?customParam=foo");
         Assert.assertEquals(((WebSocketEndpoint) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, EndpointComponent> validators = EndpointComponent.lookup();
+        Assert.assertEquals(validators.size(), 5L);
+        Assert.assertNotNull(validators.get("direct"));
+        Assert.assertEquals(validators.get("direct").getClass(), DirectEndpointComponent.class);
+        Assert.assertNotNull(validators.get("http"));
+        Assert.assertEquals(validators.get("http").getClass(), HttpEndpointComponent.class);
+        Assert.assertNotNull(validators.get("https"));
+        Assert.assertEquals(validators.get("https").getClass(), HttpsEndpointComponent.class);
+        Assert.assertNotNull(validators.get("websocket"));
+        Assert.assertEquals(validators.get("websocket").getClass(), WebSocketEndpointComponent.class);
+        Assert.assertNotNull(validators.get("ws"));
+        Assert.assertEquals(validators.get("ws").getClass(), WebSocketEndpointComponent.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(EndpointComponent.lookup("websocket").isPresent());
+        Assert.assertTrue(EndpointComponent.lookup("ws").isPresent());
     }
 }

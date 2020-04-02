@@ -29,6 +29,13 @@ import org.apache.camel.impl.DefaultCamelContext;
  * @since 1.4.1
  */
 public class CamelEndpointComponent extends AbstractEndpointComponent {
+    /**
+     * Default constructor using the name for this component.
+     */
+    public CamelEndpointComponent() {
+        super("camel");
+    }
+
     @Override
     protected Endpoint createEndpoint(String resourcePath, Map<String, String> parameters, TestContext context) {
         CamelEndpoint endpoint;

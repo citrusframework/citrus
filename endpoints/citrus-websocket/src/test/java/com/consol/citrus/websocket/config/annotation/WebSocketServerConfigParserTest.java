@@ -19,6 +19,7 @@ package com.consol.citrus.websocket.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.websocket.endpoint.WebSocketEndpoint;
@@ -95,5 +96,10 @@ public class WebSocketServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(webSocketEndpoint.getName(), "websocket3");
         Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getEndpointUri(), "/test3");
         Assert.assertEquals(webSocketEndpoint.getEndpointConfiguration().getTimeout(), 10000L);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("websocket.server").isPresent());
     }
 }

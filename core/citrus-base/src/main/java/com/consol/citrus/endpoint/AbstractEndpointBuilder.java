@@ -16,18 +16,11 @@
 
 package com.consol.citrus.endpoint;
 
-import java.lang.reflect.Method;
-
 import com.consol.citrus.TestActor;
-import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.annotations.CitrusEndpointProperty;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.TypeConversionUtils;
-import org.springframework.beans.factory.BeanFactoryAware;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * @author Christoph Deppisch
@@ -72,39 +65,26 @@ public abstract class AbstractEndpointBuilder<T extends Endpoint> implements End
     }
 
     /**
-     * Sets the Spring application context.
-     * @param applicationContext
+     * Sets the reference resolver.
+     * @param referenceResolver
      * @return
      */
-    public AbstractEndpointBuilder<T> applicationContext(ApplicationContext applicationContext) {
-        if (getEndpoint() instanceof ApplicationContextAware) {
-            ((ApplicationContextAware) getEndpoint()).setApplicationContext(applicationContext);
-        }
-
-        if (getEndpoint() instanceof BeanFactoryAware) {
-            ((BeanFactoryAware) getEndpoint()).setBeanFactory(applicationContext);
+    public AbstractEndpointBuilder<T> referenceResolver(ReferenceResolver referenceResolver) {
+        if (getEndpoint() instanceof ReferenceResolverAware) {
+            ((ReferenceResolverAware) getEndpoint()).setReferenceResolver(referenceResolver);
         }
 
         return this;
     }
 
     @Override
-    public T build(CitrusEndpoint endpointAnnotation) {
-        ReflectionUtils.invokeMethod(ReflectionUtils.findMethod(this.getClass(), "name"), this, endpointAnnotation.name());
-
-        for (CitrusEndpointProperty endpointProperty : endpointAnnotation.properties()) {
-            Method propertyMethod = ReflectionUtils.findMethod(this.getClass(), endpointProperty.name());
-            if (propertyMethod != null) {
-                ReflectionUtils.invokeMethod(propertyMethod, this, TypeConversionUtils.convertStringToType(endpointProperty.value(), endpointProperty.type()));
-            }
-        }
-
-        return build();
+    public T build() {
+        return getEndpoint();
     }
 
     @Override
-    public T build() {
-        return getEndpoint();
+    public boolean supports(Class<?> endpointType) {
+        return getEndpoint().getClass().equals(endpointType);
     }
 
     /**

@@ -1,0 +1,2 @@
+foo=com.consol.citrus.spi.mocks.Foo
+bar=com.consol.citrus.spi.mocks.Bar

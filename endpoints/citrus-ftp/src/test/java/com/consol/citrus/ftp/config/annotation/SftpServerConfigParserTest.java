@@ -19,11 +19,12 @@ package com.consol.citrus.ftp.config.annotation;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.direct.DirectEndpointAdapter;
 import com.consol.citrus.ftp.client.SftpEndpointConfiguration;
 import com.consol.citrus.ftp.server.SftpServer;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -127,5 +128,10 @@ public class SftpServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertNull(sftpServer3.getPassword());
         Assert.assertEquals(sftpServer3.getEndpointAdapter(), endpointAdapter);
         Assert.assertEquals(sftpServer3.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("sftp.server").isPresent());
     }
 }

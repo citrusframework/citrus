@@ -19,6 +19,7 @@ package com.consol.citrus.cucumber.backend.spring;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.config.CitrusSpringConfig;
+import com.consol.citrus.context.TestContext;
 import org.springframework.test.context.ContextConfiguration;
 
 /**
@@ -31,6 +32,9 @@ public class SpringRunnerSteps {
     @CitrusResource
     private TestCaseRunner testRunner;
 
+    @CitrusResource
+    private TestContext context;
+
     /**
      * Gets the value of the testRunner property.
      *
@@ -38,5 +42,14 @@ public class SpringRunnerSteps {
      */
     public TestCaseRunner getTestRunner() {
         return testRunner;
+    }
+
+    /**
+     * Obtains the test context.
+     *
+     * @return
+     */
+    public TestContext getTestContext() {
+        return context;
     }
 }

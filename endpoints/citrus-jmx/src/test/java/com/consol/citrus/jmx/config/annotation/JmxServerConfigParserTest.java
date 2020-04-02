@@ -22,11 +22,12 @@ import java.util.Properties;
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
 import com.consol.citrus.jmx.mbean.HelloBean;
 import com.consol.citrus.jmx.mbean.NewsBean;
 import com.consol.citrus.jmx.message.JmxMessageConverter;
 import com.consol.citrus.jmx.server.JmxServer;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -144,5 +145,10 @@ public class JmxServerConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(jmxServer3.getMbeans().size(), 1L);
         Assert.assertEquals(jmxServer3.getMbeans().get(0).getType(), HelloBean.class);
         Assert.assertEquals(jmxServer3.getActor(), testActor);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("jmx.server").isPresent());
     }
 }

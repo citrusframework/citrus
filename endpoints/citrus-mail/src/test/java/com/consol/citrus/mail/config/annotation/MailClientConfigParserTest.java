@@ -16,15 +16,19 @@
 
 package com.consol.citrus.mail.config.annotation;
 
+import java.util.Map;
 import java.util.Properties;
 
 import com.consol.citrus.TestActor;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusEndpoint;
-import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.config.annotation.AnnotationConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectEndpointConfigParser;
+import com.consol.citrus.endpoint.direct.annotation.DirectSyncEndpointConfigParser;
 import com.consol.citrus.mail.client.MailClient;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
+import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -114,5 +118,24 @@ public class MailClientConfigParserTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(mailClient3.getEndpointConfiguration().getMessageConverter(), messageConverter);
         Assert.assertEquals(mailClient3.getEndpointConfiguration().getMarshaller(), marshaller);
         Assert.assertEquals(mailClient3.getEndpointConfiguration().getJavaMailSender().getJavaMailProperties(), mailProperties);
+    }
+
+    @Test
+    public void testLookupAll() {
+        Map<String, AnnotationConfigParser> validators = AnnotationConfigParser.lookup();
+        Assert.assertEquals(validators.size(), 4L);
+        Assert.assertNotNull(validators.get("direct.async"));
+        Assert.assertEquals(validators.get("direct.async").getClass(), DirectEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("direct.sync"));
+        Assert.assertEquals(validators.get("direct.sync").getClass(), DirectSyncEndpointConfigParser.class);
+        Assert.assertNotNull(validators.get("mail.client"));
+        Assert.assertEquals(validators.get("mail.client").getClass(), MailClientConfigParser.class);
+        Assert.assertNotNull(validators.get("mail.server"));
+        Assert.assertEquals(validators.get("mail.server").getClass(), MailServerConfigParser.class);
+    }
+
+    @Test
+    public void testLookupByQualifier() {
+        Assert.assertTrue(AnnotationConfigParser.lookup("mail.client").isPresent());
     }
 }

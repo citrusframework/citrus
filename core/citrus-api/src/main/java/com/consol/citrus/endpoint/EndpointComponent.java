@@ -17,9 +17,13 @@
 package com.consol.citrus.endpoint;
 
 import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
-import org.springframework.beans.factory.BeanNameAware;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Endpoint component registers with bean name in Spring application context and is then responsible to create proper endpoints dynamically from
@@ -29,9 +33,18 @@ import org.springframework.beans.factory.BeanNameAware;
  * @author Christoph Deppisch
  * @since 1.4.1
  */
-public interface EndpointComponent extends BeanNameAware {
+public interface EndpointComponent {
+
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(EndpointComponent.class);
 
     String ENDPOINT_NAME = "endpointName";
+
+    /** Endpoint component resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/endpoint/component";
+
+    /** Default Citrus endpoint components from classpath resource properties */
+    ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
     /**
      * Creates proper endpoint instance from endpoint uri.
@@ -48,15 +61,41 @@ public interface EndpointComponent extends BeanNameAware {
     String getName();
 
     /**
-     * Sets the endpoint component name.
-     * @param name
-     */
-    void setName(String name);
-
-    /**
      * Construct endpoint name from endpoint uri.
      * @param endpointUri
      * @return
      */
     Map<String, String> getParameters(String endpointUri);
+
+    /**
+     * Resolves all available endpoint components from resource path lookup. Scans classpath for endpoint component meta information
+     * and instantiates those components.
+     * @return
+     */
+    static Map<String, EndpointComponent> lookup() {
+        Map<String, EndpointComponent> components = TYPE_RESOLVER.resolveAll();
+
+        if (LOG.isDebugEnabled()) {
+            components.forEach((k, v) -> LOG.debug(String.format("Found endpoint component '%s' as %s", k, v.getClass())));
+        }
+        return components;
+    }
+
+    /**
+     * Resolves endpoint component from resource path lookup with given resource name. Scans classpath for endpoint component meta information
+     * with given name and returns instance of the component. Returns optional instead of throwing exception when no endpoint component
+     * could be found.
+     * @param component
+     * @return
+     */
+    static Optional<EndpointComponent> lookup(String component) {
+        try {
+            EndpointComponent instance = TYPE_RESOLVER.resolve(component);
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            LOG.warn(String.format("Failed to resolve endpoint component from resource '%s/%s'", RESOURCE_PATH, component));
+        }
+
+        return Optional.empty();
+    }
 }
