@@ -942,6 +942,11 @@ public class TestContext implements ReferenceResolverAware {
         }
 
         @Override
+        public TestResult getTestResult() {
+            return null;
+        }
+
+        @Override
         public void addFinalAction(TestActionBuilder<?> action) {
             // do nothing
         }

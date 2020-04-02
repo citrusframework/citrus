@@ -111,6 +111,12 @@ public interface TestCase extends TestActionContainer, TestActionListenersAware 
     void setTestResult(final TestResult testResult);
 
     /**
+     * Retrieve test result.
+     * @return
+     */
+    TestResult getTestResult();
+
+    /**
      * Marks this test case as Java DSL test runner.
      * @return
      */

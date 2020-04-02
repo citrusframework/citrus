@@ -416,6 +416,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     @Override
+    public TestResult getTestResult() {
+        return testResult;
+    }
+
+    @Override
     public String[] getGroups() {
         return groups;
     }
