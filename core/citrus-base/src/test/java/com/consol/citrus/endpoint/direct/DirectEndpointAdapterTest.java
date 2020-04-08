@@ -38,7 +38,7 @@ public class DirectEndpointAdapterTest {
     private DirectEndpointAdapter endpointAdapter;
     private DirectSyncEndpointConfiguration endpointConfiguration;
 
-    private TestContextFactory testContextFactory = new TestContextFactory();
+    private TestContextFactory testContextFactory = TestContextFactory.newInstance();
     private TestContext context;
 
     @BeforeClass

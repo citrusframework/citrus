@@ -17,7 +17,6 @@
 package com.consol.citrus.dsl.runner;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Stack;
 
@@ -62,8 +61,6 @@ import com.consol.citrus.container.Parallel;
 import com.consol.citrus.container.RepeatOnErrorUntilTrue;
 import com.consol.citrus.container.RepeatUntilTrue;
 import com.consol.citrus.container.Sequence;
-import com.consol.citrus.container.SequenceAfterTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.container.Template;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.container.Timer;
@@ -84,7 +81,6 @@ import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 
@@ -130,22 +126,6 @@ public class DefaultTestRunner implements TestRunner {
     public DefaultTestRunner(TestContext context) {
         this();
         this.context = context;
-
-        if (context.getReferenceResolver() != null) {
-            try {
-                testCase.setTestActionListeners(context.getReferenceResolver().resolve(TestActionListeners.class));
-
-                if (!context.getReferenceResolver().resolveAll(SequenceBeforeTest.class).isEmpty()) {
-                    testCase.setBeforeTest(Arrays.asList(context.getReferenceResolver().resolveAll(SequenceBeforeTest.class).values().toArray(new SequenceBeforeTest[]{})));
-                }
-
-                if (!context.getReferenceResolver().resolveAll(SequenceAfterTest.class).isEmpty()) {
-                    testCase.setAfterTest(Arrays.asList(context.getReferenceResolver().resolveAll(SequenceAfterTest.class).values().toArray(new SequenceAfterTest[]{})));
-                }
-            } catch (Exception e) {
-                throw new CitrusRuntimeException("Failed to setup test designer", e);
-            }
-        }
     }
 
     @Override
