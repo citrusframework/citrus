@@ -44,6 +44,12 @@ public class DefaultMessageQueue implements MessageQueue {
     /** Flag to enable/disable message logging */
     private boolean loggingEnabled = false;
 
+    private final String name;
+
+    public DefaultMessageQueue(String name) {
+        this.name = name;
+    }
+
     @Override
     public void send(Message message) {
         this.queue.add(message);
@@ -134,5 +140,10 @@ public class DefaultMessageQueue implements MessageQueue {
      */
     public void setLoggingEnabled(boolean loggingEnabled) {
         this.loggingEnabled = loggingEnabled;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

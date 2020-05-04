@@ -18,7 +18,7 @@ package com.consol.citrus.message;
 
 /**
  * Citrus specific message headers.
- * 
+ *
  * @author Christoph Deppisch
  */
 public final class MessageHeaders {
@@ -28,7 +28,7 @@ public final class MessageHeaders {
      */
     private MessageHeaders() {
     }
-    
+
     /** Common header name prefix */
     public static final String PREFIX = "citrus_";
 
@@ -46,5 +46,8 @@ public final class MessageHeaders {
 
     /** Synchronous message correlation */
     public static final String MESSAGE_CORRELATION_KEY = MESSAGE_PREFIX + "correlator";
+
+    /** Synchronous reply to message destination name */
+    public static final String MESSAGE_REPLY_TO = MESSAGE_PREFIX + "replyTo";
 
 }

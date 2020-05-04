@@ -16,6 +16,9 @@
 
 package com.consol.citrus.channel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.channel.selector.HeaderMatchingMessageSelector;
 import com.consol.citrus.exceptions.ActionTimeoutException;
@@ -31,10 +34,11 @@ import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -42,11 +46,11 @@ import static org.mockito.Mockito.*;
 public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
     private MessagingTemplate messagingTemplate = Mockito.mock(MessagingTemplate.class);
-    
+
     private PollableChannel channel = Mockito.mock(PollableChannel.class);
 
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessage() {
@@ -54,12 +58,12 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
-        
+
         reset(messagingTemplate, channel);
 
         when(messagingTemplate.receive(channel)).thenReturn(message);
@@ -70,7 +74,7 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageChannelNameResolver() {
@@ -80,14 +84,14 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannelName("testChannel");
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
-        
+
         reset(messagingTemplate, channel, channelResolver);
-        
+
         when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
 
         when(messagingTemplate.receive(channel)).thenReturn(message);
@@ -99,7 +103,7 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithCustomTimeout() {
@@ -108,12 +112,12 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setChannel(channel);
         endpoint.getEndpointConfiguration().setTimeout(10000L);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
-        
+
         reset(messagingTemplate, channel);
         when(messagingTemplate.receive(channel)).thenReturn(message);
 
@@ -124,7 +128,7 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(10000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageTimeoutOverride() {
@@ -133,12 +137,12 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setChannel(channel);
         endpoint.getEndpointConfiguration().setTimeout(10000L);
-        
+
         Map<String, Object> headers = new HashMap<String, Object>();
         final org.springframework.messaging.Message message = MessageBuilder.withPayload("<TestRequest><Message>Hello World!</Message></TestRequest>")
                                 .copyHeaders(headers)
                                 .build();
-        
+
         reset(messagingTemplate, channel);
         when(messagingTemplate.receive(channel)).thenReturn(message);
 
@@ -149,14 +153,14 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(25000L);
     }
-    
+
     @Test
     public void testReceiveTimeout() {
         ChannelEndpoint endpoint = new ChannelEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
 
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         reset(messagingTemplate, channel);
         when(messagingTemplate.receive(channel)).thenReturn(null);
 
@@ -164,12 +168,12 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
             endpoint.createConsumer().receive(context);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
         }
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelected() {
@@ -185,41 +189,41 @@ public class ChannelEndpointConsumerTest extends AbstractTestNGUnitTest {
         } catch (CitrusRuntimeException e) {
             Assert.assertNotNull(e.getMessage());
         }
-        
+
         MessageSelectingQueueChannel queueChannel = Mockito.mock(MessageSelectingQueueChannel.class);
         org.springframework.messaging.Message message = MessageBuilder.withPayload("Hello").setHeader("Operation", "sayHello").build();
 
         when(queueChannel.receive(any(DispatchingMessageSelector.class)))
                             .thenReturn(message);
-        
+
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
         Message receivedMessage = endpoint.createConsumer().receive("Operation = 'sayHello'", context);
-        
+
         Assert.assertEquals(receivedMessage.getPayload(), message.getPayload());
         Assert.assertEquals(receivedMessage.getHeader(MessageHeaders.ID), message.getHeaders().getId());
         Assert.assertEquals(receivedMessage.getHeader("Operation"), "sayHello");
 
     }
-    
+
     @Test
     public void testReceiveSelectedNoMessageWithTimeout() {
         ChannelEndpoint endpoint = new ChannelEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
-        
+
         MessageSelectingQueueChannel queueChannel = Mockito.mock(MessageSelectingQueueChannel.class);
-        
+
         reset(queueChannel);
-        
+
         when(queueChannel.receive(any(HeaderMatchingMessageSelector.class), eq(1500L)))
                             .thenReturn(null); // force retry
-        
+
         endpoint.getEndpointConfiguration().setChannel(queueChannel);
-        
+
         try {
             endpoint.createConsumer().receive("Operation = 'sayHello'", context, 1500L);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 1500 milliseconds. Failed to receive message on endpoint: "));
         }
 
     }

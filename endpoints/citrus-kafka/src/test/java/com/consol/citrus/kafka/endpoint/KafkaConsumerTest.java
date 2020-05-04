@@ -16,11 +16,18 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import java.time.Duration;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.apache.kafka.clients.consumer.*;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.header.internals.RecordHeader;
@@ -28,11 +35,10 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
-import java.util.*;
-
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -91,13 +97,13 @@ public class KafkaConsumerTest extends AbstractTestNGUnitTest {
         try {
             endpoint.createConsumer().receive(context, 10000L);
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Failed to receive message from Kafka topic 'test'"));
+            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 10000 milliseconds. Failed to receive message on endpoint: 'test'"));
             return;
         }
-        
+
         Assert.fail("Missing " + ActionTimeoutException.class + " because of receiving message timeout");
     }
-    
+
     @Test
     public void testWithCustomTimeout() {
         String topic = "timeout";

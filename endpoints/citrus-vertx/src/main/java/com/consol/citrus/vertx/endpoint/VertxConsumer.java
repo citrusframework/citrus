@@ -17,14 +17,14 @@
 package com.consol.citrus.vertx.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractMessageConsumer;
+import io.vertx.core.Handler;
+import io.vertx.core.Vertx;
 import io.vertx.core.eventbus.MessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.vertx.core.Handler;
-import io.vertx.core.Vertx;
 
 /**
  * @author Christoph Deppisch
@@ -88,7 +88,7 @@ public class VertxConsumer extends AbstractMessageConsumer {
             }
 
             if (message == null) {
-                throw new ActionTimeoutException("Action timed out while receiving message on Vert.x event bus address '" + endpointConfiguration.getAddress() + "'");
+                throw new MessageTimeoutException(timeout, endpointConfiguration.getAddress());
             }
 
             log.info("Received message on Vert.x event bus address: '" + endpointConfiguration.getAddress() + "'");

@@ -17,7 +17,8 @@
 package com.consol.citrus.channel;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
+import com.consol.citrus.exceptions.ReplyMessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
@@ -73,14 +74,13 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
 
         log.info("Message was sent to channel: '" + destinationChannelName + "'");
 
-        org.springframework.messaging.Message replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(context),
+        org.springframework.messaging.Message<?> replyMessage = endpointConfiguration.getMessagingTemplate().sendAndReceive(getDestinationChannel(context),
                 endpointConfiguration.getMessageConverter().convertOutbound(message, endpointConfiguration, context));
 
         if (replyMessage == null) {
-            throw new ActionTimeoutException("Reply timed out after " +
-                    endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply channel");
+            throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), destinationChannelName);
         } else {
-            log.info("Received synchronous response from reply channel");
+            log.info("Received synchronous response from reply channel '" + destinationChannelName + "'");
         }
 
         correlationManager.store(correlationKey, endpointConfiguration.getMessageConverter().convertInbound(replyMessage, endpointConfiguration, context));
@@ -108,7 +108,7 @@ public class ChannelSyncProducer extends ChannelProducer implements ReplyConsume
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on message channel");
+            throw new MessageTimeoutException(timeout, getDestinationChannelName());
         }
 
         return message;

@@ -15,28 +15,28 @@
  */
 package com.consol.citrus.channel;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.messaging.Message;
-import org.springframework.integration.channel.QueueChannel;
-import org.springframework.integration.core.MessageSelector;
-import org.springframework.util.Assert;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.integration.channel.QueueChannel;
+import org.springframework.integration.core.MessageSelector;
+import org.springframework.messaging.Message;
+import org.springframework.util.Assert;
+
 /**
  * Added selective consumption of messages according to a message selector implementation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class MessageSelectingQueueChannel extends QueueChannel {
     /** Logger */
     private static final Logger RETRY_LOG = LoggerFactory.getLogger("com.consol.citrus.RetryLogger");
-    
+
     /** Blocking in memory message store */
     private final BlockingQueue<Message<?>> queue;
-    
+
     /** Polling interval when waiting for synchronous reply message to arrive */
     private long pollingInterval = 500;
 
@@ -49,28 +49,28 @@ public class MessageSelectingQueueChannel extends QueueChannel {
         this.setLoggingEnabled(false);
         this.queue = queue;
     }
-    
+
     /**
      * Create a channel with the specified queue capacity.
      */
     public MessageSelectingQueueChannel(int capacity) {
-        this(new LinkedBlockingQueue<Message<?>>(capacity));
-        
+        this(new LinkedBlockingQueue<>(capacity));
+
         Assert.isTrue(capacity > 0, "The capacity must be a positive integer. " +
                 "For a zero-capacity alternative, consider using a 'RendezvousChannel'.");
     }
-    
+
     /**
      * Default constructor.
      */
     public MessageSelectingQueueChannel() {
-        this(new LinkedBlockingQueue<Message<?>>());
+        this(new LinkedBlockingQueue<>());
     }
-    
+
     /**
-     * Supports selective consumption of messages on the channel. The first message 
+     * Supports selective consumption of messages on the channel. The first message
      * to be accepted by given message selector is returned as result.
-     * 
+     *
      * @param selector
      * @return
      */
@@ -82,14 +82,14 @@ public class MessageSelectingQueueChannel extends QueueChannel {
                 return message;
             }
         }
-        
+
         return null;
     }
-    
+
     /**
      * Consume messages on the channel via message selector. Timeout forces several retries
      * with polling interval setting.
-     * 
+     *
      * @param selector
      * @param timeout
      * @return
@@ -100,20 +100,20 @@ public class MessageSelectingQueueChannel extends QueueChannel {
 
         while (message == null && timeLeft > 0) {
             timeLeft -= pollingInterval;
-            
+
             if (RETRY_LOG.isDebugEnabled()) {
                 RETRY_LOG.debug("No message received with message selector - retrying in " + (timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft) + "ms");
             }
-            
+
             try {
                 Thread.sleep(timeLeft > 0 ? pollingInterval : pollingInterval + timeLeft);
             } catch (InterruptedException e) {
                 RETRY_LOG.warn("Thread interrupted while waiting for retry", e);
             }
-            
+
             message = receive(selector);
         }
-        
+
         return message;
     }
 

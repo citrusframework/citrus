@@ -16,16 +16,16 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import javax.jms.Destination;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import javax.jms.Destination;
 
 /**
  * @author Christoph Deppisch
@@ -82,7 +82,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         javax.jms.Message receivedJmsMessage;
 
         if (log.isDebugEnabled()) {
-            log.debug("Receiving JMS message on destination: '" + destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+            log.debug("Receiving JMS message on destination: '" + getDestinationNameWithSelector(destinationName, selector) + "'");
         }
 
         if (StringUtils.hasText(selector)) {
@@ -92,10 +92,10 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (receivedJmsMessage == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+            throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(destinationName, selector));
         }
 
-        log.info("Received JMS message on destination: '" + destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+        log.info("Received JMS message on destination: '" + getDestinationNameWithSelector(destinationName, selector) + "'");
 
         return receivedJmsMessage;
     }
@@ -110,7 +110,7 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         javax.jms.Message receivedJmsMessage;
 
         if (log.isDebugEnabled()) {
-            log.debug("Receiving JMS message on destination: '" + endpointConfiguration.getDestinationName(destination) + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+            log.debug("Receiving JMS message on destination: '" + getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector) + "'");
         }
 
         if (StringUtils.hasText(selector)) {
@@ -120,12 +120,22 @@ public class JmsConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (receivedJmsMessage == null) {
-            throw new ActionTimeoutException("Action timed out while receiving JMS message on '" + endpointConfiguration.getDestinationName(destination) + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+            throw new MessageTimeoutException(endpointConfiguration.getTimeout(), getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector));
         }
 
-        log.info("Received JMS message on destination: '" + endpointConfiguration.getDestinationName(destination) + (StringUtils.hasText(selector) ? "(" + selector + ")" : "") + "'");
+        log.info("Received JMS message on destination: '" + getDestinationNameWithSelector(endpointConfiguration.getDestinationName(destination), selector) + "'");
 
         return receivedJmsMessage;
+    }
+
+    /**
+     * Helper method to construct proper representation of destination name and selector if given.
+     * @param destinationName
+     * @param selector
+     * @return
+     */
+    private String getDestinationNameWithSelector(String destinationName, String selector) {
+        return destinationName + (StringUtils.hasText(selector) ? "(" + selector + ")" : "");
     }
 
 }

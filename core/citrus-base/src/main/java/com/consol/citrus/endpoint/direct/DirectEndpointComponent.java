@@ -38,7 +38,7 @@ public class DirectEndpointComponent extends AbstractEndpointComponent {
 
         endpoint.getEndpointConfiguration().setQueueName(queueName);
         if (!context.getReferenceResolver().isResolvable(queueName)) {
-            context.getReferenceResolver().bind(queueName, new DefaultMessageQueue());
+            context.getReferenceResolver().bind(queueName, new DefaultMessageQueue(queueName));
         }
 
         enrichEndpointConfiguration(endpoint.getEndpointConfiguration(), parameters, context);

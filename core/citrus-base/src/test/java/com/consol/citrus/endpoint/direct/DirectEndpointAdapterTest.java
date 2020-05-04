@@ -34,7 +34,7 @@ import org.testng.annotations.Test;
  */
 public class DirectEndpointAdapterTest {
 
-    private MessageQueue queue = new DefaultMessageQueue();
+    private MessageQueue queue = new DefaultMessageQueue("testQueue");
     private DirectEndpointAdapter endpointAdapter;
     private DirectSyncEndpointConfiguration endpointConfiguration;
 

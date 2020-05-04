@@ -23,10 +23,11 @@ import java.io.IOException;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.Producer;
@@ -102,12 +103,14 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(soapMessage);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        String endpointUri;
+        final String endpointUri;
         if (getEndpointConfiguration().getEndpointResolver() != null) {
             endpointUri = getEndpointConfiguration().getEndpointResolver().resolveEndpointUri(soapMessage, getEndpointConfiguration().getDefaultUri());
         } else { // use default uri
             endpointUri = getEndpointConfiguration().getDefaultUri();
         }
+
+        context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, endpointUri);
 
         if (log.isDebugEnabled()) {
             log.debug("Sending SOAP message to endpoint: '" + endpointUri + "'");
@@ -163,8 +166,15 @@ public class WebServiceClient extends AbstractEndpoint implements Producer, Repl
     public Message receive(String selector, TestContext context, long timeout) {
         Message message = correlationManager.find(selector, timeout);
 
+        String endpointUri;
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector)) {
+            endpointUri = context.getVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector);
+        } else {
+            endpointUri = getName();
+        }
+
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from soap web server");
+            throw new MessageTimeoutException(timeout, endpointUri);
         }
 
         return message;

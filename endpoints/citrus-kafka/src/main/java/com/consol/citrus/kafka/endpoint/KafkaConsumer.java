@@ -16,9 +16,16 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import java.time.Duration;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.kafka.message.KafkaMessageHeaders;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractMessageConsumer;
@@ -28,9 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.time.Duration;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -74,7 +78,7 @@ public class KafkaConsumer extends AbstractMessageConsumer {
         ConsumerRecords<Object, Object> records = consumer.poll(Duration.ofMillis(timeout));
 
         if (records.isEmpty()) {
-            throw new ActionTimeoutException(String.format("Failed to receive message from Kafka topic '%s' - timeout after %s milliseconds", topic, timeout));
+            throw new MessageTimeoutException(timeout, topic);
         }
 
         records.forEach(record -> log.debug("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset()));

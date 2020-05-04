@@ -147,7 +147,7 @@ public class DirectEndpointConsumerTest {
             endpoint.createConsumer().receive(context);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from queue"));
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
         }
     }
 
@@ -194,7 +194,7 @@ public class DirectEndpointConsumerTest {
             endpoint.createConsumer().receive("Operation = 'sayHello'", context, 1500L);
             Assert.fail("Missing " + ActionTimeoutException.class + " because no message was received");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from queue"));
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 1500 milliseconds. Failed to receive message on endpoint"));
         }
 
     }

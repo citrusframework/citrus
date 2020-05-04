@@ -38,7 +38,7 @@ public class DefaultMessageQueueTest {
 
     @Test
     public void testReceiveSelected() {
-        DefaultMessageQueue queue = new DefaultMessageQueue();
+        DefaultMessageQueue queue = new DefaultMessageQueue("testQueue");
         queue.setPollingInterval(100L);
 
         queue.send(new DefaultMessage("FooMessage").setHeader("foo", "bar"));
@@ -53,7 +53,7 @@ public class DefaultMessageQueueTest {
 
     @Test
     public void testWithRetry() {
-        DefaultMessageQueue queue = new DefaultMessageQueue();
+        DefaultMessageQueue queue = new DefaultMessageQueue("testQueue");
         queue.setPollingInterval(100L);
 
         queue.send(new DefaultMessage("FooMessage").setHeader("foo", "bar"));
@@ -75,7 +75,7 @@ public class DefaultMessageQueueTest {
 
     @Test
     public void testRetryExceeded() {
-        DefaultMessageQueue queue = new DefaultMessageQueue();
+        DefaultMessageQueue queue = new DefaultMessageQueue("testQueue");
         queue.setPollingInterval(500L);
 
         queue.send(new DefaultMessage("FooMessage").setHeader("foos", "bars"));
@@ -97,7 +97,7 @@ public class DefaultMessageQueueTest {
 
     @Test
     public void testRetryExceededWithTimeoutRest() {
-        DefaultMessageQueue queue = new DefaultMessageQueue();
+        DefaultMessageQueue queue = new DefaultMessageQueue("testQueue");
         queue.setPollingInterval(400L);
 
         queue.send(new DefaultMessage("FooMessage").setHeader("foos", "bars"));

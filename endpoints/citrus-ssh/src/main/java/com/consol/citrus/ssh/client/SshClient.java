@@ -16,22 +16,35 @@
 
 package com.consol.citrus.ssh.client;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.ssh.model.SshResponse;
 import com.consol.citrus.util.FileUtils;
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.ChannelExec;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.UserInfo;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
-import org.springframework.util.*;
-
-import java.io.*;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Ssh client connects to ssh server and sends commands to that server.
@@ -142,7 +155,7 @@ public class SshClient extends AbstractEndpoint implements Producer, ReplyConsum
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from ssh server");
+            throw new MessageTimeoutException(timeout, "SSH server out stream");
         }
 
         return message;

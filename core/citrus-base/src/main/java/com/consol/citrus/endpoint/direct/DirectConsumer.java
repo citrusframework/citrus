@@ -1,8 +1,8 @@
 package com.consol.citrus.endpoint.direct;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.MessageSelector;
@@ -66,8 +66,7 @@ public class DirectConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving message from queue '"
-                    + destinationQueueName + "'");
+            throw new MessageTimeoutException(timeout, destinationQueueName);
         }
 
         log.debug("Received message from: " + destinationQueueName);

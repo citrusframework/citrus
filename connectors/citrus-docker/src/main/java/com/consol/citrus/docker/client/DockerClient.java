@@ -16,15 +16,19 @@
 
 package com.consol.citrus.docker.client;
 
+import java.util.Objects;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.docker.command.DockerCommand;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -105,10 +109,10 @@ public class DockerClient extends AbstractEndpoint implements Producer, ReplyCon
 
     @Override
     public Message receive(String selector, TestContext context, long timeout) {
-        DockerCommand command = correlationManager.find(selector, timeout);
+        DockerCommand<?> command = correlationManager.find(selector, timeout);
 
         if (command == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from http server");
+            throw new MessageTimeoutException(timeout, Objects.toString(getEndpointConfiguration().getDockerClientConfig().getDockerHost()));
         }
 
         return new DefaultMessage(command.getCommandResult());

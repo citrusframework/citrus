@@ -16,28 +16,35 @@
 
 package com.consol.citrus.rmi.client;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.NotBoundException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.rmi.registry.Registry;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.rmi.endpoint.RmiEndpointConfiguration;
 import com.consol.citrus.rmi.message.RmiMessageHeaders;
 import com.consol.citrus.rmi.model.RmiServiceInvocation;
 import com.consol.citrus.rmi.model.RmiServiceResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.xml.transform.StringResult;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.rmi.*;
-import java.rmi.registry.Registry;
 
 /**
  * @author Christoph Deppisch
@@ -78,7 +85,8 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(message);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        String binding = message.getHeader(RmiMessageHeaders.RMI_BINDING) != null ? message.getHeader(RmiMessageHeaders.RMI_BINDING).toString() : getEndpointConfiguration().getBinding();
+        final String binding = message.getHeader(RmiMessageHeaders.RMI_BINDING) != null ? message.getHeader(RmiMessageHeaders.RMI_BINDING).toString() : getEndpointConfiguration().getBinding();
+        context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, binding);
         try {
             RmiServiceInvocation invocation = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
             Registry registry = getEndpointConfiguration().getRegistry();
@@ -167,8 +175,15 @@ public class RmiClient extends AbstractEndpoint implements Producer, ReplyConsum
     public Message receive(String selector, TestContext context, long timeout) {
         Message message = correlationManager.find(selector, timeout);
 
+        String binding;
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector)) {
+            binding = context.getVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector);
+        } else {
+            binding = getName();
+        }
+
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from RMI server");
+            throw new MessageTimeoutException(timeout, binding);
         }
 
         return message;

@@ -1,7 +1,10 @@
 package com.consol.citrus.endpoint.direct;
 
+import java.util.UUID;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
+import com.consol.citrus.exceptions.ReplyMessageTimeoutException;
 import com.consol.citrus.message.DefaultMessageQueue;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageQueue;
@@ -46,21 +49,20 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         String destinationQueueName = getDestinationQueueName();
 
         if (log.isDebugEnabled()) {
-            log.debug("Sending message to channel: '" + destinationQueueName + "'");
+            log.debug("Sending message to queue: '" + destinationQueueName + "'");
             log.debug("Message to send is:\n" + message.toString());
         }
 
-        log.info("Message was sent to channel: '" + destinationQueueName + "'");
+        log.info("Message was sent to queue: '" + destinationQueueName + "'");
 
         MessageQueue replyQueue = getReplyQueue(message, context);
         getDestinationQueue(context).send(message);
         Message replyMessage = replyQueue.receive(endpointConfiguration.getTimeout());
 
         if (replyMessage == null) {
-            throw new ActionTimeoutException("Reply timed out after " +
-                    endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply channel");
+            throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), destinationQueueName);
         } else {
-            log.info("Received synchronous response from reply channel");
+            log.info("Received synchronous response from reply queue");
         }
 
         correlationManager.store(correlationKey, replyMessage);
@@ -74,7 +76,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
      */
     private MessageQueue getReplyQueue(Message message, TestContext context) {
         if (message.getHeader(DirectMessageHeaders.REPLY_QUEUE) == null) {
-            MessageQueue temporaryQueue = new DefaultMessageQueue();
+            MessageQueue temporaryQueue = new DefaultMessageQueue(getName() + "." + UUID.randomUUID().toString());
             message.setHeader(DirectMessageHeaders.REPLY_QUEUE, temporaryQueue);
             return temporaryQueue;
         }
@@ -108,7 +110,7 @@ public class DirectSyncProducer extends DirectProducer implements ReplyConsumer 
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on message channel");
+            throw new MessageTimeoutException(timeout, getDestinationQueueName());
         }
 
         return message;

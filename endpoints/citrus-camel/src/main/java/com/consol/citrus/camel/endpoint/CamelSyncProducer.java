@@ -17,12 +17,13 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.ReplyMessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyConsumer;
-import org.apache.camel.*;
+import org.apache.camel.Exchange;
+import org.apache.camel.Processor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
                 });
 
 
-        log.info("Received synchronous response message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+        log.info("Received synchronous reply message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);
         context.onInboundMessage(replyMessage);
         correlationManager.store(correlationKey, replyMessage);
@@ -108,7 +109,7 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on camel exchange");
+            throw new ReplyMessageTimeoutException(timeout, endpointConfiguration.getEndpointUri());
         }
 
         return message;

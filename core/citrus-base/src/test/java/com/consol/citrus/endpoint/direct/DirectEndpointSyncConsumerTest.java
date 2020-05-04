@@ -222,7 +222,7 @@ public class DirectEndpointSyncConsumerTest {
             DirectSyncConsumer channelSyncConsumer = (DirectSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.receive(context);
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from queue"));
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
             return;
         }
 

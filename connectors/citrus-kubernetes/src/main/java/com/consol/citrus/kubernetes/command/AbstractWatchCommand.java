@@ -16,14 +16,18 @@
 
 package com.consol.citrus.kubernetes.command;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import io.fabric8.kubernetes.api.model.KubernetesResource;
-import io.fabric8.kubernetes.client.*;
-import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.TimeUnit;
 
-import java.util.concurrent.*;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
+import io.fabric8.kubernetes.api.model.KubernetesResource;
+import io.fabric8.kubernetes.client.KubernetesClientException;
+import io.fabric8.kubernetes.client.Watch;
+import io.fabric8.kubernetes.client.Watcher;
+import io.fabric8.kubernetes.client.dsl.ClientNonNamespaceOperation;
 
 /**
  * @author Christoph Deppisch
@@ -75,11 +79,11 @@ public abstract class AbstractWatchCommand<R extends KubernetesResource, T exten
         if (cachedResult != null) {
             return cachedResult;
         }
-        
+
         try {
             WatchEventResult<R> watchEventResult = results.poll(timeout, TimeUnit.MILLISECONDS);
             if (watchEventResult == null) {
-                throw new ActionTimeoutException("Failed to get watch result");
+                throw new MessageTimeoutException(timeout, "watchEventResultQueue");
             }
 
             try {
