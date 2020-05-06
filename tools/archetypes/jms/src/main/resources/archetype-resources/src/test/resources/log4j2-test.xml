@@ -32,7 +32,11 @@
       <AppenderRef ref="STDOUT"/>
     </Logger>
 
-    <Logger name="com.consol.citrus.channel.MessageSelectingQueueChannel" level="WARN">
+    <Logger name="Logger.Message_IN" additivity="false" level="DEBUG">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="Logger.Message_OUT" additivity="false" level="DEBUG">
       <AppenderRef ref="STDOUT"/>
     </Logger>
 
