@@ -1020,6 +1020,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
+        public void setIncremental(boolean incremental) {
+            // do nothing
+        }
+
+        @Override
         public void addFinalAction(TestActionBuilder<?> action) {
             // do nothing
         }

@@ -113,12 +113,20 @@ public interface TestCase extends TestActionContainer {
     TestResult getTestResult();
 
     /**
-     * Marks this test case as Java DSL test runner.
+     * Marks that this test case runs its actions one by one growing over time. This is usually the case when
+     * using the Java DSL that adds test actions as the Java method is processed. XML test cases ususally build and load all
+     * actions beforehand and run all actions in one step.
      * @return
      */
-    default boolean isTestRunner() {
+    default boolean isIncremental() {
         return false;
     }
+
+    /**
+     * Sets the test runner flag.
+     * @param incremental
+     */
+    void setIncremental(boolean incremental);
 
     /**
      * Gets the variables for this test case.

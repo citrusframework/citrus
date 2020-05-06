@@ -726,7 +726,7 @@ public class DefaultTestRunner implements TestRunner {
 
     @Override
     public TestCase getTestCase() {
-        testCase.setTestRunner(true);
+        testCase.setIncremental(true);
         return testCase;
     }
 

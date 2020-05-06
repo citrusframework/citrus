@@ -44,8 +44,8 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     /** The result of this test case */
     private TestResult testResult;
 
-    /** Marks this test case as test runner instance that grows in size step by step as test actions are executed */
-    private boolean testRunner = false;
+    /** Marks this test case as instance that grows in size step by step as test actions are executed */
+    private boolean incremental = false;
 
     /** Test groups */
     private String[] groups;
@@ -389,17 +389,14 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         return parameters;
     }
 
-    /**
-     * Sets the test runner flag.
-     * @param testRunner
-     */
-    public void setTestRunner(final boolean testRunner) {
-        this.testRunner = testRunner;
+    @Override
+    public void setIncremental(boolean incremental) {
+        this.incremental = incremental;
     }
 
     @Override
-    public boolean isTestRunner() {
-        return testRunner;
+    public boolean isIncremental() {
+        return incremental;
     }
 
     @Override
