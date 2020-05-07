@@ -87,6 +87,7 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     @Autowired(required=false)
     private NamespaceContextBuilder namespaceContextBuilder;
 
+    /** Spring bean application context that created this factory */
     private ApplicationContext applicationContext;
 
     /** The context factory delegate */
@@ -165,9 +166,7 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
     @Override
     public TestContext getObject() {
-        TestContext context = delegate.getObject();
-        context.setApplicationContext(applicationContext);
-        return context;
+        return delegate.getObject();
     }
 
     @Override
@@ -228,6 +227,14 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
         if (namespaceContextBuilder != null) {
             delegate.setNamespaceContextBuilder(namespaceContextBuilder);
         }
+    }
+
+    /**
+     * Obtains the applicationContext.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     @Override

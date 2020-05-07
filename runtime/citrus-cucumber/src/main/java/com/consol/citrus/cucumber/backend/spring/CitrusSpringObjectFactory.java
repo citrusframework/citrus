@@ -24,11 +24,13 @@ import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactoryBean;
 import io.cucumber.core.backend.CucumberBackendException;
 import io.cucumber.core.backend.ObjectFactory;
 import io.cucumber.spring.SpringFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
 /**
  * @author Christoph Deppisch
@@ -74,8 +76,9 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
     public <T> T getInstance(Class<T> type) {
         if (context == null) {
             try {
-                context = delegate.getInstance(TestContext.class);
-                initializeCitrus(context);
+                TestContextFactoryBean contextFactoryBean = delegate.getInstance(TestContextFactoryBean.class);
+                context = contextFactoryBean.getObject();
+                initializeCitrus(context, contextFactoryBean.getApplicationContext());
             } catch (CucumberBackendException e) {
                 log.warn("Failed to get proper TestContext from Cucumber Spring application context: " + e.getMessage());
                 context = CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
@@ -97,12 +100,19 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
         return instance;
     }
 
-    private void initializeCitrus(TestContext context) {
+    /**
+     * Initialize new Citrus instance only if it has not been initialized before
+     * or in case given application context is different to that one stored in the Citrus context.
+     *
+     * @param context
+     * @param applicationContext
+     */
+    private void initializeCitrus(TestContext context, ApplicationContext applicationContext) {
         if (CitrusInstanceManager.hasInstance()) {
             CitrusContext citrusContext = CitrusInstanceManager.getOrDefault().getCitrusContext();
 
             if (citrusContext instanceof CitrusSpringContext
-                    && !((CitrusSpringContext) citrusContext).getApplicationContext().equals(context.getApplicationContext())) {
+                    && !((CitrusSpringContext) citrusContext).getApplicationContext().equals(applicationContext)) {
                 log.warn("Citrus instance has already been initialized - creating new instance and shutting down current instance");
                 citrusContext.close();
             } else {
@@ -110,7 +120,7 @@ public class CitrusSpringObjectFactory implements ObjectFactory {
             }
         }
 
-        Citrus.newInstance(CitrusSpringContext.create(context.getApplicationContext()));
+        Citrus.newInstance(CitrusSpringContext.create(applicationContext));
     }
 
     @Override

@@ -51,10 +51,6 @@ public class ChannelEndpointComponent extends AbstractEndpointComponent {
             endpoint.getEndpointConfiguration().setChannelName(resourcePath);
         }
 
-        if (context.getApplicationContext() != null) {
-            endpoint.getEndpointConfiguration().setBeanFactory(context.getApplicationContext());
-        }
-
         if (context.getReferenceResolver() != null) {
             endpoint.getEndpointConfiguration().setChannelResolver(channelName -> context.getReferenceResolver().resolve(channelName, MessageChannel.class));
         }

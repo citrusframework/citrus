@@ -93,7 +93,6 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         ClassPathXmlApplicationContext ctx = createApplicationContext(context, packageName, testName);
 
         try {
-            context.setApplicationContext(ctx);
             context.setReferenceResolver(new SpringBeanReferenceResolver(ctx));
             TestCase testCase = ctx.getBean(testName, TestCase.class);
             if (testCase instanceof DefaultTestCase) {

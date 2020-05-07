@@ -63,7 +63,6 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.javatuples.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -152,11 +151,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * Central namespace context builder
      */
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-
-    /**
-     * Spring bean application context
-     */
-    private ApplicationContext applicationContext;
 
     /**
      * Timers registered in test context, that can be stopped
@@ -757,24 +751,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      */
     public NamespaceContextBuilder getNamespaceContextBuilder() {
         return namespaceContextBuilder;
-    }
-
-    /**
-     * Gets the Spring bean application context.
-     *
-     * @return
-     */
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    /**
-     * Sets the Spring bean application context.
-     *
-     * @param applicationContext
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 
     /**
