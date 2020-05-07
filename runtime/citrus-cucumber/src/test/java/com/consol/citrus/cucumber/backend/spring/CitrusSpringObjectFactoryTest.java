@@ -16,9 +16,10 @@
 
 package com.consol.citrus.cucumber.backend.spring;
 
-import com.consol.citrus.cucumber.backend.CitrusBackend;
+import com.consol.citrus.CitrusInstanceManager;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
@@ -26,13 +27,15 @@ import org.testng.annotations.*;
  */
 public class CitrusSpringObjectFactoryTest {
 
-    @AfterMethod(alwaysRun = true)
+    @BeforeMethod
     public void resetCitrus() {
-        CitrusBackend.resetCitrus();
+        // Need to reset Citrus here because other tests with Spring test support might have initialized a
+        // Citrus instance before and this would be closed by the SpringObjectFactory leading to errors in those tests
+        CitrusInstanceManager.reset();
     }
 
     @Test
-    public void testRunnerInject() throws Exception {
+    public void testRunnerInject() {
         CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
         factory.addClass(SpringRunnerSteps.class);
 
@@ -45,7 +48,7 @@ public class CitrusSpringObjectFactoryTest {
     }
 
     @Test
-    public void testRunnerInjectWithDefaultContext() throws Exception {
+    public void testRunnerInjectWithDefaultContext() {
         CitrusSpringObjectFactory factory = new CitrusSpringObjectFactory();
         factory.addClass(DefaultSpringRunnerSteps.class);
 

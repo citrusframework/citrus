@@ -16,7 +16,7 @@
 
 package com.consol.citrus.cucumber;
 
-import com.consol.citrus.cucumber.backend.CitrusBackend;
+import com.consol.citrus.CitrusInstanceManager;
 import io.cucumber.core.plugin.DefaultSummaryPrinter;
 import io.cucumber.plugin.ColorAware;
 import io.cucumber.plugin.ConcurrentEventListener;
@@ -37,7 +37,7 @@ public class CitrusReporter implements SummaryPrinter, ColorAware, StrictAware, 
 
     @Override
     public void setEventPublisher(EventPublisher publisher) {
-        publisher.registerHandlerFor(TestRunFinished.class, event -> CitrusBackend.getCitrus().afterSuite(SUITE_NAME));
+        publisher.registerHandlerFor(TestRunFinished.class, event -> CitrusInstanceManager.getOrDefault().afterSuite(SUITE_NAME));
         delegate.setEventPublisher(publisher);
     }
 

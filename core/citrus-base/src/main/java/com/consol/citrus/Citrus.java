@@ -43,7 +43,7 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware, 
      * Constructor with given context that holds all basic Citrus components needed to run a Citrus project.
      * @param citrusContext
      */
-    protected Citrus(CitrusContext citrusContext) {
+    Citrus(CitrusContext citrusContext) {
         this.citrusContext = citrusContext;
     }
 
@@ -53,7 +53,7 @@ public final class Citrus implements TestListenerAware, TestSuiteListenerAware, 
      * @return
      */
     public static Citrus newInstance() {
-        return CitrusInstanceManager.newInstance(CitrusContext.create());
+        return CitrusInstanceManager.newInstance();
     }
 
     /**

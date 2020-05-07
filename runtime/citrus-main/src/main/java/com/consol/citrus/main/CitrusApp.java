@@ -96,7 +96,7 @@ public class CitrusApp {
             if (citrusApp.configuration.getConfigClass() != null) {
                 Citrus.newInstance(CitrusSpringContext.create(citrusApp.configuration.getConfigClass()));
             } else {
-                Citrus.newInstance(CitrusSpringContext.create());
+                Citrus.newInstance();
             }
 
             setDefaultProperties(citrusApp.configuration);
@@ -167,10 +167,10 @@ public class CitrusApp {
     private void stop() {
         complete();
 
-        Citrus citrus = CitrusInstanceManager.getSingleton();
-        if (citrus != null) {
+        Optional<Citrus> citrus = CitrusInstanceManager.get();
+        if (citrus.isPresent()) {
             log.info("Closing Citrus and its application context");
-            citrus.close();
+            citrus.get().close();
         }
     }
 

@@ -27,7 +27,9 @@ import org.jboss.arquillian.container.spi.client.deployment.DeploymentDescriptio
 import org.jboss.arquillian.container.spi.event.container.AfterUnDeploy;
 import org.jboss.arquillian.container.spi.event.container.BeforeDeploy;
 import org.jboss.arquillian.core.api.Instance;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.reset;
@@ -40,11 +42,20 @@ public class CitrusLifecycleHandlerTest {
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
     private Citrus citrusFramework = Citrus.newInstance(CitrusSpringContext.create());
-    private Instance<Citrus> citrusInstance = Mockito.mock(Instance.class);
-    private Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
 
-    private DeployableContainer container = Mockito.mock(DeployableContainer.class);
-    private DeploymentDescription deployment = Mockito.mock(DeploymentDescription.class);
+    @Mock
+    private Instance<Citrus> citrusInstance;
+    @Mock
+    private Instance<CitrusConfiguration> configurationInstance;
+    @Mock
+    private DeployableContainer<?> container;
+    @Mock
+    private DeploymentDescription deployment;
+
+    @BeforeClass
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testLifecycle() throws Exception {

@@ -16,30 +16,14 @@
 
 package com.consol.citrus.cucumber.backend;
 
-import com.consol.citrus.config.CitrusSpringConfig;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-@ContextConfiguration(classes = CitrusSpringConfig.class)
-public class CitrusObjectFactoryTest extends AbstractTestNGUnitTest {
-
-    @BeforeClass
-    public void initializeCitrus() {
-        CitrusBackend.initializeCitrus(applicationContext);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void resetCitrus() {
-        CitrusBackend.resetCitrus();
-    }
+public class CitrusObjectFactoryTest {
 
     @Test
     public void testRunnerInject() {

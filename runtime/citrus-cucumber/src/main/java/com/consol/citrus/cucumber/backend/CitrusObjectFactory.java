@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.consol.citrus.CitrusInstanceManager;
 import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusAnnotations;
@@ -55,7 +56,7 @@ public class CitrusObjectFactory implements ObjectFactory {
 
     @Override
     public void start() {
-        context = CitrusBackend.getCitrus().getCitrusContext().createTestContext();
+        context = CitrusInstanceManager.getOrDefault().getCitrusContext().createTestContext();
         runner = new DefaultTestCaseRunner(context);
     }
 
@@ -72,7 +73,7 @@ public class CitrusObjectFactory implements ObjectFactory {
 
         T instance = type.cast(Optional.ofNullable(instances.get(type))
                                         .orElseGet(() -> this.createNewInstance(type)));
-        CitrusAnnotations.injectAll(instance, CitrusBackend.getCitrus(), context);
+        CitrusAnnotations.injectAll(instance, CitrusInstanceManager.getOrDefault(), context);
         CitrusAnnotations.injectTestRunner(instance, runner);
 
         return instance;
