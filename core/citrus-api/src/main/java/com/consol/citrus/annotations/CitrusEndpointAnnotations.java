@@ -35,7 +35,7 @@ public abstract class CitrusEndpointAnnotations {
      * @param target
      * @param context
      */
-    public static final void injectEndpoints(final Object target, final TestContext context) {
+    public static void injectEndpoints(final Object target, final TestContext context) {
         ReflectionUtils.doWithFields(target.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
