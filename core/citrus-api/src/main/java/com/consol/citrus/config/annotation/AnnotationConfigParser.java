@@ -17,6 +17,7 @@
 package com.consol.citrus.config.annotation;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -43,6 +44,8 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
     /** Default Citrus annotation config parsers from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
+    Map<String, AnnotationConfigParser> parsers = new HashMap<>();
+
     /**
      * Parse given annotation to a proper endpoint instance.
      * @param annotation
@@ -57,11 +60,12 @@ public interface AnnotationConfigParser<A extends Annotation, T extends Endpoint
      * @return
      */
     static Map<String, AnnotationConfigParser> lookup() {
-        Map<String, AnnotationConfigParser> parsers =
-                TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD);
+        if (parsers.isEmpty()) {
+            parsers.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
-        if (LOG.isDebugEnabled()) {
-            parsers.forEach((k, v) -> LOG.debug(String.format("Found annotation config parser '%s' as %s", k, v.getClass())));
+            if (LOG.isDebugEnabled()) {
+                parsers.forEach((k, v) -> LOG.debug(String.format("Found annotation config parser '%s' as %s", k, v.getClass())));
+            }
         }
         return parsers;
     }
