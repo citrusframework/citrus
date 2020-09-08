@@ -16,29 +16,42 @@
 
 package com.consol.citrus.kafka.embedded;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import kafka.metrics.KafkaMetricsReporter;
-import kafka.server.*;
+import kafka.server.KafkaConfig;
+import kafka.server.KafkaServer;
+import kafka.server.NotRunning;
 import kafka.utils.CoreUtils;
-import org.apache.kafka.clients.admin.*;
+import org.apache.kafka.clients.admin.AdminClient;
+import org.apache.kafka.clients.admin.AdminClientConfig;
+import org.apache.kafka.clients.admin.CreateTopicsResult;
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.network.ListenerName;
 import org.apache.kafka.common.security.auth.SecurityProtocol;
 import org.apache.kafka.common.utils.Time;
-import org.apache.zookeeper.server.*;
+import org.apache.zookeeper.server.NIOServerCnxnFactory;
+import org.apache.zookeeper.server.ServerCnxnFactory;
+import org.apache.zookeeper.server.ZooKeeperServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.SocketUtils;
 import org.springframework.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Embedded Kafka server with reference to embedded Zookeeper cluster for testing purpose. Starts single Zookeeper instance with logs in Java temp directory. Starts single Kafka server
@@ -109,8 +122,10 @@ public class EmbeddedKafkaServer implements InitializingBean, DisposableBean {
             brokerProperties.forEach(brokerConfigProperties::put);
         }
 
-        kafkaServer = new KafkaServer(new KafkaConfig(brokerConfigProperties), Time.SYSTEM,
-                scala.Option.apply(null), scala.collection.JavaConversions.asScalaBuffer(Collections.<KafkaMetricsReporter>emptyList()).toList());
+        kafkaServer = new KafkaServer(new KafkaConfig(brokerConfigProperties),
+                Time.SYSTEM,
+                scala.Option.apply(null),
+                scala.collection.JavaConverters.asScalaBufferConverter(Collections.<KafkaMetricsReporter>emptyList()).asScala());
         kafkaServer.startup();
         kafkaServer.boundPort(ListenerName.forSecurityProtocol(SecurityProtocol.PLAINTEXT));
 

@@ -26,9 +26,9 @@ import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
-import org.apache.camel.impl.engine.JavaUuidGenerator;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
+import org.apache.camel.support.SimpleUuidGenerator;
 import org.mockito.Mockito;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -68,7 +68,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
 
         DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Hello from Camel!");
@@ -106,7 +106,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createConsumerTemplate()).thenReturn(consumerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
 
         DefaultMessage message = new DefaultMessage(camelContext);
         message.setBody("Hello from Camel!");
@@ -153,7 +153,7 @@ public class CamelSyncEndpointTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         when(messageListeners.isEmpty()).thenReturn(false);
