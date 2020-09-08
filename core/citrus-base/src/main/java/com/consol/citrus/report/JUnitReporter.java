@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
 
@@ -115,13 +116,13 @@ public class JUnitReporter extends AbstractTestReporter {
             detailProps.put("test.duration", "0.0");
 
             if (result.isFailed()) {
-                detailProps.put("test.error.cause", Optional.ofNullable(result.getCause()).map(Object::getClass).map(Class::getName).orElse(result.getFailureType()));
+                detailProps.put("test.error.cause", Optional.ofNullable(result.getCause()).map(Object::getClass).map(Class::getName).orElse(Objects.toString(result.getFailureType(), "")));
                 detailProps.put("test.error.msg", StringEscapeUtils.escapeXml(result.getErrorMessage()));
                 detailProps.put("test.error.stackTrace", Optional.ofNullable(result.getCause()).map(cause -> {
                     StringWriter writer = new StringWriter();
                     cause.printStackTrace(new PrintWriter(writer));
                     return writer.toString();
-                }).orElse(result.getFailureStack()));
+                }).orElse(Objects.toString(result.getFailureType(), "")));
                 reportDetails.append(PropertyUtils.replacePropertiesInString(templates.getFailedTemplate(), detailProps));
             } else {
                 reportDetails.append(PropertyUtils.replacePropertiesInString(templates.getSuccessTemplate(), detailProps));
