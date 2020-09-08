@@ -19,9 +19,9 @@
     <description>Test sends and receives messages on an synchronous channel endpoint with reply message handling.</description>
 
     <variables>
-      <variable name="correlationId" value="citrus:randomNumber(10)"></variable>
-      <variable name="messageId" value="citrus:randomNumber(10)"></variable>
-      <variable name="user" value="Christoph"></variable>
+      <variable name="correlationId" value="citrus:randomNumber(10)"/>
+      <variable name="messageId" value="citrus:randomNumber(10)"/>
+      <variable name="user" value="Christoph"/>
     </variables>
 
     <actions>
@@ -99,7 +99,8 @@
         <message>Test 3: Receive channel message timeout response</message>
       </echo>
 
-      <assert exception="com.consol.citrus.exceptions.ActionTimeoutException" message="Action timeout while receiving synchronous reply message on message channel">
+      <assert exception="com.consol.citrus.exceptions.ActionTimeoutException"
+              message="Action timeout after 300 milliseconds. Failed to receive message on endpoint: 'helloSyncRequests'">
         <when>
             <receive endpoint="helloServiceChannelSyncEndpoint" timeout="300">
               <description>Receive channel timeout: HelloService -> Citrus</description>

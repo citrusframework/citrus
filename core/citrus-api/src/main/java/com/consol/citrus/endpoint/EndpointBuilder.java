@@ -17,6 +17,7 @@
 package com.consol.citrus.endpoint;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
@@ -50,6 +51,8 @@ public interface EndpointBuilder<T extends Endpoint> {
 
     /** Default Citrus endpoint builders from classpath resource properties */
     ResourcePathTypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
+    Map<String, EndpointBuilder> builders = new HashMap<>();
 
     /**
      * Evaluate if this builder supports the given type.
@@ -111,11 +114,12 @@ public interface EndpointBuilder<T extends Endpoint> {
      * @return
      */
     static Map<String, EndpointBuilder> lookup() {
-        Map<String, EndpointBuilder> builders =
-                TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD);
+        if (builders.isEmpty()) {
+            builders.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.TYPE_PROPERTY_WILDCARD));
 
-        if (LOG.isDebugEnabled()) {
-            builders.forEach((k, v) -> LOG.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
+            if (LOG.isDebugEnabled()) {
+                builders.forEach((k, v) -> LOG.debug(String.format("Found endpoint builder '%s' as %s", k, v.getClass())));
+            }
         }
         return builders;
     }

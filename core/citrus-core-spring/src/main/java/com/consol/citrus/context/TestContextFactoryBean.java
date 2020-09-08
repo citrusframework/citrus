@@ -16,9 +16,15 @@
 
 package com.consol.citrus.context;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.consol.citrus.container.AfterTest;
+import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.MessageValidatorRegistry;
@@ -35,7 +41,8 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.CollectionUtils;
 
 /**
- * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}.
+ * Factory bean implementation taking care of {@link FunctionRegistry} and {@link GlobalVariables}. Enriches a test context factory delegate with
+ * components coming from Spring application context. In addition to that adds application context reference to the test context when building new instances.
  *
  * @author Christoph Deppisch
  */
@@ -48,13 +55,22 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     private ValidationMatcherRegistry validationMatcherRegistry;
 
     @Autowired(required = false)
-    private GlobalVariables globalVariables = new GlobalVariables();
+    private GlobalVariables globalVariables;
 
     @Autowired
     private MessageValidatorRegistry messageValidatorRegistry;
 
     @Autowired
     private TestListeners testListeners;
+
+    @Autowired
+    private TestActionListeners testActionListeners;
+
+    @Autowired(required = false)
+    private List<BeforeTest> beforeTest = new ArrayList<>();
+
+    @Autowired(required = false)
+    private List<AfterTest> afterTest = new ArrayList<>();
 
     @Autowired
     private MessageListeners messageListeners;
@@ -71,7 +87,26 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     @Autowired(required=false)
     private NamespaceContextBuilder namespaceContextBuilder;
 
+    /** Spring bean application context that created this factory */
     private ApplicationContext applicationContext;
+
+    /** The context factory delegate */
+    private final TestContextFactory delegate;
+
+    /**
+     * Default constructor using default factory delegate.
+     */
+    public TestContextFactoryBean() {
+        this(TestContextFactory.newInstance());
+    }
+
+    /**
+     * Constructor initializes with given factory delegate.
+     * @param factory
+     */
+    public TestContextFactoryBean(TestContextFactory factory) {
+        this.delegate = factory;
+    }
 
     /**
      * Construct new factory instance from application context.
@@ -79,7 +114,7 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
      * @return
      */
     public static TestContextFactory newInstance(ApplicationContext applicationContext) {
-        TestContextFactory factory = new TestContextFactory();
+        TestContextFactory factory = TestContextFactory.newInstance();
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(FunctionRegistry.class))) {
             factory.setFunctionRegistry(applicationContext.getBean(FunctionRegistry.class));
@@ -131,9 +166,7 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
     @Override
     public TestContext getObject() {
-        TestContext context = super.getObject();
-        context.setApplicationContext(applicationContext);
-        return context;
+        return delegate.getObject();
     }
 
     @Override
@@ -144,48 +177,133 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     @Override
     public void afterPropertiesSet() throws Exception {
         if (functionRegistry != null) {
-            super.setFunctionRegistry(functionRegistry);
+            delegate.setFunctionRegistry(functionRegistry);
         }
 
         if (validationMatcherRegistry != null) {
-            super.setValidationMatcherRegistry(validationMatcherRegistry);
+            delegate.setValidationMatcherRegistry(validationMatcherRegistry);
         }
 
         if (globalVariables != null) {
-            super.setGlobalVariables(globalVariables);
+            delegate.setGlobalVariables(globalVariables);
         }
 
         if (messageValidatorRegistry != null) {
-            super.setMessageValidatorRegistry(messageValidatorRegistry);
+            delegate.setMessageValidatorRegistry(messageValidatorRegistry);
         }
 
         if (testListeners != null) {
-            super.setTestListeners(testListeners);
+            delegate.setTestListeners(testListeners);
+        }
+
+        if (testActionListeners != null) {
+            delegate.setTestActionListeners(testActionListeners);
+        }
+
+        if (beforeTest != null) {
+            delegate.setBeforeTest(beforeTest);
+        }
+
+        if (afterTest != null) {
+            delegate.setAfterTest(afterTest);
         }
 
         if (messageListeners != null) {
-            super.setMessageListeners(messageListeners);
+            delegate.setMessageListeners(messageListeners);
         }
 
         if (messageConstructionInterceptors != null) {
-            super.setMessageConstructionInterceptors(messageConstructionInterceptors);
+            delegate.setMessageConstructionInterceptors(messageConstructionInterceptors);
         }
 
         if (endpointFactory != null) {
-            super.setEndpointFactory(endpointFactory);
+            delegate.setEndpointFactory(endpointFactory);
         }
 
         if (referenceResolver != null) {
-            super.setReferenceResolver(referenceResolver);
+            delegate.setReferenceResolver(referenceResolver);
         }
 
         if (namespaceContextBuilder != null) {
-            super.setNamespaceContextBuilder(namespaceContextBuilder);
+            delegate.setNamespaceContextBuilder(namespaceContextBuilder);
         }
+    }
+
+    /**
+     * Obtains the applicationContext.
+     * @return
+     */
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public FunctionRegistry getFunctionRegistry() {
+        return delegate.getFunctionRegistry();
+    }
+
+    @Override
+    public ValidationMatcherRegistry getValidationMatcherRegistry() {
+        return delegate.getValidationMatcherRegistry();
+    }
+
+    @Override
+    public GlobalVariables getGlobalVariables() {
+        return delegate.getGlobalVariables();
+    }
+
+    @Override
+    public MessageValidatorRegistry getMessageValidatorRegistry() {
+        return delegate.getMessageValidatorRegistry();
+    }
+
+    @Override
+    public TestListeners getTestListeners() {
+        return delegate.getTestListeners();
+    }
+
+    @Override
+    public TestActionListeners getTestActionListeners() {
+        return delegate.getTestActionListeners();
+    }
+
+    @Override
+    public List<BeforeTest> getBeforeTest() {
+        return delegate.getBeforeTest();
+    }
+
+    @Override
+    public List<AfterTest> getAfterTest() {
+        return delegate.getAfterTest();
+    }
+
+    @Override
+    public MessageListeners getMessageListeners() {
+        return delegate.getMessageListeners();
+    }
+
+    @Override
+    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
+        return delegate.getMessageConstructionInterceptors();
+    }
+
+    @Override
+    public EndpointFactory getEndpointFactory() {
+        return delegate.getEndpointFactory();
+    }
+
+    @Override
+    public ReferenceResolver getReferenceResolver() {
+        return delegate.getReferenceResolver();
+    }
+
+    @Override
+    public NamespaceContextBuilder getNamespaceContextBuilder() {
+        return delegate.getNamespaceContextBuilder();
     }
 }

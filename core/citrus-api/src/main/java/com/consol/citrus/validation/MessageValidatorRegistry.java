@@ -53,6 +53,9 @@ public class MessageValidatorRegistry {
     /** Default message header validator - gets looked up via resource path */
     private MessageValidator<? extends ValidationContext> defaultMessageHeaderValidator;
 
+    /** Default empty message validator */
+    private DefaultEmptyMessageValidator defaultEmptyMessageValidator = new DefaultEmptyMessageValidator();
+
     /**
      * Finds matching message validators for this message type.
      *
@@ -69,7 +72,7 @@ public class MessageValidatorRegistry {
             }
         }
 
-        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(this::isDefaultMessageHeaderValidator)) {
+        if (isEmptyOrDefault(matchingValidators)) {
             // try to find fallback message validator for given message payload
             if (message.getPayload() instanceof String &&
                     StringUtils.hasText(message.getPayload(String.class))) {
@@ -85,16 +88,29 @@ public class MessageValidatorRegistry {
             }
         }
 
-        if (matchingValidators.isEmpty() || matchingValidators.stream().allMatch(this::isDefaultMessageHeaderValidator)) {
-            throw new CitrusRuntimeException("Could not find proper message validator for message type '" +
-                    messageType + "', please define a capable message validator for this message type");
+        if (isEmptyOrDefault(matchingValidators) && !StringUtils.hasText(message.getPayload(String.class))) {
+            matchingValidators.add(defaultEmptyMessageValidator);
+        }
+
+        if (isEmptyOrDefault(matchingValidators)) {
+            log.warn(String.format("Unable to find proper message validator. Message type is '%s' and message payload is '%s'", messageType, message.getPayload(String.class)));
+            throw new CitrusRuntimeException("Failed to find proper message validator for message");
         }
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("Found %s message validators for message type: %s", matchingValidators.size(), messageType));
+            log.debug(String.format("Found %s message validators for message", matchingValidators.size()));
         }
 
         return matchingValidators;
+    }
+
+    /**
+     * Checks if matching list of validators is empty or just contains default message validators.
+     * @param matchingValidators
+     * @return
+     */
+    private boolean isEmptyOrDefault(List<MessageValidator<? extends ValidationContext>> matchingValidators) {
+        return matchingValidators.isEmpty() || matchingValidators.stream().allMatch(this::isDefaultMessageHeaderValidator);
     }
 
     /**

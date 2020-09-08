@@ -39,6 +39,8 @@ public class DefaultMessageQueueParser implements BeanDefinitionParser {
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("polling-interval"), "pollingInterval");
 
+        builder.addConstructorArgValue(element.getAttribute("id"));
+
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
 
         return null;

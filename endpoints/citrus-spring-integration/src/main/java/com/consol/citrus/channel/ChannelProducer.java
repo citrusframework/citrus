@@ -24,6 +24,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Producer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.integration.channel.AbstractMessageChannel;
 import org.springframework.integration.support.channel.BeanFactoryChannelResolver;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageDeliveryException;
@@ -102,6 +103,10 @@ public class ChannelProducer implements Producer {
      */
     protected String getDestinationChannelName() {
         if (endpointConfiguration.getChannel() != null) {
+            if (endpointConfiguration.getChannel() instanceof AbstractMessageChannel) {
+                return ((AbstractMessageChannel) endpointConfiguration.getChannel()).getBeanName();
+            }
+
             return endpointConfiguration.getChannel().toString();
         } else if (StringUtils.hasText(endpointConfiguration.getChannelName())) {
             return endpointConfiguration.getChannelName();

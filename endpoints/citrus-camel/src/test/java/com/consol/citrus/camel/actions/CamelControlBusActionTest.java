@@ -24,9 +24,9 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.SimpleBuilder;
 import org.apache.camel.impl.engine.AbstractCamelContext;
 import org.apache.camel.impl.engine.DefaultHeadersMapFactory;
-import org.apache.camel.impl.engine.JavaUuidGenerator;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
+import org.apache.camel.support.SimpleUuidGenerator;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -54,7 +54,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
@@ -81,7 +81,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
@@ -105,7 +105,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
@@ -130,7 +130,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
@@ -155,7 +155,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenReturn(exchange);
 
         CamelControlBusAction action = new CamelControlBusAction.Builder()
@@ -180,7 +180,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenAnswer(invocation -> {
             Processor processor = (Processor) invocation.getArguments()[1];
             processor.process(exchange);
@@ -209,7 +209,7 @@ public class CamelControlBusActionTest extends AbstractTestNGUnitTest {
 
         when(camelContext.createProducerTemplate()).thenReturn(producerTemplate);
         when(camelContext.getHeadersMapFactory()).thenReturn(new DefaultHeadersMapFactory());
-        when(camelContext.getUuidGenerator()).thenReturn(new JavaUuidGenerator());
+        when(camelContext.getUuidGenerator()).thenReturn(new SimpleUuidGenerator());
         when(producerTemplate.request(eq(endpointUri), any(Processor.class))).thenAnswer(invocation -> {
             Processor processor = (Processor) invocation.getArguments()[1];
             processor.process(exchange);

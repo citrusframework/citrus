@@ -69,7 +69,7 @@ Cucumber is able to run tests with JUnit. The basic test case is an empty test w
 ----
 @RunWith(Cucumber.class)
 @CucumberOptions(
-  plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+  plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }
@@ -158,7 +158,7 @@ So far we have written glue code in Java in order to translate Gherkin syntax de
 ----
 @RunWith(Cucumber.class)
 @CucumberOptions(
-    plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+    plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }
@@ -324,7 +324,7 @@ If you want to enable predefined steps support in your test you need to include 
 @RunWith(Cucumber.class)
 @CucumberOptions(
     glue = { "com.consol.citrus.cucumber.step.designer.core" },
-    plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+    plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }
@@ -339,7 +339,7 @@ Of course you can also choose to include the *TestRunner* step definitions by ch
 @RunWith(Cucumber.class)
 @CucumberOptions(
     glue = { "com.consol.citrus.cucumber.step.runner.core" },
-    plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+    plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
 public class MyFeatureIT {
 
 }

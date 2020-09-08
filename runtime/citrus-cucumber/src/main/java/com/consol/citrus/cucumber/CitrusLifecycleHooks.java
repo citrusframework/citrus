@@ -46,8 +46,8 @@ public class CitrusLifecycleHooks {
     @Before
     public void before(Scenario scenario) {
         if (runner != null) {
-            runner.name(scenario.getId());
-            runner.description(scenario.getName());
+            runner.name(scenario.getName());
+            runner.description(scenario.getId());
             runner.start();
         }
     }
@@ -60,7 +60,7 @@ public class CitrusLifecycleHooks {
                 TestResult testResult = testCase.getTestResult();
                 if (testResult == null || !testResult.isFailed()) {
                     runner.getTestCase().setTestResult(TestResult.failed(testCase.getName(), testCase.getTestClass().getName(),
-                            new CitrusRuntimeException(String.format("Scenario %s status %s", scenario.getId(), scenario.getStatus().name()))));
+                            new CitrusRuntimeException(String.format("Scenario '%s' (%s) status %s", scenario.getName(), scenario.getId(), scenario.getStatus().name()))));
                 }
             }
 

@@ -16,10 +16,28 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import javax.jms.Connection;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.MessageProducer;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.Session;
+import javax.jms.TemporaryQueue;
+import javax.jms.TemporaryTopic;
+import javax.jms.Topic;
+import javax.jms.TopicConnection;
+import javax.jms.TopicConnectionFactory;
+import javax.jms.TopicSession;
+import java.util.Objects;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.ReplyMessageTimeoutException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.ReplyConsumer;
@@ -30,8 +48,6 @@ import org.springframework.jms.support.JmsUtils;
 import org.springframework.jms.support.destination.DynamicDestinationResolver;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import javax.jms.*;
 
 /**
  * @author Christoph Deppisch
@@ -115,6 +131,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             messageProducer = session.createProducer(destination);
 
             replyToDestination = getReplyDestination(session, message);
+            context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, replyToDestination);
             if (replyToDestination instanceof TemporaryQueue || replyToDestination instanceof TemporaryTopic) {
                 messageConsumer = session.createConsumer(replyToDestination);
             }
@@ -132,8 +149,7 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
             javax.jms.Message jmsReplyMessage = (endpointConfiguration.getTimeout() >= 0) ? messageConsumer.receive(endpointConfiguration.getTimeout()) : messageConsumer.receive();
 
             if (jmsReplyMessage == null) {
-                throw new ActionTimeoutException("Reply timed out after " +
-                        endpointConfiguration.getTimeout() + "ms. Did not receive reply message on reply destination");
+                throw new ReplyMessageTimeoutException(endpointConfiguration.getTimeout(), Objects.toString(replyToDestination));
             }
 
             Message responseMessage = endpointConfiguration.getMessageConverter().convertInbound(jmsReplyMessage, endpointConfiguration, context);
@@ -173,8 +189,15 @@ public class JmsSyncProducer extends JmsProducer implements ReplyConsumer {
     public Message receive(String selector, TestContext context, long timeout) {
         Message message = correlationManager.find(selector, timeout);
 
+        String replyToDestination;
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector)) {
+            replyToDestination = context.getVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector);
+        } else {
+            replyToDestination = getName();
+        }
+
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message on jms destination");
+            throw new ReplyMessageTimeoutException(timeout, replyToDestination);
         }
 
         return message;

@@ -126,12 +126,12 @@ public class CitrusStandaloneIT extends AbstractTestNGSpringContextTests {
 
         @Bean(name = "test.queue")
         public MessageQueue testQueue() {
-            return new DefaultMessageQueue();
+            return new DefaultMessageQueue("test.queue");
         }
 
         @Bean(name = "my.queue")
         public MessageQueue myQueue() {
-            return new DefaultMessageQueue();
+            return new DefaultMessageQueue("my.queue");
         }
 
         @Bean

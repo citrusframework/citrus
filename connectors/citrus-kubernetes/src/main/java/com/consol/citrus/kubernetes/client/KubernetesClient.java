@@ -18,13 +18,15 @@ package com.consol.citrus.kubernetes.client;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.kubernetes.command.KubernetesCommand;
 import com.consol.citrus.kubernetes.endpoint.KubernetesEndpointConfiguration;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
-import com.consol.citrus.messaging.*;
+import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.messaging.ReplyConsumer;
+import com.consol.citrus.messaging.SelectiveConsumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,7 +76,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
             log.debug("Sending Kubernetes request to: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
         }
 
-        KubernetesCommand command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
+        KubernetesCommand<?> command = getEndpointConfiguration().getMessageConverter().convertOutbound(message, getEndpointConfiguration(), context);
         command.execute(this, context);
 
         log.info("Kubernetes request was sent to endpoint: '" + getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl() + "'");
@@ -104,7 +106,7 @@ public class KubernetesClient extends AbstractEndpoint implements Producer, Repl
         KubernetesCommand command = correlationManager.find(selector, timeout);
 
         if (command == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from http server");
+            throw new MessageTimeoutException(timeout, getEndpointConfiguration().getKubernetesClientConfig().getMasterUrl());
         }
 
         if (command.getResultCallback() != null) {

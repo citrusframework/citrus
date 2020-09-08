@@ -32,6 +32,14 @@
       <AppenderRef ref="STDOUT"/>
     </Logger>
 
+    <Logger name="Logger.Message_IN" additivity="false" level="DEBUG">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
+    <Logger name="Logger.Message_OUT" additivity="false" level="DEBUG">
+      <AppenderRef ref="STDOUT"/>
+    </Logger>
+
     <Logger name="org.springframework" additivity="false" level="WARN">
       <AppenderRef ref="STDOUT"/>
     </Logger>

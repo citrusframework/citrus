@@ -22,11 +22,11 @@
       </echo>
 
       <create-variables>
-        <variable name="citrus_message_correlator_helloHttpClient" value="1"></variable>
+        <variable name="citrus_message_correlator_helloHttpClient" value="1"/>
       </create-variables>
 
       <assert exception="com.consol.citrus.exceptions.ActionTimeoutException"
-              message="Action timeout while receiving synchronous reply message from http server">
+              message="Action timeout after 5000 milliseconds. Failed to receive message on endpoint: 'helloHttpClient'">
         <when>
           <receive endpoint="helloHttpClient">
             <message>

@@ -16,8 +16,15 @@
 
 package com.consol.citrus.kafka.endpoint;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kafka.message.KafkaMessageHeaders;
 import com.consol.citrus.message.Message;
@@ -28,9 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
-import java.util.concurrent.*;
 
 /**
  * @author Christoph Deppisch
@@ -85,7 +89,7 @@ public class KafkaProducer implements Producer {
         } catch (InterruptedException | ExecutionException e) {
             throw new CitrusRuntimeException(String.format("Failed to send message to Kafka topic '%s'", topic), e);
         } catch (TimeoutException e) {
-            throw new ActionTimeoutException(String.format("Failed to send message to Kafka topic '%s' - timeout after %s milliseconds", topic, endpointConfiguration.getTimeout()), e);
+            throw new CitrusRuntimeException(String.format("Failed to send message to Kafka topic '%s' - timeout after %s milliseconds", topic, endpointConfiguration.getTimeout()), e);
         }
 
         context.onOutboundMessage(message);

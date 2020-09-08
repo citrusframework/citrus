@@ -21,10 +21,11 @@ import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.http.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.correlation.CorrelationManager;
 import com.consol.citrus.message.correlation.PollingCorrelationManager;
 import com.consol.citrus.messaging.Producer;
@@ -94,15 +95,11 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
         String correlationKey = getEndpointConfiguration().getCorrelator().getCorrelationKey(httpMessage);
         correlationManager.saveCorrelationKey(correlationKeyName, correlationKey, context);
 
-        String endpointUri;
-        if (getEndpointConfiguration().getEndpointUriResolver() != null) {
-            endpointUri = getEndpointConfiguration().getEndpointUriResolver().resolveEndpointUri(httpMessage, getEndpointConfiguration().getRequestUrl());
-        } else {
-            endpointUri = getEndpointConfiguration().getRequestUrl();
-        }
+        final String endpointUri = getEndpointUri(httpMessage);
+        context.setVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + correlationKeyName, endpointUri);
 
+        log.info("Sending HTTP message to: '" + endpointUri + "'");
         if (log.isDebugEnabled()) {
-            log.debug("Sending HTTP message to: '" + endpointUri + "'");
             log.debug("Message to send:\n" + httpMessage.getPayload(String.class));
         }
 
@@ -166,11 +163,26 @@ public class HttpClient extends AbstractEndpoint implements Producer, ReplyConsu
     public Message receive(String selector, TestContext context, long timeout) {
         Message message = correlationManager.find(selector, timeout);
 
+        String endpointUri;
+        if (context.getVariables().containsKey(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector)) {
+            endpointUri = context.getVariable(MessageHeaders.MESSAGE_REPLY_TO + "_" + selector);
+        } else {
+            endpointUri = getName();
+        }
+
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from http server");
+            throw new MessageTimeoutException(timeout, endpointUri);
         }
 
         return message;
+    }
+
+    private String getEndpointUri(HttpMessage httpMessage) {
+        if (getEndpointConfiguration().getEndpointUriResolver() != null) {
+            return getEndpointConfiguration().getEndpointUriResolver().resolveEndpointUri(httpMessage, getEndpointConfiguration().getRequestUrl());
+        } else {
+            return getEndpointConfiguration().getRequestUrl();
+        }
     }
 
     /**

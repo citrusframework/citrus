@@ -142,7 +142,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             if (applicationContext != null && applicationContext.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
                 inboundQueue = applicationContext.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageQueue.class);
             } else {
-                inboundQueue = new DefaultMessageQueue();
+                inboundQueue = new DefaultMessageQueue(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
             }
 
             if (inboundQueue instanceof DefaultMessageQueue) {

@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 
 import com.consol.citrus.validation.context.ValidationContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -40,9 +38,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MessageValidatorConfig {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(MessageValidatorConfig.class);
-
     private static final MessageValidatorRegistry MESSAGE_VALIDATOR_REGISTRY = new DefaultMessageValidatorRegistry();
 
     @Bean
@@ -52,9 +47,8 @@ public class MessageValidatorConfig {
             public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
                 for (Map.Entry<String, MessageValidator<? extends ValidationContext>> entry : MESSAGE_VALIDATOR_REGISTRY.getMessageValidators().entrySet()) {
                     if (!registry.containsBeanDefinition(entry.getKey())) {
-                        MessageValidator messageValidator = entry.getValue();
+                        MessageValidator<? extends ValidationContext> messageValidator = entry.getValue();
                         Supplier<MessageValidator> supplier = () -> messageValidator;
-                        log.info(String.format("Register message validator bean '%s' of type %s", entry.getKey(), messageValidator.getClass()));
                         registry.registerBeanDefinition(entry.getKey(), BeanDefinitionBuilder.genericBeanDefinition(MessageValidator.class, supplier).getBeanDefinition());
                     }
                 }

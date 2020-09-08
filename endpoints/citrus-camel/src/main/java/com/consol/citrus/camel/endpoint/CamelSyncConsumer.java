@@ -16,9 +16,11 @@
 
 package com.consol.citrus.camel.endpoint;
 
+import java.util.Map;
+
 import com.consol.citrus.camel.message.CitrusCamelMessageHeaders;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.correlation.CorrelationManager;
@@ -28,8 +30,6 @@ import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -67,7 +67,7 @@ public class CamelSyncConsumer extends CamelConsumer implements ReplyProducer {
         Exchange exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
 
         if (exchange == null) {
-            throw new ActionTimeoutException("Action timed out while receiving message from camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
+            throw new MessageTimeoutException(timeout, endpointConfiguration.getEndpointUri());
         }
 
         log.info("Received message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");

@@ -245,8 +245,8 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
 
     @Override
     public void bind(String name, Object value) {
-        if (this.referenceResolver instanceof ReferenceRegistry) {
-            ((ReferenceRegistry) this.referenceResolver).bind(name, value);
+        if (this.referenceResolver != null) {
+            this.referenceResolver.bind(name, value);
         }
     }
 

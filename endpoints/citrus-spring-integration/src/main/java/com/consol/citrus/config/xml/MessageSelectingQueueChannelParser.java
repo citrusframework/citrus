@@ -28,14 +28,12 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 /**
  * Bean definition parser for special message channel configuration which
  * supports message selection.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class MessageSelectingQueueChannelParser implements BeanDefinitionParser {
 
-    /**
-     * @see org.springframework.beans.factory.xml.BeanDefinitionParser#parse(org.w3c.dom.Element, org.springframework.beans.factory.xml.ParserContext)
-     */
+    @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         BeanDefinitionBuilder builder = BeanDefinitionBuilder.rootBeanDefinition(MessageSelectingQueueChannel.class);
 
@@ -44,9 +42,9 @@ public class MessageSelectingQueueChannelParser implements BeanDefinitionParser 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("logging"), "loggingEnabled");
 
         BeanDefinitionParserUtils.setPropertyValue(builder, element.getAttribute("polling-interval"), "pollingInterval");
-        
+
         parserContext.getRegistry().registerBeanDefinition(element.getAttribute("id"), builder.getBeanDefinition());
-        
+
         return null;
     }
 }

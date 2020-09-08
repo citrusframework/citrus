@@ -257,7 +257,7 @@ public class ChannelEndpointSyncConsumerTest extends AbstractTestNGUnitTest {
             ChannelSyncConsumer channelSyncConsumer = (ChannelSyncConsumer) endpoint.createConsumer();
             channelSyncConsumer.receive(context);
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout while receiving message from channel"));
+            Assert.assertTrue(e.getLocalizedMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint: "));
             return;
         }
 

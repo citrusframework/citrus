@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.matcher;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,15 +40,19 @@ public interface ValidationMatcher {
     /** Message validator resource lookup path */
     String RESOURCE_PATH = "META-INF/citrus/validation/matcher";
 
+    Map<String, ValidationMatcher> matcher = new HashMap<>();
+
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
      * and instantiates those validators.
      * @return
      */
     static Map<String, ValidationMatcher> lookup() {
-        Map<String, ValidationMatcher> matcher = new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH);
+        if (matcher.isEmpty()) {
+            matcher.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-        matcher.forEach((k, v) -> LOG.info(String.format("Found validation matcher '%s' as %s", k, v.getClass())));
+            matcher.forEach((k, v) -> LOG.info(String.format("Found validation matcher '%s' as %s", k, v.getClass())));
+        }
         return matcher;
     }
 

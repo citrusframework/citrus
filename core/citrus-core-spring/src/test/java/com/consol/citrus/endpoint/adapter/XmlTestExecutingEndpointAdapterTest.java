@@ -148,7 +148,7 @@ public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
     @Configuration
     public static class EndpointConfig {
 
-        private MessageQueue inboundQueue = new DefaultMessageQueue();
+        private MessageQueue inboundQueue = new DefaultMessageQueue("inboundQueue");
 
         @Bean
         public XmlTestExecutingEndpointAdapter testSimulator(TestContextFactoryBean testContextFactoryBean) {

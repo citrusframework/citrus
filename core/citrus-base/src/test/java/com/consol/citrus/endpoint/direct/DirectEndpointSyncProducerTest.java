@@ -81,7 +81,7 @@ public class DirectEndpointSyncProducerTest {
         DirectSyncEndpoint endpoint = new DirectSyncEndpoint();
         endpoint.getEndpointConfiguration().setQueue(queue);
 
-        final MessageQueue replyQueue = new DefaultMessageQueue();
+        final MessageQueue replyQueue = new DefaultMessageQueue("testQueue");
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>")
                 .setHeader(DirectMessageHeaders.REPLY_QUEUE, replyQueue);
 
@@ -221,6 +221,7 @@ public class DirectEndpointSyncProducerTest {
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(queue);
+        when(queue.toString()).thenReturn("mockQueue");
         doAnswer(invocation -> {
             Message request = invocation.getArgument(0);
             Assert.assertNotNull(request.getHeaders().get(DirectMessageHeaders.REPLY_QUEUE));
@@ -230,7 +231,8 @@ public class DirectEndpointSyncProducerTest {
         try {
             endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on reply channel");
+            Assert.assertEquals(e.getLocalizedMessage(), "Action timeout after 5000 milliseconds. " +
+                    "Failed to receive synchronous reply message on endpoint: 'mockQueue'");
             return;
         }
 

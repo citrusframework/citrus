@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.script.sql;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -44,16 +45,19 @@ public interface SqlResultSetScriptValidator {
     /** Type resolver to find custom SQL result set validators on classpath via resource path lookup */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
+    Map<String, SqlResultSetScriptValidator> validators = new HashMap<>();
+
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
      * and instantiates those validators.
      * @return
      */
     static Map<String, SqlResultSetScriptValidator> lookup() {
-        Map<String, SqlResultSetScriptValidator> validators =
-                TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
+        if (validators.isEmpty()) {
+            validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-        validators.forEach((k, v) -> LOG.info(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+            validators.forEach((k, v) -> LOG.info(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+        }
         return validators;
     }
 

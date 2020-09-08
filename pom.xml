@@ -136,36 +136,36 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <spring.version>5.2.4.RELEASE</spring.version>
-    <spring.ws.version>3.0.8.RELEASE</spring.ws.version>
-    <spring.integration.version>5.2.4.RELEASE</spring.integration.version>
+    <spring.version>5.2.8.RELEASE</spring.version>
+    <spring.ws.version>3.0.9.RELEASE</spring.ws.version>
+    <spring.integration.version>5.2.8.RELEASE</spring.integration.version>
     <spring.restdocs.version>2.0.4.RELEASE</spring.restdocs.version>
-    <kafka.version>2.4.0</kafka.version>
-    <apache.camel.version>3.1.0</apache.camel.version>
+    <kafka.version>2.6.0</kafka.version>
+    <apache.camel.version>3.5.0</apache.camel.version>
     <javatuples.version>1.2</javatuples.version>
-    <activemq.version>5.15.11</activemq.version>
-    <vertx.version>3.8.5</vertx.version>
-    <groovy.version>2.5.0</groovy.version>
-    <jetty.version>9.4.27.v20200227</jetty.version>
+    <activemq.version>5.16.0</activemq.version>
+    <vertx.version>3.9.2</vertx.version>
+    <groovy.version>2.5.13</groovy.version>
+    <jetty.version>9.4.31.v20200723</jetty.version>
     <testng.version>7.1.0</testng.version>
     <junit.version>4.13</junit.version>
-    <junit.jupiter.version>5.6.0</junit.jupiter.version>
+    <junit.jupiter.version>5.6.2</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
-    <log4j2.version>2.13.1</log4j2.version>
+    <log4j2.version>2.13.3</log4j2.version>
     <jaxb.version>2.3.0</jaxb.version>
-    <jackson.version>2.10.3</jackson.version>
+    <jackson.version>2.11.2</jackson.version>
     <arquillian.version>1.6.0.Final</arquillian.version>
-    <cucumber.version>5.4.2</cucumber.version>
-    <zookeeper.version>3.5.6</zookeeper.version>
-    <sshd.version>2.4.0</sshd.version>
-    <json.schema.validator.version>2.2.13</json.schema.validator.version>
+    <cucumber.version>5.7.0</cucumber.version>
+    <zookeeper.version>3.6.1</zookeeper.version>
+    <sshd.version>2.5.1</sshd.version>
+    <json.schema.validator.version>2.2.14</json.schema.validator.version>
     <citrus.db.version>0.1.4</citrus.db.version>
     <selenium.version>3.141.59</selenium.version>
     <htmlunit.version>2.38.0</htmlunit.version>
-    <byte.buddy.version>1.10.8</byte.buddy.version>
-    <google.guava.version>28.2-jre</google.guava.version>
+    <byte.buddy.version>1.10.14</byte.buddy.version>
+    <google.guava.version>29.0-jre</google.guava.version>
     <surefire.version>2.22.2</surefire.version>
-    <mockito.version>2.28.2</mockito.version>
+    <mockito.version>3.5.10</mockito.version>
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
@@ -492,14 +492,14 @@
       <dependency>
         <groupId>org.apache.ant</groupId>
         <artifactId>ant</artifactId>
-        <version>1.10.4</version>
+        <version>1.10.8</version>
         <scope>provided</scope>
       </dependency>
 
       <!-- Citrus Kafka dependencies -->
       <dependency>
         <groupId>org.apache.kafka</groupId>
-        <artifactId>kafka_2.11</artifactId>
+        <artifactId>kafka_2.13</artifactId>
         <version>${kafka.version}</version>
       </dependency>
       <dependency>
@@ -510,7 +510,7 @@
       </dependency>
       <dependency>
         <groupId>org.apache.kafka</groupId>
-        <artifactId>kafka_2.11</artifactId>
+        <artifactId>kafka_2.13</artifactId>
         <classifier>test</classifier>
         <version>${kafka.version}</version>
       </dependency>
@@ -643,7 +643,7 @@
       <dependency>
         <groupId>org.apache.httpcomponents</groupId>
         <artifactId>httpclient</artifactId>
-        <version>4.5.5</version>
+        <version>4.5.12</version>
       </dependency>
 
       <!-- Cucumber -->
@@ -865,6 +865,16 @@
             <artifactId>log4j</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.dropwizard.metrics</groupId>
+        <artifactId>metrics-core</artifactId>
+        <version>3.2.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.xerial.snappy</groupId>
+        <artifactId>snappy-java</artifactId>
+        <version>1.1.7.7</version>
       </dependency>
 
       <dependency>
@@ -1220,11 +1230,12 @@
         <plugin>
           <groupId>org.asciidoctor</groupId>
           <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>1.5.6</version>
+          <version>1.5.7</version>
           <inherited>false</inherited>
           <configuration>
             <sourceDirectory>src/manual</sourceDirectory>
             <sourceDocumentName>index.adoc</sourceDocumentName>
+            <sourceHighlighter>coderay</sourceHighlighter>
             <attributes>
               <icons>font</icons>
               <pagenums/>
@@ -1369,12 +1380,11 @@
                   <goal>process-asciidoc</goal>
                 </goals>
                 <configuration>
-                  <sourceHighlighter>coderay</sourceHighlighter>
                   <backend>html</backend>
-                  <sourceHighlighter>coderay</sourceHighlighter>
                   <attributes>
                     <toc>left</toc>
                     <linkcss>false</linkcss>
+                    <source-highlighter>coderay</source-highlighter>
                   </attributes>
                 </configuration>
               </execution>
@@ -1400,9 +1410,9 @@
                 </goals>
                 <configuration>
                   <backend>pdf</backend>
-                  <sourceHighlighter>rouge</sourceHighlighter>
                   <attributes>
                     <toc/>
+                    <source-highlighter>highlight.js</source-highlighter>
                   </attributes>
                 </configuration>
               </execution>
@@ -1411,7 +1421,7 @@
               <dependency>
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctorj-pdf</artifactId>
-                <version>1.5.0-alpha.11</version>
+                <version>1.5.3</version>
               </dependency>
             </dependencies>
           </plugin>

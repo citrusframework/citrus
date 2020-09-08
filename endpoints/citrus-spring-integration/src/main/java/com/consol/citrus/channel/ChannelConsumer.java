@@ -20,8 +20,8 @@ import java.util.Optional;
 
 import com.consol.citrus.channel.selector.DispatchingMessageSelector;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
@@ -96,8 +96,7 @@ public class ChannelConsumer extends AbstractSelectiveMessageConsumer {
         }
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving message from channel '"
-                    + destinationChannelName + "'");
+            throw new MessageTimeoutException(timeout, destinationChannelName);
         }
 
         log.debug("Received message from: " + destinationChannelName);

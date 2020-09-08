@@ -17,7 +17,7 @@
 package com.consol.citrus.websocket.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.AbstractSelectiveMessageConsumer;
 import org.slf4j.Logger;
@@ -73,26 +73,26 @@ public class WebSocketConsumer extends AbstractSelectiveMessageConsumer {
         long timeLeft = timeout;
 
         WebSocketMessage<?> message = config.getHandler().getMessage();
-        String path = endpointConfiguration.getEndpointUri();
+        String endpointUri = endpointConfiguration.getEndpointUri();
         while (message == null && timeLeft > 0) {
             timeLeft -= endpointConfiguration.getPollingInterval();
             long sleep = timeLeft > 0 ? endpointConfiguration.getPollingInterval() : endpointConfiguration.getPollingInterval() + timeLeft;
             if (LOG.isDebugEnabled()) {
                 String msg = "Waiting for message on '%s' - retrying in %s ms";
-                LOG.debug(String.format(msg, path, (sleep)));
+                LOG.debug(String.format(msg, endpointUri, (sleep)));
             }
 
             try {
                 Thread.sleep(sleep);
             } catch (InterruptedException e) {
-                LOG.warn(String.format("Thread interrupted while waiting for message on '%s'", path), e);
+                LOG.warn(String.format("Thread interrupted while waiting for message on '%s'", endpointUri), e);
             }
 
             message = config.getHandler().getMessage();
         }
 
         if (message == null) {
-            throw new ActionTimeoutException(String.format("Action timed out while receiving message on '%s'", path));
+            throw new MessageTimeoutException(timeout, endpointUri);
         }
         return message;
     }

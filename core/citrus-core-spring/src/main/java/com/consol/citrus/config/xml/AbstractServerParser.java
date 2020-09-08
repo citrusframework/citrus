@@ -43,7 +43,9 @@ public abstract class AbstractServerParser extends AbstractBeanDefinitionParser 
             BeanDefinitionParserUtils.setPropertyReference(serverBuilder, element.getAttribute("endpoint-adapter"), "endpointAdapter");
         } else {
             String channelId = element.getAttribute(ID_ATTRIBUTE) + AbstractServer.DEFAULT_CHANNEL_ID_SUFFIX;
-            BeanDefinitionParserUtils.registerBean(channelId, DefaultMessageQueue.class, parserContext, shouldFireEvents());
+            BeanDefinitionBuilder queueBuilder = BeanDefinitionBuilder.rootBeanDefinition(DefaultMessageQueue.class);
+            queueBuilder.addConstructorArgValue(channelId);
+            BeanDefinitionParserUtils.registerBean(channelId, queueBuilder.getBeanDefinition(), parserContext, shouldFireEvents());
         }
 
         BeanDefinitionParserUtils.setPropertyValue(serverBuilder, element.getAttribute("debug-logging"), "debugLogging");

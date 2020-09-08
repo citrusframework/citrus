@@ -25,10 +25,11 @@ import com.consol.citrus.arquillian.helper.InjectionHelper;
 import org.jboss.arquillian.core.api.Instance;
 import org.jboss.arquillian.test.spi.event.suite.AfterSuite;
 import org.jboss.arquillian.test.spi.event.suite.BeforeSuite;
-import org.mockito.Mockito;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 
@@ -39,13 +40,19 @@ public class CitrusRemoteLifecycleHandlerTest {
     private CitrusConfiguration configuration = CitrusConfiguration.from(new Properties());
 
     private Citrus citrusFramework = Citrus.newInstance(CitrusSpringContext.create());
-    private Instance<Citrus> citrusInstance = Mockito.mock(Instance.class);
-    private Instance<CitrusConfiguration> configurationInstance = Mockito.mock(Instance.class);
+
+    @Mock
+    private Instance<Citrus> citrusInstance;
+    @Mock
+    private Instance<CitrusConfiguration> configurationInstance;
+
+    @BeforeClass
+    public void setupMocks() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testLifecycle() throws Exception {
-        reset(citrusInstance, configurationInstance);
-
         when(citrusInstance.get()).thenReturn(citrusFramework);
         when(configurationInstance.get()).thenReturn(configuration);
 

@@ -16,6 +16,16 @@
 
 package com.consol.citrus.jms.endpoint;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MessageConsumer;
+import javax.jms.Queue;
+import javax.jms.Session;
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
@@ -26,11 +36,11 @@ import org.springframework.jms.core.JmsTemplate;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.jms.*;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -43,14 +53,14 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
     private Destination destination = Mockito.mock(Destination.class);
     private Queue destinationQueue = Mockito.mock(Queue.class);
     private MessageConsumer messageConsumer = Mockito.mock(MessageConsumer.class);
-    
+
     private JmsTemplate jmsTemplate = Mockito.mock(JmsTemplate.class);
 
     @Test
     public void testReceiveMessageWithJmsTemplate() {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setJmsTemplate(jmsTemplate);
-        
+
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -64,25 +74,25 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(jmsTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     public void testWithDestination() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
+
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
@@ -91,25 +101,25 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(connection).start();
     }
-    
+
     @Test
     public void testReceiveMessageWithDestinationName() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestinationName("myDestination");
-        
+
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createQueue("myDestination")).thenReturn(destinationQueue);
         when(session.createConsumer(destinationQueue, null)).thenReturn(messageConsumer);
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
@@ -119,36 +129,34 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(connection).start();
     }
-    
+
     @Test
     public void testReceiveMessageTimeout() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
-        
+
         when(messageConsumer.receive(5000L)).thenReturn(null);
 
         try {
             endpoint.createConsumer().receive(context);
+            Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiving message timeout");
         } catch(ActionTimeoutException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Action timed out while receiving JMS message on"));
+            Assert.assertTrue(e.getMessage().startsWith("Action timeout after 5000 milliseconds. Failed to receive message on endpoint"));
             verify(connection).start();
-            return;
         }
-        
-        Assert.fail("Missing " + CitrusRuntimeException.class + " because of receiveing message timeout");
     }
-    
+
     @Test
     public void testWithCustomTimeout() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
@@ -157,18 +165,18 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setDestination(destination);
 
         endpoint.getEndpointConfiguration().setTimeout(10000L);
-        
+
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
         when(messageConsumer.receive(10000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
@@ -184,21 +192,21 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
+
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>", controlHeaders);
 
         Map<String, Object> headers = new HashMap<String, Object>();
         headers.put("Operation", "sayHello");
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createConsumer(destination, null)).thenReturn(messageConsumer);
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
@@ -209,25 +217,25 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(connection).start();
     }
-    
+
     @Test
     public void testWithMessageSelector() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
         endpoint.getEndpointConfiguration().setConnectionFactory(connectionFactory);
 
         endpoint.getEndpointConfiguration().setDestination(destination);
-        
+
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createConsumer(destination, "Operation = 'sayHello'")).thenReturn(messageConsumer);
         when(messageConsumer.receive(5000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 
@@ -236,7 +244,7 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         verify(connection).start();
     }
-    
+
     @Test
     public void testWithMessageSelectorAndCustomTimeout() throws JMSException {
         JmsEndpoint endpoint = new JmsEndpoint();
@@ -244,18 +252,18 @@ public class JmsEndpointConsumerTest extends AbstractTestNGUnitTest {
 
         endpoint.getEndpointConfiguration().setDestination(destination);
         endpoint.getEndpointConfiguration().setTimeout(10000L);
-        
+
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
-        
+
         reset(jmsTemplate, connectionFactory, destination, connection, session, messageConsumer);
 
         when(connectionFactory.createConnection()).thenReturn(connection);
         when(connection.createSession(anyBoolean(), anyInt())).thenReturn(session);
         when(session.getTransacted()).thenReturn(false);
         when(session.getAcknowledgeMode()).thenReturn(Session.AUTO_ACKNOWLEDGE);
-        
+
         when(session.createConsumer(destination, "Operation = 'sayHello'")).thenReturn(messageConsumer);
         when(messageConsumer.receive(10000L)).thenReturn(new TextMessageImpl("<TestRequest><Message>Hello World!</Message></TestRequest>", headers));
 

@@ -12,7 +12,6 @@ import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
-import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.util.TestUtils;
 import org.springframework.beans.factory.BeanNameAware;
 
@@ -42,17 +41,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     /** In case test was called with parameters from outside */
     private Map<String, Object> parameters = new LinkedHashMap<>();
 
-    private TestActionListeners testActionListeners = new TestActionListeners();
-
-    private List<BeforeTest> beforeTest;
-
-    private List<AfterTest> afterTest;
-
     /** The result of this test case */
     private TestResult testResult;
 
-    /** Marks this test case as test runner instance that grows in size step by step as test actions are executed */
-    private boolean testRunner = false;
+    /** Marks this test case as instance that grows in size step by step as test actions are executed */
+    private boolean incremental = false;
 
     /** Test groups */
     private String[] groups;
@@ -108,29 +101,25 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
 
     @Override
     public void beforeTest(final TestContext context) {
-        if (beforeTest != null) {
-            for (final BeforeTest sequenceBeforeTest : beforeTest) {
-                try {
-                    if (sequenceBeforeTest.shouldExecute(getName(), packageName, groups))
-                        sequenceBeforeTest.execute(context);
-                } catch (final Exception e) {
-                    throw new CitrusRuntimeException("Before test failed with errors", e);
-                }
+        for (final BeforeTest sequenceBeforeTest : context.getBeforeTest()) {
+            try {
+                if (sequenceBeforeTest.shouldExecute(getName(), packageName, groups))
+                    sequenceBeforeTest.execute(context);
+            } catch (final Exception e) {
+                throw new CitrusRuntimeException("Before test failed with errors", e);
             }
         }
     }
 
     @Override
     public void afterTest(final TestContext context) {
-        if (afterTest != null) {
-            for (final AfterTest sequenceAfterTest : afterTest) {
-                try {
-                    if (sequenceAfterTest.shouldExecute(getName(), packageName, groups)) {
-                        sequenceAfterTest.execute(context);
-                    }
-                } catch (final Exception | AssertionError e) {
-                    log.warn("After test failed with errors", e);
+        for (final AfterTest sequenceAfterTest : context.getAfterTest()) {
+            try {
+                if (sequenceAfterTest.shouldExecute(getName(), packageName, groups)) {
+                    sequenceAfterTest.execute(context);
                 }
+            } catch (final Exception | AssertionError e) {
+                log.warn("After test failed with errors", e);
             }
         }
     }
@@ -144,12 +133,12 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
         try {
             if (!action.isDisabled(context)) {
                 setActiveAction(action);
-                testActionListeners.onTestActionStart(this, action);
+                context.getTestActionListeners().onTestActionStart(this, action);
 
                 action.execute(context);
-                testActionListeners.onTestActionFinish(this, action);
+                context.getTestActionListeners().onTestActionFinish(this, action);
             } else {
-                testActionListeners.onTestActionSkipped(this, action);
+                context.getTestActionListeners().onTestActionSkipped(this, action);
             }
         } catch (final Exception | AssertionError e) {
             testResult = TestResult.failed(getName(), testClass.getName(), e);
@@ -213,11 +202,11 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
             for (final TestActionBuilder<?> actionBuilder : finalActions) {
                 TestAction action = actionBuilder.build();
                 if (!action.isDisabled(context)) {
-                    testActionListeners.onTestActionStart(this, action);
+                    context.getTestActionListeners().onTestActionStart(this, action);
                     action.execute(context);
-                    testActionListeners.onTestActionFinish(this, action);
+                    context.getTestActionListeners().onTestActionFinish(this, action);
                 } else {
-                    testActionListeners.onTestActionSkipped(this, action);
+                    context.getTestActionListeners().onTestActionSkipped(this, action);
                 }
             }
         }
@@ -401,31 +390,13 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     }
 
     @Override
-    public void setTestActionListeners(final TestActionListeners testActionListeners) {
-        this.testActionListeners = testActionListeners;
+    public void setIncremental(boolean incremental) {
+        this.incremental = incremental;
     }
 
     @Override
-    public void setBeforeTest(final List<BeforeTest> beforeTest) {
-        this.beforeTest = beforeTest;
-    }
-
-    @Override
-    public void setAfterTest(final List<AfterTest> afterTest) {
-        this.afterTest = afterTest;
-    }
-
-    /**
-     * Sets the test runner flag.
-     * @param testRunner
-     */
-    public void setTestRunner(final boolean testRunner) {
-        this.testRunner = testRunner;
-    }
-
-    @Override
-    public boolean isTestRunner() {
-        return testRunner;
+    public boolean isIncremental() {
+        return incremental;
     }
 
     @Override

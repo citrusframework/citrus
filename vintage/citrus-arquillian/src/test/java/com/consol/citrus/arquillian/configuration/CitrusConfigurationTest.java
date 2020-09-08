@@ -16,6 +16,11 @@
 
 package com.consol.citrus.arquillian.configuration;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.arquillian.CitrusExtensionConstants;
 import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContext;
@@ -26,8 +31,6 @@ import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.*;
 
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
@@ -118,7 +121,7 @@ public class CitrusConfigurationTest {
     /**
      * Fake custom Citrus configuration.
      */
-    private class CitrusCustomConfig extends CitrusSpringConfig {
+    private static class CitrusCustomConfig extends CitrusSpringConfig {
         @Bean
         public Function customFunction() {
             return new Function() {

@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -42,17 +43,20 @@ public interface HeaderValidator {
     /** Type resolver to find custom message validators on classpath via resource path lookup */
     TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
 
+    Map<String, HeaderValidator> validators = new HashMap<>();
+
     /**
      * Resolves all available validators from resource path lookup. Scans classpath for validator meta information
      * and instantiates those validators.
      * @return
      */
     static Map<String, HeaderValidator> lookup() {
-        Map<String, HeaderValidator> validators =
-                TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name");
+        if (validators.isEmpty()) {
+            validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-        if (LOG.isDebugEnabled()) {
-            validators.forEach((k, v) -> LOG.debug(String.format("Found header validator '%s' as %s", k, v.getClass())));
+            if (LOG.isDebugEnabled()) {
+                validators.forEach((k, v) -> LOG.debug(String.format("Found header validator '%s' as %s", k, v.getClass())));
+            }
         }
         return validators;
     }

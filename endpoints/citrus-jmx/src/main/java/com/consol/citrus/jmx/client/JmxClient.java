@@ -38,8 +38,8 @@ import java.util.concurrent.TimeUnit;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.ActionTimeoutException;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
 import com.consol.citrus.jmx.message.JmxMessage;
 import com.consol.citrus.jmx.model.ManagedBeanInvocation;
@@ -190,7 +190,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
             networkConnector.addConnectionNotificationListener(this, null, null);
             return networkConnector.getMBeanServerConnection();
         } catch (IOException e) {
-            throw new CitrusRuntimeException("Failed to connect to network MBean server", e);
+            throw new CitrusRuntimeException("Failed to connect to network MBean server '" + getEndpointConfiguration().getServerUrl() + "'", e);
         }
     }
 
@@ -216,7 +216,7 @@ public class JmxClient extends AbstractEndpoint implements Producer, ReplyConsum
         Message message = correlationManager.find(selector, timeout);
 
         if (message == null) {
-            throw new ActionTimeoutException("Action timeout while receiving synchronous reply message from MBean server");
+            throw new MessageTimeoutException(timeout, getEndpointConfiguration().getServerUrl());
         }
 
         return message;

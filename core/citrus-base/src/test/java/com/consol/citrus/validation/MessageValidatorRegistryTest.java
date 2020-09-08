@@ -121,12 +121,16 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.size(), 1L);
         Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
 
-        try {
-            messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""));
-            Assert.fail("Missing exception due to no matching validator implementation");
-        } catch (CitrusRuntimeException e) {
-            Assert.assertTrue(e.getMessage().startsWith("Could not find proper message validator for message type"));
-        }
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage("Hello"));
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 1L);
+        Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
+
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage(""));
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 1L);
+        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultEmptyMessageValidator.class);
 
         messageValidatorRegistry.addMessageValidator("xmlMessageValidator", xmlMessageValidator);
         messageValidatorRegistry.addMessageValidator("groovyScriptMessageValidator", groovyScriptMessageValidator);
@@ -272,5 +276,48 @@ public class MessageValidatorRegistryTest {
         Assert.assertEquals(matchingValidators.get(0), plainTextMessageValidator);
         Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
         Assert.assertEquals(matchingValidators.get(2), groovyScriptMessageValidator);
+    }
+
+    @Test
+    public void shouldAddDefaultEmptyMessagePayloadValidator() {
+        MessageValidatorRegistry messageValidatorRegistry = new MessageValidatorRegistry();
+        List<MessageValidator<? extends ValidationContext>> matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 1L);
+        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultEmptyMessageValidator.class);
+
+        messageValidatorRegistry.addMessageValidator("jsonTextMessageValidator", jsonTextMessageValidator);
+        messageValidatorRegistry.addMessageValidator("headerMessageValidator", new DefaultMessageHeaderValidator());
+
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.PLAINTEXT.name(), new DefaultMessage(""));
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 2L);
+        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
+        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultEmptyMessageValidator.class);
+
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("{}"));
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 2L);
+        Assert.assertEquals(matchingValidators.get(0), jsonTextMessageValidator);
+        Assert.assertEquals(matchingValidators.get(1).getClass(), DefaultMessageHeaderValidator.class);
+
+        try {
+            messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"));
+            Assert.fail("Missing exception due to no proper message validator found");
+        } catch (CitrusRuntimeException e) {
+            Assert.assertEquals(e.getMessage(), "Failed to find proper message validator for message");
+        }
+
+        messageValidatorRegistry.addMessageValidator("plainTextMessageValidator", plainTextMessageValidator);
+
+        matchingValidators = messageValidatorRegistry.findMessageValidators(MessageType.JSON.name(), new DefaultMessage("Hello"));
+
+        Assert.assertNotNull(matchingValidators);
+        Assert.assertEquals(matchingValidators.size(), 2L);
+        Assert.assertEquals(matchingValidators.get(0).getClass(), DefaultMessageHeaderValidator.class);
+        Assert.assertEquals(matchingValidators.get(1), plainTextMessageValidator);
     }
 }

@@ -34,11 +34,11 @@ import org.testng.annotations.Test;
  */
 public class DirectEndpointAdapterTest {
 
-    private MessageQueue queue = new DefaultMessageQueue();
+    private MessageQueue queue = new DefaultMessageQueue("testQueue");
     private DirectEndpointAdapter endpointAdapter;
     private DirectSyncEndpointConfiguration endpointConfiguration;
 
-    private TestContextFactory testContextFactory = new TestContextFactory();
+    private TestContextFactory testContextFactory = TestContextFactory.newInstance();
     private TestContext context;
 
     @BeforeClass

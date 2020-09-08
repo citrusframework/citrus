@@ -16,8 +16,15 @@
 
 package com.consol.citrus.channel;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.DefaultMessageCorrelator;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.mockito.Mockito;
 import org.springframework.integration.core.MessagingTemplate;
@@ -27,10 +34,11 @@ import org.springframework.messaging.core.DestinationResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -41,14 +49,14 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
     private MessageChannel channel = Mockito.mock(MessageChannel.class);
     private MessageCorrelator messageCorrelator = Mockito.mock(MessageCorrelator.class);
     private DestinationResolver channelResolver = Mockito.mock(DestinationResolver.class);
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessage() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -57,14 +65,14 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel);
-        
+
         when(messagingTemplate.sendAndReceive(eq(channel), any(org.springframework.messaging.Message.class))).thenReturn(response);
 
         endpoint.createProducer().send(message, context);
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageChannelNameResolver() {
@@ -73,7 +81,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannelName("testChannel");
 
         endpoint.getEndpointConfiguration().setChannelResolver(channelResolver);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
@@ -82,7 +90,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
                                 .build();
 
         reset(messagingTemplate, channel, channelResolver);
-        
+
         when(channelResolver.resolveDestination("testChannel")).thenReturn(channel);
         when(messagingTemplate.sendAndReceive(eq(channel), any(org.springframework.messaging.Message.class))).thenReturn(response);
 
@@ -90,23 +98,23 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyHandler() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
         reset(messagingTemplate, channel);
-        
+
         when(messagingTemplate.sendAndReceive(eq(channel), any(org.springframework.messaging.Message.class))).thenReturn(response);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
@@ -119,7 +127,7 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithCustomReplyTimeout() {
@@ -128,16 +136,16 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
         endpoint.getEndpointConfiguration().setChannel(channel);
 
         endpoint.getEndpointConfiguration().setTimeout(10000L);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
         reset(messagingTemplate, channel);
-        
+
         when(messagingTemplate.sendAndReceive(eq(channel), any(org.springframework.messaging.Message.class))).thenReturn(response);
 
         ChannelSyncProducer channelSyncProducer = (ChannelSyncProducer) endpoint.createProducer();
@@ -150,25 +158,25 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(10000L);
     }
-    
+
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testSendMessageWithReplyMessageCorrelator() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
-        
+
         Map<String, Object> responseHeaders = new HashMap<String, Object>();
         final org.springframework.messaging.Message response = MessageBuilder.withPayload("<TestResponse>Hello World!</TestResponse>")
                                 .copyHeaders(responseHeaders)
                                 .build();
 
         endpoint.getEndpointConfiguration().setCorrelator(messageCorrelator);
-        
+
         reset(messagingTemplate, channel, messageCorrelator);
-        
+
         when(messagingTemplate.sendAndReceive(eq(channel), any(org.springframework.messaging.Message.class))).thenReturn(response);
 
         when(messageCorrelator.getCorrelationKey(message)).thenReturn(MessageHeaders.ID + " = '123456789'");
@@ -184,23 +192,25 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         verify(messagingTemplate).setReceiveTimeout(5000L);
     }
-    
+
     @Test
     public void testSendMessageNoResponse() {
         ChannelSyncEndpoint endpoint = new ChannelSyncEndpoint();
         endpoint.getEndpointConfiguration().setMessagingTemplate(messagingTemplate);
         endpoint.getEndpointConfiguration().setChannel(channel);
-        
+
         final Message message = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(messagingTemplate, channel);
-        
+
+        when(channel.toString()).thenReturn("mockChannel");
         when(messagingTemplate.sendAndReceive(eq(channel), any(org.springframework.messaging.Message.class))).thenReturn(null);
 
         try {
             endpoint.createProducer().send(message, context);
         } catch(CitrusRuntimeException e) {
-            Assert.assertEquals(e.getLocalizedMessage(), "Reply timed out after 5000ms. Did not receive reply message on reply channel");
+            Assert.assertEquals(e.getLocalizedMessage(), "Action timeout after 5000 milliseconds. " +
+                    "Failed to receive synchronous reply message on endpoint: 'mockChannel'");
             return;
         }
 
@@ -234,5 +244,5 @@ public class ChannelEndpointSyncProducerTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(channelSyncProducer.receive(new DefaultMessageCorrelator().getCorrelationKey(message), context), message);
     }
-    
+
 }

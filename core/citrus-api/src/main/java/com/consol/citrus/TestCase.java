@@ -16,14 +16,10 @@
 
 package com.consol.citrus;
 
-import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.container.AfterTest;
-import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.container.TestActionContainer;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.report.TestActionListenersAware;
 
 /**
  * Test case executing a list of {@link TestAction} in sequence.
@@ -32,7 +28,7 @@ import com.consol.citrus.report.TestActionListenersAware;
  * @since 2006
  */
 @SuppressWarnings({"unused", "JavaDoc"})
-public interface TestCase extends TestActionContainer, TestActionListenersAware {
+public interface TestCase extends TestActionContainer {
 
     /**
      * Starts the test case.
@@ -117,30 +113,26 @@ public interface TestCase extends TestActionContainer, TestActionListenersAware 
     TestResult getTestResult();
 
     /**
-     * Marks this test case as Java DSL test runner.
+     * Marks that this test case runs its actions one by one growing over time. This is usually the case when
+     * using the Java DSL that adds test actions as the Java method is processed. XML test cases ususally build and load all
+     * actions beforehand and run all actions in one step.
      * @return
      */
-    default boolean isTestRunner() {
+    default boolean isIncremental() {
         return false;
     }
+
+    /**
+     * Sets the test runner flag.
+     * @param incremental
+     */
+    void setIncremental(boolean incremental);
 
     /**
      * Gets the variables for this test case.
      * @return
      */
     Map<String, Object> getVariableDefinitions();
-
-    /**
-     * Sets the before test action sequence.
-     * @param beforeTest
-     */
-    void setBeforeTest(final List<BeforeTest> beforeTest);
-
-    /**
-     * Sets the after test action sequence.
-     * @param afterTest
-     */
-    void setAfterTest(final List<AfterTest> afterTest);
 
     /**
      * Adds action to finally action chain.

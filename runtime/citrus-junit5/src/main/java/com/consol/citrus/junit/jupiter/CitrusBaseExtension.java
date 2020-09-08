@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 
 import com.consol.citrus.Citrus;
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.CitrusSpringContext;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.annotations.CitrusResource;
@@ -169,7 +168,7 @@ public class CitrusBaseExtension implements BeforeAllCallback,
         Assert.notNull(extensionContext, "ExtensionContext must not be null");
         return extensionContext.getRoot().getStore(NAMESPACE).getOrComputeIfAbsent(Citrus.class.getName(), key -> {
             if (citrus == null) {
-                citrus = Citrus.newInstance(CitrusSpringContext.create());
+                citrus = Citrus.newInstance();
             }
 
             return citrus;

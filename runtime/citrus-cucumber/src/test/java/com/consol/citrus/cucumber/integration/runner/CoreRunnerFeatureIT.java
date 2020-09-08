@@ -28,6 +28,6 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         strict = true,
         glue = { "com.consol.citrus.cucumber.step.runner.core" },
-        plugin = { "com.consol.citrus.cucumber.CitrusReporter" } )
+        plugin = { "pretty", "com.consol.citrus.cucumber.CitrusReporter" } )
 public class CoreRunnerFeatureIT {
 }

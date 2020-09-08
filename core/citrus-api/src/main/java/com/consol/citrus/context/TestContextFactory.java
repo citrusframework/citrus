@@ -16,10 +16,16 @@
 
 package com.consol.citrus.context;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.consol.citrus.container.AfterTest;
+import com.consol.citrus.container.BeforeTest;
 import com.consol.citrus.endpoint.DefaultEndpointFactory;
 import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
@@ -50,6 +56,12 @@ public class TestContextFactory implements ReferenceResolverAware {
 
     private TestListeners testListeners;
 
+    private TestActionListeners testActionListeners;
+
+    private List<BeforeTest> beforeTest = new ArrayList<>();
+
+    private List<AfterTest> afterTest = new ArrayList<>();
+
     private MessageListeners messageListeners;
 
     private EndpointFactory endpointFactory;
@@ -75,6 +87,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setGlobalVariables(new GlobalVariables());
         factory.setMessageValidatorRegistry(new MessageValidatorRegistry());
         factory.setTestListeners(new TestListeners());
+        factory.setTestActionListeners(new TestActionListeners());
         factory.setMessageListeners(new MessageListeners());
         factory.setMessageConstructionInterceptors(new MessageConstructionInterceptors());
         factory.setEndpointFactory(new DefaultEndpointFactory());
@@ -95,6 +108,9 @@ public class TestContextFactory implements ReferenceResolverAware {
         context.setGlobalVariables(globalVariables);
         context.setMessageValidatorRegistry(messageValidatorRegistry);
         context.setTestListeners(testListeners);
+        context.setTestActionListeners(testActionListeners);
+        context.setBeforeTest(beforeTest);
+        context.setAfterTest(afterTest);
         context.setMessageListeners(messageListeners);
         context.setMessageConstructionInterceptors(messageConstructionInterceptors);
         context.setEndpointFactory(endpointFactory);
@@ -215,6 +231,54 @@ public class TestContextFactory implements ReferenceResolverAware {
      */
     public TestListeners getTestListeners() {
         return testListeners;
+    }
+
+    /**
+     * Obtains the testActionListeners.
+     * @return
+     */
+    public TestActionListeners getTestActionListeners() {
+        return testActionListeners;
+    }
+
+    /**
+     * Specifies the testActionListeners.
+     * @param testActionListeners
+     */
+    public void setTestActionListeners(TestActionListeners testActionListeners) {
+        this.testActionListeners = testActionListeners;
+    }
+
+    /**
+     * Obtains the beforeTest.
+     * @return
+     */
+    public List<BeforeTest> getBeforeTest() {
+        return beforeTest;
+    }
+
+    /**
+     * Specifies the beforeTest.
+     * @param beforeTest
+     */
+    public void setBeforeTest(List<BeforeTest> beforeTest) {
+        this.beforeTest = beforeTest;
+    }
+
+    /**
+     * Obtains the afterTest.
+     * @return
+     */
+    public List<AfterTest> getAfterTest() {
+        return afterTest;
+    }
+
+    /**
+     * Specifies the afterTest.
+     * @param afterTest
+     */
+    public void setAfterTest(List<AfterTest> afterTest) {
+        this.afterTest = afterTest;
     }
 
     /**

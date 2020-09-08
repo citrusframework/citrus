@@ -285,10 +285,10 @@ public class CitrusRemoteApplication implements SparkApplication {
 
     @Override
     public void destroy() {
-        Citrus citrus = CitrusInstanceManager.getSingleton();
-        if (citrus != null) {
+        Optional<Citrus> citrus = CitrusInstanceManager.get();
+        if (citrus.isPresent()) {
             log.info("Closing Citrus and its application context");
-            citrus.close();
+            citrus.get().close();
         }
     }
 }

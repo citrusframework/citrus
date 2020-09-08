@@ -2,6 +2,7 @@ package com.consol.citrus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Instance creation manager creates new Citrus instances or always a singleton based on instance creation strategy.
@@ -31,12 +32,8 @@ public class CitrusInstanceManager {
      * @return
      */
     public static Citrus newInstance() {
-        if (strategy.equals(CitrusInstanceStrategy.NEW)) {
-            return newInstance(CitrusContext.create());
-        } else if (citrus == null) {
-            citrus = newInstance(CitrusContext.create());
-        }
-
+        CitrusContextProvider contextProvider = CitrusContextProvider.lookup();
+        citrus = newInstance(contextProvider.create());
         return citrus;
     }
 
@@ -49,6 +46,7 @@ public class CitrusInstanceManager {
         if (strategy.equals(CitrusInstanceStrategy.NEW)) {
             Citrus instance = new Citrus(citrusContext);
             instanceProcessors.forEach(processor -> processor.process(instance));
+            citrus = instance;
             return instance;
         } else if (citrus == null) {
             citrus = new Citrus(citrusContext);
@@ -67,10 +65,40 @@ public class CitrusInstanceManager {
     }
 
     /**
-     * Gets the singleton instance of Citrus.
+     * Gets the actual instance that has been created with this manager.
      * @return
      */
-    public static Citrus getSingleton() {
+    public static Optional<Citrus> get() {
+        return Optional.ofNullable(citrus);
+    }
+
+
+    /**
+     * Provide access to the current Citrus instance.
+     * Create new instance if it has not been initialized yet.
+     * @return
+     */
+    public static Citrus getOrDefault() {
+        if (citrus == null) {
+            citrus = newInstance();
+        }
+
         return citrus;
+    }
+
+    /**
+     * Check if there has already been an instance instantiated using this manager.
+     * @return
+     */
+    public static boolean hasInstance() {
+        return citrus != null;
+    }
+
+    /**
+     * Removes current Citrus instance if any.
+     * @return
+     */
+    public static void reset() {
+        citrus = null;
     }
 }

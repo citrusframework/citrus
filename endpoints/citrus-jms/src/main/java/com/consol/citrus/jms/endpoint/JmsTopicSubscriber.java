@@ -78,7 +78,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
         DirectEndpointConfiguration directEndpointConfiguration = new DirectEndpointConfiguration();
 
-        MessageQueue inboundQueue = new DefaultMessageQueue();
+        MessageQueue inboundQueue = new DefaultMessageQueue(name + ".inbound");
         directEndpointConfiguration.setQueue(inboundQueue);
 
         this.messageQueue = new DirectEndpoint(directEndpointConfiguration);
@@ -93,7 +93,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
 
         TopicConnection connection = null;
         try {
-            if (connectionFactory == null || !(connectionFactory instanceof TopicConnectionFactory)) {
+            if (!(connectionFactory instanceof TopicConnectionFactory)) {
                 throw new CitrusRuntimeException("Failed to create JMS topic subscriber for unsupported connection factory type: " + Optional.ofNullable(connectionFactory)
                         .map(Object::getClass)
                         .map(Class::getName)
@@ -203,8 +203,7 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
     }
 
     /**
-     * Gets the running.
-     *
+     * Gets the running state.
      * @return
      */
     public boolean isRunning() {

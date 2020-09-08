@@ -49,8 +49,8 @@ public class CitrusLifecycleHooksTest extends UnitTestSupport {
         when(state.getName()).thenReturn("This is a mocked scenario");
 
         citrusLifecycleHooks.before(new Scenario(state));
-        verify(runner).name("mockedScenario");
-        verify(runner).description("This is a mocked scenario");
+        verify(runner).name("This is a mocked scenario");
+        verify(runner).description("mockedScenario");
         verify(runner).start();
     }
 
@@ -69,6 +69,7 @@ public class CitrusLifecycleHooksTest extends UnitTestSupport {
         testCase.setTestResult(TestResult.success("foo", "FooClass"));
 
         when(state.getId()).thenReturn("mockedScenario");
+        when(state.getName()).thenReturn("Mocked Scenario");
         when(state.getStatus()).thenReturn(Status.FAILED);
         when(state.isFailed()).thenReturn(true);
         when(runner.getTestCase()).thenReturn(testCase);
@@ -76,7 +77,7 @@ public class CitrusLifecycleHooksTest extends UnitTestSupport {
 
         Assert.assertTrue(testCase.getTestResult().isFailed());
         Assert.assertEquals(testCase.getTestResult().getCause().getClass(), CitrusRuntimeException.class);
-        Assert.assertEquals(testCase.getTestResult().getCause().getMessage(), "Scenario mockedScenario status FAILED");
+        Assert.assertEquals(testCase.getTestResult().getCause().getMessage(), "Scenario 'Mocked Scenario' (mockedScenario) status FAILED");
 
         verify(runner).stop();
         verify(runner, atLeastOnce()).getTestCase();
@@ -87,6 +88,7 @@ public class CitrusLifecycleHooksTest extends UnitTestSupport {
         TestCase testCase = new DefaultTestCase();
 
         when(state.getId()).thenReturn("mockedScenario");
+        when(state.getName()).thenReturn("Mocked Scenario");
         when(state.getStatus()).thenReturn(Status.FAILED);
         when(state.isFailed()).thenReturn(true);
         when(runner.getTestCase()).thenReturn(testCase);
@@ -94,7 +96,7 @@ public class CitrusLifecycleHooksTest extends UnitTestSupport {
 
         Assert.assertTrue(testCase.getTestResult().isFailed());
         Assert.assertEquals(testCase.getTestResult().getCause().getClass(), CitrusRuntimeException.class);
-        Assert.assertEquals(testCase.getTestResult().getCause().getMessage(), "Scenario mockedScenario status FAILED");
+        Assert.assertEquals(testCase.getTestResult().getCause().getMessage(), "Scenario 'Mocked Scenario' (mockedScenario) status FAILED");
 
         verify(runner).stop();
         verify(runner, atLeastOnce()).getTestCase();

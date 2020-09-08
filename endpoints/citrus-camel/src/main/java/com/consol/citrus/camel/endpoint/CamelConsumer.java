@@ -17,7 +17,7 @@
 package com.consol.citrus.camel.endpoint;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.exceptions.ActionTimeoutException;
+import com.consol.citrus.exceptions.MessageTimeoutException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import org.apache.camel.ConsumerTemplate;
@@ -66,7 +66,7 @@ public class CamelConsumer implements Consumer {
         Exchange exchange = getConsumerTemplate().receive(endpointConfiguration.getEndpointUri(), timeout);
 
         if (exchange == null) {
-            throw new ActionTimeoutException("Action timed out while receiving message from camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
+            throw new MessageTimeoutException(timeout, endpointConfiguration.getEndpointUri());
         }
 
         log.info("Received message from camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");

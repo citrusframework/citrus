@@ -47,6 +47,8 @@ import com.consol.citrus.message.DefaultMessageStore;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
+import com.consol.citrus.report.TestActionListener;
+import com.consol.citrus.report.TestActionListenerAware;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -61,7 +63,6 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import org.javatuples.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
@@ -70,7 +71,7 @@ import org.springframework.util.StringUtils;
  * Class holding and managing test variables. The test context also provides utility methods
  * for replacing dynamic content(variables and functions) in message payloads and headers.
  */
-public class TestContext implements ReferenceResolverAware {
+public class TestContext implements ReferenceResolverAware, TestActionListenerAware {
     /**
      * Logger
      */
@@ -122,6 +123,21 @@ public class TestContext implements ReferenceResolverAware {
     private TestListeners testListeners = new TestListeners();
 
     /**
+     * List of test action listeners to be informed on test action events.
+     */
+    private TestActionListeners testActionListeners = new TestActionListeners();
+
+    /**
+     * List of actions to run before each test.
+     */
+    private List<BeforeTest> beforeTest = new ArrayList<>();
+
+    /**
+     * List of actions to run after each test.
+     */
+    private List<AfterTest> afterTest = new ArrayList<>();
+
+    /**
      * List of message listeners to be informed on inbound and outbound message exchange
      */
     private MessageListeners messageListeners = new MessageListeners();
@@ -135,11 +151,6 @@ public class TestContext implements ReferenceResolverAware {
      * Central namespace context builder
      */
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
-
-    /**
-     * Spring bean application context
-     */
-    private ApplicationContext applicationContext;
 
     /**
      * Timers registered in test context, that can be stopped
@@ -622,6 +633,59 @@ public class TestContext implements ReferenceResolverAware {
     }
 
     /**
+     * Obtains the testActionListeners.
+     * @return
+     */
+    public TestActionListeners getTestActionListeners() {
+        return testActionListeners;
+    }
+
+    /**
+     * Specifies the testActionListeners.
+     * @param testActionListeners
+     */
+    public void setTestActionListeners(TestActionListeners testActionListeners) {
+        this.testActionListeners = testActionListeners;
+    }
+
+    @Override
+    public void addTestActionListener(TestActionListener listener) {
+        this.testActionListeners.addTestActionListener(listener);
+    }
+
+    /**
+     * Obtains the beforeTest.
+     * @return
+     */
+    public List<BeforeTest> getBeforeTest() {
+        return beforeTest;
+    }
+
+    /**
+     * Specifies the beforeTest.
+     * @param beforeTest
+     */
+    public void setBeforeTest(List<BeforeTest> beforeTest) {
+        this.beforeTest = beforeTest;
+    }
+
+    /**
+     * Obtains the afterTest.
+     * @return
+     */
+    public List<AfterTest> getAfterTest() {
+        return afterTest;
+    }
+
+    /**
+     * Specifies the afterTest.
+     * @param afterTest
+     */
+    public void setAfterTest(List<AfterTest> afterTest) {
+        this.afterTest = afterTest;
+    }
+
+    /**
      * Gets the global message construction interceptors.
      *
      * @return
@@ -687,24 +751,6 @@ public class TestContext implements ReferenceResolverAware {
      */
     public NamespaceContextBuilder getNamespaceContextBuilder() {
         return namespaceContextBuilder;
-    }
-
-    /**
-     * Gets the Spring bean application context.
-     *
-     * @return
-     */
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
-    }
-
-    /**
-     * Sets the Spring bean application context.
-     *
-     * @param applicationContext
-     */
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
     }
 
     /**
@@ -950,22 +996,12 @@ public class TestContext implements ReferenceResolverAware {
         }
 
         @Override
+        public void setIncremental(boolean incremental) {
+            // do nothing
+        }
+
+        @Override
         public void addFinalAction(TestActionBuilder<?> action) {
-            // do nothing
-        }
-
-        @Override
-        public void setTestActionListeners(TestActionListeners testActionListeners) {
-            // do nothing
-        }
-
-        @Override
-        public void setBeforeTest(List<BeforeTest> beforeTest) {
-            // do nothing
-        }
-
-        @Override
-        public void setAfterTest(List<AfterTest> afterTest) {
             // do nothing
         }
 
