@@ -18,6 +18,10 @@
       <groupId>com.sparkjava</groupId>
       <artifactId>spark-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+    </dependency>
 
     <!-- Citrus -->
     <dependency>

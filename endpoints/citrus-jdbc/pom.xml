@@ -55,6 +55,14 @@
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-db-server</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.eclipse.jetty.websocket</groupId>
+      <artifactId>websocket-server</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
+    </dependency>
 
     <!-- Test scoped dependencies -->
     <dependency>

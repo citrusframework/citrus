@@ -23,7 +23,8 @@
   </modules>
 
   <properties>
-    <swagger.version>1.0.32</swagger.version>
+    <swagger.version>1.5.16</swagger.version>
+    <swagger.parser.version>1.0.32</swagger.parser.version>
   </properties>
 
   <dependencyManagement>
@@ -31,7 +32,29 @@
       <dependency>
         <groupId>io.swagger</groupId>
         <artifactId>swagger-parser</artifactId>
+        <version>${swagger.parser.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-core</artifactId>
         <version>${swagger.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-models</artifactId>
+        <version>${swagger.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>

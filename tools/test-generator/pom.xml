@@ -66,12 +66,20 @@
       <groupId>io.swagger</groupId>
       <artifactId>swagger-parser</artifactId>
     </dependency>
+    <dependency>
+      <groupId>jakarta.validation</groupId>
+      <artifactId>jakarta.validation-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>com.squareup</groupId>
       <artifactId>javapoet</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-runtime</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.xmlbeans</groupId>
       <artifactId>xmlbeans</artifactId>
