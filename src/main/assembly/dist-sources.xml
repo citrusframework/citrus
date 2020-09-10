@@ -36,7 +36,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>core/citrus-core-spring/target</directory>
+      <directory>core/citrus-spring/target</directory>
       <outputDirectory/>
       <includes>
         <include>*sources.jar</include>

@@ -1,2 +1,0 @@
-http\://www.citrusframework.org/schema/testcase=com.consol.citrus.config.handler.CitrusTestcaseNamespaceHandler
-http\://www.citrusframework.org/schema/config=com.consol.citrus.config.handler.CitrusConfigNamespaceHandler

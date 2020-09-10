@@ -17,7 +17,7 @@
     <!-- Citrus Spring core module -->
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core-spring</artifactId>
+      <artifactId>citrus-spring</artifactId>
       <version>${project.version}</version>
     </dependency>
 

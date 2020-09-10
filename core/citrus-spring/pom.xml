@@ -9,7 +9,7 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <artifactId>citrus-core-spring</artifactId>
+  <artifactId>citrus-spring</artifactId>
   <name>Citrus :: Core :: Spring</name>
   <description>Citrus Spring engine implementation</description>
 

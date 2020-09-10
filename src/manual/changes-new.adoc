@@ -39,14 +39,14 @@ In Citrus 3.0.0 we end up with following module categories:
 
 - [Core modules](https://github.com/citrusframework/citrus/tree/3.x/core)
 
-API and base implementations of core Citrus features. There will be a separate `citrus-base` and `citrus-core-spring` module where latter encapsulates the Spring Framework support in Citrus.
+API and base implementations of core Citrus features. There will be a separate `citrus-base` and `citrus-spring` module where latter encapsulates the Spring Framework support in Citrus.
 
 |===
 |Module | Description
 
 |citrus-api         | Interfaces, enums, constants
 |citrus-base        | Default implementation of `citrus-api`
-|citrus-core-spring | Adds Spring Framework support to `citrus-base` (Bean definition parsers, Application context configuration, Autowiring in factory beans
+|citrus-spring      | Adds Spring Framework support to `citrus-base` (Bean definition parsers, Application context configuration, Autowiring in factory beans
 |===
 
 - [Runtime modules](https://github.com/citrusframework/citrus/tree/3.x/runtime)
@@ -215,7 +215,7 @@ If you want to use Spring Framework support you may also add:
 ----
 <dependency>
   <groupId>com.consol.citrus</groupId>
-  <artifactId>citrus-core-spring</artifactId>
+  <artifactId>citrus-spring</artifactId>
   <version>${project.version}</version>
 </dependency>
 ----
@@ -489,7 +489,7 @@ Users enable the Spring support in Citrus by adding:
 ----
 <dependency>
   <groupId>com.consol.citrus</groupId>
-  <artifactId>citrus-core-spring</artifactId>
+  <artifactId>citrus-spring</artifactId>
   <version>${project.version}</version>
 </dependency>
 ----
@@ -499,7 +499,7 @@ When using `citrus-core` dependency this Spring support is enabled by default in
 [[changes-3-0-0-standalone]]
 === Citrus standalone
 
-In case you exclude the `citrus-core-spring` module for Citrus you will load the same components and features but only without Spring framework support. Keep in mind only the XML based configuration and XML test cases continue to require Spring.
+In case you exclude the `citrus-spring` module for Citrus you will load the same components and features but only without Spring framework support. Keep in mind only the XML based configuration and XML test cases continue to require Spring.
 
 In non-Spring mode custom components can be directly configured in the Citrus context then. Also Citrus uses a resource common path lookup mechanism to identify common components that get loaded automatically.
 

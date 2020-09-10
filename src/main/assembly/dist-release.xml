@@ -13,7 +13,7 @@
         <include>com.consol.citrus:citrus-api</include>
         <include>com.consol.citrus:citrus-base</include>
         <include>com.consol.citrus:citrus-core</include>
-        <include>com.consol.citrus:citrus-core-spring</include>
+        <include>com.consol.citrus:citrus-spring</include>
 
         <include>com.consol.citrus:citrus-cucumber</include>
         <include>com.consol.citrus:citrus-testng</include>
@@ -92,7 +92,7 @@
       </includes>
     </fileSet>
     <fileSet>
-      <directory>core/citrus-core-spring/target</directory>
+      <directory>core/citrus-spring/target</directory>
       <outputDirectory>src</outputDirectory>
       <includes>
         <include>*sources.jar</include>
