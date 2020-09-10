@@ -29,7 +29,7 @@ import static com.consol.citrus.container.Assert.Builder.assertException;
  * @author Christoph Deppisch
  */
 @Test
-public class FailActionJavaT extends TestNGCitrusSupport {
+public class FailActionJavaIT extends TestNGCitrusSupport {
 
     @CitrusTest
     public void failAction() {
