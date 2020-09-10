@@ -74,6 +74,14 @@ public class EchoAction extends AbstractTestAction {
 
         /**
          * Fluent API action building entry method used in Java DSL.
+         * @return
+         */
+        public static Builder echo() {
+            return new Builder();
+        }
+
+        /**
+         * Fluent API action building entry method used in Java DSL.
          * @param message
          * @return
          */
