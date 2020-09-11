@@ -39,11 +39,11 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
+import com.consol.citrus.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringResult;
 
 /**
  * Validates x-www-form-urlencoded HTML form data content by marshalling form fields to Xml representation.

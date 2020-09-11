@@ -25,7 +25,7 @@ import java.util.Map.Entry;
 import com.consol.citrus.message.Message;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.util.xml.SimpleNamespaceContext;
 
 /**
  * Builds a namespace context for XPath expression evaluations. Builder supports default mappings

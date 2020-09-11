@@ -27,6 +27,7 @@ import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -80,6 +81,9 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
     @Autowired
     private ReferenceResolver referenceResolver;
+
+    @Autowired
+    private TypeConverter typeConverter;
 
     @Autowired
     private MessageConstructionInterceptors messageConstructionInterceptors;
@@ -152,6 +156,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
             factory.setReferenceResolver(applicationContext.getBean(ReferenceResolver.class));
         }
 
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(TypeConverter.class))) {
+            factory.setTypeConverter(applicationContext.getBean(TypeConverter.class));
+        }
+
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(NamespaceContextBuilder.class))) {
             factory.setNamespaceContextBuilder(applicationContext.getBean(NamespaceContextBuilder.class));
         }
@@ -222,6 +230,10 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
 
         if (referenceResolver != null) {
             delegate.setReferenceResolver(referenceResolver);
+        }
+
+        if (typeConverter != null) {
+            delegate.setTypeConverter(typeConverter);
         }
 
         if (namespaceContextBuilder != null) {
@@ -300,6 +312,11 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     @Override
     public ReferenceResolver getReferenceResolver() {
         return delegate.getReferenceResolver();
+    }
+
+    @Override
+    public TypeConverter getTypeConverter() {
+        return delegate.getTypeConverter();
     }
 
     @Override

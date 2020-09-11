@@ -16,14 +16,16 @@
 
 package com.consol.citrus.ssh.message;
 
+import javax.xml.transform.Source;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
 import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.model.SshMessage;
-import org.springframework.xml.transform.StringResult;
-
-import javax.xml.transform.Source;
+import com.consol.citrus.xml.StringResult;
 
 /**
  * @author Christoph Deppisch

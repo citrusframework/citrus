@@ -16,15 +16,15 @@
 
 package com.consol.citrus.generate.dictionary;
 
+import javax.xml.xpath.XPathConstants;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.variable.dictionary.xml.XpathMappingDataDictionary;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import javax.xml.xpath.XPathConstants;
-import java.util.Map;
 
 /**
  * @author Christoph Deppisch
@@ -75,7 +75,7 @@ public class InboundXmlDataDictionary extends XpathMappingDataDictionary {
             NodeList findings = (NodeList) XPathUtils.evaluateExpression(node.getOwnerDocument(), expression, namespaceContext, XPathConstants.NODESET);
 
             if (findings != null && containsNode(findings, node)) {
-                return convertIfNecessary(context.replaceDynamicContentInString(expressionEntry.getValue()), value);
+                return convertIfNecessary(expressionEntry.getValue(), value, context);
             }
         }
 

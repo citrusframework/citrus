@@ -16,10 +16,10 @@
 
 package com.consol.citrus.kafka.message;
 
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.util.TypeConversionUtils;
-
 import java.util.Map;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.DefaultMessage;
 
 /**
  * @author Christoph Deppisch
@@ -104,7 +104,13 @@ public class KafkaMessage extends DefaultMessage {
         Object partition = getHeader(KafkaMessageHeaders.PARTITION);
 
         if (partition != null) {
-            return TypeConversionUtils.convertIfNecessary(partition, Integer.class);
+            if (partition instanceof Integer) {
+                return (Integer) partition;
+            } else if (partition instanceof String) {
+                return Integer.parseInt((String) partition);
+            }
+
+            throw new CitrusRuntimeException(String.format("Failed to convert partition header to proper Integer value: %s", partition.getClass()));
         }
 
         return null;
@@ -132,7 +138,13 @@ public class KafkaMessage extends DefaultMessage {
         Object offset = getHeader(KafkaMessageHeaders.OFFSET);
 
         if (offset != null) {
-            return TypeConversionUtils.convertIfNecessary(offset, Long.class);
+            if (offset instanceof Long) {
+                return (Long) offset;
+            } else if (offset instanceof String) {
+                return Long.parseLong((String) offset);
+            }
+
+            throw new CitrusRuntimeException(String.format("Failed to convert partition header to proper Long value: %s", offset.getClass()));
         }
 
         return 0L;

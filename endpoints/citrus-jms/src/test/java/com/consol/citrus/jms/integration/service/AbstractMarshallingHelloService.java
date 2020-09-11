@@ -16,18 +16,20 @@
 
 package com.consol.citrus.jms.integration.service;
 
+import java.io.IOException;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.integration.service.model.HelloRequest;
 import com.consol.citrus.jms.integration.service.model.HelloResponse;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
-import org.springframework.oxm.*;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-
-import java.io.IOException;
+import org.springframework.messaging.Message;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
 
 /**
  * @author Christoph Deppisch
@@ -36,10 +38,10 @@ public abstract class AbstractMarshallingHelloService implements HelloService {
 
     @Autowired
     private Marshaller helloMarshaller;
-    
+
     @Autowired
     private Unmarshaller helloUnmarshaller;
-    
+
     @ServiceActivator
     public Message<String> sayHelloInternal(Message<String> request) {
         try {
@@ -50,15 +52,15 @@ public abstract class AbstractMarshallingHelloService implements HelloService {
 
             StringResult result = new StringResult();
             helloMarshaller.marshal(sayHello(helloRequest).getPayload(), result);
-            
+
             return MessageBuilder.withPayload(result.toString()).copyHeaders(request.getHeaders()).build();
-            
+
         } catch (XmlMappingException e) {
             throw new CitrusRuntimeException("Failed to marshal/unmarshal XML", e);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed due to IO error", e);
         }
     }
-    
+
     public abstract Message<HelloResponse> sayHello(Message<HelloRequest> requestMessage);
 }

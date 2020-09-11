@@ -47,7 +47,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, mappings.get(nodePath)));
                 }
-                return convertIfNecessary(context.replaceDynamicContentInString(mappings.get(nodePath)), value);
+                return convertIfNecessary(mappings.get(nodePath), value, context);
             }
         } else if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
@@ -55,7 +55,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
-                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
+                    return convertIfNecessary(entry.getValue(), value, context);
                 }
             }
         } else if (getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.STARTS_WITH)) {
@@ -64,7 +64,7 @@ public class NodeMappingDataDictionary extends AbstractXmlDataDictionary impleme
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", nodePath, entry.getValue()));
                     }
-                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
+                    return convertIfNecessary(entry.getValue(), value, context);
                 }
             }
         }

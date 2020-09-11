@@ -16,19 +16,22 @@
 
 package com.consol.citrus.jdbc.message;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jdbc.generator.JdbcOperationGenerator;
-import com.consol.citrus.jdbc.model.*;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.util.FileUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.jdbc.generator.JdbcOperationGenerator;
+import com.consol.citrus.jdbc.model.JdbcMarshaller;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.OperationResult;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch

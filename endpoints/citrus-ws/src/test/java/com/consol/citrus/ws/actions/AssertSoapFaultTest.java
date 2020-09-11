@@ -28,6 +28,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.ws.UnitTestSupport;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
+import com.consol.citrus.xml.StringSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.soap.SoapFault;
 import org.springframework.ws.soap.SoapFaultDetail;
@@ -37,7 +38,6 @@ import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
 import org.springframework.ws.soap.soap11.Soap11Body;
 import org.springframework.ws.soap.soap11.Soap11Fault;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

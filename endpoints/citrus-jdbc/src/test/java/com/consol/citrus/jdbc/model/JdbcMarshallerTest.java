@@ -17,8 +17,8 @@
 package com.consol.citrus.jdbc.model;
 
 import com.consol.citrus.message.MessageType;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -84,7 +84,7 @@ public class JdbcMarshallerTest {
         Assert.assertTrue(operationResult instanceof OperationResult);
         Assert.assertFalse(((OperationResult) operationResult).isSuccess());
         Assert.assertEquals(((OperationResult) operationResult).getException(), "Something went wrong");
-        
+
         marshaller.setType(MessageType.JSON.name());
         operationResult = marshaller.unmarshal(new StringSource("<operation-result xmlns=\"http://www.citrusframework.org/schema/jdbc/message\"><success>true</success></operation-result>"));
 

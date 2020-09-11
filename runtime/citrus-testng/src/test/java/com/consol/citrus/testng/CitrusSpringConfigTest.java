@@ -23,6 +23,8 @@ import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListener;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.util.SpringBeanTypeConverter;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
@@ -83,6 +85,9 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
     private ReferenceResolver referenceResolver;
 
     @Autowired
+    private TypeConverter typeConverter;
+
+    @Autowired
     private TestContextFactoryBean testContextFactory;
 
     @Autowired
@@ -134,6 +139,7 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
         Assert.assertEquals(endpointFactory.getClass(), DefaultEndpointFactory.class);
 
         Assert.assertEquals(referenceResolver.getClass(), SpringBeanReferenceResolver.class);
+        Assert.assertEquals(typeConverter.getClass(), SpringBeanTypeConverter.class);
 
         Assert.assertEquals(testContextFactory.getTestListeners(), testListeners);
         Assert.assertEquals(testContextFactory.getMessageListeners(), messageListeners);
@@ -143,6 +149,7 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
         Assert.assertEquals(testContextFactory.getMessageValidatorRegistry(), messageValidatorRegistry);
         Assert.assertEquals(testContextFactory.getEndpointFactory(), endpointFactory);
         Assert.assertEquals(testContextFactory.getReferenceResolver(), referenceResolver);
+        Assert.assertEquals(testContextFactory.getTypeConverter(), typeConverter);
     }
 
     @Configuration

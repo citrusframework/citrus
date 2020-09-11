@@ -29,6 +29,7 @@ import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.ftp.model.Command;
 import com.consol.citrus.ftp.model.CommandResult;
 import com.consol.citrus.ssh.server.SshServer;
+import com.consol.citrus.xml.StringResult;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.ftplet.DataType;
 import org.apache.sshd.common.scp.ScpTransferEventListener;
@@ -38,7 +39,6 @@ import org.apache.sshd.server.subsystem.sftp.FileHandle;
 import org.apache.sshd.server.subsystem.sftp.SftpEventListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.xml.transform.StringResult;
 
 /**
  * @author Christoph Deppisch

@@ -16,6 +16,10 @@
 
 package com.consol.citrus.variable.dictionary.xml;
 
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPathConstants;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -25,13 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
+import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
-import javax.xml.namespace.NamespaceContext;
-import javax.xml.xpath.XPathConstants;
-import java.util.Map;
 
 /**
  * Xml data dictionary implementation maps elements via XPath expressions. When element is identified by some expression
@@ -60,7 +60,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' value: %s", XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
                 }
-                return convertIfNecessary(context.replaceDynamicContentInString(expressionEntry.getValue()), value);
+                return convertIfNecessary(expressionEntry.getValue(), value, context);
             }
         }
 

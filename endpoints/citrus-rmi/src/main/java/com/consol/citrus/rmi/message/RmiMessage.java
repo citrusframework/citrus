@@ -16,12 +16,15 @@
 
 package com.consol.citrus.rmi.message;
 
+import java.rmi.Remote;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.rmi.model.*;
-import org.springframework.xml.transform.StringResult;
-
-import java.rmi.Remote;
+import com.consol.citrus.rmi.model.MethodArg;
+import com.consol.citrus.rmi.model.RmiMarshaller;
+import com.consol.citrus.rmi.model.RmiServiceInvocation;
+import com.consol.citrus.rmi.model.RmiServiceResult;
+import com.consol.citrus.xml.StringResult;
 
 /**
  * @author Christoph Deppisch

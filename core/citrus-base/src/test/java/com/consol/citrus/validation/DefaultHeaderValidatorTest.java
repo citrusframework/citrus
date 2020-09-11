@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import com.consol.citrus.UnitTestSupport;
@@ -44,6 +45,7 @@ public class DefaultHeaderValidatorTest extends UnitTestSupport {
             new Object[] { "foo", "foo" },
             new Object[] { null, "" },
             new Object[] { null, null },
+            new Object[] { Arrays.asList("foo", "bar"), Arrays.asList("foo", "bar") },
             new Object[] { new String[] {"foo", "bar"}, new String[] {"foo", "bar"} },
             new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "value") }
         };
@@ -73,6 +75,7 @@ public class DefaultHeaderValidatorTest extends UnitTestSupport {
                 new Object[] { "foo", "wrong" },
                 new Object[] { null, "wrong" },
                 new Object[] { "foo", null },
+                new Object[] { Arrays.asList("foo", "bar"), Arrays.asList("foo", "wrong") },
                 new Object[] { new String[] {"foo", "bar"}, new String[] {"foo", "wrong"} },
                 new Object[] { Collections.singletonMap("key", "value"), Collections.singletonMap("key", "wrong") }
         };

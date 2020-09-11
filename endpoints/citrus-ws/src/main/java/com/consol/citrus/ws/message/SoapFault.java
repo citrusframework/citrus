@@ -16,18 +16,24 @@
 
 package com.consol.citrus.ws.message;
 
+import javax.xml.namespace.QName;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.xml.StringResult;
 import org.springframework.beans.propertyeditors.LocaleEditor;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.SoapFaultDetailElement;
 import org.springframework.xml.namespace.QNameEditor;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringResult;
-
-import javax.xml.namespace.QName;
-import javax.xml.transform.*;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch

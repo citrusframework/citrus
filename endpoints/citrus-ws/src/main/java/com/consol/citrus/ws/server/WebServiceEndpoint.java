@@ -16,20 +16,41 @@
 
 package com.consol.citrus.ws.server;
 
+import javax.xml.namespace.QName;
+import javax.xml.soap.MimeHeaders;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import java.io.IOException;
+import java.util.List;
+import java.util.Map.Entry;
+
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.endpoint.adapter.EmptyResponseEndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaderUtils;
+import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.*;
+import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapFault;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.ws.context.MessageContext;
 import org.springframework.ws.mime.MimeMessage;
 import org.springframework.ws.server.endpoint.MessageEndpoint;
-import org.springframework.ws.soap.*;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapFaultDetail;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.axiom.AxiomSoapMessage;
 import org.springframework.ws.soap.saaj.SaajSoapMessage;
@@ -41,31 +62,22 @@ import org.springframework.ws.transport.WebServiceConnection;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
-import javax.xml.namespace.QName;
-import javax.xml.soap.MimeHeaders;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import java.io.IOException;
-import java.util.List;
-import java.util.Map.Entry;
-
 /**
- * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to 
+ * SpringWS {@link MessageEndpoint} implementation. Endpoint will delegate message processing to
  * a {@link EndpointAdapter} implementation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class WebServiceEndpoint implements MessageEndpoint {
 
     /** EndpointAdapter handling incoming requests and providing proper responses */
     private EndpointAdapter endpointAdapter = new EmptyResponseEndpointAdapter();
-    
+
     /** Default namespace for all SOAP header entries */
     private String defaultNamespaceUri;
-    
+
     /** Default prefix for all SOAP header entries */
     private String defaultPrefix = "";
 
@@ -74,7 +86,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(WebServiceEndpoint.class);
-    
+
     /** JMS headers begin with this prefix */
     private static final String DEFAULT_JMS_HEADER_PREFIX = "JMS";
 
@@ -84,27 +96,27 @@ public class WebServiceEndpoint implements MessageEndpoint {
      */
     public void invoke(final MessageContext messageContext) throws Exception {
         Assert.notNull(messageContext.getRequest(), "Request must not be null - unable to send message");
-        
+
         Message requestMessage = endpointConfiguration.getMessageConverter().convertInbound(messageContext.getRequest(), messageContext, endpointConfiguration);
 
         if (log.isDebugEnabled()) {
             log.debug("Received SOAP request:\n" + requestMessage.toString());
         }
-        
+
         //delegate request processing to endpoint adapter
         Message replyMessage = endpointAdapter.handleMessage(requestMessage);
-        
+
         if (simulateHttpStatusCode(replyMessage)) {
             return;
         }
-        
+
         if (replyMessage != null && replyMessage.getPayload() != null) {
             if (log.isDebugEnabled()) {
                 log.debug("Sending SOAP response:\n" + replyMessage.toString());
             }
-            
+
             SoapMessage response = (SoapMessage) messageContext.getResponse();
-            
+
             //add soap fault or normal soap body to response
             if (replyMessage instanceof SoapFault) {
                 addSoapFault(response, (SoapFault) replyMessage);
@@ -144,17 +156,17 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * No SOAP response is sent back in this case.
      * @param replyMessage
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     private boolean simulateHttpStatusCode(Message replyMessage) throws IOException {
         if (replyMessage == null || CollectionUtils.isEmpty(replyMessage.getHeaders())) {
             return false;
         }
-        
+
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (headerEntry.getKey().equalsIgnoreCase(SoapMessageHeaders.HTTP_STATUS_CODE)) {
                 WebServiceConnection connection = TransportContextHolder.getTransportContext().getConnection();
-                
+
                 int statusCode = Integer.valueOf(headerEntry.getValue().toString());
                 if (connection instanceof HttpServletConnection) {
                     ((HttpServletConnection)connection).setFault(false);
@@ -165,12 +177,12 @@ public class WebServiceEndpoint implements MessageEndpoint {
                 }
             }
         }
-        
+
         return false;
     }
 
     /**
-     * Adds mime headers outside of SOAP envelope. Header entries that go to this header section 
+     * Adds mime headers outside of SOAP envelope. Header entries that go to this header section
      * must have internal http header prefix defined in {@link com.consol.citrus.ws.message.SoapMessageHeaders}.
      * @param response the soap response message.
      * @param replyMessage the internal reply message.
@@ -179,7 +191,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
         for (Entry<String, Object> headerEntry : replyMessage.getHeaders().entrySet()) {
             if (headerEntry.getKey().toLowerCase().startsWith(SoapMessageHeaders.HTTP_PREFIX)) {
                 String headerName = headerEntry.getKey().substring(SoapMessageHeaders.HTTP_PREFIX.length());
-                
+
                 if (response instanceof SaajSoapMessage) {
                     SaajSoapMessage saajSoapMessage = (SaajSoapMessage) response;
                     MimeHeaders headers = saajSoapMessage.getSaajMessage().getMimeHeaders();
@@ -199,17 +211,17 @@ public class WebServiceEndpoint implements MessageEndpoint {
      * @param replyMessage
      */
     private void addSoapBody(SoapMessage response, Message replyMessage) throws TransformerException {
-        if (!(replyMessage.getPayload() instanceof String) || 
+        if (!(replyMessage.getPayload() instanceof String) ||
                 StringUtils.hasText(replyMessage.getPayload(String.class))) {
             Source responseSource = getPayloadAsSource(replyMessage.getPayload());
-            
+
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            
+
             transformer.transform(responseSource, response.getPayloadResult());
         }
     }
-    
+
     /**
      * Translates message headers to SOAP headers in response.
      * @param response
@@ -255,14 +267,14 @@ public class WebServiceEndpoint implements MessageEndpoint {
     /**
      * Adds a SOAP fault to the SOAP response body. The SOAP fault is declared
      * as QName string in the response message's header (see {@link com.consol.citrus.ws.message.SoapMessageHeaders})
-     * 
+     *
      * @param response
      * @param replyMessage
      */
     private void addSoapFault(SoapMessage response, SoapFault replyMessage) throws TransformerException {
         SoapBody soapBody = response.getSoapBody();
         org.springframework.ws.soap.SoapFault soapFault;
-        
+
         if (SoapFaultDefinition.SERVER.equals(replyMessage.getFaultCodeQName()) ||
                 SoapFaultDefinition.RECEIVER.equals(replyMessage.getFaultCodeQName())) {
             soapFault = soapBody.addServerOrReceiverFault(replyMessage.getFaultString(),
@@ -281,30 +293,30 @@ public class WebServiceEndpoint implements MessageEndpoint {
             Soap12Fault soap12Fault = soap12Body.addServerOrReceiverFault(replyMessage.getFaultString(),
                             replyMessage.getLocale());
             soap12Fault.addFaultSubcode(replyMessage.getFaultCodeQName());
-            
+
             soapFault = soap12Fault;
         } else {
                 throw new CitrusRuntimeException("Found unsupported SOAP implementation. Use SOAP 1.1 or SOAP 1.2.");
         }
-        
+
         if (replyMessage.getFaultActor() != null) {
             soapFault.setFaultActorOrRole(replyMessage.getFaultActor());
         }
-        
+
         List<String> soapFaultDetails = replyMessage.getFaultDetails();
         if (!soapFaultDetails.isEmpty()) {
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
-            
+
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            
+
             SoapFaultDetail faultDetail = soapFault.addFaultDetail();
             for (int i = 0; i < soapFaultDetails.size(); i++) {
                 transformer.transform(new StringSource(soapFaultDetails.get(i)), faultDetail.getResult());
             }
         }
     }
-    
+
     /**
      * Get the message payload object as {@link Source}, supported payload types are
      * {@link Source}, {@link Document} and {@link String}.
@@ -320,7 +332,7 @@ public class WebServiceEndpoint implements MessageEndpoint {
             return new StringSource((String) replyPayload);
         } else {
             throw new CitrusRuntimeException("Unknown type for reply message payload (" + replyPayload.getClass().getName() + ") " +
-                    "Supported types are " + "'" + Source.class.getName() + "', " + "'" + Document.class.getName() + "'" + 
+                    "Supported types are " + "'" + Source.class.getName() + "', " + "'" + Document.class.getName() + "'" +
                     ", or '" + String.class.getName() + "'");
         }
     }

@@ -28,6 +28,8 @@ import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.spi.ReferenceRegistry;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.SimpleReferenceResolver;
+import com.consol.citrus.util.DefaultTypeConverter;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
@@ -61,6 +63,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     private final ReferenceResolver referenceResolver;
     private final MessageConstructionInterceptors messageConstructionInterceptors;
     private final NamespaceContextBuilder namespaceContextBuilder;
+    private final TypeConverter typeConverter;
 
     /**
      * Protected constructor using given builder to construct this instance.
@@ -83,6 +86,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         this.referenceResolver = builder.referenceResolver;
         this.messageConstructionInterceptors = builder.messageConstructionInterceptors;
         this.namespaceContextBuilder = builder.namespaceContextBuilder;
+        this.typeConverter = builder.typeConverter;
 
         this.testContextFactory = Optional.ofNullable(builder.testContextFactory)
                 .orElseGet(TestContextFactory::newInstance);
@@ -236,6 +240,14 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     }
 
     /**
+     * Obtains the typeConverter.
+     * @return
+     */
+    public TypeConverter getTypeConverter() {
+        return typeConverter;
+    }
+
+    /**
      * Obtains the testContextFactory.
      * @return
      */
@@ -271,6 +283,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private ReferenceResolver referenceResolver = new SimpleReferenceResolver();
         private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
+        private TypeConverter typeConverter = new DefaultTypeConverter();
 
         public Builder testContextFactory(TestContextFactory testContextFactory) {
             this.testContextFactory = testContextFactory;
@@ -374,6 +387,11 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
 
         public Builder namespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {
             this.namespaceContextBuilder = namespaceContextBuilder;
+            return this;
+        }
+
+        public Builder typeConverter(TypeConverter converter) {
+            this.typeConverter = converter;
             return this;
         }
 

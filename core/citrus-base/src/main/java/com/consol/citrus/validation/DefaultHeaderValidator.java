@@ -22,7 +22,6 @@ import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.slf4j.Logger;
@@ -51,13 +50,13 @@ public class DefaultHeaderValidator implements HeaderValidator {
         }
 
         String expectedValue = Optional.ofNullable(controlValue)
-                .map(value -> TypeConversionUtils.convertIfNecessary(value, String.class))
+                .map(value -> context.getTypeConverter().convertIfNecessary(value, String.class))
                 .map(context::replaceDynamicContentInString)
                 .orElse("");
 
         try {
             if (receivedValue != null) {
-                String receivedValueString = TypeConversionUtils.convertIfNecessary(receivedValue, String.class);
+                String receivedValueString = context.getTypeConverter().convertIfNecessary(receivedValue, String.class);
                 if (ValidationMatcherUtils.isValidationMatcherExpression(expectedValue)) {
                     ValidationMatcherUtils.resolveValidationMatcher(headerName, receivedValueString,
                             expectedValue, context);

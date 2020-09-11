@@ -16,21 +16,26 @@
 
 package com.consol.citrus.generate.xml;
 
-import com.consol.citrus.generate.*;
+import javax.xml.bind.Marshaller;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import com.consol.citrus.generate.AbstractTemplateBasedTestGenerator;
+import com.consol.citrus.generate.TestGenerator;
 import com.consol.citrus.generate.javadsl.JavaTestGenerator;
 import com.consol.citrus.model.testcase.core.EchoModel;
 import com.consol.citrus.model.testcase.core.ObjectFactory;
+import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.namespace.CitrusNamespacePrefixMapper;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
-import org.springframework.xml.transform.StringResult;
-
-import javax.xml.bind.Marshaller;
-import java.io.File;
-import java.util.*;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * @author Christoph Deppisch

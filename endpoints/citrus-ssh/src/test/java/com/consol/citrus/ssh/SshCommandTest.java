@@ -30,12 +30,12 @@ import com.consol.citrus.ssh.client.SshEndpointConfiguration;
 import com.consol.citrus.ssh.model.SshMarshaller;
 import com.consol.citrus.ssh.model.SshRequest;
 import com.consol.citrus.ssh.model.SshResponse;
+import com.consol.citrus.xml.StringResult;
 import org.apache.sshd.server.Environment;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.mockito.ArgumentMatcher;
 import org.mockito.Mockito;
-import org.springframework.xml.transform.StringResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

@@ -16,7 +16,6 @@
 
 package com.consol.citrus.endpoint.adapter;
 
-import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
@@ -95,10 +94,8 @@ public class XmlTestExecutingEndpointAdapter extends RequestDispatchingEndpointA
         try {
             context.setReferenceResolver(new SpringBeanReferenceResolver(ctx));
             TestCase testCase = ctx.getBean(testName, TestCase.class);
-            if (testCase instanceof DefaultTestCase) {
-                testCase.setName(testName);
-                ((DefaultTestCase) testCase).setPackageName(packageName);
-            }
+            testCase.setName(testName);
+            testCase.setPackageName(packageName);
             return testCase;
         } catch (NoSuchBeanDefinitionException e) {
             throw context.handleError(testName, packageName, "Could not find test with name '" + testName + "'", e);

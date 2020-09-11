@@ -16,6 +16,9 @@
 
 package com.consol.citrus.jdbc.server;
 
+import java.util.HashMap;
+import java.util.Random;
+
 import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.db.server.JdbcServerConfiguration;
 import com.consol.citrus.db.server.JdbcServerException;
@@ -23,18 +26,29 @@ import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.jdbc.data.DataSetCreator;
 import com.consol.citrus.jdbc.message.JdbcMessage;
 import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.*;
-import com.consol.citrus.message.*;
-import org.springframework.xml.transform.StringResult;
-import org.testng.annotations.*;
-
-import java.util.HashMap;
-import java.util.Random;
+import com.consol.citrus.jdbc.model.Execute;
+import com.consol.citrus.jdbc.model.JdbcMarshaller;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.OperationResult;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.xml.StringResult;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -770,7 +784,7 @@ public class JdbcEndpointAdapterControllerTest {
         assertTrue(operationResult.isSuccess());
         assertEquals(operationResult.getDataSet(), null);
         assertEquals(operationResult.getAffectedRows(), isMatching ? 0 : null);
-        
+
         verify(endpointAdapter, times(isMatching ? 0 : 1)).handleMessage(any());
     }
 

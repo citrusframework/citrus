@@ -30,6 +30,8 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.spi.SimpleReferenceResolver;
+import com.consol.citrus.util.DefaultTypeConverter;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -72,6 +74,8 @@ public class TestContextFactory implements ReferenceResolverAware {
 
     private NamespaceContextBuilder namespaceContextBuilder;
 
+    private TypeConverter typeConverter;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(TestContextFactory.class);
 
@@ -93,6 +97,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setEndpointFactory(new DefaultEndpointFactory());
         factory.setReferenceResolver(new SimpleReferenceResolver());
         factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
+        factory.setTypeConverter(new DefaultTypeConverter());
 
         return factory;
     }
@@ -118,6 +123,10 @@ public class TestContextFactory implements ReferenceResolverAware {
 
         if (namespaceContextBuilder != null) {
             context.setNamespaceContextBuilder(namespaceContextBuilder);
+        }
+
+        if (typeConverter != null) {
+            context.setTypeConverter(typeConverter);
         }
 
         if (log.isDebugEnabled()) {
@@ -327,5 +336,21 @@ public class TestContextFactory implements ReferenceResolverAware {
      */
     public MessageConstructionInterceptors getMessageConstructionInterceptors() {
         return messageConstructionInterceptors;
+    }
+
+    /**
+     * Obtains the typeConverter.
+     * @return
+     */
+    public TypeConverter getTypeConverter() {
+        return typeConverter;
+    }
+
+    /**
+     * Specifies the typeConverter.
+     * @param typeConverter
+     */
+    public void setTypeConverter(TypeConverter typeConverter) {
+        this.typeConverter = typeConverter;
     }
 }

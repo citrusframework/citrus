@@ -16,6 +16,9 @@
 
 package com.consol.citrus.kafka.message;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.kafka.endpoint.KafkaEndpointConfiguration;
@@ -26,14 +29,11 @@ import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.core.io.Resource;
 
-import java.io.IOException;
-import java.util.Optional;
-
 /**
  * Basic message converter for converting Spring Integration message implementations to Kafka
- * messages and vice versa. Converter combines message converting logic and header mapping. 
+ * messages and vice versa. Converter combines message converting logic and header mapping.
  * Usually the message's payload is extracted to the Kafka message payload and default Kafka headers are mapped.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2.8
  */
@@ -66,7 +66,7 @@ public class KafkaMessageConverter implements MessageConverter<ConsumerRecord<Ob
                                     Optional.ofNullable(kafkaMessage.getPartition()).orElse(endpointConfiguration.getPartition()),
                                     kafkaMessage.getMessageKey(),
                                     payload,
-                                    endpointConfiguration.getHeaderMapper().toHeaders(kafkaMessage.getHeaders()));
+                                    endpointConfiguration.getHeaderMapper().toHeaders(kafkaMessage.getHeaders(), context));
     }
 
     @Override

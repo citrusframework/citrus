@@ -16,32 +16,6 @@
 
 package com.consol.citrus.ws.message.converter;
 
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.SoapAttachment;
-import com.consol.citrus.ws.message.SoapMessage;
-import com.consol.citrus.ws.message.SoapMessageHeaders;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.util.StringUtils;
-import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.SoapBody;
-import org.springframework.ws.soap.SoapEnvelope;
-import org.springframework.ws.soap.SoapHeader;
-import org.springframework.ws.soap.SoapHeaderElement;
-import org.springframework.ws.soap.SoapMessageFactory;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeader;
 import javax.xml.soap.MimeHeaders;
@@ -55,6 +29,32 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.SoapAttachment;
+import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
+import org.springframework.core.io.InputStreamSource;
+import org.springframework.util.StringUtils;
+import org.springframework.ws.WebServiceMessage;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapMessageFactory;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.saaj.SaajSoapMessageFactory;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -302,7 +302,7 @@ public class SoapMessageConverterTest extends AbstractTestNGUnitTest {
         }).when(soapRequest).addAttachment(eq("<attContentId>"), any(InputStreamSource.class), eq(attachment.getContentType()));
 
         soapMessageConverter.convertOutbound(soapRequest, testMessage, new WebServiceEndpointConfiguration(), context);
-        
+
         verify(soapRequest).addAttachment(eq("<attContentId>"), any(InputStreamSource.class), eq(attachment.getContentType()));
 
     }

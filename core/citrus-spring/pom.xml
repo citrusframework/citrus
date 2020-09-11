@@ -47,7 +47,7 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- Spring framework -->
+    <!-- Spring Framework -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>

@@ -12,6 +12,7 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.report.TestReporters;
 import com.consol.citrus.report.TestSuiteListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import org.springframework.context.ApplicationContext;
@@ -104,6 +105,7 @@ public class CitrusSpringContext extends CitrusContext {
             testSuiteListeners(applicationContext.getBean(TestSuiteListeners.class));
             testContextFactory(applicationContext.getBean(TestContextFactoryBean.class));
             referenceResolver(applicationContext.getBean(ReferenceResolver.class));
+            typeConverter(applicationContext.getBean(TypeConverter.class));
             beforeSuite(new ArrayList<>(applicationContext.getBeansOfType(BeforeSuite.class).values()));
             afterSuite(new ArrayList<>(applicationContext.getBeansOfType(AfterSuite.class).values()));
 

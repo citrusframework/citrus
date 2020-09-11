@@ -28,6 +28,8 @@ import com.consol.citrus.report.TestListenersFactory;
 import com.consol.citrus.report.TestSuiteListenersFactory;
 import com.consol.citrus.reporter.ReporterConfig;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.util.SpringBeanTypeConverter;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorConfig;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptorsFactory;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
@@ -62,6 +64,11 @@ public class CitrusSpringConfig {
     @Bean
     public ReferenceResolver referenceResolver() {
         return new SpringBeanReferenceResolver();
+    }
+
+    @Bean
+    public TypeConverter typeConverter() {
+        return SpringBeanTypeConverter.INSTANCE;
     }
 
     @Bean

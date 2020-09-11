@@ -34,6 +34,8 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -45,8 +47,6 @@ import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
 import org.springframework.ws.soap.SoapMessage;
 import org.springframework.ws.soap.SoapMessageFactory;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 
 /**
  * Special message converter automatically adds SOAP envelope with proper SOAP header and body elements.

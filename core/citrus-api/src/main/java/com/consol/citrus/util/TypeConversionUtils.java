@@ -16,35 +16,8 @@
 
 package com.consol.citrus.util;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.ConversionNotSupportedException;
-import org.springframework.beans.SimpleTypeConverter;
-import org.springframework.core.io.InputStreamSource;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.util.StreamUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringSource;
-import org.w3c.dom.Node;
 
 /**
  * @author Christoph Deppisch
@@ -52,8 +25,8 @@ import org.w3c.dom.Node;
  */
 public abstract class TypeConversionUtils {
 
-    /** Logger */
-    private static Logger log = LoggerFactory.getLogger(TypeConversionUtils.class);
+    /** Type converter delegate used to convert target objects to required type */
+    private static TypeConverter typeConverter = new DefaultTypeConverter();
 
     /**
      * Prevent instantiation.
@@ -71,125 +44,7 @@ public abstract class TypeConversionUtils {
      * @return
      */
     public static <T> T convertIfNecessary(Object target, Class<T> type) {
-        if (type.isInstance(target)) {
-            return type.cast(target);
-        }
-
-        if (Source.class.isAssignableFrom(type)) {
-            if (target.getClass().isAssignableFrom(String.class)) {
-                return (T) new StringSource(String.valueOf(target));
-            } else if (target.getClass().isAssignableFrom(Node.class)) {
-                return (T) new DOMSource((Node) target);
-            } else if (target.getClass().isAssignableFrom(InputStreamSource.class)) {
-                try {
-                    return (T) new StreamSource(((InputStreamSource)target).getInputStream());
-                } catch (IOException e) {
-                    log.warn("Failed to create stream source from object", e);
-                }
-            }
-        }
-
-        if (MultiValueMap.class.isAssignableFrom(type)) {
-            String mapString = String.valueOf(target);
-
-            Properties props = new Properties();
-            try {
-                props.load(new StringReader(mapString.substring(1, mapString.length() - 1).replaceAll("\\]\\s*", "]\n")));
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to reconstruct object of type map", e);
-            }
-            MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-            for (Map.Entry<Object, Object> entry : props.entrySet()) {
-                String arrayString = String.valueOf(entry.getValue()).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
-                map.add(entry.getKey().toString(), StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString)));
-            }
-
-            return (T) map;
-        }
-
-        if (Map.class.isAssignableFrom(type)) {
-            String mapString = String.valueOf(target);
-
-            Properties props = new Properties();
-            try {
-                props.load(new StringReader(mapString.substring(1, mapString.length() - 1).replaceAll(",\\s*", "\n")));
-            } catch (IOException e) {
-                throw new CitrusRuntimeException("Failed to reconstruct object of type map", e);
-            }
-            Map<String, Object> map = new LinkedHashMap<>();
-            for (Map.Entry<Object, Object> entry : props.entrySet()) {
-                map.put(entry.getKey().toString(), entry.getValue());
-            }
-
-            return (T) map;
-        }
-
-        if (String[].class.isAssignableFrom(type)) {
-            String arrayString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
-            return (T) StringUtils.commaDelimitedListToStringArray(String.valueOf(arrayString));
-        }
-
-        if (List.class.isAssignableFrom(type)) {
-            String listString = String.valueOf(target).replaceAll("^\\[", "").replaceAll("\\]$", "").replaceAll(",\\s", ",");
-            return (T) Arrays.asList(StringUtils.commaDelimitedListToStringArray(String.valueOf(listString)));
-        }
-
-        if (byte[].class.isAssignableFrom(type)) {
-            if (target instanceof String) {
-                try {
-                    return (T) String.valueOf(target).getBytes(CitrusSettings.CITRUS_FILE_ENCODING);
-                } catch (UnsupportedEncodingException e) {
-                    return (T) String.valueOf(target).getBytes();
-                }
-            } else if (target instanceof ByteBuffer) {
-                return (T) ((ByteBuffer) target).array();
-            } else if (target instanceof ByteArrayInputStream) {
-                try {
-                    return (T) StreamUtils.copyToByteArray((ByteArrayInputStream) target);
-                } catch (IOException e) {
-                    throw new CitrusRuntimeException("Failed to convert input stream to byte[]");
-                }
-            }
-        }
-
-        if (InputStream.class.isAssignableFrom(type)) {
-            if (target instanceof InputStream) {
-                return (T) target;
-            } else if (target instanceof byte[]) {
-                return (T) new ByteArrayInputStream((byte[]) target);
-            } else if (target instanceof String) {
-                try {
-                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes(CitrusSettings.CITRUS_FILE_ENCODING));
-                } catch (UnsupportedEncodingException e) {
-                    return (T) new ByteArrayInputStream(String.valueOf(target).getBytes());
-                }
-            } else {
-                try {
-                    return (T) new ByteArrayInputStream(target.toString().getBytes(CitrusSettings.CITRUS_FILE_ENCODING));
-                } catch (UnsupportedEncodingException e) {
-                    return (T) new ByteArrayInputStream(target.toString().getBytes());
-                }
-            }
-        }
-
-        if (type.equals(String.class)) {
-            if (ByteBuffer.class.isAssignableFrom(target.getClass())) {
-                return (T) new String(((ByteBuffer) target).array());
-            } else if (byte[].class.isAssignableFrom(target.getClass())) {
-                return (T) Arrays.toString((byte[]) target);
-            }
-        }
-
-        try {
-            return new SimpleTypeConverter().convertIfNecessary(target, type);
-        } catch (ConversionNotSupportedException e) {
-            if (String.class.equals(type)) {
-                log.warn(String.format("Using object toString representation: %s", e.getMessage()));
-                return (T) target.toString();
-            }
-
-            throw e;
-        }
+        return typeConverter.convertIfNecessary(target, type);
     }
 
     /**
@@ -241,5 +96,13 @@ public abstract class TypeConversionUtils {
 
             throw new CitrusRuntimeException(String.format("Unable to convert '%s' to required type '%s' - also no bean of required type available in application context", value, type.getName()), e.getCause());
         }
+    }
+
+    /**
+     * Sets the type converter delegate used in this utility class.
+     * @param typeConverter
+     */
+    static void registerTypeConverter(TypeConverter typeConverter) {
+        TypeConversionUtils.typeConverter = typeConverter;
     }
 }

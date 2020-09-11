@@ -16,19 +16,31 @@
 
 package com.consol.citrus.ftp.message;
 
-import com.consol.citrus.ftp.model.*;
+import java.util.List;
+import java.util.Optional;
+
+import com.consol.citrus.ftp.model.Command;
+import com.consol.citrus.ftp.model.CommandResult;
+import com.consol.citrus.ftp.model.CommandResultType;
+import com.consol.citrus.ftp.model.CommandType;
+import com.consol.citrus.ftp.model.ConnectCommand;
+import com.consol.citrus.ftp.model.DeleteCommand;
+import com.consol.citrus.ftp.model.DeleteCommandResult;
+import com.consol.citrus.ftp.model.GetCommand;
+import com.consol.citrus.ftp.model.GetCommandResult;
+import com.consol.citrus.ftp.model.ListCommand;
+import com.consol.citrus.ftp.model.ListCommandResult;
+import com.consol.citrus.ftp.model.PutCommand;
+import com.consol.citrus.ftp.model.PutCommandResult;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
 import org.apache.ftpserver.ftplet.DataType;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author Christoph Deppisch

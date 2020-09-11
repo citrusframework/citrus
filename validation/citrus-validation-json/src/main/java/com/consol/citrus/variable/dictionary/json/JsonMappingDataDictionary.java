@@ -16,6 +16,9 @@
 
 package com.consol.citrus.variable.dictionary.json;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -26,9 +29,6 @@ import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-
-import java.util.Iterator;
-import java.util.Map;
 
 /**
  * Simple json data dictionary implementation holds a set of mappings where keys are json path expressions to match
@@ -79,7 +79,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, mappings.get(jsonPath)));
                 }
-                return convertIfNecessary(context.replaceDynamicContentInString(mappings.get(jsonPath)), value);
+                return convertIfNecessary(mappings.get(jsonPath), value, context);
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.ENDS_WITH)) {
             for (Map.Entry<String, String> entry : mappings.entrySet()) {
@@ -87,7 +87,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
-                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
+                    return convertIfNecessary(entry.getValue(), value, context);
                 }
             }
         } else if (getPathMappingStrategy().equals(PathMappingStrategy.STARTS_WITH)) {
@@ -96,7 +96,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Data dictionary setting element '%s' with value: %s", jsonPath, entry.getValue()));
                     }
-                    return convertIfNecessary(context.replaceDynamicContentInString(entry.getValue()), value);
+                    return convertIfNecessary(entry.getValue(), value, context);
                 }
             }
         }

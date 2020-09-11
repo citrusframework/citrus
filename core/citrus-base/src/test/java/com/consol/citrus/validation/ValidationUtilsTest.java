@@ -25,7 +25,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.validation.matcher.ValidationMatcher;
-import org.springframework.beans.TypeMismatchException;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -53,7 +52,7 @@ public class ValidationUtilsTest extends UnitTestSupport {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
 
-    @Test(dataProvider = "testDataTypeFailed", expectedExceptions = TypeMismatchException.class)
+    @Test(dataProvider = "testDataTypeFailed", expectedExceptions = ValidationException.class)
     public void testValidateValuesTypeFailure(String actualValue, Object expectedValue, String path) throws Exception {
         ValidationUtils.validateValues(actualValue, expectedValue, path, context);
     }
@@ -112,8 +111,8 @@ public class ValidationUtilsTest extends UnitTestSupport {
     @DataProvider
     public Object[][] testDataTypeFailed() {
         return new Object[][] {
-                new Object[] {"foo", 0, "stringCompare"},
-                new Object[] {"bar", false, "booleanCompare"}
+                new Object[] {"foo", 0, "intCompare"},
+                new Object[] {"bar", 1L, "longCompare"}
         };
     }
 

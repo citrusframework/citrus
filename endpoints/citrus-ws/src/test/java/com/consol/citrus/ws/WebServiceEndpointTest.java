@@ -16,38 +16,55 @@
 
 package com.consol.citrus.ws;
 
-import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.SoapFault;
-import com.consol.citrus.ws.message.SoapMessage;
-import com.consol.citrus.ws.message.*;
-import com.consol.citrus.ws.server.WebServiceEndpoint;
-import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
-import org.springframework.ws.context.MessageContext;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.*;
-import org.springframework.ws.soap.saaj.SaajSoapMessage;
-import org.springframework.ws.soap.soap11.Soap11Body;
-import org.springframework.ws.soap.soap11.Soap11Fault;
-import org.springframework.ws.soap.soap12.Soap12Body;
-import org.springframework.ws.soap.soap12.Soap12Fault;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPMessage;
 import java.io.ByteArrayInputStream;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
-import static org.mockito.Mockito.*;
+import com.consol.citrus.endpoint.adapter.StaticEndpointAdapter;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.SoapAttachment;
+import com.consol.citrus.ws.message.SoapFault;
+import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.ws.server.WebServiceEndpoint;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+import org.springframework.ws.context.MessageContext;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapFaultDetail;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapHeaderException;
+import org.springframework.ws.soap.saaj.SaajSoapMessage;
+import org.springframework.ws.soap.soap11.Soap11Body;
+import org.springframework.ws.soap.soap11.Soap11Fault;
+import org.springframework.ws.soap.soap12.Soap12Body;
+import org.springframework.ws.soap.soap12.Soap12Fault;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -89,35 +106,35 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn(null);
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
@@ -146,39 +163,39 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithSoapRequestHeaders() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -207,41 +224,41 @@ public class WebServiceEndpointTest {
         soapRequestHeaders.add(soapRequestHeaderEntry);
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapRequestHeaderEntry, soapResponse);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
-        
+
         when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://www.consol.de/citrus", "Operation", "citrus"));
         when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithMimeRequestHeaders() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -258,7 +275,7 @@ public class WebServiceEndpointTest {
         requestHeaders.put("Content-Length", "236");
         requestHeaders.put("Accept", "text/xml, text/html, image/gif, image/jpeg");
         requestHeaders.put("Content-Type", "text/xml");
-        
+
         final Message requestMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>", requestHeaders);
 
         final Message responseMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestResponse><Message>Hello World!</Message></TestResponse>");
@@ -275,7 +292,7 @@ public class WebServiceEndpointTest {
                 return responseMessage;
             }
         });
-        
+
         SOAPMessage soapRequestMessage = Mockito.mock(SOAPMessage.class);
         MimeHeaders mimeHeaders = new MimeHeaders();
         mimeHeaders.addHeader("Host", "localhost:8080");
@@ -285,19 +302,19 @@ public class WebServiceEndpointTest {
         mimeHeaders.addHeader("Accept", "image/gif");
         mimeHeaders.addHeader("Accept", "image/jpeg");
         mimeHeaders.addHeader("Content-Type", "text/xml");
-        
+
         Set<SoapHeaderElement> soapRequestHeaders = new HashSet<SoapHeaderElement>();
         soapRequestHeaders.add(soapRequestHeaderEntry);
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequestHeader, soapBody, soapRequestHeaderEntry, soapResponse, saajSoapRequest, soapRequestMessage);
 
         when(saajSoapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(saajSoapRequest.getSoapAction()).thenReturn("sayHello");
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(saajSoapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(saajSoapRequest.getSaajMessage()).thenReturn(soapRequestMessage);
         when(soapRequestMessage.getMimeHeaders()).thenReturn(mimeHeaders);
 
@@ -306,28 +323,28 @@ public class WebServiceEndpointTest {
 
         when(soapEnvelope.getBody()).thenReturn(soapBody);
         when(soapBody.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(soapEnvelope.getHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(soapRequestHeaders.iterator());
-        
+
         when(soapRequestHeaderEntry.getName()).thenReturn(new QName("http://www.consol.de/citrus", "Operation", "citrus"));
         when(soapRequestHeaderEntry.getText()).thenReturn("sayHello");
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithSoapResponseHeaders() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -354,32 +371,32 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapRequestHeaderEntry);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-        
+
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
 
         doAnswer(new Answer<SoapHeaderElement>() {
@@ -400,7 +417,7 @@ public class WebServiceEndpointTest {
 
         verify(soapRequestHeaderEntry).setText("sayHello");
     }
-    
+
     @Test
     public void testMessageProcessingWithDefaultHeaderQName() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -430,31 +447,31 @@ public class WebServiceEndpointTest {
         endpoint.setDefaultPrefix("citrus");
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-        
+
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
 
         doAnswer(new Answer<SoapHeaderElement>() {
@@ -475,7 +492,7 @@ public class WebServiceEndpointTest {
 
         verify(soapRequestHeaderEntry).setText("sayHello");
     }
-    
+
     @Test
     public void testMessageProcessingWithDefaultHeaderQNameNoPrefix() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -504,32 +521,32 @@ public class WebServiceEndpointTest {
         endpoint.setDefaultNamespaceUri("http://www.consol.de/citrus");
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-        
+
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
 
         doAnswer(new Answer<SoapHeaderElement>() {
@@ -550,7 +567,7 @@ public class WebServiceEndpointTest {
 
         verify(soapRequestHeaderEntry, times(2)).setText("sayHello");
     }
-    
+
     @Test(expectedExceptions = SoapHeaderException.class)
     public void testMessageProcessingMissingNamespaceUri() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -577,32 +594,32 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-        
+
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
 
         doAnswer(new Answer<SoapHeaderElement>() {
@@ -623,7 +640,7 @@ public class WebServiceEndpointTest {
 
         verify(soapRequestHeaderEntry).setText("sayHello");
     }
-    
+
     @Test
     public void testMessageProcessingWithSoapAttachment() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -656,41 +673,41 @@ public class WebServiceEndpointTest {
 
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         Set<Attachment> attachments = new HashSet<Attachment>();
         Attachment attachment = Mockito.mock(Attachment.class);
         attachments.add(attachment);
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, attachment);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         when(soapRequest.getAttachments()).thenReturn(attachments.iterator());
         when(attachment.getContentId()).thenReturn("myContentId");
         when(attachment.getContentType()).thenReturn("text/xml");
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
-        
+
         when(attachment.getInputStream()).thenReturn(new ByteArrayInputStream("AttachmentBody".getBytes()));
 
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
     }
 
@@ -752,7 +769,7 @@ public class WebServiceEndpointTest {
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithServerSoapFaultInResponse() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -779,32 +796,32 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
-        
+
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
@@ -816,13 +833,13 @@ public class WebServiceEndpointTest {
             }
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithClientSoapFaultInResponse() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -849,32 +866,32 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
-        
+
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
@@ -885,13 +902,13 @@ public class WebServiceEndpointTest {
             }
         }).when(soapBody).addClientOrSenderFault((String)any(), (Locale)any());
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithSoapFaultDetail() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -920,32 +937,32 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapFaultResult = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
-        
+
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
@@ -956,18 +973,18 @@ public class WebServiceEndpointTest {
                 return soapFault;
             }
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
-        
+
         when(soapFault.addFaultDetail()).thenReturn(soapFaultDetail);
-        
+
         when(soapFaultDetail.getResult()).thenReturn(soapFaultResult);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage>");
 
     }
-    
+
     @Test
     public void testMessageProcessingWithMultipleSoapFaultDetails() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -997,32 +1014,32 @@ public class WebServiceEndpointTest {
         });
 
         StringResult soapFaultResult = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapBody, soapFault, soapFaultDetail);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
-        
+
         when(soapResponse.getSoapBody()).thenReturn(soapBody);
 
         doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
@@ -1033,18 +1050,18 @@ public class WebServiceEndpointTest {
                 return soapFault;
             }
         }).when(soapBody).addServerOrReceiverFault((String)any(), (Locale)any());
-        
+
         when(soapFault.addFaultDetail()).thenReturn(soapFaultDetail);
-        
+
         when(soapFaultDetail.getResult()).thenReturn(soapFaultResult);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapFaultResult.toString(), "<DetailMessage><text>This request was not OK!</text></DetailMessage><Error><text>This request was not OK!</text></Error>");
 
     }
-    
+
     @Test
     public void testMessageProcessingWithSoapActionInResponse() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -1072,28 +1089,28 @@ public class WebServiceEndpointTest {
 
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getPayloadResult()).thenReturn(soapResponsePayload);
@@ -1104,7 +1121,7 @@ public class WebServiceEndpointTest {
 
         verify(soapResponse).setSoapAction("answerHello");
     }
-    
+
     @Test
     public void testMessageProcessingWithSoap11FaultInResponse() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -1132,34 +1149,34 @@ public class WebServiceEndpointTest {
 
         Soap11Body soapResponseBody = Mockito.mock(Soap11Body.class);
         final Soap11Fault soapFault = Mockito.mock(Soap11Fault.class);
-        
+
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
-        
+
         when(soapResponse.getSoapBody()).thenReturn(soapResponseBody);
 
         doAnswer(new Answer<org.springframework.ws.soap.SoapFault>() {
@@ -1176,13 +1193,13 @@ public class WebServiceEndpointTest {
             }
         }).when(soapResponseBody).addFault((QName)any(), (String)any(), (Locale)any());
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testMessageProcessingWithSoap12FaultInResponse() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -1210,36 +1227,36 @@ public class WebServiceEndpointTest {
 
         Soap12Body soapResponseBody = Mockito.mock(Soap12Body.class);
         final Soap12Fault soapFault = Mockito.mock(Soap12Fault.class);
-        
+
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse, soapResponseHeader, soapResponseBody, soapFault);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(getSoapRequestPayload()));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(new StringSource(requestPayload));
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn("sayHello");
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
         when(soapResponse.getSoapHeader()).thenReturn(soapResponseHeader);
-        
+
         when(soapResponse.getSoapBody()).thenReturn(soapResponseBody);
-        
+
         doAnswer(new Answer<Soap12Fault>() {
             @Override
             public Soap12Fault answer(InvocationOnMock invocation) throws Throwable {
@@ -1261,11 +1278,11 @@ public class WebServiceEndpointTest {
         }).when(soapFault).addFaultSubcode((QName)any());
 
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }
-    
+
     @Test
     public void testEmptySoapMessageProcessing() throws Exception {
         WebServiceEndpoint endpoint = new WebServiceEndpoint();
@@ -1284,33 +1301,33 @@ public class WebServiceEndpointTest {
 
 
         StringResult soapResponsePayload = new StringResult();
-        
+
         reset(messageContext, soapEnvelope, soapRequest, soapRequestHeader, soapResponse);
 
         when(messageContext.getRequest()).thenReturn(soapRequest);
         when(soapRequest.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource("<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\"><SOAP-ENV:Header/><SOAP-ENV:Body></SOAP-ENV:Body></SOAP-ENV:Envelope>"));
-        
+
         when(soapRequest.getPayloadSource()).thenReturn(null);
-        
+
         when(messageContext.getPropertyNames()).thenReturn(new String[]{});
-        
+
         when(soapRequest.getSoapHeader()).thenReturn(soapRequestHeader);
         when(soapRequestHeader.getSource()).thenReturn(null);
-        
+
         Set<SoapHeaderElement> emptyHeaderSet = Collections.emptySet();
         when(soapRequestHeader.examineAllHeaderElements()).thenReturn(emptyHeaderSet.iterator());
-        
+
         when(soapRequest.getSoapAction()).thenReturn(null);
-        
+
         Set<Attachment> emptyAttachmentSet = Collections.emptySet();
         when(soapRequest.getAttachments()).thenReturn(emptyAttachmentSet.iterator());
-        
+
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
-        
+
         endpoint.invoke(messageContext);
-        
+
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());
 
     }

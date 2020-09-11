@@ -21,6 +21,8 @@ import java.io.IOException;
 import com.consol.citrus.demo.model.HelloRequest;
 import com.consol.citrus.demo.model.HelloResponse;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
@@ -28,8 +30,6 @@ import org.springframework.messaging.Message;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 
 /**
  * @author Christoph Deppisch

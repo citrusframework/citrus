@@ -39,12 +39,12 @@ import com.consol.citrus.rmi.endpoint.RmiEndpointConfiguration;
 import com.consol.citrus.rmi.message.RmiMessageHeaders;
 import com.consol.citrus.rmi.model.RmiServiceInvocation;
 import com.consol.citrus.rmi.model.RmiServiceResult;
+import com.consol.citrus.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringResult;
 
 /**
  * @author Christoph Deppisch

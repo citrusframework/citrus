@@ -28,11 +28,11 @@ import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 
 
 /**

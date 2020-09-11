@@ -16,12 +16,12 @@
 
 package com.consol.citrus.kafka.message;
 
-import com.consol.citrus.util.TypeConversionUtils;
-import org.apache.kafka.common.header.Headers;
-import org.apache.kafka.common.header.internals.RecordHeaders;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.context.TestContext;
+import org.apache.kafka.common.header.Headers;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 
 /**
  * Citrus Kafka header mapper translates internal message headers to Spring integration message headers and
@@ -39,14 +39,14 @@ public class KafkaMessageHeaderMapper {
         return headers;
     }
 
-    public Headers toHeaders(Map<String, Object> headers) {
+    public Headers toHeaders(Map<String, Object> headers, TestContext context) {
         Headers kafkaHeaders = new RecordHeaders();
 
         for (Map.Entry<String, Object> headerEntry : headers.entrySet()) {
             if (!headerEntry.getKey().startsWith(KafkaMessageHeaders.KAFKA_PREFIX)
                     && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.ID)
                     && !headerEntry.getKey().equals(com.consol.citrus.message.MessageHeaders.TIMESTAMP)) {
-                kafkaHeaders.add(headerEntry.getKey(), TypeConversionUtils.convertIfNecessary(headerEntry.getValue(), byte[].class));
+                kafkaHeaders.add(headerEntry.getKey(), context.getTypeConverter().convertIfNecessary(headerEntry.getValue(), byte[].class));
             }
         }
 

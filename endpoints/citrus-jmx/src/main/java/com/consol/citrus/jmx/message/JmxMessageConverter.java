@@ -16,15 +16,17 @@
 
 package com.consol.citrus.jmx.message;
 
+import javax.xml.transform.Source;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.jmx.endpoint.JmxEndpointConfiguration;
 import com.consol.citrus.jmx.model.ManagedBeanInvocation;
 import com.consol.citrus.jmx.model.OperationParam;
-import com.consol.citrus.message.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageConverter;
+import com.consol.citrus.xml.StringResult;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringResult;
-
-import javax.xml.transform.Source;
 
 /**
  * @author Christoph Deppisch

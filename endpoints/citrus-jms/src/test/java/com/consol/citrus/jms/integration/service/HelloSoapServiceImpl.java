@@ -16,19 +16,29 @@
 
 package com.consol.citrus.jms.integration.service;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jms.integration.service.model.*;
+import com.consol.citrus.jms.integration.service.model.HelloRequest;
+import com.consol.citrus.jms.integration.service.model.HelloResponse;
+import com.consol.citrus.jms.integration.service.model.ResponseHeader;
+import com.consol.citrus.xml.StringResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.Message;
-import org.springframework.oxm.*;
+import org.springframework.oxm.Marshaller;
+import org.springframework.oxm.Unmarshaller;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.ws.WebServiceMessage;
-import org.springframework.ws.soap.*;
-import org.springframework.xml.transform.StringResult;
-
-import javax.xml.transform.*;
-import java.io.*;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapMessage;
+import org.springframework.ws.soap.SoapMessageFactory;
 
 /**
  * @author Christoph Deppisch

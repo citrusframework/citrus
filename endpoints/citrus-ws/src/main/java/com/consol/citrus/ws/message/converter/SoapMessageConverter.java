@@ -45,6 +45,8 @@ import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
 import com.consol.citrus.ws.message.SoapAttachment;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -61,8 +63,6 @@ import org.springframework.ws.transport.context.TransportContext;
 import org.springframework.ws.transport.context.TransportContextHolder;
 import org.springframework.ws.transport.http.HttpServletConnection;
 import org.springframework.xml.namespace.QNameUtils;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 

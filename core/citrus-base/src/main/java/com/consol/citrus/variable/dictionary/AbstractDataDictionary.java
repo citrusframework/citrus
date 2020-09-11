@@ -16,17 +16,20 @@
 
 package com.consol.citrus.variable.dictionary;
 
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Properties;
+
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
-
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Abstract data dictionary implementation provides global scope handling.
@@ -56,15 +59,17 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageConstruct
      * Convert to original value type if necessary.
      * @param value
      * @param originalValue
+     * @param context
      * @param <T>
      * @return
      */
-    protected <T> T convertIfNecessary(String value, T originalValue) {
+    protected <T> T convertIfNecessary(String value, T originalValue, TestContext context) {
         if (originalValue == null) {
-            return (T) value;
+            return (T) context.replaceDynamicContentInString(value);
         }
 
-        return TypeConversionUtils.convertIfNecessary(value, (Class<T>) originalValue.getClass());
+        return context.getTypeConverter().convertIfNecessary(context.replaceDynamicContentInString(value),
+                                                            (Class<T>) originalValue.getClass());
     }
 
     @Override

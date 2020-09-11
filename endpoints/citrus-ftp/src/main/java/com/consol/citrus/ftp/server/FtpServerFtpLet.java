@@ -16,21 +16,29 @@
 
 package com.consol.citrus.ftp.server;
 
+import java.util.Optional;
+import java.util.stream.Stream;
+
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.client.FtpEndpointConfiguration;
 import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.ftp.model.Command;
 import com.consol.citrus.ftp.model.CommandResultType;
+import com.consol.citrus.xml.StringResult;
 import org.apache.commons.net.ftp.FTPCmd;
-import org.apache.ftpserver.ftplet.*;
+import org.apache.ftpserver.ftplet.DefaultFtpReply;
+import org.apache.ftpserver.ftplet.FtpException;
+import org.apache.ftpserver.ftplet.FtpReply;
+import org.apache.ftpserver.ftplet.FtpRequest;
+import org.apache.ftpserver.ftplet.FtpSession;
+import org.apache.ftpserver.ftplet.Ftplet;
+import org.apache.ftpserver.ftplet.FtpletContext;
+import org.apache.ftpserver.ftplet.FtpletResult;
+import org.apache.ftpserver.ftplet.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringResult;
-
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Ftp servlet implementation that logs incoming connections and commands forwarding those to

@@ -53,7 +53,8 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
-import com.consol.citrus.util.TypeConversionUtils;
+import com.consol.citrus.util.DefaultTypeConverter;
+import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -163,6 +164,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     private List<CitrusRuntimeException> exceptions = new ArrayList<>();
 
     /**
+     * Type converter.
+     */
+    private TypeConverter typeConverter = new DefaultTypeConverter();
+
+    /**
      * Default constructor
      */
     public TestContext() {
@@ -192,7 +198,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @return
      */
     public <T> T getVariable(String variableExpression, Class<T> type) {
-        return TypeConversionUtils.convertIfNecessary(getVariableObject(variableExpression), type);
+        return typeConverter.convertIfNecessary(getVariableObject(variableExpression), type);
     }
 
     /**
@@ -751,6 +757,22 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      */
     public NamespaceContextBuilder getNamespaceContextBuilder() {
         return namespaceContextBuilder;
+    }
+
+    /**
+     * Obtains the typeConverter.
+     * @return
+     */
+    public TypeConverter getTypeConverter() {
+        return typeConverter;
+    }
+
+    /**
+     * Specifies the typeConverter.
+     * @param typeConverter
+     */
+    public void setTypeConverter(TypeConverter typeConverter) {
+        this.typeConverter = typeConverter;
     }
 
     /**

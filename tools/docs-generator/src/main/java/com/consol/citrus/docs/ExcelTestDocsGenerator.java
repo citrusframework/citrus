@@ -16,23 +16,29 @@
 
 package com.consol.citrus.docs;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringSource;
-import org.xml.sax.SAXException;
-
-import javax.xml.transform.*;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.GregorianCalendar;
+import java.util.Properties;
+import java.util.StringTokenizer;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.xml.StringSource;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
+import org.xml.sax.SAXException;
 
 /**
  * Class to automatically generate a list of all available tests in MS Excel.
- * 
+ *
  * @author Christoph Deppisch
  * @since 2007
  */
@@ -44,31 +50,31 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
     private String author = "Citrus Testframework";
     private Resource headers = new ClassPathResource("testdoc-header.xml", ExcelTestDocsGenerator.class);
     private String customHeaders = "";
-    
+
     /**
      * Default constructor using test doc template name.
      */
     public ExcelTestDocsGenerator() {
         super("CitrusTests.xls", "testdoc.xls.template");
     }
-    
+
     @Override
     public void doHeader(OutputStream buffered) throws TransformerException,
             IOException, SAXException {
         // no header information here.
     }
-    
+
     @Override
     public void doBody(OutputStream buffered) throws TransformerException, IOException, SAXException {
         StreamResult res = new StreamResult(buffered);
         Transformer t = getTransformer("generate-xls-doc.xslt", "text/xml", "xml");
-        
+
         if (StringUtils.hasText(customHeaders)) {
             t.transform(new StringSource(buildHeaderXml()), res);
         } else {
             t.transform(new StreamSource(headers.getInputStream()), res);
         }
-        
+
         int testNumber = 1;
         for (File testFile : getTestFiles()) {
         	buffered.write("<Row>".getBytes());
@@ -79,11 +85,11 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
             t.transform(xml, res);
             buffered.write(("<Cell><Data ss:Type=\"String\">" + testFile.getName() + "</Data></Cell>").getBytes());
             buffered.write("</Row>".getBytes());
-            
+
             testNumber++;
         }
     }
-    
+
     @Override
     protected Properties getTestDocProperties() {
         Properties props = new Properties();
@@ -91,7 +97,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         props.setProperty("company", company);
         props.setProperty("author", author);
         props.setProperty("date", String.format("%1$tY-%1$tm-%1$td", new GregorianCalendar()));
-        
+
         return props;
     }
 
@@ -101,17 +107,17 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
      */
     private String buildHeaderXml() {
         StringBuilder buf = new StringBuilder();
-        
+
         buf.append("<headers xmlns=\"http://www.citrusframework.org/schema/doc/header\">");
-        
+
         StringTokenizer tok = new StringTokenizer(customHeaders, ";");
-        
+
         while (tok.hasMoreElements()) {
             buf.append("<header>" + tok.nextToken() + "</header>");
         }
-        
+
         buf.append("</headers>");
-        
+
         return buf.toString();
     }
 
@@ -122,7 +128,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
     public static ExcelTestDocsGenerator build() {
         return new ExcelTestDocsGenerator();
     }
-    
+
     /**
      * Adds a custom output file.
      * @param filename the output file name.
@@ -132,7 +138,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         this.setOutputFile(filename);
         return this;
     }
-    
+
     /**
      * Adds a custom page title.
      * @param pageTitle the page title.
@@ -142,7 +148,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         this.pageTitle = pageTitle;
         return this;
     }
-    
+
     /**
      * Adds a custom test source directory.
      * @param testDir the test source directory.
@@ -152,7 +158,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         this.setSrcDirectory(testDir);
         return this;
     }
-    
+
     /**
      * Adds a custom author name.
      * @param author the author name.
@@ -162,7 +168,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         this.author = author;
         return this;
     }
-    
+
     /**
      * Adds a custom company.
      * @param company the company name.
@@ -172,7 +178,7 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         this.company = company;
         return this;
     }
-    
+
     /**
      * Adds a custom header configuration.
      * @param customHeaders the header configuration.
@@ -182,13 +188,13 @@ public class ExcelTestDocsGenerator extends AbstractTestDocsGenerator {
         this.customHeaders = customHeaders;
         return this;
     }
-    
+
     /**
      * Executable application cli.
      * @param args
      */
     public static void main(String[] args) {
-        try {    
+        try {
             ExcelTestDocsGenerator generator = ExcelTestDocsGenerator.build();
 
             generator.useSrcDirectory(args.length == 1 ? args[0] : generator.srcDirectory)

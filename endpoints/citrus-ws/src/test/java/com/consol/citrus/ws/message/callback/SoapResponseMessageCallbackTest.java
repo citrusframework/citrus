@@ -16,26 +16,31 @@
 
 package com.consol.citrus.ws.message.callback;
 
-import com.consol.citrus.message.Message;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import com.consol.citrus.ws.message.*;
-import com.consol.citrus.ws.message.SoapMessage;
-import org.mockito.Mockito;
-import org.springframework.ws.mime.Attachment;
-import org.springframework.ws.soap.*;
-import org.springframework.xml.transform.StringSource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.mockito.Mockito.*;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.ws.message.SoapAttachment;
+import com.consol.citrus.ws.message.SoapMessage;
+import com.consol.citrus.ws.message.SoapMessageHeaders;
+import com.consol.citrus.xml.StringSource;
+import org.mockito.Mockito;
+import org.springframework.ws.mime.Attachment;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapEnvelope;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch
@@ -55,14 +60,14 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
             responsePayload +
             "</SOAP-ENV:Body>\n" +
             "</SOAP-ENV:Envelope>";
-    
+
     @Test
     public void testSoapBody() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
-        
+
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
-        
+
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
@@ -72,30 +77,30 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapEnvelope.getHeader()).thenReturn(soapHeader);
         when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
         when(soapHeader.getSource()).thenReturn(null);
-        
+
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
-        
+
         when(soapResponse.getSoapAction()).thenReturn("");
 
-        
+
         callback.doWithMessage(soapResponse);
-        
+
         Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertNull(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION));
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
     }
-    
+
     @Test
     public void testSoapAction() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
-        
+
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
-        
+
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
-        
+
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
         when(soapEnvelope.getSource()).thenReturn(new StringSource(soapResponsePayload));
         when(soapResponse.getPayloadSource()).thenReturn(new StringSource(responsePayload));
@@ -103,33 +108,33 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapEnvelope.getHeader()).thenReturn(soapHeader);
         when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
         when(soapHeader.getSource()).thenReturn(null);
-        
+
         when(soapResponse.getSoapAction()).thenReturn("soapOperation");
-        
+
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
 
-        
+
         callback.doWithMessage(soapResponse);
-        
+
         Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
     }
-    
+
     @Test
     public void testSoapHeaderContent() throws TransformerException, IOException {
-        String soapHeaderContent = "<header>" + 
-                        		"<operation>unitTest</operation>" + 
-                        		"<messageId>123456789</messageId>" + 
+        String soapHeaderContent = "<header>" +
+                        		"<operation>unitTest</operation>" +
+                        		"<messageId>123456789</messageId>" +
                     		"</header>";
-        
+
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
-        
+
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
-        
+
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
@@ -139,14 +144,14 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapEnvelope.getHeader()).thenReturn(soapHeader);
         when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
         when(soapHeader.getSource()).thenReturn(new StringSource(soapHeaderContent));
-        
+
         when(soapResponse.getSoapAction()).thenReturn("\"\"");
-        
+
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
 
-        
+
         callback.doWithMessage(soapResponse);
-        
+
         Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "");
@@ -154,18 +159,18 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getHeaderData().get(0), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + soapHeaderContent);
 
     }
-    
+
     @Test
     public void testSoapHeader() throws TransformerException, IOException {
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
-        
+
         SoapHeaderElement soapHeaderElement = Mockito.mock(SoapHeaderElement.class);
-        
+
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         soapHeaders.add(soapHeaderElement);
-        
+
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
-        
+
         reset(soapResponse, soapEnvelope, soapBody, soapHeader, soapHeaderElement);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
@@ -175,17 +180,17 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapEnvelope.getHeader()).thenReturn(soapHeader);
         when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
         when(soapHeader.getSource()).thenReturn(null);
-        
+
         when(soapHeaderElement.getName()).thenReturn(new QName("{http://citrusframework.org}citrus:messageId"));
         when(soapHeaderElement.getText()).thenReturn("123456789");
-        
+
         when(soapResponse.getSoapAction()).thenReturn("soapOperation");
-        
+
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
 
-        
+
         callback.doWithMessage(soapResponse);
-        
+
         Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");
@@ -193,20 +198,20 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(responseMessage.getHeaderData().size(), 0L);
 
     }
-    
+
     @Test
     public void testSoapAttachment() throws TransformerException, IOException {
         SoapAttachment attachment = new SoapAttachment();
         attachment.setContentId("attContentId");
         attachment.setContent("This is a SOAP attachment" + System.getProperty("line.separator") + "with multi-line");
         attachment.setContentType("plain/text");
-        
+
         SoapResponseMessageCallback callback = new SoapResponseMessageCallback(new WebServiceEndpointConfiguration(), context);
-        
+
         Set<SoapHeaderElement> soapHeaders = new HashSet<SoapHeaderElement>();
         Set<Attachment> soapAttachments = new HashSet<Attachment>();
         soapAttachments.add(attachment);
-        
+
         reset(soapResponse, soapEnvelope, soapBody, soapHeader);
 
         when(soapResponse.getEnvelope()).thenReturn(soapEnvelope);
@@ -216,14 +221,14 @@ public class SoapResponseMessageCallbackTest extends AbstractTestNGUnitTest {
         when(soapEnvelope.getHeader()).thenReturn(soapHeader);
         when(soapHeader.examineAllHeaderElements()).thenReturn(soapHeaders.iterator());
         when(soapHeader.getSource()).thenReturn(null);
-        
+
         when(soapResponse.getSoapAction()).thenReturn("soapOperation");
-        
+
         when(soapResponse.getAttachments()).thenReturn(soapAttachments.iterator());
 
-        
+
         callback.doWithMessage(soapResponse);
-        
+
         Message responseMessage = callback.getResponse();
         Assert.assertEquals(responseMessage.getPayload(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + responsePayload);
         Assert.assertEquals(responseMessage.getHeader(SoapMessageHeaders.SOAP_ACTION), "soapOperation");

@@ -24,7 +24,6 @@ import java.util.Optional;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.util.TypeConversionUtils;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.util.Assert;
@@ -73,7 +72,7 @@ public abstract class ValidationUtils {
                 }
 
                 if (!(expectedValue instanceof String)) {
-                    Object converted = TypeConversionUtils.convertIfNecessary(actualValue, expectedValue.getClass());
+                    Object converted = context.getTypeConverter().convertIfNecessary(actualValue, expectedValue.getClass());
 
                     if (converted == null) {
                         throw new CitrusRuntimeException(String.format("Failed to convert value '%s' to required type '%s'", actualValue, expectedValue.getClass()));

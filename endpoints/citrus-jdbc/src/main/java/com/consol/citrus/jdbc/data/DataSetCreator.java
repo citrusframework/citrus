@@ -16,6 +16,10 @@
 
 package com.consol.citrus.jdbc.data;
 
+import java.sql.SQLException;
+import java.util.Objects;
+import java.util.Optional;
+
 import com.consol.citrus.db.driver.dataset.DataSet;
 import com.consol.citrus.db.driver.json.JsonDataSetProducer;
 import com.consol.citrus.db.driver.xml.XmlDataSetProducer;
@@ -25,12 +29,8 @@ import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.xml.StringSource;
 import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringSource;
-
-import java.sql.SQLException;
-import java.util.Objects;
-import java.util.Optional;
 
 public class DataSetCreator {
 
@@ -77,7 +77,7 @@ public class DataSetCreator {
                 dataSet = response.getPayload(String.class);
             }
         }
-        
+
         if (isJsonResponse(messageType)) {
             return new JsonDataSetProducer(Optional.ofNullable(dataSet).orElse("[]")).produce();
         } else if (isXmlResponse(messageType)) {

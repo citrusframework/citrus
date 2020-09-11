@@ -16,25 +16,36 @@
 
 package com.consol.citrus.jdbc.server;
 
-import com.consol.citrus.db.driver.dataset.DataSet;
-import com.consol.citrus.db.server.JdbcServerException;
-import com.consol.citrus.db.server.controller.JdbcController;
-import com.consol.citrus.endpoint.*;
-import com.consol.citrus.jdbc.data.DataSetCreator;
-import com.consol.citrus.jdbc.message.JdbcMessage;
-import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
-import com.consol.citrus.jdbc.model.*;
-import com.consol.citrus.message.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
-
-import java.util.*;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.consol.citrus.db.driver.dataset.DataSet;
+import com.consol.citrus.db.server.JdbcServerException;
+import com.consol.citrus.db.server.controller.JdbcController;
+import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.endpoint.EndpointConfiguration;
+import com.consol.citrus.jdbc.data.DataSetCreator;
+import com.consol.citrus.jdbc.message.JdbcMessage;
+import com.consol.citrus.jdbc.message.JdbcMessageHeaders;
+import com.consol.citrus.jdbc.model.Execute;
+import com.consol.citrus.jdbc.model.OpenConnection;
+import com.consol.citrus.jdbc.model.Operation;
+import com.consol.citrus.jdbc.model.OperationResult;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.MessageType;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch

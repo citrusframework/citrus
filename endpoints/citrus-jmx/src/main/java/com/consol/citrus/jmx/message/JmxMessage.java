@@ -17,9 +17,12 @@
 package com.consol.citrus.jmx.message;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.jmx.model.*;
+import com.consol.citrus.jmx.model.JmxMarshaller;
+import com.consol.citrus.jmx.model.ManagedBeanInvocation;
+import com.consol.citrus.jmx.model.ManagedBeanResult;
+import com.consol.citrus.jmx.model.OperationParam;
 import com.consol.citrus.message.DefaultMessage;
-import org.springframework.xml.transform.StringResult;
+import com.consol.citrus.xml.StringResult;
 
 /**
  * @author Christoph Deppisch

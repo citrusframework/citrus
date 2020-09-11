@@ -37,6 +37,7 @@ import com.consol.citrus.ws.interceptor.LoggingClientInterceptor;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.ws.message.callback.SoapRequestMessageCallback;
 import com.consol.citrus.ws.message.callback.SoapResponseMessageCallback;
+import com.consol.citrus.xml.StringResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -44,7 +45,6 @@ import org.springframework.ws.WebServiceMessage;
 import org.springframework.ws.client.core.FaultMessageResolver;
 import org.springframework.ws.client.core.SimpleFaultMessageResolver;
 import org.springframework.ws.soap.client.core.SoapFaultMessageResolver;
-import org.springframework.xml.transform.StringResult;
 
 /**
  * Client sends SOAP WebService messages to some server endpoint via Http protocol. Client waits for synchronous

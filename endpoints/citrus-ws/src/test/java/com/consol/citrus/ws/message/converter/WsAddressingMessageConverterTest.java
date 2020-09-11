@@ -16,23 +16,31 @@
 
 package com.consol.citrus.ws.message.converter;
 
-import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.ws.addressing.*;
-import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
-import org.mockito.Mockito;
-import org.springframework.ws.soap.*;
-import org.springframework.xml.transform.StringResult;
-import org.testng.Assert;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import javax.xml.namespace.QName;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.testng.AbstractTestNGUnitTest;
+import com.consol.citrus.ws.addressing.WsAddressingHeaders;
+import com.consol.citrus.ws.addressing.WsAddressingMessageHeaders;
+import com.consol.citrus.ws.addressing.WsAddressingVersion;
+import com.consol.citrus.ws.client.WebServiceEndpointConfiguration;
+import com.consol.citrus.xml.StringResult;
+import org.mockito.Mockito;
+import org.springframework.ws.soap.SoapBody;
+import org.springframework.ws.soap.SoapHeader;
+import org.springframework.ws.soap.SoapHeaderElement;
+import org.springframework.ws.soap.SoapMessage;
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Christoph Deppisch

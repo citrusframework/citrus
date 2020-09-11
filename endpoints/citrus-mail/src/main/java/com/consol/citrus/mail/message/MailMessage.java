@@ -16,12 +16,17 @@
 
 package com.consol.citrus.mail.message;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.mail.model.*;
-import com.consol.citrus.message.DefaultMessage;
-import org.springframework.xml.transform.StringResult;
-
 import java.util.Map;
+
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.mail.model.AcceptRequest;
+import com.consol.citrus.mail.model.AcceptResponse;
+import com.consol.citrus.mail.model.BodyPart;
+import com.consol.citrus.mail.model.MailMarshaller;
+import com.consol.citrus.mail.model.MailRequest;
+import com.consol.citrus.mail.model.MailResponse;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.xml.StringResult;
 
 /**
  * @author Christoph Deppisch

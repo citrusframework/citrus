@@ -26,9 +26,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.callback.AbstractValidationCallback;
+import com.consol.citrus.xml.StringSource;
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.util.Assert;
-import org.springframework.xml.transform.StringSource;
 import org.w3c.dom.Document;
 
 /**

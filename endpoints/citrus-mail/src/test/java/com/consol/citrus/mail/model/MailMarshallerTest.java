@@ -17,9 +17,9 @@
 package com.consol.citrus.mail.model;
 
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.xml.StringResult;
+import com.consol.citrus.xml.StringSource;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.xml.transform.StringResult;
-import org.springframework.xml.transform.StringSource;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
