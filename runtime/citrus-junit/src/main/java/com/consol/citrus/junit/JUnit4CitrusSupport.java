@@ -26,9 +26,10 @@ import com.consol.citrus.GherkinTestActionRunner;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.TestActionRunner;
+import com.consol.citrus.TestBehavior;
 import com.consol.citrus.TestCase;
-import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestCaseMetaInfo;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.TestResult;
 import com.consol.citrus.annotations.CitrusAnnotations;
 import com.consol.citrus.context.TestContext;
@@ -115,6 +116,11 @@ public class JUnit4CitrusSupport extends AbstractJUnit4CitrusTest implements Ghe
     @Override
     public <T extends TestAction> T run(TestActionBuilder<T> builder) {
         return testCaseRunner.run(builder);
+    }
+
+    @Override
+    public <T extends TestAction> TestActionBuilder<T> applyBehavior(TestBehavior behavior) {
+        return testCaseRunner.applyBehavior(behavior);
     }
 
     public <T> T variable(String name, T value) {

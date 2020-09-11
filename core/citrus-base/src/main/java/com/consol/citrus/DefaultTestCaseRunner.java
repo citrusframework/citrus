@@ -2,6 +2,7 @@ package com.consol.citrus;
 
 import java.util.Date;
 
+import com.consol.citrus.actions.ApplyTestBehaviorAction;
 import com.consol.citrus.container.FinallySequence;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.spi.ReferenceResolverAware;
@@ -109,6 +110,10 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
             ((ReferenceResolverAware) builder).setReferenceResolver(context.getReferenceResolver());
         }
 
+        if (builder instanceof ApplyTestBehaviorAction.Builder) {
+            ((ApplyTestBehaviorAction.Builder) builder).on(this);
+        }
+
         T action = builder.build();
 
         if (builder instanceof FinallySequence.Builder) {
@@ -119,6 +124,14 @@ public class DefaultTestCaseRunner implements TestCaseRunner {
         testCase.addTestAction(action);
         testCase.executeAction(action, context);
         return action;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public ApplyTestBehaviorAction.Builder applyBehavior(TestBehavior behavior) {
+        return new ApplyTestBehaviorAction.Builder()
+                .behavior(behavior)
+                .on(this);
     }
 
     /**

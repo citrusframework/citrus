@@ -22,4 +22,11 @@ public interface TestActionRunner {
      * @return
      */
     <T extends TestAction> T run(TestActionBuilder<T> builder);
+
+    /**
+     * Apply test behavior on this test action runner.
+     * @param behavior
+     * @return
+     */
+    <T extends TestAction> TestActionBuilder<T> applyBehavior(TestBehavior behavior);
 }
