@@ -19,17 +19,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.UnitTestSupport;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageSelector;
-import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
+import com.consol.citrus.spi.ReferenceResolver;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
 /**
@@ -111,124 +109,9 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
     }
 
     @Test
-    public void testRootQNameDelegation() {
-        DelegatingMessageSelector messageSelector = new DelegatingMessageSelector("foo = 'bar' AND root-qname = 'FooTest'", context);
-
-        Message acceptMessage = new DefaultMessage("<FooTest><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Message declineMessage = new DefaultMessage("<BarTest><text>foobar</text></BarTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-
-        messageSelector = new DelegatingMessageSelector("root-qname = 'FooTest'", context);
-
-        acceptMessage = new DefaultMessage("<FooTest><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        declineMessage = new DefaultMessage("<BarTest><text>foobar</text></BarTest>")
-                .setHeader("operation", "foo");
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
-
-    @Test
-    public void testRootQNameDelegationWithNamespace() {
-        DelegatingMessageSelector messageSelector = new DelegatingMessageSelector("root-qname = '{http://citrusframework.org/fooschema}FooTest'", context);
-
-        Message acceptMessage = new DefaultMessage("<FooTest xmlns=\"http://citrusframework.org/fooschema\"><text>foo</text></FooTest>")
-                .setHeader("operation", "foo");
-
-        Message declineMessage = new DefaultMessage("<FooTest xmlns=\"http://citrusframework.org/barschema\"><text>bar</text></FooTest>")
-                .setHeader("operation", "foo");
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
-
-    @Test
-    public void testXPathEvaluationDelegation() {
-        DelegatingMessageSelector messageSelector = new DelegatingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://FooTest/text = 'foobar'", context);
-
-        Message acceptMessage = new DefaultMessage("<FooTest><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Message declineMessage = new DefaultMessage("<FooTest><text>barfoo</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-
-        messageSelector = new DelegatingMessageSelector("xpath://FooTest/text = 'foobar'", context);
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
-
-    @Test
-    public void testXPathEvaluationDelegationWithNamespaceBuilder() {
-        NamespaceContextBuilder nsContextBuilder = new NamespaceContextBuilder();
-        nsContextBuilder.getNamespaceMappings().put("foo", "http://citrusframework.org/foo");
-
-        context.setNamespaceContextBuilder(nsContextBuilder);
-
-        reset(resolver);
-
-        when(resolver.resolve(NamespaceContextBuilder.class)).thenReturn(nsContextBuilder);
-
-        DelegatingMessageSelector messageSelector = new DelegatingMessageSelector("foo = 'bar' AND root-qname = 'FooTest' AND xpath://foo:FooTest/foo:text = 'foobar'", context);
-
-        Message acceptMessage = new DefaultMessage("<FooTest xmlns=\"http://citrusframework.org/foo\"><text>foobar</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Message declineMessage = new DefaultMessage("<FooTest><text>barfoo</text></FooTest>")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-
-        messageSelector = new DelegatingMessageSelector("xpath://foo:FooTest/foo:text = 'foobar'", context);
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-
-    }
-
-    @Test
-    public void testJsonPathEvaluationDelegation() {
-        DelegatingMessageSelector messageSelector = new DelegatingMessageSelector("foo = 'bar' AND jsonPath:$.foo.text = 'foobar'", context);
-
-        Message acceptMessage = new DefaultMessage("{ \"foo\": { \"text\": \"foobar\"} }")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Message declineMessage = new DefaultMessage("{ \"foo\": { \"text\": \"barfoo\"} }")
-                .setHeader("foo", "bar")
-                .setHeader("operation", "foo");
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-
-        messageSelector = new DelegatingMessageSelector("jsonPath:$.foo.text = 'foobar'", context);
-
-        Assert.assertTrue(messageSelector.accept(acceptMessage));
-        Assert.assertFalse(messageSelector.accept(declineMessage));
-    }
-
-    @Test
     public void testCustomMessageSelectorDelegation() {
-        Map<String, MessageSelectorFactory> factories = new HashMap<>();
-        factories.put("customSelectorFactory", new MessageSelectorFactory() {
+        Map<String, MessageSelector.MessageSelectorFactory> factories = new HashMap<>();
+        factories.put("customSelectorFactory", new MessageSelector.MessageSelectorFactory() {
             @Override
             public boolean supports(String key) {
                 return key.startsWith("x:");
@@ -240,7 +123,7 @@ public class DelegatingMessageSelectorTest extends UnitTestSupport {
             }
         });
 
-        when(resolver.resolveAll(MessageSelectorFactory.class)).thenReturn(factories);
+        when(resolver.resolveAll(MessageSelector.MessageSelectorFactory.class)).thenReturn(factories);
 
         context.setReferenceResolver(resolver);
         DelegatingMessageSelector messageSelector = new DelegatingMessageSelector("x:foo = 'bar'", context);

@@ -39,7 +39,7 @@ public class DelegatingMessageSelector implements MessageSelector {
     private final Map<String, String> matchingHeaders;
 
     /** List of available message selector factories */
-    private final List<MessageSelectorFactory> factories = new ArrayList<>();
+    private final List<MessageSelectorFactory> factories;
 
     /** Test context */
     private final TestContext context;
@@ -53,14 +53,13 @@ public class DelegatingMessageSelector implements MessageSelector {
 
         Assert.isTrue(matchingHeaders.size() > 0, "Invalid empty message selector");
 
-        factories.add(new RootQNameMessageSelector.Factory());
-        factories.add(new XpathPayloadMessageSelector.Factory());
-        factories.add(new JsonPathPayloadMessageSelector.Factory());
-        factories.add(new PayloadMatchingMessageSelector.Factory());
+        factories = new ArrayList<>();
 
         if (context.getReferenceResolver() != null) {
             factories.addAll(context.getReferenceResolver().resolveAll(MessageSelectorFactory.class).values());
         }
+
+        factories.addAll(MessageSelector.lookup().values());
     }
 
     @Override
