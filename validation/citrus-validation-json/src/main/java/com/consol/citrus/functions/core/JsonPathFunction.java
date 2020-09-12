@@ -16,13 +16,13 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import com.consol.citrus.json.JsonPathUtils;
 import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * @author Christoph Deppisch

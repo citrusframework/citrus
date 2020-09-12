@@ -22,10 +22,9 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2008
  */
-public class XPathFunctionIT extends AbstractTestNGCitrusTest {
+public class XmlFunctionsIT extends AbstractTestNGCitrusTest {
     @Test
     @CitrusXmlTest
-    public void XPathFunctionIT() {}
+    public void XmlFunctionsIT() {}
 }

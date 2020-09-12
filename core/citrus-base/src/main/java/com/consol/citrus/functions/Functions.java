@@ -22,12 +22,10 @@ import java.util.Collections;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.functions.core.ChangeDateFunction;
-import com.consol.citrus.functions.core.CreateCDataSectionFunction;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.functions.core.DecodeBase64Function;
 import com.consol.citrus.functions.core.DigestAuthHeaderFunction;
 import com.consol.citrus.functions.core.EncodeBase64Function;
-import com.consol.citrus.functions.core.EscapeXmlFunction;
 import com.consol.citrus.functions.core.RandomNumberFunction;
 import com.consol.citrus.functions.core.RandomStringFunction;
 import com.consol.citrus.functions.core.RandomUUIDFunction;
@@ -82,14 +80,6 @@ public final class Functions {
      */
     public static String changeDate(String date, String dateOffset, TestContext context) {
         return new ChangeDateFunction().execute(Arrays.asList(date, dateOffset), context);
-    }
-
-    /**
-     * Runs create CData section function with arguments.
-     * @return
-     */
-    public static String createCDataSection(String content, TestContext context) {
-        return new CreateCDataSectionFunction().execute(Collections.singletonList(content), context);
     }
 
     /**
@@ -229,14 +219,6 @@ public final class Functions {
      */
     public static String randomString(Long numberOfLetters, String notationMethod, TestContext context) {
         return new RandomStringFunction().execute(Arrays.asList(String.valueOf(numberOfLetters), String.valueOf(notationMethod)), context);
-    }
-
-    /**
-     * Runs escape XML function with arguments.
-     * @return
-     */
-    public static String escapeXml(String content, TestContext context) {
-        return new EscapeXmlFunction().execute(Collections.singletonList(content), context);
     }
 
     /**

@@ -10,7 +10,7 @@
     </meta-info>
 
     <description>
-      This test shows the usage of xpath functions as variable values
+      This test shows the usage of default functions as variable values
     </description>
 
     <variables>
@@ -33,7 +33,6 @@
       <variable name="sum" value="citrus:sum('3', '4', '5')"/>
       <variable name="abs" value="citrus:absolute('-3')"/>
       <variable name="randomUUID" value="citrus:randomUUID()"/>
-      <variable name="cdata" value="citrus:cdataSection('Hallo Test Framework')"/>
       <variable name="encodeBase64" value="citrus:encodeBase64('Test Framework')"/>
       <variable name="decodeBase64" value="citrus:decodeBase64('VGVzdCBGcmFtZXdvcms=')"/>
       <variable name="digestAuthHeader" value="citrus:digestAuthHeader('username', 'password', 'authRealm', 'acegi', 'POST', 'http://localhost:8080', 'citrus', 'md5')"/>
@@ -45,13 +44,6 @@
 
     <actions>
       <echo><message>citrus:concat('Today is: ', ${date})</message></echo>
-      <echo>
-        <message>
-          <![CDATA[
-              citrus:escapeXml('<!-- This is a XML comment --><Message>Hallo Test Framework</Message>')
-          ]]>
-        </message>
-      </echo>
       <trace-variables/>
     </actions>
 

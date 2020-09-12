@@ -16,15 +16,15 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.xml.namespace.SimpleNamespaceContext;
-
-import java.util.List;
+import org.springframework.util.xml.SimpleNamespaceContext;
 
 /**
  * @author Christoph Deppisch

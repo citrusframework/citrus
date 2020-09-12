@@ -16,45 +16,49 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class JsonPathFunctionTest extends AbstractTestNGUnitTest {
+public class XpathFunctionTest extends AbstractTestNGUnitTest {
 
-    private JsonPathFunction function = new JsonPathFunction();
+    private XpathFunction function = new XpathFunction();
 
-    private String jsonSource = "{ \"person\": { \"name\": \"Sheldon\", \"age\": \"29\" } }";
+    private String xmlSource = "<person><name>Sheldon</name><age>29</age></person>";
+    private String xmlSourceNamespace = "<person xmlns=\"http://citrus.sample.org/person\"><name>Sheldon</name><age>29</age></person>";
 
     @Test
-    public void testExecuteJsonPath() throws Exception {
+    public void testExecuteXpath() throws Exception {
         List<String> parameters = new ArrayList<>();
-        parameters.add(jsonSource);
-        parameters.add("$.person.name");
+        parameters.add(xmlSource);
+        parameters.add("/person/name");
         Assert.assertEquals(function.execute(parameters, context), "Sheldon");
     }
 
     @Test
-    public void testExecuteJsonPathFunctions() throws Exception {
+    public void testExecuteXpathWithNamespaces() throws Exception {
         List<String> parameters = new ArrayList<>();
-        parameters.add(jsonSource);
-        parameters.add("$.person.keySet()");
-        Assert.assertEquals(function.execute(parameters, context), "[name, age]");
+        parameters.add(xmlSourceNamespace);
+        parameters.add("/p:person/p:name");
+
+        context.getNamespaceContextBuilder().getNamespaceMappings().put("p", "http://citrus.sample.org/person");
+
+        Assert.assertEquals(function.execute(parameters, context), "Sheldon");
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)
-    public void testExecuteJsonPathUnknown() throws Exception {
+    public void testExecuteXpathUnknown() throws Exception {
         List<String> parameters = new ArrayList<>();
-        parameters.add(jsonSource);
-        parameters.add("$.person.unknown");
+        parameters.add(xmlSource);
+        parameters.add("/person/unknown");
         function.execute(parameters, context);
     }
 }

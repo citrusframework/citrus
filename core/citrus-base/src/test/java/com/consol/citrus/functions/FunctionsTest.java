@@ -16,7 +16,7 @@
 
 package com.consol.citrus.functions;
 
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 
 import com.consol.citrus.functions.core.RandomStringFunction;
@@ -25,12 +25,10 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.functions.Functions.changeDate;
-import static com.consol.citrus.functions.Functions.createCDataSection;
 import static com.consol.citrus.functions.Functions.currentDate;
 import static com.consol.citrus.functions.Functions.decodeBase64;
 import static com.consol.citrus.functions.Functions.digestAuthHeader;
 import static com.consol.citrus.functions.Functions.encodeBase64;
-import static com.consol.citrus.functions.Functions.escapeXml;
 import static com.consol.citrus.functions.Functions.randomNumber;
 import static com.consol.citrus.functions.Functions.randomString;
 import static com.consol.citrus.functions.Functions.randomUUID;
@@ -54,18 +52,13 @@ public class FunctionsTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testCreateCDataSection() throws Exception {
-        Assert.assertEquals(createCDataSection("<Test><Message>Some Text<Message></Test>", context), "<![CDATA[<Test><Message>Some Text<Message></Test>]]>");
-    }
-
-    @Test
     public void testEncodeBase64() throws Exception {
         Assert.assertEquals(encodeBase64("Foo", context), "Rm9v");
     }
 
     @Test
     public void testEncodeBase64WithCharset() throws Exception {
-        Assert.assertEquals(encodeBase64("Foo", Charset.forName("UTF-8"), context), "Rm9v");
+        Assert.assertEquals(encodeBase64("Foo", StandardCharsets.UTF_8, context), "Rm9v");
     }
 
     @Test
@@ -75,7 +68,7 @@ public class FunctionsTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testDecodeBase64WithCharset() throws Exception {
-        Assert.assertEquals(decodeBase64("Rm9v", Charset.forName("UTF-8"), context), "Foo");
+        Assert.assertEquals(decodeBase64("Rm9v", StandardCharsets.UTF_8, context), "Foo");
     }
 
     @Test
@@ -108,10 +101,5 @@ public class FunctionsTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(randomString(10L, false, context).length(), 10);
         Assert.assertEquals(randomString(10L, RandomStringFunction.LOWERCASE, context).length(), 10);
         Assert.assertEquals(randomString(10L, RandomStringFunction.UPPERCASE, false, context).length(), 10);
-    }
-
-    @Test
-    public void testEscapeXml() throws Exception {
-        Assert.assertEquals(escapeXml("<Test><Message>Some Text<Message></Test>", context), "&lt;Test&gt;&lt;Message&gt;Some Text&lt;Message&gt;&lt;/Test&gt;");
     }
 }

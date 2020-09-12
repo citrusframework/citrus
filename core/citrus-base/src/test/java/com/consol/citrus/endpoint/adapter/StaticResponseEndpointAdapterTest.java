@@ -82,17 +82,18 @@ public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
 
         endpointAdapter.setMessageHeader(header);
         endpointAdapter.setMessagePayload("<TestResponse>" +
-                    "<Text>Hello citrus:xpath(citrus:message(request.payload()), '/TestRequest/User')!</Text>" +
+                    "<Text>Length is citrus:stringLength(citrus:message(request.payload()))!</Text>" +
                 "</TestResponse>");
 
+        String request = "<TestRequest>" +
+                "<User>Christoph</User>" +
+                "<Text>Hello World!</Text>" +
+                "</TestRequest>";
         Message response = endpointAdapter.handleMessage(
-                new DefaultMessage("<TestRequest>" +
-                            "<User>Christoph</User>" +
-                            "<Text>Hello World!</Text>" +
-                        "</TestRequest>")
+                new DefaultMessage(request)
                 .setHeader("Id", "987654321"));
 
-        Assert.assertEquals(response.getPayload(), "<TestResponse><Text>Hello Christoph!</Text></TestResponse>");
+        Assert.assertEquals(response.getPayload(), String.format("<TestResponse><Text>Length is %s!</Text></TestResponse>", request.length()));
         Assert.assertNotNull(response.getHeader("Operation"));
         Assert.assertEquals(response.getHeader("Operation"), "UNITTEST");
         Assert.assertNotNull(response.getHeader("RequestId"));

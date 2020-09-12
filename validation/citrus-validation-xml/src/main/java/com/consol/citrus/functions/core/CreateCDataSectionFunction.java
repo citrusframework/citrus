@@ -16,12 +16,12 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.functions.Function;
 import org.springframework.util.CollectionUtils;
-
-import java.util.List;
 
 /**
  * Adds XML CDATA section tags to parameter value. This is extremely useful when having
@@ -37,9 +37,7 @@ public class CreateCDataSectionFunction implements Function {
     private static final String CDATA_START = "<![CDATA[";
     private static final String CDATA_END = "]]>";
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public String execute(List<String> parameterList, TestContext context) {
         if (CollectionUtils.isEmpty(parameterList) || parameterList.size() != 1) {
             throw new InvalidFunctionUsageException("Invalid function parameter usage - missing parameter value!");

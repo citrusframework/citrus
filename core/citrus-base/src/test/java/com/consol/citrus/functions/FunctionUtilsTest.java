@@ -80,9 +80,6 @@ public class FunctionUtilsTest extends UnitTestSupport {
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes , I like Citrus!')", context), "Hello Yes , I like Citrus!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus!', 'Hello Yes,we like Citrus!')", context), "Hello Yes, I like Citrus!Hello Yes,we like Citrus!");
         Assert.assertEquals(FunctionUtils.resolveFunction("citrus:concat('Hello Yes, I like Citrus, and this is great!', 'Hello Yes,we like Citrus, and this is great!')", context), "Hello Yes, I like Citrus, and this is great!Hello Yes,we like Citrus, and this is great!");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes, I like Citrus!</Message>')", context), "&lt;Message&gt;Hello Yes, I like Citrus!&lt;/Message&gt;");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes , I like Citrus!</Message>')", context), "&lt;Message&gt;Hello Yes , I like Citrus!&lt;/Message&gt;");
-        Assert.assertEquals(FunctionUtils.resolveFunction("citrus:escapeXml('<Message>Hello Yes,I like Citrus, and this is great!</Message>')", context), "&lt;Message&gt;Hello Yes,I like Citrus, and this is great!&lt;/Message&gt;");
     }
 
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})

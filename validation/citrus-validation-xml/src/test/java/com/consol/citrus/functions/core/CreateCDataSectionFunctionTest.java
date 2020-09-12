@@ -16,27 +16,27 @@
 
 package com.consol.citrus.functions.core;
 
+import java.util.Collections;
+
 import com.consol.citrus.exceptions.InvalidFunctionUsageException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 /**
  * @author Christoph Deppisch
  */
 public class CreateCDataSectionFunctionTest extends AbstractTestNGUnitTest {
     CreateCDataSectionFunction function = new CreateCDataSectionFunction();
-    
+
     private String xmlFragment = "<foo><bar>I like Citrus!</bar></foo>";
     private String resultXml = "<![CDATA[<foo><bar>I like Citrus!</bar></foo>]]>";
-    
+
     @Test
     public void testFunction() {
         Assert.assertEquals(function.execute(Collections.singletonList(xmlFragment), context), resultXml);
     }
-    
+
     @Test(expectedExceptions = {InvalidFunctionUsageException.class})
     public void testNoParameters() {
         function.execute(Collections.<String>emptyList(), context);
