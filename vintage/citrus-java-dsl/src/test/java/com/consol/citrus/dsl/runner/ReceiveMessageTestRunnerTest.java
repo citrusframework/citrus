@@ -1177,10 +1177,11 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertEquals(action.getMessageProcessors().size(), 2);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getMessageProcessors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getMessageProcessors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
     }
 
@@ -1231,10 +1232,13 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.JSON.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((JsonPathVariableExtractor) action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
+        Assert.assertEquals(action.getMessageProcessors().size(), 3);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(action.getMessageProcessors().get(2) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor) action.getMessageProcessors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor) action.getMessageProcessors().get(1)).getJsonPathExpressions().containsKey("$.toString()"));
+        Assert.assertTrue(((JsonPathVariableExtractor) action.getMessageProcessors().get(2)).getJsonPathExpressions().containsKey("$.person"));
 
     }
 
@@ -1276,10 +1280,11 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
+        Assert.assertEquals(action.getMessageProcessors().size(), 2);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getMessageProcessors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getMessageProcessors().get(1)).getHeaderMappings().containsKey("requestId"));
 
     }
 
@@ -1328,14 +1333,16 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 2);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
+        Assert.assertEquals(action.getMessageProcessors().size(), 4);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getMessageProcessors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getMessageProcessors().get(1)).getHeaderMappings().containsKey("requestId"));
 
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertTrue(action.getMessageProcessors().get(2) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(action.getMessageProcessors().get(3) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getMessageProcessors().get(2)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor) action.getMessageProcessors().get(3)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
 
     }
 
@@ -1381,7 +1388,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScript() {
+    public void testReceiveBuilderWithValidationScript() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
@@ -1437,7 +1444,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScriptResourcePath() throws IOException {
+    public void testReceiveBuilderWithValidationScriptResourcePath() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
@@ -1492,7 +1499,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScriptResource() throws IOException {
+    public void testReceiveBuilderWithValidationScriptResource() throws IOException {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
@@ -1547,7 +1554,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithValidatonScriptAndHeader() {
+    public void testReceiveBuilderWithValidationScriptAndHeader() {
         final GroovyJsonMessageValidator validator = new GroovyJsonMessageValidator();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);

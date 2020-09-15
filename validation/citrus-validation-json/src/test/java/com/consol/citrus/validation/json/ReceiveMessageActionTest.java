@@ -114,8 +114,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         extractMessageElements.put("$.text", "messageVar");
         extractMessageElements.put("$.person", "person");
 
-        JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor();
-        variableExtractor.setJsonPathExpressions(extractMessageElements);
+        JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
@@ -130,7 +131,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);

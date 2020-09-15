@@ -16,21 +16,93 @@
 
 package com.consol.citrus.variable;
 
-import com.consol.citrus.message.Message;
+import java.util.Map;
+import java.util.Optional;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.spi.ResourcePathTypeResolver;
+import com.consol.citrus.spi.TypeResolver;
+import com.consol.citrus.validation.MessageValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class extracting variables form messages. Implementing classes may read
  * message contents and save those to test variables.
- * 
+ *
  * @author Christoph Deppisch
  */
-public interface VariableExtractor {
+public interface VariableExtractor extends MessageProcessor {
+
+    /** Logger */
+    Logger LOG = LoggerFactory.getLogger(MessageValidator.class);
+
+    /** Variable extractor resource lookup path */
+    String RESOURCE_PATH = "META-INF/citrus/variable/extractor";
+
+    /** Type resolver to find custom variable extractors on classpath via resource path lookup */
+    TypeResolver TYPE_RESOLVER = new ResourcePathTypeResolver(RESOURCE_PATH);
+
     /**
-     * 
+     * Resolves extractor from resource path lookup with given extractor resource name. Scans classpath for extractor meta information
+     * with given name and returns instance of extractor. Returns optional instead of throwing exception when no extractor
+     * could be found.
+     * @param extractor
+     * @return
+     */
+    static <T extends VariableExtractor, B extends Builder<T, B>> Optional<Builder<T, B>> lookup(String extractor) {
+        try {
+            Builder<T, B> instance = TYPE_RESOLVER.resolve(extractor);
+            return Optional.of(instance);
+        } catch (CitrusRuntimeException e) {
+            LOG.warn(String.format("Failed to resolve variable extractor from resource '%s/%s'", RESOURCE_PATH, extractor));
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    default Message process(Message message, TestContext context) {
+        extractVariables(message, context);
+        return message;
+    }
+
+    /**
+     * Extract variables from given message.
      * @param message
      * @param context
      */
     void extractVariables(Message message, TestContext context);
+
+    /**
+     * @author Christoph Deppisch
+     */
+    interface Builder<T extends VariableExtractor, B extends Builder<T, B>> {
+
+        /**
+         * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target
+         * variable names that are stored in the test context with the evaluated result as variable value.
+         * @param expressions
+         * @return
+         */
+        B expressions(Map<String, String> expressions);
+
+        /**
+         * Add an expression that gets evaluated. The evaluation result is stored in the test context as variable with
+         * given variable name.
+         * @param expression
+         * @param variableName
+         * @return
+         */
+        B expression(final String expression, final String variableName);
+
+        /**
+         * Builds new variable extractor instance.
+         * @return the built extractor.
+         */
+        T build();
+    }
 }

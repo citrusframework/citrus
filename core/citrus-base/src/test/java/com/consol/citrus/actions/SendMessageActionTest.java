@@ -637,8 +637,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         extractVars.put("Operation", "myOperation");
         extractVars.put(MessageHeaders.ID, "correlationId");
 
-        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
-        variableExtractor.setHeaderMappings(extractVars);
+        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor.Builder()
+                .headers(extractVars)
+                .build();
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -653,7 +654,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .messageBuilder(messageBuilder)
                 .build();
         sendAction.execute(context);

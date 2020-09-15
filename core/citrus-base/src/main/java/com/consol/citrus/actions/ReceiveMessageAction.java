@@ -34,6 +34,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
@@ -53,12 +54,9 @@ import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.xml.StringResult;
@@ -113,8 +111,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** List of validation contexts for this receive action */
     private final List<ValidationContext> validationContexts;
 
-    /** List of variable extractors responsible for creating variables from received message content */
-    private final List<VariableExtractor> variableExtractors;
+    /** List of processors that handle the receive message */
+    private final List<MessageProcessor> messageProcessors;
 
     /** The expected message type to arrive in this receive action - this information is needed to find a proper
      * message validator for this message */
@@ -139,7 +137,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.dataDictionary = builder.dataDictionary;
         this.validationCallback = builder.validationCallback;
         this.validationContexts = builder.validationContexts;
-        this.variableExtractors = builder.variableExtractors;
+        this.messageProcessors = builder.messageProcessors;
         this.messageType = Optional.ofNullable(builder.messageType).orElse(CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
 
@@ -147,31 +145,25 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Method receives a message via {@link com.consol.citrus.endpoint.Endpoint} instance
      * constructs a validation context and starts the message validation
      * via {@link MessageValidator}.
-     *
-     * @throws CitrusRuntimeException
      */
     @Override
     public void doExecute(TestContext context) {
-        try {
-            Message receivedMessage;
-            String selector = MessageSelectorBuilder.build(messageSelector, messageSelectorMap, context);
+        Message receivedMessage;
+        String selector = MessageSelectorBuilder.build(messageSelector, messageSelectorMap, context);
 
-            //receive message either selected or plain with message receiver
-            if (StringUtils.hasText(selector)) {
-                receivedMessage = receiveSelected(context, selector);
-            } else {
-                receivedMessage = receive(context);
-            }
-
-            if (receivedMessage == null) {
-                throw new CitrusRuntimeException("Failed to receive message - message is not available");
-            }
-
-            //validate the message
-            validateMessage(receivedMessage, context);
-        } catch (IOException e) {
-            throw new CitrusRuntimeException(e);
+        //receive message either selected or plain with message receiver
+        if (StringUtils.hasText(selector)) {
+            receivedMessage = receiveSelected(context, selector);
+        } else {
+            receivedMessage = receive(context);
         }
+
+        if (receivedMessage == null) {
+            throw new CitrusRuntimeException("Failed to receive message - message is not available");
+        }
+
+        //validate the message
+        validateMessage(receivedMessage, context);
     }
 
     /**
@@ -216,12 +208,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
     /**
      * Override this message if you want to add additional message validation
-     * @param receivedMessage
+     * @param message
      */
-    protected void validateMessage(Message receivedMessage, TestContext context) throws IOException {
-        // extract variables from received message content
-        for (VariableExtractor variableExtractor : variableExtractors) {
-            variableExtractor.extractVariables(receivedMessage, context);
+    protected void validateMessage(Message message, TestContext context) {
+        Message receivedMessage = message;
+        for (MessageProcessor processor : messageProcessors) {
+            receivedMessage = processor.process(receivedMessage, context);
         }
 
         if (validationCallback != null) {
@@ -333,11 +325,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Gets the variable extractors.
-     * @return the variableExtractors
+     * Obtains the message processors.
+     * @return
      */
-    public List<VariableExtractor> getVariableExtractors() {
-        return variableExtractors;
+    public List<MessageProcessor> getMessageProcessors() {
+        return messageProcessors;
     }
 
     /**
@@ -467,7 +459,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private String dataDictionaryName;
         private ValidationCallback validationCallback;
         private List<ValidationContext> validationContexts = new ArrayList<>();
-        private List<VariableExtractor> variableExtractors = new ArrayList<>();
+        private List<MessageProcessor> messageProcessors = new ArrayList<>();
         private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
         /** Validation context used in this action builder */
@@ -480,11 +472,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
         /** Script validation context used in this action builder */
         private ScriptValidationContext scriptValidationContext;
-
-        /** Variable extractors filled within this action builder */
-        private MessageHeaderVariableExtractor headerExtractor;
-        private XpathPayloadVariableExtractor xpathExtractor;
-        private JsonPathVariableExtractor jsonPathExtractor;
 
         private final List<String> validatorNames = new ArrayList<>();
         private final List<String> headerValidatorNames = new ArrayList<>();
@@ -1077,32 +1064,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Adds explicit namespace declaration for later path validation expressions.
-         *
-         * @param prefix
-         * @param namespaceUri
-         * @return
-         */
-        public B namespace(final String prefix, final String namespaceUri) {
-            getXpathVariableExtractor().getNamespaces().put(prefix, namespaceUri);
-            getXmlMessageValidationContext().getNamespaces().put(prefix, namespaceUri);
-            return self;
-        }
-
-        /**
-         * Sets default namespace declarations on this action builder.
-         *
-         * @param namespaceMappings
-         * @return
-         */
-        public B namespaces(final Map<String, String> namespaceMappings) {
-            getXpathVariableExtractor().getNamespaces().putAll(namespaceMappings);
-
-            getXmlMessageValidationContext().getNamespaces().putAll(namespaceMappings);
-            return self;
-        }
-
-        /**
          * Sets message selector string.
          *
          * @param messageSelector
@@ -1213,40 +1174,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Extract message header entry as variable.
-         *
-         * @param headerName
-         * @param variable
-         * @return
-         */
-        public B extractFromHeader(final String headerName, final String variable) {
-            if (headerExtractor == null) {
-                headerExtractor = new MessageHeaderVariableExtractor();
-
-                variableExtractor(headerExtractor);
-            }
-
-            headerExtractor.getHeaderMappings().put(headerName, variable);
-            return self;
-        }
-
-        /**
-         * Extract message element via XPath or JSONPath from message payload as new test variable.
-         *
-         * @param path
-         * @param variable
-         * @return
-         */
-        public B extractFromPayload(final String path, final String variable) {
-            if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-                getJsonPathVariableExtractor().getJsonPathExpressions().put(path, variable);
-            } else {
-                getXpathVariableExtractor().getXpathExpressions().put(path, variable);
-            }
-            return self;
-        }
-
-        /**
          * Adds validation callback to the receive action for validating
          * the received message with Java code.
          *
@@ -1263,8 +1190,18 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param extractor
          * @return
          */
-        public B variableExtractor(VariableExtractor extractor) {
-            this.variableExtractors.add(extractor);
+        public B extract(VariableExtractor extractor) {
+            this.messageProcessors.add(extractor);
+            return self;
+        }
+
+        /**
+         * Adds variable extractor builder.
+         * @param builder
+         * @return
+         */
+        public B extract(VariableExtractor.Builder<?, ?> builder) {
+            this.messageProcessors.add(builder.build());
             return self;
         }
 
@@ -1389,32 +1326,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Creates new variable extractor and adds it to test action.
-         */
-        private XpathPayloadVariableExtractor getXpathVariableExtractor() {
-            if (xpathExtractor == null) {
-                xpathExtractor = new XpathPayloadVariableExtractor();
-
-                variableExtractor(xpathExtractor);
-            }
-
-            return xpathExtractor;
-        }
-
-        /**
-         * Creates new variable extractor and adds it to test action.
-         */
-        private JsonPathVariableExtractor getJsonPathVariableExtractor() {
-            if (jsonPathExtractor == null) {
-                jsonPathExtractor = new JsonPathVariableExtractor();
-
-                variableExtractor(jsonPathExtractor);
-            }
-
-            return jsonPathExtractor;
-        }
-
-        /**
          * Gets the validation context as XML validation context an raises exception if existing validation context is
          * not a XML validation context.
          *
@@ -1444,7 +1355,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         /**
          * Creates new xml validation context if not done before and gets the xml validation context.
          */
-        private XmlMessageValidationContext getXmlMessageValidationContext() {
+        protected XmlMessageValidationContext getXmlMessageValidationContext() {
             if (xmlMessageValidationContext == null) {
                 xmlMessageValidationContext = new XmlMessageValidationContext();
 
@@ -1569,6 +1480,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
             }
 
             return Optional.empty();
+        }
+
+        /**
+         * Obtains the validationContexts.
+         * @return
+         */
+        public List<ValidationContext> getValidationContexts() {
+            return validationContexts;
         }
     }
 }

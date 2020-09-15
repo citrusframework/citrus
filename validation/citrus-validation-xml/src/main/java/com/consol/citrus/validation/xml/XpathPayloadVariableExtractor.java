@@ -16,6 +16,13 @@
 
 package com.consol.citrus.validation.xml;
 
+import javax.xml.namespace.NamespaceContext;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
@@ -27,41 +34,47 @@ import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-
-import javax.xml.namespace.NamespaceContext;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Class reads message elements via XPath expressions and saves the text values as new test variables.
  * Implementation parsed the message payload as DOM document, so XML message payload is needed here.
- *  
+ *
  * @author Christoph Deppisch
  */
 public class XpathPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines xpath expressions and target variable names */
-    private Map<String, String> xPathExpressions = new HashMap<String, String>();
-    
+    private final Map<String, String> xPathExpressions;
+
     /** Namespace definitions used in xpath expressions */
-    private Map<String, String> namespaces = new HashMap<String, String>();
-    
+    private final Map<String, String> namespaces;
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
-    
+
+    /**
+     * Constructor using fluent builder.
+     * @param builder
+     */
+    private XpathPayloadVariableExtractor(Builder builder) {
+        this.xPathExpressions = builder.expressions;
+        this.namespaces = builder.namespaces;
+    }
+
     /**
      * Extract variables using Xpath expressions.
      */
     public void extractVariables(Message message, TestContext context) {
-        if (CollectionUtils.isEmpty(xPathExpressions)) {return;}
+        if (CollectionUtils.isEmpty(xPathExpressions)) {
+            return;
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Reading XML elements with XPath");
         }
-        
+
         NamespaceContext nsContext = context.getNamespaceContextBuilder().buildContext(message, namespaces);
 
         for (Entry<String, String> entry : xPathExpressions.entrySet()) {
@@ -71,13 +84,13 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
             if (log.isDebugEnabled()) {
                 log.debug("Evaluating XPath expression: " + pathExpression);
             }
-            
+
             Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
-            
+
             if (XPathUtils.isXPathExpression(pathExpression)) {
                 XPathExpressionResult resultType = XPathExpressionResult.fromString(pathExpression, XPathExpressionResult.STRING);
                 pathExpression = XPathExpressionResult.cutOffPrefix(pathExpression);
-                
+
                 Object value = XPathUtils.evaluate(doc, pathExpression, nsContext, resultType);
 
                 if (value == null) {
@@ -85,9 +98,9 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
                 }
 
                 if (value instanceof List) {
-                    value = StringUtils.arrayToCommaDelimitedString(((List)value).toArray(new String[((List)value).size()]));
+                    value = ((List) value).stream().collect(Collectors.joining(","));
                 }
-                
+
                 context.setVariable(variableName, value);
             } else {
                 Node node = XMLUtils.findNodeByName(doc, pathExpression);
@@ -110,19 +123,60 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     }
 
     /**
-     * Set the xPath expressions to identify the message elements and variable names.
-     * @param xPathExpressions the xPathExpressions to set
+     * Fluent builder.
      */
-    public void setXpathExpressions(Map<String, String> xPathExpressions) {
-        this.xPathExpressions = xPathExpressions;
-    }
-    
-    /**
-     * List of expected namespaces.
-     * @param namespaces the namespaces to set
-     */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
+    public static final class Builder implements VariableExtractor.Builder<XpathPayloadVariableExtractor, Builder>, XmlNamespaceAware {
+        private Map<String, String> expressions = new HashMap<>();
+        private Map<String, String> namespaces = new HashMap<>();
+
+        public static Builder xpathExtractor() {
+            return new Builder();
+        }
+
+        /**
+         * Adds explicit namespace declaration for later path validation expressions.
+         *
+         * @param prefix
+         * @param namespaceUri
+         * @return
+         */
+        public Builder namespace(final String prefix, final String namespaceUri) {
+            this.namespaces.put(prefix, namespaceUri);
+            return this;
+        }
+
+        /**
+         * Sets default namespace declarations on this action builder.
+         *
+         * @param namespaceMappings
+         * @return
+         */
+        public Builder namespaces(final Map<String, String> namespaceMappings) {
+            this.namespaces.putAll(namespaceMappings);
+            return this;
+        }
+
+        @Override
+        public Builder expressions(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String expression, final String variableName) {
+            this.expressions.put(expression, variableName);
+            return this;
+        }
+
+        @Override
+        public void setNamespaces(Map<String, String> namespaces) {
+            namespaces(namespaces);
+        }
+
+        @Override
+        public XpathPayloadVariableExtractor build() {
+            return new XpathPayloadVariableExtractor(this);
+        }
     }
 
     /**

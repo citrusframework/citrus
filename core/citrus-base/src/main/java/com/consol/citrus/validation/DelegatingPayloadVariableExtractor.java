@@ -16,26 +16,28 @@
 
 package com.consol.citrus.validation;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
+import com.consol.citrus.validation.xml.XmlNamespaceAware;
 import com.consol.citrus.variable.VariableExtractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-
 /**
  * Generic extractor implementation delegating to JSONPath or XPath variable extractor based on given expression
- * type.
+ * type. Delegate extractor implementations are referenced through resource path lookup.
  *
  * @author Simon Hofmann
  * @since 2.7.3
  */
-public class DefaultPayloadVariableExtractor implements VariableExtractor {
+public class DelegatingPayloadVariableExtractor implements VariableExtractor {
 
     /** Map defines path expressions and target variable names */
     private Map<String, String> pathExpressions = new HashMap<>();
@@ -43,7 +45,7 @@ public class DefaultPayloadVariableExtractor implements VariableExtractor {
     private Map<String, String> namespaces = new HashMap<>();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(DefaultPayloadVariableExtractor.class);
+    private static Logger log = LoggerFactory.getLogger(DelegatingPayloadVariableExtractor.class);
 
     @Override
     public void extractVariables(Message message, TestContext context) {
@@ -51,13 +53,6 @@ public class DefaultPayloadVariableExtractor implements VariableExtractor {
 
         if (log.isDebugEnabled()) {
             log.debug("Reading path elements.");
-        }
-
-        JsonPathVariableExtractor jsonPathVariableExtractor = new JsonPathVariableExtractor();
-        XpathPayloadVariableExtractor xpathPayloadVariableExtractor = new XpathPayloadVariableExtractor();
-
-        if (!this.namespaces.isEmpty()) {
-            xpathPayloadVariableExtractor.setNamespaces(this.namespaces);
         }
 
         Map<String, String> jsonPathExpressions = new LinkedHashMap<>();
@@ -75,13 +70,29 @@ public class DefaultPayloadVariableExtractor implements VariableExtractor {
         }
 
         if (!jsonPathExpressions.isEmpty()) {
-            jsonPathVariableExtractor.setJsonPathExpressions(jsonPathExpressions);
-            jsonPathVariableExtractor.extractVariables(message, context);
+            final VariableExtractor.Builder<?, ?> jsonPathExtractor = VariableExtractor.lookup("jsonPath")
+                    .orElseThrow(() -> new CitrusRuntimeException("Missing proper Json Path extractor implementation for resource 'jsonPath' - " +
+                            "consider adding proper json validation module to the project"));
+
+            jsonPathExtractor
+                    .expressions(jsonPathExpressions)
+                    .build()
+                    .extractVariables(message, context);
         }
 
         if (!xpathExpressions.isEmpty()) {
-            xpathPayloadVariableExtractor.setXpathExpressions(xpathExpressions);
-            xpathPayloadVariableExtractor.extractVariables(message, context);
+            final VariableExtractor.Builder<?, ?> xpathExtractor = VariableExtractor.lookup("xpath")
+                    .orElseThrow(() -> new CitrusRuntimeException("Missing proper Xpath extractor implementation for resource 'xpath' - " +
+                            "consider adding proper xml validation module to the project"));
+
+            if (!this.namespaces.isEmpty() && xpathExtractor instanceof XmlNamespaceAware) {
+                ((XmlNamespaceAware) xpathExtractor).setNamespaces(this.namespaces);
+            }
+
+            xpathExtractor
+                    .expressions(xpathExpressions)
+                    .build()
+                    .extractVariables(message, context);
         }
     }
 

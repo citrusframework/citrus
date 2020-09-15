@@ -20,6 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static com.consol.citrus.ws.actions.SoapActionBuilder.soap;
 
 /**
@@ -74,7 +75,8 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusSupport {
                           "</ns0:HelloHeader>" +
                       "</SOAP-ENV:Header>")
             .schemaValidation(false)
-            .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"));
+            .extract(headerValueExtractor()
+                        .header("citrus_jms_messageId", "internal_correlation_id")));
 
         then(soap().server("soapResponseEndpoint")
             .send()

@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
  */
 public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
 
-    private JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor();
     private Message jsonMessage;
 
     @BeforeClass
@@ -39,17 +38,19 @@ public class JsonPathVariableExtractorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testExtractVariables() throws Exception {
-        variableExtractor.getJsonPathExpressions().put("$['index']", "index");
-        variableExtractor.getJsonPathExpressions().put("$.numbers", "numbers");
-        variableExtractor.getJsonPathExpressions().put("$.numbers.size()", "numbersSize");
-        variableExtractor.getJsonPathExpressions().put("$.person", "person");
-        variableExtractor.getJsonPathExpressions().put("$.person.name", "personName");
-        variableExtractor.getJsonPathExpressions().put("$.toString()", "toString");
-        variableExtractor.getJsonPathExpressions().put("$.keySet()", "keySet");
-        variableExtractor.getJsonPathExpressions().put("$.values()", "values");
-        variableExtractor.getJsonPathExpressions().put("$.size()", "size");
-        variableExtractor.getJsonPathExpressions().put("$.*", "all");
-        variableExtractor.getJsonPathExpressions().put("$", "root");
+        JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor.Builder()
+                .expression("$['index']", "index")
+                .expression("$.numbers", "numbers")
+                .expression("$.numbers.size()", "numbersSize")
+                .expression("$.person", "person")
+                .expression("$.person.name", "personName")
+                .expression("$.toString()", "toString")
+                .expression("$.keySet()", "keySet")
+                .expression("$.values()", "values")
+                .expression("$.size()", "size")
+                .expression("$.*", "all")
+                .expression("$", "root")
+            .build();
         variableExtractor.extractVariables(jsonMessage, context);
 
         Assert.assertNotNull(context.getVariable("toString"));

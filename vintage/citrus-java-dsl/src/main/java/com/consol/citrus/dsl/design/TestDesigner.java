@@ -33,9 +33,7 @@ import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.JavaAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.actions.StartServerAction;
 import com.consol.citrus.actions.StopServerAction;
@@ -65,7 +63,9 @@ import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.ReceiveMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SendMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.endpoint.Endpoint;
@@ -262,7 +262,7 @@ public interface TestDesigner extends TestCaseBuilder {
      * @param messageEndpoint
      * @return
      */
-    ReceiveMessageAction.Builder receive(Endpoint messageEndpoint);
+    ReceiveMessageActionBuilder<?> receive(Endpoint messageEndpoint);
 
     /**
      * Creates receive message action definition with messsage endpoint name.
@@ -270,7 +270,7 @@ public interface TestDesigner extends TestCaseBuilder {
      * @param messageEndpointName
      * @return
      */
-    ReceiveMessageAction.Builder receive(String messageEndpointName);
+    ReceiveMessageActionBuilder<?> receive(String messageEndpointName);
 
     /**
      * Create send message action definition with message endpoint instance.
@@ -278,7 +278,7 @@ public interface TestDesigner extends TestCaseBuilder {
      * @param messageEndpoint
      * @return
      */
-    SendMessageAction.Builder send(Endpoint messageEndpoint);
+    SendMessageActionBuilder<?> send(Endpoint messageEndpoint);
 
     /**
      * Create send message action definition with message endpoint name. According to message endpoint type
@@ -287,7 +287,7 @@ public interface TestDesigner extends TestCaseBuilder {
      * @param messageEndpointName
      * @return
      */
-    SendMessageAction.Builder send(String messageEndpointName);
+    SendMessageActionBuilder<?> send(String messageEndpointName);
 
     /**
      * Add sleep action with default delay time.

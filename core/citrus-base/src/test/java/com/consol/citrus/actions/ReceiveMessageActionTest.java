@@ -16,7 +16,6 @@
 
 package com.consol.citrus.actions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +41,10 @@ import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.mockito.Mock;
@@ -934,10 +931,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Operation", "myOperation");
 
-        MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
-        headerVariableExtractor.setHeaderMappings(headers);
-        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
-        variableExtractors.add(headerVariableExtractor);
+        MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor.Builder()
+                .headers(headers)
+                .build();
 
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -964,7 +960,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(headerVariableExtractor)
+                .extract(headerVariableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -976,66 +972,17 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageJsonPath() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        controlMessageBuilder.setPayloadData("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
-
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("$.text", "messageVar");
-        extractMessageElements.put("$.person", "person");
-
-        JsonPathVariableExtractor variableExtractor = new JsonPathVariableExtractor();
-        variableExtractor.setJsonPathExpressions(extractMessageElements);
-
-        Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
-        Assert.assertNotNull(context.getVariable("person"));
-        Assert.assertTrue(context.getVariable("person").contains("\"John\""));
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageXPath() {
+    public void testReceiveMessageWithExtractVariables() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("/TestRequest/Message", "messageVar");
-
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        VariableExtractor variableExtractor = new VariableExtractor() {
+            @Override
+            public void extractVariables(Message message, TestContext context) {
+                context.setVariable("messageVar", "Hello World!");
+            }
+        };
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -1060,163 +1007,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageXPathNodeList() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest>" +
-                  "<Message>Hello</Message>" +
-                  "<Message>ByeBye</Message>" +
-                "</TestRequest>");
-
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("node-set://TestRequest/Message", "messageVar");
-
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
-
-        Message controlMessage = new DefaultMessage("<TestRequest>" +
-                  "<Message>Hello</Message>" +
-                  "<Message>ByeBye</Message>" +
-                "</TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello,ByeBye");
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageXPathDefaultNamespaceSupport() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>");
-
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("/:TestRequest/:Message", "messageVar");
-
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
-
-        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        validationContext.setSchemaValidation(false);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-        Assert.assertNotNull(context.getVariable("messageVar"));
-        Assert.assertEquals(context.getVariable("messageVar"), "Hello World!");
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageWithExtractVariablesFromMessageXPathNamespaceBindings() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>");
-
-        Map<String, String> extractMessageElements = new HashMap<String, String>();
-        extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
-
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
-
-        Map<String, String> namespaces = new HashMap<String, String>();
-        namespaces.put("pfx", "http://citrusframework.org/unittest");
-        variableExtractor.setNamespaces(namespaces);
-
-        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        validationContext.setSchemaValidation(false);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);

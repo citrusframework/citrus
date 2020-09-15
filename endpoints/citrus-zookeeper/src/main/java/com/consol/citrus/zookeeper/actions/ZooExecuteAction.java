@@ -18,9 +18,7 @@ package com.consol.citrus.zookeeper.actions;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import com.consol.citrus.AbstractTestActionBuilder;
@@ -30,12 +28,12 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.zookeeper.client.ZooClient;
 import com.consol.citrus.zookeeper.command.AbstractZooCommand;
@@ -88,8 +86,8 @@ public class ZooExecuteAction extends AbstractTestAction {
     /** An optional validation contextst containing json path validators to validate the command result */
     private final JsonPathMessageValidationContext jsonPathMessageValidationContext;
 
-    /** List of variable extractors responsible for creating variables from received message content */
-    private final List<VariableExtractor> variableExtractors;
+    /** List of message processors responsible for working with received message content */
+    private final List<MessageProcessor> messageProcessors;
 
     /**
      * Default constructor.
@@ -104,7 +102,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         this.jsonMessageValidator = builder.jsonMessageValidator;
         this.jsonPathMessageValidator = builder.jsonPathMessageValidator;
         this.jsonPathMessageValidationContext = builder.jsonPathMessageValidationContext;
-        this.variableExtractors = builder.variableExtractors;
+        this.messageProcessors = builder.messageProcessors;
     }
 
     @Override
@@ -193,14 +191,15 @@ public class ZooExecuteAction extends AbstractTestAction {
 
     /**
      * Validate command results.
-     *
      * @param command
      * @param context
      */
     private void validateCommandResult(ZooCommand command, TestContext context) {
         Message commandResult = getCommandResult(command);
 
-        extractVariables(commandResult, context);
+        for (MessageProcessor processor : messageProcessors) {
+            commandResult = processor.process(commandResult, context);
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("Validating Zookeeper response");
@@ -244,16 +243,6 @@ public class ZooExecuteAction extends AbstractTestAction {
         }
     }
 
-    private void extractVariables(Message commandResult, TestContext context) {
-        if (log.isDebugEnabled()) {
-            log.debug("Extracting variables from Zookeeper response");
-        }
-
-        for (VariableExtractor variableExtractor : variableExtractors) {
-            variableExtractor.extractVariables(commandResult, context);
-        }
-    }
-
     /**
      * Gets the zookeeper command to execute.
      *
@@ -282,25 +271,6 @@ public class ZooExecuteAction extends AbstractTestAction {
     }
 
     /**
-     * Adds a new variable extractor.
-     *
-     * @param variableExtractor the variableExtractor to add
-     */
-    public ZooExecuteAction addVariableExtractors(VariableExtractor variableExtractor) {
-        this.variableExtractors.add(variableExtractor);
-        return this;
-    }
-
-    /**
-     * Gets the variable extractors.
-     *
-     * @return the variableExtractors
-     */
-    public List<VariableExtractor> getVariableExtractors() {
-        return variableExtractors;
-    }
-
-    /**
      * Gets the JsonPathMessageValidationContext.
      *
      * @return the validationContexts
@@ -325,7 +295,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         private MessageValidator<? extends ValidationContext> jsonMessageValidator;
         private MessageValidator<? extends ValidationContext> jsonPathMessageValidator;
         private JsonPathMessageValidationContext jsonPathMessageValidationContext;
-        private List<VariableExtractor> variableExtractors = new ArrayList<>();
+        private List<MessageProcessor> messageProcessors = new ArrayList<>();
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -489,23 +459,13 @@ public class ZooExecuteAction extends AbstractTestAction {
             return this;
         }
 
-        /**
-         * Adds variable extractor for extracting variable from command response.
-         *
-         * @param jsonPath the json path to reference the value to be extracted
-         * @param variableName the name of the variable to store the extracted value in
-         * @return
-         */
-        public Builder extract(String jsonPath, String variableName) {
-            JsonPathVariableExtractor jsonPathVariableExtractor = new JsonPathVariableExtractor();
-            Map<String, String> pathVariableMap = new HashMap<>();
-            pathVariableMap.put(jsonPath, variableName);
-            jsonPathVariableExtractor.setJsonPathExpressions(pathVariableMap);
-            return extractor(jsonPathVariableExtractor);
+        public Builder extract(VariableExtractor variableExtractor) {
+            this.messageProcessors.add(variableExtractor);
+            return this;
         }
 
-        public Builder extractor(VariableExtractor variableExtractor) {
-            this.variableExtractors.add(variableExtractor);
+        public Builder extract(VariableExtractor.Builder<?, ?> builder) {
+            this.messageProcessors.add(builder.build());
             return this;
         }
 

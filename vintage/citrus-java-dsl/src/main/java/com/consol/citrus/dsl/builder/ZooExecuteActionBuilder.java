@@ -13,6 +13,8 @@ import com.consol.citrus.zookeeper.command.ZooCommand;
 import com.consol.citrus.zookeeper.command.ZooResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import static com.consol.citrus.validation.json.JsonPathVariableExtractor.Builder.jsonPathExtractor;
+
 /**
  * @author Christoph Deppisch
  */
@@ -106,13 +108,18 @@ public class ZooExecuteActionBuilder extends AbstractTestActionBuilder<ZooExecut
     }
 
     public ZooExecuteActionBuilder extract(String jsonPath, String variableName) {
-        delegate.extract(jsonPath, variableName);
-        return this;
+        return extractor(jsonPathExtractor()
+                .expression(jsonPath, variableName)
+                .build());
     }
 
     public ZooExecuteActionBuilder extractor(VariableExtractor variableExtractor) {
-        delegate.extractor(variableExtractor);
+        delegate.extract(variableExtractor);
         return this;
+    }
+
+    public ZooExecuteActionBuilder extractor(VariableExtractor.Builder<?, ?> builder) {
+        return extractor(builder.build());
     }
 
     public ZooExecuteActionBuilder validate(String jsonPath, String expectedValue) {

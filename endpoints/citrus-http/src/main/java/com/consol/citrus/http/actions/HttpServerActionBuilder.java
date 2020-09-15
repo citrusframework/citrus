@@ -57,8 +57,6 @@ public class HttpServerActionBuilder implements TestActionBuilder.DelegatingTest
         this.httpServerUri = httpServerUri;
     }
 
-
-
     /**
      * Generic response builder for sending response messages to client.
      * @return

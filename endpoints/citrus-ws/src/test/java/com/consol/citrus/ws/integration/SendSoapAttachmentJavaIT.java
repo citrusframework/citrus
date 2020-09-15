@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 
 import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
+import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static com.consol.citrus.ws.actions.SoapActionBuilder.soap;
 
 /**
@@ -47,7 +48,8 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
                                 .schemaValidation(false)
-                                .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
+                                .extract(headerValueExtractor()
+                                            .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
                                 .timeout(5000L),
                         soap().server("soapResponseEndpoint")
@@ -82,7 +84,8 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
                                 .schemaValidation(false)
-                                .extractFromHeader("citrus_jms_messageId", "internal_correlation_id")
+                                .extract(headerValueExtractor()
+                                            .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
                                 .timeout(5000L),
                         soap().server("soapResponseEndpoint")

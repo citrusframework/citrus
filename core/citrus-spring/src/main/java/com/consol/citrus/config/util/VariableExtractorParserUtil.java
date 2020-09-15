@@ -16,12 +16,14 @@
 
 package com.consol.citrus.config.util;
 
-import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.*;
 
 /**
  * Helper for parsing 'extract' elements containing nested xpath or json variable-extractors.
@@ -46,7 +48,7 @@ public class VariableExtractorParserUtil {
     }
 
     public static void addPayloadVariableExtractors(Element element, List<VariableExtractor> variableExtractors, Map<String, String> extractFromPath) {
-        DefaultPayloadVariableExtractor payloadVariableExtractor = new DefaultPayloadVariableExtractor();
+        DelegatingPayloadVariableExtractor payloadVariableExtractor = new DelegatingPayloadVariableExtractor();
         payloadVariableExtractor.setPathExpressions(extractFromPath);
         Map<String, String> namespaces = new HashMap<>();
         if (element != null) {

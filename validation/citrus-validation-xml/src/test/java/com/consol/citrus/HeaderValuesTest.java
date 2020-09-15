@@ -365,13 +365,14 @@ public class HeaderValuesTest extends UnitTestSupport {
         extractHeaderValues.put("header-valueA", "${valueA}");
         extractHeaderValues.put("header-valueB", "${valueB}");
 
-        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
-        variableExtractor.setHeaderMappings(extractHeaderValues);
+        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor.Builder()
+                .headers(extractHeaderValues)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(new HeaderValidationContext())
                 .validationContext(validationContext)
                 .build();

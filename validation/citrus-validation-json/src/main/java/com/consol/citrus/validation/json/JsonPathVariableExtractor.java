@@ -16,6 +16,10 @@
 
 package com.consol.citrus.validation.json;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.JsonPathUtils;
@@ -31,8 +35,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
-
 /**
  * Extractor implementation reads message elements via JSONPath expressions and saves the
  * values as new test variables. JSONObject and JSONArray items will be saved as String representation.
@@ -42,11 +44,19 @@ import java.util.*;
  */
 public class JsonPathVariableExtractor implements VariableExtractor {
 
-    /** Map defines xpath expressions and target variable names */
-    private Map<String, String> jsonPathExpressions = new HashMap<>();
+    /** Map defines json path expressions and target variable names */
+    private final Map<String, String> jsonPathExpressions;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
+
+    /**
+     * Constructor using fluent builder.
+     * @param builder
+     */
+    private JsonPathVariableExtractor(Builder builder) {
+        this.jsonPathExpressions = builder.expressions;
+    }
 
     @Override
     public void extractVariables(Message message, TestContext context) {
@@ -85,11 +95,31 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     }
 
     /**
-     * Sets the JSONPath expressions.
-     * @param jsonPathExpressions
+     * Fluent builder.
      */
-    public void setJsonPathExpressions(Map<String, String> jsonPathExpressions) {
-        this.jsonPathExpressions = jsonPathExpressions;
+    public static final class Builder implements VariableExtractor.Builder<JsonPathVariableExtractor, Builder> {
+        private Map<String, String> expressions = new HashMap<>();
+
+        public static Builder jsonPathExtractor() {
+            return new Builder();
+        }
+
+        @Override
+        public Builder expressions(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String expression, final String variableName) {
+            this.expressions.put(expression, variableName);
+            return this;
+        }
+
+        @Override
+        public JsonPathVariableExtractor build() {
+            return new JsonPathVariableExtractor(this);
+        }
     }
 
     /**

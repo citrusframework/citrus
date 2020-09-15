@@ -19,7 +19,7 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.ActionParserTestSupport;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
-import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
+import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -71,7 +71,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
-        Assert.assertEquals(action.getVariableExtractors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         // 2nd action
         action = getNextTestActionFromTest();
@@ -98,7 +98,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
-        Assert.assertEquals(action.getVariableExtractors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         // 3rd action
         action = getNextTestActionFromTest();
@@ -172,11 +172,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
 
         // 7th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getVariableExtractors().size(), 2);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
-        MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof DefaultPayloadVariableExtractor);
-        DefaultPayloadVariableExtractor variableExtractor = (DefaultPayloadVariableExtractor)action.getVariableExtractors().get(1);
+        Assert.assertEquals(action.getMessageProcessors().size(), 2);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
+        MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getMessageProcessors().get(0);
+        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof DelegatingPayloadVariableExtractor);
+        DelegatingPayloadVariableExtractor variableExtractor = (DelegatingPayloadVariableExtractor)action.getMessageProcessors().get(1);
 
         Assert.assertEquals(variableExtractor.getNamespaces().size(), 0L);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
@@ -351,11 +351,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
 
         // 16th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getVariableExtractors().size(), 2);
-        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
-        headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
-        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof DefaultPayloadVariableExtractor);
-        DefaultPayloadVariableExtractor jsonVariableExtractor = (DefaultPayloadVariableExtractor) action.getVariableExtractors().get(1);
+        Assert.assertEquals(action.getMessageProcessors().size(), 2);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
+        headerVariableExtractor = (MessageHeaderVariableExtractor)action.getMessageProcessors().get(0);
+        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof DelegatingPayloadVariableExtractor);
+        DelegatingPayloadVariableExtractor jsonVariableExtractor = (DelegatingPayloadVariableExtractor) action.getMessageProcessors().get(1);
 
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");

@@ -16,9 +16,7 @@
 
 package com.consol.citrus.validation.xml;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.DefaultTestCase;
@@ -42,7 +40,6 @@ import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.xhtml.XhtmlMessageValidator;
 import com.consol.citrus.validation.xhtml.XhtmlXpathMessageValidator;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
-import com.consol.citrus.variable.VariableExtractor;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -573,10 +570,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Operation", "myOperation");
 
-        MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor();
-        headerVariableExtractor.setHeaderMappings(headers);
-        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
-        variableExtractors.add(headerVariableExtractor);
+        MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor.Builder()
+                .headers(headers)
+                .build();
 
         Map<String, Object> controlHeaders = new HashMap<String, Object>();
         controlHeaders.put("Operation", "sayHello");
@@ -593,7 +589,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(headerVariableExtractor)
+                .extract(headerVariableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -770,8 +766,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/TestRequest/Message", "messageVar");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -786,7 +783,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -809,8 +806,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("node-set://TestRequest/Message", "messageVar");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest>" +
                 "<Message>Hello</Message>" +
@@ -828,7 +826,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -849,8 +847,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/:TestRequest/:Message", "messageVar");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest  xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>Hello World!</Message></TestRequest>");
@@ -868,7 +867,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -889,8 +888,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/ns0:TestRequest/ns0:Message", "messageVar");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
@@ -908,7 +908,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -929,8 +929,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/ns0:TestRequest/ns1:Message", "messageVar");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message></ns0:TestRequest>");
@@ -948,7 +949,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -969,12 +970,13 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("/pfx:TestRequest/pfx:Message", "messageVar");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
-
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrusframework.org/unittest");
-        variableExtractor.setNamespaces(namespaces);
+
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .namespaces(namespaces)
+                .build();
 
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>Hello World!</ns0:Message></ns0:TestRequest>");
@@ -992,7 +994,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);

@@ -73,7 +73,9 @@ import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.ReceiveMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SendMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.endpoint.Endpoint;
@@ -361,33 +363,33 @@ public class DefaultTestDesigner implements TestDesigner {
     }
 
     @Override
-    public ReceiveMessageAction.Builder receive(Endpoint messageEndpoint) {
-        ReceiveMessageAction.Builder builder = ReceiveMessageAction.Builder.receive(messageEndpoint)
-                .withReferenceResolver(context.getReferenceResolver());
+    public ReceiveMessageActionBuilder<?> receive(Endpoint messageEndpoint) {
+        ReceiveMessageActionBuilder<?> builder = new ReceiveMessageActionBuilder<>(ReceiveMessageAction.Builder.receive(messageEndpoint)
+                .withReferenceResolver(context.getReferenceResolver()));
         action(builder);
         return builder;
     }
 
     @Override
-    public ReceiveMessageAction.Builder receive(String messageEndpointUri) {
-        ReceiveMessageAction.Builder builder = ReceiveMessageAction.Builder.receive(messageEndpointUri)
-                .withReferenceResolver(context.getReferenceResolver());
+    public ReceiveMessageActionBuilder<?> receive(String messageEndpointUri) {
+        ReceiveMessageActionBuilder<?> builder = new ReceiveMessageActionBuilder<>(ReceiveMessageAction.Builder.receive(messageEndpointUri)
+                .withReferenceResolver(context.getReferenceResolver()));
         action(builder);
         return builder;
     }
 
     @Override
-    public SendMessageAction.Builder send(Endpoint messageEndpoint) {
-        SendMessageAction.Builder builder = SendMessageAction.Builder.send(messageEndpoint)
-                .withReferenceResolver(context.getReferenceResolver());
+    public SendMessageActionBuilder<?> send(Endpoint messageEndpoint) {
+        SendMessageActionBuilder<?> builder = new SendMessageActionBuilder<>(SendMessageAction.Builder.send(messageEndpoint)
+                .withReferenceResolver(context.getReferenceResolver()));
         action(builder);
         return builder;
     }
 
     @Override
-    public SendMessageAction.Builder send(String messageEndpointUri) {
-        SendMessageAction.Builder builder = SendMessageAction.Builder.send(messageEndpointUri)
-                .withReferenceResolver(context.getReferenceResolver());
+    public SendMessageActionBuilder<?> send(String messageEndpointUri) {
+        SendMessageActionBuilder<?> builder = new SendMessageActionBuilder<>(SendMessageAction.Builder.send(messageEndpointUri)
+                .withReferenceResolver(context.getReferenceResolver()));
         action(builder);
         return builder;
     }

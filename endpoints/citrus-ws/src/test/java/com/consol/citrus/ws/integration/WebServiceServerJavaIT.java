@@ -24,6 +24,7 @@ import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
 import static com.consol.citrus.container.Parallel.Builder.parallel;
 import static com.consol.citrus.container.Sequence.Builder.sequential;
+import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 
 /**
  * @author Christoph Deppisch
@@ -56,7 +57,8 @@ public class WebServiceServerJavaIT extends TestNGCitrusSupport {
                               "</ns0:HelloRequest>")
                     .header("Operation", "sayHello")
                     .schemaValidation(false)
-                    .extractFromHeader("citrus_jms_messageId", "internal_correlation_id"),
+                    .extract(headerValueExtractor()
+                                    .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")
                     .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +
                                     "<ns0:MessageId>${messageId}</ns0:MessageId>" +

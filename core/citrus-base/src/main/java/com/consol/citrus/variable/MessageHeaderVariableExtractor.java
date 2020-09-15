@@ -33,7 +33,15 @@ import org.springframework.util.CollectionUtils;
 public class MessageHeaderVariableExtractor implements VariableExtractor {
 
     /** Map holding header names and target variable names */
-    private Map<String, String> headerMappings = new HashMap<String, String>();
+    private final Map<String, String> headerMappings;
+
+    /**
+     * Constructor using fluent builder.
+     * @param builder
+     */
+    private MessageHeaderVariableExtractor(Builder builder) {
+        this.headerMappings = builder.expressions;
+    }
 
     /**
      * Reads header information and saves new test variables.
@@ -54,11 +62,52 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     }
 
     /**
-     * Set the header mappings.
-     * @param headerMappings the headerMappings to set
+     * Fluent builder.
      */
-    public void setHeaderMappings(Map<String, String> headerMappings) {
-        this.headerMappings = headerMappings;
+    public static final class Builder implements VariableExtractor.Builder<MessageHeaderVariableExtractor, Builder> {
+        private Map<String, String> expressions = new HashMap<>();
+
+        public static Builder headerValueExtractor() {
+            return new Builder();
+        }
+
+        /**
+         * Evaluate all header name expressions and store values as new variables to the test context.
+         * @param expressions
+         * @return
+         */
+        public Builder headers(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        /**
+         * Reads header by its name and stores value as new variable to the test context.
+         * @param headerName
+         * @param variableName
+         * @return
+         */
+        public Builder header(final String headerName, final String variableName) {
+            this.expressions.put(headerName, variableName);
+            return this;
+        }
+
+        @Override
+        public Builder expressions(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String headerName, final String variableName) {
+            this.expressions.put(headerName, variableName);
+            return this;
+        }
+
+        @Override
+        public MessageHeaderVariableExtractor build() {
+            return new MessageHeaderVariableExtractor(this);
+        }
     }
 
     /**

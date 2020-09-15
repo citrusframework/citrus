@@ -196,7 +196,7 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
          * @param variableExtractors the variableExtractors to set
          */
         public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
-            variableExtractors.forEach(builder::extractor);
+            variableExtractors.forEach(builder::extract);
         }
 
         /**

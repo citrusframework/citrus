@@ -36,7 +36,7 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
 
     private ApplicationContext applicationContext;
 
-    private SimpleReferenceResolver fallback = new SimpleReferenceResolver();
+    private ReferenceResolver fallback = new SimpleReferenceResolver();
 
     /**
      * Default constructor.
@@ -100,6 +100,15 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
         return applicationContext.containsBean(name) || fallback.isResolvable(name);
     }
 
+    /**
+     * Specifies the fallback.
+     * @param fallback
+     */
+    public SpringBeanReferenceResolver withFallback(ReferenceResolver fallback) {
+        this.fallback = fallback;
+        return this;
+    }
+
     @Override
     public void bind(String name, Object value) {
         fallback.bind(name, value);
@@ -108,6 +117,14 @@ public class SpringBeanReferenceResolver implements ReferenceResolver, Applicati
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    /**
+     * Specifies the fallback.
+     * @param fallback
+     */
+    public void setFallback(ReferenceResolver fallback) {
+        this.fallback = fallback;
     }
 
     /**

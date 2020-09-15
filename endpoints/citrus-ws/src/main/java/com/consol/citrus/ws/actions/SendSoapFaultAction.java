@@ -266,7 +266,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         }
 
         @Override
-        public SendSoapFaultAction build() {
+        public SendSoapFaultAction doBuild() {
             return new SendSoapFaultAction(this);
         }
     }

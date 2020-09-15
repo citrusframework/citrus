@@ -41,12 +41,9 @@ import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.xml.StringResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -1124,53 +1121,6 @@ class ReceiveMessageBuilderTest {
 	}
 
 	@Test
-	void namespace() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String prefix = "foo";
-		final String uri = "http://foo.com";
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.namespace(prefix, uri);
-
-		//THEN
-		assertSame(copy, builder);
-
-		final XpathPayloadVariableExtractor xpathExtractor =
-				getFieldFromBuilder(builder, XpathPayloadVariableExtractor.class, "xpathExtractor");
-		assertEquals(uri, xpathExtractor.getNamespaces().get(prefix));
-
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
-		assertEquals(uri, xmlMessageValidationContext.getNamespaces().get(prefix));
-	}
-
-    @Test
-    void setNamespaceAsMap() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-        final String prefix = "foo";
-        final String uri = "http://foo.com";
-        final Map<String, String> namespaceMap = Collections.singletonMap(prefix, uri);
-
-        //WHEN
-        final ReceiveMessageAction.Builder copy = builder.namespaces(namespaceMap);
-
-        //THEN
-        assertSame(copy, builder);
-
-        final XpathPayloadVariableExtractor xpathExtractor =
-				getFieldFromBuilder(builder, XpathPayloadVariableExtractor.class, "xpathExtractor");
-        assertEquals(uri, xpathExtractor.getNamespaces().get(prefix));
-
-        final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
-        assertEquals(uri, xmlMessageValidationContext.getNamespaces().get(prefix));
-    }
-
-	@Test
 	void selector_fromString() {
 
 		//GIVEN
@@ -1326,71 +1276,6 @@ class ReceiveMessageBuilderTest {
 
 		assertSame(copy, builder);
 		assertEquals(dataDictionary, builder.build().getDataDictionary());
-	}
-
-	@Test
-	void extractFromHeader() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String name = "foo";
-		final String variable = "bar";
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.extractFromHeader(name, variable);
-
-		//THEN
-		assertSame(copy, builder);
-		assertNotNull(builder.build().getVariableExtractors());
-		assertEquals(1, builder.build().getVariableExtractors().size());
-
-		final MessageHeaderVariableExtractor headerExtractor =
-				getFieldFromBuilder(builder, MessageHeaderVariableExtractor.class, "headerExtractor");
-		assertEquals("bar", headerExtractor.getHeaderMappings().get("foo"));
-	}
-
-	@Test
-	void extractFromPayload_xpath() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String path = "//ResultCode";
-		final String controlValue = "Success";
-		builder.messageType(MessageType.XML);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.extractFromPayload(path, controlValue);
-
-		//THEN
-		assertSame(copy, builder);
-		assertNotNull(builder.build().getVariableExtractors());
-		assertEquals(1, builder.build().getVariableExtractors().size());
-
-		final XpathPayloadVariableExtractor xpathExtractor =
-				getFieldFromBuilder(builder, XpathPayloadVariableExtractor.class, "xpathExtractor");
-		assertEquals("Success", xpathExtractor.getXpathExpressions().get("//ResultCode"));
-	}
-
-	@Test
-	void extractFromPayload_json() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String path = "$ResultCode";
-		final String controlValue = "Success";
-		builder.messageType(MessageType.JSON);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.extractFromPayload(path, controlValue);
-
-		//THEN
-		assertSame(copy, builder);
-		assertNotNull(builder.build().getVariableExtractors());
-		assertEquals(1, builder.build().getVariableExtractors().size());
-
-		final JsonPathVariableExtractor jsonPathExtractor =
-				getFieldFromBuilder(builder, JsonPathVariableExtractor.class, "jsonPathExtractor");
-		assertEquals("Success", jsonPathExtractor.getJsonPathExpressions().get("$ResultCode"));
 	}
 
 	@Test

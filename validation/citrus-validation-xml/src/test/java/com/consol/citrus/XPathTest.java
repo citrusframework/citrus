@@ -298,8 +298,9 @@ public class XPathTest extends UnitTestSupport {
         extractMessageElements.put("boolean:/ns1:root/:element", "exists");
         extractMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "existsNot");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
@@ -310,7 +311,7 @@ public class XPathTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
 

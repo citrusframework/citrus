@@ -77,7 +77,9 @@ import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.ReceiveMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SendMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -350,17 +352,17 @@ public class DefaultTestRunner implements TestRunner {
     }
 
     @Override
-    public ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer) {
-        ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder()
-                .withReferenceResolver(context.getReferenceResolver());
+    public ReceiveMessageActionBuilder<?> receive(BuilderSupport<ReceiveMessageActionBuilder<?>> configurer) {
+        ReceiveMessageActionBuilder<?> builder = new ReceiveMessageActionBuilder<>(new ReceiveMessageAction.Builder()
+                .withReferenceResolver(context.getReferenceResolver()));
         configurer.configure(builder);
         return run(builder);
     }
 
     @Override
-    public SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer) {
-        SendMessageAction.Builder builder = new SendMessageAction.Builder()
-                .withReferenceResolver(context.getReferenceResolver());
+    public SendMessageActionBuilder<?> send(BuilderSupport<SendMessageActionBuilder<?>> configurer) {
+        SendMessageActionBuilder<?> builder = new SendMessageActionBuilder<>(new SendMessageAction.Builder()
+                .withReferenceResolver(context.getReferenceResolver()));
         configurer.configure(builder);
         return run(builder);
     }

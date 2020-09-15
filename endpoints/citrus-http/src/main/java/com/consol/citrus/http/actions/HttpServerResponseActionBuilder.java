@@ -122,7 +122,7 @@ public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessa
     }
 
     @Override
-    public SendMessageAction build() {
+    public SendMessageAction doBuild() {
         return new SendMessageAction(this);
     }
 }

@@ -137,7 +137,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
         }
 
         @Override
-        public SendSoapMessageAction build() {
+        public SendSoapMessageAction doBuild() {
             return new SendSoapMessageAction(this);
         }
     }

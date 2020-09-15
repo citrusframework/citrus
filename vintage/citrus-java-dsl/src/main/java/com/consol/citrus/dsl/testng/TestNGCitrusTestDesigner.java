@@ -36,9 +36,7 @@ import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.JavaAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.actions.StartServerAction;
 import com.consol.citrus.actions.StopServerAction;
@@ -68,7 +66,9 @@ import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.ReceiveMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SendMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.dsl.design.ApplyTestBehaviorAction;
@@ -306,22 +306,22 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     }
 
     @Override
-    public ReceiveMessageAction.Builder receive(Endpoint messageEndpoint) {
+    public ReceiveMessageActionBuilder<?> receive(Endpoint messageEndpoint) {
         return testDesigner.receive(messageEndpoint);
     }
 
     @Override
-    public ReceiveMessageAction.Builder receive(String messageEndpointName) {
+    public ReceiveMessageActionBuilder<?> receive(String messageEndpointName) {
         return testDesigner.receive(messageEndpointName);
     }
 
     @Override
-    public SendMessageAction.Builder send(Endpoint messageEndpoint) {
+    public SendMessageActionBuilder<?> send(Endpoint messageEndpoint) {
         return testDesigner.send(messageEndpoint);
     }
 
     @Override
-    public SendMessageAction.Builder send(String messageEndpointName) {
+    public SendMessageActionBuilder<?> send(String messageEndpointName) {
         return testDesigner.send(messageEndpointName);
     }
 

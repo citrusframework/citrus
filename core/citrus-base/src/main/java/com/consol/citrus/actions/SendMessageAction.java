@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -32,8 +33,10 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
@@ -42,11 +45,7 @@ import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.interceptor.BinaryMessageConstructionInterceptor;
 import com.consol.citrus.validation.interceptor.GzipMessageConstructionInterceptor;
 import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
-import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.xml.StringResult;
@@ -58,7 +57,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -78,8 +76,8 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /** Message endpoint uri - either bean name or dynamic uri */
     private final String endpointUri;
 
-    /** List of variable extractors responsible for creating variables from received message content */
-    private final List<VariableExtractor> variableExtractors;
+    /** List of message processors responsible for manipulating message to be sent */
+    private final List<MessageProcessor> messageProcessors;
 
     /** Builder constructing a control message */
     private final MessageContentBuilder messageBuilder;
@@ -109,7 +107,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         this.endpoint = builder.endpoint;
         this.endpointUri = builder.endpointUri;
-        this.variableExtractors = builder.variableExtractors;
+        this.messageProcessors = builder.messageProcessors;
         this.messageBuilder = builder.messageBuilder;
         this.forkMode = builder.forkMode;
         this.messageType = builder.messageType;
@@ -122,12 +120,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      */
     @Override
     public void doExecute(final TestContext context) {
-        final Message message = createMessage(context, messageType);
+        Message message = createMessage(context, messageType);
         finished = new CompletableFuture<>();
 
-        // extract variables from before sending message so we can save dynamic message ids
-        for (VariableExtractor variableExtractor : variableExtractors) {
-            variableExtractor.extractVariables(message, context);
+        for (MessageProcessor processor : messageProcessors) {
+            message = processor.process(message, context);
         }
 
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
@@ -142,9 +139,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             log.debug("Forking message sending action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
+            final Message finalMessage = message;
             taskExecutor.execute(() -> {
                 try {
-                    messageEndpoint.createProducer().send(message, context);
+                    messageEndpoint.createProducer().send(finalMessage, context);
                 } catch (Exception e) {
                     if (e instanceof CitrusRuntimeException) {
                         context.addException((CitrusRuntimeException) e);
@@ -221,11 +219,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     }
 
     /**
-     * Get the variable extractors.
-     * @return the variableExtractors
+     * Obtains the message processors.
+     * @return
      */
-    public List<VariableExtractor> getVariableExtractors() {
-        return variableExtractors;
+    public List<MessageProcessor> getMessageProcessors() {
+        return messageProcessors;
     }
 
     /**
@@ -304,7 +302,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         @Override
-        public SendMessageAction build() {
+        public SendMessageAction doBuild() {
             return new SendMessageAction(this);
         }
 
@@ -313,21 +311,20 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /**
      * Base send message action builder also used by subclasses of base send message action.
      */
-    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, B extends SendMessageActionBuilder<T, B>> extends AbstractTestActionBuilder<T, B> {
+    public static abstract class SendMessageActionBuilder<T extends SendMessageAction, B extends SendMessageActionBuilder<T, B>> extends AbstractTestActionBuilder<T, B> implements ReferenceResolverAware {
 
         protected Endpoint endpoint;
         protected String endpointUri;
-        protected List<VariableExtractor> variableExtractors = new ArrayList<>();
+        protected List<MessageProcessor> messageProcessors = new ArrayList<>();
         protected MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
         protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
         protected DataDictionary<?> dataDictionary;
+        protected String dataDictionaryName;
 
-        /** Variable extractors filled within this builder */
-        private MessageHeaderVariableExtractor headerExtractor;
-        private XpathPayloadVariableExtractor xpathExtractor;
-        private JsonPathVariableExtractor jsonPathExtractor;
+        private final Map<String, List<Object>> headerFragmentMappers = new HashMap<>();
+        private final Map<String, List<Object>> payloadMappers = new HashMap<>();
 
         /** Message constructing interceptor */
         private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
@@ -336,7 +333,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor = new BinaryMessageConstructionInterceptor();
 
         /** Basic bean reference resolver */
-        private ReferenceResolver referenceResolver;
+        protected ReferenceResolver referenceResolver;
 
         /**
          * Sets the message endpoint to send messages to.
@@ -495,15 +492,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B payloadModel(Object payload) {
-            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-
-            if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
-                return payload(payload, referenceResolver.resolve(Marshaller.class));
-            } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
-                return payload(payload, referenceResolver.resolve(ObjectMapper.class));
-            }
-
-            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+            this.payloadMappers.putIfAbsent("", new ArrayList<>());
+            this.payloadMappers.get("").add(payload);
+            return self;
         }
 
         /**
@@ -515,21 +506,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B payload(Object payload, String mapperName) {
-            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-
-            if (referenceResolver.isResolvable(mapperName)) {
-                Object mapper = referenceResolver.resolve(mapperName);
-
-                if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                    return payload(payload, (Marshaller) mapper);
-                } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
-                    return payload(payload, (ObjectMapper) mapper);
-                } else {
-                    throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
-                }
-            }
-
-            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+            this.payloadMappers.putIfAbsent(mapperName, new ArrayList<>());
+            this.payloadMappers.get(mapperName).add(payload);
+            return self;
         }
 
         /**
@@ -625,15 +604,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B headerFragment(Object model) {
-            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-
-            if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
-                return headerFragment(model, referenceResolver.resolve(Marshaller.class));
-            } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
-                return headerFragment(model, referenceResolver.resolve(ObjectMapper.class));
-            }
-
-            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+            this.headerFragmentMappers.putIfAbsent("", new ArrayList<>());
+            this.headerFragmentMappers.get("").add(model);
+            return self;
         }
 
         /**
@@ -645,21 +618,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B headerFragment(Object model, String mapperName) {
-            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-
-            if (referenceResolver.isResolvable(mapperName)) {
-                Object mapper = referenceResolver.resolve(mapperName);
-
-                if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
-                    return headerFragment(model, (Marshaller) mapper);
-                } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
-                    return headerFragment(model, (ObjectMapper) mapper);
-                } else {
-                    throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
-                }
-            }
-
-            throw new CitrusRuntimeException("Unable to find default object mapper or marshaller in application context");
+            this.headerFragmentMappers.putIfAbsent(mapperName, new ArrayList<>());
+            this.headerFragmentMappers.get(mapperName).add(model);
+            return self;
         }
 
         /**
@@ -707,44 +668,22 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Extract message header entry as variable before message is sent.
-         * @param headerName
-         * @param variable
-         * @return
-         */
-        public B extractFromHeader(String headerName, String variable) {
-            if (headerExtractor == null) {
-                headerExtractor = new MessageHeaderVariableExtractor();
-
-                variableExtractor(headerExtractor);
-            }
-
-            headerExtractor.getHeaderMappings().put(headerName, variable);
-            return self;
-        }
-
-        /**
-         * Extract message element via XPath or JSONPath from payload before message is sent.
-         * @param path
-         * @param variable
-         * @return
-         */
-        public B extractFromPayload(String path, String variable) {
-            if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-                getJsonPathVariableExtractor().getJsonPathExpressions().put(path, variable);
-            } else {
-                getXpathVariableExtractor().getXpathExpressions().put(path, variable);
-            }
-            return self;
-        }
-
-        /**
          * Adds variable extractor.
          * @param extractor
          * @return
          */
-        public B variableExtractor(VariableExtractor extractor) {
-            this.variableExtractors.add(extractor);
+        public B extract(VariableExtractor extractor) {
+            this.messageProcessors.add(extractor);
+            return self;
+        }
+
+        /**
+         * Adds variable extractor builder.
+         * @param builder
+         * @return
+         */
+        public B extract(VariableExtractor.Builder<?, ?> builder) {
+            this.messageProcessors.add(builder.build());
             return self;
         }
 
@@ -795,32 +734,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Creates new variable extractor and adds it to test action.
-         */
-        private XpathPayloadVariableExtractor getXpathVariableExtractor() {
-            if (xpathExtractor == null) {
-                xpathExtractor = new XpathPayloadVariableExtractor();
-
-                variableExtractor(xpathExtractor);
-            }
-
-            return xpathExtractor;
-        }
-
-        /**
-         * Creates new variable extractor and adds it to test action.
-         */
-        private JsonPathVariableExtractor getJsonPathVariableExtractor() {
-            if (jsonPathExtractor == null) {
-                jsonPathExtractor = new JsonPathVariableExtractor();
-
-                variableExtractor(jsonPathExtractor);
-            }
-
-            return jsonPathExtractor;
-        }
-
-        /**
          * Sets the bean reference resolver.
          * @param referenceResolver
          */
@@ -844,13 +757,88 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param dictionaryName
          * @return
          */
-        @SuppressWarnings("unchecked")
         public B dictionary(String dictionaryName) {
-            Assert.notNull(referenceResolver, "Citrus bean reference resolver is not initialized!");
-            DataDictionary dictionary = referenceResolver.resolve(dictionaryName, DataDictionary.class);
-
-            this.dataDictionary = dictionary;
+            this.dataDictionaryName = dictionaryName;
             return self;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
+        }
+
+        /**
+         * Find mapper or marshaller for given name using the reference resolver in this builder.
+         * @param mapperName
+         * @return
+         */
+        private Object findMapperOrMarshaller(String mapperName) {
+            if (mapperName.equals("")) {
+                if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(Marshaller.class))) {
+                    return referenceResolver.resolve(Marshaller.class);
+                } else if (!CollectionUtils.isEmpty(referenceResolver.resolveAll(ObjectMapper.class))) {
+                    return referenceResolver.resolve(ObjectMapper.class);
+                } else {
+                    throw createUnableToFindMapperException();
+                }
+            } else if (referenceResolver.isResolvable(mapperName)) {
+                return referenceResolver.resolve(mapperName);
+            } else {
+                throw createUnableToFindMapperException();
+            }
+        }
+
+        private CitrusRuntimeException createUnableToFindMapperException() {
+            return new CitrusRuntimeException("Unable to resolve default object mapper or marshaller");
+        }
+
+        /**
+         * Build method implemented by subclasses.
+         * @return
+         */
+        protected abstract T doBuild();
+
+        @Override
+        public final T build() {
+            if (referenceResolver != null) {
+                if (dataDictionaryName != null) {
+                    this.dataDictionary = referenceResolver.resolve(dataDictionaryName, DataDictionary.class);
+                }
+
+                for (Map.Entry<String, List<Object>> mapperEntry : headerFragmentMappers.entrySet()) {
+                    String mapperName = mapperEntry.getKey();
+                    final Object mapper = findMapperOrMarshaller(mapperName);
+
+                    for (Object model : mapperEntry.getValue()) {
+                        if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
+                            headerFragment(model, (Marshaller) mapper);
+                        } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
+                            headerFragment(model, (ObjectMapper) mapper);
+                        } else {
+                            throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
+                        }
+                    }
+                }
+                headerFragmentMappers.clear();
+
+                for (Map.Entry<String, List<Object>> mapperEntry : payloadMappers.entrySet()) {
+                    String mapperName = mapperEntry.getKey();
+                    final Object mapper = findMapperOrMarshaller(mapperName);
+
+                    for (Object model : mapperEntry.getValue()) {
+                        if (Marshaller.class.isAssignableFrom(mapper.getClass())) {
+                            payload(model, (Marshaller) mapper);
+                        } else if (ObjectMapper.class.isAssignableFrom(mapper.getClass())) {
+                            payload(model, (ObjectMapper) mapper);
+                        } else {
+                            throw new CitrusRuntimeException(String.format("Invalid bean type for mapper '%s' expected ObjectMapper or Marshaller but was '%s'", mapperName, mapper.getClass()));
+                        }
+                    }
+                }
+                payloadMappers.clear();
+            }
+
+            return doBuild();
         }
     }
 }

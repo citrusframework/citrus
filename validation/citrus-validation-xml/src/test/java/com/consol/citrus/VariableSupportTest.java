@@ -430,14 +430,15 @@ public class VariableSupportTest extends UnitTestSupport {
         extractMessageElements.put("//root/element/sub-elementA", "${variableA}");
         extractMessageElements.put("//root/element/sub-elementB", "${variableB}");
 
-        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor();
-        variableExtractor.setXpathExpressions(extractMessageElements);
+        XpathPayloadVariableExtractor variableExtractor = new XpathPayloadVariableExtractor.Builder()
+                .expressions(extractMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
 
@@ -486,14 +487,15 @@ public class VariableSupportTest extends UnitTestSupport {
         extractHeaderValues.put("header-valueA", "${variableA}");
         extractHeaderValues.put("header-valueB", "${variableB}");
 
-        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor();
-        variableExtractor.setHeaderMappings(extractHeaderValues);
+        MessageHeaderVariableExtractor variableExtractor = new MessageHeaderVariableExtractor.Builder()
+                .headers(extractHeaderValues)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
-                .variableExtractor(variableExtractor)
+                .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
 

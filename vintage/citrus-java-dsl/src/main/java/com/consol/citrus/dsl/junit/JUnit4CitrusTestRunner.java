@@ -34,9 +34,7 @@ import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.actions.StartServerAction;
 import com.consol.citrus.actions.StopServerAction;
@@ -67,7 +65,9 @@ import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.ReceiveMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SendMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.dsl.runner.ApplyTestBehaviorAction;
@@ -256,12 +256,12 @@ public class JUnit4CitrusTestRunner extends JUnit4CitrusTest implements TestRunn
     }
 
     @Override
-    public ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer) {
+    public ReceiveMessageActionBuilder<?> receive(BuilderSupport<ReceiveMessageActionBuilder<?>> configurer) {
         return testRunner.receive(configurer);
     }
 
     @Override
-    public SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer) {
+    public SendMessageActionBuilder<?> send(BuilderSupport<SendMessageActionBuilder<?>> configurer) {
         return testRunner.send(configurer);
     }
 

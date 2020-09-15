@@ -167,7 +167,7 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
     }
 
     @Override
-    public SendMessageAction build() {
+    public SendMessageAction doBuild() {
         return new SendMessageAction(this);
     }
 }

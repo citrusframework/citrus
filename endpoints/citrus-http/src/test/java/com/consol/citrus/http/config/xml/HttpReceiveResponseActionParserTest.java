@@ -23,7 +23,7 @@ import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.consol.citrus.validation.DefaultPayloadVariableExtractor;
+import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -60,7 +60,7 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertNotNull(httpMessageContentBuilder.getMessage().getHeaders().get(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
-        Assert.assertEquals(action.getVariableExtractors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);
@@ -97,9 +97,9 @@ public class HttpReceiveResponseActionParserTest extends AbstractActionParserTes
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpClient", HttpClient.class));
         Assert.assertNull(action.getEndpointUri());
 
-        Assert.assertEquals(action.getVariableExtractors().size(), 1L);
-        Assert.assertEquals(((DefaultPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().size(), 1L);
-        Assert.assertEquals(((DefaultPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().get("$.user.id"), "userId");
+        Assert.assertEquals(action.getMessageProcessors().size(), 1L);
+        Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getMessageProcessors().get(0)).getPathExpressions().size(), 1L);
+        Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getMessageProcessors().get(0)).getPathExpressions().get("$.user.id"), "userId");
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);

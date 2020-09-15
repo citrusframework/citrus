@@ -30,9 +30,7 @@ import com.consol.citrus.actions.FailAction;
 import com.consol.citrus.actions.InputAction;
 import com.consol.citrus.actions.LoadPropertiesAction;
 import com.consol.citrus.actions.PurgeEndpointAction;
-import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.actions.ReceiveTimeoutAction;
-import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.actions.SleepAction;
 import com.consol.citrus.actions.StartServerAction;
 import com.consol.citrus.actions.StopServerAction;
@@ -63,7 +61,9 @@ import com.consol.citrus.dsl.builder.HttpActionBuilder;
 import com.consol.citrus.dsl.builder.KubernetesExecuteActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeJmsQueuesActionBuilder;
 import com.consol.citrus.dsl.builder.PurgeMessageChannelActionBuilder;
+import com.consol.citrus.dsl.builder.ReceiveMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SeleniumActionBuilder;
+import com.consol.citrus.dsl.builder.SendMessageActionBuilder;
 import com.consol.citrus.dsl.builder.SoapActionBuilder;
 import com.consol.citrus.dsl.builder.ZooExecuteActionBuilder;
 import com.consol.citrus.script.GroovyAction;
@@ -240,7 +240,7 @@ public interface TestRunner extends TestCaseBuilder {
      * @param configurer
      * @return
      */
-    ReceiveMessageAction.Builder receive(BuilderSupport<ReceiveMessageAction.Builder> configurer);
+    ReceiveMessageActionBuilder<?> receive(BuilderSupport<ReceiveMessageActionBuilder<?>> configurer);
 
     /**
      * Create send message action definition with message endpoint instance.
@@ -248,7 +248,7 @@ public interface TestRunner extends TestCaseBuilder {
      * @param configurer
      * @return
      */
-    SendMessageAction.Builder send(BuilderSupport<SendMessageAction.Builder> configurer);
+    SendMessageActionBuilder<?> send(BuilderSupport<SendMessageActionBuilder<?>> configurer);
 
     /**
      * Add sleep action with default delay time.
