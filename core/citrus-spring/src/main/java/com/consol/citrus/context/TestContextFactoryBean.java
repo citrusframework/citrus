@@ -29,7 +29,7 @@ import com.consol.citrus.report.TestListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -86,7 +86,7 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     private TypeConverter typeConverter;
 
     @Autowired
-    private MessageConstructionInterceptors messageConstructionInterceptors;
+    private MessageProcessors messageProcessors;
 
     @Autowired(required=false)
     private NamespaceContextBuilder namespaceContextBuilder;
@@ -144,8 +144,8 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
             factory.setMessageListeners(applicationContext.getBean(MessageListeners.class));
         }
 
-        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(MessageConstructionInterceptors.class))) {
-            factory.setMessageConstructionInterceptors(applicationContext.getBean(MessageConstructionInterceptors.class));
+        if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(MessageProcessors.class))) {
+            factory.setMessageProcessors(applicationContext.getBean(MessageProcessors.class));
         }
 
         if (!CollectionUtils.isEmpty(applicationContext.getBeansOfType(EndpointFactory.class))) {
@@ -220,8 +220,8 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
             delegate.setMessageListeners(messageListeners);
         }
 
-        if (messageConstructionInterceptors != null) {
-            delegate.setMessageConstructionInterceptors(messageConstructionInterceptors);
+        if (messageProcessors != null) {
+            delegate.setMessageProcessors(messageProcessors);
         }
 
         if (endpointFactory != null) {
@@ -300,8 +300,8 @@ public class TestContextFactoryBean extends TestContextFactory implements Factor
     }
 
     @Override
-    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
-        return delegate.getMessageConstructionInterceptors();
+    public MessageProcessors getMessageProcessors() {
+        return delegate.getMessageProcessors();
     }
 
     @Override

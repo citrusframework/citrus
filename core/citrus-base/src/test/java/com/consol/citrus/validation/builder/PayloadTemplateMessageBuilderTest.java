@@ -16,20 +16,19 @@
 
 package com.consol.citrus.validation.builder;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
@@ -58,7 +57,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("TestMessagePayload");
 
-        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.emptyList());
+        context.getMessageProcessors().setMessageProcessors(Collections.emptyList());
     }
 
     @Test
@@ -100,28 +99,6 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
         assertEquals(resultingMessage.getPayload(), "This payload data contains variables!");
-    }
-
-    @Test
-    public void testMessageBuilderWithPayloadResourceBinary() {
-        messageBuilder = new PayloadTemplateMessageBuilder();
-
-        messageBuilder.setPayloadResourcePath(imagePayloadResource);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.BINARY.name());
-
-        assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
-    }
-
-    @Test
-    public void testMessageBuilderWithPayloadResourceGzip() {
-        messageBuilder = new PayloadTemplateMessageBuilder();
-
-        messageBuilder.setPayloadResourcePath(imagePayloadResource);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.GZIP.name());
-
-        assertEquals(resultingMessage.getPayload().getClass(), byte[].class);
     }
 
     @Test
@@ -247,10 +224,10 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testMessageBuilderInterceptor() {
-        MessageConstructionInterceptor interceptor = new AbstractMessageConstructionInterceptor() {
+    public void testMessageBuilderProcessor() {
+        MessageProcessor processor = new AbstractMessageProcessor() {
             @Override
-            public Message interceptMessage(Message message, String messageType, TestContext context) {
+            public Message processMessage(Message message, TestContext context) {
                 message.setPayload("InterceptedMessagePayload");
                 message.setHeader("NewHeader", "new");
 
@@ -263,7 +240,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
             }
         };
 
-        messageBuilder.add(interceptor);
+        messageBuilder.add(processor);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
 
@@ -276,9 +253,9 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
         when(dataDictionary.isGlobalScope()).thenReturn(true);
-        when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
+        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
@@ -290,7 +267,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithExplicitDataDictionary() {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
         messageBuilder.setDataDictionary(dataDictionary);
 
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
@@ -309,13 +286,13 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithGlobalAndExplicitDataDictionary() {
         DataDictionary<String> globalDataDictionary = Mockito.mock(DataDictionary.class);
         when(globalDataDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
-        when(globalDataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(globalDataDictionaryResult));
+        when(globalDataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(globalDataDictionaryResult));
 
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(globalDataDictionary));
+        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(globalDataDictionary));
         messageBuilder.setDataDictionary(dataDictionary);
 
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
@@ -335,9 +312,9 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(dataDictionary.isGlobalScope()).thenReturn(true);
-        when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
+        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
@@ -352,9 +329,9 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
         when(dataDictionary.isGlobalScope()).thenReturn(true);
-        when(dataDictionary.interceptMessageConstruction(any(Message.class), eq(MessageType.JSON.name()), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
 
-        context.getMessageConstructionInterceptors().setMessageConstructionInterceptors(Collections.singletonList(dataDictionary));
+        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
 
         Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
@@ -362,22 +339,6 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
 
         resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
         assertEquals(resultingMessage.getPayload(), initialDataDictionaryTestPayload);
-    }
-
-    @Test
-    public void testMessagePayloadWithBinaryTargetIsConverted(){
-
-        //GIVEN
-        context.setVariable("name", "Frauke");
-        messageBuilder.setPayloadData(initialVariableTestPayload);
-        final byte[] expectedPayload = resultingVariableTestPayload.getBytes();
-
-        //WHEN
-        final Message message = messageBuilder.buildMessageContent(
-                context, MessageType.BINARY.name(), MessageDirection.OUTBOUND);
-
-        //THEN
-        assertEquals(message.getPayload(), expectedPayload);
     }
 
     @Test
@@ -393,28 +354,5 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
 
         //THEN
         assertEquals(message.getPayload(), resultingVariableTestPayload);
-    }
-
-    @Test
-    public void testMessagePayloadWithGzipTargetIsConverted(){
-
-        //GIVEN
-        context.setVariable("name", "Frauke");
-        messageBuilder.setPayloadData(initialVariableTestPayload);
-
-        //prepared GZIP value of resultingVariableTestPayload
-        byte[] expectedPayload = new byte[]{
-                31, -117, 8, 0, 0, 0, 0, 0, 0, 0, -85, 86, 80, 42, 72, 45, 42, -50, -49, 83, -78, 82, -88, 86, 80, -54,
-                75, -52, 77, 5, -78, -108, -36, -118, 18, 75, -77, 83, -107, 116, 20, -108, 18, -45, 65, 2, 70, 6, -75,
-                10, -75, 0, 4, 70, 73, 96, 44, 0, 0, 0};
-
-        //WHEN
-        final Message message = messageBuilder.buildMessageContent(
-                context, MessageType.GZIP.name(), MessageDirection.OUTBOUND);
-
-        System.out.print(Arrays.toString((byte[])message.getPayload()));
-
-        //THEN
-        assertEquals(message.getPayload(), expectedPayload);
     }
 }

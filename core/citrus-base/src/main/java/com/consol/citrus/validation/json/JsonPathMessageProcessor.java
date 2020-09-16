@@ -16,13 +16,18 @@
 
 package com.consol.citrus.validation.json;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
-import com.jayway.jsonpath.*;
+import com.jayway.jsonpath.DocumentContext;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.PathNotFoundException;
 import net.minidev.json.parser.JSONParser;
 import net.minidev.json.parser.ParseException;
 import org.slf4j.Logger;
@@ -30,17 +35,14 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.NumberUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * @author Christoph Deppisch
  * @since 2.3
  */
-public class JsonPathMessageConstructionInterceptor extends AbstractMessageConstructionInterceptor {
+public class JsonPathMessageProcessor extends AbstractMessageProcessor {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JsonPathMessageConstructionInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(JsonPathMessageProcessor.class);
 
     /** Overwrites message elements before validating (via JSONPath expressions) */
     private Map<String, String> jsonPathExpressions = new HashMap<>();
@@ -51,7 +53,7 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
     /**
      * Default constructor.
      */
-    public JsonPathMessageConstructionInterceptor() {
+    public JsonPathMessageProcessor() {
         super();
     }
 
@@ -59,7 +61,7 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
      * Default constructor using fields.
      * @param jsonPathExpressions
      */
-    public JsonPathMessageConstructionInterceptor(Map<String, String> jsonPathExpressions) {
+    public JsonPathMessageProcessor(Map<String, String> jsonPathExpressions) {
         super();
         this.jsonPathExpressions = jsonPathExpressions;
     }
@@ -72,12 +74,12 @@ public class JsonPathMessageConstructionInterceptor extends AbstractMessageConst
      * needs to be XML here.
      */
     @Override
-    public Message interceptMessage(Message message, String messageType, TestContext context) {
+    public Message processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
 
-        String jsonPathExpression = null;
+        String jsonPathExpression;
         try {
             JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
             Object jsonData = parser.parse(message.getPayload(String.class));

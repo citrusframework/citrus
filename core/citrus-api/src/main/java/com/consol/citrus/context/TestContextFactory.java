@@ -33,7 +33,7 @@ import com.consol.citrus.spi.SimpleReferenceResolver;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
@@ -70,7 +70,7 @@ public class TestContextFactory implements ReferenceResolverAware {
 
     private ReferenceResolver referenceResolver;
 
-    private MessageConstructionInterceptors messageConstructionInterceptors;
+    private MessageProcessors messageProcessors;
 
     private NamespaceContextBuilder namespaceContextBuilder;
 
@@ -93,7 +93,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         factory.setTestListeners(new TestListeners());
         factory.setTestActionListeners(new TestActionListeners());
         factory.setMessageListeners(new MessageListeners());
-        factory.setMessageConstructionInterceptors(new MessageConstructionInterceptors());
+        factory.setMessageProcessors(new MessageProcessors());
         factory.setEndpointFactory(new DefaultEndpointFactory());
         factory.setReferenceResolver(new SimpleReferenceResolver());
         factory.setNamespaceContextBuilder(new NamespaceContextBuilder());
@@ -117,7 +117,7 @@ public class TestContextFactory implements ReferenceResolverAware {
         context.setBeforeTest(beforeTest);
         context.setAfterTest(afterTest);
         context.setMessageListeners(messageListeners);
-        context.setMessageConstructionInterceptors(messageConstructionInterceptors);
+        context.setMessageProcessors(messageProcessors);
         context.setEndpointFactory(endpointFactory);
         context.setReferenceResolver(referenceResolver);
 
@@ -323,19 +323,19 @@ public class TestContextFactory implements ReferenceResolverAware {
     }
 
     /**
-     * Sets the message construction interceptors.
-     * @param messageConstructionInterceptors
+     * Sets the message processors.
+     * @param messageProcessors
      */
-    public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
-        this.messageConstructionInterceptors = messageConstructionInterceptors;
+    public void setMessageProcessors(MessageProcessors messageProcessors) {
+        this.messageProcessors = messageProcessors;
     }
 
     /**
-     * Gets the message construction interceptors.
+     * Gets the message processors.
      * @return
      */
-    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
-        return messageConstructionInterceptors;
+    public MessageProcessors getMessageProcessors() {
+        return messageProcessors;
     }
 
     /**

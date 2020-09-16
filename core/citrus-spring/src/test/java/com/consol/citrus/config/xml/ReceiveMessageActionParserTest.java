@@ -24,12 +24,12 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
@@ -68,7 +68,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
-        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
@@ -95,7 +95,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
         Assert.assertEquals(messageBuilder.getHeaderData().size(), 1);
         Assert.assertEquals(messageBuilder.getHeaderData().get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Header xmlns=\"http://citrusframework.org/test\">\n   <operation>hello</operation>\n</Header>");
-        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
@@ -120,7 +120,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getPayloadResourcePath(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
-        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 0);
+        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
 
         // 4th action
         action = getNextTestActionFromTest();
@@ -201,12 +201,12 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
 
-        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 1);
-        Assert.assertTrue(messageBuilder.getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
-        XpathMessageConstructionInterceptor messageConstructionInterceptor = (XpathMessageConstructionInterceptor)messageBuilder.getMessageInterceptors().get(0);
+        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 1);
+        Assert.assertTrue(messageBuilder.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
+        XpathMessageProcessor messageProcessor = (XpathMessageProcessor)messageBuilder.getMessageProcessors().get(0);
 
-        Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().size(), 1);
-        Assert.assertEquals(messageConstructionInterceptor.getXPathExpressions().get("/ns:TestMessage/"), "newValue");
+        Assert.assertEquals(messageProcessor.getXPathExpressions().size(), 1);
+        Assert.assertEquals(messageProcessor.getXPathExpressions().get("/ns:TestMessage/"), "newValue");
 
         Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), false);
 
@@ -339,12 +339,12 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 
-        Assert.assertEquals(messageBuilder.getMessageInterceptors().size(), 1);
-        Assert.assertTrue(messageBuilder.getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
-        JsonPathMessageConstructionInterceptor jsonMessageConstructionInterceptor = (JsonPathMessageConstructionInterceptor)messageBuilder.getMessageInterceptors().get(0);
+        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 1);
+        Assert.assertTrue(messageBuilder.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        JsonPathMessageProcessor jsonMessageProcessor = (JsonPathMessageProcessor)messageBuilder.getMessageProcessors().get(0);
 
-        Assert.assertEquals(jsonMessageConstructionInterceptor.getJsonPathExpressions().size(), 1);
-        Assert.assertEquals(jsonMessageConstructionInterceptor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");
+        Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().size(), 1);
+        Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");
 
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().iterator().next(), "$.FooMessage.bar");

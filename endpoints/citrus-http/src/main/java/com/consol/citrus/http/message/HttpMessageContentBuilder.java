@@ -16,16 +16,16 @@
 
 package com.consol.citrus.http.message;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
-import com.consol.citrus.variable.dictionary.DataDictionary;
-
 import javax.servlet.http.Cookie;
 import java.util.List;
 import java.util.Map;
+
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 
 public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
@@ -67,6 +67,7 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
         final Message constructed = delegate.buildMessageContent(context, messageType, direction);
 
         message.setName(delegate.getMessageName());
+        message.setType(constructed.getType());
         message.setPayload(constructed.getPayload());
         message.setCookies(constructCookies(context));
         replaceHeaders(constructed, message);
@@ -99,13 +100,13 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public List<MessageConstructionInterceptor> getMessageInterceptors() {
-        return delegate.getMessageInterceptors();
+    public List<MessageProcessor> getMessageProcessors() {
+        return delegate.getMessageProcessors();
     }
 
     @Override
-    public void setMessageInterceptors(final List<MessageConstructionInterceptor> messageInterceptors) {
-        delegate.setMessageInterceptors(messageInterceptors);
+    public void setMessageProcessors(final List<MessageProcessor> messageProcessors) {
+        delegate.setMessageProcessors(messageProcessors);
     }
 
     @Override
@@ -154,8 +155,8 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public void add(final MessageConstructionInterceptor interceptor) {
-        delegate.add(interceptor);
+    public void add(final MessageProcessor processor) {
+        delegate.add(processor);
     }
 
     @Override

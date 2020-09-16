@@ -16,24 +16,32 @@
 
 package com.consol.citrus.generate.javadsl;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.WsdlTestGenerator;
 import com.consol.citrus.generate.dictionary.InboundXmlDataDictionary;
 import com.consol.citrus.generate.dictionary.OutboundXmlDataDictionary;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.ws.message.SoapMessage;
 import com.consol.citrus.xml.XmlConfigurer;
-import org.apache.xmlbeans.*;
+import org.apache.xmlbeans.SchemaType;
+import org.apache.xmlbeans.SchemaTypeSystem;
+import org.apache.xmlbeans.XmlBeans;
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlException;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
 import org.apache.xmlbeans.impl.xsd2inst.SampleXmlUtil;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.util.StringUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -136,12 +144,12 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
 
     @Override
     protected Message generateInboundMessage(Message message) {
-        return inboundDataDictionary.interceptMessageConstruction(message, MessageType.XML.name(), new TestContext());
+        return inboundDataDictionary.process(message, new TestContext());
     }
 
     @Override
     protected Message generateOutboundMessage(Message message) {
-        return outboundDataDictionary.interceptMessageConstruction(message, MessageType.XML.name(), new TestContext());
+        return outboundDataDictionary.process(message, new TestContext());
     }
 
     /**

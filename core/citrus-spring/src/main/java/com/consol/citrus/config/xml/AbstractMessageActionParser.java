@@ -23,15 +23,18 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
+import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
@@ -140,9 +143,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         if (messageBuilder != null) {
             Map<String, String> overwriteXpath = new HashMap<>();
             Map<String, String> overwriteJsonPath = new HashMap<>();
-            List<?> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
-            for (Iterator<?> iter = messageValueElements.iterator(); iter.hasNext();) {
-                Element messageValue = (Element) iter.next();
+            List<Element> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
+            for (Element messageValue : messageValueElements) {
                 String pathExpression = messageValue.getAttribute("path");
 
                 if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
@@ -153,13 +155,24 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
             }
 
             if (!overwriteXpath.isEmpty()) {
-                XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteXpath);
+                XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteXpath);
                 messageBuilder.add(interceptor);
             }
 
             if (!overwriteJsonPath.isEmpty()) {
-                JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteJsonPath);
+                JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteJsonPath);
                 messageBuilder.add(interceptor);
+            }
+
+            String messageType = messageElement.getAttribute("type");
+            if (StringUtils.hasText(messageType)) {
+                if (messageType.equalsIgnoreCase(MessageType.GZIP.name())) {
+                    messageBuilder.add(new GzipMessageProcessor());
+                }
+
+                if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
+                    messageBuilder.add(new BinaryMessageProcessor());
+                }
             }
         }
 

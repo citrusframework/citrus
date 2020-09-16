@@ -11,6 +11,8 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
+import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -30,6 +32,9 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
     protected final B self;
 
     private final SendMessageAction.SendMessageActionBuilder<?, ?> delegate;
+
+    private final GzipMessageProcessor gzipMessageProcessor = new GzipMessageProcessor();
+    private final BinaryMessageProcessor binaryMessageProcessor = new BinaryMessageProcessor();
 
     public SendMessageActionBuilder() {
         this(new SendMessageAction.Builder());
@@ -290,6 +295,15 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      */
     public B messageType(String messageType) {
         delegate.messageType(messageType);
+
+        if (MessageType.BINARY.name().equalsIgnoreCase(messageType)) {
+            delegate.getMessageContentBuilder().add(binaryMessageProcessor);
+        }
+
+        if (MessageType.GZIP.name().equalsIgnoreCase(messageType)) {
+            delegate.getMessageContentBuilder().add(gzipMessageProcessor);
+        }
+
         return self;
     }
 

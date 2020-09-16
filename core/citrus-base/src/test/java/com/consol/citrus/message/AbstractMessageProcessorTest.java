@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.interceptor;
+package com.consol.citrus.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -25,33 +24,34 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-@Deprecated
-public class AbstractMessageConstructionInterceptorTest extends AbstractTestNGUnitTest {
+public class AbstractMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
-    public void testInterceptMessageConstruction() throws Exception {
-        MessageConstructionInterceptor interceptor = new AbstractMessageConstructionInterceptor() {
+    public void testProcessMessage() {
+        MessageProcessor processor = new AbstractMessageProcessor() {
             @Override
             public boolean supportsMessageType(String messageType) {
                 return MessageType.XML.toString().equalsIgnoreCase(messageType);
             }
 
             @Override
-            protected Message interceptMessage(Message message, String messageType, TestContext context) {
-                return new DefaultMessage("Intercepted!");
+            protected Message processMessage(Message message, TestContext context) {
+                return new DefaultMessage("Processed!");
             }
 
             @Override
             protected String getName() {
-                return "MockInterceptor";
+                return "MockProcessor";
             }
         };
 
         Message in = new DefaultMessage("Hello Citrus!");
-        Message intercepted = interceptor.interceptMessageConstruction(in, MessageType.XML.toString(), context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "Intercepted!");
+        in.setType(MessageType.XML.name());
+        Message intercepted = processor.process(in, context);
+        Assert.assertEquals(intercepted.getPayload(String.class), "Processed!");
 
-        intercepted = interceptor.interceptMessageConstruction(in, MessageType.PLAINTEXT.toString(), context);
+        in.setType(MessageType.PLAINTEXT.name());
+        intercepted = processor.process(in, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "Hello Citrus!");
     }
 }

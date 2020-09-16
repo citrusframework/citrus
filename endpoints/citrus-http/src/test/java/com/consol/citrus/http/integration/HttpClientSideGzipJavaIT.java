@@ -21,6 +21,7 @@ import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.TestNGCitrusSupport;
+import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -53,7 +54,7 @@ public class HttpClientSideGzipJavaIT extends TestNGCitrusSupport {
                 .post()
                 .contentType(MediaType.TEXT_HTML_VALUE)
                 .header(HttpHeaders.CONTENT_ENCODING, "gzip")
-                .messageType(MessageType.GZIP)
+                .transform(new GzipMessageProcessor())
                 .payload(text)
                 .fork(true));
 

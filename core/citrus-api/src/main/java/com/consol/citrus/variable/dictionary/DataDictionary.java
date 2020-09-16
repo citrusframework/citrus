@@ -16,8 +16,10 @@
 
 package com.consol.citrus.variable.dictionary;
 
+import com.consol.citrus.Scoped;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.message.MessageDirectionAware;
+import com.consol.citrus.message.MessageProcessor;
 
 /**
  * Data dictionary interface describes a mechanism to modify message content (payload) with global dictionary elements.
@@ -28,7 +30,7 @@ import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public interface DataDictionary<T> extends MessageConstructionInterceptor {
+public interface DataDictionary<T> extends MessageProcessor, MessageDirectionAware, Scoped {
 
     /**
      * Translate value with given path in message content.
@@ -51,15 +53,10 @@ public interface DataDictionary<T> extends MessageConstructionInterceptor {
     PathMappingStrategy getPathMappingStrategy();
 
     /**
-     * Should dictionary be used in global scope.
-     */
-    boolean isGlobalScope();
-
-    /**
      * Possible mapping strategies for identifying matching dictionary items
      * with path comparison.
      */
-    public static enum PathMappingStrategy {
+    enum PathMappingStrategy {
         EXACT,
         ENDS_WITH,
         STARTS_WITH;

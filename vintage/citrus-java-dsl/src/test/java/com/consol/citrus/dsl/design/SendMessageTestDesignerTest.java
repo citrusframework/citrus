@@ -38,9 +38,9 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -136,7 +136,7 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
         final Message constructed = messageBuilder.buildMessageContent(new TestContext(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size() + 1);
         Assert.assertEquals(constructed.getHeader("operation"), "foo");
-        Assert.assertEquals(constructed.getHeader(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(constructed.getType(), MessageType.PLAINTEXT.name());
         Assert.assertNotEquals(constructed.getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
     }
 
@@ -176,7 +176,7 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(constructed.getHeaders().size(), message.getHeaders().size() + 2);
         Assert.assertEquals(constructed.getHeader("operation"), "foo");
         Assert.assertEquals(constructed.getHeader("additional"), "new");
-        Assert.assertEquals(constructed.getHeader(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(constructed.getType(), MessageType.PLAINTEXT.name());
     }
 
     @Test
@@ -666,9 +666,9 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
-        Assert.assertEquals(((XpathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
+        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
+        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof XpathMessageProcessor);
+        Assert.assertEquals(((XpathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
     }
 
     @Test
@@ -694,9 +694,9 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 1);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
-        Assert.assertEquals(((JsonPathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
+        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
+        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        Assert.assertEquals(((JsonPathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
     }
 
     @Test

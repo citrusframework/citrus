@@ -24,7 +24,7 @@ import java.util.Properties;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
+import com.consol.citrus.message.AbstractMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,7 +35,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
  * Abstract data dictionary implementation provides global scope handling.
  * @author Christoph Deppisch
  */
-public abstract class AbstractDataDictionary<T> extends AbstractMessageConstructionInterceptor implements DataDictionary<T>, InitializingBean {
+public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor implements DataDictionary<T>, InitializingBean {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractDataDictionary.class);

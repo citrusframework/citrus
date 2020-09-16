@@ -46,13 +46,13 @@ import org.w3c.dom.traversal.NodeFilter;
 public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<Node> {
 
     @Override
-    protected Message interceptMessage(Message message, String messageType, TestContext context) {
+    protected Message processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
 
         String messagePayload = message.getPayload(String.class);
-        if (MessageType.XHTML.name().equalsIgnoreCase(messageType)) {
+        if (MessageType.XHTML.name().equalsIgnoreCase(message.getType())) {
             messagePayload = new XhtmlMessageConverter().convert(messagePayload);
         }
 

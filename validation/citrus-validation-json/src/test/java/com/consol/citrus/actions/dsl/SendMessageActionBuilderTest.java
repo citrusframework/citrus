@@ -18,7 +18,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.json.JsonMappingDataDictionary;
@@ -223,9 +223,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 3);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof JsonPathMessageConstructionInterceptor);
-        Assert.assertEquals(((JsonPathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
+        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
+        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        Assert.assertEquals(((JsonPathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
     }
 
     @Test

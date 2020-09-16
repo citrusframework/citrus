@@ -16,18 +16,18 @@
 
 package com.consol.citrus.http.message;
 
+import javax.servlet.http.Cookie;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import javax.servlet.http.Cookie;
-import java.util.Collections;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Christoph Deppisch
@@ -50,8 +50,9 @@ public class HttpMessageUtilsTest {
         Assert.assertNotEquals(from.getId(), to.getId());
         Assert.assertEquals(to.getName(), "FooMessage");
         Assert.assertEquals(to.getPayload(String.class), "fooMessage");
-        Assert.assertEquals(to.getHeaders().size(), 3L);
+        Assert.assertEquals(to.getHeaders().size(), 4L);
         Assert.assertNotNull(to.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(to.getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertNotNull(to.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(to.getHeader("X-Foo"), "foo");
         Assert.assertEquals(to.getHeaderData().size(), 1L);
@@ -79,8 +80,9 @@ public class HttpMessageUtilsTest {
         Assert.assertNotEquals(from.getId(), to.getId());
         Assert.assertEquals(to.getName(), "FooMessage");
         Assert.assertEquals(to.getPayload(String.class), "fooMessage");
-        Assert.assertEquals(to.getHeaders().size(), 6L);
+        Assert.assertEquals(to.getHeaders().size(), 7L);
         Assert.assertNotNull(to.getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(to.getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertNotNull(to.getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(to.getHeader("X-Foo"), "foo");
         Assert.assertEquals(to.getHeader("X-Existing"), "existing");

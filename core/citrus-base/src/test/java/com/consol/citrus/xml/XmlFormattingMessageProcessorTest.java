@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.ws.message;
+package com.consol.citrus.xml;
 
 import com.consol.citrus.message.*;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
@@ -23,46 +23,42 @@ import org.testng.annotations.Test;
 
 /**
  * @author Christoph Deppisch
- * @since 2.6
+ * @since 2.6.2
  */
-public class SoapFormattingMessageInterceptorTest extends AbstractTestNGUnitTest {
+public class XmlFormattingMessageProcessorTest extends AbstractTestNGUnitTest {
 
-    private SoapFormattingMessageInterceptor messageInterceptor = new SoapFormattingMessageInterceptor();
+    private XmlFormattingMessageProcessor messageProcessor = new XmlFormattingMessageProcessor();
 
     @Test
-    public void testInterceptMessage() throws Exception {
-        SoapMessage message = new SoapMessage("<root>"
+    public void testProcessMessage() throws Exception {
+        Message message = new DefaultMessage("<root>"
                     + "<element attribute='attribute-value'>"
                         + "<sub-element>text-value</sub-element>"
                     + "</element>"
                 + "</root>");
-
-        messageInterceptor.interceptMessageConstruction(message, MessageType.XML.name(), context);
+        messageProcessor.process(message, context);
 
         Assert.assertTrue(message.getPayload(String.class).contains(System.lineSeparator()));
     }
 
     @Test
-    public void testInterceptSoapFault() throws Exception {
-        SoapFault message = new SoapFault("<root>"
+    public void testProcessMessageExplicitType() throws Exception {
+        Message message = new DefaultMessage("<root>"
                     + "<element attribute='attribute-value'>"
                         + "<sub-element>text-value</sub-element>"
                     + "</element>"
                 + "</root>");
-
-        message.addFaultDetail("<fault-detail><error>Something went wrong</error></fault-detail>");
-
-        messageInterceptor.interceptMessageConstruction(message, MessageType.XML.name(), context);
+        message.setType(MessageType.XML.name());
+        messageProcessor.process(message, context);
 
         Assert.assertTrue(message.getPayload(String.class).contains(System.lineSeparator()));
-        Assert.assertEquals(message.getFaultDetails().size(), 1L);
-        Assert.assertTrue(message.getFaultDetails().get(0).contains(System.lineSeparator()));
     }
 
     @Test
-    public void testInterceptNonXmlMessage() throws Exception {
+    public void testProcessNonXmlMessage() throws Exception {
         Message message = new DefaultMessage("This is plaintext");
-        messageInterceptor.interceptMessageConstruction(message, MessageType.PLAINTEXT.name(), context);
+        message.setType(MessageType.PLAINTEXT.name());
+        messageProcessor.process(message, context);
         Assert.assertEquals(message.getPayload(String.class), "This is plaintext");
     }
 

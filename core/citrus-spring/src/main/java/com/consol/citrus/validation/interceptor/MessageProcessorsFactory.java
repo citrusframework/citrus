@@ -1,5 +1,7 @@
 package com.consol.citrus.validation.interceptor;
 
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -13,35 +15,35 @@ import org.springframework.context.ApplicationContextAware;
  *
  * @author Christoph Deppisch
  */
-public class MessageConstructionInterceptorsFactory implements FactoryBean<MessageConstructionInterceptors>, ApplicationContextAware {
+public class MessageProcessorsFactory implements FactoryBean<MessageProcessors>, ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
-    private final MessageConstructionInterceptors registry;
+    private final MessageProcessors registry;
 
     /**
      * Default constructor.
      */
-    public MessageConstructionInterceptorsFactory() {
-        this(new MessageConstructionInterceptors());
+    public MessageProcessorsFactory() {
+        this(new MessageProcessors());
     }
 
     /**
      * Constructor initializes with given registry.
      * @param registry
      */
-    public MessageConstructionInterceptorsFactory(MessageConstructionInterceptors registry) {
+    public MessageProcessorsFactory(MessageProcessors registry) {
         this.registry = registry;
     }
 
     @Override
-    public MessageConstructionInterceptors getObject() throws Exception {
+    public MessageProcessors getObject() throws Exception {
         if (applicationContext != null) {
-            applicationContext.getBeansOfType(MessageConstructionInterceptor.class)
+            applicationContext.getBeansOfType(MessageProcessor.class)
                     .entrySet()
                     .stream()
                     .filter(entry -> !(entry.getValue() instanceof DataDictionary) || ((DataDictionary<?>) entry.getValue()).isGlobalScope())
-                    .forEach(entry -> registry.addMessageConstructionInterceptor(entry.getValue()));
+                    .forEach(entry -> registry.addMessageProcessor(entry.getValue()));
         }
 
         return registry;
@@ -49,7 +51,7 @@ public class MessageConstructionInterceptorsFactory implements FactoryBean<Messa
 
     @Override
     public Class<?> getObjectType() {
-        return MessageConstructionInterceptors.class;
+        return MessageProcessors.class;
     }
 
     @Override

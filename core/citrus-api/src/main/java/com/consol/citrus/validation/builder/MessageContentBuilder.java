@@ -19,18 +19,18 @@ package com.consol.citrus.validation.builder;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 /**
  * Interface for classes beeing able to build control messages for validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public interface MessageContentBuilder {
-    
+
     /**
-     * Builds the control message. 
+     * Builds the control message.
      * @param context the current test context.
      * @param messageType the message type to build.
      * @param direction
@@ -51,10 +51,10 @@ public interface MessageContentBuilder {
     }
 
     /**
-     * Adds a message construction interceptor.
-     * @param interceptor
+     * Adds a message processor.
+     * @param processor
      */
-    void add(MessageConstructionInterceptor interceptor);
+    void add(MessageProcessor processor);
 
     /**
      * Sets explicit data dictionary for this message builder.

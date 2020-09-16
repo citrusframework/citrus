@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.validation.interceptor;
+package com.consol.citrus.message;
 
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Abstract message construction interceptor reads message payload and headers for separate interceptor methods.
- * Subclasses can either do payload modifying or header modifying or both depending on which method is overwritten.
+ * Abstract message processor is message direction aware and automatically applies message type selector.
+ * Subclasses can modify payload and/or headers of the processed message.
  *
  * @author Christoph Deppisch
- * @since 1.4
- * @deprecated since 3.0 in favor of using {@link com.consol.citrus.message.AbstractMessageProcessor}
  */
-@Deprecated
-public abstract class AbstractMessageConstructionInterceptor implements MessageConstructionInterceptor {
+public abstract class AbstractMessageProcessor implements MessageProcessor, MessageDirectionAware, MessageTypeSelector {
 
     /** Logger */
     private Logger log = LoggerFactory.getLogger(this.getClass());
@@ -40,17 +35,22 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
     private MessageDirection direction = MessageDirection.UNBOUND;
 
     @Override
-    public Message interceptMessageConstruction(Message message, String messageType, TestContext context) {
-        if (supportsMessageType(messageType)) {
-            return interceptMessage(message, messageType, context);
+    public final Message process(Message message, TestContext context) {
+        if (supportsMessageType(message.getType())) {
+            return processMessage(message, context);
         } else {
-            log.debug(String.format("Message interceptor type '%s' skipped for message type: %s", getName(), messageType));
+            log.debug(String.format("Message processor '%s' skipped for message type: %s", getName(), message.getType()));
             return message;
         }
     }
 
+    @Override
+    public boolean supportsMessageType(String messageType) {
+        return true;
+    }
+
     /**
-     * Gets this interceptors name.
+     * Gets this processors name.
      * @return
      */
     protected String getName() {
@@ -58,28 +58,22 @@ public abstract class AbstractMessageConstructionInterceptor implements MessageC
     }
 
     /**
-     * Intercept the message construction. Subclasses may overwrite this method and modify message payload.
-     * @param message the payload
-     * @param messageType
-     * @param context the current test context
+     * Subclasses may overwrite this method in order to modify payload and/or headers of the processed message.
+     * @param message the message to process.
+     * @param context the current test context.
+     * @return the processed message.
      */
-    protected Message interceptMessage(Message message, String messageType, TestContext context) {
+    protected Message processMessage(Message message, TestContext context) {
         return message;
     }
 
-    /**
-     * Gets the direction.
-     *
-     * @return
-     */
     @Override
     public MessageDirection getDirection() {
         return direction;
     }
 
     /**
-     * Sets the direction.
-     *
+     * Sets the processor direction (inbound, outbound, unbound).
      * @param direction
      */
     public void setDirection(MessageDirection direction) {

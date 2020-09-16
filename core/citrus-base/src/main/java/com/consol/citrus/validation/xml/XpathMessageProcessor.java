@@ -16,13 +16,18 @@
 
 package com.consol.citrus.validation.xml;
 
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
+import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,29 +35,24 @@ import org.springframework.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
 /**
- * Interceptor implementation evaluating XPath expressions on message payload during message construction.
+ * Processor implementation evaluating XPath expressions on message payload during message construction.
  * Class identifies XML elements inside the message payload via XPath expressions in order to overwrite their value.
- * 
+ *
  * @author Christoph Deppisch
  */
-public class XpathMessageConstructionInterceptor extends AbstractMessageConstructionInterceptor {
+public class XpathMessageProcessor extends AbstractMessageProcessor {
 
     /** Overwrites message elements before validating (via XPath expressions) */
     private Map<String, String> xPathExpressions = new LinkedHashMap<>();
-    
+
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathMessageConstructionInterceptor.class);
+    private static Logger log = LoggerFactory.getLogger(XpathMessageProcessor.class);
 
     /**
      * Default constructor.
      */
-    public XpathMessageConstructionInterceptor() {
+    public XpathMessageProcessor() {
         super();
     }
 
@@ -60,20 +60,20 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
      * Default constructor using fields.
      * @param xPathExpressions The xPaths to apply to the messages
      */
-    public XpathMessageConstructionInterceptor(final Map<String, String> xPathExpressions) {
+    public XpathMessageProcessor(final Map<String, String> xPathExpressions) {
         super();
         this.xPathExpressions.putAll(xPathExpressions);
     }
 
     /**
-     * Intercept the message payload construction and replace elements identified 
+     * Intercept the message payload construction and replace elements identified
      * via XPath expressions.
      *
      * Method parses the message payload to DOM document representation, therefore message payload
      * needs to be XML here.
      */
     @Override
-    public Message interceptMessage(final Message message, final String messageType, final TestContext context) {
+    public Message processMessage(final Message message, final TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
@@ -109,12 +109,12 @@ public class XpathMessageConstructionInterceptor extends AbstractMessageConstruc
             } else {
                 node.setNodeValue(valueExpression);
             }
-            
+
             if (log.isDebugEnabled()) {
                 log.debug("Element " +  pathExpression + " was set to value: " + valueExpression);
             }
         }
-        
+
         message.setPayload(XMLUtils.serialize(doc));
         return message;
     }

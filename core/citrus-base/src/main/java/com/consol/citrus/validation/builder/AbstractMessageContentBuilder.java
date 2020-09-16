@@ -28,11 +28,11 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.message.MessageHeaderUtils;
-import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 
 /**
@@ -59,7 +59,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     private DataDictionary dataDictionary;
 
     /** List of manipulators for static message payload */
-    private List<MessageConstructionInterceptor> messageInterceptors = new ArrayList<>();
+    private List<MessageProcessor> messageProcessors = new ArrayList<>();
 
     /**
      * Constructs the control message with headers and payload coming from
@@ -73,27 +73,40 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         final Object payload = buildMessagePayload(context, messageType);
 
         try {
-            Message message = new DefaultMessage(payload, buildMessageHeaders(context, messageType));
+            Message message = new DefaultMessage(payload, buildMessageHeaders(context));
             message.setName(messageName);
+            message.setType(messageType);
 
             if (payload != null) {
-                for (final MessageConstructionInterceptor interceptor: context.getMessageConstructionInterceptors().getMessageConstructionInterceptors()) {
+                for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
+                    MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                    if (processor instanceof MessageDirectionAware) {
+                        processorDirection = ((MessageDirectionAware) processor).getDirection();
+                    }
+
                     if (direction.equals(MessageDirection.UNBOUND)
-                            || interceptor.getDirection().equals(MessageDirection.UNBOUND)
-                            || direction.equals(interceptor.getDirection())) {
-                        message = interceptor.interceptMessageConstruction(message, messageType, context);
+                            || processorDirection.equals(MessageDirection.UNBOUND)
+                            || direction.equals(processorDirection)) {
+                        message = processor.process(message, context);
                     }
                 }
 
                 if (dataDictionary != null) {
-                    message = dataDictionary.interceptMessageConstruction(message, messageType, context);
+                    message = dataDictionary.process(message, context);
                 }
 
-                for (final MessageConstructionInterceptor interceptor : messageInterceptors) {
+                for (final MessageProcessor processor : messageProcessors) {
+                    MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                    if (processor instanceof MessageDirectionAware) {
+                        processorDirection = ((MessageDirectionAware) processor).getDirection();
+                    }
+
                     if (direction.equals(MessageDirection.UNBOUND)
-                            || interceptor.getDirection().equals(MessageDirection.UNBOUND)
-                            || direction.equals(interceptor.getDirection())) {
-                        message = interceptor.interceptMessageConstruction(message, messageType, context);
+                            || processorDirection.equals(MessageDirection.UNBOUND)
+                            || direction.equals(processorDirection)) {
+                        message = processor.process(message, context);
                     }
                 }
             }
@@ -120,13 +133,11 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     /**
      * Build message headers.
      * @param context The test context of the message
-     * @param messageType The message type of the Message
      * @return A Map containing all headers as key value pairs
      */
-    public Map<String, Object> buildMessageHeaders(final TestContext context, final String messageType) {
+    public Map<String, Object> buildMessageHeaders(final TestContext context) {
         try {
             final Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
-            headers.put(MessageHeaders.MESSAGE_TYPE, messageType);
 
             for (final Map.Entry<String, Object> entry : headers.entrySet()) {
                 final String value = entry.getValue().toString();
@@ -254,27 +265,27 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     }
 
     /**
-     * Adds a new interceptor to the message construction process.
-     * @param interceptor
+     * Adds a new message processor to the message construction process.
+     * @param processor
      */
-    public void add(final MessageConstructionInterceptor interceptor) {
-        messageInterceptors.add(interceptor);
+    public void add(final MessageProcessor processor) {
+        messageProcessors.add(processor);
     }
 
     /**
-     * Gets the messageInterceptors.
-     * @return the messageInterceptors
+     * Gets the message processors.
+     * @return the list of processors bound to this message construction process.
      */
-    public List<MessageConstructionInterceptor> getMessageInterceptors() {
-        return messageInterceptors;
+    public List<MessageProcessor> getMessageProcessors() {
+        return messageProcessors;
     }
 
     /**
-     * Sets the messageInterceptors.
-     * @param messageInterceptors the messageInterceptors to set
+     * Sets the message processors.
+     * @param messageProcessors the processors to set
      */
-    public void setMessageInterceptors(
-            final List<MessageConstructionInterceptor> messageInterceptors) {
-        this.messageInterceptors = messageInterceptors;
+    public void setMessageProcessors(
+            final List<MessageProcessor> messageProcessors) {
+        this.messageProcessors = messageProcessors;
     }
 }

@@ -21,7 +21,6 @@ import java.util.Map;
 
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -29,7 +28,7 @@ import org.testng.annotations.Test;
 /**
  * @author Christoph Deppisch
  */
-public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUnitTest {
+public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithJsonPath() {
@@ -38,8 +37,8 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
 
-        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
-        Message intercepted = interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
+        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
+        Message intercepted = interceptor.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\"}}");
     }
 
@@ -51,8 +50,8 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
         jsonPathExpressions.put("$.TestMessage.Id", "9999999");
 
-        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
-        Message intercepted = interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
+        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
+        Message intercepted = interceptor.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":9999999}}");
     }
 
@@ -63,8 +62,8 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..Text", "Hello!");
 
-        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
-        Message intercepted = interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
+        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
+        Message intercepted = interceptor.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello!\"}]}");
     }
 
@@ -75,8 +74,8 @@ public class JsonPathMessageConstructionInterceptorTest extends AbstractTestNGUn
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Unknown", "Hello!");
 
-        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(jsonPathExpressions);
-        Message intercepted = interceptor.interceptMessage(message, MessageType.JSON.toString(), context);
+        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
+        Message intercepted = interceptor.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\"}}");
     }
 }

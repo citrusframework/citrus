@@ -17,6 +17,9 @@
 
 package com.consol.citrus.http.message;
 
+import javax.servlet.http.Cookie;
+import java.util.Collections;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
@@ -24,9 +27,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.servlet.http.Cookie;
-import java.util.Collections;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -44,19 +44,19 @@ public class HttpMessageContentBuilderTest {
     }
 
     @Test
-    public void testDefaultMessageHeader(){
+    public void testDefaultMessageHeader() {
 
         //GIVEN
         final HttpMessageContentBuilder builder = getBuilder();
 
         //WHEN
-        final Message builtMessage = builder.buildMessageContent(new TestContext(), String.valueOf(MessageType.XML));
+        final Message builtMessage = builder.buildMessageContent(new TestContext(), MessageType.XML.name());
 
         //THEN
         assertEquals(builtMessage.getHeaders().entrySet().size(), 3);
         assertEquals(message.getHeader(MessageHeaders.ID), builtMessage.getHeader(MessageHeaders.ID));
         assertEquals(message.getHeader(MessageHeaders.TIMESTAMP), builtMessage.getHeader(MessageHeaders.TIMESTAMP));
-        assertEquals(MessageType.XML.toString(), builtMessage.getHeader(MessageHeaders.MESSAGE_TYPE));
+        assertEquals(builtMessage.getType(), MessageType.XML.toString());
     }
 
     @Test

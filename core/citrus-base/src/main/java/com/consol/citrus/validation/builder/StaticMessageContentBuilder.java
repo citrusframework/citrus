@@ -16,17 +16,19 @@
 
 package com.consol.citrus.validation.builder;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
-
-import java.util.*;
 
 /**
  * Message builder returning a static message every time the build mechanism is called. This
  * class is primary used in unit tests and Soap message validators as we have other mechanisms there to
  * construct the control message.
- *  
+ *
  * @author Christoph Deppisch
  */
 public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
@@ -52,8 +54,8 @@ public class StaticMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public Map<String, Object> buildMessageHeaders(final TestContext context, final String messageType) {
-        final Map<String, Object> headers = super.buildMessageHeaders(context, messageType);
+    public Map<String, Object> buildMessageHeaders(final TestContext context) {
+        final Map<String, Object> headers = super.buildMessageHeaders(context);
         headers.putAll(context.resolveDynamicValuesInMap(message.getHeaders().entrySet()
                                     .stream()
                                     .filter(entry -> !entry.getKey().equals(MessageHeaders.ID) && !entry.getKey().equals(MessageHeaders.TIMESTAMP))

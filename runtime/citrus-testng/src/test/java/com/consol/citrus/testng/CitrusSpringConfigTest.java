@@ -8,6 +8,8 @@ import com.consol.citrus.endpoint.EndpointFactory;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.functions.FunctionLibrary;
 import com.consol.citrus.functions.FunctionRegistry;
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.report.FailureStackTestListener;
 import com.consol.citrus.report.HtmlReporter;
 import com.consol.citrus.report.JUnitReporter;
@@ -28,8 +30,6 @@ import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptor;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherLibrary;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
@@ -67,7 +67,7 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
     private MessageListeners messageListeners;
 
     @Autowired
-    private MessageConstructionInterceptors messageConstructionInterceptors;
+    private MessageProcessors messageProcessors;
 
     @Autowired
     private FunctionRegistry functionRegistry;
@@ -121,8 +121,8 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
         Assert.assertTrue(messageListeners.getMessageListener().stream().anyMatch(CustomConfig.messageListener::equals));
         Assert.assertTrue(messageListeners.getMessageListener().stream().anyMatch(loggingReporter::equals));
 
-        Assert.assertEquals(messageConstructionInterceptors.getMessageConstructionInterceptors().size(), 1);
-        Assert.assertTrue(messageConstructionInterceptors.getMessageConstructionInterceptors().stream().anyMatch(CustomConfig.messageConstructionInterceptor::equals));
+        Assert.assertEquals(messageProcessors.getMessageProcessors().size(), 1);
+        Assert.assertTrue(messageProcessors.getMessageProcessors().stream().anyMatch(CustomConfig.messageProcessor::equals));
 
         Assert.assertEquals(functionRegistry.getFunctionLibraries().size(), 2);
         Assert.assertTrue(functionRegistry.getFunctionLibraries().stream().anyMatch(CustomConfig.functionLibrary::equals));
@@ -143,7 +143,7 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
 
         Assert.assertEquals(testContextFactory.getTestListeners(), testListeners);
         Assert.assertEquals(testContextFactory.getMessageListeners(), messageListeners);
-        Assert.assertEquals(testContextFactory.getMessageConstructionInterceptors(), messageConstructionInterceptors);
+        Assert.assertEquals(testContextFactory.getMessageProcessors(), messageProcessors);
         Assert.assertEquals(testContextFactory.getFunctionRegistry(), functionRegistry);
         Assert.assertEquals(testContextFactory.getValidationMatcherRegistry(), validationMatcherRegistry);
         Assert.assertEquals(testContextFactory.getMessageValidatorRegistry(), messageValidatorRegistry);
@@ -159,7 +159,7 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
         static TestSuiteListener testSuiteListener = Mockito.mock(TestSuiteListener.class);
         static TestActionListener testActionListener = Mockito.mock(TestActionListener.class);
         static MessageListener messageListener = Mockito.mock(MessageListener.class);
-        static MessageConstructionInterceptor messageConstructionInterceptor = Mockito.mock(MessageConstructionInterceptor.class);
+        static MessageProcessor messageProcessor = Mockito.mock(MessageProcessor.class);
 
         static FunctionLibrary functionLibrary = Mockito.mock(FunctionLibrary.class);
         static ValidationMatcherLibrary validationMatcherLibrary = Mockito.mock(ValidationMatcherLibrary.class);
@@ -191,8 +191,8 @@ public class CitrusSpringConfigTest extends AbstractTestNGCitrusTest {
         }
 
         @Bean
-        public MessageConstructionInterceptor messageConstructionInterceptor() {
-            return messageConstructionInterceptor;
+        public MessageProcessor messageProcessor() {
+            return messageProcessor;
         }
 
         @Bean

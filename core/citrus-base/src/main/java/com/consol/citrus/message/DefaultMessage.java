@@ -23,8 +23,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.json.JsonUtils;
 import com.consol.citrus.util.TypeConversionUtils;
+import com.consol.citrus.util.XMLUtils;
 import org.springframework.util.CollectionUtils;
 
 /**
@@ -51,6 +54,9 @@ public class DefaultMessage implements Message {
     /** The message name for internal use */
     private String name;
 
+    /** Type of the message indicates the content type - also see {@link MessageType) */
+    private String type;
+
     /**
      * Empty constructor initializing with empty message payload.
      */
@@ -66,6 +72,7 @@ public class DefaultMessage implements Message {
         this(message.getPayload(), message.getHeaders());
 
         this.setName(message.getName());
+        this.setType(message.getType());
         this.headerData.addAll(message.getHeaderData());
     }
 
@@ -175,5 +182,42 @@ public class DefaultMessage implements Message {
     @Override
     public String getName() {
         return name;
+    }
+
+    /**
+     * Specifies the message type.
+     * @param type one of the default message types.
+     */
+    public void setType(MessageType type) {
+        this.type = type.name();
+    }
+
+    @Override
+    public void setType(String type) {
+        if (type != null) {
+            headers.put(MessageHeaders.MESSAGE_TYPE, type);
+        }
+
+        this.type = type;
+    }
+
+    @Override
+    public String getType() {
+        if (type == null) {
+            if (JsonUtils.hasJsonPayload(this)) {
+                type = MessageType.JSON.name();
+            } else if (XMLUtils.hasXmlPayload(this)) {
+                type = MessageType.XML.name();
+            } else if (getPayload() instanceof String) {
+                type = MessageType.PLAINTEXT.name();
+            } else if (!CitrusSettings.DEFAULT_MESSAGE_TYPE.equals(MessageType.XML.name())
+                    && !CitrusSettings.DEFAULT_MESSAGE_TYPE.equals(MessageType.JSON.name())) {
+                type = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+            } else {
+                type = MessageType.UNSPECIFIED.name();
+            }
+        }
+
+        return type;
     }
 }

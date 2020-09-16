@@ -44,7 +44,7 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
     private static Logger log = LoggerFactory.getLogger(JsonMappingDataDictionary.class);
 
     @Override
-    protected Message interceptMessage(Message message, String messageType, TestContext context) {
+    protected Message processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }

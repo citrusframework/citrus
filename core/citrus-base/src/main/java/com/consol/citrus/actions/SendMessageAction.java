@@ -42,10 +42,8 @@ import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.interceptor.BinaryMessageConstructionInterceptor;
-import com.consol.citrus.validation.interceptor.GzipMessageConstructionInterceptor;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.xml.StringResult;
@@ -87,7 +85,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     private final boolean forkMode;
 
     /** The message type to send in this action - this information is needed to find proper
-     * message construction interceptors for this message */
+     * message construction processors for this message */
     private final String messageType;
 
     /** Optional data dictionary that explicitly modifies message content before sending */
@@ -326,11 +324,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         private final Map<String, List<Object>> headerFragmentMappers = new HashMap<>();
         private final Map<String, List<Object>> payloadMappers = new HashMap<>();
 
-        /** Message constructing interceptor */
-        private XpathMessageConstructionInterceptor xpathMessageConstructionInterceptor;
-        private JsonPathMessageConstructionInterceptor jsonPathMessageConstructionInterceptor;
-        private final GzipMessageConstructionInterceptor gzipMessageConstructionInterceptor = new GzipMessageConstructionInterceptor();
-        private final BinaryMessageConstructionInterceptor binaryMessageConstructionInterceptor = new BinaryMessageConstructionInterceptor();
+        /** Message processor */
+        private XpathMessageProcessor xpathMessageProcessor;
+        private JsonPathMessageProcessor jsonPathMessageProcessor;
 
         /** Basic bean reference resolver */
         protected ReferenceResolver referenceResolver;
@@ -634,21 +630,12 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Sets a explicit message type for this send action.
-         * @param messageType The message type to send the message in
+         * Sets an explicit message type for this send action.
+         * @param messageType the type of the message indicates the content type (e.g. Xml, Json, binary).
          * @return The modified send message
          */
         public B messageType(String messageType) {
             this.messageType = messageType;
-
-            if (binaryMessageConstructionInterceptor.supportsMessageType(messageType)) {
-                getMessageContentBuilder().add(binaryMessageConstructionInterceptor);
-            }
-
-            if (gzipMessageConstructionInterceptor.supportsMessageType(messageType)) {
-                getMessageContentBuilder().add(gzipMessageConstructionInterceptor);
-            }
-
             return self;
         }
 
@@ -657,7 +644,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          *
          * @return the message builder in use
          */
-        protected AbstractMessageContentBuilder getMessageContentBuilder() {
+        public AbstractMessageContentBuilder getMessageContentBuilder() {
             if (this.messageBuilder != null && this.messageBuilder instanceof AbstractMessageContentBuilder) {
                 return (AbstractMessageContentBuilder) this.messageBuilder;
             } else {
@@ -665,6 +652,16 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                 messageBuilder(messageBuilder);
                 return messageBuilder;
             }
+        }
+
+        /**
+         * Adds message processor.
+         * @param processor
+         * @return
+         */
+        public B transform(MessageProcessor processor) {
+            this.messageProcessors.add(processor);
+            return self;
         }
 
         /**
@@ -694,19 +691,19 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B xpath(String expression, String value) {
-            if (xpathMessageConstructionInterceptor == null) {
-                xpathMessageConstructionInterceptor = new XpathMessageConstructionInterceptor();
+            if (xpathMessageProcessor == null) {
+                xpathMessageProcessor = new XpathMessageProcessor();
 
                 if (this.messageBuilder != null) {
-                    this.messageBuilder.add(xpathMessageConstructionInterceptor);
+                    this.messageBuilder.add(xpathMessageProcessor);
                 } else {
                     PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                    messageBuilder.getMessageInterceptors().add(xpathMessageConstructionInterceptor);
+                    messageBuilder.add(xpathMessageProcessor);
                     messageBuilder(messageBuilder);
                 }
             }
 
-            xpathMessageConstructionInterceptor.getXPathExpressions().put(expression, value);
+            xpathMessageProcessor.getXPathExpressions().put(expression, value);
             return self;
         }
 
@@ -717,19 +714,19 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B jsonPath(String expression, String value) {
-            if (jsonPathMessageConstructionInterceptor == null) {
-                jsonPathMessageConstructionInterceptor = new JsonPathMessageConstructionInterceptor();
+            if (jsonPathMessageProcessor == null) {
+                jsonPathMessageProcessor = new JsonPathMessageProcessor();
 
                 if (this.messageBuilder != null) {
-                    this.messageBuilder.add(jsonPathMessageConstructionInterceptor);
+                    this.messageBuilder.add(jsonPathMessageProcessor);
                 } else {
                     PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                    messageBuilder.getMessageInterceptors().add(jsonPathMessageConstructionInterceptor);
+                    messageBuilder.add(jsonPathMessageProcessor);
                     messageBuilder(messageBuilder);
                 }
             }
 
-            jsonPathMessageConstructionInterceptor.getJsonPathExpressions().put(expression, value);
+            jsonPathMessageProcessor.getJsonPathExpressions().put(expression, value);
             return self;
         }
 

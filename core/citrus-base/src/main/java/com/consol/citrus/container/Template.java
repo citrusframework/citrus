@@ -105,7 +105,7 @@ public class Template extends AbstractTestAction {
             innerContext.setValidationMatcherRegistry(context.getValidationMatcherRegistry());
             innerContext.setTestListeners(context.getTestListeners());
             innerContext.setMessageListeners(context.getMessageListeners());
-            innerContext.setMessageConstructionInterceptors(context.getMessageConstructionInterceptors());
+            innerContext.setMessageProcessors(context.getMessageProcessors());
             innerContext.setEndpointFactory(context.getEndpointFactory());
             innerContext.setNamespaceContextBuilder(context.getNamespaceContextBuilder());
             innerContext.setReferenceResolver(context.getReferenceResolver());

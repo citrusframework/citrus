@@ -31,7 +31,7 @@ import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.SpringBeanTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorConfig;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptorsFactory;
+import com.consol.citrus.validation.interceptor.MessageProcessorsFactory;
 import com.consol.citrus.validation.matcher.ValidationMatcherConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -72,8 +72,8 @@ public class CitrusSpringConfig {
     }
 
     @Bean
-    public MessageConstructionInterceptorsFactory messageConstructionInterceptors() {
-        return new MessageConstructionInterceptorsFactory();
+    public MessageProcessorsFactory messageProcessors() {
+        return new MessageProcessorsFactory();
     }
 
     @Bean

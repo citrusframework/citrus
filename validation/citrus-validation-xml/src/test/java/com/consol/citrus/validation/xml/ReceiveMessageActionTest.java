@@ -272,7 +272,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -304,7 +304,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -337,7 +337,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -372,7 +372,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
@@ -407,7 +407,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\"><Message>Hello World!</Message></TestRequest>");

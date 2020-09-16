@@ -31,7 +31,6 @@ import com.consol.citrus.jdbc.model.JdbcMarshaller;
 import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.xml.StringResult;
 import org.testng.annotations.BeforeMethod;
@@ -369,7 +368,7 @@ public class JdbcEndpointAdapterControllerTest {
                 spy(new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter, dataSetCreator));
 
         final Message messageToMarshal = mock(Message.class);
-        when(messageToMarshal.getHeader(MessageHeaders.MESSAGE_TYPE)).thenReturn(MessageType.JSON.toString());
+        when(messageToMarshal.getType()).thenReturn(MessageType.JSON.toString());
         doReturn(messageToMarshal).when(jdbcEndpointAdapterController).handleMessage(any());
 
         final String query = "some query";
@@ -414,7 +413,7 @@ public class JdbcEndpointAdapterControllerTest {
                 spy(new JdbcEndpointAdapterController(jdbcEndpointConfiguration, endpointAdapter, dataSetCreator));
 
         final Message messageToMarshal = mock(Message.class);
-        when(messageToMarshal.getHeader(MessageHeaders.MESSAGE_TYPE)).thenReturn(MessageType.JSON.toString());
+        when(messageToMarshal.getType()).thenReturn(MessageType.JSON.toString());
         doReturn(messageToMarshal).when(jdbcEndpointAdapterController).handleMessage(any());
 
         //WHEN

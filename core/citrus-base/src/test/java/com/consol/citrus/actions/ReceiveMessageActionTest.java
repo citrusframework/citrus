@@ -40,11 +40,11 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.mockito.Mock;
@@ -489,7 +489,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
@@ -533,7 +533,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
-        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteElements);
+        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
@@ -576,7 +576,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
@@ -621,7 +621,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -668,7 +668,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
@@ -715,7 +715,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(overwriteElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +

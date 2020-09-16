@@ -33,6 +33,18 @@ public interface Message extends Serializable {
     String getId();
 
     /**
+     * Indicates the type of the message content (e.g. Xml, Json, binary)
+     * @return
+     */
+    String getType();
+
+    /**
+     * Sets the message type indicating the content type.
+     * @param type
+     */
+    void setType(String type);
+
+    /**
      * Gets the message name for internal use;
      * @return
      */

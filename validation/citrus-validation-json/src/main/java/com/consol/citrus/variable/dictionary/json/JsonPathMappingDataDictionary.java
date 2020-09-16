@@ -18,7 +18,7 @@ package com.consol.citrus.variable.dictionary.json;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.json.JsonPathMessageConstructionInterceptor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -36,16 +36,16 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
     private static Logger log = LoggerFactory.getLogger(JsonPathMappingDataDictionary.class);
 
     @Override
-    protected Message interceptMessage(Message message, String messageType, TestContext context) {
+    protected Message processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
             return message;
         }
 
-        JsonPathMessageConstructionInterceptor delegateInterceptor = new JsonPathMessageConstructionInterceptor();
+        JsonPathMessageProcessor delegateInterceptor = new JsonPathMessageProcessor();
         delegateInterceptor.setIgnoreNotFound(true);
         delegateInterceptor.setJsonPathExpressions(mappings);
 
-        return delegateInterceptor.interceptMessage(message, messageType, context);
+        return delegateInterceptor.processMessage(message, context);
     }
 
     @Override

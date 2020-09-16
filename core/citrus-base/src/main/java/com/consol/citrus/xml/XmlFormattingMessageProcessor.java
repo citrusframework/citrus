@@ -17,24 +17,25 @@
 package com.consol.citrus.xml;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.interceptor.AbstractMessageConstructionInterceptor;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6.2
  */
-public class XmlFormattingMessageInterceptor extends AbstractMessageConstructionInterceptor {
+public class XmlFormattingMessageProcessor extends AbstractMessageProcessor {
 
     @Override
-    public Message interceptMessage(Message message, String messageType, TestContext context) {
+    public Message processMessage(Message message, TestContext context) {
         message.setPayload(XMLUtils.prettyPrint(message.getPayload(String.class)));
         return message;
     }
 
     @Override
     public boolean supportsMessageType(String messageType) {
-        return messageType.equalsIgnoreCase("xml");
+        return messageType.equalsIgnoreCase(MessageType.XML.name());
     }
 }

@@ -18,10 +18,11 @@ package com.consol.citrus.message;
 
 /**
  * Enumeration for message protocol types used in test cases.
- * 
+ *
  * @author Christoph Deppisch
  */
 public enum MessageType {
+    UNSPECIFIED,
     XML,
     XHTML,
     CSV,
@@ -35,7 +36,7 @@ public enum MessageType {
 
     /**
      * Check if this message type name is matching a enum value.
-     * 
+     *
      * @param messageTypeName
      * @return
      */
@@ -45,7 +46,17 @@ public enum MessageType {
                 return true;
             }
         }
-        
+
         return false;
+    }
+
+    /**
+     * Checks for the given message type to be handled as binary content.
+     * @param messageType
+     * @return
+     */
+    public static boolean isBinary(String messageType) {
+        return MessageType.GZIP.name().equalsIgnoreCase(messageType)
+                || MessageType.BINARY.name().equalsIgnoreCase(messageType);
     }
 }

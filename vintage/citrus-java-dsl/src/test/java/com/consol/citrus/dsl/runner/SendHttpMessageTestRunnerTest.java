@@ -93,8 +93,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 5L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
@@ -109,8 +110,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Bar");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 4L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 5L);
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "bar");
@@ -156,8 +158,9 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 8L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 9L);
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeader("Content-Type"), ContentType.APPLICATION_JSON.getMimeType());

@@ -80,7 +80,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
-        JsonPathMessageConstructionInterceptor interceptor = new JsonPathMessageConstructionInterceptor(overwriteElements);
+        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteElements);
         controlMessageBuilder.add(interceptor);
 
         Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");

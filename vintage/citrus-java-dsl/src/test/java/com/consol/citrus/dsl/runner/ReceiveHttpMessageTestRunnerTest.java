@@ -143,8 +143,9 @@ public class ReceiveHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 10L);
+        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 11L);
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
+        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
         Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
         Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "/test/foo");

@@ -49,21 +49,24 @@ public class GroovyScriptMessageBuilder extends AbstractMessageContentBuilder {
     /** Inline control message payload as Groovy MarkupBuilder script */
     private String scriptData;
 
-    /**
-     * Build the control message from script code.
-     */
+    @Override
     public String buildMessagePayload(TestContext context, String messageType) {
-        try {
-            //construct control message payload
-            String messagePayload = "";
-            if (scriptResourcePath != null) {
-                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(
-                        FileUtils.readToString(FileUtils.getFileResource(scriptResourcePath, context), Charset.forName(context.resolveDynamicValue(scriptResourceCharset)))));
-            } else if (scriptData != null) {
-                messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
-            }
+        //construct control message payload
+        String messagePayload = "";
+        if (scriptResourcePath != null) {
+            messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(getContentFromResource(context)));
+        } else if (scriptData != null) {
+            messagePayload = buildMarkupBuilderScript(context.replaceDynamicContentInString(scriptData));
+        }
 
-            return messagePayload;
+        return messagePayload;
+    }
+
+    private String getContentFromResource(TestContext context) {
+        try {
+            final Resource fileResource = FileUtils.getFileResource(scriptResourcePath, context);
+            final Charset charset = Charset.forName(context.resolveDynamicValue(scriptResourceCharset));
+            return FileUtils.readToString(fileResource, charset);
         } catch (IOException e) {
             throw new CitrusRuntimeException("Failed to build control message payload", e);
         }

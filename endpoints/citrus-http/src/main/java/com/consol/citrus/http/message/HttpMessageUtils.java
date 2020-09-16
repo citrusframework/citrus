@@ -55,6 +55,7 @@ public final class HttpMessageUtils {
      */
     public static void copy(HttpMessage from, HttpMessage to) {
         to.setName(from.getName());
+        to.setType(from.getType());
         to.setPayload(from.getPayload());
 
         from.getHeaders().entrySet()

@@ -39,7 +39,6 @@ import com.consol.citrus.jdbc.model.OpenConnection;
 import com.consol.citrus.jdbc.model.Operation;
 import com.consol.citrus.jdbc.model.OperationResult;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.StringSource;
@@ -128,7 +127,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
             if (autoHandleQueryPattern.matcher(sqlQuery).find()) {
                 log.debug(String.format("Auto handle query '%s' with positive response", sqlQuery));
                 JdbcMessage defaultResponse = JdbcMessage.success().rowsUpdated(0);
-                defaultResponse.setHeader(MessageHeaders.MESSAGE_TYPE, MessageType.XML.name());
+                defaultResponse.setType(MessageType.XML);
                 return defaultResponse;
             }
         }
@@ -319,7 +318,7 @@ public class JdbcEndpointAdapterController implements JdbcController, EndpointAd
      * @return The MessageType of the response
      */
     private MessageType getMessageType(Message response) {
-        String messageTypeString = (String) response.getHeader(MessageHeaders.MESSAGE_TYPE);
+        String messageTypeString = response.getType();
         if (MessageType.knows(messageTypeString)){
             return MessageType.valueOf(messageTypeString.toUpperCase());
         }

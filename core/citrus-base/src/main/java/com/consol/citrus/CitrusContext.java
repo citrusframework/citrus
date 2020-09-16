@@ -32,7 +32,7 @@ import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.DefaultMessageValidatorRegistry;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherRegistry;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
@@ -61,7 +61,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     private final MessageListeners messageListeners;
     private final EndpointFactory endpointFactory;
     private final ReferenceResolver referenceResolver;
-    private final MessageConstructionInterceptors messageConstructionInterceptors;
+    private final MessageProcessors messageProcessors;
     private final NamespaceContextBuilder namespaceContextBuilder;
     private final TypeConverter typeConverter;
 
@@ -84,7 +84,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         this.messageListeners = builder.messageListeners;
         this.endpointFactory = builder.endpointFactory;
         this.referenceResolver = builder.referenceResolver;
-        this.messageConstructionInterceptors = builder.messageConstructionInterceptors;
+        this.messageProcessors = builder.messageProcessors;
         this.namespaceContextBuilder = builder.namespaceContextBuilder;
         this.typeConverter = builder.typeConverter;
 
@@ -224,11 +224,11 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
     }
 
     /**
-     * Obtains the messageConstructionInterceptors.
+     * Obtains the messageProcessors.
      * @return
      */
-    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
-        return messageConstructionInterceptors;
+    public MessageProcessors getMessageProcessors() {
+        return messageProcessors;
     }
 
     /**
@@ -281,7 +281,7 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
         private MessageListeners messageListeners = new MessageListeners();
         private EndpointFactory endpointFactory = new DefaultEndpointFactory();
         private ReferenceResolver referenceResolver = new SimpleReferenceResolver();
-        private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
+        private MessageProcessors messageProcessors = new MessageProcessors();
         private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
         private TypeConverter typeConverter = new DefaultTypeConverter();
 
@@ -380,8 +380,8 @@ public class CitrusContext implements TestListenerAware, TestSuiteListenerAware,
             return this;
         }
 
-        public Builder messageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
-            this.messageConstructionInterceptors = messageConstructionInterceptors;
+        public Builder messageProcessors(MessageProcessors messageProcessors) {
+            this.messageProcessors = messageProcessors;
             return this;
         }
 

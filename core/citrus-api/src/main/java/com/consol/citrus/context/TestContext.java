@@ -56,7 +56,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.DefaultTypeConverter;
 import com.consol.citrus.util.TypeConverter;
 import com.consol.citrus.validation.MessageValidatorRegistry;
-import com.consol.citrus.validation.interceptor.MessageConstructionInterceptors;
+import com.consol.citrus.message.MessageProcessors;
 import com.consol.citrus.validation.matcher.ValidationMatcherRegistry;
 import com.consol.citrus.variable.GlobalVariables;
 import com.consol.citrus.variable.VariableUtils;
@@ -144,9 +144,9 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     private MessageListeners messageListeners = new MessageListeners();
 
     /**
-     * List of global message construction interceptors
+     * List of global message processors
      */
-    private MessageConstructionInterceptors messageConstructionInterceptors = new MessageConstructionInterceptors();
+    private MessageProcessors messageProcessors = new MessageProcessors();
 
     /**
      * Central namespace context builder
@@ -692,21 +692,21 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     }
 
     /**
-     * Gets the global message construction interceptors.
+     * Gets the global message processors.
      *
      * @return
      */
-    public MessageConstructionInterceptors getMessageConstructionInterceptors() {
-        return messageConstructionInterceptors;
+    public MessageProcessors getMessageProcessors() {
+        return messageProcessors;
     }
 
     /**
-     * Sets the global messsage construction interceptors.
+     * Sets the global message processors.
      *
-     * @param messageConstructionInterceptors
+     * @param messageProcessors
      */
-    public void setMessageConstructionInterceptors(MessageConstructionInterceptors messageConstructionInterceptors) {
-        this.messageConstructionInterceptors = messageConstructionInterceptors;
+    public void setMessageProcessors(MessageProcessors messageProcessors) {
+        this.messageProcessors = messageProcessors;
     }
 
     /**

@@ -17,7 +17,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import org.mockito.Mockito;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.xstream.XStreamMarshaller;
@@ -184,9 +184,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().size(), 3);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0) instanceof XpathMessageConstructionInterceptor);
-        Assert.assertEquals(((XpathMessageConstructionInterceptor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageInterceptors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
+        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
+        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof XpathMessageProcessor);
+        Assert.assertEquals(((XpathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
 
     }
 }

@@ -29,7 +29,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageConstructionInterceptor;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import org.mockito.Mockito;
@@ -327,7 +327,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
@@ -371,7 +371,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA", "");
         messageElements.put("sub-elementB", "");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
@@ -415,7 +415,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         HashMap<String, Object> validateElements = new HashMap<>();
@@ -465,7 +465,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA.attribute", "A");
         messageElements.put("sub-elementB.attribute", "B");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
@@ -509,7 +509,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-element-wrong", "text-value");
         messageElements.put("sub-element-wrong", "text-value");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
@@ -553,7 +553,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         messageElements.put("sub-elementB.attribute-wrong", "B");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
@@ -597,7 +597,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA-wrong.attribute", "A");
         messageElements.put("sub-elementB-wrong.attribute", "B");
 
-        XpathMessageConstructionInterceptor interceptor = new XpathMessageConstructionInterceptor(messageElements);
+        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
         controlMessageBuilder.add(interceptor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()

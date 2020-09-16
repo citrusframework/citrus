@@ -16,22 +16,22 @@
 
 package com.consol.citrus.ws.message;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.xml.XmlFormattingMessageInterceptor;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.consol.citrus.xml.XmlFormattingMessageProcessor;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6.2
  */
-public class SoapFormattingMessageInterceptor extends XmlFormattingMessageInterceptor {
+public class SoapFormattingMessageProcessor extends XmlFormattingMessageProcessor {
 
     @Override
-    public Message interceptMessage(Message message, String messageType, TestContext context) {
+    public Message processMessage(Message message, TestContext context) {
         if (message instanceof SoapFault) {
             List<String> faultDetailsFormat = new ArrayList<>();
             for (String faultDetail : ((SoapFault) message).getFaultDetails()) {
@@ -43,6 +43,6 @@ public class SoapFormattingMessageInterceptor extends XmlFormattingMessageInterc
             }
         }
 
-        return super.interceptMessage(message, messageType, context);
+        return super.processMessage(message, context);
     }
 }

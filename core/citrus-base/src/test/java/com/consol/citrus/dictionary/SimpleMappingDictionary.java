@@ -23,7 +23,7 @@ public class SimpleMappingDictionary extends AbstractDataDictionary<String> {
     }
 
     @Override
-    protected Message interceptMessage(Message message, String messageType, TestContext context) {
+    protected Message processMessage(Message message, TestContext context) {
         String payload = message.getPayload(String.class);
 
         for (Map.Entry<String, String> mapping : mappings.entrySet()) {

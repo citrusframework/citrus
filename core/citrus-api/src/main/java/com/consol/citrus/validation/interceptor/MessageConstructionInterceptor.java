@@ -18,16 +18,25 @@ package com.consol.citrus.validation.interceptor;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageDirectionAware;
+import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageTypeSelector;
 
 
 /**
  * Implementing classes may intercept the message payload constructing mechanism in order
  * to modify the message content.
- * 
+ *
  * @author Christoph Deppisch
+ * @deprecated since 3.0 in favor of using {@link com.consol.citrus.message.MessageProcessor}
  */
-public interface MessageConstructionInterceptor {
+@Deprecated
+public interface MessageConstructionInterceptor extends MessageProcessor, MessageDirectionAware, MessageTypeSelector {
+
+    @Override
+    default Message process(Message message, TestContext context) {
+        return interceptMessageConstruction(message, message.getType(), context);
+    }
 
     /**
      * Intercept the message construction.
@@ -36,19 +45,4 @@ public interface MessageConstructionInterceptor {
      * @param context the current test context.
      */
     Message interceptMessageConstruction(Message message, String messageType, TestContext context);
-
-    /**
-     * Checks if this message interceptor is capable of this message type. XML message interceptors may only apply to this message
-     * type while JSON message interceptor implementations do not and vice versa.
-     *
-     * @param messageType the message type representation as String (e.g. xml, json, csv, plaintext).
-     * @return true if this message interceptor supports the message type.
-     */
-    boolean supportsMessageType(String messageType);
-
-    /**
-     * Indicates the direction of messages this interceptor should apply to.
-     * @return
-     */
-    MessageDirection getDirection();
 }

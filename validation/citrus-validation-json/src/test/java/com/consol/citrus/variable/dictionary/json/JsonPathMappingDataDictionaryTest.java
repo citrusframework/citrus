@@ -22,7 +22,6 @@ import java.util.Map;
 import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.core.io.ClassPathResource;
 import org.testng.Assert;
@@ -44,7 +43,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}");
     }
 
@@ -62,7 +61,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "[" +
                     "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}," +
                     "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\",\"OtherNumber\":10}}" +
@@ -81,7 +80,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
 
         context.setVariable("helloText", "Hello!");
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");
     }
 
@@ -96,7 +95,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":[\"Hello!\",\"Hello Universe!\"],\"OtherText\":\"No changes\"}}");
     }
 
@@ -111,7 +110,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Greetings\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello Universe!\"}],\"OtherText\":\"No changes\"}}");
     }
 
@@ -123,7 +122,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappingFile(new ClassPathResource("jsonmapping.properties", DataDictionary.class));
         dictionary.afterPropertiesSet();
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":\"No changes\"}}");
     }
 
@@ -137,7 +136,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"OtherText\":null}}");
     }
 
@@ -151,7 +150,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Number\":99,\"OtherNumber\":100}}");
     }
 
@@ -165,7 +164,7 @@ public class JsonPathMappingDataDictionaryTest extends UnitTestSupport {
         JsonPathMappingDataDictionary dictionary = new JsonPathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.interceptMessage(message, MessageType.JSON.toString(), context);
+        Message intercepted = dictionary.processMessage(message, context);
         Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\",\"OtherText\":\"No changes\"}}");
     }
 }
