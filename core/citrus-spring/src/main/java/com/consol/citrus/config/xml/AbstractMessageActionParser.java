@@ -23,6 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.message.DelegatingPathExpressionProcessor;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
@@ -33,10 +34,7 @@ import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
 import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
-import com.consol.citrus.validation.json.JsonPathMessageProcessor;
-import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
@@ -145,28 +143,16 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         }
 
         if (messageBuilder != null) {
-            Map<String, String> overwriteXpath = new HashMap<>();
-            Map<String, String> overwriteJsonPath = new HashMap<>();
+            Map<String, String> pathExpressions = new HashMap<>();
             List<Element> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
             for (Element messageValue : messageValueElements) {
                 String pathExpression = messageValue.getAttribute("path");
-
-                if (JsonPathMessageValidationContext.isJsonPathExpression(pathExpression)) {
-                    overwriteJsonPath.put(pathExpression, messageValue.getAttribute("value"));
-                } else {
-                    overwriteXpath.put(pathExpression, messageValue.getAttribute("value"));
-                }
+                pathExpressions.put(pathExpression, messageValue.getAttribute("value"));
             }
 
             List<MessageProcessor> messageProcessors = new ArrayList<>();
-            if (!overwriteXpath.isEmpty()) {
-                XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteXpath);
-                messageProcessors.add(interceptor);
-            }
-
-            if (!overwriteJsonPath.isEmpty()) {
-                JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteJsonPath);
-                messageProcessors.add(interceptor);
+            if (!pathExpressions.isEmpty()) {
+                messageProcessors.add(new DelegatingPathExpressionProcessor(pathExpressions));
             }
 
             String messageType = messageElement.getAttribute("type");

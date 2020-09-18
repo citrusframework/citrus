@@ -43,8 +43,6 @@ import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
-import com.consol.citrus.validation.json.JsonPathMessageProcessor;
-import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.xml.StringResult;
@@ -367,10 +365,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         private final Map<String, List<Object>> headerFragmentMappers = new HashMap<>();
         private final Map<String, List<Object>> payloadMappers = new HashMap<>();
-
-        /** Message processor */
-        private XpathMessageProcessor xpathMessageProcessor;
-        private JsonPathMessageProcessor jsonPathMessageProcessor;
 
         /** Basic bean reference resolver */
         protected ReferenceResolver referenceResolver;
@@ -735,38 +729,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          */
         public B extract(VariableExtractor.Builder<?, ?> builder) {
             this.variableExtractors.add(builder.build());
-            return self;
-        }
-
-        /**
-         * Adds XPath manipulating expression that evaluates to message payload before sending.
-         * @param expression
-         * @param value
-         * @return
-         */
-        public B xpath(String expression, String value) {
-            if (xpathMessageProcessor == null) {
-                xpathMessageProcessor = new XpathMessageProcessor();
-                this.messageProcessors.add(xpathMessageProcessor);
-            }
-
-            xpathMessageProcessor.getXPathExpressions().put(expression, value);
-            return self;
-        }
-
-        /**
-         * Adds JSONPath manipulating expression that evaluates to message payload before sending.
-         * @param expression
-         * @param value
-         * @return
-         */
-        public B jsonPath(String expression, String value) {
-            if (jsonPathMessageProcessor == null) {
-                jsonPathMessageProcessor = new JsonPathMessageProcessor();
-                this.messageProcessors.add(jsonPathMessageProcessor);
-            }
-
-            jsonPathMessageProcessor.getJsonPathExpressions().put(expression, value);
             return self;
         }
 

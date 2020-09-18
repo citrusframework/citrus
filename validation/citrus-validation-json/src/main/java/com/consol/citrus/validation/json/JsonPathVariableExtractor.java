@@ -50,6 +50,10 @@ public class JsonPathVariableExtractor implements VariableExtractor {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JsonPathVariableExtractor.class);
 
+    public JsonPathVariableExtractor() {
+        this(Builder.jsonPathExtractor());
+    }
+
     /**
      * Constructor using fluent builder.
      * @param builder

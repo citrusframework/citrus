@@ -16,14 +16,16 @@
 
 package com.consol.citrus.validation.json;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.consol.citrus.builder.WithExpressions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
@@ -45,33 +47,30 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
     private static Logger log = LoggerFactory.getLogger(JsonPathMessageProcessor.class);
 
     /** Overwrites message elements before validating (via JSONPath expressions) */
-    private Map<String, String> jsonPathExpressions = new HashMap<>();
+    private final Map<String, String> jsonPathExpressions;
 
     /** Optional ignoring element not found errors */
-    private boolean ignoreNotFound = false;
+    private final boolean ignoreNotFound;
 
     /**
      * Default constructor.
      */
     public JsonPathMessageProcessor() {
-        super();
+        this(Builder.jsonPath());
     }
 
     /**
-     * Default constructor using fields.
-     * @param jsonPathExpressions
+     * Constructor using fluent builder.
+     * @param builder
      */
-    public JsonPathMessageProcessor(Map<String, String> jsonPathExpressions) {
-        super();
-        this.jsonPathExpressions = jsonPathExpressions;
+    private JsonPathMessageProcessor(Builder builder) {
+        this.jsonPathExpressions = builder.expressions;
+        this.ignoreNotFound = builder.ignoreNotFound;
     }
 
     /**
      * Intercept the message payload construction and replace elements identified
-     * via XPath expressions.
-     *
-     * Method parses the message payload to DOM document representation, therefore message payload
-     * needs to be XML here.
+     * via Json path expressions.
      */
     @Override
     public void processMessage(Message message, TestContext context) {
@@ -126,8 +125,42 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
         return MessageType.JSON.toString().equalsIgnoreCase(messageType);
     }
 
-    public void setJsonPathExpressions(Map<String, String> jsonPathExpressions) {
-        this.jsonPathExpressions = jsonPathExpressions;
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder implements MessageProcessor.Builder<JsonPathMessageProcessor, Builder>, WithExpressions<Builder> {
+        private Map<String, String> expressions = new LinkedHashMap<>();
+        private boolean ignoreNotFound = false;
+
+        public static Builder jsonPath() {
+            return new Builder();
+        }
+
+        /**
+         * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target
+         * variable names that are stored in the test context with the evaluated result as variable value.
+         * @param expressions
+         * @return
+         */
+        public Builder expressions(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        public Builder expression(final String expression, final String expectedValue) {
+            this.expressions.put(expression, expectedValue);
+            return this;
+        }
+
+        public Builder ignoreNotFound(boolean ignore) {
+            this.ignoreNotFound = ignore;
+            return this;
+        }
+
+        @Override
+        public JsonPathMessageProcessor build() {
+            return new JsonPathMessageProcessor(this);
+        }
     }
 
     public Map<String, String> getJsonPathExpressions() {
@@ -141,14 +174,5 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
      */
     public boolean isIgnoreNotFound() {
         return ignoreNotFound;
-    }
-
-    /**
-     * Sets the ignoreNotFound.
-     *
-     * @param ignoreNotFound
-     */
-    public void setIgnoreNotFound(boolean ignoreNotFound) {
-        this.ignoreNotFound = ignoreNotFound;
     }
 }

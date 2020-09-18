@@ -35,16 +35,14 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageHeaders;
-import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
-import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
@@ -329,161 +327,15 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings("rawtypes")
-    public void testSendMessageOverwriteMessageElementsXPath() {
+    public void testSendMessageOverwriteMessageElements() {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/TestRequest/Message", "Hello World!");
+        MessageProcessor processor = (message, context) -> {
+            message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
+        };
 
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
-                .process(processor)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageOverwriteMessageElementsJsonPath() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("$.TestRequest.Message", "Hello World!");
-
-        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(overwriteElements);
-
-        final Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageType(MessageType.JSON)
-                .messageBuilder(messageBuilder)
-                .process(processor)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageOverwriteMessageElementsDotNotation() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("TestRequest.Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
-                .process(processor)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageOverwriteMessageElementsXPathWithNamespace() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
-                "</ns0:TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
-                .process(processor)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageOverwriteMessageElementsXPathWithDefaultNamespace() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>?</Message></TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/:TestRequest/:Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, producer, endpointConfiguration);
         when(endpoint.createProducer()).thenReturn(producer);
@@ -686,33 +538,6 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .build();
-        sendAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings("rawtypes")
-    public void testSendMessageWithXmlDeclaration() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
-
-        reset(endpoint, producer, endpointConfiguration);
-        when(endpoint.createProducer()).thenReturn(producer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-
-        doAnswer(invocation -> {
-            validateMessageToSend(invocation.getArgument(0), controlMessage);
-            return null;
-        }).when(producer).send(any(Message.class), any(TestContext.class));
-
-        when(endpoint.getActor()).thenReturn(null);
-
-        SendMessageAction sendAction = new SendMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
                 .build();
         sendAction.execute(context);
 

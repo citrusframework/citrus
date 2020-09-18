@@ -19,17 +19,16 @@ package com.consol.citrus.config.xml;
 import com.consol.citrus.ActionParserTestSupport;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.message.DelegatingPathExpressionProcessor;
 import com.consol.citrus.validation.DelegatingPayloadVariableExtractor;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
@@ -202,11 +201,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
 
         Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
-        XpathMessageProcessor messageProcessor = (XpathMessageProcessor)action.getMessageProcessors().get(0);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
+        DelegatingPathExpressionProcessor messageProcessor = (DelegatingPathExpressionProcessor)action.getMessageProcessors().get(0);
 
-        Assert.assertEquals(messageProcessor.getXPathExpressions().size(), 1);
-        Assert.assertEquals(messageProcessor.getXPathExpressions().get("/ns:TestMessage/"), "newValue");
+        Assert.assertEquals(messageProcessor.getPathExpressions().size(), 1);
+        Assert.assertEquals(messageProcessor.getPathExpressions().get("/ns:TestMessage/"), "newValue");
 
         Assert.assertFalse(xmlValidationContext.isSchemaValidationEnabled());
 
@@ -340,11 +339,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 
         Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
-        JsonPathMessageProcessor jsonMessageProcessor = (JsonPathMessageProcessor)action.getMessageProcessors().get(0);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
+        DelegatingPathExpressionProcessor jsonMessageProcessor = (DelegatingPathExpressionProcessor)action.getMessageProcessors().get(0);
 
-        Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().size(), 1);
-        Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");
+        Assert.assertEquals(jsonMessageProcessor.getPathExpressions().size(), 1);
+        Assert.assertEquals(jsonMessageProcessor.getPathExpressions().get("$.FooMessage.foo"), "newValue");
 
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(jsonValidationContext.getIgnoreExpressions().iterator().next(), "$.FooMessage.bar");

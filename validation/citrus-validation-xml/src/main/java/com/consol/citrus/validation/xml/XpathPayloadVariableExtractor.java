@@ -54,6 +54,10 @@ public class XpathPayloadVariableExtractor implements VariableExtractor {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathPayloadVariableExtractor.class);
 
+    public XpathPayloadVariableExtractor() {
+        this(Builder.xpathExtractor());
+    }
+
     /**
      * Constructor using fluent builder.
      * @param builder

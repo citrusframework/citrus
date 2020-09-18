@@ -44,7 +44,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/TestMessage/Text", "Hello!");
 
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
         processor.processMessage(message, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
@@ -60,7 +62,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/:TestMessage/:Text", "Hello!");
 
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
         processor.processMessage(message, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
@@ -72,7 +76,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns0:Text", "Hello!");
 
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
         processor.processMessage(messageNamespace, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
@@ -86,7 +92,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
 
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
         processor.processMessage(messageNamespace, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
@@ -102,7 +110,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns1:Text", "Hello!");
 
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
         processor.processMessage(message, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
@@ -115,8 +125,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put(".Invalid/Unknown", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
-        interceptor.processMessage(message, context);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
+        processor.processMessage(message, context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
@@ -125,8 +137,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/TestMessage/Unknown", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
-        interceptor.processMessage(message, context);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
+        processor.processMessage(message, context);
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class,
@@ -135,7 +149,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
 
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpressions)
+                .build();
         processor.processMessage(messageNamespace, context);
 
         Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
@@ -154,7 +170,9 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpression = Collections.singletonMap("//TestMessage/Text", "foobar");
 
         //WHEN
-        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpression);
+        XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
+                .expressions(xPathExpression)
+                .build();
         processor.processMessage(message, context);
 
         //THEN

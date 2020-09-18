@@ -80,7 +80,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
-        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(overwriteElements);
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
+                .expressions(overwriteElements)
+                .build();
 
         Message controlMessage = new DefaultMessage("{ \"TestRequest\": { \"Message\": \"Hello World!\" }}");
 
@@ -292,4 +294,5 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         Assert.fail("Missing " + CitrusRuntimeException.class + " for receiving unexpected empty message payload");
     }
+
 }

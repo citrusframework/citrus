@@ -13,7 +13,9 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
 import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
+import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +37,10 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
 
     private final GzipMessageProcessor gzipMessageProcessor = new GzipMessageProcessor();
     private final BinaryMessageProcessor binaryMessageProcessor = new BinaryMessageProcessor();
+
+    /** Message processor */
+    private XpathMessageProcessor xpathMessageProcessor;
+    private JsonPathMessageProcessor jsonPathMessageProcessor;
 
     public SendMessageActionBuilder() {
         this(new SendMessageAction.Builder());
@@ -350,23 +356,18 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
     }
 
     /**
-     * Adds variable extractor builder.
-     * @param builder
-     * @return
-     */
-    public B variableExtractor(VariableExtractor.Builder<?, ?> builder) {
-        delegate.extract(builder);
-        return self;
-    }
-
-    /**
      * Adds XPath manipulating expression that evaluates to message payload before sending.
      * @param expression
      * @param value
      * @return
      */
     public B xpath(String expression, String value) {
-        delegate.xpath(expression, value);
+        if (xpathMessageProcessor == null) {
+            xpathMessageProcessor = new XpathMessageProcessor();
+            delegate.process(xpathMessageProcessor);
+        }
+
+        xpathMessageProcessor.getXPathExpressions().put(expression, value);
         return self;
     }
 
@@ -377,7 +378,12 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B jsonPath(String expression, String value) {
-        delegate.jsonPath(expression, value);
+        if (jsonPathMessageProcessor == null) {
+            jsonPathMessageProcessor = new JsonPathMessageProcessor();
+            delegate.process(jsonPathMessageProcessor);
+        }
+
+        jsonPathMessageProcessor.getJsonPathExpressions().put(expression, value);
         return self;
     }
 

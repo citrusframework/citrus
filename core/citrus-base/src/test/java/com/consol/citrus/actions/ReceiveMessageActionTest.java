@@ -34,20 +34,17 @@ import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageQueue;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
-import com.consol.citrus.validation.json.JsonPathMessageProcessor;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -486,246 +483,18 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageOverwriteMessageElementsXPath() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/TestRequest/Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .process(processor)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageOverwriteMessageElementsJsonPath() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        controlMessageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("$.TestRequest.Message", "Hello World!");
-
-        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(overwriteElements);
-
-        Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageType(MessageType.JSON)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .process(processor)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageOverwriteMessageElementsDotNotation() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("TestRequest.Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .process(processor)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageOverwriteMessageElementsXPathWithNamespaces() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <ns0:Message>Hello World!</ns0:Message>" + System.lineSeparator() +
-                "</ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .process(processor)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageOverwriteMessageElementsXPathWithNestedNamespaces() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        controlMessageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">?</ns1:Message></ns0:TestRequest>");
-
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
-
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <ns1:Message xmlns:ns1=\"http://citrusframework.org/unittest/message\">Hello World!</ns1:Message>" + System.lineSeparator() +
-                "</ns0:TestRequest>");
-
-        reset(endpoint, consumer, endpointConfiguration);
-        when(endpoint.createConsumer()).thenReturn(consumer);
-        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
-        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
-
-        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
-        when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
-
-        doAnswer(invocationOnMock -> {
-            Message received = invocationOnMock.getArgument(0);
-            Message control = invocationOnMock.getArgument(1);
-            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
-
-            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
-            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
-            return null;
-        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
-
-        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
-                .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .process(processor)
-                .build();
-        receiveAction.execute(context);
-
-    }
-
-    @Test
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public void testReceiveMessageOverwriteMessageElementsXPathWithDefaultNamespaces() {
+    public void testReceiveMessageOverwriteMessageElements() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
-        overwriteElements.put("/:TestRequest/:Message", "Hello World!");
+        MessageProcessor processor = (message, context) -> {
+            message.setPayload(message.getPayload(String.class).replaceAll("\\?", "Hello World!"));
+        };
 
-        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
-
-        Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
-                "   <Message>Hello World!</Message>" + System.lineSeparator() +
-                "</TestRequest>");
+        Message controlMessage = new DefaultMessage("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
         when(endpoint.createConsumer()).thenReturn(consumer);

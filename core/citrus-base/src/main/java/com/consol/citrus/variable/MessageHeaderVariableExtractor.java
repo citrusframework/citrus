@@ -35,6 +35,10 @@ public class MessageHeaderVariableExtractor implements VariableExtractor {
     /** Map holding header names and target variable names */
     private final Map<String, String> headerMappings;
 
+    public MessageHeaderVariableExtractor() {
+        this(Builder.headerValueExtractor());
+    }
+
     /**
      * Constructor using fluent builder.
      * @param builder

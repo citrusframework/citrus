@@ -21,11 +21,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.consol.citrus.builder.WithExpressions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.UnknownElementException;
 import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.xml.xpath.XPathUtils;
@@ -44,7 +46,7 @@ import org.w3c.dom.Node;
 public class XpathMessageProcessor extends AbstractMessageProcessor {
 
     /** Overwrites message elements before validating (via XPath expressions) */
-    private Map<String, String> xPathExpressions = new LinkedHashMap<>();
+    private final Map<String, String> xPathExpressions;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathMessageProcessor.class);
@@ -53,16 +55,15 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
      * Default constructor.
      */
     public XpathMessageProcessor() {
-        super();
+        this(Builder.xpath());
     }
 
     /**
-     * Default constructor using fields.
-     * @param xPathExpressions The xPaths to apply to the messages
+     * Constructor using fluent builder.
+     * @param builder
      */
-    public XpathMessageProcessor(final Map<String, String> xPathExpressions) {
-        super();
-        this.xPathExpressions.putAll(xPathExpressions);
+    private XpathMessageProcessor(Builder builder) {
+        this.xPathExpressions = builder.expressions;
     }
 
     /**
@@ -124,10 +125,35 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
     }
 
     /**
-     * @param xPathExpressions the xPathExpressions to set
+     * Fluent builder.
      */
-    public void setXPathExpressions(final Map<String, String> xPathExpressions) {
-        this.xPathExpressions = xPathExpressions;
+    public static final class Builder implements MessageProcessor.Builder<XpathMessageProcessor, Builder>, WithExpressions<Builder> {
+        private Map<String, String> expressions = new LinkedHashMap<>();
+
+        public static Builder xpath() {
+            return new Builder();
+        }
+
+        /**
+         * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target
+         * variable names that are stored in the test context with the evaluated result as variable value.
+         * @param expressions
+         * @return
+         */
+        public Builder expressions(Map<String, String> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        public Builder expression(final String expression, final String expectedValue) {
+            this.expressions.put(expression, expectedValue);
+            return this;
+        }
+
+        @Override
+        public XpathMessageProcessor build() {
+            return new XpathMessageProcessor(this);
+        }
     }
 
     /**

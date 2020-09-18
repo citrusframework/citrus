@@ -41,10 +41,11 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
             return;
         }
 
-        JsonPathMessageProcessor delegateInterceptor = new JsonPathMessageProcessor();
-        delegateInterceptor.setIgnoreNotFound(true);
-        delegateInterceptor.setJsonPathExpressions(mappings);
-        delegateInterceptor.processMessage(message, context);
+        JsonPathMessageProcessor delegateProcessor = new JsonPathMessageProcessor.Builder()
+                .ignoreNotFound(true)
+                .expressions(mappings)
+                .build();
+        delegateProcessor.processMessage(message, context);
     }
 
     @Override
