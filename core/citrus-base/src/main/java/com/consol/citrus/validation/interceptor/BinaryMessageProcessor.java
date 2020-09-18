@@ -8,6 +8,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
@@ -20,7 +21,15 @@ import org.springframework.util.FileCopyUtils;
  */
 public class BinaryMessageProcessor extends AbstractMessageProcessor {
 
-    private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
+    private final Charset encoding;
+
+    public BinaryMessageProcessor() {
+        this(Builder.toBinary());
+    }
+
+    public BinaryMessageProcessor(Builder builder) {
+        this.encoding = builder.encoding;
+    }
 
     @Override
     protected void processMessage(Message message, TestContext context) {
@@ -40,10 +49,38 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
     }
 
     /**
-     * Specifies the encoding.
-     * @param encoding
+     * Fluent builder.
      */
-    public void setEncoding(Charset encoding) {
-        this.encoding = encoding;
+    public static final class Builder implements MessageProcessor.Builder<BinaryMessageProcessor, Builder> {
+
+        private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
+
+        public static Builder toBinary() {
+            return new Builder();
+        }
+
+        /**
+         * With custom charset encoding identified by its name.
+         * @param charsetName
+         * @return
+         */
+        public Builder encoding(String charsetName) {
+            return encoding(Charset.forName(charsetName));
+        }
+
+        /**
+         * With custom charset encoding.
+         * @param encoding
+         * @return
+         */
+        public Builder encoding(Charset encoding) {
+            this.encoding = encoding;
+            return this;
+        }
+
+        @Override
+        public BinaryMessageProcessor build() {
+            return new BinaryMessageProcessor(this);
+        }
     }
 }

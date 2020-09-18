@@ -28,25 +28,25 @@ import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
 import static com.consol.citrus.actions.SendMessageAction.Builder.send;
-import static com.consol.citrus.validation.interceptor.BinaryMessageProcessor.Builder.toBinary;
+import static com.consol.citrus.validation.interceptor.GzipMessageProcessor.Builder.toGzip;
 
 /**
  * @author Christoph Deppisch
  */
 @Test
-public class JmsByteMessageJavaIT extends TestNGCitrusSupport {
+public class JmsGzipMessageJavaIT extends TestNGCitrusSupport {
 
     @CitrusTest
     public void jmsByteMessage() throws IOException {
-        when(send("jms:queue:jms.binary.queue")
+        when(send("jms:queue:jms.gzip.queue")
                 .message(new DefaultMessage(
                         FileCopyUtils.copyToByteArray(
                                 FileUtils.getFileResource("com/consol/citrus/jms/integration/button.png")
                                  .getInputStream())))
-                .process(toBinary()));
+                .process(toGzip()));
 
-        then(receive("jms:queue:jms.binary.queue")
-                .messageType(MessageType.BINARY_BASE64)
+        then(receive("jms:queue:jms.gzip.queue")
+                .messageType(MessageType.GZIP_BASE64)
                 .payload("citrus:readFile('classpath:com/consol/citrus/jms/integration/button.png', true)"));
     }
 }
