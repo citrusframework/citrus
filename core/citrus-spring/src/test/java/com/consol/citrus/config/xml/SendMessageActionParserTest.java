@@ -50,7 +50,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -67,7 +67,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
         Assert.assertEquals(messageBuilder.getHeaderData().size(), 1);
         Assert.assertEquals(messageBuilder.getHeaderData().get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Header xmlns=\"http://citrusframework.org/test\">\n   <operation>hello</operation>\n</Header>");
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -81,7 +81,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(messageBuilder.getPayloadResourcePath(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -110,9 +110,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         // 6th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
-        MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
 
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");
@@ -125,9 +125,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
 
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 1);
-        Assert.assertTrue(messageBuilder.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
-        XpathMessageProcessor messageProcessor = (XpathMessageProcessor)messageBuilder.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
+        XpathMessageProcessor messageProcessor = (XpathMessageProcessor)action.getMessageProcessors().get(0);
 
         Assert.assertEquals(messageProcessor.getXPathExpressions().size(), 1);
         Assert.assertEquals(messageProcessor.getXPathExpressions().get("/TestMessage/text()"), "newValue");
@@ -154,7 +154,7 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         // 8th action
         action = getNextTestActionFromTest();
@@ -167,9 +167,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 1);
-        Assert.assertTrue(messageBuilder.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
-        JsonPathMessageProcessor jsonMessageProcessor = (JsonPathMessageProcessor)messageBuilder.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        JsonPathMessageProcessor jsonMessageProcessor = (JsonPathMessageProcessor)action.getMessageProcessors().get(0);
 
         Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().size(), 1);
         Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");

@@ -16,19 +16,21 @@
 
 package com.consol.citrus.http.config.xml;
 
+import javax.servlet.http.Cookie;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
-import com.consol.citrus.http.message.*;
+import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import javax.servlet.http.Cookie;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -118,7 +120,7 @@ public class HttpSendResponseActionParser extends SendMessageActionParser {
             }
         }
 
-        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body)));
+        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body, builder)));
 
         return builder.getBeanDefinition();
     }

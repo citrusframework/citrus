@@ -21,32 +21,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.CitrusSettings;
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.message.AbstractMessageProcessor;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.variable.dictionary.DataDictionary;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
 
-    private final String imagePayloadResource = "classpath:com/consol/citrus/validation/builder/button.png";
     private final String variablePayloadResource = "classpath:com/consol/citrus/validation/builder/variable-data-resource.txt";
-    private final String initialDataDictionaryTestPayload = "{ \"person\": { \"name\": \"initial_value\", \"age\": 20} }";
-    private final String dataDictionaryResult = "{ \"person\": { \"name\" : \"new_value\", \"age\":20} }";
-    private final String globalDataDictionaryResult = "{ \"person\": { \"name\": \"global_value\", \"age\":20} }";
     private final String initialVariableTestPayload = "{ \"person\": { \"name\": \"${name}\", \"age\": 20} }";
     private final String resultingVariableTestPayload = "{ \"person\": { \"name\": \"Frauke\", \"age\": 20} }";
 
@@ -224,146 +210,6 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     }
 
     @Test
-    public void testMessageBuilderProcessor() {
-        MessageProcessor processor = new AbstractMessageProcessor() {
-            @Override
-            public void processMessage(Message message, TestContext context) {
-                message.setPayload("InterceptedMessagePayload");
-                message.setHeader("NewHeader", "new");
-            }
-
-            @Override
-            public boolean supportsMessageType(String messageType) {
-                return true;
-            }
-        };
-
-        messageBuilder.add(processor);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, CitrusSettings.DEFAULT_MESSAGE_TYPE);
-
-        assertEquals(resultingMessage.getPayload(), "InterceptedMessagePayload");
-        assertNotNull(resultingMessage.getHeader("NewHeader"));
-    }
-
-    @Test
-    public void testMessageBuilderWithGlobalDataDictionary() {
-        DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
-        when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        when(dataDictionary.isGlobalScope()).thenReturn(true);
-        doAnswer(invocationOnMock -> {
-            Message message = invocationOnMock.getArgument(0);
-            message.setPayload(dataDictionaryResult);
-            return null;
-        }).when(dataDictionary).process(any(Message.class), eq(context));
-
-        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
-        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
-
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-    }
-
-    @Test
-    public void testMessageBuilderWithExplicitDataDictionary() {
-        DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
-        when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        doAnswer(invocationOnMock -> {
-            Message message = invocationOnMock.getArgument(0);
-            message.setPayload(dataDictionaryResult);
-            return null;
-        }).when(dataDictionary).process(any(Message.class), eq(context));
-        messageBuilder.setDataDictionary(dataDictionary);
-
-        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-
-        resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-
-        resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-    }
-
-    @Test
-    public void testMessageBuilderWithGlobalAndExplicitDataDictionary() {
-        DataDictionary<String> globalDataDictionary = Mockito.mock(DataDictionary.class);
-        when(globalDataDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
-        doAnswer(invocationOnMock -> {
-            Message message = invocationOnMock.getArgument(0);
-            message.setPayload(globalDataDictionaryResult);
-            return null;
-        }).when(globalDataDictionary).process(any(Message.class), eq(context));
-
-        DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
-        when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        doAnswer(invocationOnMock -> {
-            Message message = invocationOnMock.getArgument(0);
-            message.setPayload(dataDictionaryResult);
-            return null;
-        }).when(dataDictionary).process(any(Message.class), eq(context));
-
-        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(globalDataDictionary));
-        messageBuilder.setDataDictionary(dataDictionary);
-
-        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-
-        resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-
-        resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-    }
-
-    @Test
-    public void testMessageBuilderWithGlobalInboundDataDictionary() {
-        DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
-        when(dataDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
-        when(dataDictionary.isGlobalScope()).thenReturn(true);
-        doAnswer(invocationOnMock -> {
-            Message message = invocationOnMock.getArgument(0);
-            message.setPayload(dataDictionaryResult);
-            return null;
-        }).when(dataDictionary).process(any(Message.class), eq(context));
-
-        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
-        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-
-        resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        assertEquals(resultingMessage.getPayload(), initialDataDictionaryTestPayload);
-    }
-
-    @Test
-    public void testMessageBuilderWithGlobalOutboundDataDictionary() {
-        DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
-        when(dataDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
-        when(dataDictionary.isGlobalScope()).thenReturn(true);
-        doAnswer(invocationOnMock -> {
-            Message message = invocationOnMock.getArgument(0);
-            message.setPayload(dataDictionaryResult);
-            return null;
-        }).when(dataDictionary).process(any(Message.class), eq(context));
-
-        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
-        messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
-
-        Message resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
-        assertEquals(resultingMessage.getPayload(), dataDictionaryResult);
-
-        resultingMessage = messageBuilder.buildMessageContent(context, MessageType.JSON.name(), MessageDirection.INBOUND);
-        assertEquals(resultingMessage.getPayload(), initialDataDictionaryTestPayload);
-    }
-
-    @Test
     public void testVariablesInMessagePayloadsAreReplaced(){
 
         //GIVEN
@@ -371,8 +217,7 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadData(initialVariableTestPayload);
 
         //WHEN
-        final Message message = messageBuilder.buildMessageContent(
-                context, MessageType.JSON.name(), MessageDirection.OUTBOUND);
+        final Message message = messageBuilder.buildMessageContent(context, MessageType.JSON.name());
 
         //THEN
         assertEquals(message.getPayload(), resultingVariableTestPayload);

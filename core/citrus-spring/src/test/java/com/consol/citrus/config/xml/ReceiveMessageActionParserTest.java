@@ -68,7 +68,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
@@ -95,7 +95,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
         Assert.assertEquals(messageBuilder.getHeaderData().size(), 1);
         Assert.assertEquals(messageBuilder.getHeaderData().get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><Header xmlns=\"http://citrusframework.org/test\">\n   <operation>hello</operation>\n</Header>");
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         Assert.assertNull(action.getDataDictionary());
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
@@ -120,7 +120,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertEquals(messageBuilder.getPayloadResourcePath(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
         Assert.assertNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 0);
 
         // 4th action
         action = getNextTestActionFromTest();
@@ -172,11 +172,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
 
         // 7th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageProcessors().size(), 2);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
-        MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getMessageProcessors().get(0);
-        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof DelegatingPayloadVariableExtractor);
-        DelegatingPayloadVariableExtractor variableExtractor = (DelegatingPayloadVariableExtractor)action.getMessageProcessors().get(1);
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        MessageHeaderVariableExtractor headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof DelegatingPayloadVariableExtractor);
+        DelegatingPayloadVariableExtractor variableExtractor = (DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(1);
 
         Assert.assertEquals(variableExtractor.getNamespaces().size(), 0L);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
@@ -201,14 +201,14 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<ns:TestMessage xmlns:ns=\"http://www.consol.com\">Hello Citrus</ns:TestMessage>");
 
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 1);
-        Assert.assertTrue(messageBuilder.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
-        XpathMessageProcessor messageProcessor = (XpathMessageProcessor)messageBuilder.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
+        XpathMessageProcessor messageProcessor = (XpathMessageProcessor)action.getMessageProcessors().get(0);
 
         Assert.assertEquals(messageProcessor.getXPathExpressions().size(), 1);
         Assert.assertEquals(messageProcessor.getXPathExpressions().get("/ns:TestMessage/"), "newValue");
 
-        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), false);
+        Assert.assertFalse(xmlValidationContext.isSchemaValidationEnabled());
 
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().size(), 1);
         Assert.assertEquals(xmlValidationContext.getIgnoreExpressions().iterator().next(), "/ns:TestMessage/ns:ignore");
@@ -227,7 +227,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+        Assert.assertTrue(xmlValidationContext.isSchemaValidationEnabled());
 
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 2);
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
@@ -245,7 +245,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+        Assert.assertTrue(xmlValidationContext.isSchemaValidationEnabled());
 
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 2);
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("/TestMessage/text"), "Hello Citrus");
@@ -265,7 +265,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+        Assert.assertTrue(xmlValidationContext.isSchemaValidationEnabled());
 
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().size(), 1);
         Assert.assertEquals(xPathValidationContext.getXpathExpressions().get("boolean:/TestMessage/foo"), "true");
@@ -285,7 +285,7 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
 
-        Assert.assertEquals(xmlValidationContext.isSchemaValidationEnabled(), true);
+        Assert.assertTrue(xmlValidationContext.isSchemaValidationEnabled());
 
         Assert.assertEquals(scriptValidationContext.getScriptType(), "groovy");
         Assert.assertEquals(scriptValidationContext.getValidationScriptResourcePath(), "classpath:com/consol/citrus/actions/test-validation-script.groovy");
@@ -339,9 +339,9 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
         Assert.assertNotNull(messageBuilder.getPayloadData());
         Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 
-        Assert.assertEquals(messageBuilder.getMessageProcessors().size(), 1);
-        Assert.assertTrue(messageBuilder.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
-        JsonPathMessageProcessor jsonMessageProcessor = (JsonPathMessageProcessor)messageBuilder.getMessageProcessors().get(0);
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        JsonPathMessageProcessor jsonMessageProcessor = (JsonPathMessageProcessor)action.getMessageProcessors().get(0);
 
         Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().size(), 1);
         Assert.assertEquals(jsonMessageProcessor.getJsonPathExpressions().get("$.FooMessage.foo"), "newValue");
@@ -351,11 +351,11 @@ public class ReceiveMessageActionParserTest extends ActionParserTestSupport<Rece
 
         // 16th action
         action = getNextTestActionFromTest();
-        Assert.assertEquals(action.getMessageProcessors().size(), 2);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
-        headerVariableExtractor = (MessageHeaderVariableExtractor)action.getMessageProcessors().get(0);
-        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof DelegatingPayloadVariableExtractor);
-        DelegatingPayloadVariableExtractor jsonVariableExtractor = (DelegatingPayloadVariableExtractor) action.getMessageProcessors().get(1);
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        headerVariableExtractor = (MessageHeaderVariableExtractor)action.getVariableExtractors().get(0);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof DelegatingPayloadVariableExtractor);
+        DelegatingPayloadVariableExtractor jsonVariableExtractor = (DelegatingPayloadVariableExtractor) action.getVariableExtractors().get(1);
 
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().size(), 1);
         Assert.assertEquals(headerVariableExtractor.getHeaderMappings().get("operation"), "operation");

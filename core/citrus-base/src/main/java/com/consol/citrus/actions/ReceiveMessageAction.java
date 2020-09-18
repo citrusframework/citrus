@@ -34,6 +34,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.MessageType;
@@ -111,6 +112,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
     /** List of validation contexts for this receive action */
     private final List<ValidationContext> validationContexts;
 
+    /** List of variable extractors responsible for creating variables from received message content */
+    private final List<VariableExtractor> variableExtractors;
+
     /** List of processors that handle the receive message */
     private final List<MessageProcessor> messageProcessors;
 
@@ -137,6 +141,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.dataDictionary = builder.dataDictionary;
         this.validationCallback = builder.validationCallback;
         this.validationContexts = builder.validationContexts;
+        this.variableExtractors = builder.variableExtractors;
         this.messageProcessors = builder.messageProcessors;
         this.messageType = Optional.ofNullable(builder.messageType).orElse(CitrusSettings.DEFAULT_MESSAGE_TYPE);
     }
@@ -211,8 +216,9 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @param message
      */
     protected void validateMessage(Message message, TestContext context) {
-        for (MessageProcessor processor : messageProcessors) {
-            processor.process(message, context);
+        // extract variables from received message content
+        for (VariableExtractor variableExtractor : variableExtractors) {
+            variableExtractor.extractVariables(message, context);
         }
 
         if (validationCallback != null) {
@@ -269,17 +275,47 @@ public class ReceiveMessageAction extends AbstractTestAction {
     }
 
     /**
-     * Create control message that is expected.
+     * Create control message that is expected. Apply global and local message processors and data dictionaries.
      * @param context
      * @param messageType
      * @return
      */
     protected Message createControlMessage(TestContext context, String messageType) {
-        if (dataDictionary != null) {
-            messageBuilder.setDataDictionary(dataDictionary);
+        Message message = messageBuilder.buildMessageContent(context, messageType);
+
+        if (message.getPayload() != null) {
+            for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
+                MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                if (processor instanceof MessageDirectionAware) {
+                    processorDirection = ((MessageDirectionAware) processor).getDirection();
+                }
+
+                if (processorDirection.equals(MessageDirection.INBOUND)
+                        || processorDirection.equals(MessageDirection.UNBOUND)) {
+                    processor.process(message, context);
+                }
+            }
+
+            if (dataDictionary != null) {
+                dataDictionary.process(message, context);
+            }
+
+            for (final MessageProcessor processor : messageProcessors) {
+                MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                if (processor instanceof MessageDirectionAware) {
+                    processorDirection = ((MessageDirectionAware) processor).getDirection();
+                }
+
+                if (processorDirection.equals(MessageDirection.INBOUND)
+                        || processorDirection.equals(MessageDirection.UNBOUND)) {
+                    processor.process(message, context);
+                }
+            }
         }
 
-        return messageBuilder.buildMessageContent(context, messageType, MessageDirection.INBOUND);
+        return message;
     }
 
     @Override
@@ -321,6 +357,14 @@ public class ReceiveMessageAction extends AbstractTestAction {
      */
     public String getEndpointUri() {
         return endpointUri;
+    }
+
+    /**
+     * Gets the variable extractors.
+     * @return the variableExtractors
+     */
+    public List<VariableExtractor> getVariableExtractors() {
+        return variableExtractors;
     }
 
     /**
@@ -458,6 +502,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private String dataDictionaryName;
         private ValidationCallback validationCallback;
         private List<ValidationContext> validationContexts = new ArrayList<>();
+        private List<VariableExtractor> variableExtractors = new ArrayList<>();
         private List<MessageProcessor> messageProcessors = new ArrayList<>();
         private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
@@ -1185,12 +1230,32 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
+         * Adds message processor.
+         * @param processor
+         * @return
+         */
+        public B process(MessageProcessor processor) {
+            this.messageProcessors.add(processor);
+            return self;
+        }
+
+        /**
+         * Adds message processor as fluent builder.
+         * @param builder
+         * @return
+         */
+        public B process(MessageProcessor.Builder<?, ?> builder) {
+            this.messageProcessors.add(builder.build());
+            return self;
+        }
+
+        /**
          * Adds variable extractor.
          * @param extractor
          * @return
          */
         public B extract(VariableExtractor extractor) {
-            this.messageProcessors.add(extractor);
+            this.variableExtractors.add(extractor);
             return self;
         }
 
@@ -1200,7 +1265,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B extract(VariableExtractor.Builder<?, ?> builder) {
-            this.messageProcessors.add(builder.build());
+            this.variableExtractors.add(builder.build());
             return self;
         }
 

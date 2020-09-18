@@ -112,9 +112,9 @@ public class HttpReceiveRequestActionParserTest extends AbstractActionParserTest
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("httpServer", HttpServer.class));
         Assert.assertNull(action.getEndpointUri());
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1L);
-        Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getMessageProcessors().get(0)).getPathExpressions().size(), 1L);
-        Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getMessageProcessors().get(0)).getPathExpressions().get("$.user.id"), "userId");
+        Assert.assertEquals(action.getVariableExtractors().size(), 1L);
+        Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().size(), 1L);
+        Assert.assertEquals(((DelegatingPayloadVariableExtractor)action.getVariableExtractors().get(0)).getPathExpressions().get("$.user.id"), "userId");
 
         action = getNextTestActionFromTest();
         Assert.assertEquals(action.getValidationContexts().size(), 3);

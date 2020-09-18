@@ -33,6 +33,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
+import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -74,6 +75,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
     /** Message endpoint uri - either bean name or dynamic uri */
     private final String endpointUri;
 
+    /** List of variable extractors responsible for creating variables from received message content */
+    private final List<VariableExtractor> variableExtractors;
+
     /** List of message processors responsible for manipulating message to be sent */
     private final List<MessageProcessor> messageProcessors;
 
@@ -105,6 +109,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         this.endpoint = builder.endpoint;
         this.endpointUri = builder.endpointUri;
+        this.variableExtractors = builder.variableExtractors;
         this.messageProcessors = builder.messageProcessors;
         this.messageBuilder = builder.messageBuilder;
         this.forkMode = builder.forkMode;
@@ -118,11 +123,12 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      */
     @Override
     public void doExecute(final TestContext context) {
-        Message message = createMessage(context, messageType);
+        final Message message = createMessage(context, messageType);
         finished = new CompletableFuture<>();
 
-        for (MessageProcessor processor : messageProcessors) {
-            processor.process(message, context);
+        // extract variables from before sending message so we can save dynamic message ids
+        for (VariableExtractor variableExtractor : variableExtractors) {
+            variableExtractor.extractVariables(message, context);
         }
 
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
@@ -137,10 +143,9 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             log.debug("Forking message sending action ...");
 
             SimpleAsyncTaskExecutor taskExecutor = new SimpleAsyncTaskExecutor();
-            final Message finalMessage = message;
             taskExecutor.execute(() -> {
                 try {
-                    messageEndpoint.createProducer().send(finalMessage, context);
+                    messageEndpoint.createProducer().send(message, context);
                 } catch (Exception e) {
                     if (e instanceof CitrusRuntimeException) {
                         context.addException((CitrusRuntimeException) e);
@@ -187,11 +192,41 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      * @return
      */
     protected Message createMessage(TestContext context, String messageType) {
-        if (dataDictionary != null) {
-            messageBuilder.setDataDictionary(dataDictionary);
+        Message message = messageBuilder.buildMessageContent(context, messageType);
+
+        if (message.getPayload() != null) {
+            for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
+                MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                if (processor instanceof MessageDirectionAware) {
+                    processorDirection = ((MessageDirectionAware) processor).getDirection();
+                }
+
+                if (processorDirection.equals(MessageDirection.OUTBOUND)
+                        || processorDirection.equals(MessageDirection.UNBOUND)) {
+                    processor.process(message, context);
+                }
+            }
+
+            if (dataDictionary != null) {
+                dataDictionary.process(message, context);
+            }
+
+            for (final MessageProcessor processor : messageProcessors) {
+                MessageDirection processorDirection = MessageDirection.UNBOUND;
+
+                if (processor instanceof MessageDirectionAware) {
+                    processorDirection = ((MessageDirectionAware) processor).getDirection();
+                }
+
+                if (processorDirection.equals(MessageDirection.OUTBOUND)
+                        || processorDirection.equals(MessageDirection.UNBOUND)) {
+                    processor.process(message, context);
+                }
+            }
         }
 
-        return messageBuilder.buildMessageContent(context, messageType, MessageDirection.OUTBOUND);
+        return message;
     }
 
     /**
@@ -214,6 +249,14 @@ public class SendMessageAction extends AbstractTestAction implements Completable
      */
     public Endpoint getEndpoint() {
         return endpoint;
+    }
+
+    /**
+     * Get the variable extractors.
+     * @return the variableExtractors
+     */
+    public List<VariableExtractor> getVariableExtractors() {
+        return variableExtractors;
     }
 
     /**
@@ -313,6 +356,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
 
         protected Endpoint endpoint;
         protected String endpointUri;
+        protected List<VariableExtractor> variableExtractors = new ArrayList<>();
         protected List<MessageProcessor> messageProcessors = new ArrayList<>();
         protected MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         protected boolean forkMode = false;
@@ -644,7 +688,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          *
          * @return the message builder in use
          */
-        public AbstractMessageContentBuilder getMessageContentBuilder() {
+        protected AbstractMessageContentBuilder getMessageContentBuilder() {
             if (this.messageBuilder != null && this.messageBuilder instanceof AbstractMessageContentBuilder) {
                 return (AbstractMessageContentBuilder) this.messageBuilder;
             } else {
@@ -680,7 +724,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B extract(VariableExtractor extractor) {
-            this.messageProcessors.add(extractor);
+            this.variableExtractors.add(extractor);
             return self;
         }
 
@@ -690,7 +734,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B extract(VariableExtractor.Builder<?, ?> builder) {
-            this.messageProcessors.add(builder.build());
+            this.variableExtractors.add(builder.build());
             return self;
         }
 
@@ -703,14 +747,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         public B xpath(String expression, String value) {
             if (xpathMessageProcessor == null) {
                 xpathMessageProcessor = new XpathMessageProcessor();
-
-                if (this.messageBuilder != null) {
-                    this.messageBuilder.add(xpathMessageProcessor);
-                } else {
-                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                    messageBuilder.add(xpathMessageProcessor);
-                    messageBuilder(messageBuilder);
-                }
+                this.messageProcessors.add(xpathMessageProcessor);
             }
 
             xpathMessageProcessor.getXPathExpressions().put(expression, value);
@@ -726,14 +763,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         public B jsonPath(String expression, String value) {
             if (jsonPathMessageProcessor == null) {
                 jsonPathMessageProcessor = new JsonPathMessageProcessor();
-
-                if (this.messageBuilder != null) {
-                    this.messageBuilder.add(jsonPathMessageProcessor);
-                } else {
-                    PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                    messageBuilder.add(jsonPathMessageProcessor);
-                    messageBuilder(messageBuilder);
-                }
+                this.messageProcessors.add(jsonPathMessageProcessor);
             }
 
             jsonPathMessageProcessor.getJsonPathExpressions().put(expression, value);
@@ -754,7 +784,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param dictionary
          * @return
          */
-        public B dictionary(DataDictionary dictionary) {
+        public B dictionary(DataDictionary<?> dictionary) {
             this.dataDictionary = dictionary;
             return self;
         }

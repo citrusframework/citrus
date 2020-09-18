@@ -188,10 +188,10 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathVariableExtractor);
-        Assert.assertTrue(((JsonPathVariableExtractor)action.getMessageProcessors().get(0)).getJsonPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((JsonPathVariableExtractor)action.getMessageProcessors().get(0)).getJsonPathExpressions().containsKey("$.person"));
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.person"));
 
     }
 
@@ -223,9 +223,9 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
-        Assert.assertEquals(((JsonPathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        Assert.assertEquals(((JsonPathMessageProcessor)action.getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
     }
 
     @Test

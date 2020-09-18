@@ -16,6 +16,8 @@
 
 package com.consol.citrus.actions;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.SelectiveConsumer;
@@ -47,6 +50,7 @@ import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -57,6 +61,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.when;
 
@@ -489,8 +494,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
                 "   <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -518,6 +522,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
@@ -533,8 +538,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
-        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteElements);
-        controlMessageBuilder.add(interceptor);
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(overwriteElements);
 
         Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
 
@@ -561,6 +565,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .messageType(MessageType.JSON)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
@@ -576,8 +581,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
                 "   <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -605,6 +609,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
@@ -621,8 +626,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
@@ -650,6 +654,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
+                .process(processor)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
                 .build();
@@ -668,8 +673,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns1:Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
@@ -699,6 +703,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
 
@@ -715,8 +720,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
@@ -745,6 +749,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
+                .process(processor)
                 .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -1371,5 +1376,155 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
+    }
+
+    @Test
+    public void testWithExplicitDataDictionary() {
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(dictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
+        when(dictionary.isGlobalScope()).thenReturn(false);
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+            return null;
+        }).when(dictionary).process(any(Message.class), eq(context));
+
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .dictionary(dictionary)
+                .build();
+        receiveAction.execute(context);
+    }
+
+    @Test
+    public void testWithExplicitAndGlobalDataDictionary() {
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> globalDictionary = Mockito.mock(DataDictionary.class);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(dictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
+        when(globalDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
+        when(dictionary.isGlobalScope()).thenReturn(false);
+        when(globalDictionary.isGlobalScope()).thenReturn(true);
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            return null;
+        }).when(globalDictionary).process(any(Message.class), eq(context));
+
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+            return null;
+        }).when(dictionary).process(any(Message.class), eq(context));
+
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
+        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(globalDictionary));
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .dictionary(dictionary)
+                .build();
+        receiveAction.execute(context);
+    }
+
+    @Test
+    public void testWithGlobalDataDictionary() {
+        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+        controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+
+        Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        DataDictionary<String> inboundDictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> outboundDictionary = Mockito.mock(DataDictionary.class);
+        reset(endpoint, consumer, endpointConfiguration);
+        when(inboundDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
+        when(outboundDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
+        when(inboundDictionary.isGlobalScope()).thenReturn(true);
+        when(outboundDictionary.isGlobalScope()).thenReturn(true);
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            return null;
+        }).when(inboundDictionary).process(any(Message.class), eq(context));
+
+        doThrow(new CitrusRuntimeException("Unexpected call of outbound data dictionary"))
+                .when(outboundDictionary).process(any(Message.class), eq(context));
+
+        when(endpoint.createConsumer()).thenReturn(consumer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+        when(endpointConfiguration.getTimeout()).thenReturn(5000L);
+
+        when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
+        when(endpoint.getActor()).thenReturn(null);
+
+        doAnswer(invocationOnMock -> {
+            Message received = invocationOnMock.getArgument(0);
+            Message control = invocationOnMock.getArgument(1);
+            List<ValidationContext> validationContextList = invocationOnMock.getArgument(3);
+
+            Assert.assertEquals(received.getPayload(String.class).trim(), control.getPayload(String.class).trim());
+            new DefaultMessageHeaderValidator().validateMessage(received, control, context, validationContextList);
+            return null;
+        }).when(validator).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+
+        context.getMessageProcessors().setMessageProcessors(Arrays.asList(inboundDictionary, outboundDictionary));
+
+        ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(controlMessageBuilder)
+                .validationContext(validationContext)
+                .build();
+        receiveAction.execute(context);
     }
 }

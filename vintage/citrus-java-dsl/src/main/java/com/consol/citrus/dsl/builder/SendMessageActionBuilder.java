@@ -297,11 +297,11 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
         delegate.messageType(messageType);
 
         if (MessageType.BINARY.name().equalsIgnoreCase(messageType)) {
-            delegate.getMessageContentBuilder().add(binaryMessageProcessor);
+            delegate.process(binaryMessageProcessor);
         }
 
         if (MessageType.GZIP.name().equalsIgnoreCase(messageType)) {
-            delegate.getMessageContentBuilder().add(gzipMessageProcessor);
+            delegate.process(gzipMessageProcessor);
         }
 
         return self;

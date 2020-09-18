@@ -17,6 +17,8 @@
 package com.consol.citrus.actions;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,6 +33,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Producer;
@@ -43,12 +46,15 @@ import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
+import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -330,8 +336,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        messageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
                 "   <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -351,6 +356,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(messageBuilder)
+                .process(processor)
                 .build();
         sendAction.execute(context);
 
@@ -365,8 +371,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
-        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteElements);
-        messageBuilder.add(interceptor);
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(overwriteElements);
 
         final Message controlMessage = new DefaultMessage("{\"TestRequest\":{\"Message\":\"Hello World!\"}}");
 
@@ -385,6 +390,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageType(MessageType.JSON)
                 .messageBuilder(messageBuilder)
+                .process(processor)
                 .build();
         sendAction.execute(context);
 
@@ -399,8 +405,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        messageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest>" + System.lineSeparator() +
                 "   <Message>Hello World!</Message>" + System.lineSeparator() +
@@ -420,6 +425,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(messageBuilder)
+                .process(processor)
                 .build();
         sendAction.execute(context);
 
@@ -435,8 +441,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        messageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
@@ -457,6 +462,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(messageBuilder)
+                .process(processor)
                 .build();
         sendAction.execute(context);
 
@@ -472,8 +478,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         Map<String, String> overwriteElements = new HashMap<String, String>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteElements);
-        messageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(overwriteElements);
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
                 "<TestRequest xmlns=\"http://citrusframework.org/unittest\">" + System.lineSeparator() +
@@ -494,6 +499,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(messageBuilder)
+                .process(processor)
                 .build();
         sendAction.execute(context);
 
@@ -868,6 +874,129 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         testCase.addTestAction(sendAction);
         testCase.execute(context);
 
+    }
+
+    @Test
+    public void testWithExplicitDataDictionary() {
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
+        reset(endpoint, producer, endpointConfiguration);
+        when(dictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
+        when(dictionary.isGlobalScope()).thenReturn(false);
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+            return null;
+        }).when(dictionary).process(any(Message.class), eq(context));
+
+        when(endpoint.createProducer()).thenReturn(producer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
+        }).when(producer).send(any(Message.class), any(TestContext.class));
+
+        when(endpoint.getActor()).thenReturn(null);
+
+        SendMessageAction sendAction = new SendMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(messageBuilder)
+                .dictionary(dictionary)
+                .build();
+        sendAction.execute(context);
+    }
+
+    @Test
+    public void testWithExplicitAndGlobalDataDictionary() {
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+
+        DataDictionary<String> dictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> globalDictionary = Mockito.mock(DataDictionary.class);
+        reset(endpoint, producer, endpointConfiguration);
+        when(dictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
+        when(globalDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
+        when(dictionary.isGlobalScope()).thenReturn(false);
+        when(globalDictionary.isGlobalScope()).thenReturn(true);
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            return null;
+        }).when(globalDictionary).process(any(Message.class), eq(context));
+
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+            return null;
+        }).when(dictionary).process(any(Message.class), eq(context));
+
+        when(endpoint.createProducer()).thenReturn(producer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
+        }).when(producer).send(any(Message.class), any(TestContext.class));
+
+        when(endpoint.getActor()).thenReturn(null);
+
+        context.getMessageProcessors().setMessageProcessors(Collections.singletonList(globalDictionary));
+
+        SendMessageAction sendAction = new SendMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(messageBuilder)
+                .dictionary(dictionary)
+                .build();
+        sendAction.execute(context);
+    }
+
+    @Test
+    public void testWithGlobalDataDictionary() {
+        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+
+        final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
+
+        DataDictionary<String> inboundDictionary = Mockito.mock(DataDictionary.class);
+        DataDictionary<String> outboundDictionary = Mockito.mock(DataDictionary.class);
+        reset(endpoint, producer, endpointConfiguration);
+        when(inboundDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
+        when(outboundDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
+        when(inboundDictionary.isGlobalScope()).thenReturn(true);
+        when(outboundDictionary.isGlobalScope()).thenReturn(true);
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload("<TestRequest><Message>Hello World!</Message></TestRequest>");
+            return null;
+        }).when(outboundDictionary).process(any(Message.class), eq(context));
+
+        doThrow(new CitrusRuntimeException("Unexpected call of inbound data dictionary"))
+                .when(inboundDictionary).process(any(Message.class), eq(context));
+
+        when(endpoint.createProducer()).thenReturn(producer);
+        when(endpoint.getEndpointConfiguration()).thenReturn(endpointConfiguration);
+
+        doAnswer(invocation -> {
+            validateMessageToSend(invocation.getArgument(0), controlMessage);
+            return null;
+        }).when(producer).send(any(Message.class), any(TestContext.class));
+
+        when(endpoint.getActor()).thenReturn(null);
+
+        context.getMessageProcessors().setMessageProcessors(Arrays.asList(inboundDictionary, outboundDictionary));
+
+        SendMessageAction sendAction = new SendMessageAction.Builder()
+                .endpoint(endpoint)
+                .messageBuilder(messageBuilder)
+                .build();
+        sendAction.execute(context);
     }
 
     private void validateMessageToSend(Message toSend, Message controlMessage) {

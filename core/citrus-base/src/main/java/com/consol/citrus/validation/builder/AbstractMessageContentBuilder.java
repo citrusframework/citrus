@@ -27,13 +27,9 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.message.MessageHeaderUtils;
-import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.variable.dictionary.DataDictionary;
 
 /**
  * Abstract control message builder is aware of message headers and delegates message payload
@@ -55,64 +51,19 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
     /** The message header as inline data */
     private List<String> headerData = new ArrayList<>();
 
-    /** Optional data dictionary that explicitly modifies control message content before construction */
-    private DataDictionary dataDictionary;
-
-    /** List of manipulators for static message payload */
-    private List<MessageProcessor> messageProcessors = new ArrayList<>();
-
     /**
      * Constructs the control message with headers and payload coming from
      * subclass implementation.
      */
     @Override
-    public Message buildMessageContent(
-            final TestContext context,
-            final String messageType,
-            final MessageDirection direction) {
+    public Message buildMessageContent(final TestContext context, final String messageType) {
         final Object payload = buildMessagePayload(context, messageType);
 
         try {
             Message message = new DefaultMessage(payload, buildMessageHeaders(context));
             message.setName(messageName);
             message.setType(messageType);
-
-            if (payload != null) {
-                for (final MessageProcessor processor: context.getMessageProcessors().getMessageProcessors()) {
-                    MessageDirection processorDirection = MessageDirection.UNBOUND;
-
-                    if (processor instanceof MessageDirectionAware) {
-                        processorDirection = ((MessageDirectionAware) processor).getDirection();
-                    }
-
-                    if (direction.equals(MessageDirection.UNBOUND)
-                            || processorDirection.equals(MessageDirection.UNBOUND)
-                            || direction.equals(processorDirection)) {
-                        processor.process(message, context);
-                    }
-                }
-
-                if (dataDictionary != null) {
-                    dataDictionary.process(message, context);
-                }
-
-                for (final MessageProcessor processor : messageProcessors) {
-                    MessageDirection processorDirection = MessageDirection.UNBOUND;
-
-                    if (processor instanceof MessageDirectionAware) {
-                        processorDirection = ((MessageDirectionAware) processor).getDirection();
-                    }
-
-                    if (direction.equals(MessageDirection.UNBOUND)
-                            || processorDirection.equals(MessageDirection.UNBOUND)
-                            || direction.equals(processorDirection)) {
-                        processor.process(message, context);
-                    }
-                }
-            }
-
             message.getHeaderData().addAll(buildMessageHeaderData(context));
-
             return message;
         } catch (final RuntimeException e) {
             throw e;
@@ -203,19 +154,6 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         return messageName;
     }
 
-    @Override
-    public void setDataDictionary(final DataDictionary dataDictionary) {
-        this.dataDictionary = dataDictionary;
-    }
-
-    /**
-     * Gets the data dictionary.
-     * @return
-     */
-    public DataDictionary getDataDictionary() {
-        return dataDictionary;
-    }
-
     /**
      * Sets the message headers for this control message.
      * @param messageHeaders the controlMessageHeaders to set
@@ -264,28 +202,4 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
         return headerData;
     }
 
-    /**
-     * Adds a new message processor to the message construction process.
-     * @param processor
-     */
-    public void add(final MessageProcessor processor) {
-        messageProcessors.add(processor);
-    }
-
-    /**
-     * Gets the message processors.
-     * @return the list of processors bound to this message construction process.
-     */
-    public List<MessageProcessor> getMessageProcessors() {
-        return messageProcessors;
-    }
-
-    /**
-     * Sets the message processors.
-     * @param messageProcessors the processors to set
-     */
-    public void setMessageProcessors(
-            final List<MessageProcessor> messageProcessors) {
-        this.messageProcessors = messageProcessors;
-    }
 }

@@ -22,10 +22,7 @@ import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.variable.dictionary.DataDictionary;
 
 public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
 
@@ -59,12 +56,12 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     }
 
     @Override
-    public Message buildMessageContent(final TestContext context, final String messageType, final MessageDirection direction) {
+    public Message buildMessageContent(final TestContext context, final String messageType) {
         //Copy the initial message, so that it is not manipulated during the test.
         final HttpMessage message = new HttpMessage(template);
 
         delegate.getMessageHeaders().putAll(template.getHeaders());
-        final Message constructed = delegate.buildMessageContent(context, messageType, direction);
+        final Message constructed = delegate.buildMessageContent(context, messageType);
 
         message.setName(delegate.getMessageName());
         message.setType(constructed.getType());
@@ -92,21 +89,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     private Cookie[] constructCookies(final TestContext context) {
         final List<Cookie> cookies = cookieEnricher.enrich(template.getCookies(), context);
         return cookies.toArray(new Cookie[0]);
-    }
-
-    @Override
-    public DataDictionary getDataDictionary() {
-        return delegate.getDataDictionary();
-    }
-
-    @Override
-    public List<MessageProcessor> getMessageProcessors() {
-        return delegate.getMessageProcessors();
-    }
-
-    @Override
-    public void setMessageProcessors(final List<MessageProcessor> messageProcessors) {
-        delegate.setMessageProcessors(messageProcessors);
     }
 
     @Override
@@ -152,16 +134,6 @@ public class HttpMessageContentBuilder extends AbstractMessageContentBuilder {
     @Override
     public Object buildMessagePayload(final TestContext context, final String messageType) {
         return delegate.buildMessagePayload(context, messageType);
-    }
-
-    @Override
-    public void add(final MessageProcessor processor) {
-        delegate.add(processor);
-    }
-
-    @Override
-    public void setDataDictionary(final DataDictionary dataDictionary) {
-        delegate.setDataDictionary(dataDictionary);
     }
 
     public AbstractMessageContentBuilder getDelegate() {

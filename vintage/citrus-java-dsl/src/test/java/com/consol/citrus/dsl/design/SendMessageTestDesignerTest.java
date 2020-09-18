@@ -575,11 +575,11 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 2);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof XpathPayloadVariableExtractor);
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getMessageProcessors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
-        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getMessageProcessors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof XpathPayloadVariableExtractor);
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(0)).getXpathExpressions().containsKey("/TestRequest/Message"));
+        Assert.assertTrue(((XpathPayloadVariableExtractor)action.getVariableExtractors().get(1)).getXpathExpressions().containsKey("/TestRequest/Message/@lang"));
     }
 
     @Test
@@ -606,11 +606,11 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 2);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathVariableExtractor);
-        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof JsonPathVariableExtractor);
-        Assert.assertTrue(((JsonPathVariableExtractor)action.getMessageProcessors().get(0)).getJsonPathExpressions().containsKey("$.text"));
-        Assert.assertTrue(((JsonPathVariableExtractor)action.getMessageProcessors().get(1)).getJsonPathExpressions().containsKey("$.person"));
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof JsonPathVariableExtractor);
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(0)).getJsonPathExpressions().containsKey("$.text"));
+        Assert.assertTrue(((JsonPathVariableExtractor)action.getVariableExtractors().get(1)).getJsonPathExpressions().containsKey("$.person"));
     }
 
     @Test
@@ -636,11 +636,11 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 2);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
-        Assert.assertTrue(action.getMessageProcessors().get(1) instanceof MessageHeaderVariableExtractor);
-        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getMessageProcessors().get(0)).getHeaderMappings().containsKey("operation"));
-        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getMessageProcessors().get(1)).getHeaderMappings().containsKey("requestId"));
+        Assert.assertEquals(action.getVariableExtractors().size(), 2);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(action.getVariableExtractors().get(1) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor)action.getVariableExtractors().get(1)).getHeaderMappings().containsKey("requestId"));
     }
 
     @Test
@@ -666,9 +666,9 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof XpathMessageProcessor);
-        Assert.assertEquals(((XpathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof XpathMessageProcessor);
+        Assert.assertEquals(((XpathMessageProcessor)action.getMessageProcessors().get(0)).getXPathExpressions().get("/TestRequest/Message"), "Hello World!");
     }
 
     @Test
@@ -694,9 +694,9 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof AbstractMessageContentBuilder);
-        Assert.assertEquals(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().size(), 1);
-        Assert.assertTrue(((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
-        Assert.assertEquals(((JsonPathMessageProcessor)((AbstractMessageContentBuilder) action.getMessageBuilder()).getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
+        Assert.assertEquals(action.getMessageProcessors().size(), 1);
+        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof JsonPathMessageProcessor);
+        Assert.assertEquals(((JsonPathMessageProcessor)action.getMessageProcessors().get(0)).getJsonPathExpressions().get("$.TestRequest.Message"), "Hello World!");
     }
 
     @Test

@@ -327,13 +327,13 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -371,13 +371,13 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA", "");
         messageElements.put("sub-elementB", "");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -415,8 +415,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         HashMap<String, Object> validateElements = new HashMap<>();
         validateElements.put("root.element.sub-elementA", "text-value");
@@ -428,6 +427,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -465,13 +465,13 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA.attribute", "A");
         messageElements.put("sub-elementB.attribute", "B");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -509,13 +509,13 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-element-wrong", "text-value");
         messageElements.put("sub-element-wrong", "text-value");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -553,13 +553,13 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         messageElements.put("sub-elementB.attribute-wrong", "B");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -597,13 +597,13 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         messageElements.put("root.element.sub-elementA-wrong.attribute", "A");
         messageElements.put("sub-elementB-wrong.attribute", "B");
 
-        XpathMessageProcessor interceptor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(interceptor);
+        XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }

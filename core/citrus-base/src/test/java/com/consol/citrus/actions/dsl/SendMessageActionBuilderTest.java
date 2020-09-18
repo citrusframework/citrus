@@ -663,8 +663,8 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertEquals(action.getMessageProcessors().get(0), extractor);
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertEquals(action.getVariableExtractors().get(0), extractor);
 
     }
 
@@ -702,10 +702,10 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
 
-        Assert.assertEquals(action.getMessageProcessors().size(), 1);
-        Assert.assertTrue(action.getMessageProcessors().get(0) instanceof MessageHeaderVariableExtractor);
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getMessageProcessors().get(0)).getHeaderMappings().containsKey("operation"));
-        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getMessageProcessors().get(0)).getHeaderMappings().containsKey("requestId"));
+        Assert.assertEquals(action.getVariableExtractors().size(), 1);
+        Assert.assertTrue(action.getVariableExtractors().get(0) instanceof MessageHeaderVariableExtractor);
+        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("operation"));
+        Assert.assertTrue(((MessageHeaderVariableExtractor) action.getVariableExtractors().get(0)).getHeaderMappings().containsKey("requestId"));
 
     }
 

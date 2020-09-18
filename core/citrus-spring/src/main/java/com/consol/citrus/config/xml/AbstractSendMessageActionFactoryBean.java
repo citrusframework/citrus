@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.validation.builder.MessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -35,6 +36,15 @@ public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessage
      */
     public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
         variableExtractors.forEach(getBuilder()::extract);
+    }
+
+    /**
+     * Set the list of message processors.
+     *
+     * @param messageProcessors the messageProcessors to set
+     */
+    public void setMessageProcessors(List<MessageProcessor> messageProcessors) {
+        messageProcessors.forEach(getBuilder()::process);
     }
 
     /**

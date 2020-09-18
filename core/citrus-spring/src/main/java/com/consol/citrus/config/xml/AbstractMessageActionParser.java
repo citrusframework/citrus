@@ -16,6 +16,7 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.message.MessageHeaderType;
+import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
@@ -38,6 +40,7 @@ import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -56,11 +59,11 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
      *
      * @param messageElement
      */
-    public AbstractMessageContentBuilder constructMessageBuilder(Element messageElement) {
+    public AbstractMessageContentBuilder constructMessageBuilder(Element messageElement, BeanDefinitionBuilder actionBuilder) {
         AbstractMessageContentBuilder messageBuilder = null;
 
         if (messageElement != null) {
-            messageBuilder = parsePayloadTemplateBuilder(messageElement);
+            messageBuilder = parsePayloadTemplateBuilder(messageElement, actionBuilder);
 
             if (messageBuilder == null) {
                 messageBuilder = parseScriptBuilder(messageElement);
@@ -119,8 +122,9 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
     /**
      * Parses message payload template information given in message element.
      * @param messageElement
+     * @param actionBuilder
      */
-    private PayloadTemplateMessageBuilder parsePayloadTemplateBuilder(Element messageElement) {
+    private PayloadTemplateMessageBuilder parsePayloadTemplateBuilder(Element messageElement, BeanDefinitionBuilder actionBuilder) {
         PayloadTemplateMessageBuilder messageBuilder;
 
         messageBuilder = parsePayloadElement(messageElement);
@@ -154,26 +158,29 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
                 }
             }
 
+            List<MessageProcessor> messageProcessors = new ArrayList<>();
             if (!overwriteXpath.isEmpty()) {
                 XpathMessageProcessor interceptor = new XpathMessageProcessor(overwriteXpath);
-                messageBuilder.add(interceptor);
+                messageProcessors.add(interceptor);
             }
 
             if (!overwriteJsonPath.isEmpty()) {
                 JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(overwriteJsonPath);
-                messageBuilder.add(interceptor);
+                messageProcessors.add(interceptor);
             }
 
             String messageType = messageElement.getAttribute("type");
             if (StringUtils.hasText(messageType)) {
                 if (messageType.equalsIgnoreCase(MessageType.GZIP.name())) {
-                    messageBuilder.add(new GzipMessageProcessor());
+                    messageProcessors.add(new GzipMessageProcessor());
                 }
 
                 if (messageType.equalsIgnoreCase(MessageType.BINARY.name())) {
-                    messageBuilder.add(new BinaryMessageProcessor());
+                    messageProcessors.add(new BinaryMessageProcessor());
                 }
             }
+
+            actionBuilder.addPropertyValue("messageProcessors", messageProcessors);
         }
 
         return messageBuilder;

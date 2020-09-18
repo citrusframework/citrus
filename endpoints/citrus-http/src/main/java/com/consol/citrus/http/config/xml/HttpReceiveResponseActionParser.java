@@ -16,9 +16,16 @@
 
 package com.consol.citrus.http.config.xml;
 
+import javax.servlet.http.Cookie;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
-import com.consol.citrus.config.xml.*;
-import com.consol.citrus.http.message.*;
+import com.consol.citrus.config.xml.DescriptionElementParser;
+import com.consol.citrus.config.xml.MessageSelectorParser;
+import com.consol.citrus.config.xml.ReceiveMessageActionParser;
+import com.consol.citrus.http.message.HttpMessage;
+import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.http.message.HttpMessageHeaders;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.BeanCreationException;
@@ -28,9 +35,6 @@ import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import javax.servlet.http.Cookie;
-import java.util.List;
 
 /**
  * @author Christoph Deppisch
@@ -129,7 +133,7 @@ public class HttpReceiveResponseActionParser extends ReceiveMessageActionParser 
 
         MessageSelectorParser.doParse(element, builder);
 
-        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body)));
+        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body, builder)));
         builder.addPropertyValue("validationContexts", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 

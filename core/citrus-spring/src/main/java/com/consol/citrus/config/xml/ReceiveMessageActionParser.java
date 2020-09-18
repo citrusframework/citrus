@@ -90,7 +90,7 @@ public class ReceiveMessageActionParser extends AbstractMessageActionParser {
         Element messageElement = DomUtils.getChildElementByTagName(element, "message");
         List<ValidationContext> validationContexts = parseValidationContexts(messageElement, builder);
 
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
+        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
         parseHeaderElements(element, messageBuilder, validationContexts);
 
         builder.addPropertyValue("messageBuilder", messageBuilder);

@@ -18,47 +18,20 @@ package com.consol.citrus.validation.builder;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageDirection;
-import com.consol.citrus.message.MessageProcessor;
-import com.consol.citrus.variable.dictionary.DataDictionary;
 
 /**
  * Interface for classes beeing able to build control messages for validation.
  *
  * @author Christoph Deppisch
  */
+@FunctionalInterface
 public interface MessageContentBuilder {
 
     /**
      * Builds the control message.
      * @param context the current test context.
      * @param messageType the message type to build.
-     * @param direction
      * @return the constructed message object.
      */
-    Message buildMessageContent(TestContext context, String messageType, MessageDirection direction);
-
-    /**
-     * Builds the control message.
-     * @param context the current test context.
-     * @param messageType the message type to build.
-     * @return the constructed message object.
-     * @deprecated in favor of using {@link #buildMessageContent(TestContext, String, MessageDirection)}.
-     */
-    @Deprecated
-    default Message buildMessageContent(TestContext context, String messageType){
-        return buildMessageContent(context, messageType, MessageDirection.UNBOUND);
-    }
-
-    /**
-     * Adds a message processor.
-     * @param processor
-     */
-    void add(MessageProcessor processor);
-
-    /**
-     * Sets explicit data dictionary for this message builder.
-     * @param dataDictionary
-     */
-    void setDataDictionary(DataDictionary dataDictionary);
+    Message buildMessageContent(TestContext context, String messageType);
 }

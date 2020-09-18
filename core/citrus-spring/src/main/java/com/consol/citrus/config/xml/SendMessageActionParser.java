@@ -74,14 +74,14 @@ public class SendMessageActionParser extends AbstractMessageActionParser {
             }
         }
 
-        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement);
+        AbstractMessageContentBuilder messageBuilder = constructMessageBuilder(messageElement, builder);
         parseHeaderElements(element, messageBuilder, Collections.emptyList());
 
         if (messageBuilder != null) {
             builder.addPropertyValue("messageBuilder", messageBuilder);
         }
 
-        List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
+        List<VariableExtractor> variableExtractors = new ArrayList<>();
         parseExtractHeaderElements(element, variableExtractors);
 
         if (!variableExtractors.isEmpty()) {

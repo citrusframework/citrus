@@ -400,12 +400,12 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-elementB", "text-value");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -445,12 +445,12 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-elementB", "");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -490,7 +490,6 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-elementB", "text-value");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         HashMap<String, Object> validateElements = new HashMap<>();
         validateElements.put("//root/element/sub-elementA", "text-value");
@@ -502,6 +501,7 @@ public class MessageElementsTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -541,12 +541,12 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-elementB/@attribute", "B");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -586,12 +586,12 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-element-wrong", "text-value");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -631,12 +631,12 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-elementB/@attribute-wrong", "B");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }
@@ -676,12 +676,12 @@ public class MessageElementsTest extends UnitTestSupport {
         messageElements.put("//sub-elementB-wrong/@attribute", "B");
 
         XpathMessageProcessor processor = new XpathMessageProcessor(messageElements);
-        controlMessageBuilder.add(processor);
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validationContext(validationContext)
+                .process(processor)
                 .build();
         receiveAction.execute(context);
     }

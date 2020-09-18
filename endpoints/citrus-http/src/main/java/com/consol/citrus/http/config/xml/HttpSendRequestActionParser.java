@@ -16,6 +16,10 @@
 
 package com.consol.citrus.http.config.xml;
 
+import javax.servlet.http.Cookie;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.config.xml.SendMessageActionParser;
@@ -31,9 +35,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import javax.servlet.http.Cookie;
-import java.util.*;
 
 /**
  * @author Christoph Deppisch
@@ -123,7 +124,7 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body)));
+        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body, builder)));
 
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         parseExtractHeaderElements(element, variableExtractors);
