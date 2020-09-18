@@ -211,30 +211,29 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * @param message
      */
     protected void validateMessage(Message message, TestContext context) {
-        Message receivedMessage = message;
         for (MessageProcessor processor : messageProcessors) {
-            receivedMessage = processor.process(receivedMessage, context);
+            processor.process(message, context);
         }
 
         if (validationCallback != null) {
-            if (StringUtils.hasText(receivedMessage.getName())) {
-                context.getMessageStore().storeMessage(receivedMessage.getName(), receivedMessage);
+            if (StringUtils.hasText(message.getName())) {
+                context.getMessageStore().storeMessage(message.getName(), message);
             } else {
-                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), receivedMessage);
+                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
             }
 
-            validationCallback.validate(receivedMessage, context);
+            validationCallback.validate(message, context);
         } else {
             Message controlMessage = createControlMessage(context, messageType);
             if (StringUtils.hasText(controlMessage.getName())) {
-                context.getMessageStore().storeMessage(controlMessage.getName(), receivedMessage);
+                context.getMessageStore().storeMessage(controlMessage.getName(), message);
             } else {
-                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), receivedMessage);
+                context.getMessageStore().storeMessage(context.getMessageStore().constructMessageName(this, getOrCreateEndpoint(context)), message);
             }
 
             if (!CollectionUtils.isEmpty(validators)) {
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                    messageValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+                    messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }
 
                 if (validators.parallelStream()
@@ -242,12 +241,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
                         .noneMatch(DefaultMessageHeaderValidator.class::isAssignableFrom)) {
                     MessageValidator<?extends ValidationContext> defaultMessageHeaderValidator = context.getMessageValidatorRegistry().getDefaultMessageHeaderValidator();
                     if (defaultMessageHeaderValidator != null) {
-                        defaultMessageHeaderValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+                        defaultMessageHeaderValidator.validateMessage(message, controlMessage, context, validationContexts);
                     }
                 }
             } else {
                 List<MessageValidator<? extends ValidationContext>> validators =
-                        context.getMessageValidatorRegistry().findMessageValidators(messageType, receivedMessage);
+                        context.getMessageValidatorRegistry().findMessageValidators(messageType, message);
 
                 if (validators.isEmpty()) {
                     if (controlMessage.getPayload() instanceof String &&
@@ -263,7 +262,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
                 }
 
                 for (MessageValidator<? extends ValidationContext> messageValidator : validators) {
-                    messageValidator.validateMessage(receivedMessage, controlMessage, context, validationContexts);
+                    messageValidator.validateMessage(message, controlMessage, context, validationContexts);
                 }
             }
         }

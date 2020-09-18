@@ -35,13 +35,22 @@ public abstract class AbstractMessageProcessor implements MessageProcessor, Mess
     private MessageDirection direction = MessageDirection.UNBOUND;
 
     @Override
-    public final Message process(Message message, TestContext context) {
+    public void process(Message message, TestContext context) {
         if (supportsMessageType(message.getType())) {
-            return processMessage(message, context);
+            processMessage(message, context);
         } else {
             log.debug(String.format("Message processor '%s' skipped for message type: %s", getName(), message.getType()));
-            return message;
         }
+    }
+
+    /**
+     * Subclasses may overwrite this method in order to modify payload and/or headers of the processed message.
+     * @param message the message to process.
+     * @param context the current test context.
+     * @return the processed message.
+     */
+    protected void processMessage(Message message, TestContext context) {
+        // subclasses may implement processing logic
     }
 
     @Override
@@ -55,16 +64,6 @@ public abstract class AbstractMessageProcessor implements MessageProcessor, Mess
      */
     protected String getName() {
         return getClass().getSimpleName();
-    }
-
-    /**
-     * Subclasses may overwrite this method in order to modify payload and/or headers of the processed message.
-     * @param message the message to process.
-     * @param context the current test context.
-     * @return the processed message.
-     */
-    protected Message processMessage(Message message, TestContext context) {
-        return message;
     }
 
     @Override

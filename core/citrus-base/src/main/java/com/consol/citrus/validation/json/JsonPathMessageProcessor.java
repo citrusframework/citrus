@@ -74,9 +74,9 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
      * needs to be XML here.
      */
     @Override
-    public Message processMessage(Message message, TestContext context) {
+    public void processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
-            return message;
+            return;
         }
 
         String jsonPathExpression;
@@ -119,8 +119,6 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
         } catch (ParseException e) {
             throw new CitrusRuntimeException("Failed to parse JSON text", e);
         }
-
-        return message;
     }
 
     @Override

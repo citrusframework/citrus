@@ -144,12 +144,14 @@ public class WsdlJavaTestGenerator extends MessagingJavaTestGenerator<WsdlJavaTe
 
     @Override
     protected Message generateInboundMessage(Message message) {
-        return inboundDataDictionary.process(message, new TestContext());
+        inboundDataDictionary.process(message, new TestContext());
+        return super.generateInboundMessage(message);
     }
 
     @Override
     protected Message generateOutboundMessage(Message message) {
-        return outboundDataDictionary.process(message, new TestContext());
+        outboundDataDictionary.process(message, new TestContext());
+        return super.generateOutboundMessage(message);
     }
 
     /**

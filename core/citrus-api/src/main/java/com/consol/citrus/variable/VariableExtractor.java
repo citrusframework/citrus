@@ -65,9 +65,8 @@ public interface VariableExtractor extends MessageProcessor {
     }
 
     @Override
-    default Message process(Message message, TestContext context) {
+    default void process(Message message, TestContext context) {
         extractVariables(message, context);
-        return message;
     }
 
     /**
@@ -78,7 +77,9 @@ public interface VariableExtractor extends MessageProcessor {
     void extractVariables(Message message, TestContext context);
 
     /**
-     * @author Christoph Deppisch
+     * Fluent builder
+     * @param <T> extractor type
+     * @param <B> builder reference to self
      */
     interface Builder<T extends VariableExtractor, B extends Builder<T, B>> {
 

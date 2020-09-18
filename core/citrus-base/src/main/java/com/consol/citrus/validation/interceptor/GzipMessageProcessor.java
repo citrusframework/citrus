@@ -27,9 +27,9 @@ public class GzipMessageProcessor extends AbstractMessageProcessor {
     private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
 
     @Override
-    protected Message processMessage(Message message, TestContext context) {
+    protected void processMessage(Message message, TestContext context) {
         if (message.getPayload() instanceof GZIPOutputStream) {
-            return message;
+            return;
         }
 
         try {
@@ -47,7 +47,6 @@ public class GzipMessageProcessor extends AbstractMessageProcessor {
         }
 
         message.setType(MessageType.GZIP.name());
-        return message;
     }
 
     private byte[] getZipped(byte[] in) throws IOException {

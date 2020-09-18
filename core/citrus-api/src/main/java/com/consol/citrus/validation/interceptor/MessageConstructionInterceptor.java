@@ -19,7 +19,7 @@ package com.consol.citrus.validation.interceptor;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirectionAware;
-import com.consol.citrus.message.MessageProcessor;
+import com.consol.citrus.message.MessageTransformer;
 import com.consol.citrus.message.MessageTypeSelector;
 
 
@@ -28,13 +28,13 @@ import com.consol.citrus.message.MessageTypeSelector;
  * to modify the message content.
  *
  * @author Christoph Deppisch
- * @deprecated since 3.0 in favor of using {@link com.consol.citrus.message.MessageProcessor}
+ * @deprecated since 3.0 in favor of using {@link com.consol.citrus.message.MessageTransformer}
  */
 @Deprecated
-public interface MessageConstructionInterceptor extends MessageProcessor, MessageDirectionAware, MessageTypeSelector {
+public interface MessageConstructionInterceptor extends MessageTransformer, MessageDirectionAware, MessageTypeSelector {
 
     @Override
-    default Message process(Message message, TestContext context) {
+    default Message transform(Message message, TestContext context) {
         return interceptMessageConstruction(message, message.getType(), context);
     }
 

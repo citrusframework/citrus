@@ -23,7 +23,7 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
     private Charset encoding = Charset.forName(CitrusSettings.CITRUS_FILE_ENCODING);
 
     @Override
-    protected Message processMessage(Message message, TestContext context) {
+    protected void processMessage(Message message, TestContext context) {
         if (message.getPayload() instanceof String) {
             message.setPayload(message.getPayload(String.class).getBytes(encoding));
         } else if (message.getPayload() instanceof Resource) {
@@ -37,7 +37,6 @@ public class BinaryMessageProcessor extends AbstractMessageProcessor {
         }
 
         message.setType(MessageType.BINARY.name());
-        return message;
     }
 
     /**

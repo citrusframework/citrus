@@ -39,7 +39,7 @@ public class JmsByteMessageJavaIT extends TestNGCitrusSupport {
     @CitrusTest
     public void jmsByteMessage() throws IOException {
         when(send("jms:queue:jms.binary.queue")
-                .transform(new BinaryMessageProcessor())
+                .process(new BinaryMessageProcessor())
                 .message(new DefaultMessage(
                         FileCopyUtils.copyToByteArray(
                                 FileUtils.getFileResource("com/consol/citrus/jms/integration/button.png")

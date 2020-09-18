@@ -44,9 +44,9 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
     private static Logger log = LoggerFactory.getLogger(JsonMappingDataDictionary.class);
 
     @Override
-    protected Message processMessage(Message message, TestContext context) {
+    protected void processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
-            return message;
+            return;
         }
 
         JSONParser parser = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
@@ -68,8 +68,6 @@ public class JsonMappingDataDictionary extends AbstractJsonDataDictionary {
         } catch (ParseException e) {
             log.warn("Data dictionary unable to parse JSON object", e);
         }
-
-        return message;
     }
 
     @Override

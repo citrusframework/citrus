@@ -9,7 +9,6 @@ import java.util.zip.GZIPOutputStream;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
@@ -40,11 +39,10 @@ public class GzipMessageProcessorTest extends AbstractTestNGUnitTest {
                 message.setType(MessageType.GZIP);
 
                 //WHEN
-                final Message interceptedMessage =
-                        processor.process(message, context);
+                processor.process(message, context);
 
                 //THEN
-                assertEquals(interceptedMessage.getPayload(), gzipOutputStream);
+                assertEquals(message.getPayload(), gzipOutputStream);
             }
         }
     }
@@ -57,14 +55,13 @@ public class GzipMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getType(), MessageType.GZIP.name());
+        assertEquals(message.getType(), MessageType.GZIP.name());
         ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = new GZIPInputStream(
-                new ByteArrayInputStream(interceptedMessage.getPayload(byte[].class)));
+                new ByteArrayInputStream(message.getPayload(byte[].class)));
         StreamUtils.copy(gzipInputStream, unzipped);
         Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
     }
@@ -77,14 +74,13 @@ public class GzipMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.BINARY);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getType(), MessageType.GZIP.name());
+        assertEquals(message.getType(), MessageType.GZIP.name());
         ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = new GZIPInputStream(
-                new ByteArrayInputStream(interceptedMessage.getPayload(byte[].class)));
+                new ByteArrayInputStream(message.getPayload(byte[].class)));
         StreamUtils.copy(gzipInputStream, unzipped);
         Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
     }
@@ -97,14 +93,13 @@ public class GzipMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getType(), MessageType.GZIP.name());
+        assertEquals(message.getType(), MessageType.GZIP.name());
         ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = new GZIPInputStream(
-                new ByteArrayInputStream(interceptedMessage.getPayload(byte[].class)));
+                new ByteArrayInputStream(message.getPayload(byte[].class)));
         StreamUtils.copy(gzipInputStream, unzipped);
         Assert.assertEquals(unzipped.toByteArray(), "foo".getBytes(StandardCharsets.UTF_8));
     }
@@ -117,14 +112,13 @@ public class GzipMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getType(), MessageType.GZIP.name());
+        assertEquals(message.getType(), MessageType.GZIP.name());
         ByteArrayOutputStream unzipped = new ByteArrayOutputStream();
         GZIPInputStream gzipInputStream = new GZIPInputStream(
-                new ByteArrayInputStream(interceptedMessage.getPayload(byte[].class)));
+                new ByteArrayInputStream(message.getPayload(byte[].class)));
         StreamUtils.copy(gzipInputStream, unzipped);
         Assert.assertEquals(unzipped.toByteArray(),  FileCopyUtils.copyToByteArray(getTestFile().getInputStream()));
     }

@@ -88,12 +88,12 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
                     if (direction.equals(MessageDirection.UNBOUND)
                             || processorDirection.equals(MessageDirection.UNBOUND)
                             || direction.equals(processorDirection)) {
-                        message = processor.process(message, context);
+                        processor.process(message, context);
                     }
                 }
 
                 if (dataDictionary != null) {
-                    message = dataDictionary.process(message, context);
+                    dataDictionary.process(message, context);
                 }
 
                 for (final MessageProcessor processor : messageProcessors) {
@@ -106,7 +106,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
                     if (direction.equals(MessageDirection.UNBOUND)
                             || processorDirection.equals(MessageDirection.UNBOUND)
                             || direction.equals(processorDirection)) {
-                        message = processor.process(message, context);
+                        processor.process(message, context);
                     }
                 }
             }

@@ -122,7 +122,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         finished = new CompletableFuture<>();
 
         for (MessageProcessor processor : messageProcessors) {
-            message = processor.process(message, context);
+            processor.process(message, context);
         }
 
         final Endpoint messageEndpoint = getOrCreateEndpoint(context);
@@ -659,8 +659,18 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param processor
          * @return
          */
-        public B transform(MessageProcessor processor) {
+        public B process(MessageProcessor processor) {
             this.messageProcessors.add(processor);
+            return self;
+        }
+
+        /**
+         * Adds message processor as fluent builder.
+         * @param builder
+         * @return
+         */
+        public B process(MessageProcessor.Builder<?, ?> builder) {
+            this.messageProcessors.add(builder.build());
             return self;
         }
 
@@ -675,7 +685,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         }
 
         /**
-         * Adds variable extractor builder.
+         * Adds variable extractor as fluent builder.
          * @param builder
          * @return
          */

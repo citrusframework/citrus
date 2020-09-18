@@ -62,8 +62,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -80,8 +80,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">Hello!</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -98,8 +98,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">" + System.getProperty("line.separator") +
                 "   <ns1:Text>Hello!</ns1:Text>" + System.getProperty("line.separator") +
                 "   <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>" + System.getProperty("line.separator") +
                 "</ns1:TestMessage>");
@@ -122,8 +122,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         namespaceContextBuilder.setNamespaceMappings(namespaces);
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><ns1:TestMessage xmlns:ns1=\"http://www.foo.bar\">" + System.getProperty("line.separator") +
                 "   <ns1:Text>Hello!</ns1:Text>" + System.getProperty("line.separator") +
                 "   <ns1:OtherText name=\"bar\">No changes</ns1:OtherText>" + System.getProperty("line.separator") +
                 "</ns1:TestMessage>");
@@ -142,8 +142,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -157,8 +157,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         dictionary.setMappingFile(new ClassPathResource("xpathmapping.properties", DataDictionary.class));
         dictionary.afterPropertiesSet();
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">GoodBye!</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -175,8 +175,8 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         XpathMappingDataDictionary dictionary = new XpathMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello World!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"bar\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -198,9 +198,9 @@ public class XpathMappingDataDictionaryTest extends AbstractTestNGUnitTest {
         namespaceContextBuilder.getNamespaceMappings().put("xh", "http://www.w3.org/1999/xhtml");
         dictionary.setNamespaceContextBuilder(namespaceContextBuilder);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertTrue(intercepted.getPayload(String.class).trim().contains("<title>Hello</title>"));
-        Assert.assertTrue(intercepted.getPayload(String.class).trim().contains("<h1>Hello Citrus!</h1>"));
-        Assert.assertTrue(intercepted.getPayload(String.class).trim().contains("<hr />"));
+        dictionary.processMessage(message, context);
+        Assert.assertTrue(message.getPayload(String.class).trim().contains("<title>Hello</title>"));
+        Assert.assertTrue(message.getPayload(String.class).trim().contains("<h1>Hello Citrus!</h1>"));
+        Assert.assertTrue(message.getPayload(String.class).trim().contains("<hr />"));
     }
 }

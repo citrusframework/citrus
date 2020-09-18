@@ -23,7 +23,6 @@ import java.util.Map;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.AbstractMessageProcessor;
-import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageProcessor;
@@ -36,6 +35,7 @@ import org.testng.annotations.Test;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -227,11 +227,9 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderProcessor() {
         MessageProcessor processor = new AbstractMessageProcessor() {
             @Override
-            public Message processMessage(Message message, TestContext context) {
+            public void processMessage(Message message, TestContext context) {
                 message.setPayload("InterceptedMessagePayload");
                 message.setHeader("NewHeader", "new");
-
-                return message;
             }
 
             @Override
@@ -253,7 +251,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
         when(dataDictionary.isGlobalScope()).thenReturn(true);
-        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload(dataDictionaryResult);
+            return null;
+        }).when(dataDictionary).process(any(Message.class), eq(context));
 
         context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
@@ -267,7 +269,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithExplicitDataDictionary() {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload(dataDictionaryResult);
+            return null;
+        }).when(dataDictionary).process(any(Message.class), eq(context));
         messageBuilder.setDataDictionary(dataDictionary);
 
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
@@ -286,11 +292,19 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
     public void testMessageBuilderWithGlobalAndExplicitDataDictionary() {
         DataDictionary<String> globalDataDictionary = Mockito.mock(DataDictionary.class);
         when(globalDataDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
-        when(globalDataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(globalDataDictionaryResult));
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload(globalDataDictionaryResult);
+            return null;
+        }).when(globalDataDictionary).process(any(Message.class), eq(context));
 
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload(dataDictionaryResult);
+            return null;
+        }).when(dataDictionary).process(any(Message.class), eq(context));
 
         context.getMessageProcessors().setMessageProcessors(Collections.singletonList(globalDataDictionary));
         messageBuilder.setDataDictionary(dataDictionary);
@@ -312,7 +326,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.INBOUND);
         when(dataDictionary.isGlobalScope()).thenReturn(true);
-        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload(dataDictionaryResult);
+            return null;
+        }).when(dataDictionary).process(any(Message.class), eq(context));
 
         context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);
@@ -329,7 +347,11 @@ public class PayloadTemplateMessageBuilderTest extends AbstractTestNGUnitTest {
         DataDictionary<String> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.OUTBOUND);
         when(dataDictionary.isGlobalScope()).thenReturn(true);
-        when(dataDictionary.process(any(Message.class), eq(context))).thenReturn(new DefaultMessage(dataDictionaryResult));
+        doAnswer(invocationOnMock -> {
+            Message message = invocationOnMock.getArgument(0);
+            message.setPayload(dataDictionaryResult);
+            return null;
+        }).when(dataDictionary).process(any(Message.class), eq(context));
 
         context.getMessageProcessors().setMessageProcessors(Collections.singletonList(dataDictionary));
         messageBuilder.setPayloadData(initialDataDictionaryTestPayload);

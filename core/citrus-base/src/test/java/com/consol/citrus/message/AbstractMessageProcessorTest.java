@@ -35,8 +35,8 @@ public class AbstractMessageProcessorTest extends AbstractTestNGUnitTest {
             }
 
             @Override
-            protected Message processMessage(Message message, TestContext context) {
-                return new DefaultMessage("Processed!");
+            protected void processMessage(Message message, TestContext context) {
+                message.setPayload("Processed!");
             }
 
             @Override
@@ -47,11 +47,12 @@ public class AbstractMessageProcessorTest extends AbstractTestNGUnitTest {
 
         Message in = new DefaultMessage("Hello Citrus!");
         in.setType(MessageType.XML.name());
-        Message intercepted = processor.process(in, context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "Processed!");
+        processor.process(in, context);
+        Assert.assertEquals(in.getPayload(String.class), "Processed!");
 
+        in = new DefaultMessage("Hello Citrus!");
         in.setType(MessageType.PLAINTEXT.name());
-        intercepted = processor.process(in, context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "Hello Citrus!");
+        processor.process(in, context);
+        Assert.assertEquals(in.getPayload(String.class), "Hello Citrus!");
     }
 }

@@ -41,12 +41,13 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithXPath() {
-        final Map<String, String> xPathExpressions = new HashMap<String, String>();
+        final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/TestMessage/Text", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        processor.processMessage(message, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.processMessage(message, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
                 .endsWith("<TestMessage><Text>Hello!</Text></TestMessage>"));
     }
 
@@ -59,9 +60,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/:TestMessage/:Text", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        processor.processMessage(message, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.processMessage(message, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
                 .contains("<Text>Hello!</Text>"));
     }
 
@@ -70,9 +72,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns0:Text", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.processMessage(messageNamespace, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -83,9 +86,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.processMessage(messageNamespace, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -98,9 +102,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns1:Text", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        processor.processMessage(message, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.processMessage(message, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(message.getPayload(String.class))
                 .contains("<ns1:Textxmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello!</ns1:Text>"));
     }
 
@@ -130,9 +135,10 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
 
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpressions);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpressions);
+        processor.processMessage(messageNamespace, context);
 
-        Assert.assertTrue(StringUtils.trimAllWhitespace(interceptor.processMessage(messageNamespace, context).getPayload(String.class))
+        Assert.assertTrue(StringUtils.trimAllWhitespace(messageNamespace.getPayload(String.class))
                 .contains("<ns0:Text>Hello!</ns0:Text>"));
     }
 
@@ -148,14 +154,12 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
         final Map<String, String> xPathExpression = Collections.singletonMap("//TestMessage/Text", "foobar");
 
         //WHEN
-        final XpathMessageProcessor interceptor = new XpathMessageProcessor(xPathExpression);
+        final XpathMessageProcessor processor = new XpathMessageProcessor(xPathExpression);
+        processor.processMessage(message, context);
 
         //THEN
         Assert.assertTrue(StringUtils
-                .trimAllWhitespace(
-                        interceptor
-                                .processMessage(message, context)
-                                .getPayload(String.class))
+                .trimAllWhitespace(message.getPayload(String.class))
                 .contains("<Text>foobar</Text>"));
     }
 }

@@ -62,11 +62,11 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
     }
 
     @Override
-    protected void validateMessage(Message receivedMessage, TestContext context) {
-        super.validateMessage(receivedMessage, context);
+    protected void validateMessage(Message message, TestContext context) {
+        super.validateMessage(message, context);
 
-        if (!attachments.isEmpty() && !(receivedMessage instanceof SoapMessage)) {
-            throw new CitrusRuntimeException(String.format("Unable to perform SOAP attachment validation on message type '%s'", receivedMessage.getClass()));
+        if (!attachments.isEmpty() && !(message instanceof SoapMessage)) {
+            throw new CitrusRuntimeException(String.format("Unable to perform SOAP attachment validation on message type '%s'", message.getClass()));
         }
 
         for (SoapAttachment attachment : attachments) {
@@ -74,7 +74,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
         }
 
         if (!attachments.isEmpty()) {
-            attachmentValidator.validateAttachment((SoapMessage) receivedMessage, attachments);
+            attachmentValidator.validateAttachment((SoapMessage) message, attachments);
         }
     }
 

@@ -37,9 +37,9 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
 
-        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
-        Message intercepted = interceptor.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\"}}");
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(jsonPathExpressions);
+        processor.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\"}}");
     }
 
     @Test
@@ -50,9 +50,9 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
         jsonPathExpressions.put("$.TestMessage.Id", "9999999");
 
-        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
-        Message intercepted = interceptor.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":9999999}}");
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(jsonPathExpressions);
+        processor.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello!\",\"Id\":9999999}}");
     }
 
     @Test
@@ -62,9 +62,9 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..Text", "Hello!");
 
-        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
-        Message intercepted = interceptor.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello!\"}]}");
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(jsonPathExpressions);
+        processor.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":[{\"Text\":\"Hello!\"},{\"Text\":\"Hello!\"}]}");
     }
 
     @Test
@@ -74,8 +74,8 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
         Map<String, String> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Unknown", "Hello!");
 
-        JsonPathMessageProcessor interceptor = new JsonPathMessageProcessor(jsonPathExpressions);
-        Message intercepted = interceptor.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\"}}");
+        JsonPathMessageProcessor processor = new JsonPathMessageProcessor(jsonPathExpressions);
+        processor.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class), "{\"TestMessage\":{\"Text\":\"Hello World!\"}}");
     }
 }

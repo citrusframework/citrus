@@ -46,9 +46,9 @@ import org.w3c.dom.traversal.NodeFilter;
 public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<Node> {
 
     @Override
-    protected Message processMessage(Message message, TestContext context) {
+    protected void processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
-            return message;
+            return;
         }
 
         String messagePayload = message.getPayload(String.class);
@@ -72,7 +72,6 @@ public abstract class AbstractXmlDataDictionary extends AbstractDataDictionary<N
         serializer.write(doc, output);
 
         message.setPayload(writer.toString());
-        return message;
     }
 
     /**

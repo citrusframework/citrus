@@ -30,8 +30,6 @@ import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 /**
@@ -145,8 +143,6 @@ public class StaticMessageContentBuilderTest extends AbstractTestNGUnitTest {
 
         DataDictionary<?> dataDictionary = Mockito.mock(DataDictionary.class);
         when(dataDictionary.getDirection()).thenReturn(MessageDirection.UNBOUND);
-        when(dataDictionary.process(any(Message.class), eq(context)))
-                .thenAnswer(invocationOnMock -> invocationOnMock.getArgument(0));
 
         messageBuilder = new StaticMessageContentBuilder(testMessage);
         messageBuilder.setDataDictionary(dataDictionary);

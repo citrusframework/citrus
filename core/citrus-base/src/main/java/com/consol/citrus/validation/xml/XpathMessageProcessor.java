@@ -73,9 +73,9 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
      * needs to be XML here.
      */
     @Override
-    public Message processMessage(final Message message, final TestContext context) {
+    public void processMessage(final Message message, final TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
-            return message;
+            return;
         }
 
         final Document doc = XMLUtils.parseMessagePayload(message.getPayload(String.class));
@@ -116,7 +116,6 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
         }
 
         message.setPayload(XMLUtils.serialize(doc));
-        return message;
     }
 
     @Override

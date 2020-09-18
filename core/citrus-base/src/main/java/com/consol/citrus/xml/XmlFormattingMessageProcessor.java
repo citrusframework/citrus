@@ -29,9 +29,8 @@ import com.consol.citrus.util.XMLUtils;
 public class XmlFormattingMessageProcessor extends AbstractMessageProcessor {
 
     @Override
-    public Message processMessage(Message message, TestContext context) {
+    public void processMessage(Message message, TestContext context) {
         message.setPayload(XMLUtils.prettyPrint(message.getPayload(String.class)));
-        return message;
     }
 
     @Override

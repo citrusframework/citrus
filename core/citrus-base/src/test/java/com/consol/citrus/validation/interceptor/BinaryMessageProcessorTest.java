@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets;
 
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
-import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import org.springframework.core.io.ClassPathResource;
@@ -28,11 +27,10 @@ public class BinaryMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.BINARY);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getPayload(), "foo".getBytes(StandardCharsets.UTF_8));
+        assertEquals(message.getPayload(), "foo".getBytes(StandardCharsets.UTF_8));
     }
 
     @Test
@@ -43,12 +41,11 @@ public class BinaryMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getPayload(), "foo".getBytes(StandardCharsets.UTF_8));
-        assertEquals(interceptedMessage.getType(), MessageType.BINARY.name());
+        assertEquals(message.getPayload(), "foo".getBytes(StandardCharsets.UTF_8));
+        assertEquals(message.getType(), MessageType.BINARY.name());
     }
 
     @Test
@@ -59,12 +56,11 @@ public class BinaryMessageProcessorTest extends AbstractTestNGUnitTest {
         message.setType(MessageType.PLAINTEXT);
 
         //WHEN
-        final Message interceptedMessage =
-                processor.process(message, context);
+        processor.process(message, context);
 
         //THEN
-        assertEquals(interceptedMessage.getPayload(), FileCopyUtils.copyToByteArray(getTestFile().getInputStream()));
-        assertEquals(interceptedMessage.getType(), MessageType.BINARY.name());
+        assertEquals(message.getPayload(), FileCopyUtils.copyToByteArray(getTestFile().getInputStream()));
+        assertEquals(message.getType(), MessageType.BINARY.name());
     }
 
     @Test(expectedExceptions = CitrusRuntimeException.class)

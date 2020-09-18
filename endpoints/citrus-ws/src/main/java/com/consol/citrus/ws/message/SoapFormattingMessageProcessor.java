@@ -31,7 +31,7 @@ import com.consol.citrus.xml.XmlFormattingMessageProcessor;
 public class SoapFormattingMessageProcessor extends XmlFormattingMessageProcessor {
 
     @Override
-    public Message processMessage(Message message, TestContext context) {
+    public void processMessage(Message message, TestContext context) {
         if (message instanceof SoapFault) {
             List<String> faultDetailsFormat = new ArrayList<>();
             for (String faultDetail : ((SoapFault) message).getFaultDetails()) {
@@ -43,6 +43,6 @@ public class SoapFormattingMessageProcessor extends XmlFormattingMessageProcesso
             }
         }
 
-        return super.processMessage(message, context);
+        super.processMessage(message, context);
     }
 }

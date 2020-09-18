@@ -23,7 +23,7 @@ public class SimpleMappingDictionary extends AbstractDataDictionary<String> {
     }
 
     @Override
-    protected Message processMessage(Message message, TestContext context) {
+    protected void processMessage(Message message, TestContext context) {
         String payload = message.getPayload(String.class);
 
         for (Map.Entry<String, String> mapping : mappings.entrySet()) {
@@ -31,8 +31,6 @@ public class SimpleMappingDictionary extends AbstractDataDictionary<String> {
         }
 
         message.setPayload(payload);
-
-        return message;
     }
 
     @Override

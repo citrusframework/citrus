@@ -198,7 +198,7 @@ public class ZooExecuteAction extends AbstractTestAction {
         Message commandResult = getCommandResult(command);
 
         for (MessageProcessor processor : messageProcessors) {
-            commandResult = processor.process(commandResult, context);
+            processor.process(commandResult, context);
         }
 
         if (log.isDebugEnabled()) {

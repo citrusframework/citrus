@@ -36,16 +36,15 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
     private static Logger log = LoggerFactory.getLogger(JsonPathMappingDataDictionary.class);
 
     @Override
-    protected Message processMessage(Message message, TestContext context) {
+    protected void processMessage(Message message, TestContext context) {
         if (message.getPayload() == null || !StringUtils.hasText(message.getPayload(String.class))) {
-            return message;
+            return;
         }
 
         JsonPathMessageProcessor delegateInterceptor = new JsonPathMessageProcessor();
         delegateInterceptor.setIgnoreNotFound(true);
         delegateInterceptor.setJsonPathExpressions(mappings);
-
-        return delegateInterceptor.processMessage(message, context);
+        delegateInterceptor.processMessage(message, context);
     }
 
     @Override

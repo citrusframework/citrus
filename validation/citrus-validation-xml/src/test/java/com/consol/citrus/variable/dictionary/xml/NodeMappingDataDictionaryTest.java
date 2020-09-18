@@ -44,8 +44,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -63,8 +63,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.STARTS_WITH);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>Bye!</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -81,8 +81,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>Hello!</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -99,8 +99,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"newName\">Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"goodbyeText\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -117,8 +117,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappings(mappings);
         dictionary.setPathMappingStrategy(DataDictionary.PathMappingStrategy.ENDS_WITH);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"newName\">Hello World!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText name=\"newName\">No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -137,8 +137,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"TEXT\">Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -154,8 +154,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         dictionary.setMappingFile(new ClassPathResource("mapping.properties", DataDictionary.class));
         dictionary.afterPropertiesSet();
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text name=\"newName\">Hello!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
@@ -171,8 +171,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>" + System.getProperty("line.separator") +
                 "      <value>Hello!</value>" + System.getProperty("line.separator") +
                 "   </Text>" + System.getProperty("line.separator") +
@@ -190,8 +190,8 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappings(mappings);
 
-        Message intercepted = dictionary.processMessage(message, context);
-        Assert.assertEquals(intercepted.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
+        dictionary.processMessage(message, context);
+        Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +
                 "   <Text>Hello World!</Text>" + System.getProperty("line.separator") +
                 "   <OtherText>No changes</OtherText>" + System.getProperty("line.separator") +
                 "</TestMessage>");
