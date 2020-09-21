@@ -27,6 +27,7 @@ import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
@@ -46,6 +47,7 @@ import com.consol.citrus.validation.json.JsonPathVariableExtractor;
 import com.consol.citrus.validation.json.report.GraciousProcessingReport;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
@@ -54,6 +56,8 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.validation.json.JsonMessageValidationContext.Builder.json;
+import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.validation.json.JsonPathVariableExtractor.Builder.jsonPathExtractor;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.containsString;
@@ -503,11 +507,12 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\",\"active\": true}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate("$.person.name", "John")
-                                .validate("$.person.active", true)
-                                .validate("$.id", anyOf(containsString("123456789"), nullValue()))
-                                .validate("$.text", "Hello World!")
-                                .validate("$.index", 5));
+                                .validate(jsonPath()
+                                        .expression("$.person.name", "John")
+                                        .expression("$.person.active", true)
+                                        .expression("$.id", anyOf(containsString("123456789"), nullValue()))
+                                        .expression("$.text", "Hello World!")
+                                        .expression("$.index", 5)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -552,8 +557,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate("$.person.name", "John")
-                                .validate("$.text", "Hello Citrus!"));
+                                .validate(jsonPath()
+                                        .expression("$.person.name", "John")
+                                        .expression("$.text", "Hello Citrus!")));
     }
 
     @Test(expectedExceptions = TestCaseFailedException.class)
@@ -571,8 +577,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"Hello Citrus!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                                .validate("$.person.name", "John")
-                                .validate("$.text", "Hello World!"));
+                                .validate(jsonPath()
+                                        .expression("$.person.name", "John")
+                                        .expression("$.text", "Hello World!")));
     }
 
     @Test
@@ -590,9 +597,10 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
                                 .payload("{\"text\":\"?\", \"person\":{\"name\":\"John\",\"surname\":\"?\"}, \"index\":0, \"id\":\"x123456789x\"}")
-                                .ignore("$..text")
-                                .ignore("$.person.surname")
-                                .ignore("$.index"));
+                                .validate(json()
+                                        .ignore("$..text")
+                                        .ignore("$.person.surname")
+                                        .ignore("$.index")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -622,7 +630,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithJsonSchemaRepository() throws IOException {
+    public void testReceiveBuilderWithJsonSchemaRepository() throws ProcessingException {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -634,10 +642,17 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
+        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(schema.getSchema()).thenReturn(jsonSchemaMock);
+
+        context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
+
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .payload("{}")
-                .jsonSchemaRepository("customJsonSchemaRepository"));
+                .validate(json()
+                        .schemaRepository("customJsonSchemaRepository")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -663,7 +678,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithJsonSchema() throws IOException {
+    public void testReceiveBuilderWithJsonSchema() throws ProcessingException {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -675,10 +690,17 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
 
+        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(schema.getSchema()).thenReturn(jsonSchemaMock);
+
+        context.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
+
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .payload("{}")
-                .jsonSchema("jsonTestSchema"));
+                .validate(json()
+                        .schema("jsonTestSchema")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -723,7 +745,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                 .payload("{}")
-                .schemaValidation(true));
+                .validate(json()
+                        .schemaValidation(true)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -733,22 +756,53 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
-
-        XmlMessageValidationContext xmlMessageValidationContext = action.getValidationContexts().stream()
-                .filter(XmlMessageValidationContext.class::isInstance).findFirst()
-                .map(XmlMessageValidationContext.class::cast)
-                .orElseThrow(() -> new AssertionError("Missing validation context"));
-        Assert.assertTrue(xmlMessageValidationContext.isSchemaValidationEnabled());
 
         JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
                 .filter(JsonMessageValidationContext.class::isInstance).findFirst()
                 .map(JsonMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertTrue(jsonMessageValidationContext.isSchemaValidationEnabled());
+
+    }
+
+    @Test
+    public void testDeactivateSchemaValidation() throws IOException {
+
+        reset(messageEndpoint, messageConsumer, configuration);
+        when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
+        when(messageEndpoint.getEndpointConfiguration()).thenReturn(configuration);
+        when(configuration.getTimeout()).thenReturn(100L);
+        when(messageEndpoint.getActor()).thenReturn(null);
+        when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
+                new DefaultMessage("{}")
+                        .setHeader("operation", "sayHello"));
+
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(receive(messageEndpoint)
+                .payload("{}")
+                .validate(json()
+                        .schemaValidation(false)));
+
+        TestCase test = runner.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), ReceiveMessageAction.class);
+
+        ReceiveMessageAction action = ((ReceiveMessageAction)test.getActions().get(0));
+        Assert.assertEquals(action.getName(), "receive");
+
+        Assert.assertEquals(action.getEndpoint(), messageEndpoint);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
+
+        JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
+                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
+                .map(JsonMessageValidationContext.class::cast)
+                .orElseThrow(() -> new AssertionError("Missing validation context"));
+        Assert.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
 
     }
 }

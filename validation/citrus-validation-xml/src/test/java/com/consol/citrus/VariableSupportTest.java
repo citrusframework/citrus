@@ -27,7 +27,6 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
@@ -74,13 +73,14 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("//sub-elementB", "${variable}");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -112,13 +112,14 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("//sub-elementB", "citrus:concat(${text}, '-', 'value')");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -148,13 +149,14 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("${expression}", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -185,13 +187,14 @@ public class VariableSupportTest extends UnitTestSupport {
         validateMessageElements.put("citrus:concat('//sub-element', ${variable})", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -219,7 +222,6 @@ public class VariableSupportTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -242,7 +244,6 @@ public class VariableSupportTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -270,7 +271,6 @@ public class VariableSupportTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -291,7 +291,6 @@ public class VariableSupportTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -319,7 +318,6 @@ public class VariableSupportTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -342,7 +340,6 @@ public class VariableSupportTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -370,7 +367,6 @@ public class VariableSupportTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -389,7 +385,6 @@ public class VariableSupportTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -417,7 +412,6 @@ public class VariableSupportTest extends UnitTestSupport {
         context.getVariables().put("variableB", "initial");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -437,7 +431,6 @@ public class VariableSupportTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -474,7 +467,6 @@ public class VariableSupportTest extends UnitTestSupport {
         context.getVariables().put("variableB", "initial");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -494,7 +486,6 @@ public class VariableSupportTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);

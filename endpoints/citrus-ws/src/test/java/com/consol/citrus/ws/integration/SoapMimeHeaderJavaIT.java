@@ -20,6 +20,7 @@ import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.testng.TestNGCitrusSupport;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static com.consol.citrus.ws.actions.SoapActionBuilder.soap;
 
@@ -59,7 +60,7 @@ public class SoapMimeHeaderJavaIT extends TestNGCitrusSupport {
             .header("Operation", "sayHello")
             .header("operation", "sayHello")
             .soapAction("sayHello")
-            .schemaValidation(false)
+            .validate(xml().schemaValidation(false))
             .extract(headerValueExtractor()
                     .header("citrus_jms_messageId", "internal_correlation_id")));
 
@@ -85,7 +86,7 @@ public class SoapMimeHeaderJavaIT extends TestNGCitrusSupport {
                         "</ns0:HelloResponse>")
             .header("Operation", "answerHello")
             .header("operation", "answerHello")
-            .schemaValidation(false)
+            .validate(xml().schemaValidation(false))
             .timeout(5000L));
     }
 }

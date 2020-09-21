@@ -72,7 +72,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreElements() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>no validation</sub-elementA>"
@@ -84,12 +83,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -108,7 +110,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element>"
                     + "<sub-element attribute='A'>no validation</sub-element>"
@@ -119,12 +120,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//sub-element");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -143,7 +147,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element>"
                     + "<sub-element attribute='wrong'>no validation</sub-element>"
@@ -155,12 +158,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//sub-element[1]");
         ignoreMessageElements.add("//sub-element[3]");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -181,7 +187,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element>"
                     + "<another-element>no validation</another-element>"
@@ -193,12 +198,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("/*");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -206,7 +214,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreAttributes() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
@@ -218,12 +225,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA/@attribute");
         ignoreMessageElements.add("//sub-elementB/@attribute");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -231,7 +241,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreAttributesAll() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
@@ -242,12 +251,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//@attribute");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -272,7 +284,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-element attribute='no validation'>text-value</sub-element>"
@@ -284,12 +295,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//sub-element[1]/@attribute");
         ignoreMessageElements.add("//sub-element[2]/@attribute");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -310,19 +324,21 @@ public class IgnoreElementsTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element additonal-attribute='some'>Wrong text</element>"
                         + "</root>");
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -330,7 +346,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreElementsAndValidate() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>no validation</sub-elementA>"
@@ -342,17 +357,20 @@ public class IgnoreElementsTest extends UnitTestSupport {
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//root/element/sub-elementA");
         ignoreMessageElements.add("//sub-elementB");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
 
         Map<String, Object> validateElements = new HashMap<>();
         validateElements.put("//root/element/sub-elementA", "wrong value");
         validateElements.put("//sub-elementB", "wrong value");
-        validationContext.setXpathExpressions(validateElements);
+
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .expressions(validateElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -360,7 +378,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreElementsByPlaceholder() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>@ignore@</sub-elementA>"
@@ -372,7 +389,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -380,7 +396,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreSubElementsByPlaceholder() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >@ignore@</element>"
             + "</root>");
@@ -388,7 +403,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -396,7 +410,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test
     public void testIgnoreAttributesByPlaceholder() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='@ignore@'>text-value</sub-elementA>"
@@ -408,7 +421,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -416,7 +428,6 @@ public class IgnoreElementsTest extends UnitTestSupport {
     @Test(expectedExceptions = CitrusRuntimeException.class, expectedExceptionsMessageRegExp = "No result for XPath expression: '//something-else'")
     public void testIgnoreElementsNoMatch() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -427,12 +438,15 @@ public class IgnoreElementsTest extends UnitTestSupport {
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("//something-else");
-        validationContext.setIgnoreExpressions(ignoreMessageElements);
+
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }

@@ -16,6 +16,9 @@
 
 package com.consol.citrus.variable.dictionary.json;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.json.JsonPathMessageProcessor;
@@ -43,7 +46,8 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
 
         JsonPathMessageProcessor delegateProcessor = new JsonPathMessageProcessor.Builder()
                 .ignoreNotFound(true)
-                .expressions(mappings)
+                .expressions(mappings.entrySet().stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, (entry) -> (Object) entry.getValue())))
                 .build();
         delegateProcessor.processMessage(message, context);
     }

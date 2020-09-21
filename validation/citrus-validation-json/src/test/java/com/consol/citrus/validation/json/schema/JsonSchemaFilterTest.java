@@ -69,9 +69,10 @@ public class JsonSchemaFilterTest {
                 Arrays.asList(firstJsonSchemaRepository, secondJsonSchemaRepository);
 
         //Setup validation validationContext
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
-        validationContext.setSchemaRepository("schemaRepository2");
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .schemaRepository("schemaRepository2")
+                .build();
 
         //WHEN
         List<SimpleJsonSchema> simpleJsonSchemas =
@@ -96,9 +97,10 @@ public class JsonSchemaFilterTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
         //Setup validation validationContext
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
-        validationContext.setSchema("mySchema");
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .schema("mySchema")
+                .build();
 
         //Setup application validationContext
         when(referenceResolverMock.resolve("mySchema", SimpleJsonSchema.class))
@@ -124,9 +126,10 @@ public class JsonSchemaFilterTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(jsonSchemaRepository);
 
         //Setup validation validationContext
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
-        validationContext.setSchema("mySchema");
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .schema("mySchema")
+                .build();
 
         //Setup expected SimpleJsonSchema
         SimpleJsonSchema expectedSimpleJsonSchema = mock(SimpleJsonSchema.class);
@@ -157,9 +160,10 @@ public class JsonSchemaFilterTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(firstJsonSchemaRepository);
 
         //Setup validation validationContext
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
-        validationContext.setSchemaRepository("schemaRepository2");
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .schemaRepository("schemaRepository2")
+                .build();
 
         //WHEN
         jsonSchemaFilter.filter(schemaRepositories, validationContext, referenceResolverMock);
@@ -181,9 +185,10 @@ public class JsonSchemaFilterTest {
         List<JsonSchemaRepository> schemaRepositories = Collections.singletonList(firstJsonSchemaRepository);
 
         //Setup validation validationContext
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
-        validationContext.setSchema("foo");
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .schema("foo")
+                .build();
 
 
         //Setup application validationContext
@@ -218,8 +223,9 @@ public class JsonSchemaFilterTest {
                 Arrays.asList(firstJsonSchemaRepository, secondJsonSchemaRepository);
 
         //Setup validation validationContext
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .build();
 
         //WHEN
         List<SimpleJsonSchema> simpleJsonSchemas =

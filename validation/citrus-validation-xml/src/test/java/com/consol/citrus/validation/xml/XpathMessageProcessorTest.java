@@ -41,7 +41,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithXPath() {
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/TestMessage/Text", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -59,7 +59,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 "<Text>Hello World!</Text>" +
                 "</TestMessage>");
 
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/:TestMessage/:Text", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -73,7 +73,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
 
     @Test
     public void testConstructWithXPathAndNamespace() {
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns0:Text", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -89,7 +89,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
     public void testConstructWithXPathAndGlobalNamespace() {
         context.getNamespaceContextBuilder().getNamespaceMappings().put("global", "http://www.citrusframework.org/test");
 
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -107,7 +107,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 "<ns1:Text xmlns:ns1=\"http://www.citrusframework.org/test/text\">Hello World!</ns1:Text>" +
                 "</ns0:TestMessage>");
 
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/ns0:TestMessage/ns1:Text", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -122,7 +122,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "Can not evaluate xpath expression.*")
     public void testConstructWithInvalidXPath() {
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put(".Invalid/Unknown", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -134,7 +134,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "No result for XPath expression.*")
     public void testConstructWithXPathNoResult() {
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/TestMessage/Unknown", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -146,7 +146,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class,
             expectedExceptionsMessageRegExp = "Can not evaluate xpath expression.*")
     public void testConstructWithXPathAndInvalidGlobalNamespace() {
-        final Map<String, String> xPathExpressions = new HashMap<>();
+        final Map<String, Object> xPathExpressions = new HashMap<>();
         xPathExpressions.put("/global:TestMessage/global:Text", "Hello!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -167,7 +167,7 @@ public class XpathMessageProcessorTest extends AbstractTestNGUnitTest {
                 "<TestMessage>" +
                     "<Text></Text>" +
                 "</TestMessage>");
-        final Map<String, String> xPathExpression = Collections.singletonMap("//TestMessage/Text", "foobar");
+        final Map<String, Object> xPathExpression = Collections.singletonMap("//TestMessage/Text", "foobar");
 
         //WHEN
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()

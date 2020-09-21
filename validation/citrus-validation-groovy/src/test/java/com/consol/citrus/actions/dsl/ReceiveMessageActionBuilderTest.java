@@ -37,7 +37,6 @@ import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
-import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
 import org.mockito.Mockito;
@@ -46,6 +45,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.validation.script.ScriptValidationContext.Builder.groovy;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
 import static org.mockito.Mockito.reset;
@@ -82,7 +82,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
-                                .validateScript("assert json.message == 'Hello Citrus!'")
+                                .validate(groovy().script("assert json.message == 'Hello Citrus!'"))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
@@ -97,9 +97,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
         ScriptValidationContext validationContext = action.getValidationContexts().stream()
@@ -134,7 +133,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
-                                .validateScriptResource("classpath:com/consol/citrus/actions/dsl/validation.groovy")
+                                .validate(groovy().scriptResource("classpath:com/consol/citrus/actions/dsl/validation.groovy"))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
@@ -149,9 +148,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
         ScriptValidationContext validationContext = action.getValidationContexts().stream()
@@ -185,7 +183,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
-                                .validateScript(new ClassPathResource("com/consol/citrus/actions/dsl/validation.groovy"))
+                                .validate(groovy().script(new ClassPathResource("com/consol/citrus/actions/dsl/validation.groovy")))
                                 .validator("groovyMessageValidator"));
 
         TestCase test = runner.getTestCase();
@@ -200,9 +198,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
         ScriptValidationContext validationContext = action.getValidationContexts().stream()
@@ -236,7 +233,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .messageType(MessageType.JSON)
-                                .validateScript("assert json.message == 'Hello Citrus!'")
+                                .validate(groovy().script("assert json.message == 'Hello Citrus!'"))
                                 .validator("groovyMessageValidator")
                                 .header("operation", "sayHello"));
 
@@ -252,9 +249,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getValidators().size(), 1L);
         Assert.assertEquals(action.getValidators().get(0), validator);
 
-        Assert.assertEquals(action.getValidationContexts().size(), 3L);
+        Assert.assertEquals(action.getValidationContexts().size(), 2L);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(ScriptValidationContext.class::isInstance));
 
         ScriptValidationContext validationContext = action.getValidationContexts().stream()

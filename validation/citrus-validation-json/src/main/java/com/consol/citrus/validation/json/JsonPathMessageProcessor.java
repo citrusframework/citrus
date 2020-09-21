@@ -47,7 +47,7 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
     private static Logger log = LoggerFactory.getLogger(JsonPathMessageProcessor.class);
 
     /** Overwrites message elements before validating (via JSONPath expressions) */
-    private final Map<String, String> jsonPathExpressions;
+    private final Map<String, Object> jsonPathExpressions;
 
     /** Optional ignoring element not found errors */
     private final boolean ignoreNotFound;
@@ -84,9 +84,9 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
             Object jsonData = parser.parse(message.getPayload(String.class));
             DocumentContext documentContext = JsonPath.parse(jsonData);
 
-            for (Map.Entry<String, String> entry : jsonPathExpressions.entrySet()) {
+            for (Map.Entry<String, Object> entry : jsonPathExpressions.entrySet()) {
                 jsonPathExpression = entry.getKey();
-                String valueExpression = context.replaceDynamicContentInString(entry.getValue());
+                String valueExpression = context.replaceDynamicContentInString(entry.getValue().toString());
 
                 Object value;
                 if (valueExpression.equals("true")) {
@@ -129,25 +129,21 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
      * Fluent builder.
      */
     public static final class Builder implements MessageProcessor.Builder<JsonPathMessageProcessor, Builder>, WithExpressions<Builder> {
-        private Map<String, String> expressions = new LinkedHashMap<>();
+        private Map<String, Object> expressions = new LinkedHashMap<>();
         private boolean ignoreNotFound = false;
 
         public static Builder jsonPath() {
             return new Builder();
         }
 
-        /**
-         * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target
-         * variable names that are stored in the test context with the evaluated result as variable value.
-         * @param expressions
-         * @return
-         */
-        public Builder expressions(Map<String, String> expressions) {
+        @Override
+        public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
-        public Builder expression(final String expression, final String expectedValue) {
+        @Override
+        public Builder expression(final String expression, final Object expectedValue) {
             this.expressions.put(expression, expectedValue);
             return this;
         }
@@ -163,7 +159,7 @@ public class JsonPathMessageProcessor extends AbstractMessageProcessor {
         }
     }
 
-    public Map<String, String> getJsonPathExpressions() {
+    public Map<String, Object> getJsonPathExpressions() {
         return jsonPathExpressions;
     }
 

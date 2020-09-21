@@ -89,7 +89,7 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .messageType(MessageType.XHTML)
                 .build();
         receiveAction.execute(context);
@@ -133,7 +133,7 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .messageType(MessageType.XHTML)
                 .build();
         receiveAction.execute(context);

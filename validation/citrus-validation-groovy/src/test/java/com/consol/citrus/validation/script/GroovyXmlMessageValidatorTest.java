@@ -23,7 +23,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -59,8 +58,10 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +
                         "assert root.Text.text() == 'Hello TestFramework'";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -75,8 +76,10 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +
                         "assert root.Text.text() == 'Hello ' + context.getVariable(\"user\")";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -88,8 +91,10 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
                         "assert root.BookingId.text() == 'Bx1G987654321' \n" +
                         "assert root.Text == 'Hello Citrus'"; //should fail
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -106,8 +111,10 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
     @Test
     public void testEmptyValidationScript() {
         String validationScript = "";
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -118,11 +125,11 @@ public class GroovyXmlMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new XpathMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext("scala", MessageType.PLAINTEXT.name()));
+        validationContexts.add(new ScriptValidationContext("scala"));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 
-        validationContexts.add(new ScriptValidationContext(MessageType.XML.name()));
+        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }

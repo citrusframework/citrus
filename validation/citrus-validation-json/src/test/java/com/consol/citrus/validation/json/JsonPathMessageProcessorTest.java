@@ -34,7 +34,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
     public void testConstructWithJsonPath() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\" }}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
@@ -48,7 +48,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
     public void testConstructWithJsonPathMultipleValues() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\", \"Id\": 1234567}}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Text", "Hello!");
         jsonPathExpressions.put("$.TestMessage.Id", "9999999");
 
@@ -63,7 +63,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
     public void testConstructWithJsonPathWithArrays() {
         Message message = new DefaultMessage("{ \"TestMessage\": [{ \"Text\": \"Hello World!\" }, { \"Text\": \"Another Hello World!\" }]}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..Text", "Hello!");
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
@@ -77,7 +77,7 @@ public class JsonPathMessageProcessorTest extends AbstractTestNGUnitTest {
     public void testConstructWithJsonPathNoResult() {
         Message message = new DefaultMessage("{ \"TestMessage\": { \"Text\": \"Hello World!\" }}");
 
-        Map<String, String> jsonPathExpressions = new HashMap<>();
+        Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.TestMessage.Unknown", "Hello!");
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()

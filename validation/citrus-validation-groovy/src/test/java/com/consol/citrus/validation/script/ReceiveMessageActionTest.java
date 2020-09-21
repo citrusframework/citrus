@@ -41,7 +41,6 @@ import com.consol.citrus.validation.MessageValidatorRegistry;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -95,7 +94,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         sb.append("}");
 
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptData(sb.toString());
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -111,7 +109,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -128,7 +125,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         sb.append("}");
 
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptData(sb.toString());
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -144,7 +140,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -154,7 +149,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
 
         final Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -170,7 +164,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -179,9 +172,11 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidationScript() {
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript("assert root.Message.name() == 'Message'\n" +
-                "assert root.Message.text() == 'Hello World!'");
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script("assert root.Message.name() == 'Message'\n" +
+                        "assert root.Message.text() == 'Hello World!'")
+                .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -196,7 +191,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .validator(new GroovyXmlMessageValidator())
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -205,8 +200,10 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithValidationScriptResource() {
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScriptResourcePath("classpath:com/consol/citrus/actions/test-validation-script.groovy");
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .scriptResource("classpath:com/consol/citrus/actions/test-validation-script.groovy")
+                .build();
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
@@ -221,7 +218,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .validator(new GroovyXmlMessageValidator())
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -231,7 +228,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testInjectedMessageValidators() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -250,7 +246,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -268,8 +263,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
-                .validationContext(scriptValidationContext)
+                .validate(scriptValidationContext)
                 .build();
         receiveAction.execute(context);
 

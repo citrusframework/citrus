@@ -151,11 +151,6 @@ public class ReceiveSoapMessageActionBuilder extends ReceiveMessageActionBuilder
     }
 
     @Override
-    public ReceiveMessageAction build() {
-        return delegate.build();
-    }
-
-    @Override
     public TestActionBuilder<?> getDelegate() {
         return delegate;
     }

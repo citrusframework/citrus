@@ -16,9 +16,9 @@
 
 package com.consol.citrus.variable;
 
+import java.util.Map;
 import java.util.Optional;
 
-import com.consol.citrus.builder.WithExpressions;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
@@ -80,7 +80,24 @@ public interface VariableExtractor extends MessageProcessor {
      * @param <T> extractor type
      * @param <B> builder reference to self
      */
-    interface Builder<T extends VariableExtractor, B extends Builder<T, B>> extends WithExpressions<B> {
+    interface Builder<T extends VariableExtractor, B extends Builder<T, B>> {
+
+        /**
+         * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target
+         * variable names that are stored in the test context with the evaluated result as variable value.
+         * @param expressions
+         * @return
+         */
+        B expressions(Map<String, String> expressions);
+
+        /**
+         * Add an expression that gets evaluated. The evaluation result is stored in the test context as variable with
+         * given variable name.
+         * @param expression
+         * @param value
+         * @return
+         */
+        B expression(final String expression, final String value);
 
         /**
          * Builds new variable extractor instance.

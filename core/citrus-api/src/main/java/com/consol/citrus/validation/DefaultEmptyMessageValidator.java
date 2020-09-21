@@ -17,9 +17,9 @@
 package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.ValidationContext;
-import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
@@ -38,8 +38,9 @@ public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
             return;
         }
 
-        Assert.isTrue(!StringUtils.hasText(controlMessage.getPayload(String.class)), "Empty message validation failed - " +
-                "control message is not empty!");
+        if (StringUtils.hasText(controlMessage.getPayload(String.class))) {
+            throw new ValidationException("Empty message validation failed - control message is not empty!");
+        }
 
         log.debug("Start to verify empty message payload ...");
 
@@ -48,8 +49,9 @@ public class DefaultEmptyMessageValidator extends DefaultMessageValidator {
             log.debug("Control message:\n" + controlMessage);
         }
 
-        Assert.isTrue(!StringUtils.hasText(receivedMessage.getPayload(String.class)), "Validation failed - " +
-                "received message content is not empty!");
+        if (StringUtils.hasText(receivedMessage.getPayload(String.class))) {
+            throw new ValidationException("Validation failed - received message content is not empty!") ;
+        }
 
         log.info("Message payload is empty as expected: All values OK");
     }

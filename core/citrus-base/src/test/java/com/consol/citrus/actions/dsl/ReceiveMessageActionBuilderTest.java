@@ -61,6 +61,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyLong;
@@ -1219,7 +1220,8 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                         .payload("{}")
-                        .schemaValidation(false));
+                        .validate(xml()
+                                .schemaValidation(false)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1229,22 +1231,14 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         XmlMessageValidationContext xmlMessageValidationContext = action.getValidationContexts().stream()
                 .filter(XmlMessageValidationContext.class::isInstance).findFirst()
                 .map(XmlMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertFalse(xmlMessageValidationContext.isSchemaValidationEnabled());
-
-        JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
-                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
-                .map(JsonMessageValidationContext.class::cast)
-                .orElseThrow(() -> new AssertionError("Missing validation context"));
-        Assert.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
-
     }
 }

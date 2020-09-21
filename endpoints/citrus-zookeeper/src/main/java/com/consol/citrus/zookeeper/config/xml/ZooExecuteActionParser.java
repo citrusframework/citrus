@@ -125,9 +125,9 @@ public class ZooExecuteActionParser implements BeanDefinitionParser {
     private JsonPathMessageValidationContext getValidationContext(Element validateElement) {
         Map<String, Object> validateJsonPathExpressions = new HashMap<>();
         ValidateMessageParserUtil.parseJsonPathElements(validateElement, validateJsonPathExpressions);
-        JsonPathMessageValidationContext context = new JsonPathMessageValidationContext();
-        context.setJsonPathExpressions(validateJsonPathExpressions);
-        return context;
+        return new JsonPathMessageValidationContext.Builder()
+                .expressions(validateJsonPathExpressions)
+                .build();
     }
 
     /**

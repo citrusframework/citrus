@@ -61,6 +61,7 @@ import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 import com.consol.citrus.xml.StringSource;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.main.JsonSchema;
 import org.hamcrest.core.AnyOf;
 import org.mockito.Mockito;
@@ -2014,7 +2015,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithJsonSchemaRepository() throws IOException {
+    public void testReceiveBuilderWithJsonSchemaRepository() throws ProcessingException {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -2025,6 +2026,10 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
+
+        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
@@ -2059,7 +2064,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
     }
 
     @Test
-    public void testReceiveBuilderWithJsonSchema() throws IOException {
+    public void testReceiveBuilderWithJsonSchema() throws ProcessingException {
         SimpleJsonSchema schema = applicationContext.getBean("jsonTestSchema", SimpleJsonSchema.class);
 
         reset(schema, messageEndpoint, messageConsumer, configuration);
@@ -2070,6 +2075,10 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(
                 new DefaultMessage("{}")
                         .setHeader("operation", "sayHello"));
+
+        JsonSchema jsonSchemaMock = mock(JsonSchema.class);
+        when(jsonSchemaMock.validate(any())).thenReturn(new GraciousProcessingReport(true));
+        when(schema.getSchema()).thenReturn(jsonSchemaMock);
 
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override

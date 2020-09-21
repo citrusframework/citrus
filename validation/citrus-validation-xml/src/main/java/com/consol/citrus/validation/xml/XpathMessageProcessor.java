@@ -46,7 +46,7 @@ import org.w3c.dom.Node;
 public class XpathMessageProcessor extends AbstractMessageProcessor {
 
     /** Overwrites message elements before validating (via XPath expressions) */
-    private final Map<String, String> xPathExpressions;
+    private final Map<String, Object> xPathExpressions;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(XpathMessageProcessor.class);
@@ -85,9 +85,9 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
             throw new CitrusRuntimeException("Not able to set message elements, because no XML ressource defined");
         }
 
-        for (final Entry<String, String> entry : xPathExpressions.entrySet()) {
+        for (final Entry<String, Object> entry : xPathExpressions.entrySet()) {
             final String pathExpression = entry.getKey();
-            String valueExpression = entry.getValue();
+            String valueExpression = entry.getValue().toString();
 
             //check if value expr is variable or function (and resolve it if yes)
             valueExpression = context.replaceDynamicContentInString(valueExpression);
@@ -128,7 +128,7 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
      * Fluent builder.
      */
     public static final class Builder implements MessageProcessor.Builder<XpathMessageProcessor, Builder>, WithExpressions<Builder> {
-        private Map<String, String> expressions = new LinkedHashMap<>();
+        private Map<String, Object> expressions = new LinkedHashMap<>();
 
         public static Builder xpath() {
             return new Builder();
@@ -140,12 +140,12 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
          * @param expressions
          * @return
          */
-        public Builder expressions(Map<String, String> expressions) {
+        public Builder expressions(Map<String, Object> expressions) {
             this.expressions.putAll(expressions);
             return this;
         }
 
-        public Builder expression(final String expression, final String expectedValue) {
+        public Builder expression(final String expression, final Object expectedValue) {
             this.expressions.put(expression, expectedValue);
             return this;
         }
@@ -160,7 +160,7 @@ public class XpathMessageProcessor extends AbstractMessageProcessor {
      * Gets the xPathExpressions.
      * @return the xPathExpressions
      */
-    public Map<String, String> getXPathExpressions() {
+    public Map<String, Object> getXPathExpressions() {
         return xPathExpressions;
     }
 }

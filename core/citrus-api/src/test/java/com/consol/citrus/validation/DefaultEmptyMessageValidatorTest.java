@@ -1,6 +1,7 @@
 package com.consol.citrus.validation;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import org.mockito.Mock;
@@ -41,7 +42,7 @@ public class DefaultEmptyMessageValidatorTest {
         validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class,
+    @Test(expectedExceptions = ValidationException.class,
           expectedExceptionsMessageRegExp = "Validation failed - received message content is not empty!")
     public void shouldValidateNonEmptyMessage() {
         when(received.getPayload(String.class)).thenReturn("Hello");
@@ -51,7 +52,7 @@ public class DefaultEmptyMessageValidatorTest {
         validator.validateMessage(received, control, new TestContext(), new DefaultValidationContext());
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class,
+    @Test(expectedExceptions = ValidationException.class,
             expectedExceptionsMessageRegExp = "Empty message validation failed - control message is not empty!")
     public void shouldValidateInvalidControlMessage() {
         when(received.getPayload(String.class)).thenReturn("");

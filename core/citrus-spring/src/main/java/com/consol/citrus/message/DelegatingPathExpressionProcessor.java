@@ -34,13 +34,13 @@ import org.springframework.util.CollectionUtils;
 public class DelegatingPathExpressionProcessor implements MessageProcessor {
 
     /** Map defines path expressions */
-    private final Map<String, String> pathExpressions;
+    private final Map<String, Object> pathExpressions;
 
     public DelegatingPathExpressionProcessor() {
         this(new HashMap<>());
     }
 
-    public DelegatingPathExpressionProcessor(Map<String, String> pathExpressions) {
+    public DelegatingPathExpressionProcessor(Map<String, Object> pathExpressions) {
         this.pathExpressions = pathExpressions;
     }
 
@@ -50,12 +50,12 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
             return;
         }
 
-        Map<String, String> jsonPathExpressions = new LinkedHashMap<>();
-        Map<String, String> xpathExpressions = new LinkedHashMap<>();
+        Map<String, Object> jsonPathExpressions = new LinkedHashMap<>();
+        Map<String, Object> xpathExpressions = new LinkedHashMap<>();
 
-        for (Map.Entry<String, String> pathExpression : pathExpressions.entrySet()) {
+        for (Map.Entry<String, Object> pathExpression : pathExpressions.entrySet()) {
             final String path = context.replaceDynamicContentInString(pathExpression.getKey());
-            final String variable = pathExpression.getValue();
+            final Object variable = pathExpression.getValue();
 
             if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
                 jsonPathExpressions.put(path, variable);
@@ -94,7 +94,7 @@ public class DelegatingPathExpressionProcessor implements MessageProcessor {
      * Gets the JSONPath / XPath expressions.
      * @return
      */
-    public Map<String, String> getPathExpressions() {
+    public Map<String, Object> getPathExpressions() {
         return pathExpressions;
     }
 

@@ -29,22 +29,10 @@ public interface SchemaValidationContext {
     boolean isSchemaValidationEnabled();
 
     /**
-     * Enable/disable schema validation.
-     * @param schemaValidation the schemaValidation to set
-     */
-    void setSchemaValidation(boolean schemaValidation);
-
-    /**
      * Gets the schemaRepository.
      * @return the schemaRepository the schemaRepository to get.
      */
     String getSchemaRepository();
-
-    /**
-     * Sets the schemaRepository.
-     * @param schemaRepository the schemaRepository to set
-     */
-    void setSchemaRepository(String schemaRepository);
 
     /**
      * Gets the schema.
@@ -53,8 +41,30 @@ public interface SchemaValidationContext {
     String getSchema();
 
     /**
-     * Sets the schema.
-     * @param schema the schema to set
+     * Fluent builder
+     * @param <B>
      */
-    void setSchema(String schema);
+    interface Builder<B> {
+
+        /**
+         * Sets schema validation enabled/disabled for this message.
+         * @param enabled
+         * @return
+         */
+        B schemaValidation(final boolean enabled);
+
+        /**
+         * Sets explicit schema instance name to use for schema validation.
+         * @param schemaName
+         * @return
+         */
+        B schema(final String schemaName);
+
+        /**
+         * Sets explicit xsd schema repository instance to use for validation.
+         * @param schemaRepository
+         * @return
+         */
+        B schemaRepository(final String schemaRepository);
+    }
 }

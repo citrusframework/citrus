@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.consol.citrus.AbstractTestActionBuilder;
@@ -140,7 +141,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         this.validators = builder.validators;
         this.dataDictionary = builder.dataDictionary;
         this.validationCallback = builder.validationCallback;
-        this.validationContexts = builder.validationContexts;
+        this.validationContexts = builder.getValidationContexts();
         this.variableExtractors = builder.variableExtractors;
         this.messageProcessors = builder.messageProcessors;
         this.messageType = Optional.ofNullable(builder.messageType).orElse(CitrusSettings.DEFAULT_MESSAGE_TYPE);
@@ -501,21 +502,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private DataDictionary<?> dataDictionary;
         private String dataDictionaryName;
         private ValidationCallback validationCallback;
-        private List<ValidationContext> validationContexts = new ArrayList<>();
+        private List<ValidationContext.Builder<?, ?>> validationContexts = new ArrayList<>();
         private List<VariableExtractor> variableExtractors = new ArrayList<>();
         private List<MessageProcessor> messageProcessors = new ArrayList<>();
         private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
 
         /** Validation context used in this action builder */
         private HeaderValidationContext headerValidationContext;
-        private XmlMessageValidationContext xmlMessageValidationContext;
-        private JsonMessageValidationContext jsonMessageValidationContext;
-
-        /** JSON validation context used in this action builder */
-        private JsonPathMessageValidationContext jsonPathValidationContext;
-
-        /** Script validation context used in this action builder */
-        private ScriptValidationContext scriptValidationContext;
 
         private final List<String> validatorNames = new ArrayList<>();
         private final List<String> headerValidatorNames = new ArrayList<>();
@@ -855,66 +848,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Adds script validation.
-         *
-         * @param validationScript
-         * @return
-         */
-        public B validateScript(final String validationScript) {
-            getScriptValidationContext().setValidationScript(validationScript);
-            return self;
-        }
-
-        /**
-         * Reads validation script file resource and sets content as validation script.
-         *
-         * @param scriptResource
-         * @return
-         */
-        public B validateScript(final Resource scriptResource) {
-            return validateScript(scriptResource, FileUtils.getDefaultCharset());
-        }
-
-        /**
-         * Reads validation script file resource and sets content as validation script.
-         *
-         * @param scriptResource
-         * @param charset
-         * @return
-         */
-        public B validateScript(final Resource scriptResource, final Charset charset) {
-            try {
-                validateScript(FileUtils.readToString(scriptResource, charset));
-            } catch (final IOException e) {
-                throw new CitrusRuntimeException("Failed to read script resource file", e);
-            }
-
-            return self;
-        }
-
-        /**
-         * Adds script validation file resource.
-         *
-         * @param fileResourcePath
-         * @return
-         */
-        public B validateScriptResource(final String fileResourcePath) {
-            getScriptValidationContext().setValidationScriptResourcePath(fileResourcePath);
-            return self;
-        }
-
-        /**
-         * Adds custom validation script type.
-         *
-         * @param type
-         * @return
-         */
-        public B validateScriptType(final String type) {
-            getScriptValidationContext().setScriptType(type);
-            return self;
-        }
-
-        /**
          * Sets a explicit message type for this receive action.
          *
          * @param messageType
@@ -933,20 +866,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B messageType(final String messageType) {
             this.messageType = messageType;
-
-            if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
-                getJsonMessageValidationContext();
-            }
-
-            if (MessageType.XML.name().equalsIgnoreCase(messageType)
-                || MessageType.XHTML.name().equalsIgnoreCase(messageType)) {
-                getXmlMessageValidationContext();
-            }
-
-            if (scriptValidationContext != null) {
-                scriptValidationContext.setMessageType(messageType);
-            }
-
             return self;
         }
 
@@ -955,8 +874,27 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validationContext
          * @return
          */
-        public B validationContext(final ValidationContext validationContext) {
+        public B validate(final ValidationContext.Builder<?, ?> validationContext) {
             this.validationContexts.add(validationContext);
+            return self;
+        }
+
+        /**
+         * Adds a validation context.
+         * @param validationContext
+         * @return
+         */
+        public B validate(final ValidationContext validationContext) {
+            return validate((ValidationContext.Builder) () -> validationContext);
+        }
+
+        /**
+         * Sets validation contexts.
+         * @param validationContexts
+         * @return
+         */
+        public B validate(final List<ValidationContext.Builder<?, ?>> validationContexts) {
+            this.validationContexts.addAll(validationContexts);
             return self;
         }
 
@@ -965,146 +903,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validationContexts
          * @return
          */
-        public B validationContexts(final List<ValidationContext> validationContexts) {
-            this.validationContexts = validationContexts;
-            return self;
-        }
-
-        /**
-         * Sets schema validation enabled/disabled for this message.
-         *
-         * @param enabled
-         * @return
-         */
-        public B schemaValidation(final boolean enabled) {
-            getXmlMessageValidationContext().setSchemaValidation(enabled);
-            getJsonMessageValidationContext().setSchemaValidation(enabled);
-            return self;
-        }
-
-        /**
-         * Validates XML namespace with prefix and uri.
-         *
-         * @param prefix
-         * @param namespaceUri
-         * @return
-         */
-        public B validateNamespace(final String prefix, final String namespaceUri) {
-            getXmlMessageValidationContext().getControlNamespaces().put(prefix, namespaceUri);
-            return self;
-        }
-
-        /**
-         * Adds message element validation.
-         *
-         * @param path
-         * @param controlValue
-         * @return
-         */
-        public B validate(final String path, final Object controlValue) {
-            if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
-                getJsonPathValidationContext().getJsonPathExpressions().put(path, controlValue);
-            } else {
-                getXPathValidationContext().getXpathExpressions().put(path, controlValue);
-            }
-
-            return self;
-        }
-
-        /**
-         * Adds the given map of paths with their corresponding control values for validation.
-         *
-         * @param map Map of paths with control values
-         * @return The modified builder
-         */
-        public B validate(final Map<String, Object> map) {
-            for (final Map.Entry<String, Object> validationMapping : map.entrySet()) {
-                validate(validationMapping.getKey(), validationMapping.getValue());
-            }
-            return self;
-        }
-
-        /**
-         * Adds ignore path expression for message element.
-         *
-         * @param path
-         * @return
-         */
-        public B ignore(final String path) {
-            if (messageType.equalsIgnoreCase(MessageType.XML.name())
-                    || messageType.equalsIgnoreCase(MessageType.XHTML.name())) {
-                getXmlMessageValidationContext().getIgnoreExpressions().add(path);
-            } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
-                getJsonMessageValidationContext().getIgnoreExpressions().add(path);
-            }
-            return self;
-        }
-
-        /**
-         * Adds XPath message element validation.
-         *
-         * @param xPathExpression
-         * @param controlValue
-         * @return
-         */
-        public B xpath(final String xPathExpression, final Object controlValue) {
-            validate(xPathExpression, controlValue);
-            return self;
-        }
-
-        /**
-         * Adds JsonPath message element validation.
-         *
-         * @param jsonPathExpression
-         * @param controlValue
-         * @return
-         */
-        public B jsonPath(final String jsonPathExpression, final Object controlValue) {
-            validate(jsonPathExpression, controlValue);
-            return self;
-        }
-
-        /**
-         * Sets explicit schema instance name to use for schema validation.
-         *
-         * @param schemaName
-         * @return
-         */
-        public B xsd(final String schemaName) {
-            getXmlMessageValidationContext().setSchema(schemaName);
-            return self;
-        }
-
-        /**
-         * Sets explicit schema instance name to use for schema validation.
-         *
-         * @param schemaName The name of the schema bean
-         */
-        public B jsonSchema(final String schemaName) {
-            getJsonMessageValidationContext().setSchema(schemaName);
-            return self;
-        }
-
-        /**
-         * Sets explicit xsd schema repository instance to use for validation.
-         *
-         * @param schemaRepository
-         * @return
-         */
-        public B xsdSchemaRepository(final String schemaRepository) {
-            getXmlMessageValidationContext().setSchemaRepository(schemaRepository);
-            return self;
-        }
-
-        /**
-         * Sets explicit json schema repository instance to use for validation.
-         *
-         * @param schemaRepository The name of the schema repository bean
-         * @return
-         */
-        public B jsonSchemaRepository(final String schemaRepository) {
-            getJsonMessageValidationContext().setSchemaRepository(schemaRepository);
-            return self;
+        public B validate(ValidationContext.Builder<?, ?> ... validationContexts) {
+            return validate(Arrays.asList(validationContexts));
         }
 
         /**
@@ -1381,7 +1181,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          *
          * @return the message builder in use
          */
-        private AbstractMessageContentBuilder getMessageContentBuilder() {
+        public AbstractMessageContentBuilder getMessageContentBuilder() {
             if (this.messageBuilder == null) {
                 messageBuilder(new PayloadTemplateMessageBuilder());
             }
@@ -1390,95 +1190,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
         }
 
         /**
-         * Gets the validation context as XML validation context an raises exception if existing validation context is
-         * not a XML validation context.
-         *
-         * @return
-         */
-        private XpathMessageValidationContext getXPathValidationContext() {
-            if (getXmlMessageValidationContext() instanceof XpathMessageValidationContext) {
-                return ((XpathMessageValidationContext) getXmlMessageValidationContext());
-            } else {
-                final XpathMessageValidationContext xPathContext = new XpathMessageValidationContext();
-                xPathContext.setNamespaces(getXmlMessageValidationContext().getNamespaces());
-                xPathContext.setControlNamespaces(getXmlMessageValidationContext().getControlNamespaces());
-                xPathContext.setIgnoreExpressions(getXmlMessageValidationContext().getIgnoreExpressions());
-                xPathContext.setSchema(getXmlMessageValidationContext().getSchema());
-                xPathContext.setSchemaRepository(getXmlMessageValidationContext().getSchemaRepository());
-                xPathContext.setSchemaValidation(getXmlMessageValidationContext().isSchemaValidationEnabled());
-                xPathContext.setDTDResource(getXmlMessageValidationContext().getDTDResource());
-
-                this.validationContexts.remove(getXmlMessageValidationContext());
-                validationContext(xPathContext);
-
-                xmlMessageValidationContext = xPathContext;
-                return xPathContext;
-            }
-        }
-
-        /**
-         * Creates new xml validation context if not done before and gets the xml validation context.
-         */
-        protected XmlMessageValidationContext getXmlMessageValidationContext() {
-            if (xmlMessageValidationContext == null) {
-                xmlMessageValidationContext = new XmlMessageValidationContext();
-
-                validationContext(xmlMessageValidationContext);
-            }
-
-            return xmlMessageValidationContext;
-        }
-
-        /**
-         * Creates new json validation context if not done before and gets the json validation context.
-         */
-        private JsonMessageValidationContext getJsonMessageValidationContext() {
-            if (jsonMessageValidationContext == null) {
-                jsonMessageValidationContext = new JsonMessageValidationContext();
-
-                validationContext(jsonMessageValidationContext);
-            }
-
-            return jsonMessageValidationContext;
-        }
-
-        /**
          * Creates new header validation context if not done before and gets the header validation context.
          */
-        private HeaderValidationContext getHeaderValidationContext() {
+        public HeaderValidationContext getHeaderValidationContext() {
             if (headerValidationContext == null) {
                 headerValidationContext = new HeaderValidationContext();
 
-                validationContext(headerValidationContext);
+                validate(headerValidationContext);
             }
 
             return headerValidationContext;
-        }
-
-        /**
-         * Creates new script validation context if not done before and gets the script validation context.
-         */
-        private ScriptValidationContext getScriptValidationContext() {
-            if (scriptValidationContext == null) {
-                scriptValidationContext = new ScriptValidationContext(messageType);
-
-                validationContext(scriptValidationContext);
-            }
-
-            return scriptValidationContext;
-        }
-
-        /**
-         * Creates new JSONPath validation context if not done before and gets the validation context.
-         */
-        private JsonPathMessageValidationContext getJsonPathValidationContext() {
-            if (jsonPathValidationContext == null) {
-                jsonPathValidationContext = new JsonPathMessageValidationContext();
-
-                validationContext(jsonPathValidationContext);
-            }
-
-            return jsonPathValidationContext;
         }
 
         private CitrusRuntimeException createUnableToFindMapperException() {
@@ -1499,30 +1220,26 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * steps will execute later on.
          */
         protected void reconcileValidationContexts() {
-            if (validationContexts.isEmpty()
-                    || validationContexts.stream().allMatch(HeaderValidationContext.class::isInstance)) {
-                getXmlMessageValidationContext();
-                getJsonMessageValidationContext();
-            }
-
+            List<ValidationContext> validationContexts = getValidationContexts();
             if (validationContexts.stream().noneMatch(HeaderValidationContext.class::isInstance)) {
                 getHeaderValidationContext();
             }
 
-            if (validationContexts.stream().anyMatch(JsonPathMessageValidationContext.class::isInstance)
+            if (validationContexts.stream().allMatch(HeaderValidationContext.class::isInstance)) {
+                validate(new XmlMessageValidationContext());
+                validate(new JsonMessageValidationContext());
+            } else if (validationContexts.stream().anyMatch(JsonPathMessageValidationContext.class::isInstance)
                     && validationContexts.stream().noneMatch(JsonMessageValidationContext.class::isInstance)) {
-                getJsonMessageValidationContext();
-            }
-
-            // if still no Json or Xml message validation context is set check the message payload and set proper context
-            if (validationContexts.stream().noneMatch(XmlMessageValidationContext.class::isInstance)
-                && validationContexts.stream().noneMatch(JsonMessageValidationContext.class::isInstance)) {
+                validate(new JsonMessageValidationContext());
+            } else if (validationContexts.stream().noneMatch(XmlMessageValidationContext.class::isInstance)
+                        && validationContexts.stream().noneMatch(JsonMessageValidationContext.class::isInstance)) {
+                // if still no Json or Xml message validation context is set check the message payload and set proper context
                 Optional<String> payload = getMessagePayload();
                 if (payload.isPresent()) {
                     if (payload.get().startsWith("<")) {
-                        getXmlMessageValidationContext();
+                        validate(new XmlMessageValidationContext());
                     } else if ((payload.get().startsWith("{") || payload.get().startsWith("["))) {
-                        getJsonMessageValidationContext();
+                        validate(new JsonMessageValidationContext());
                     }
                 }
             }
@@ -1551,6 +1268,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public List<ValidationContext> getValidationContexts() {
+            return validationContexts.stream()
+                    .map(ValidationContext.Builder::build)
+                    .collect(Collectors.toList());
+        }
+
+        /**
+         * Obtains the validationContext builders.
+         * @return
+         */
+        public List<ValidationContext.Builder<?, ?>> getValidationContextBuilders() {
             return validationContexts;
         }
     }

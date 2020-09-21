@@ -65,7 +65,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
+        Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -102,7 +102,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
+        Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -140,7 +140,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
                 "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
+        Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()
@@ -179,7 +179,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         messageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
+        Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
 
         XpathMessageProcessor processor = new XpathMessageProcessor.Builder()

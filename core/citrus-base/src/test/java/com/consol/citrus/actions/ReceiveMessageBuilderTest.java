@@ -59,6 +59,8 @@ import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.XmlMappingException;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import static com.consol.citrus.validation.json.JsonMessageValidationContext.Builder.json;
+import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -703,12 +705,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validateScript(validationScript);
+		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+				.script(validationScript)
+				.build());
 
 		//THEN
 		assertSame(copy, builder);
-		final ScriptValidationContext scriptValidationContext =
-				getFieldFromBuilder(builder, ScriptValidationContext.class, "scriptValidationContext");
+		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+				.filter(ScriptValidationContext.class::isInstance)
+				.map(ScriptValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("validation.txt", scriptValidationContext.getValidationScript());
 	}
 
@@ -720,12 +727,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validateScript(resource);
+		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+				.script(resource)
+				.build());
 
 		//THEN
 		assertSame(copy, builder);
-		final ScriptValidationContext scriptValidationContext =
-				getFieldFromBuilder(builder, ScriptValidationContext.class, "scriptValidationContext");
+		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+				.filter(ScriptValidationContext.class::isInstance)
+				.map(ScriptValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("", scriptValidationContext.getValidationScript());
 	}
 
@@ -737,12 +749,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validateScript(resource, Charset.defaultCharset());
+		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+				.script(resource, Charset.defaultCharset())
+				.build());
 
 		//THEN
 		assertSame(copy, builder);
-		final ScriptValidationContext scriptValidationContext =
-				getFieldFromBuilder(builder, ScriptValidationContext.class, "scriptValidationContext");
+		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+				.filter(ScriptValidationContext.class::isInstance)
+				.map(ScriptValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("", scriptValidationContext.getValidationScript());
 	}
 
@@ -755,12 +772,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validateScriptResource(validationScript);
+		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+				.scriptResource(validationScript)
+				.build());
 
 		//THEN
 		assertSame(copy, builder);
-		final ScriptValidationContext scriptValidationContext =
-				getFieldFromBuilder(builder, ScriptValidationContext.class, "scriptValidationContext");
+		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+				.filter(ScriptValidationContext.class::isInstance)
+				.map(ScriptValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("validation.txt", scriptValidationContext.getValidationScriptResourcePath());
 	}
 
@@ -773,12 +795,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validateScriptType(scriptType);
+		final ReceiveMessageAction.Builder copy = builder.validate(new ScriptValidationContext.Builder()
+				.scriptType(scriptType)
+				.build());
 
 		//THEN
 		assertSame(copy, builder);
-		final ScriptValidationContext scriptValidationContext =
-				getFieldFromBuilder(builder, ScriptValidationContext.class, "scriptValidationContext");
+		final ScriptValidationContext scriptValidationContext = builder.getValidationContexts().stream()
+				.filter(ScriptValidationContext.class::isInstance)
+				.map(ScriptValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("bash", scriptValidationContext.getScriptType());
 	}
 
@@ -805,8 +832,9 @@ class ReceiveMessageBuilderTest {
 		assertSame(copy, builder);
 		assertEquals(messageType, ReflectionTestUtils.getField(builder, "messageType"));
 		assertEquals(messageType, builder.build().getMessageType());
-		assertEquals(2, builder.build().getValidationContexts().size());
+		assertEquals(3, builder.build().getValidationContexts().size());
 		assertTrue(builder.build().getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
+		assertTrue(builder.build().getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
 		assertTrue(builder.build().getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 	}
 
@@ -816,17 +844,16 @@ class ReceiveMessageBuilderTest {
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.schemaValidation(true);
+		final ReceiveMessageAction.Builder copy = builder.validate(xml().schemaValidation(true));
 
 		//THEN
 		assertSame(copy, builder);
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XmlMessageValidationContext.class::isInstance)
+				.map(XmlMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertTrue(xmlMessageValidationContext.isSchemaValidationEnabled());
-
-		final JsonMessageValidationContext jsonMessageValidationContext =
-				getFieldFromBuilder(builder, JsonMessageValidationContext.class, "jsonMessageValidationContext");
-		assertTrue(jsonMessageValidationContext.isSchemaValidationEnabled());
 	}
 
 	@Test
@@ -838,12 +865,15 @@ class ReceiveMessageBuilderTest {
 		final String uri = "http://foo.com";
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validateNamespace(prefix, uri);
+		final ReceiveMessageAction.Builder copy = builder.validate(xml().namespace(prefix, uri));
 
 		//THEN
 		assertSame(copy, builder);
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XmlMessageValidationContext.class::isInstance)
+				.map(XmlMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("http://foo.com", xmlMessageValidationContext.getControlNamespaces().get("foo"));
 	}
 
@@ -857,12 +887,16 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(path, controlValue);
+		final ReceiveMessageAction.Builder copy = builder.validate(JsonPathMessageValidationContext.Builder.jsonPath()
+				.expression(path, controlValue));
 
 		//THEN
 		assertSame(copy, builder);
-		final JsonPathMessageValidationContext jsonMessageValidationContext =
-				getFieldFromBuilder(builder, JsonPathMessageValidationContext.class, "jsonPathValidationContext");
+		final JsonPathMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(JsonPathMessageValidationContext.class::isInstance)
+				.map(JsonPathMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("Success", jsonMessageValidationContext.getJsonPathExpressions().get("$ResultCode"));
 	}
 
@@ -876,12 +910,16 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(path, controlValue);
+		final ReceiveMessageAction.Builder copy = builder.validate(XpathMessageValidationContext.Builder.xpath()
+				.expression(path, controlValue));
 
 		//THEN
 		assertSame(copy, builder);
-		final XpathMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XpathMessageValidationContext.class, "xmlMessageValidationContext");
+		final XpathMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XpathMessageValidationContext.class::isInstance)
+				.map(XpathMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
 	}
 
@@ -903,13 +941,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType( MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(map);
+		final ReceiveMessageAction.Builder copy = builder.validate(XpathMessageValidationContext.Builder.xpath()
+				.expressions(map));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final XpathMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XpathMessageValidationContext.class, "xmlMessageValidationContext");
+		final XpathMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XpathMessageValidationContext.class::isInstance)
+				.map(XpathMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(value1, xmlMessageValidationContext.getXpathExpressions().get(key1));
 		assertEquals(value2, xmlMessageValidationContext.getXpathExpressions().get(key2));
 		assertEquals(value3, xmlMessageValidationContext.getXpathExpressions().get(key3));
@@ -934,13 +976,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.validate(map);
+		final ReceiveMessageAction.Builder copy = builder.validate(JsonPathMessageValidationContext.Builder.jsonPath()
+				.expressions(map));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final JsonPathMessageValidationContext jsonPathValidationContext =
-				getFieldFromBuilder(builder, JsonPathMessageValidationContext.class, "jsonPathValidationContext");
+		final JsonPathMessageValidationContext jsonPathValidationContext = builder.getValidationContexts().stream()
+				.filter(JsonPathMessageValidationContext.class::isInstance)
+				.map(JsonPathMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 
 		assertEquals(value1, jsonPathValidationContext.getJsonPathExpressions().get(key1));
 		assertEquals(value2, jsonPathValidationContext.getJsonPathExpressions().get(key2));
@@ -956,13 +1002,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.ignore(path);
+		final ReceiveMessageAction.Builder copy = builder.validate(json()
+				.ignore(path));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final JsonMessageValidationContext jsonMessageValidationContext =
-				getFieldFromBuilder(builder, JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		final JsonMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(JsonMessageValidationContext.class::isInstance)
+				.map(JsonMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertTrue(jsonMessageValidationContext.getIgnoreExpressions().contains("$ResultCode"));
 	}
 
@@ -975,73 +1025,17 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.ignore(path);
+		final ReceiveMessageAction.Builder copy = builder.validate(xml().ignore(path));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XmlMessageValidationContext.class::isInstance)
+				.map(XmlMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertTrue(xmlMessageValidationContext.getIgnoreExpressions().contains("//ResultCode"));
-	}
-
-	@Test
-	void ignore_xhtml() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String path = "//ResultCode";
-		builder.messageType(MessageType.XHTML);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.ignore(path);
-
-		//THEN
-		assertSame(copy, builder);
-
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
-		assertTrue(xmlMessageValidationContext.getIgnoreExpressions().contains("//ResultCode"));
-	}
-
-	@Test
-	void xpath() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String path = "//ResultCode";
-		final String controlValue = "Success";
-		builder.messageType(MessageType.XML);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.xpath(path, controlValue);
-
-		//THEN
-		assertSame(copy, builder);
-
-		final XpathMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XpathMessageValidationContext.class, "xmlMessageValidationContext");
-		assertEquals("Success", xmlMessageValidationContext.getXpathExpressions().get("//ResultCode"));
-	}
-
-	@Test
-	void jsonPath() {
-
-		//GIVEN
-		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final String path = "$ResultCode";
-		final String controlValue = "Success";
-		builder.messageType(MessageType.JSON);
-
-		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.jsonPath(path, controlValue);
-
-		//THEN
-		assertSame(copy, builder);
-
-		final JsonPathMessageValidationContext jsonPathValidationContext =
-				getFieldFromBuilder(builder, JsonPathMessageValidationContext.class, "jsonPathValidationContext");
-		assertEquals("Success", jsonPathValidationContext.getJsonPathExpressions().get("$ResultCode"));
 	}
 
 	@Test
@@ -1053,13 +1047,16 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.xsd(schemaName);
+		final ReceiveMessageAction.Builder copy = builder.validate(xml().schema(schemaName));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XmlMessageValidationContext.class::isInstance)
+				.map(XmlMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(schemaName,xmlMessageValidationContext.getSchema());
 	}
 
@@ -1072,13 +1069,16 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.jsonSchema(schemaName);
+		final ReceiveMessageAction.Builder copy = builder.validate(json().schema(schemaName));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final JsonMessageValidationContext jsonMessageValidationContext =
-				getFieldFromBuilder(builder, JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		final JsonMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(JsonMessageValidationContext.class::isInstance)
+				.map(JsonMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(schemaName, jsonMessageValidationContext.getSchema());
 	}
 
@@ -1091,13 +1091,16 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.XML);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.xsdSchemaRepository(schemaRepository);
+		final ReceiveMessageAction.Builder copy = builder.validate(xml().schemaRepository(schemaRepository));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final XmlMessageValidationContext xmlMessageValidationContext =
-				getFieldFromBuilder(builder, XmlMessageValidationContext.class, "xmlMessageValidationContext");
+		final XmlMessageValidationContext xmlMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(XmlMessageValidationContext.class::isInstance)
+				.map(XmlMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(schemaRepository, xmlMessageValidationContext.getSchemaRepository());
 	}
 
@@ -1110,13 +1113,16 @@ class ReceiveMessageBuilderTest {
 		builder.messageType(MessageType.JSON);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.jsonSchemaRepository(schemaRepository);
+		final ReceiveMessageAction.Builder copy = builder.validate(json().schemaRepository(schemaRepository));
 
 		//THEN
 		assertSame(copy, builder);
 
-		final JsonMessageValidationContext jsonMessageValidationContext =
-				getFieldFromBuilder(builder, JsonMessageValidationContext.class, "jsonMessageValidationContext");
+		final JsonMessageValidationContext jsonMessageValidationContext = builder.getValidationContexts().stream()
+				.filter(JsonMessageValidationContext.class::isInstance)
+				.map(JsonMessageValidationContext.class::cast)
+				.findFirst()
+				.orElseThrow(() -> new CitrusRuntimeException("Missing validation context"));
 		assertEquals(schemaRepository, jsonMessageValidationContext.getSchemaRepository());
 	}
 

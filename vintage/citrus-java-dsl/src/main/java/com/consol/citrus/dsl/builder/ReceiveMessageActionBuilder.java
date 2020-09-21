@@ -1,5 +1,6 @@
 package com.consol.citrus.dsl.builder;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.AbstractTestActionBuilder;
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.actions.ReceiveMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -19,9 +22,12 @@ import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonMessageValidationContext;
 import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
+import com.consol.citrus.validation.script.ScriptValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XmlNamespaceAware;
+import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +47,18 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
 
     private final ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?> delegate;
 
+    private String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
+
     private final Map<String, String> namespaces = new HashMap<>();
+
+    private XmlMessageValidationContext.AbstractBuilder<?, ?> xmlMessageValidationContext;
+    private JsonMessageValidationContext.Builder jsonMessageValidationContext;
+
+    /** JSON validation context used in this action builder */
+    private JsonPathMessageValidationContext.Builder jsonPathValidationContext;
+
+    /** Script validation context used in this action builder */
+    private ScriptValidationContext.Builder scriptValidationContext;
 
     public ReceiveMessageActionBuilder(ReceiveMessageAction.ReceiveMessageActionBuilder<?, ?> builder) {
         this.self = (B) this;
@@ -325,7 +342,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validateScript(final String validationScript) {
-        delegate.validateScript(validationScript);
+        getScriptValidationContext().script(validationScript);
         return self;
     }
 
@@ -347,7 +364,11 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validateScript(final Resource scriptResource, final Charset charset) {
-        delegate.validateScript(scriptResource, charset);
+        try {
+            validateScript(FileUtils.readToString(scriptResource, charset));
+        } catch (final IOException e) {
+            throw new CitrusRuntimeException("Failed to read script resource file", e);
+        }
         return self;
     }
 
@@ -358,7 +379,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validateScriptResource(final String fileResourcePath) {
-        delegate.validateScriptResource(fileResourcePath);
+        getScriptValidationContext().scriptResource(fileResourcePath);
         return self;
     }
 
@@ -369,7 +390,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validateScriptType(final String type) {
-        delegate.validateScriptType(type);
+        getScriptValidationContext().scriptType(type);
         return self;
     }
 
@@ -391,7 +412,28 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B messageType(final String messageType) {
+        this.messageType = messageType;
         delegate.messageType(messageType);
+
+        if (MessageType.JSON.name().equalsIgnoreCase(messageType)) {
+            getJsonMessageValidationContext();
+        }
+
+        if (MessageType.XML.name().equalsIgnoreCase(messageType)
+                || MessageType.XHTML.name().equalsIgnoreCase(messageType)) {
+            getXmlMessageValidationContext();
+        }
+
+        return self;
+    }
+
+    /**
+     * Adds a validation context.
+     * @param validationContext
+     * @return
+     */
+    public B validationContext(final ValidationContext.Builder<?, ?> validationContext) {
+        this.delegate.validate(validationContext);
         return self;
     }
 
@@ -401,7 +443,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validationContext(final ValidationContext validationContext) {
-        this.delegate.validationContext(validationContext);
+        this.delegate.validate(validationContext);
         return self;
     }
 
@@ -411,7 +453,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validationContexts(final List<ValidationContext> validationContexts) {
-        delegate.validationContexts(validationContexts);
+        validationContexts.forEach(this::validationContext);
         return self;
     }
 
@@ -422,7 +464,8 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B schemaValidation(final boolean enabled) {
-        delegate.schemaValidation(enabled);
+        getXmlMessageValidationContext().schemaValidation(enabled);
+        getJsonMessageValidationContext().schemaValidation(enabled);
         return self;
     }
 
@@ -434,7 +477,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validateNamespace(final String prefix, final String namespaceUri) {
-        delegate.validateNamespace(prefix, namespaceUri);
+        getXmlMessageValidationContext().namespace(prefix, namespaceUri);
         return self;
     }
 
@@ -446,7 +489,11 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B validate(final String path, final Object controlValue) {
-        delegate.validate(path, controlValue);
+        if (JsonPathMessageValidationContext.isJsonPathExpression(path)) {
+            getJsonPathValidationContext().expression(path, controlValue);
+        } else {
+            getXPathValidationContext().expression(path, controlValue);
+        }
         return self;
     }
 
@@ -457,7 +504,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return The modified builder
      */
     public B validate(final Map<String, Object> map) {
-        delegate.validate(map);
+        map.forEach(this::validate);
         return self;
     }
 
@@ -468,7 +515,12 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B ignore(final String path) {
-        delegate.ignore(path);
+        if (messageType.equalsIgnoreCase(MessageType.XML.name())
+                || messageType.equalsIgnoreCase(MessageType.XHTML.name())) {
+            getXmlMessageValidationContext().ignore(path);
+        } else if (messageType.equalsIgnoreCase(MessageType.JSON.name())) {
+            getJsonMessageValidationContext().ignore(path);
+        }
         return self;
     }
 
@@ -480,7 +532,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B xpath(final String xPathExpression, final Object controlValue) {
-        delegate.xpath(xPathExpression, controlValue);
+        getXPathValidationContext().expression(xPathExpression, controlValue);
         return self;
     }
 
@@ -492,7 +544,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B jsonPath(final String jsonPathExpression, final Object controlValue) {
-        delegate.jsonPath(jsonPathExpression, controlValue);
+        getJsonPathValidationContext().expression(jsonPathExpression, controlValue);
         return self;
     }
 
@@ -503,7 +555,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B xsd(final String schemaName) {
-        delegate.xsd(schemaName);
+        getXmlMessageValidationContext().schema(schemaName);
         return self;
     }
 
@@ -513,7 +565,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @param schemaName The name of the schema bean
      */
     public B jsonSchema(final String schemaName) {
-        delegate.jsonSchema(schemaName);
+        getJsonMessageValidationContext().schema(schemaName);
         return self;
     }
 
@@ -524,7 +576,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B xsdSchemaRepository(final String schemaRepository) {
-        delegate.xsdSchemaRepository(schemaRepository);
+        getXmlMessageValidationContext().schemaRepository(schemaRepository);
         return self;
     }
 
@@ -535,7 +587,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B jsonSchemaRepository(final String schemaRepository) {
-        delegate.jsonSchemaRepository(schemaRepository);
+        getJsonMessageValidationContext().schemaRepository(schemaRepository);
         return self;
     }
 
@@ -756,12 +808,93 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
     }
 
     @Override
-    public ReceiveMessageAction build() {
-        delegate.getValidationContexts().stream()
-                .filter(context -> context instanceof XmlMessageValidationContext)
-                .map(XmlMessageValidationContext.class::cast)
+    public final ReceiveMessageAction build() {
+        delegate.getValidationContextBuilders().stream()
+                .filter(context -> context instanceof XmlNamespaceAware)
+                .map(XmlNamespaceAware.class::cast)
                 .forEach(context -> context.setNamespaces(namespaces));
 
         return delegate.build();
+    }
+
+    /**
+     * Gets the validation context as XML validation context an raises exception if existing validation context is
+     * not a XML validation context.
+     *
+     * @return
+     */
+    private XpathMessageValidationContext.Builder getXPathValidationContext() {
+        if (getXmlMessageValidationContext() instanceof XpathMessageValidationContext.Builder) {
+            return ((XpathMessageValidationContext.Builder) getXmlMessageValidationContext());
+        } else {
+            XmlMessageValidationContext context = getXmlMessageValidationContext().build();
+            final XpathMessageValidationContext.Builder xPathContext = new XpathMessageValidationContext.Builder();
+            xPathContext.setNamespaces(context.getNamespaces());
+
+            context.getControlNamespaces().forEach(xPathContext::namespace);
+            context.getIgnoreExpressions().forEach(xPathContext::ignore);
+            xPathContext.schema(context.getSchema());
+            xPathContext.schemaRepository(context.getSchemaRepository());
+            xPathContext.schemaValidation(context.isSchemaValidationEnabled());
+            xPathContext.dtd(context.getDTDResource());
+
+            delegate.getValidationContextBuilders().remove(getXmlMessageValidationContext());
+            delegate.validate(xPathContext);
+
+            xmlMessageValidationContext = xPathContext;
+            return xPathContext;
+        }
+    }
+
+    /**
+     * Creates new xml validation context if not done before and gets the xml validation context.
+     */
+    protected XmlMessageValidationContext.AbstractBuilder<?, ?> getXmlMessageValidationContext() {
+        if (xmlMessageValidationContext == null) {
+            xmlMessageValidationContext = new XmlMessageValidationContext.Builder();
+
+            delegate.validate(xmlMessageValidationContext);
+        }
+
+        return xmlMessageValidationContext;
+    }
+
+    /**
+     * Creates new json validation context if not done before and gets the json validation context.
+     */
+    private JsonMessageValidationContext.Builder getJsonMessageValidationContext() {
+        if (jsonMessageValidationContext == null) {
+            jsonMessageValidationContext = new JsonMessageValidationContext.Builder();
+
+            delegate.validate(jsonMessageValidationContext);
+        }
+
+        return jsonMessageValidationContext;
+    }
+
+    /**
+     * Creates new script validation context if not done before and gets the script validation context.
+     */
+    private ScriptValidationContext.Builder getScriptValidationContext() {
+        if (scriptValidationContext == null) {
+            scriptValidationContext = new ScriptValidationContext.Builder();
+
+            delegate.validate(scriptValidationContext);
+        }
+
+        return scriptValidationContext;
+    }
+
+    /**
+     * Creates new JSONPath validation context if not done before and gets the validation context.
+     */
+    private JsonPathMessageValidationContext.Builder getJsonPathValidationContext() {
+        if (jsonPathValidationContext == null) {
+            jsonPathValidationContext = new JsonPathMessageValidationContext.Builder();
+
+            delegate.validate(jsonPathValidationContext);
+        }
+
+        return jsonPathValidationContext;
     }
 }

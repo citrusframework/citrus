@@ -16,11 +16,13 @@
 
 package com.consol.citrus.validation.json;
 
-import com.consol.citrus.validation.context.DefaultValidationContext;
-import org.springframework.util.StringUtils;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.consol.citrus.builder.WithExpressions;
+import com.consol.citrus.validation.context.DefaultValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
+import org.springframework.util.StringUtils;
 
 /**
  * Specialised validation context adds JSON path expressions for message validation.
@@ -30,7 +32,56 @@ import java.util.Map;
 public class JsonPathMessageValidationContext extends DefaultValidationContext {
 
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, Object> jsonPathExpressions = new HashMap<>();
+    private final Map<String, Object> jsonPathExpressions;
+
+    /**
+     * Constructor using fluent builder.
+     * @param builder
+     */
+    public JsonPathMessageValidationContext(Builder builder) {
+        this.jsonPathExpressions = builder.expressions;
+    }
+
+    /**
+     * Default constructor.
+     */
+    public JsonPathMessageValidationContext() {
+        this(Builder.jsonPath());
+    }
+
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder
+            implements ValidationContext.Builder<JsonPathMessageValidationContext, Builder>, WithExpressions<Builder> {
+
+        private Map<String, Object> expressions = new HashMap<>();
+
+        /**
+         * Static entry method for fluent builder API.
+         * @return
+         */
+        public static Builder jsonPath() {
+            return new Builder();
+        }
+
+        @Override
+        public Builder expressions(Map<String, Object> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String expression, final Object value) {
+            this.expressions.put(expression, value);
+            return this;
+        }
+
+        @Override
+        public JsonPathMessageValidationContext build() {
+            return new JsonPathMessageValidationContext(this);
+        }
+    }
 
     /**
      * Get the control message elements that have to be present in
@@ -39,14 +90,6 @@ public class JsonPathMessageValidationContext extends DefaultValidationContext {
      */
     public Map<String, Object> getJsonPathExpressions() {
         return jsonPathExpressions;
-    }
-
-    /**
-     * Set the control message elements explicitly validated XPath expression validation.
-     * @param jsonPathExpressions the jsonPathExpressions to set
-     */
-    public void setJsonPathExpressions(Map<String, Object> jsonPathExpressions) {
-        this.jsonPathExpressions = jsonPathExpressions;
     }
 
     /**

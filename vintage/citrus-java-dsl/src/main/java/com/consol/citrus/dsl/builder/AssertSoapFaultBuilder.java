@@ -7,6 +7,7 @@ import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
@@ -19,6 +20,8 @@ import org.springframework.core.io.Resource;
 public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertSoapFault, AssertSoapFaultBuilder> {
 
     private final AssertSoapFault.Builder delegate = new AssertSoapFault.Builder();
+
+    private final XmlMessageValidationContext.Builder xmlValidationContext = new XmlMessageValidationContext.Builder();
 
     public AssertSoapFaultBuilder when(TestAction action) {
         return when(() -> action);
@@ -79,22 +82,25 @@ public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertS
     }
 
     public AssertSoapFaultBuilder schemaValidation(boolean enabled) {
-        delegate.schemaValidation(enabled);
+        xmlValidationContext.schemaValidation(enabled);
+        delegate.validate(xmlValidationContext);
         return this;
     }
 
     public AssertSoapFaultBuilder xsd(String schemaName) {
-        delegate.xsd(schemaName);
+        xmlValidationContext.schema(schemaName);
+        delegate.validate(xmlValidationContext);
         return this;
     }
 
     public AssertSoapFaultBuilder xsdSchemaRepository(String schemaRepository) {
-        delegate.xsdSchemaRepository(schemaRepository);
+        xmlValidationContext.schemaRepository(schemaRepository);
+        delegate.validate(xmlValidationContext);
         return this;
     }
 
     public AssertSoapFaultBuilder validationContext(SoapFaultDetailValidationContext validationContext) {
-        delegate.validationContext(validationContext);
+        delegate.validate(validationContext);
         return this;
     }
 

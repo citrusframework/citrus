@@ -16,13 +16,14 @@
 
 package com.consol.citrus.integration.runner;
 
+import javax.sql.DataSource;
+
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.testng.TestNGCitrusTestRunner;
+import com.consol.citrus.script.ScriptTypes;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.testng.annotations.Test;
-
-import javax.sql.DataSource;
 
 /**
  * @author Christoph Deppisch
@@ -78,6 +79,6 @@ public class ExecuteSQLTestRunnerIT extends TestNGCitrusTestRunner {
                 .statement("select REQUEST_TAG as RTAG, DESCRIPTION as DESC from ORDERS")
                 .validateScript("assert rows.size == 2\n" +
                         "assert rows[0].RTAG == 'requestTag'\n" +
-                        "assert rows[0].DESC == 'Migrate'\n", "groovy"));
+                        "assert rows[0].DESC == 'Migrate'\n", ScriptTypes.GROOVY));
     }
 }

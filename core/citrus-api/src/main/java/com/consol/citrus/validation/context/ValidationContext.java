@@ -19,8 +19,22 @@ package com.consol.citrus.validation.context;
 
 /**
  * Basic validation context holding validation specific information.
- * 
+ *
  * @author Christoph Deppisch
  */
 public interface ValidationContext {
+
+    /**
+     * Fluent builder
+     * @param <T> context type
+     * @param <B> builder reference to self
+     */
+    interface Builder<T extends ValidationContext, B extends Builder<T, B>> {
+
+        /**
+         * Builds new validation context instance.
+         * @return the built context.
+         */
+        T build();
+    }
 }

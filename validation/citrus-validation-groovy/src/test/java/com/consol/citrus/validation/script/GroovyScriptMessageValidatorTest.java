@@ -22,7 +22,6 @@ import java.util.List;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.message.MessageType;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -53,8 +52,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         		"assert payload == 'This is plain text!'\n" +
         		"assert payload.contains('!')";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -67,8 +68,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
 
         context.setVariable("plainText", "This is plain text!");
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         validator.validateMessage(message, new DefaultMessage(), context, validationContext);
     }
@@ -79,8 +82,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
                 "assert payload == 'This is plain text!'\n" +
                 "assert payload.contains('!')";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         try {
             validator.validateMessage(message, new DefaultMessage(), context, validationContext);
@@ -97,8 +102,10 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         String validationScript = "context.setVariable('operation', 'unitTesting')\n" +
                 "context.setVariable('text', 'This is plain text!')";
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(ScriptTypes.GROOVY);
-        validationContext.setValidationScript(validationScript);
+        ScriptValidationContext validationContext = new ScriptValidationContext.Builder()
+                .scriptType(ScriptTypes.GROOVY)
+                .script(validationScript)
+                .build();
 
         Assert.assertNull(context.getVariables().get("operation"));
         Assert.assertNull(context.getVariables().get("text"));
@@ -117,11 +124,11 @@ public class GroovyScriptMessageValidatorTest extends AbstractTestNGUnitTest {
         validationContexts.add(new HeaderValidationContext());
         validationContexts.add(new XmlMessageValidationContext());
         validationContexts.add(new JsonMessageValidationContext());
-        validationContexts.add(new ScriptValidationContext("scala", MessageType.XML.name()));
+        validationContexts.add(new ScriptValidationContext("scala"));
 
         Assert.assertNull(validator.findValidationContext(validationContexts));
 
-        validationContexts.add(new ScriptValidationContext(MessageType.PLAINTEXT.name()));
+        validationContexts.add(new ScriptValidationContext(ScriptTypes.GROOVY));
 
         Assert.assertNotNull(validator.findValidationContext(validationContexts));
     }

@@ -32,6 +32,8 @@ import com.consol.citrus.http.actions.HttpServerRequestActionBuilder;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.validation.context.ValidationContext;
+import com.consol.citrus.validation.json.JsonPathMessageValidationContext;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -41,6 +43,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
+import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
 
 /**
  * @author Christoph Deppisch
@@ -279,8 +283,20 @@ public class HttpSteps {
                 .response(response.getStatusCode())
                 .message(response);
 
-        for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
-            responseBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
+        for (Map.Entry<String, String> pathValidation : pathValidations.entrySet()) {
+            ValidationContext validationContext;
+
+            if (JsonPathMessageValidationContext.isJsonPathExpression(pathValidation.getKey())) {
+                validationContext = jsonPath()
+                        .expression(pathValidation.getKey(), pathValidation.getValue())
+                        .build();
+            } else {
+                validationContext = xpath()
+                        .expression(pathValidation.getKey(), pathValidation.getValue())
+                        .build();
+            }
+
+            responseBuilder.validate(validationContext);
         }
         pathValidations.clear();
 
@@ -345,8 +361,20 @@ public class HttpSteps {
             requestBuilder = receiveBuilder.post().message(request);
         }
 
-        for (Map.Entry<String, String> headerEntry : pathValidations.entrySet()) {
-            requestBuilder.validate(headerEntry.getKey(), headerEntry.getValue());
+        for (Map.Entry<String, String> pathValidation : pathValidations.entrySet()) {
+            ValidationContext validationContext;
+
+            if (JsonPathMessageValidationContext.isJsonPathExpression(pathValidation.getKey())) {
+                validationContext = jsonPath()
+                        .expression(pathValidation.getKey(), pathValidation.getValue())
+                        .build();
+            } else {
+                validationContext = xpath()
+                        .expression(pathValidation.getKey(), pathValidation.getValue())
+                        .build();
+            }
+
+            requestBuilder.validate(validationContext);
         }
         pathValidations.clear();
 

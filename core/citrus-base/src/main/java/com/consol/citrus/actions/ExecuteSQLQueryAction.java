@@ -456,9 +456,10 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
          * @param type
          */
         public Builder validateScript(String script, String type) {
-            ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
-            scriptValidationContext.setValidationScript(script);
-            this.scriptValidationContext = scriptValidationContext;
+            this.scriptValidationContext = new ScriptValidationContext.Builder()
+                    .scriptType(type)
+                    .script(script)
+                    .build();
             return this;
         }
 
@@ -478,13 +479,14 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
          * @param charset
          */
         public Builder validateScript(Resource scriptResource, String type, Charset charset) {
-            ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
+            ScriptValidationContext.Builder scriptValidationContext = new ScriptValidationContext.Builder()
+                    .scriptType(type);
             try {
-                scriptValidationContext.setValidationScript(FileUtils.readToString(scriptResource, charset));
+                scriptValidationContext.script(FileUtils.readToString(scriptResource, charset));
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read script resource", e);
             }
-            this.scriptValidationContext = scriptValidationContext;
+            this.scriptValidationContext = scriptValidationContext.build();
             return this;
         }
 
@@ -495,10 +497,11 @@ public class ExecuteSQLQueryAction extends AbstractDatabaseConnectingTestAction 
          * @param charset
          */
         public Builder validateScriptResource(String scriptResourcePath, String type, Charset charset) {
-            ScriptValidationContext scriptValidationContext = new ScriptValidationContext(type);
-            scriptValidationContext.setValidationScriptResourcePath(scriptResourcePath);
-            scriptValidationContext.setValidationScriptResourceCharset(charset.toString());
-            this.scriptValidationContext = scriptValidationContext;
+            this.scriptValidationContext = new ScriptValidationContext.Builder()
+                    .scriptResource(scriptResourcePath)
+                    .scriptResourceCharset(charset.toString())
+                    .scriptType(type)
+                    .build();
             return this;
         }
 

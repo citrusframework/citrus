@@ -16,40 +16,210 @@
 
 package com.consol.citrus.validation.xml;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.consol.citrus.validation.context.DefaultValidationContext;
 import com.consol.citrus.validation.context.SchemaValidationContext;
+import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.core.io.Resource;
 
-import java.util.*;
-
 /**
- * XML validation context holding validation specific information needed for XML 
+ * XML validation context holding validation specific information needed for XML
  * message validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class XmlMessageValidationContext extends DefaultValidationContext implements SchemaValidationContext {
 
     /** Map holding xpath expressions to identify the ignored message elements */
-    private Set<String> ignoreExpressions = new HashSet<>();
+    private final Set<String> ignoreExpressions;
 
     /** Namespace definitions resolving namespaces in XML message validation */
-    private Map<String, String> namespaces = new HashMap<>();
-    
+    private final Map<String, String> namespaces;
+
     /** dtdResource for DTD validation */
-    private Resource dtdResource;
-    
+    private final Resource dtdResource;
+
     /** Map holding control namespaces for validation */
-    private Map<String, String> controlNamespaces = new HashMap<>();
-    
+    private final Map<String, String> controlNamespaces;
+
     /** Should message be validated with its schema definition */
-    private boolean schemaValidation = true;
-    
+    private final boolean schemaValidation;
+
     /** Explicit schema repository to use for this validation */
-    private String schemaRepository;
-    
+    private final String schemaRepository;
+
     /** Explicit schema instance to use for this validation */
-    private String schema;
+    private final String schema;
+
+    /**
+     * Default constructor.
+     */
+    public XmlMessageValidationContext() {
+        this(Builder.xml());
+    }
+
+    /**
+     * Constructor using fluent builder.
+     * @param builder
+     */
+    public XmlMessageValidationContext(AbstractBuilder<?, ?> builder) {
+        this.ignoreExpressions = builder.ignoreExpressions;
+        this.namespaces = builder.namespaces;
+        this.controlNamespaces = builder.controlNamespaces;
+        this.dtdResource = builder.dtdResource;
+        this.schemaValidation = builder.schemaValidation;
+        this.schemaRepository = builder.schemaRepository;
+        this.schema = builder.schema;
+    }
+
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder extends AbstractBuilder<XmlMessageValidationContext, Builder> {
+
+        /**
+         * Static entry method for fluent builder API.
+         * @return
+         */
+        public static Builder xml() {
+            return new Builder();
+        }
+
+        @Override
+        public XmlMessageValidationContext build() {
+            return new XmlMessageValidationContext(this);
+        }
+    }
+
+    /**
+     * Base fluent builder for XML validation contexts.
+     */
+    public static abstract class AbstractBuilder<T extends XmlMessageValidationContext, S extends AbstractBuilder<T, S>>
+            implements ValidationContext.Builder<T, AbstractBuilder<T, S>>, XmlNamespaceAware, SchemaValidationContext.Builder<AbstractBuilder<T, S>> {
+
+        protected final S self;
+
+        private Set<String> ignoreExpressions = new HashSet<>();
+        private Map<String, String> namespaces = new HashMap<>();
+        private Resource dtdResource;
+        private Map<String, String> controlNamespaces = new HashMap<>();
+        private boolean schemaValidation = true;
+        private String schemaRepository;
+        private String schema;
+
+        protected AbstractBuilder() {
+            this.self = (S) this;
+        }
+
+        /**
+         * Sets schema validation enabled/disabled for this message.
+         *
+         * @param enabled
+         * @return
+         */
+        public S schemaValidation(final boolean enabled) {
+            this.schemaValidation = enabled;
+            return self;
+        }
+
+        /**
+         * Validates XML namespace with prefix and uri.
+         *
+         * @param prefix
+         * @param namespaceUri
+         * @return
+         */
+        public S namespace(final String prefix, final String namespaceUri) {
+            this.controlNamespaces.put(prefix, namespaceUri);
+            return self;
+        }
+
+        /**
+         * Validates XML namespace with prefix and uri.
+         *
+         * @param namespaces
+         * @return
+         */
+        public S namespaces(final Map<String, String> namespaces) {
+            this.controlNamespaces.putAll(namespaces);
+            return self;
+        }
+
+        /**
+         * Add namespaces as context to the expression evaluation. Keys are prefixes and values are namespace URIs.
+         *
+         * @param namespaces
+         * @return
+         */
+        public S namespaceContext(final Map<String, String> namespaces) {
+            this.namespaces.putAll(namespaces);
+            return self;
+        }
+
+        /**
+         * Sets explicit schema instance name to use for schema validation.
+         *
+         * @param schemaName
+         * @return
+         */
+        public S schema(final String schemaName) {
+            this.schema = schemaName;
+            return self;
+        }
+
+        /**
+         * Sets explicit xsd schema repository instance to use for validation.
+         *
+         * @param schemaRepository
+         * @return
+         */
+        public S schemaRepository(final String schemaRepository) {
+            this.schemaRepository = schemaRepository;
+            return self;
+        }
+
+        /**
+         * Sets explicit DTD resource to use for validation.
+         *
+         * @param dtdResource
+         * @return
+         */
+        public S dtd(final Resource dtdResource) {
+            this.dtdResource = dtdResource;
+            return self;
+        }
+
+        /**
+         * Adds ignore path expression for message element.
+         *
+         * @param path
+         * @return
+         */
+        public S ignore(final String path) {
+            this.ignoreExpressions.add(path);
+            return self;
+        }
+
+        /**
+         * Adds a list of ignore path expressions for message element.
+         *
+         * @param paths
+         * @return
+         */
+        public S ignore(final Set<String> paths) {
+            this.ignoreExpressions.addAll(paths);
+            return self;
+        }
+
+        @Override
+        public void setNamespaces(Map<String, String> namespaces) {
+            this.namespaces = namespaces;
+        }
+    }
 
     /**
      * Get ignored message elements.
@@ -57,14 +227,6 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
      */
     public Set<String> getIgnoreExpressions() {
         return ignoreExpressions;
-    }
-
-    /**
-     * Set ignored message elements.
-     * @param ignoreExpressions the ignoreExpressions to set
-     */
-    public void setIgnoreExpressions(Set<String> ignoreExpressions) {
-        this.ignoreExpressions = ignoreExpressions;
     }
 
     /**
@@ -76,27 +238,11 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
     }
 
     /**
-     * Set the namespace definitions.
-     * @param namespaces the namespaceContext to set
-     */
-    public void setNamespaces(Map<String, String> namespaces) {
-        this.namespaces = namespaces;
-    }
-
-    /**
      * Get the dtd resource.
      * @return the dtdResource
      */
     public Resource getDTDResource() {
         return dtdResource;
-    }
-
-    /**
-     * Set dtd resource.
-     * @param dtdResource the dtdResource to set
-     */
-    public void setDTDResource(Resource dtdResource) {
-        this.dtdResource = dtdResource;
     }
 
     /**
@@ -107,60 +253,19 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
         return controlNamespaces;
     }
 
-    /**
-     * Set the control namespace elements.
-     * @param controlNamespaces the controlNamespaces to set
-     */
-    public void setControlNamespaces(Map<String, String> controlNamespaces) {
-        this.controlNamespaces = controlNamespaces;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isSchemaValidationEnabled() {
         return schemaValidation;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setSchemaValidation(boolean schemaValidation) {
-        this.schemaValidation = schemaValidation;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getSchemaRepository() {
         return schemaRepository;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setSchemaRepository(String schemaRepository) {
-        this.schemaRepository = schemaRepository;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getSchema() {
         return schema;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setSchema(String schema) {
-        this.schema = schema;
     }
 
 }

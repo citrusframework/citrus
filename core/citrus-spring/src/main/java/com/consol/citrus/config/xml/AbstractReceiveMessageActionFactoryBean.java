@@ -96,7 +96,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param validationContexts the validationContexts to set
      */
     public void setValidationContexts(List<ValidationContext> validationContexts) {
-        getBuilder().validationContexts(validationContexts);
+        validationContexts.forEach(getBuilder()::validate);
     }
 
     /**

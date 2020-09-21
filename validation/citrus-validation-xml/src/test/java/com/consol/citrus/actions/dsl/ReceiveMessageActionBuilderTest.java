@@ -64,6 +64,8 @@ import org.testng.annotations.Test;
 import org.xml.sax.SAXParseException;
 
 import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.validation.xml.XmlMessageValidationContext.Builder.xml;
+import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
 import static com.consol.citrus.validation.xml.XpathPayloadVariableExtractor.Builder.xpathExtractor;
 import static com.consol.citrus.variable.MessageHeaderVariableExtractor.Builder.headerValueExtractor;
 import static org.mockito.Mockito.any;
@@ -1137,7 +1139,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest xmlns:pfx=\"http://www.consol.de/schemas/test\"><Message>Hello World!</Message></TestRequest>")
-                                .validateNamespace("pfx", "http://www.consol.de/schemas/test"));
+                                .validate(xml()
+                                        .namespace("pfx", "http://www.consol.de/schemas/test")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1178,8 +1181,9 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message><Operation>SayHello</Operation></TestRequest>")
-                                .validate("TestRequest.Message", "Hello World!")
-                                .validate("TestRequest.Operation", "SayHello"));
+                                .validate(xpath()
+                                        .expression("TestRequest.Message", "Hello World!")
+                                        .expression("TestRequest.Operation", "SayHello")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1220,7 +1224,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message>?</Message></TestRequest>")
-                                .ignore("TestRequest.Message"));
+                                .validate(xml()
+                                        .ignore("TestRequest.Message")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1273,7 +1278,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
-                                .xsd("testSchema"));
+                                .validate(xml()
+                                        .schema("testSchema")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1330,7 +1336,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest xmlns=\"http://citrusframework.org/test\"><Message>Hello World!</Message></TestRequest>")
-                                .xsdSchemaRepository("customSchemaRepository"));
+                                .validate(xml()
+                                        .schemaRepository("customSchemaRepository")));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1371,7 +1378,8 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                         .payload("<TestRequest><Message>Hello Citrus!</Message></TestRequest>")
-                        .schemaValidation(false));
+                        .validate(xml()
+                                .schemaValidation(false)));
 
         TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
@@ -1381,22 +1389,15 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         Assert.assertEquals(action.getName(), "receive");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getValidationContexts().size(), 3);
+        Assert.assertEquals(action.getValidationContexts().size(), 2);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(XmlMessageValidationContext.class::isInstance));
-        Assert.assertTrue(action.getValidationContexts().stream().anyMatch(JsonMessageValidationContext.class::isInstance));
 
         XmlMessageValidationContext xmlMessageValidationContext = action.getValidationContexts().stream()
                 .filter(XmlMessageValidationContext.class::isInstance).findFirst()
                 .map(XmlMessageValidationContext.class::cast)
                 .orElseThrow(() -> new AssertionError("Missing validation context"));
         Assert.assertFalse(xmlMessageValidationContext.isSchemaValidationEnabled());
-
-        JsonMessageValidationContext jsonMessageValidationContext = action.getValidationContexts().stream()
-                .filter(JsonMessageValidationContext.class::isInstance).findFirst()
-                .map(JsonMessageValidationContext.class::cast)
-                .orElseThrow(() -> new AssertionError("Missing validation context"));
-        Assert.assertFalse(jsonMessageValidationContext.isSchemaValidationEnabled());
 
     }
 }

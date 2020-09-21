@@ -77,15 +77,16 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//*[.='search-for']", "search-for");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -120,15 +121,16 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//*[.='search-for']", "search-for");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -159,15 +161,16 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//ns1:ns-element", "namespace");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -198,20 +201,20 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("//ns1:ns-element", "namespace");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://citrus");
 
-        validationContext.setNamespaces(namespaces);
-
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .namespaceContext(namespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -253,15 +256,16 @@ public class XPathTest extends UnitTestSupport {
         validateMessageElements.put("boolean:/ns1:root/:element-does-not-exist", "false");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -303,14 +307,15 @@ public class XPathTest extends UnitTestSupport {
                 .build();
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);

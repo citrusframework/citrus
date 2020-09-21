@@ -65,19 +65,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>"
                     + "</ns1:root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -100,19 +101,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns2:root xmlns:ns2='http://citrus'>"
                         + "<ns2:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns2:sub-element attribute='A'>text-value</ns2:sub-element>"
                         + "</ns2:element>"
                     + "</ns2:root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -135,19 +137,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus' xmlns:ns2='http://citrus/default'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>"
                     + "</ns1:root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -170,19 +173,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                         + "</ns1:element>"
                     + "</ns1:root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -205,19 +209,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>"
                     + "</root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -240,19 +245,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
                         + "</element>"
                     + "</root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -275,19 +281,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus'>"
                     + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                     + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                     + "</ns1:element>"
                 + "</ns1:root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -310,19 +317,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                             + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<sub-element attribute='A'>text-value</sub-element>"
                             + "</element>"
                         + "</root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -345,19 +353,20 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/wrong'>"
                             + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                             + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
                             + "</ns1:element>"
                         + "</ns1:root>");
 
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -380,7 +389,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -390,14 +398,15 @@ public class NamespaceTest extends UnitTestSupport {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -420,7 +429,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
@@ -430,14 +438,15 @@ public class NamespaceTest extends UnitTestSupport {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://citrus/ns1");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -460,7 +469,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -471,14 +479,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("", "http://citrus/default");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -501,7 +510,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -513,14 +521,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -543,7 +552,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -553,14 +561,15 @@ public class NamespaceTest extends UnitTestSupport {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("", "http://citrus/wrong");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -583,7 +592,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns1:root xmlns:ns1='http://citrus/ns1'>"
                         + "<ns1:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns1:sub-element attribute='A'>text-value</ns1:sub-element>"
@@ -593,14 +601,15 @@ public class NamespaceTest extends UnitTestSupport {
         Map<String, String> expectedNamespaces = new HashMap<String, String>();
         expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -623,7 +632,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -634,14 +642,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("", "http://citrus/default/wrong");
         expectedNamespaces.put("ns1", "http://citrus/ns1");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -664,7 +673,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -676,14 +684,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("ns1", "http://citrus/ns1/wrong");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -706,7 +715,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -718,14 +726,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("nswrong", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -748,7 +757,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<ns0:root xmlns:ns0='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<ns0:element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<ns0:sub-element attribute='A'>text-value</ns0:sub-element>"
@@ -760,14 +768,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -790,7 +799,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -802,14 +810,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -832,7 +841,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -845,14 +853,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("ns2", "http://citrus/ns2");
         expectedNamespaces.put("ns4", "http://citrus/ns4");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -875,7 +884,6 @@ public class NamespaceTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root xmlns='http://citrus/default' xmlns:ns1='http://citrus/ns1' xmlns:ns2='http://citrus/ns2' xmlns:ns4='http://citrus/ns4'>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value'>"
                         + "<sub-element attribute='A'>text-value</sub-element>"
@@ -887,14 +895,15 @@ public class NamespaceTest extends UnitTestSupport {
         expectedNamespaces.put("ns1", "http://citrus/ns1");
         expectedNamespaces.put("ns2", "http://citrus/ns2");
 
-        validationContext.setControlNamespaces(expectedNamespaces);
-
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .namespaces(expectedNamespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -923,20 +932,20 @@ public class NamespaceTest extends UnitTestSupport {
         validateMessageElements.put("//ns1:sub-elementB", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("ns1", "http://citrus/default");
 
-        validationContext.setNamespaces(namespaces);
-
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .namespaceContext(namespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -965,20 +974,20 @@ public class NamespaceTest extends UnitTestSupport {
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrus/default");
 
-        validationContext.setNamespaces(namespaces);
-
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .namespaceContext(namespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -1007,20 +1016,20 @@ public class NamespaceTest extends UnitTestSupport {
         validateMessageElements.put("//pfx:sub-elementB", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
 
         Map<String, String> namespaces = new HashMap<String, String>();
         namespaces.put("pfx", "http://citrus/wrong");
 
-        validationContext.setNamespaces(namespaces);
-
-        validationContext.setSchemaValidation(false);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .expressions(validateMessageElements)
+                .namespaceContext(namespaces)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }

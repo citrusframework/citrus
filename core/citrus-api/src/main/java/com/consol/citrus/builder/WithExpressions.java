@@ -13,7 +13,7 @@ public interface WithExpressions<B> {
      * @param expressions
      * @return
      */
-    B expressions(Map<String, String> expressions);
+    B expressions(Map<String, Object> expressions);
 
     /**
      * Add an expression that gets evaluated. The evaluation result is stored in the test context as variable with
@@ -22,5 +22,5 @@ public interface WithExpressions<B> {
      * @param value
      * @return
      */
-    B expression(final String expression, final String value);
+    B expression(final String expression, final Object value);
 }

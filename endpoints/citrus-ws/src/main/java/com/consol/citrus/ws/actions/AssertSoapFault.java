@@ -241,9 +241,8 @@ public class AssertSoapFault extends AbstractActionContainer {
         private List<String> faultDetails = new ArrayList<>();
         private List<String> faultDetailResourcePaths = new ArrayList<>();
         private SoapFaultValidator validator = new SimpleSoapFaultValidator();
-        private XmlMessageValidationContext xmlValidationContext = new XmlMessageValidationContext();
-        private SoapFaultDetailValidationContext validationContext = new SoapFaultDetailValidationContext()
-                .addValidationContext(xmlValidationContext);
+        private XmlMessageValidationContext.Builder xmlValidationContext = new XmlMessageValidationContext.Builder();
+        private SoapFaultDetailValidationContext validationContext;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -372,32 +371,11 @@ public class AssertSoapFault extends AbstractActionContainer {
         }
 
         /**
-         * Sets schema validation enabled/disabled for this SOAP fault assertion.
-         * @param enabled
-         * @return
+         * Specifies the XML validationContext.
+         * @param validationContext
          */
-        public Builder schemaValidation(boolean enabled) {
-            xmlValidationContext.setSchemaValidation(enabled);
-            return this;
-        }
-
-        /**
-         * Sets explicit schema instance name to use for schema validation.
-         * @param schemaName
-         * @return
-         */
-        public Builder xsd(String schemaName) {
-            xmlValidationContext.setSchema(schemaName);
-            return this;
-        }
-
-        /**
-         * Sets explicit xsd schema repository instance to use for validation.
-         * @param schemaRepository
-         * @return
-         */
-        public Builder xsdSchemaRepository(String schemaRepository) {
-            xmlValidationContext.setSchemaRepository(schemaRepository);
+        public Builder validate(XmlMessageValidationContext.Builder validationContext) {
+            this.xmlValidationContext = validationContext;
             return this;
         }
 
@@ -405,7 +383,7 @@ public class AssertSoapFault extends AbstractActionContainer {
          * Specifies the validationContext.
          * @param validationContext
          */
-        public Builder validationContext(SoapFaultDetailValidationContext validationContext) {
+        public Builder validate(SoapFaultDetailValidationContext validationContext) {
             this.validationContext = validationContext;
             return this;
         }
@@ -424,6 +402,10 @@ public class AssertSoapFault extends AbstractActionContainer {
 
         @Override
         public AssertSoapFault build() {
+            if (validationContext == null) {
+                this.validationContext = new SoapFaultDetailValidationContext()
+                        .addValidationContext(xmlValidationContext.build());
+            }
             return new AssertSoapFault(this);
         }
     }

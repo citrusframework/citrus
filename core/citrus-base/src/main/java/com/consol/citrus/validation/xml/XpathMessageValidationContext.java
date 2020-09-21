@@ -19,6 +19,8 @@ package com.consol.citrus.validation.xml;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.consol.citrus.builder.WithExpressions;
+
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
  * @author Christoph Deppisch
@@ -27,7 +29,57 @@ import java.util.Map;
 public class XpathMessageValidationContext extends XmlMessageValidationContext {
 
     /** Map holding xpath expressions as key and expected values as values */
-    private Map<String, Object> xPathExpressions = new HashMap<>();
+    private final Map<String, Object> xPathExpressions;
+
+    /**
+     * Default constructor.
+     */
+    public XpathMessageValidationContext() {
+        this(Builder.xpath());
+    }
+
+    /**
+     * Constructor using fluent builder.
+     * @param builder
+     */
+    public XpathMessageValidationContext(Builder builder) {
+        super(builder);
+        this.xPathExpressions = builder.expressions;
+    }
+
+    /**
+     * Fluent builder.
+     */
+    public static final class Builder extends XmlMessageValidationContext.AbstractBuilder<XpathMessageValidationContext, Builder>
+            implements WithExpressions<Builder> {
+
+        private Map<String, Object> expressions = new HashMap<>();
+
+        /**
+         * Static entry method for fluent builder API.
+         * @return
+         */
+        public static Builder xpath() {
+            return new Builder();
+        }
+
+        @Override
+        public Builder expressions(Map<String, Object> expressions) {
+            this.expressions.putAll(expressions);
+            return this;
+        }
+
+        @Override
+        public Builder expression(final String expression, final Object value) {
+            this.expressions.put(expression, value);
+            return this;
+        }
+
+        @Override
+        public XpathMessageValidationContext build() {
+            return new XpathMessageValidationContext(this);
+        }
+    }
 
     /**
      * Get the control message elements that have to be present in
@@ -36,13 +88,5 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
      */
     public Map<String, Object> getXpathExpressions() {
         return xPathExpressions;
-    }
-
-    /**
-     * Set the control message elements explicitly validated XPath expression validation.
-     * @param xPathExpressions the xPathExpressions to set
-     */
-    public void setXpathExpressions(Map<String, Object> xPathExpressions) {
-        this.xPathExpressions = xPathExpressions;
     }
 }

@@ -93,11 +93,6 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageActionBuilder
     }
 
     @Override
-    public ReceiveMessageAction build() {
-        return delegate.build();
-    }
-
-    @Override
     public TestActionBuilder<?> getDelegate() {
         return delegate;
     }

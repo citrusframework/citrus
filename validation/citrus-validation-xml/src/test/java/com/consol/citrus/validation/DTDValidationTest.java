@@ -26,7 +26,6 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -67,7 +66,6 @@ public class DTDValidationTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
@@ -82,7 +80,6 @@ public class DTDValidationTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -106,7 +103,6 @@ public class DTDValidationTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
@@ -117,7 +113,6 @@ public class DTDValidationTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -141,7 +136,6 @@ public class DTDValidationTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
@@ -152,7 +146,6 @@ public class DTDValidationTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -176,7 +169,6 @@ public class DTDValidationTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"foo\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
@@ -189,7 +181,6 @@ public class DTDValidationTest extends UnitTestSupport {
             ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
                     .messageBuilder(controlMessageBuilder)
-                    .validationContext(validationContext)
                     .build();
             receiveAction.execute(context);
             Assert.fail("Missing validation exception due to mismatch in public id");
@@ -217,7 +208,6 @@ public class DTDValidationTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"org/w3/xhtml/xhtml1-transitional.dtd\">"
                         + "<root>"
                             + "<message>"
@@ -230,7 +220,6 @@ public class DTDValidationTest extends UnitTestSupport {
             ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
                     .messageBuilder(controlMessageBuilder)
-                    .validationContext(validationContext)
                     .build();
             receiveAction.execute(context);
             Assert.fail("Missing validation exception due to mismatch in public id");

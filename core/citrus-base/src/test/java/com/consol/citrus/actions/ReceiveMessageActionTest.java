@@ -98,7 +98,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         testActor.setName("TESTACTOR");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -119,7 +118,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint("direct:mockQueue?timeout=15000")
                 .actor(testActor)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -132,7 +130,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         testActor.setName("TESTACTOR");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -153,7 +150,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint("${varEndpoint}")
                 .actor(testActor)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -166,7 +162,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
 
 		PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -193,7 +188,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .actor(testActor)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 	}
@@ -202,7 +196,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResource() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload.xml");
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
@@ -231,7 +224,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -246,7 +238,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         sb.append("}");
 
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptData(sb.toString());
 
         Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
@@ -274,7 +265,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -291,7 +281,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         sb.append("}");
 
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptData(sb.toString());
 
         Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
@@ -319,7 +308,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -329,7 +317,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageBuilderScriptResource() {
         GroovyScriptMessageBuilder controlMessageBuilder = new GroovyScriptMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setScriptResourcePath("classpath:com/consol/citrus/actions/test-request-payload.groovy");
 
         final Message controlMessage = new DefaultMessage("<TestRequest>" + System.lineSeparator() +
@@ -357,7 +344,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -367,7 +353,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadDataVariablesSupport() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
 
         context.setVariable("myText", "Hello World!");
@@ -395,7 +380,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -405,7 +389,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceVariablesSupport() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-variables.xml");
 
         context.setVariable("myText", "Hello World!");
@@ -436,7 +419,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -446,7 +428,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessagePayloadResourceFunctionsSupport() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadResourcePath("classpath:com/consol/citrus/actions/test-request-payload-with-functions.xml");
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + System.lineSeparator() +
@@ -475,7 +456,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -485,7 +465,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageOverwriteMessageElements() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
                 "<Message>?</Message></TestRequest>");
 
@@ -503,7 +482,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(controlMessage);
         when(endpoint.getActor()).thenReturn(null);
-        validationContext.setSchemaValidation(false);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaValidation(false)
+                .build();
 
         doAnswer(invocationOnMock -> {
             Message received = invocationOnMock.getArgument(0);
@@ -519,7 +500,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .process(processor)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -529,7 +510,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeaders() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -561,7 +541,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -571,7 +550,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithMessageHeadersVariablesSupport() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         context.setVariable("myOperation", "sayHello");
@@ -605,7 +583,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -615,7 +592,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariablesInMessageHeaders() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, Object> headers = new HashMap<String, Object>();
@@ -647,7 +623,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         try {
             receiveAction.execute(context);
@@ -660,7 +635,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithUnknownVariableInMessagePayload() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>${myText}</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -686,7 +660,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         try {
             receiveAction.execute(context);
@@ -699,10 +672,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariablesFromHeaders() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
         headers.put("Operation", "myOperation");
 
         MessageHeaderVariableExtractor headerVariableExtractor = new MessageHeaderVariableExtractor.Builder()
@@ -735,7 +707,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .extract(headerVariableExtractor)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -748,7 +719,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithExtractVariables() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         VariableExtractor variableExtractor = new VariableExtractor() {
@@ -782,7 +752,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .extract(variableExtractor)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -795,7 +764,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveMessageWithTimeout() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -822,7 +790,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .timeout(3000L)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -832,7 +799,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelector() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         String messageSelector = "Operation = 'sayHello'";
@@ -863,7 +829,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .selector(messageSelector)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -873,7 +838,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorAndTimeout() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         String messageSelector = "Operation = 'sayHello'";
@@ -905,7 +869,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .messageBuilder(controlMessageBuilder)
                 .timeout(5000L)
                 .selector(messageSelector)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -915,7 +878,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMap() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, String> messageSelector = new HashMap<>();
@@ -947,7 +909,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .selector(messageSelector)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -957,7 +918,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveSelectedWithMessageSelectorMapAndTimeout() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Map<String, String> messageSelector = new HashMap<>();
@@ -990,7 +950,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .timeout(5000L)
                 .messageBuilder(controlMessageBuilder)
                 .selector(messageSelector)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -999,7 +958,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testMessageTimeout() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1023,7 +981,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         try {
             receiveAction.execute(context);
@@ -1039,7 +996,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("");
 
         Message controlMessage = new DefaultMessage("");
@@ -1065,7 +1021,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -1079,7 +1034,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         disabledActor.setDisabled(true);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1103,7 +1057,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .actor(disabledActor)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
@@ -1118,7 +1071,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         disabledActor.setDisabled(true);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         reset(endpoint, consumer, endpointConfiguration);
@@ -1141,7 +1093,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
@@ -1150,7 +1101,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testWithExplicitDataDictionary() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -1185,7 +1135,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .dictionary(dictionary)
                 .build();
         receiveAction.execute(context);
@@ -1194,7 +1143,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testWithExplicitAndGlobalDataDictionary() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
@@ -1240,7 +1188,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .dictionary(dictionary)
                 .build();
         receiveAction.execute(context);
@@ -1249,7 +1196,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testWithGlobalDataDictionary() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
 
         Message controlMessage = new DefaultMessage("<TestRequest><Message>Hello World!</Message></TestRequest>");
@@ -1292,7 +1238,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }

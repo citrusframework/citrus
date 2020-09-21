@@ -81,22 +81,22 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 }
             }
 
-            XmlMessageValidationContext context = new XmlMessageValidationContext();
+            XmlMessageValidationContext.Builder context = new XmlMessageValidationContext.Builder();
             String schemaValidation = faultDetailElement.getAttribute("schema-validation");
             if (StringUtils.hasText(schemaValidation)) {
-                context.setSchemaValidation(Boolean.valueOf(schemaValidation));
+                context.schemaValidation(Boolean.parseBoolean(schemaValidation));
             }
 
             String schema = faultDetailElement.getAttribute("schema");
             if (StringUtils.hasText(schema)) {
-                context.setSchema(schema);
+                context.schema(schema);
             }
 
             String schemaRepository = faultDetailElement.getAttribute("schema-repository");
             if (StringUtils.hasText(schemaRepository)) {
-                context.setSchemaRepository(schemaRepository);
+                context.schemaRepository(schemaRepository);
             }
-            validationContext.addValidationContext(context);
+            validationContext.addValidationContext(context.build());
         }
 
         if (!soapFaultDetails.isEmpty() || !soapFaultDetailPaths.isEmpty()) {
@@ -191,7 +191,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
          * @param validationContext the validationContext to set
          */
         public void setValidationContext(SoapFaultDetailValidationContext validationContext) {
-            builder.validationContext(validationContext);
+            builder.validate(validationContext);
         }
 
         @Override

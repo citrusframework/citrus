@@ -26,7 +26,6 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -66,7 +65,6 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
@@ -85,7 +83,6 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .messageType(MessageType.XHTML)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -115,7 +112,6 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
@@ -133,7 +129,6 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .messageType(MessageType.XHTML)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
     }

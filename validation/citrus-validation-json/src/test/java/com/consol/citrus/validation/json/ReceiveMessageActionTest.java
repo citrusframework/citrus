@@ -77,7 +77,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
+        Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()
@@ -98,7 +98,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageType(MessageType.JSON)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -134,7 +134,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .extract(variableExtractor)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -149,14 +149,16 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     public void testReceiveMessageWithJsonPathValidation() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
 
         Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..text", "Hello World!");
         jsonPathExpressions.put("$.person.name", "John");
         jsonPathExpressions.put("$.person.surname", "Doe");
         jsonPathExpressions.put("$.index", "5");
-        validationContext.setJsonPathExpressions(jsonPathExpressions);
+
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
+                .expressions(jsonPathExpressions)
+                .build();
 
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
@@ -172,7 +174,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .messageType(MessageType.JSON)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -181,11 +183,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = ValidationException.class)
     public void testReceiveMessageWithJsonPathValidationFailure() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
 
         Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$..text", "Hello Citrus!");
-        validationContext.setJsonPathExpressions(jsonPathExpressions);
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
+                .expressions(jsonPathExpressions)
+                .build();
 
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
@@ -201,7 +204,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .messageType(MessageType.JSON)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -209,11 +212,12 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @Test(expectedExceptions = CitrusRuntimeException.class)
     public void testReceiveMessageWithJsonPathValidationNoPathResult() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
 
         Map<String, Object> jsonPathExpressions = new HashMap<>();
         jsonPathExpressions.put("$.person.age", "50");
-        validationContext.setJsonPathExpressions(jsonPathExpressions);
+        JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
+                .expressions(jsonPathExpressions)
+                .build();
 
         Message controlMessage = new DefaultMessage("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}");
 
@@ -229,7 +233,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .messageType(MessageType.JSON)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -238,7 +242,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadAsExpected() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadData("");
 
         Message controlMessage = new DefaultMessage("");
@@ -255,7 +258,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .messageType(MessageType.JSON)
-                .validationContext(validationContext)
                 .build();
         receiveAction.execute(context);
 
@@ -265,7 +267,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public void testReceiveEmptyMessagePayloadUnexpected() {
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
         controlMessageBuilder.setPayloadData("{\"text\":\"Hello World!\"}");
 
         Message controlMessage = new DefaultMessage("");
@@ -282,7 +283,6 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .messageType(MessageType.JSON)
-                .validationContext(validationContext)
                 .build();
         try {
             receiveAction.execute(context);

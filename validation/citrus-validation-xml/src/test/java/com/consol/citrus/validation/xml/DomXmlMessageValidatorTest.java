@@ -239,8 +239,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "<test>Hello TestFramework</test>"
                     + "</message>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setSchema("testSchema2"); // defined as bean in application context
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schema("testSchema2") // defined as bean in application context
+                .build();
         validator.validateXMLSchema(message, context, validationContext);
     }
 
@@ -252,8 +253,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "<test>Hello TestFramework</test>"
                     + "</message>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setSchemaRepository("testSchemaRepository1"); // defined as bean in application context
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaRepository("testSchemaRepository1") // defined as bean in application context
+                .build();
         validator.validateXMLSchema(message, context, validationContext);
     }
 
@@ -265,8 +267,9 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                         + "<test>Hello TestFramework</test>"
                     + "</message>");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setSchemaRepository("testSchemaRepository2"); // defined as bean in application context
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .schemaRepository("testSchemaRepository2") // defined as bean in application context
+                .build();
         validator.validateXMLSchema(message, context, validationContext);
     }
 
@@ -654,6 +657,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
                     + "</root>");
 
         XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
+
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
     }
@@ -680,8 +684,10 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         Set<String> ignoreExpressions = new HashSet<String>();
         ignoreExpressions.add("//root/element/sub-element1");
 
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
-        validationContext.setIgnoreExpressions(ignoreExpressions);
+        XmlMessageValidationContext validationContext = new XmlMessageValidationContext.Builder()
+                .ignore(ignoreExpressions)
+                .build();
+
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
         validator.validateMessage(message, controlMessage, context, validationContext);
     }

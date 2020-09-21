@@ -18,7 +18,6 @@ package com.consol.citrus.config.xml;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -143,7 +142,7 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         }
 
         if (messageBuilder != null) {
-            Map<String, String> pathExpressions = new HashMap<>();
+            Map<String, Object> pathExpressions = new HashMap<>();
             List<Element> messageValueElements = DomUtils.getChildElementsByTagName(messageElement, "element");
             for (Element messageValue : messageValueElements) {
                 String pathExpression = messageValue.getAttribute("path");
@@ -212,10 +211,8 @@ public abstract class AbstractMessageActionParser implements BeanDefinitionParse
         Map<String, Object> messageHeaders = new LinkedHashMap<>();
 
         if (headerElement != null) {
-            List<?> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
-            for (Iterator<?> iter = elements.iterator(); iter.hasNext();) {
-                Element headerValue = (Element) iter.next();
-
+            List<Element> elements = DomUtils.getChildElementsByTagName(headerElement, "element");
+            for (Element headerValue : elements) {
                 String name = headerValue.getAttribute("name");
                 String value = headerValue.getAttribute("value");
                 String type = headerValue.getAttribute("type");

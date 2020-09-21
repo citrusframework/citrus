@@ -163,8 +163,9 @@ public class KubernetesExecuteAction extends AbstractTestAction {
                 }
 
                 if (!CollectionUtils.isEmpty(commandResultExpressions)) {
-                    JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext();
-                    validationContext.setJsonPathExpressions(commandResultExpressions);
+                    JsonPathMessageValidationContext validationContext = new JsonPathMessageValidationContext.Builder()
+                            .expressions(commandResultExpressions)
+                            .build();
                     getPathValidator(context).validateMessage(new DefaultMessage(commandResultJson), new DefaultMessage(commandResult), context, Collections.singletonList(validationContext));
                     log.info("Kubernetes command result path validation successful - all values OK!");
                 }

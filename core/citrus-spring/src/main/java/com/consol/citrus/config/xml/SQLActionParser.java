@@ -161,15 +161,16 @@ public class SQLActionParser implements BeanDefinitionParser {
     private ScriptValidationContext getScriptValidationContext(Element scriptElement) {
         String type = scriptElement.getAttribute("type");
 
-        ScriptValidationContext validationContext = new ScriptValidationContext(type);
+        ScriptValidationContext.Builder validationContext = new ScriptValidationContext.Builder()
+                .scriptType(type);
         String filePath = scriptElement.getAttribute("file");
         if (StringUtils.hasText(filePath)) {
-            validationContext.setValidationScriptResourcePath(filePath);
+            validationContext.scriptResource(filePath);
         } else {
-            validationContext.setValidationScript(DomUtils.getTextValue(scriptElement));
+            validationContext.script(DomUtils.getTextValue(scriptElement));
         }
 
-        return validationContext;
+        return validationContext.build();
     }
 
     /**
@@ -248,7 +249,7 @@ public class SQLActionParser implements BeanDefinitionParser {
 
             if (scriptValidationContext.getValidationScriptResourcePath() != null) {
                 builder.validateScriptResource(scriptValidationContext.getValidationScriptResourcePath(),
-                        scriptValidationContext.getMessageType(),
+                        scriptValidationContext.getScriptType(),
                         Charset.forName(scriptValidationContext.getValidationScriptResourceCharset()));
             }
         }

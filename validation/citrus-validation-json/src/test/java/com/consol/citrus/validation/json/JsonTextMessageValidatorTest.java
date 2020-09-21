@@ -429,8 +429,9 @@ public class JsonTextMessageValidatorTest extends UnitTestSupport {
     public void testUseSchemaRepositoryValidatorIfSchemaValidationIsEnabled() {
 
         //GIVEN
-        JsonMessageValidationContext validationContext = new JsonMessageValidationContext();
-        validationContext.setSchemaValidation(true);
+        JsonMessageValidationContext validationContext = new JsonMessageValidationContext.Builder()
+                .schemaValidation(true)
+                .build();
 
         JsonSchemaValidation jsonSchemaValidation = mock(JsonSchemaValidation.class);
         when(jsonSchemaValidation.validate(any(), anyList(), any(), any())).thenReturn(new GraciousProcessingReport((true)));

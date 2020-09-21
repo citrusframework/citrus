@@ -66,7 +66,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
         messageBuilder.setPayloadData("{ \"TestRequest\": { \"Message\": \"?\" }}");
 
-        Map<String, String> overwriteElements = new HashMap<String, String>();
+        Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("$.TestRequest.Message", "Hello World!");
 
         JsonPathMessageProcessor processor = new JsonPathMessageProcessor.Builder()

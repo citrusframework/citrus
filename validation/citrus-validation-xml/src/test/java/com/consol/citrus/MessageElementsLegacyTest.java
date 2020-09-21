@@ -28,7 +28,6 @@ import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
@@ -73,13 +72,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-elementB", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -108,13 +108,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-elementB", "");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -143,13 +144,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-elementB.attribute", "B");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -178,13 +180,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-element-wrong", "text-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -213,13 +216,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-elementB", "text-value-wrong");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -248,13 +252,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-elementB.attribute", "wrong-value");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -283,13 +288,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateMessageElements.put("sub-elementB.attribute-wrong", "B");
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
-        validationContext.setXpathExpressions(validateMessageElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateMessageElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .build();
         receiveAction.execute(context);
     }
@@ -314,7 +320,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -323,7 +328,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
 
@@ -334,7 +339,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -360,7 +364,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -369,7 +372,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-elementA", "");
         messageElements.put("sub-elementB", "");
 
@@ -380,7 +383,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -406,7 +408,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -415,7 +416,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-elementA", "text-value");
         messageElements.put("sub-elementB", "text-value");
 
@@ -427,12 +428,14 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         validateElements.put("root.element.sub-elementA", "text-value");
         validateElements.put("sub-elementB", "text-value");
 
-        validationContext.setXpathExpressions(validateElements);
+        XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
+                .expressions(validateElements)
+                .build();
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
+                .validate(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -458,7 +461,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
@@ -467,7 +469,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-elementA.attribute", "A");
         messageElements.put("sub-elementB.attribute", "B");
 
@@ -478,7 +480,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -504,7 +505,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
@@ -513,7 +513,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-element-wrong", "text-value");
         messageElements.put("sub-element-wrong", "text-value");
 
@@ -524,7 +524,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -550,7 +549,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
@@ -559,7 +557,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-elementA.attribute-wrong", "A");
         messageElements.put("sub-elementB.attribute-wrong", "B");
 
@@ -570,7 +568,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -596,7 +593,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
@@ -605,7 +601,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
                         + "</element>"
                         + "</root>");
 
-        HashMap<String, String> messageElements = new HashMap<String, String>();
+        HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("root.element.sub-elementA-wrong.attribute", "A");
         messageElements.put("sub-elementB-wrong.attribute", "B");
 
@@ -616,7 +612,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -642,7 +637,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -662,7 +656,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -693,7 +686,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -713,7 +705,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -744,7 +735,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -764,7 +754,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -793,7 +782,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         when(endpoint.getActor()).thenReturn(null);
 
         PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        XmlMessageValidationContext validationContext = new XmlMessageValidationContext();
         controlMessageBuilder.setPayloadData("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>text-value</sub-elementA>"
@@ -812,7 +800,6 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .validationContext(validationContext)
                 .extract(variableExtractor)
                 .build();
         receiveAction.execute(context);
