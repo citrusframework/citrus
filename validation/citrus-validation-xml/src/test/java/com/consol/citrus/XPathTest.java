@@ -316,7 +316,7 @@ public class XPathTest extends UnitTestSupport {
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
                 .validate(validationContext)
-                .extract(variableExtractor)
+                .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
 

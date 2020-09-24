@@ -26,7 +26,7 @@ import com.consol.citrus.variable.dictionary.json.JsonPathMappingDataDictionary;
 public class JsonPathDataDictionaryParser extends AbstractDataDictionaryParser {
 
     @Override
-    protected Class<? extends DataDictionary> getDictionaryClass() {
+    protected Class<? extends DataDictionary<?>> getDictionaryClass() {
         return JsonPathMappingDataDictionary.class;
     }
 }

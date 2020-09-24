@@ -165,8 +165,9 @@ public class DefaultMessage implements Message {
     }
 
     @Override
-    public void setPayload(Object payload) {
+    public DefaultMessage setPayload(Object payload) {
         this.payload = payload;
+        return this;
     }
 
     @Override
@@ -175,8 +176,9 @@ public class DefaultMessage implements Message {
     }
 
     @Override
-    public void setName(String name) {
+    public DefaultMessage setName(String name) {
         this.name = name;
+        return this;
     }
 
     @Override
@@ -188,17 +190,19 @@ public class DefaultMessage implements Message {
      * Specifies the message type.
      * @param type one of the default message types.
      */
-    public void setType(MessageType type) {
+    public DefaultMessage setType(MessageType type) {
         this.type = type.name();
+        return this;
     }
 
     @Override
-    public void setType(String type) {
+    public DefaultMessage setType(String type) {
         if (type != null) {
             headers.put(MessageHeaders.MESSAGE_TYPE, type);
         }
 
         this.type = type;
+        return this;
     }
 
     @Override

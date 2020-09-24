@@ -90,7 +90,6 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
             public void execute() {
                 soap(action -> action.server(server)
                         .receive()
-                        .messageType(MessageType.PLAINTEXT)
                         .message(new DefaultMessage("Foo").setHeader("operation", "foo"))
                         .attachment(testAttachment));
             }

@@ -463,7 +463,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         runner.run(receive(messageEndpoint)
                 .messageType(MessageType.JSON)
                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(jsonPathExtractor()
+                .process(jsonPathExtractor()
                         .expression("$.text", "text")
                         .expression("$.toString()", "payload")
                         .expression("$.person", "person")));

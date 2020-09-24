@@ -67,7 +67,7 @@ public class SoapHttpErrorJavaIT extends TestNGCitrusSupport {
                     .header("operation", "sayHello")
                     .header("citrus_soap_action", "sayHello")
                     .validate(xml().schemaValidation(false))
-                    .extract(headerValueExtractor()
+                    .process(headerValueExtractor()
                                     .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")
                     .header("citrus_http_status_code", "500")

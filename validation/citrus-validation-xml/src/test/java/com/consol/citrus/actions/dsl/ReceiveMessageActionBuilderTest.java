@@ -969,7 +969,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .extract(xpathExtractor()
+                                .process(xpathExtractor()
                                             .expression("/TestRequest/Message", "text")
                                             .expression("/TestRequest/Message/@lang", "language")));
 
@@ -1010,7 +1010,7 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .extract(headerValueExtractor()
+                                .process(headerValueExtractor()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id")));
 
@@ -1051,10 +1051,10 @@ public class ReceiveMessageActionBuilderTest extends UnitTestSupport {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .extract(headerValueExtractor()
+                                .process(headerValueExtractor()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id"))
-                                .extract(xpathExtractor()
+                                .process(xpathExtractor()
                                         .expression("/TestRequest/Message", "text")
                                         .expression("/TestRequest/Message/@lang", "language")));
 

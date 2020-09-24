@@ -61,7 +61,7 @@ public class SoapMimeHeaderJavaIT extends TestNGCitrusSupport {
             .header("operation", "sayHello")
             .soapAction("sayHello")
             .validate(xml().schemaValidation(false))
-            .extract(headerValueExtractor()
+            .process(headerValueExtractor()
                     .header("citrus_jms_messageId", "internal_correlation_id")));
 
         then(soap().server("soapResponseEndpoint")

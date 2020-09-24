@@ -49,7 +49,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
                                 .validate(xml().schemaValidation(false))
-                                .extract(headerValueExtractor()
+                                .process(headerValueExtractor()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", new ClassPathResource("com/consol/citrus/ws/soapAttachment.txt"))
                                 .timeout(5000L),
@@ -85,7 +85,7 @@ public class SendSoapAttachmentJavaIT extends TestNGCitrusSupport {
                                             "<ns0:Operation>Read the attachment</ns0:Operation>" +
                                         "</ns0:SoapMessageWithAttachmentRequest>")
                                 .validate(xml().schemaValidation(false))
-                                .extract(headerValueExtractor()
+                                .process(headerValueExtractor()
                                             .header("citrus_jms_messageId", "internal_correlation_id"))
                                 .attachment("MySoapAttachment", "text/plain", "This is an attachment!")
                                 .timeout(5000L),

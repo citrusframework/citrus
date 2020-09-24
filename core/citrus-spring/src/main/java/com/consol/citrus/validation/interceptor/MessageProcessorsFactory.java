@@ -42,7 +42,7 @@ public class MessageProcessorsFactory implements FactoryBean<MessageProcessors>,
             applicationContext.getBeansOfType(MessageProcessor.class)
                     .entrySet()
                     .stream()
-                    .filter(entry -> !(entry.getValue() instanceof DataDictionary) || ((DataDictionary<?>) entry.getValue()).isGlobalScope())
+                    .filter(entry -> !(entry.getValue() instanceof DataDictionary<?>) || ((DataDictionary<?>) entry.getValue()).isGlobalScope())
                     .forEach(entry -> registry.addMessageProcessor(entry.getValue()));
         }
 

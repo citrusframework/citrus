@@ -1254,7 +1254,7 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		final DataDictionary dataDictionary = mock(DataDictionary.class);
+		final DataDictionary<?> dataDictionary = mock(DataDictionary.class);
 
 		//WHEN
 		final ReceiveMessageAction.Builder copy = builder.dictionary(dataDictionary);
@@ -1270,7 +1270,7 @@ class ReceiveMessageBuilderTest {
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
 		final String name = "dictionary";
-		final DataDictionary dataDictionary = mock(DataDictionary.class);
+		final DataDictionary<?> dataDictionary = mock(DataDictionary.class);
 		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
 		when(referenceResolver.resolve(name, DataDictionary.class)).thenReturn(dataDictionary);
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);

@@ -512,7 +512,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .extract(variableExtractor)
+                .process(variableExtractor)
                 .messageBuilder(messageBuilder)
                 .build();
         sendAction.execute(context);

@@ -80,7 +80,7 @@ public interface VariableExtractor extends MessageProcessor {
      * @param <T> extractor type
      * @param <B> builder reference to self
      */
-    interface Builder<T extends VariableExtractor, B extends Builder<T, B>> {
+    interface Builder<T extends VariableExtractor, B extends Builder<T, B>> extends MessageProcessor.Builder<T, B> {
 
         /**
          * Sets the expressions to evaluate. Keys are expressions that should be evaluated and values are target

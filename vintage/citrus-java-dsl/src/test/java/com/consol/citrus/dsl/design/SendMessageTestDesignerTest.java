@@ -701,7 +701,7 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testSendBuilderWithDictionary() {
-        final DataDictionary dictionary = new NodeMappingDataDictionary();
+        final DataDictionary<?> dictionary = new NodeMappingDataDictionary();
 
         reset(referenceResolver);
 
@@ -734,7 +734,7 @@ public class SendMessageTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testSendBuilderWithDictionaryName() {
-        final DataDictionary dictionary = new NodeMappingDataDictionary();
+        final DataDictionary<?> dictionary = new NodeMappingDataDictionary();
 
         reset(referenceResolver);
 

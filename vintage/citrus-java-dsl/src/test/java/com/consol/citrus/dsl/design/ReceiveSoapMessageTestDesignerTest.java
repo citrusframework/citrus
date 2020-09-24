@@ -90,7 +90,7 @@ public class ReceiveSoapMessageTestDesignerTest extends UnitTestSupport {
         ReceiveSoapMessageAction action = (ReceiveSoapMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive");
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), server);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);
@@ -130,7 +130,7 @@ public class ReceiveSoapMessageTestDesignerTest extends UnitTestSupport {
         ReceiveSoapMessageAction action = (ReceiveSoapMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive");
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), server);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertEquals(action.getValidationContexts().get(0).getClass(), HeaderValidationContext.class);

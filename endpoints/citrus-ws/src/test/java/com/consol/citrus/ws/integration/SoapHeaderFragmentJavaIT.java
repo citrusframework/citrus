@@ -76,7 +76,7 @@ public class SoapHeaderFragmentJavaIT extends TestNGCitrusSupport {
                           "</ns0:HelloHeader>" +
                       "</SOAP-ENV:Header>")
             .validate(xml().schemaValidation(false))
-            .extract(headerValueExtractor()
+            .process(headerValueExtractor()
                         .header("citrus_jms_messageId", "internal_correlation_id")));
 
         then(soap().server("soapResponseEndpoint")

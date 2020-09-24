@@ -133,7 +133,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .extract(variableExtractor)
+                .process(variableExtractor)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);

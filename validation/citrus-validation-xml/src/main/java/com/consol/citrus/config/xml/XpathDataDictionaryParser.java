@@ -26,7 +26,7 @@ import com.consol.citrus.variable.dictionary.xml.XpathMappingDataDictionary;
 public class XpathDataDictionaryParser extends AbstractDataDictionaryParser {
 
     @Override
-    protected Class<? extends DataDictionary> getDictionaryClass() {
+    protected Class<? extends DataDictionary<?>> getDictionaryClass() {
         return XpathMappingDataDictionary.class;
     }
 }

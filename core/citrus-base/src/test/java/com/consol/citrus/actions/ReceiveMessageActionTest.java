@@ -706,7 +706,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .extract(headerVariableExtractor)
+                .process(headerVariableExtractor)
                 .build();
         receiveAction.execute(context);
 
@@ -751,7 +751,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageBuilder(controlMessageBuilder)
-                .extract(variableExtractor)
+                .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
 

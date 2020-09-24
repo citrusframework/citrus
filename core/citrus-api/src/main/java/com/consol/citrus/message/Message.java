@@ -42,7 +42,7 @@ public interface Message extends Serializable {
      * Sets the message type indicating the content type.
      * @param type
      */
-    void setType(String type);
+    Message setType(String type);
 
     /**
      * Gets the message name for internal use;
@@ -54,7 +54,7 @@ public interface Message extends Serializable {
      * Sets the message name for internal use.
      * @param name
      */
-    void setName(String name);
+    Message setName(String name);
 
     /**
      * Gets the message header value by its header name.
@@ -115,6 +115,6 @@ public interface Message extends Serializable {
      * Sets the message payload.
      * @param payload
      */
-    void setPayload(Object payload);
+    Message setPayload(Object payload);
 
 }

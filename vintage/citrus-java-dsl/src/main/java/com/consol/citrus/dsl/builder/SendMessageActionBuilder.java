@@ -351,7 +351,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B variableExtractor(VariableExtractor extractor) {
-        delegate.extract(extractor);
+        delegate.process(extractor);
         return self;
     }
 
@@ -401,7 +401,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @param dictionary
      * @return
      */
-    public B dictionary(DataDictionary dictionary) {
+    public B dictionary(DataDictionary<?> dictionary) {
         delegate.dictionary(dictionary);
         return self;
     }

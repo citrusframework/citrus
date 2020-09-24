@@ -779,7 +779,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
             ((XmlNamespaceAware) extractor).setNamespaces(namespaces);
         }
 
-        this.delegate.extract(extractor);
+        this.delegate.process(extractor);
         return self;
     }
 

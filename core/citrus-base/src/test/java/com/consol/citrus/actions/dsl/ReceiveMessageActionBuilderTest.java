@@ -1058,7 +1058,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .extract(extractor));
+                                .process(extractor));
 
         Assert.assertNotNull(context.getVariable("messageId"));
         Assert.assertEquals(context.getVariable("messageId"), received.getId());
@@ -1092,7 +1092,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .extract(headerValueExtractor()
+                                .process(headerValueExtractor()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id")));
 
@@ -1136,10 +1136,10 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(receive(messageEndpoint)
                                 .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                                .extract(headerValueExtractor()
+                                .process(headerValueExtractor()
                                         .header("operation", "operationHeader")
                                         .header("requestId", "id"))
-                                .extract(extractor));
+                                .process(extractor));
 
         Assert.assertNotNull(context.getVariable("operationHeader"));
         Assert.assertNotNull(context.getVariable("id"));

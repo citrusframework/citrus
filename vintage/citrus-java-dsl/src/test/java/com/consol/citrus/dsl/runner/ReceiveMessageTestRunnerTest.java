@@ -148,7 +148,6 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
             @Override
             public void execute() {
                 receive(action -> action.endpoint(messageEndpoint)
-                        .messageType(MessageType.PLAINTEXT)
                         .message(new DefaultMessage("Foo").setHeader("operation", "foo")));
             }
         };
@@ -974,7 +973,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testReceiveBuilderWithDictionary() {
-        final DataDictionary dictionary = new NodeMappingDataDictionary();
+        final DataDictionary<?> dictionary = new NodeMappingDataDictionary();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);
@@ -1018,7 +1017,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
 
     @Test
     public void testReceiveBuilderWithDictionaryName() {
-        final DataDictionary dictionary = new NodeMappingDataDictionary();
+        final DataDictionary<?> dictionary = new NodeMappingDataDictionary();
 
         reset(referenceResolver, messageEndpoint, messageConsumer, configuration);
         when(messageEndpoint.createConsumer()).thenReturn(messageConsumer);

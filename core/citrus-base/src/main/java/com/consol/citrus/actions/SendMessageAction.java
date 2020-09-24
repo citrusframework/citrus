@@ -418,6 +418,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
             staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
             messageBuilder(staticMessageContentBuilder);
+            messageType(message.getType());
             return self;
         }
 
@@ -698,7 +699,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B process(MessageProcessor processor) {
-            this.messageProcessors.add(processor);
+            if (processor instanceof VariableExtractor) {
+                this.variableExtractors.add((VariableExtractor) processor);
+            } else {
+                this.messageProcessors.add(processor);
+            }
             return self;
         }
 
@@ -708,28 +713,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B process(MessageProcessor.Builder<?, ?> builder) {
-            this.messageProcessors.add(builder.build());
-            return self;
-        }
-
-        /**
-         * Adds variable extractor.
-         * @param extractor
-         * @return
-         */
-        public B extract(VariableExtractor extractor) {
-            this.variableExtractors.add(extractor);
-            return self;
-        }
-
-        /**
-         * Adds variable extractor as fluent builder.
-         * @param builder
-         * @return
-         */
-        public B extract(VariableExtractor.Builder<?, ?> builder) {
-            this.variableExtractors.add(builder.build());
-            return self;
+            return process(builder.build());
         }
 
         /**

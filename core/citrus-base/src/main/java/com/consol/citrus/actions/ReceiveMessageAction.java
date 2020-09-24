@@ -436,7 +436,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
      * Gets the data dictionary.
      * @return
      */
-    public DataDictionary getDataDictionary() {
+    public DataDictionary<?> getDataDictionary() {
         return dataDictionary;
     }
 
@@ -573,6 +573,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
             final StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
             staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
             messageBuilder(staticMessageContentBuilder);
+            messageType(controlMessage.getType());
             return self;
         }
 
@@ -946,7 +947,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validators
          * @return
          */
-        public B validators(MessageValidator<? extends ValidationContext>... validators) {
+        @SafeVarargs
+        public final B validators(final MessageValidator<? extends ValidationContext>... validators) {
             return validators(Arrays.asList(validators));
         }
 
@@ -1035,7 +1037,12 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B process(MessageProcessor processor) {
-            this.messageProcessors.add(processor);
+            if (processor instanceof VariableExtractor) {
+                this.variableExtractors.add((VariableExtractor) processor);
+            } else {
+                this.messageProcessors.add(processor);
+            }
+
             return self;
         }
 
@@ -1045,28 +1052,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B process(MessageProcessor.Builder<?, ?> builder) {
-            this.messageProcessors.add(builder.build());
-            return self;
-        }
-
-        /**
-         * Adds variable extractor.
-         * @param extractor
-         * @return
-         */
-        public B extract(VariableExtractor extractor) {
-            this.variableExtractors.add(extractor);
-            return self;
-        }
-
-        /**
-         * Adds variable extractor builder.
-         * @param builder
-         * @return
-         */
-        public B extract(VariableExtractor.Builder<?, ?> builder) {
-            this.variableExtractors.add(builder.build());
-            return self;
+            return process(builder.build());
         }
 
         /**

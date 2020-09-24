@@ -78,7 +78,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param variableExtractors the variableExtractors to set
      */
     public void setVariableExtractors(List<VariableExtractor> variableExtractors) {
-        variableExtractors.forEach(getBuilder()::extract);
+        variableExtractors.forEach(getBuilder()::process);
     }
 
     /**

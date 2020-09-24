@@ -16,6 +16,8 @@
 
 package com.consol.citrus.config.xml;
 
+import java.util.HashMap;
+
 import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.variable.dictionary.DataDictionary;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -24,8 +26,6 @@ import org.springframework.beans.factory.xml.BeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
-
-import java.util.HashMap;
 
 /**
  * @author Christoph Deppisch
@@ -79,5 +79,5 @@ public abstract class AbstractDataDictionaryParser implements BeanDefinitionPars
      * Subclasses provide suite container class.
      * @return
      */
-    protected abstract Class<? extends DataDictionary> getDictionaryClass();
+    protected abstract Class<? extends DataDictionary<?>> getDictionaryClass();
 }

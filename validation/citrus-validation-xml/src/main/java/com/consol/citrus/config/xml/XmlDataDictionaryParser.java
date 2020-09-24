@@ -26,7 +26,7 @@ import com.consol.citrus.variable.dictionary.xml.NodeMappingDataDictionary;
 public class XmlDataDictionaryParser extends AbstractDataDictionaryParser {
 
     @Override
-    protected Class<? extends DataDictionary> getDictionaryClass() {
+    protected Class<? extends DataDictionary<?>> getDictionaryClass() {
         return NodeMappingDataDictionary.class;
     }
 }

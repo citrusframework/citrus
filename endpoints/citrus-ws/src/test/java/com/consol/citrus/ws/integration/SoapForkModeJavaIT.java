@@ -56,7 +56,7 @@ public class SoapForkModeJavaIT extends TestNGCitrusSupport {
                           "<ns0:Text>Hello WebServer</ns0:Text>" +
                       "</ns0:HelloRequest>")
             .validate(xml().schemaValidation(false))
-            .extract(headerValueExtractor()
+            .process(headerValueExtractor()
                     .header("citrus_jms_messageId", "internal_correlation_id")));
 
         then(soap().server("soapResponseEndpoint")

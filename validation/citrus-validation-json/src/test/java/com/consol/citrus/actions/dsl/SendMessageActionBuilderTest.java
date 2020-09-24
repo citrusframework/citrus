@@ -171,7 +171,7 @@ public class SendMessageActionBuilderTest extends UnitTestSupport {
         runner.run(send(messageEndpoint)
                 .messageType(MessageType.JSON)
                 .payload("{\"text\":\"Hello World!\", \"person\":{\"name\":\"John\",\"surname\":\"Doe\"}, \"index\":5, \"id\":\"x123456789x\"}")
-                .extract(jsonPathExtractor()
+                .process(jsonPathExtractor()
                         .expression("$.text", "text")
                         .expression("$.person", "person")));
 

@@ -61,7 +61,7 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
                     .contentType("application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .extract(headerValueExtractor()
+                    .process(headerValueExtractor()
                                 .header("citrus_jms_messageId", "correlation_id")),
 
                http().server("httpServerResponseEndpoint")
@@ -111,7 +111,7 @@ public class HttpServerJavaIT extends TestNGCitrusSupport {
                     .contentType("application/xml")
                     .accept("application/xml")
                     .header("Authorization", "Basic c29tZVVzZXJuYW1lOnNvbWVQYXNzd29yZA==")
-                    .extract(headerValueExtractor()
+                    .process(headerValueExtractor()
                                 .header("citrus_jms_messageId", "correlation_id")),
 
                http().server("httpServerResponseEndpoint")

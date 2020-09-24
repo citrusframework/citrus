@@ -51,7 +51,7 @@ public class SendReplyToJavaIT extends TestNGCitrusSupport {
                         "</GetDateRequestMessage>")
                 .header("Operation", "${operation}")
                 .header("ConversationId", "${conversationId}")
-                .extract(headerValueExtractor()
+                .process(headerValueExtractor()
                             .header(MessageHeaders.ID, "syncRequestCorrelatorId")),
 
             sequential().actions(

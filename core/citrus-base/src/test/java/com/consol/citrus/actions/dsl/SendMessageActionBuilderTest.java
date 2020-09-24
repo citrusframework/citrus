@@ -650,7 +650,7 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
         runner.run(send(messageEndpoint)
                         .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
-                        .extract(extractor));
+                        .process(extractor));
 
         Assert.assertNotNull(context.getVariable("messageId"));
 
@@ -684,7 +684,7 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
                         .payload("<TestRequest><Message lang=\"ENG\">Hello World!</Message></TestRequest>")
                         .header("operation", "sayHello")
                         .header("requestId", "123456")
-                        .extract(headerValueExtractor()
+                        .process(headerValueExtractor()
                                 .header("operation", "operationHeader")
                                 .header("requestId", "id")));
 

@@ -58,7 +58,7 @@ public class WebServiceServerJavaIT extends TestNGCitrusSupport {
                               "</ns0:HelloRequest>")
                     .header("Operation", "sayHello")
                     .validate(xml().schemaValidation(false))
-                    .extract(headerValueExtractor()
+                    .process(headerValueExtractor()
                                     .header("citrus_jms_messageId", "internal_correlation_id")),
                 send("soapResponseEndpoint")
                     .payload("<ns0:HelloResponse xmlns:ns0=\"http://citrusframework.org/schemas/samples/HelloService.xsd\">" +

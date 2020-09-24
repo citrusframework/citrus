@@ -127,7 +127,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
         ReceiveMessageAction action = (ReceiveMessageAction) test.getActions().get(0);
         Assert.assertEquals(action.getName(), "receive");
 
-        Assert.assertEquals(action.getMessageType(), MessageType.XML.name());
+        Assert.assertEquals(action.getMessageType(), MessageType.PLAINTEXT.name());
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
         Assert.assertEquals(action.getValidationContexts().size(), 3);
         Assert.assertTrue(action.getValidationContexts().stream().anyMatch(HeaderValidationContext.class::isInstance));
@@ -803,7 +803,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testReceiveBuilderWithDictionary() {
-        final DataDictionary dictionary = new NodeMappingDataDictionary();
+        final DataDictionary<?> dictionary = new NodeMappingDataDictionary();
 
         reset(referenceResolver);
 
@@ -843,7 +843,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
     @Test
     public void testReceiveBuilderWithDictionaryName() {
-        final DataDictionary dictionary = new NodeMappingDataDictionary();
+        final DataDictionary<?> dictionary = new NodeMappingDataDictionary();
 
         reset(referenceResolver);
 
