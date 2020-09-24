@@ -41,7 +41,6 @@ import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.TextEqualsMessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
@@ -859,7 +858,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("plainTextValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());

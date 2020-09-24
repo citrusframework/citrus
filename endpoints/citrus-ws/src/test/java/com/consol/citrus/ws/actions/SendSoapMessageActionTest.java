@@ -84,7 +84,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
                 .mtomEnabled(true)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -123,7 +123,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
                 .mtomEnabled(true)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -162,7 +162,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
                 .mtomEnabled(true)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -204,7 +204,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
                 .mtomEnabled(true)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -248,7 +248,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
                 .mtomEnabled(true)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -273,7 +273,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
                 .mtomEnabled(true)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         try {
@@ -313,7 +313,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -351,7 +351,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -404,7 +404,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .attachment(attachment2)
                 .build();
@@ -425,7 +425,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         soapMessageAction.execute(context);
         verify(producer).send(any(Message.class), any(TestContext.class));
@@ -460,7 +460,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -497,7 +497,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -534,7 +534,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -567,7 +567,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         soapMessageAction.execute(context);
     }
@@ -602,7 +602,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         soapMessageAction.execute(context);
     }
@@ -634,7 +634,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         soapMessageAction.execute(context);
     }
@@ -668,7 +668,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         soapMessageAction.execute(context);
     }
@@ -702,7 +702,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
 
         SendSoapMessageAction soapMessageAction = new SendSoapMessageAction.Builder()
                 .endpoint(webServiceEndpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         soapMessageAction.execute(context);
     }

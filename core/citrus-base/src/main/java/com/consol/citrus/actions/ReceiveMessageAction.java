@@ -511,7 +511,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private HeaderValidationContext headerValidationContext;
 
         private final List<String> validatorNames = new ArrayList<>();
-        private final List<String> headerValidatorNames = new ArrayList<>();
         private final Map<String, List<Object>> headerFragmentMappers = new HashMap<>();
         private final Map<String, List<Object>> payloadMappers = new HashMap<>();
 
@@ -558,7 +557,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param messageBuilder
          * @return
          */
-        public B messageBuilder(AbstractMessageContentBuilder messageBuilder) {
+        public B message(AbstractMessageContentBuilder messageBuilder) {
             this.messageBuilder = messageBuilder;
             return self;
         }
@@ -572,7 +571,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         public B message(final Message controlMessage) {
             final StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
             staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
-            messageBuilder(staticMessageContentBuilder);
+            message(staticMessageContentBuilder);
             messageType(controlMessage.getType());
             return self;
         }
@@ -981,19 +980,8 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param validators
          * @return
          */
-        public B headerValidator(final HeaderValidator... validators) {
+        public B validator(final HeaderValidator... validators) {
             Stream.of(validators).forEach(getHeaderValidationContext()::addHeaderValidator);
-            return self;
-        }
-
-        /**
-         * Sets explicit header validators by name.
-         *
-         * @param validatorNames
-         * @return
-         */
-        public B headerValidator(final String... validatorNames) {
-            this.headerValidatorNames.addAll(Arrays.asList(validatorNames));
             return self;
         }
 
@@ -1087,12 +1075,13 @@ public class ReceiveMessageAction extends AbstractTestAction {
 
                 while (!validatorNames.isEmpty()) {
                     final String validatorName = validatorNames.remove(0);
-                    this.validators.add(referenceResolver.resolve(validatorName, MessageValidator.class));
-                }
 
-                while (!headerValidatorNames.isEmpty()) {
-                    final String validatorName = headerValidatorNames.remove(0);
-                    getHeaderValidationContext().addHeaderValidator(referenceResolver.resolve(validatorName, HeaderValidator.class));
+                    Object validator = referenceResolver.resolve(validatorName);
+                    if (validator instanceof HeaderValidator) {
+                        getHeaderValidationContext().addHeaderValidator((HeaderValidator) validator);
+                    } else {
+                        this.validators.add((MessageValidator<? extends ValidationContext>) validator);
+                    }
                 }
 
                 if (dataDictionaryName != null) {
@@ -1169,7 +1158,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public AbstractMessageContentBuilder getMessageContentBuilder() {
             if (this.messageBuilder == null) {
-                messageBuilder(new PayloadTemplateMessageBuilder());
+                message(new PayloadTemplateMessageBuilder());
             }
 
             return messageBuilder;

@@ -34,7 +34,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
-import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
@@ -765,7 +764,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         reset(referenceResolver);
 
-        when(referenceResolver.resolve("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("plainTextValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1133,7 +1132,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         reset(referenceResolver);
 
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1185,7 +1184,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         reset(referenceResolver);
 
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1236,7 +1235,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         reset(referenceResolver);
 
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1288,7 +1287,7 @@ public class ReceiveMessageTestDesignerTest extends UnitTestSupport {
 
         reset(referenceResolver);
 
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());

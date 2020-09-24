@@ -89,7 +89,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageType(MessageType.JSON)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .process(processor)
                 .build();
         sendAction.execute(context);

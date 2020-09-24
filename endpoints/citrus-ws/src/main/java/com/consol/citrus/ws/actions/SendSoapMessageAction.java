@@ -133,7 +133,7 @@ public class SendSoapMessageAction extends SendMessageAction implements TestActi
     public static final class Builder extends SendSoapMessageBuilder<SendSoapMessageAction, Builder> {
 
         public Builder() {
-            messageBuilder(new StaticMessageContentBuilder(soapMessage));
+            message(new StaticMessageContentBuilder(soapMessage));
         }
 
         @Override

@@ -43,10 +43,10 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
     public HttpServerRequestActionBuilder() {
         StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
         staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        messageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        message(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
 
         headerNameIgnoreCase(true);
-        headerValidator(new HttpQueryParamHeaderValidator());
+        validator(new HttpQueryParamHeaderValidator());
     }
 
     @Override

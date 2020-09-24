@@ -92,7 +92,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint("direct:mockQueue?timeout=15000")
                 .actor(testActor)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -114,7 +114,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint("${varEndpoint}")
                 .actor(testActor)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -141,7 +141,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .actor(testActor)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -164,7 +164,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -190,7 +190,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -216,7 +216,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -240,7 +240,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -271,7 +271,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -303,7 +303,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -340,7 +340,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .process(processor)
                 .build();
@@ -378,7 +378,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .process(processor)
                 .build();
@@ -415,7 +415,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .process(processor)
                 .build();
@@ -447,7 +447,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -479,7 +479,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -509,7 +509,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         try {
             receiveAction.execute(context);
@@ -536,7 +536,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         try {
             receiveAction.execute(context);
@@ -572,7 +572,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(headerVariableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -605,7 +605,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -637,7 +637,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -669,7 +669,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -701,7 +701,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -737,7 +737,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -769,7 +769,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -810,7 +810,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -851,7 +851,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .validate(validationContext)
                 .build();
@@ -893,7 +893,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .validate(validationContext)
                 .build();
@@ -935,7 +935,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .validate(validationContext)
                 .build();
@@ -981,7 +981,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .validate(validationContext)
                 .build();
@@ -1011,7 +1011,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .timeout(3000L)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -1039,7 +1039,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
@@ -1068,7 +1068,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .timeout(5000L)
                 .selector(messageSelector)
                 .build();
@@ -1099,7 +1099,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
@@ -1130,7 +1130,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .timeout(5000L)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .selector(messageSelector)
                 .build();
         receiveAction.execute(context);
@@ -1152,7 +1152,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         try {
             receiveAction.execute(context);
@@ -1182,7 +1182,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
 
@@ -1206,7 +1206,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         try {
             receiveAction.execute(context);
@@ -1238,7 +1238,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .actor(disabledActor)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);
@@ -1264,7 +1264,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         testCase.addTestAction(receiveAction);
         testCase.execute(context);

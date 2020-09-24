@@ -82,7 +82,7 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageType(MessageType.XHTML)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -128,7 +128,7 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageType(MessageType.XHTML)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }

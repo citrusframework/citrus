@@ -99,7 +99,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .actor(testActor)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
 		sendAction.execute(context);
 
@@ -129,7 +129,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -163,7 +163,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(scriptMessageBuidler)
+                .message(scriptMessageBuidler)
                 .build();
 		sendAction.execute(context);
 
@@ -199,7 +199,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(scriptMessageBuidler)
+                .message(scriptMessageBuidler)
                 .build();
         sendAction.execute(context);
 
@@ -228,7 +228,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(scriptMessageBuidler)
+                .message(scriptMessageBuidler)
                 .build();
         sendAction.execute(context);
 
@@ -257,7 +257,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -289,7 +289,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -319,7 +319,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -350,7 +350,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .process(processor)
                 .build();
         sendAction.execute(context);
@@ -384,7 +384,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -419,7 +419,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -437,7 +437,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         try {
             sendAction.execute(context);
@@ -465,7 +465,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         try {
             sendAction.execute(context);
@@ -513,7 +513,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .process(variableExtractor)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -564,7 +564,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -591,7 +591,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -611,7 +611,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         try {
             sendAction.execute(context);
@@ -646,7 +646,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
 
@@ -670,7 +670,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
                 .actor(disabledActor)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         testCase.addTestAction(sendAction);
         testCase.execute(context);
@@ -694,7 +694,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         testCase.addTestAction(sendAction);
         testCase.execute(context);
@@ -730,7 +730,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .dictionary(dictionary)
                 .build();
         sendAction.execute(context);
@@ -776,7 +776,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .dictionary(dictionary)
                 .build();
         sendAction.execute(context);
@@ -819,7 +819,7 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
 
         SendMessageAction sendAction = new SendMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(messageBuilder)
+                .message(messageBuilder)
                 .build();
         sendAction.execute(context);
     }

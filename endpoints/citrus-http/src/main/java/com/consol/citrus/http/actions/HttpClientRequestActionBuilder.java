@@ -42,7 +42,7 @@ public class HttpClientRequestActionBuilder extends SendMessageAction.SendMessag
     public HttpClientRequestActionBuilder() {
         StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
         staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        messageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        message(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
     }
 
     @Override

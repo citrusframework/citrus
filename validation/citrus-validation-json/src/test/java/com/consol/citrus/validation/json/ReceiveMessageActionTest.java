@@ -97,7 +97,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
                 .messageType(MessageType.JSON)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .process(processor)
                 .build();
@@ -132,7 +132,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .validate(validationContext)
                 .build();
@@ -172,7 +172,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .messageType(MessageType.JSON)
                 .validate(validationContext)
                 .build();
@@ -202,7 +202,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .messageType(MessageType.JSON)
                 .validate(validationContext)
                 .build();
@@ -231,7 +231,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .messageType(MessageType.JSON)
                 .validate(validationContext)
                 .build();
@@ -256,7 +256,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .messageType(MessageType.JSON)
                 .build();
         receiveAction.execute(context);
@@ -281,7 +281,7 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .messageType(MessageType.JSON)
                 .build();
         try {

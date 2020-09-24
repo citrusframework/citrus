@@ -168,7 +168,7 @@ public class SendSoapFaultAction extends SendSoapMessageAction {
         private List<String> faultDetailResourcePaths = new ArrayList<>();
 
         public Builder() {
-            messageBuilder(new StaticMessageContentBuilder(soapMessage));
+            message(new StaticMessageContentBuilder(soapMessage));
         }
 
         /**

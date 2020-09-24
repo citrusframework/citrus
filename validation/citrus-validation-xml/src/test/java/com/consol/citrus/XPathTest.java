@@ -85,7 +85,7 @@ public class XPathTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -129,7 +129,7 @@ public class XPathTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -169,7 +169,7 @@ public class XPathTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -213,7 +213,7 @@ public class XPathTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -264,7 +264,7 @@ public class XPathTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -314,7 +314,7 @@ public class XPathTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .process(variableExtractor)
                 .build();

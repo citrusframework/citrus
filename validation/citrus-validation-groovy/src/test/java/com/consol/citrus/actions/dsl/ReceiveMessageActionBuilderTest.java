@@ -34,7 +34,6 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
@@ -73,7 +72,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -124,7 +123,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -174,7 +173,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -224,7 +223,7 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());

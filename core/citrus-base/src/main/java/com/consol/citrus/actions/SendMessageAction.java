@@ -404,7 +404,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param messageBuilder
          * @return
          */
-        public B messageBuilder(MessageContentBuilder messageBuilder) {
+        public B message(MessageContentBuilder messageBuilder) {
             this.messageBuilder = messageBuilder;
             return self;
         }
@@ -417,7 +417,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         public B message(Message message) {
             StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
             staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
-            messageBuilder(staticMessageContentBuilder);
+            message(staticMessageContentBuilder);
             messageType(message.getType());
             return self;
         }
@@ -688,7 +688,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
                 return (AbstractMessageContentBuilder) this.messageBuilder;
             } else {
                 PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                messageBuilder(messageBuilder);
+                message(messageBuilder);
                 return messageBuilder;
             }
         }

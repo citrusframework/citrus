@@ -937,7 +937,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("TestMessage").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(referenceResolver.resolve("plainTextValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("plainTextValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1399,7 +1399,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1455,7 +1455,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1510,7 +1510,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
@@ -1565,7 +1565,7 @@ public class ReceiveMessageTestRunnerTest extends UnitTestSupport {
         when(messageConsumer.receive(any(TestContext.class), anyLong())).thenReturn(new DefaultMessage("{\"message\": \"Hello Citrus!\"}").setHeader("operation", "sayHello"));
 
         when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
-        when(referenceResolver.resolve("groovyMessageValidator", MessageValidator.class)).thenReturn(validator);
+        when(referenceResolver.resolve("groovyMessageValidator")).thenReturn(validator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());

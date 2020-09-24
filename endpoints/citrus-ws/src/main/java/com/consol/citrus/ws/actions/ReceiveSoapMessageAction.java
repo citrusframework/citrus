@@ -106,7 +106,7 @@ public class ReceiveSoapMessageAction extends ReceiveMessageAction implements Te
         protected SoapMessage soapMessage = new SoapMessage();
 
         public Builder() {
-            messageBuilder(new StaticMessageContentBuilder(soapMessage));
+            message(new StaticMessageContentBuilder(soapMessage));
             headerNameIgnoreCase(true);
         }
 

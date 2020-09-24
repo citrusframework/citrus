@@ -27,7 +27,7 @@ public abstract class AbstractSendMessageActionFactoryBean<T extends SendMessage
      * @param messageBuilder the messageBuilder to set
      */
     public void setMessageBuilder(MessageContentBuilder messageBuilder) {
-        getBuilder().messageBuilder(messageBuilder);
+        getBuilder().message(messageBuilder);
     }
 
     /**

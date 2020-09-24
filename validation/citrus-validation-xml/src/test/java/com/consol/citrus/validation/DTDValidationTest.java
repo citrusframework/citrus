@@ -79,7 +79,7 @@ public class DTDValidationTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -112,7 +112,7 @@ public class DTDValidationTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -145,7 +145,7 @@ public class DTDValidationTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -180,7 +180,7 @@ public class DTDValidationTest extends UnitTestSupport {
         try {
             ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
-                    .messageBuilder(controlMessageBuilder)
+                    .message(controlMessageBuilder)
                     .build();
             receiveAction.execute(context);
             Assert.fail("Missing validation exception due to mismatch in public id");
@@ -219,7 +219,7 @@ public class DTDValidationTest extends UnitTestSupport {
         try {
             ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                     .endpoint(endpoint)
-                    .messageBuilder(controlMessageBuilder)
+                    .message(controlMessageBuilder)
                     .build();
             receiveAction.execute(context);
             Assert.fail("Missing validation exception due to mismatch in public id");

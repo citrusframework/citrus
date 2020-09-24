@@ -87,7 +87,7 @@ public class SendMessageActionBuilder<B extends SendMessageActionBuilder<B>> ext
      * @return
      */
     public B messageBuilder(MessageContentBuilder messageBuilder) {
-        delegate.messageBuilder(messageBuilder);
+        delegate.message(messageBuilder);
         return self;
     }
 

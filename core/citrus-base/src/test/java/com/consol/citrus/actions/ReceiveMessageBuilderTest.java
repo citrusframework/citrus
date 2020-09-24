@@ -177,7 +177,6 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.messageBuilder(null);
 
         //WHEN
         final ReceiveMessageAction.Builder copy = builder.payload("payload");
@@ -193,7 +192,7 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.messageBuilder(new StaticMessageContentBuilder(new DefaultMessage()));
+		builder.message(new StaticMessageContentBuilder(new DefaultMessage()));
 
         //WHEN
         final ReceiveMessageAction.Builder copy = builder.payload("payload");
@@ -210,7 +209,7 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.messageBuilder(new AbstractMessageContentBuilder() {
+		builder.message(new AbstractMessageContentBuilder() {
 			@Override
 			public Object buildMessagePayload(final TestContext context, final String messageType) {
 				return null;
@@ -1187,9 +1186,9 @@ class ReceiveMessageBuilderTest {
 		final String name2 = "validator2";
 		final String name3 = "validator3";
 		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		doReturn(validator1).when(referenceResolver).resolve(name1, MessageValidator.class);
-		doReturn(validator2).when(referenceResolver).resolve(name2, MessageValidator.class);
-		doReturn(validator3).when(referenceResolver).resolve(name3, MessageValidator.class);
+		doReturn(validator1).when(referenceResolver).resolve(name1);
+		doReturn(validator2).when(referenceResolver).resolve(name2);
+		doReturn(validator3).when(referenceResolver).resolve(name3);
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
@@ -1210,7 +1209,7 @@ class ReceiveMessageBuilderTest {
 		final HeaderValidator validator3 = mock(HeaderValidator.class);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerValidator(validator1, validator2, validator3);
+		final ReceiveMessageAction.Builder copy = builder.validator(validator1, validator2, validator3);
 
 		//THEN
 		assertSame(copy, builder);
@@ -1232,13 +1231,13 @@ class ReceiveMessageBuilderTest {
 		final String name2 = "validator2";
 		final String name3 = "validator3";
 		final ReferenceResolver referenceResolver = mock(ReferenceResolver.class);
-		doReturn(validator1).when(referenceResolver).resolve(name1, HeaderValidator.class);
-		doReturn(validator2).when(referenceResolver).resolve(name2, HeaderValidator.class);
-		doReturn(validator3).when(referenceResolver).resolve(name3, HeaderValidator.class);
+		doReturn(validator1).when(referenceResolver).resolve(name1);
+		doReturn(validator2).when(referenceResolver).resolve(name2);
+		doReturn(validator3).when(referenceResolver).resolve(name3);
 		ReflectionTestUtils.setField(builder, "referenceResolver", referenceResolver);
 
 		//WHEN
-		final ReceiveMessageAction.Builder copy = builder.headerValidator(name1, name2, name3);
+		final ReceiveMessageAction.Builder copy = builder.validator(name1, name2, name3);
 
 		//THEN
 		assertSame(copy, builder);

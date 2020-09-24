@@ -104,7 +104,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B messageBuilder(AbstractMessageContentBuilder messageBuilder) {
-        delegate.messageBuilder(messageBuilder);
+        delegate.message(messageBuilder);
         return self;
     }
 
@@ -720,7 +720,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerValidator(final HeaderValidator... validators) {
-        this.delegate.headerValidator(validators);
+        this.delegate.validator(validators);
         return self;
     }
 
@@ -731,7 +731,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @return
      */
     public B headerValidator(final String... validatorNames) {
-        this.delegate.headerValidator(validatorNames);
+        this.delegate.validator(validatorNames);
         return self;
     }
 

@@ -24,6 +24,15 @@ public class SimpleReferenceResolver implements ReferenceResolver, ReferenceRegi
     }
 
     @Override
+    public Object resolve(String name) {
+        if (!objectStore.containsKey(name)) {
+            throw new CitrusRuntimeException(String.format("Unable to find bean reference for name '%s'", name));
+        }
+
+        return objectStore.get(name);
+    }
+
+    @Override
     public <T> T resolve(String name, Class<T> type) {
         return objectStore.entrySet().stream()
                 .filter(entry -> name.equals(entry.getKey()) && type.isInstance(entry.getValue()))

@@ -42,7 +42,7 @@ public class HttpClientResponseActionBuilder extends ReceiveMessageAction.Receiv
     public HttpClientResponseActionBuilder() {
         StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
         staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        messageBuilder(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        message(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
 
         headerNameIgnoreCase(true);
     }

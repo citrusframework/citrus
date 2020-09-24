@@ -88,7 +88,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -133,7 +133,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -191,7 +191,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .attachment(attachment2)
                 .build();
@@ -236,7 +236,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -263,7 +263,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         soapMessageAction.execute(context);
 
@@ -307,7 +307,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -354,7 +354,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);
@@ -401,7 +401,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 .endpoint(endpoint)
                 .attachmentValidator(attachmentValidator)
                 .validator(new DomXmlMessageValidator())
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .attachment(attachment)
                 .build();
         soapMessageAction.execute(context);

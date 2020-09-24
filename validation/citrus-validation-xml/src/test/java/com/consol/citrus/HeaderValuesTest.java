@@ -84,7 +84,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -129,7 +129,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(new HeaderValidationContext())
                 .build();
         receiveAction.execute(context);
@@ -173,7 +173,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -216,7 +216,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -261,7 +261,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -306,7 +306,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .build();
         receiveAction.execute(context);
     }
@@ -352,7 +352,7 @@ public class HeaderValuesTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);

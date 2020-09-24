@@ -132,7 +132,7 @@ public abstract class AbstractReceiveMessageActionFactoryBean<T extends ReceiveM
      * @param messageBuilder the messageBuilder to set
      */
     public void setMessageBuilder(AbstractMessageContentBuilder messageBuilder) {
-        getBuilder().messageBuilder(messageBuilder);
+        getBuilder().message(messageBuilder);
     }
 
     /**

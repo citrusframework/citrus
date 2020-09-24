@@ -78,7 +78,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -114,7 +114,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -150,7 +150,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -186,7 +186,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -222,7 +222,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -258,7 +258,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -294,7 +294,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .build();
         receiveAction.execute(context);
@@ -338,7 +338,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -382,7 +382,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -434,7 +434,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .validate(validationContext)
                 .process(processor)
                 .build();
@@ -479,7 +479,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -523,7 +523,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -567,7 +567,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -611,7 +611,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(processor)
                 .build();
         receiveAction.execute(context);
@@ -655,7 +655,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -704,7 +704,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -753,7 +753,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
@@ -799,7 +799,7 @@ public class MessageElementsLegacyTest extends UnitTestSupport {
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
-                .messageBuilder(controlMessageBuilder)
+                .message(controlMessageBuilder)
                 .process(variableExtractor)
                 .build();
         receiveAction.execute(context);
