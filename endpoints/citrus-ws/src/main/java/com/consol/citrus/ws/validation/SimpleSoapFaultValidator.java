@@ -19,7 +19,6 @@ package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.context.ValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -27,7 +26,7 @@ import org.springframework.util.StringUtils;
 /**
  * Simple soap fault validator implementation just performing String equals on soap fault detail
  * as validation algorithm.
- * 
+ *
  * @author Christoph Deppisch
  */
 public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
@@ -37,7 +36,7 @@ public class SimpleSoapFaultValidator extends AbstractFaultDetailValidator {
 
     @Override
     protected void validateFaultDetailString(String received, String control,
-            TestContext context, ValidationContext validationContext) throws ValidationException {
+            TestContext context, SoapFaultDetailValidationContext validationContext) throws ValidationException {
 
         log.debug("Validating SOAP fault detail ...");
 

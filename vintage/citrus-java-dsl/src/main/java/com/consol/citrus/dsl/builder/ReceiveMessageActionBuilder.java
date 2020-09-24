@@ -51,7 +51,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
 
     private final Map<String, String> namespaces = new HashMap<>();
 
-    private XmlMessageValidationContext.AbstractBuilder<?, ?> xmlMessageValidationContext;
+    private XmlMessageValidationContext.XmlValidationContextBuilder<?, ?> xmlMessageValidationContext;
     private JsonMessageValidationContext.Builder jsonMessageValidationContext;
 
     /** JSON validation context used in this action builder */
@@ -849,7 +849,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
     /**
      * Creates new xml validation context if not done before and gets the xml validation context.
      */
-    protected XmlMessageValidationContext.AbstractBuilder<?, ?> getXmlMessageValidationContext() {
+    protected XmlMessageValidationContext.XmlValidationContextBuilder<?, ?> getXmlMessageValidationContext() {
         if (xmlMessageValidationContext == null) {
             xmlMessageValidationContext = new XmlMessageValidationContext.Builder();
 

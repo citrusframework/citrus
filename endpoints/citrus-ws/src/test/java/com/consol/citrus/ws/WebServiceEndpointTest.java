@@ -1325,7 +1325,6 @@ public class WebServiceEndpointTest {
 
         when(messageContext.getResponse()).thenReturn(soapResponse);
 
-
         endpoint.invoke(messageContext);
 
         Assert.assertEquals(soapResponsePayload.toString(), responseMessage.getPayload());

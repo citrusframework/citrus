@@ -50,7 +50,7 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
     /**
      * Fluent builder.
      */
-    public static final class Builder extends XmlMessageValidationContext.AbstractBuilder<XpathMessageValidationContext, Builder>
+    public static final class Builder extends XmlValidationContextBuilder<XpathMessageValidationContext, Builder>
             implements WithExpressions<Builder> {
 
         private Map<String, Object> expressions = new HashMap<>();

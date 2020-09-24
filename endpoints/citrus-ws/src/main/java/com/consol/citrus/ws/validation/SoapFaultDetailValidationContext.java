@@ -16,46 +16,45 @@
 
 package com.consol.citrus.ws.validation;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.consol.citrus.validation.context.DefaultValidationContext;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
 /**
- * Special validation context holds 1-n {@link XmlMessageValidationContext} instances for
- * 1-n SOAP fault detail elements.
- *
+ * Soap fault detail validation context extends XML validation context.
  * @author Christoph Deppisch
  */
-public class SoapFaultDetailValidationContext extends DefaultValidationContext {
-
-    /** List of validation contexts to use for SOAP fault detail validation */
-    private List<ValidationContext> validationContexts = new ArrayList<>();
+public class SoapFaultDetailValidationContext extends XmlMessageValidationContext {
 
     /**
-     * Gets the validationContexts.
-     * @return the validationContexts the validationContexts to get.
+     * Default constructor.
      */
-    public List<ValidationContext> getValidationContexts() {
-        return validationContexts;
+    public SoapFaultDetailValidationContext() {
+        this(Builder.faultDetail());
     }
 
     /**
-     * Sets the validationContexts.
-     * @param validationContexts the validationContexts to set
+     * Constructor using fluent builder.
+     * @param builder
      */
-    public void setValidationContexts(List<ValidationContext> validationContexts) {
-        this.validationContexts = validationContexts;
+    public SoapFaultDetailValidationContext(Builder builder) {
+        super(builder);
     }
 
     /**
-     * Adds new validation context to the list of contexts.
-     * @param context
+     * Fluent builder.
      */
-    public SoapFaultDetailValidationContext addValidationContext(XmlMessageValidationContext context) {
-        this.validationContexts.add(context);
-        return this;
+    public static final class Builder extends XmlValidationContextBuilder<SoapFaultDetailValidationContext, Builder> {
+
+        /**
+         * Static entry method for fluent builder API.
+         * @return
+         */
+        public static Builder faultDetail() {
+            return new Builder();
+        }
+
+        @Override
+        public SoapFaultDetailValidationContext build() {
+            return new SoapFaultDetailValidationContext(this);
+        }
     }
 }

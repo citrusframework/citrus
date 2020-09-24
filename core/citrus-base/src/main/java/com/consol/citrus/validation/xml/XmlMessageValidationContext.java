@@ -66,7 +66,7 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
      * Constructor using fluent builder.
      * @param builder
      */
-    public XmlMessageValidationContext(AbstractBuilder<?, ?> builder) {
+    public XmlMessageValidationContext(XmlValidationContextBuilder<?, ?> builder) {
         this.ignoreExpressions = builder.ignoreExpressions;
         this.namespaces = builder.namespaces;
         this.controlNamespaces = builder.controlNamespaces;
@@ -79,7 +79,7 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
     /**
      * Fluent builder.
      */
-    public static final class Builder extends AbstractBuilder<XmlMessageValidationContext, Builder> {
+    public static final class Builder extends XmlValidationContextBuilder<XmlMessageValidationContext, Builder> {
 
         /**
          * Static entry method for fluent builder API.
@@ -98,8 +98,8 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
     /**
      * Base fluent builder for XML validation contexts.
      */
-    public static abstract class AbstractBuilder<T extends XmlMessageValidationContext, S extends AbstractBuilder<T, S>>
-            implements ValidationContext.Builder<T, AbstractBuilder<T, S>>, XmlNamespaceAware, SchemaValidationContext.Builder<AbstractBuilder<T, S>> {
+    public static abstract class XmlValidationContextBuilder<T extends XmlMessageValidationContext, S extends XmlValidationContextBuilder<T, S>>
+            implements ValidationContext.Builder<T, XmlValidationContextBuilder<T, S>>, XmlNamespaceAware, SchemaValidationContext.Builder<XmlValidationContextBuilder<T, S>> {
 
         protected final S self;
 
@@ -111,7 +111,7 @@ public class XmlMessageValidationContext extends DefaultValidationContext implem
         private String schemaRepository;
         private String schema;
 
-        protected AbstractBuilder() {
+        protected XmlValidationContextBuilder() {
             this.self = (S) this;
         }
 

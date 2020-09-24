@@ -5,11 +5,12 @@ import java.nio.charset.Charset;
 import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
+import com.consol.citrus.ws.validation.SoapFaultValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
@@ -21,7 +22,8 @@ public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertS
 
     private final AssertSoapFault.Builder delegate = new AssertSoapFault.Builder();
 
-    private final XmlMessageValidationContext.Builder xmlValidationContext = new XmlMessageValidationContext.Builder();
+    private SoapFaultDetailValidationContext.Builder detailValidationContext;
+    private SoapFaultValidationContext.Builder validationContext = new SoapFaultValidationContext.Builder();
 
     public AssertSoapFaultBuilder when(TestAction action) {
         return when(() -> action);
@@ -77,30 +79,29 @@ public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertS
     }
 
     public AssertSoapFaultBuilder validator(String validatorName, ApplicationContext applicationContext) {
-        delegate.validator(validatorName, applicationContext);
+        delegate.withReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
+        delegate.validator(validatorName);
         return this;
     }
 
     public AssertSoapFaultBuilder schemaValidation(boolean enabled) {
-        xmlValidationContext.schemaValidation(enabled);
-        delegate.validate(xmlValidationContext);
+        getDetailValidationContext().schemaValidation(enabled);
         return this;
     }
 
     public AssertSoapFaultBuilder xsd(String schemaName) {
-        xmlValidationContext.schema(schemaName);
-        delegate.validate(xmlValidationContext);
+        getDetailValidationContext().schema(schemaName);
         return this;
     }
 
     public AssertSoapFaultBuilder xsdSchemaRepository(String schemaRepository) {
-        xmlValidationContext.schemaRepository(schemaRepository);
-        delegate.validate(xmlValidationContext);
+        getDetailValidationContext().schemaRepository(schemaRepository);
         return this;
     }
 
-    public AssertSoapFaultBuilder validationContext(SoapFaultDetailValidationContext validationContext) {
-        delegate.validate(validationContext);
+    public AssertSoapFaultBuilder validationContext(SoapFaultValidationContext.Builder validationContext) {
+        this.validationContext = validationContext;
+        this.delegate.validate(this.validationContext);
         return this;
     }
 
@@ -109,8 +110,21 @@ public class AssertSoapFaultBuilder extends AbstractTestContainerBuilder<AssertS
         return this;
     }
 
+    private SoapFaultDetailValidationContext.Builder getDetailValidationContext() {
+        if (detailValidationContext == null) {
+            detailValidationContext = new SoapFaultDetailValidationContext.Builder();
+        }
+
+        return detailValidationContext;
+    }
+
     @Override
     public AssertSoapFault build() {
+        if (detailValidationContext != null) {
+            this.validationContext.detail(detailValidationContext.build());
+            this.detailValidationContext = null;
+        }
+
         return delegate.build();
     }
 }

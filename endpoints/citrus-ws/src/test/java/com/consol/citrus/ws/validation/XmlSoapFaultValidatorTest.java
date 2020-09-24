@@ -18,7 +18,6 @@ package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.message.SoapFault;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.testng.annotations.Test;
@@ -27,25 +26,25 @@ import org.testng.annotations.Test;
  * @author Christoph Deppisch
  */
 public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
-    
+
     @Autowired
     private XmlSoapFaultValidator soapFaultValidator;
-    
+
     private String error = "<ws:Error xmlns:ws=\"http://www.citrusframework.org/schema/ws/fault\" " +
     		"type=\"INTERNAL\">" +
     		    "<ws:code>1001</ws:code>" +
     		    "<ws:message>Something went wrong</ws:message>" +
     		"</ws:Error>";
-    
+
     private String detail = "<ws:ErrorDetails xmlns:ws=\"http://www.citrusframework.org/schema/ws/fault\">" +
                 "<ws:stacktrace>N/A</ws:stacktrace>" +
             "</ws:ErrorDetails>";
-    
+
     @Test
     public void testXmlDetailValidation() {
-        soapFaultValidator.validateFaultDetailString(detail, detail, context, new XmlMessageValidationContext());
+        soapFaultValidator.validateFaultDetailString(detail, detail, context, new SoapFaultDetailValidationContext());
     }
-    
+
     @Test
     public void testFaultDetailValidation() {
         SoapFault receivedDetail = new SoapFault();
@@ -53,7 +52,7 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         SoapFault controlDetail = new SoapFault();
         controlDetail.addFaultDetail(error);
 
-        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new SoapFaultValidationContext());
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Validation failed: Node value not equal for element 'code', expected '1001' but was '1002'")
@@ -63,9 +62,9 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         SoapFault controlDetail = new SoapFault();
         controlDetail.addFaultDetail(error);
 
-        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new SoapFaultValidationContext());
     }
-    
+
     @Test
     public void testMultipleFaultDetailValidation() {
         SoapFault receivedDetail = new SoapFault();
@@ -75,7 +74,7 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         controlDetail.addFaultDetail(error);
         controlDetail.addFaultDetail(detail);
 
-        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new SoapFaultValidationContext());
     }
 
     @Test(expectedExceptions = ValidationException.class, expectedExceptionsMessageRegExp = "Validation failed: Node value not equal for element 'code', expected '1002' but was '1001'")
@@ -87,6 +86,6 @@ public class XmlSoapFaultValidatorTest extends AbstractTestNGUnitTest {
         controlDetail.addFaultDetail(error.replaceFirst("1001", "1002"));
         controlDetail.addFaultDetail(detail);
 
-        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new XmlMessageValidationContext());
+        soapFaultValidator.validateFaultDetail(receivedDetail, controlDetail, context, new SoapFaultValidationContext());
     }
 }

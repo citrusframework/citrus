@@ -41,7 +41,7 @@ import org.springframework.context.ApplicationContextAware;
 public class XmlSoapAttachmentValidator extends SimpleSoapAttachmentValidator implements ApplicationContextAware {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XmlSoapFaultValidator.class);
+    private static Logger log = LoggerFactory.getLogger(XmlSoapAttachmentValidator.class);
 
     private TestContextFactory testContextFactory;
 

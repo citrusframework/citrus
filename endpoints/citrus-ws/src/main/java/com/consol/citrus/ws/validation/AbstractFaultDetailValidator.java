@@ -16,45 +16,38 @@
 
 package com.consol.citrus.ws.validation;
 
+import java.util.List;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.util.XMLUtils;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.message.SoapFault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Abstract implementation of {@link SoapFaultValidator} converting soap fault detail objects to simple String content for
  * further validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultValidator {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractFaultDetailValidator.class);
-    
+
     @Override
     protected void validateFaultDetail(SoapFault receivedDetail, SoapFault controlDetail,
-            TestContext context, final ValidationContext validationContext) {
+            TestContext context, final SoapFaultValidationContext validationContext) {
         if (controlDetail == null) { return; }
-        
+
         if (log.isDebugEnabled()) {
             log.debug("Validating SOAP fault detail content ...");
         }
 
         if (receivedDetail == null) {
             throw new ValidationException("Missing SOAP fault detail in received message");
-        }
-
-        List<ValidationContext> contexts = new ArrayList<ValidationContext>();
-        if (validationContext instanceof SoapFaultDetailValidationContext) {
-            contexts.addAll(((SoapFaultDetailValidationContext) validationContext).getValidationContexts());
         }
 
         List<String> receivedDetailElements = receivedDetail.getFaultDetails();
@@ -68,19 +61,27 @@ public abstract class AbstractFaultDetailValidator extends AbstractSoapFaultVali
             String receivedDetailString = receivedDetailElements.get(i);
             String controlDetailString = controlDetailElements.get(i);
 
-            validateFaultDetailString(XMLUtils.omitXmlDeclaration(receivedDetailString), XMLUtils.omitXmlDeclaration(controlDetailString), context,
-                    CollectionUtils.isEmpty(contexts) ? validationContext : contexts.get(i++));
+            SoapFaultDetailValidationContext detailValidationContext;
+            if (CollectionUtils.isEmpty(validationContext.getValidationContexts())) {
+                detailValidationContext = new SoapFaultDetailValidationContext.Builder().build();
+            } else {
+                detailValidationContext = validationContext.getValidationContexts().get(i++);
+            }
+
+            validateFaultDetailString(XMLUtils.omitXmlDeclaration(receivedDetailString),
+                                    XMLUtils.omitXmlDeclaration(controlDetailString),
+                                    context, detailValidationContext);
         }
     }
 
     /**
      * Actual validation logic in this method.
-     * 
+     *
      * @param receivedDetail received soap fault representation as string.
      * @param controlDetail control soap fault representation as string.
      * @param context
      * @param validationContext
      */
-    protected abstract void validateFaultDetailString(String receivedDetail, String controlDetail, 
-            TestContext context, ValidationContext validationContext) throws ValidationException;
+    protected abstract void validateFaultDetailString(String receivedDetail, String controlDetail,
+            TestContext context, SoapFaultDetailValidationContext validationContext) throws ValidationException;
 }

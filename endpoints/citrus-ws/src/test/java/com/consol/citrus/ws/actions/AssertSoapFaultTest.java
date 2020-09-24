@@ -23,6 +23,7 @@ import java.util.Locale;
 
 import com.consol.citrus.TestAction;
 import com.consol.citrus.actions.AbstractTestAction;
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
@@ -73,6 +74,36 @@ public class AssertSoapFaultTest extends UnitTestSupport {
 
         AssertSoapFault assertAction = new AssertSoapFault.Builder()
                 .validator(soapFaultValidator)
+                .when(action)
+                .faultActor("SERVER")
+                .faultCode("{http://citrusframework.org}ws:TEC-1001")
+                .faultString("Internal server error")
+                .build();
+        assertAction.execute(context);
+    }
+
+    @Test
+    public void testAssertSoapFaultWithValidatorName() throws Exception {
+        TestAction action = new AbstractTestAction() {
+            @Override
+            public void doExecute(TestContext context) {
+                SoapMessage faultMessage;
+
+                faultMessage = messageFactory.createWebServiceMessage();
+
+                Soap11Fault fault = ((Soap11Body)faultMessage.getSoapBody()).addFault(QNameUtils.parseQNameString("{http://citrusframework.org}ws:TEC-1001"),
+                        "Internal server error",
+                        Locale.GERMANY);
+
+                fault.setFaultActorOrRole("SERVER");
+
+                throw new SoapFaultClientException(faultMessage);
+            }
+        };
+
+        AssertSoapFault assertAction = new AssertSoapFault.Builder()
+                .validator("soapFaultValidator")
+                .withReferenceResolver(new SpringBeanReferenceResolver(applicationContext))
                 .when(action)
                 .faultActor("SERVER")
                 .faultCode("{http://citrusframework.org}ws:TEC-1001")

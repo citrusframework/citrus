@@ -25,9 +25,9 @@ import com.consol.citrus.config.util.BeanDefinitionParserUtils;
 import com.consol.citrus.config.xml.AbstractTestActionFactoryBean;
 import com.consol.citrus.config.xml.DescriptionElementParser;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
+import com.consol.citrus.ws.validation.SoapFaultValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.apache.xerces.util.DOMUtil;
 import org.springframework.beans.factory.BeanCreationException;
@@ -59,7 +59,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
         BeanDefinitionParserUtils.setPropertyValue(beanDefinition, element.getAttribute("fault-actor"), "faultActor");
 
         List<Element> faultDetails = DomUtils.getChildElementsByTagName(element, "fault-detail");
-        SoapFaultDetailValidationContext validationContext = new SoapFaultDetailValidationContext();
+        SoapFaultValidationContext.Builder validationContext = new SoapFaultValidationContext.Builder();
         List<String> soapFaultDetails = new ArrayList<>();
         List<String> soapFaultDetailPaths = new ArrayList<>();
         for (Element faultDetailElement : faultDetails) {
@@ -81,7 +81,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
                 }
             }
 
-            XmlMessageValidationContext.Builder context = new XmlMessageValidationContext.Builder();
+            SoapFaultDetailValidationContext.Builder context = new SoapFaultDetailValidationContext.Builder();
             String schemaValidation = faultDetailElement.getAttribute("schema-validation");
             if (StringUtils.hasText(schemaValidation)) {
                 context.schemaValidation(Boolean.parseBoolean(schemaValidation));
@@ -96,7 +96,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
             if (StringUtils.hasText(schemaRepository)) {
                 context.schemaRepository(schemaRepository);
             }
-            validationContext.addValidationContext(context.build());
+            validationContext.detail(context.build());
         }
 
         if (!soapFaultDetails.isEmpty() || !soapFaultDetailPaths.isEmpty()) {
@@ -190,7 +190,7 @@ public class AssertSoapFaultParser implements BeanDefinitionParser {
          * Sets the validationContext.
          * @param validationContext the validationContext to set
          */
-        public void setValidationContext(SoapFaultDetailValidationContext validationContext) {
+        public void setValidationContext(SoapFaultValidationContext.Builder validationContext) {
             builder.validate(validationContext);
         }
 

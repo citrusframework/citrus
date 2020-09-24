@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.consol.citrus.dsl.runner;
+package com.consol.citrus.ws.actions.dsl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -22,14 +22,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 
+import com.consol.citrus.DefaultTestCaseRunner;
 import com.consol.citrus.TestCase;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.container.SequenceAfterTest;
 import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.UnitTestSupport;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.ws.UnitTestSupport;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
@@ -46,12 +47,13 @@ import org.springframework.ws.soap.server.endpoint.SoapFaultDefinition;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static com.consol.citrus.ws.actions.AssertSoapFault.Builder.assertSoapFault;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
+public class AssertSoapFaultBuilderTest extends UnitTestSupport {
 
     public static final String INTERNAL_SERVER_ERROR = "Internal server error";
     public static final String SOAP_FAULT_VALIDATOR = "soapFaultValidator";
@@ -60,7 +62,7 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
     private SoapFaultValidator soapFaultValidator = Mockito.mock(SoapFaultValidator.class);
     private ReferenceResolver referenceResolver = Mockito.mock(ReferenceResolver.class);
 
-    private SoapMessage soapMessage = Mockito.mock(org.springframework.ws.soap.SoapMessage.class);
+    private SoapMessage soapMessage = Mockito.mock(SoapMessage.class);
     private SoapBody soapBody = Mockito.mock(SoapBody.class);
     private SoapFault soapFault = Mockito.mock(SoapFault.class);
     private SoapFaultDetail soapFaultDetail = Mockito.mock(SoapFaultDetail.class);
@@ -79,28 +81,24 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
-                                .faultString(INTERNAL_SERVER_ERROR)
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                            .faultString(INTERNAL_SERVER_ERROR)
                         .when(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -112,6 +110,100 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
         Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
 
+    }
+
+    @Test
+    public void testAssertSoapFaultExplicitValidatorBuilder() {
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+
+        when(soapMessage.getSoapBody()).thenReturn(soapBody);
+        when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
+        when(soapBody.getFault()).thenReturn(soapFault);
+
+        when(soapFault.getFaultActorOrRole()).thenReturn(SoapFaultDefinition.SERVER.getLocalPart());
+        when(soapFault.getFaultCode()).thenReturn(SoapFaultDefinition.SERVER);
+        when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
+        when(soapFault.getFaultDetail()).thenReturn(null);
+
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                .faultString(INTERNAL_SERVER_ERROR)
+                .validator(soapFaultValidator)
+                .when(new AbstractTestAction() {
+                    @Override
+                    public void doExecute(TestContext context) {
+                        throw new SoapFaultClientException(soapMessage);
+                    }
+                }));
+
+        TestCase test = runner.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
+
+        Assert.assertEquals(container.getActionCount(), 1);
+        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+
+        verify(soapFaultValidator).validateSoapFault(any(com.consol.citrus.ws.message.SoapFault.class), any(com.consol.citrus.ws.message.SoapFault.class),
+                any(TestContext.class), any(SoapFaultValidationContext.class));
+    }
+
+    @Test
+    public void testAssertSoapFaultWithValidatorNameBuilder() {
+        reset(referenceResolver, soapMessage, soapFaultValidator, soapBody, soapFault, soapFaultDetail, soapFaultDetailElement);
+
+        when(soapMessage.getSoapBody()).thenReturn(soapBody);
+        when(soapMessage.getFaultReason()).thenReturn(INTERNAL_SERVER_ERROR);
+        when(soapBody.getFault()).thenReturn(soapFault);
+
+        when(soapFault.getFaultActorOrRole()).thenReturn(SoapFaultDefinition.SERVER.getLocalPart());
+        when(soapFault.getFaultCode()).thenReturn(SoapFaultDefinition.SERVER);
+        when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
+        when(soapFault.getFaultDetail()).thenReturn(null);
+
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
+        when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(true);
+        when(referenceResolver.resolve(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
+        when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
+        when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
+        when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
+
+        context.setReferenceResolver(referenceResolver);
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+                                .faultString(INTERNAL_SERVER_ERROR)
+                                .validator(SOAP_FAULT_VALIDATOR)
+                        .when(new AbstractTestAction() {
+                            @Override
+                            public void doExecute(TestContext context) {
+                                throw new SoapFaultClientException(soapMessage);
+                            }
+                        }));
+
+        TestCase test = runner.getTestCase();
+        Assert.assertEquals(test.getActionCount(), 1);
+        Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
+        Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
+
+        AssertSoapFault container = (AssertSoapFault)(test.getTestAction(0));
+
+        Assert.assertEquals(container.getActionCount(), 1);
+        Assert.assertTrue(container.getAction().getClass().isAnonymousClass());
+        Assert.assertEquals(container.getFaultCode(), SoapFaultDefinition.SERVER.getLocalPart());
+        Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
+
+        verify(soapFaultValidator).validateSoapFault(any(com.consol.citrus.ws.message.SoapFault.class), any(com.consol.citrus.ws.message.SoapFault.class),
+                any(TestContext.class), any(SoapFaultValidationContext.class));
     }
 
     @Test
@@ -127,7 +219,7 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(true);
         when(referenceResolver.resolve(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
@@ -135,21 +227,17 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                         .when(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -181,17 +269,15 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFaultDetail.getDetailEntries()).thenReturn(Collections.singleton(soapFaultDetailElement).iterator());
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><message>Something went wrong</message></ErrorDetail>"));
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><message>Something went wrong</message></ErrorDetail>")
                         .when(new AbstractTestAction() {
@@ -199,11 +285,9 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -236,17 +320,15 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><code>1001</code></ErrorDetail>"))
                                                 .thenReturn(new StringSource("<MessageDetail><message>Something went wrong</message></MessageDetail>"));
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetail("<MessageDetail><message>Something went wrong</message></MessageDetail>")
@@ -255,11 +337,9 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -293,17 +373,15 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFaultDetail.getDetailEntries()).thenReturn(Collections.singleton(soapFaultDetailElement).iterator());
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><message>Something went wrong</message></ErrorDetail>"));
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetailResource(resource)
                         .when(new AbstractTestAction() {
@@ -311,11 +389,9 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -347,29 +423,25 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFaultDetail.getDetailEntries()).thenReturn(Collections.singleton(soapFaultDetailElement).iterator());
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><message>Something went wrong</message></ErrorDetail>"));
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
-                                .faultDetailResource("classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml")
+                                .faultDetailResource("classpath:com/consol/citrus/ws/actions/dsl/soap-fault-detail.xml")
                         .when(new AbstractTestAction() {
                             @Override
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -382,7 +454,7 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(container.getFaultString(), INTERNAL_SERVER_ERROR);
         Assert.assertEquals(container.getFaultDetails().size(), 0L);
         Assert.assertEquals(container.getFaultDetailResourcePaths().size(), 1L);
-        Assert.assertEquals(container.getFaultDetailResourcePaths().get(0), "classpath:com/consol/citrus/dsl/runner/soap-fault-detail.xml");
+        Assert.assertEquals(container.getFaultDetailResourcePaths().get(0), "classpath:com/consol/citrus/ws/actions/dsl/soap-fault-detail.xml");
 
     }
 
@@ -404,17 +476,15 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFaultDetailElement.getSource()).thenReturn(new StringSource("<ErrorDetail><code>1001</code></ErrorDetail>"))
                                                 .thenReturn(new StringSource("<MessageDetail><message>Something went wrong</message></MessageDetail>"));
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultDetail("<ErrorDetail><code>1001</code></ErrorDetail>")
                                 .faultDetailResource(resource)
@@ -423,11 +493,9 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -457,7 +525,7 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(true);
         when(referenceResolver.resolve(SOAP_FAULT_VALIDATOR, SoapFaultValidator.class)).thenReturn(soapFaultValidator);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
@@ -465,10 +533,8 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .validator(soapFaultValidator)
                         .when(new AbstractTestAction() {
@@ -476,11 +542,9 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");
@@ -510,17 +574,15 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
         when(soapFault.getFaultStringOrReason()).thenReturn(INTERNAL_SERVER_ERROR);
         when(soapFault.getFaultDetail()).thenReturn(null);
 
-        when(referenceResolver.resolve(TestContext.class)).thenReturn(applicationContext.getBean(TestContext.class));
+        when(referenceResolver.resolve(TestContext.class)).thenReturn(context);
         when(referenceResolver.isResolvable(SOAP_FAULT_VALIDATOR)).thenReturn(false);
         when(referenceResolver.resolve(TestActionListeners.class)).thenReturn(new TestActionListeners());
         when(referenceResolver.resolveAll(SequenceBeforeTest.class)).thenReturn(new HashMap<>());
         when(referenceResolver.resolveAll(SequenceAfterTest.class)).thenReturn(new HashMap<>());
 
         context.setReferenceResolver(referenceResolver);
-        MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
-            @Override
-            public void execute() {
-                assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
+        DefaultTestCaseRunner runner = new DefaultTestCaseRunner(context);
+        runner.run(assertSoapFault().faultCode(SoapFaultDefinition.SERVER.getLocalPart())
                                 .faultString(INTERNAL_SERVER_ERROR)
                                 .faultActor("MyActor")
                         .when(new AbstractTestAction() {
@@ -528,11 +590,9 @@ public class AssertSoapFaultTestRunnerTest extends UnitTestSupport {
                             public void doExecute(TestContext context) {
                                 throw new SoapFaultClientException(soapMessage);
                             }
-                        });
-            }
-        };
+                        }));
 
-        TestCase test = builder.getTestCase();
+        TestCase test = runner.getTestCase();
         Assert.assertEquals(test.getActionCount(), 1);
         Assert.assertEquals(test.getActions().get(0).getClass(), AssertSoapFault.class);
         Assert.assertEquals(test.getActions().get(0).getName(), "soap-fault");

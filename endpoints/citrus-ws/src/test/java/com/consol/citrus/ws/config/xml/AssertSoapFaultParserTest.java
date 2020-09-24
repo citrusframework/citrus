@@ -17,8 +17,6 @@
 package com.consol.citrus.ws.config.xml;
 
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.actions.AssertSoapFault;
 import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
 import org.testng.Assert;
@@ -61,7 +59,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "FaultDetail");
-        Assert.assertEquals(((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().size(), 1L);
+        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
         // 4th action
         action = getNextTestActionFromTest();
@@ -72,7 +70,7 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultDetails().size(), 0L);
         Assert.assertEquals(action.getFaultDetailResourcePaths().size(), 1L);
         Assert.assertEquals(action.getFaultDetailResourcePaths().get(0), "classpath:com/consol/citrus/ws/actions/test-fault-detail.xml");
-        Assert.assertEquals(((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().size(), 1L);
+        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
         // 5th action
         action = getNextTestActionFromTest();
@@ -84,13 +82,12 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "FaultDetail");
 
-        Assert.assertEquals(((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().size(), 1L);
+        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
-        ValidationContext xmlValidationContext = ((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().get(0);
-        Assert.assertTrue(xmlValidationContext instanceof XmlMessageValidationContext);
-        Assert.assertTrue(((XmlMessageValidationContext)xmlValidationContext).isSchemaValidationEnabled());
-        Assert.assertEquals(((XmlMessageValidationContext)xmlValidationContext).getSchemaRepository(), "fooSchemaRepository");
-        Assert.assertNull(((XmlMessageValidationContext)xmlValidationContext).getSchema());
+        SoapFaultDetailValidationContext detailValidationContext = action.getValidationContext().getValidationContexts().get(0);
+        Assert.assertTrue(detailValidationContext.isSchemaValidationEnabled());
+        Assert.assertEquals(detailValidationContext.getSchemaRepository(), "fooSchemaRepository");
+        Assert.assertNull(detailValidationContext.getSchema());
 
         // 6th action
         action = getNextTestActionFromTest();
@@ -101,13 +98,12 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "FaultDetail");
-        Assert.assertEquals(((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().size(), 1L);
+        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
-        xmlValidationContext = ((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().get(0);
-        Assert.assertTrue(xmlValidationContext instanceof XmlMessageValidationContext);
-        Assert.assertTrue(((XmlMessageValidationContext)xmlValidationContext).isSchemaValidationEnabled());
-        Assert.assertNull(((XmlMessageValidationContext)xmlValidationContext).getSchemaRepository());
-        Assert.assertEquals(((XmlMessageValidationContext)xmlValidationContext).getSchema(), "fooSchema");
+        detailValidationContext = action.getValidationContext().getValidationContexts().get(0);
+        Assert.assertTrue(detailValidationContext.isSchemaValidationEnabled());
+        Assert.assertNull(detailValidationContext.getSchemaRepository());
+        Assert.assertEquals(detailValidationContext.getSchema(), "fooSchema");
 
         // 7th action
         action = getNextTestActionFromTest();
@@ -118,12 +114,11 @@ public class AssertSoapFaultParserTest extends AbstractActionParserTest<AssertSo
         Assert.assertEquals(action.getFaultActor(), "FaultActor");
         Assert.assertEquals(action.getFaultDetails().size(), 1L);
         Assert.assertEquals(action.getFaultDetails().get(0), "FaultDetail");
-        Assert.assertEquals(((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().size(), 1L);
+        Assert.assertEquals(action.getValidationContext().getValidationContexts().size(), 1L);
 
-        xmlValidationContext = ((SoapFaultDetailValidationContext)action.getValidationContext()).getValidationContexts().get(0);
-        Assert.assertTrue(xmlValidationContext instanceof XmlMessageValidationContext);
-        Assert.assertFalse(((XmlMessageValidationContext)xmlValidationContext).isSchemaValidationEnabled());
-        Assert.assertNull(((XmlMessageValidationContext)xmlValidationContext).getSchemaRepository());
-        Assert.assertNull(((XmlMessageValidationContext)xmlValidationContext).getSchema());
+        detailValidationContext = action.getValidationContext().getValidationContexts().get(0);
+        Assert.assertFalse(detailValidationContext.isSchemaValidationEnabled());
+        Assert.assertNull(detailValidationContext.getSchemaRepository());
+        Assert.assertNull(detailValidationContext.getSchema());
     }
 }

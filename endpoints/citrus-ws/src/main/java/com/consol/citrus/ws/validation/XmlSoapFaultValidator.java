@@ -25,7 +25,6 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,17 +49,9 @@ public class XmlSoapFaultValidator extends AbstractFaultDetailValidator {
      */
     @Override
     protected void validateFaultDetailString(String receivedDetailString, String controlDetailString,
-            TestContext context, ValidationContext validationContext) throws ValidationException {
-        XmlMessageValidationContext xmlMessageValidationContext;
-
-        if (validationContext instanceof XmlMessageValidationContext) {
-            xmlMessageValidationContext = (XmlMessageValidationContext) validationContext;
-        } else {
-            xmlMessageValidationContext = new XmlMessageValidationContext();
-        }
-
+            TestContext context, SoapFaultDetailValidationContext validationContext) throws ValidationException {
         getMessageValidator(context).validateMessage(new DefaultMessage(receivedDetailString), new DefaultMessage(controlDetailString),
-                context, Collections.singletonList(xmlMessageValidationContext));
+                context, Collections.singletonList(validationContext));
     }
 
     /**

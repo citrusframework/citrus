@@ -26,20 +26,18 @@ import com.consol.citrus.AbstractTestContainerBuilder;
 import com.consol.citrus.TestAction;
 import com.consol.citrus.TestActionBuilder;
 import com.consol.citrus.container.AbstractActionContainer;
-import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.context.ValidationContext;
-import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.ws.message.SoapFault;
 import com.consol.citrus.ws.validation.SimpleSoapFaultValidator;
-import com.consol.citrus.ws.validation.SoapFaultDetailValidationContext;
+import com.consol.citrus.ws.validation.SoapFaultValidationContext;
 import com.consol.citrus.ws.validation.SoapFaultValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 import org.springframework.ws.soap.client.SoapFaultClientException;
@@ -47,7 +45,7 @@ import org.springframework.ws.soap.client.SoapFaultClientException;
 /**
  * Asserting SOAP fault exception in embedded test action.
  *
- * Class constructs a control soap fault detail with given expeceted information (faultCode, faultString and faultDetail)
+ * Class constructs a control soap fault detail with given expected information (faultCode, faultString and faultDetail)
  * and delegates validation to {@link SoapFaultValidator} instance.
  *
  * @author Christoph Deppisch
@@ -76,7 +74,7 @@ public class AssertSoapFault extends AbstractActionContainer {
     private final SoapFaultValidator validator;
 
     /** Validation context */
-    private final ValidationContext validationContext;
+    private final SoapFaultValidationContext validationContext;
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AssertSoapFault.class);
@@ -95,7 +93,7 @@ public class AssertSoapFault extends AbstractActionContainer {
         this.faultDetailResourcePaths = builder.faultDetailResourcePaths;
         this.validator = builder.validator;
 
-        this.validationContext = builder.validationContext;
+        this.validationContext = builder.validationContext.build();
     }
 
     @Override
@@ -225,14 +223,14 @@ public class AssertSoapFault extends AbstractActionContainer {
      * Gets the validationContext.
      * @return the validationContext the validationContext to get.
      */
-    public ValidationContext getValidationContext() {
+    public SoapFaultValidationContext getValidationContext() {
         return validationContext;
     }
 
     /**
      * Action builder.
      */
-    public static class Builder extends AbstractTestContainerBuilder<AssertSoapFault, Builder> {
+    public static class Builder extends AbstractTestContainerBuilder<AssertSoapFault, Builder> implements ReferenceResolverAware {
 
         private TestActionBuilder<?> action;
         private String faultString;
@@ -240,9 +238,11 @@ public class AssertSoapFault extends AbstractActionContainer {
         private String faultActor;
         private List<String> faultDetails = new ArrayList<>();
         private List<String> faultDetailResourcePaths = new ArrayList<>();
-        private SoapFaultValidator validator = new SimpleSoapFaultValidator();
-        private XmlMessageValidationContext.Builder xmlValidationContext = new XmlMessageValidationContext.Builder();
-        private SoapFaultDetailValidationContext validationContext;
+        private String validatorName;
+        private SoapFaultValidator validator;
+        private SoapFaultValidationContext.Builder validationContext;
+
+        private ReferenceResolver referenceResolver;
 
         /**
          * Fluent API action building entry method used in Java DSL.
@@ -362,20 +362,10 @@ public class AssertSoapFault extends AbstractActionContainer {
         /**
          * Set explicit SOAP fault validator implementation by bean name.
          * @param validatorName
-         * @param applicationContext
          * @return
          */
-        public Builder validator(String validatorName, ApplicationContext applicationContext) {
-            this.validator = applicationContext.getBean(validatorName, SoapFaultValidator.class);
-            return this;
-        }
-
-        /**
-         * Specifies the XML validationContext.
-         * @param validationContext
-         */
-        public Builder validate(XmlMessageValidationContext.Builder validationContext) {
-            this.xmlValidationContext = validationContext;
+        public Builder validator(String validatorName) {
+            this.validatorName = validatorName;
             return this;
         }
 
@@ -383,7 +373,7 @@ public class AssertSoapFault extends AbstractActionContainer {
          * Specifies the validationContext.
          * @param validationContext
          */
-        public Builder validate(SoapFaultDetailValidationContext validationContext) {
+        public Builder validate(SoapFaultValidationContext.Builder validationContext) {
             this.validationContext = validationContext;
             return this;
         }
@@ -393,19 +383,35 @@ public class AssertSoapFault extends AbstractActionContainer {
          * @param referenceResolver
          */
         public Builder withReferenceResolver(ReferenceResolver referenceResolver) {
-            if (referenceResolver.isResolvable("soapFaultValidator")) {
-                validator(referenceResolver.resolve("soapFaultValidator", SoapFaultValidator.class));
-            }
-
+            this.referenceResolver = referenceResolver;
             return this;
+        }
+
+        @Override
+        public void setReferenceResolver(ReferenceResolver referenceResolver) {
+            this.referenceResolver = referenceResolver;
         }
 
         @Override
         public AssertSoapFault build() {
             if (validationContext == null) {
-                this.validationContext = new SoapFaultDetailValidationContext()
-                        .addValidationContext(xmlValidationContext.build());
+                this.validationContext = new SoapFaultValidationContext.Builder();
             }
+
+            if (referenceResolver != null) {
+                if (StringUtils.hasText(validatorName)) {
+                    validator(referenceResolver.resolve(validatorName, SoapFaultValidator.class));
+                }
+
+                if (validator == null) {
+                    if (referenceResolver.isResolvable("soapFaultValidator")) {
+                        validator(referenceResolver.resolve("soapFaultValidator", SoapFaultValidator.class));
+                    } else {
+                        validator = new SimpleSoapFaultValidator();
+                    }
+                }
+            }
+
             return new AssertSoapFault(this);
         }
     }

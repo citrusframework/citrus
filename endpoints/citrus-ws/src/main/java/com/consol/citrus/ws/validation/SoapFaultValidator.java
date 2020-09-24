@@ -18,26 +18,25 @@ package com.consol.citrus.ws.validation;
 
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.ws.message.SoapFault;
 
 /**
  * Interface for soap fault validation.
- * 
+ *
  * @author Christoph Deppisch
  */
 public interface SoapFaultValidator {
 
     /**
      * Validate soap fault with given control fault.
-     * 
+     *
      * @param receivedFault the received fault instance.
      * @param controlFault the control fault with expected fault information.
      * @param context
      * @param validationContext
      */
     void validateSoapFault(SoapFault receivedFault,
-                           SoapFault controlFault, 
+                           SoapFault controlFault,
                            TestContext context,
-                           ValidationContext validationContext) throws ValidationException;
+                           SoapFaultValidationContext validationContext) throws ValidationException;
 }

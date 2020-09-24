@@ -19,7 +19,6 @@ package com.consol.citrus.ws.validation;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
-import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.matcher.ValidationMatcherUtils;
 import com.consol.citrus.ws.message.SoapFault;
 import org.slf4j.Logger;
@@ -43,7 +42,7 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
 
     @Override
     public void validateSoapFault(SoapFault receivedFault, SoapFault controlFault,
-            TestContext context, ValidationContext validationContext) throws ValidationException {
+            TestContext context, SoapFaultValidationContext validationContext) throws ValidationException {
         //fault string validation
         if (controlFault.getFaultString() != null &&
                 !controlFault.getFaultString().equals(receivedFault.getFaultString())) {
@@ -90,5 +89,5 @@ public abstract class AbstractSoapFaultValidator implements SoapFaultValidator {
      * @param validationContext
      */
     protected abstract void validateFaultDetail(SoapFault receivedDetail, SoapFault controlDetail,
-            TestContext context, ValidationContext validationContext);
+            TestContext context, SoapFaultValidationContext validationContext);
 }
