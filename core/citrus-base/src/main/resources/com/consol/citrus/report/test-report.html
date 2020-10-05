@@ -1,32 +1,32 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
         <title>Citrus Test Report</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <style type="text/css">
             body { font-family: Verdana,Helvetica,Arial,sans-serif; font-size: 12px; text-align: left; margin-left: auto;
             margin-right: auto; padding: 1% 1%; }
-            
+
             table th { background-color: #EEEEEE; color: #555555; font-weight: bold; text-align: left; padding: 2px 4px; }
             table td { background-color: #EEEEEE; width: 80px; padding: 2px 4px; }
-            
+
             img#citrus-logo { width: 450px; }
             div#report-content { margin-top: 5px; margin-left: 30px; width: 100%; }
-            
+
             table#report-summary { margin-top: 20px; width: 600px; margin-left: 10px; }
             table#report-summary th.title { background-color: #CCCCCC; font-size: 14px; font-weight: bold; }
             table#report-summary tr.even th { background-color: #DDDDDD; }
             table#report-summary tr.odd th { background-color: #EAEAEA; }
             table#report-summary tr.even td { background-color: #DDDDDD; }
             table#report-summary tr.odd td { background-color: #EAEAEA; }
-            
+
             table#test-results { margin-left: 10px; margin-bottom: 20px; width: 940px; }
             table#test-results tr th { padding: 2px 0 2px 10px; cursor: pointer; }
-            
+
             span.tooltip { color: #555555; display: none; width: 350px; position: absolute;
             background-color: #EAEAEA; border: 1px solid #333333; font-size: 11px; font-weight: normal; padding: 3px; }
             span.tooltip i { display: block; text-decoration: underline; }
-            
+
             table#test-results tr.success th { color: #009900; }
             table#test-results tr.success td { color: #009900; }
             table#test-results tr.skip th { color: #999999; text-decoration: line-through; }
@@ -40,30 +40,30 @@
             pre.code-failed { color: #AA0000; margin: 0px; background-color: #EAEAEA; }
             span.line-number { background-color: #DDDDDD; border-right: 1px solid #BBBBBB; color: #555555; display: block; float: left; width: 30px; }
         </style>
-        <script type="text/javascript">            
+        <script type="text/javascript">
             var tooltipElement;
             var delayer;
             var delayTimeInMs = 800;
             var cursorX;
             var cursorY;
-            
+
             function showTooltip(elementId, event) {
                 tooltipElement = document.getElementById(elementId);
                 cursorX = event.pageX ? event.pageX : window.event.clientX + document.documentElement.scrollLeft;
                 cursorY = event.pageY ? event.pageY : window.event.clientY + document.documentElement.scrollTop;
                 delayer = setTimeout('showTooltipDelayed();', delayTimeInMs);
             }
-            
+
             function showTooltipDelayed() {
                 tooltipElement.style.display = "block";
                 setTooltipPosition();
             }
-            
+
             function hideTooltip() {
                 clearTimeout(delayer);
                 tooltipElement.style.display = "none";
             }
-            
+
             function setTooltipPosition() {
                 if (tooltipElement != null && tooltipElement.style.display == "block") {
                     var cursorPosLeft = cursorX + tooltipElement.offsetParent.scrollLeft - tooltipElement.offsetParent.offsetLeft;
@@ -112,10 +112,10 @@
                     </tr>
                 </tbody>
             </table>
-            
+
             <h1>Tests results (@test.cnt@ Tests)</h1>
-            <table id="test-results"> 
-                <tbody> 
+            <table id="test-results">
+                <tbody>
                     @test.results@
                 </tbody>
             </table>

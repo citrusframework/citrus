@@ -63,7 +63,7 @@ public class StaticResponseEndpointAdapterTest extends UnitTestSupport {
         Message response = endpointAdapter.handleMessage(
                 new DefaultMessage("<TestMessage>Hello World!</TestMessage>"));
 
-        Assert.assertEquals(response.getPayload(), "<TestMessage>Hello User!</TestMessage>");
+        Assert.assertEquals(response.getPayload(String.class).trim(), "<TestMessage>Hello User!</TestMessage>");
         Assert.assertNotNull(response.getHeader("Operation"));
         Assert.assertEquals(response.getHeader("Operation"), "UnitTest");
     }

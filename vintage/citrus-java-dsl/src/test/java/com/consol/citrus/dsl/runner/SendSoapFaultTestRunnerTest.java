@@ -247,7 +247,7 @@ public class SendSoapFaultTestRunnerTest extends UnitTestSupport {
             Assert.assertEquals(message.getFaultCode(), FAULT_CODE);
             Assert.assertEquals(message.getFaultString(), FAULT_STRING);
             Assert.assertEquals(message.getFaultDetails().size(), 1L);
-            Assert.assertEquals(message.getFaultDetails().get(0), ERROR_DETAIL);
+            Assert.assertEquals(message.getFaultDetails().get(0).trim(), ERROR_DETAIL);
             return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {

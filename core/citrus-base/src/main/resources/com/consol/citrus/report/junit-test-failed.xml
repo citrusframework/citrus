@@ -1,5 +1,4 @@
-
-    <testcase name="@test.name@" classname="@test.class@" time="@test.duration@">
+<testcase name="@test.name@" classname="@test.class@" time="@test.duration@">
       <failure type="@test.error.cause@" message="@test.error.msg@">
         <![CDATA[
         @test.error.stackTrace@

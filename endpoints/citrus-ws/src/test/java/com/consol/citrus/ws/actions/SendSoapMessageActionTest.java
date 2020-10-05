@@ -450,7 +450,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
-                Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(constructedAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
@@ -524,7 +524,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 SoapAttachment constructedAttachment = ((SoapMessage)invocation.getArguments()[0]).getAttachments().get(0);
                 Assert.assertNull(constructedAttachment.getContentId());
                 Assert.assertEquals(constructedAttachment.getContentType(), "text/plain");
-                Assert.assertEquals(constructedAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(constructedAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(constructedAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
@@ -624,7 +624,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 Message constructedMessage = (Message)invocation.getArguments()[0];
 
                 Assert.assertEquals(constructedMessage.getHeaderData().size(), 1L);
-                Assert.assertEquals(constructedMessage.getHeaderData().get(0),
+                Assert.assertEquals(constructedMessage.getHeaderData().get(0).trim(),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 return null;
             }
@@ -692,7 +692,7 @@ public class SendSoapMessageActionTest extends AbstractTestNGUnitTest {
                 Message constructedMessage = (Message)invocation.getArguments()[0];
 
                 Assert.assertEquals(constructedMessage.getHeaderData().size(), 1L);
-                Assert.assertEquals(constructedMessage.getHeaderData().get(0),
+                Assert.assertEquals(constructedMessage.getHeaderData().get(0).trim(),
                         "<TestHeader><operation>soapOperation</operation></TestHeader>");
                 return null;
             }
