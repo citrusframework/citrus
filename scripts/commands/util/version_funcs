@@ -1,0 +1,184 @@
+#!/bin/bash
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# Get release version from arguments or exit with error
+get_release_version() {
+    local working_dir="$1"
+
+    if [ $(hasflag --snapshot-release) ]; then
+        if [ $(hasflag --snapshot-version) ]; then
+            echo $(get_snapshot_version "$working_dir")
+        else
+            echo $(calc_timestamp_version "$working_dir")
+        fi
+        return
+    fi
+
+    local release_version=$(readopt --release-version)
+    if [ -z "${release_version}" ]; then
+        echo "ERROR: Please specify --release-version"
+        exit 1
+    fi
+    echo $release_version
+}
+
+# Get current snapshot version from arguments or from Maven POM
+get_snapshot_version() {
+    local working_dir="$1"
+
+    local snapshot_version=$(readopt --snapshot-version | tr '[:lower:]' '[:upper:]')
+    if [ -z "${snapshot_version}" ]; then
+        # Get version from Maven POM
+        # ./mvnw -N help:evaluate -Dexpression="project.version"
+        local pom_version=$(cd "$working_dir" && ./mvnw -N help:evaluate -Dexpression="project.version" | grep  '^[0-9]')
+        if [ -z "${pom_version}" ]; then
+            echo "ERROR: Cannot extract version from pom.xml"
+            exit 1
+        fi
+
+        snapshot_version="$pom_version"
+    fi
+    echo $snapshot_version
+}
+
+# Get next snapshot version from arguments or auto increase given snapshot version
+get_next_snapshot_version() {
+    local working_dir="$1"
+
+    local next_version=$(readopt --next-version)
+    if [ -z "${next_version}" ]; then
+      local snapshot_version=$(get_snapshot_version "$working_dir")
+      check_error $snapshot_version
+
+      local version_num=$(echo $snapshot_version | sed -E "s/([0-9.]*)-SNAPSHOT/\1/g")
+      local next_version_num=$(echo $version_num | awk 'BEGIN { FS = "." } ; {print $1"."++$2".0"}')
+      next_version="$next_version_num-SNAPSHOT"
+    fi
+    echo $next_version
+}
+
+# Set version in sources
+set_version() {
+  local working_dir="$1"
+  local version="$2"
+  local snapshot_version="$3"
+
+  if [[ "$version" == "$snapshot_version" ]]; then
+      echo "Using version: $version"
+      return
+  fi
+
+  local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/")
+  local include=(".java" ".xml" ".properties" ".xsd" "spring.schemas" ".adoc")
+
+  # Update all sources
+  for f in $(find ${working_dir} -type f);
+  do
+    check=false
+    for b in ${include[*]}; do
+      # check file includes
+      if [[ "$f" == *"$b" ]]; then
+        check=true
+        break
+      fi
+    done
+
+    if [ "$check" = true ]; then
+        # double check for explicit directory excludes
+        for b in ${exclude[*]}; do
+          if [[ "$f" == *"$b"* ]]; then
+            #echo "exclude $f"
+            check=false
+            break
+          fi
+        done
+    fi
+
+    if [ "$check" = true ]; then
+      #echo "update $f"
+      if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        sed -i "s/$snapshot_version/$version/g" $f
+      elif [[ "$OSTYPE" == "darwin"* ]]; then
+        # Mac OSX
+        sed -i '' "s/$snapshot_version/$version/g" $f
+      fi
+    fi
+  done
+
+  unsnapshot_sources "$working_dir" "$version" "$snapshot_version"
+
+  echo "Version set to: $version"
+}
+
+calc_timestamp_version() {
+    local working_dir="$1"
+    cd $working_dir
+    # ./mvnw -N help:evaluate -Dexpression="project.version"
+    local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep  '^[0-9]')
+    if [ -z "${pom_version}" ]; then
+        echo "ERROR: Cannot extract version from pom.xml"
+        exit 1
+    fi
+    local version_num=$(echo pom_version | sed -E "s/([0-9.]*)-SNAPSHOT/\1/g")
+    echo "${version_num}-$(date '+%Y%m%d%H%M')"
+}
+
+unsnapshot_sources() {
+    local working_dir="$1"
+    local version="$2"
+    local snapshot_version="$3"
+
+    if [[ "$version" == "$snapshot_version" ]]; then
+        return
+    fi
+
+    local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/")
+
+    for d in $(find ${working_dir} -type d -name "*-SNAPSHOT*");
+    do
+      dir_check=true
+      for b in ${exclude[*]}; do
+        if [[ "$d" == *"$b"* ]]; then
+          #echo "exclude $d"
+          dir_check=false
+          break
+        fi
+      done
+
+      if [ "$dir_check" = true ]; then
+          #echo "update $d"
+          mv ${d} ${d//"$snapshot_version"/"$version"}
+      fi
+    done
+
+    for f in $(find ${working_dir} -type f -name "*-SNAPSHOT*");
+    do
+      file_check=true
+      for b in ${exclude[*]}; do
+        if [[ "$f" == *"$b"* ]]; then
+          #echo "exclude $f"
+          file_check=false
+          break
+        fi
+      done
+
+      if [ "$file_check" = true ]; then
+          #echo "update $f"
+          mv ${f} ${f//$snapshot_version/"$version"}
+      fi
+    done
+}
