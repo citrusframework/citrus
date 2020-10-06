@@ -10,8 +10,8 @@
       <outputDirectory/>
       <includes>
         <include>README.md</include>
-        <include>LICENSE.txt</include>
-        <include>NOTICE.txt</include>
+        <include>LICENSE</include>
+        <include>NOTICE</include>
       </includes>
     </fileSet>
     <fileSet>
