@@ -211,7 +211,7 @@ public class TestCaseTest extends UnitTestSupport {
         //THEN
         final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
         Assert.assertEquals(threadSet.stream()
-                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX))
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTestCase")))
                 .filter(Thread::isAlive)
                 .count(),
                 0);

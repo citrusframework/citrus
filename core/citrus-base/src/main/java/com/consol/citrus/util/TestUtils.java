@@ -23,6 +23,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
@@ -68,7 +69,8 @@ public abstract class TestUtils {
      */
     public static void waitForCompletion(final Completable container,
                                          final TestContext context, long timeout) {
-        waitForCompletion(Executors.newSingleThreadScheduledExecutor(TestUtils::createWaitingThread), container, context, timeout);
+        waitForCompletion(Executors.newSingleThreadScheduledExecutor(runnable -> TestUtils.createWaitingThread(runnable, context)),
+                container, context, timeout);
     }
 
     /**
@@ -109,9 +111,15 @@ public abstract class TestUtils {
         }
     }
 
-    private static Thread createWaitingThread(final Runnable runnable) {
+    private static Thread createWaitingThread(final Runnable runnable, TestContext context) {
         final Thread waitThread = Executors.defaultThreadFactory().newThread(runnable);
-        waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
+
+        if (context.getVariables().containsKey(CitrusSettings.TEST_NAME_VARIABLE)) {
+            waitThread.setName(WAIT_THREAD_PREFIX.concat(context.getVariable(CitrusSettings.TEST_NAME_VARIABLE))
+                    .concat("-").concat(waitThread.getName()));
+        } else {
+            waitThread.setName(WAIT_THREAD_PREFIX.concat(waitThread.getName()));
+        }
         return waitThread;
     }
 }
