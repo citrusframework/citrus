@@ -228,7 +228,7 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
+        }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
 
@@ -293,13 +293,13 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
                 SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
+        }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
 
@@ -340,13 +340,13 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
                 SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
+        }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
 
@@ -387,13 +387,13 @@ public class ReceiveSoapMessageActionTest extends AbstractTestNGUnitTest {
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 Assert.assertEquals(((List<SoapAttachment>)invocation.getArguments()[1]).size(), 1L);
                 SoapAttachment soapAttachment = ((List<SoapAttachment>)invocation.getArguments()[1]).get(0);
-                Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+                Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
                 Assert.assertEquals(soapAttachment.getContentId(), "myAttachment");
                 Assert.assertEquals(soapAttachment.getContentType(), "text/xml");
                 Assert.assertEquals(soapAttachment.getCharsetName(), "UTF-8");
                 return null;
             }
-        }).when(attachmentValidator).validateAttachment((SoapMessage)any(), (List) any());
+        }).when(attachmentValidator).validateAttachment(any(SoapMessage.class), any(List.class));
 
         when(endpoint.getActor()).thenReturn(null);
 

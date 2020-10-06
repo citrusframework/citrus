@@ -1,0 +1,171 @@
+#!/bin/bash
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# ===================================================================================================
+# Citrus Build Script
+#
+# See `citrus --help` for usage information
+# ==================================================================================================
+
+# Exit if any error occurs
+# Fail on a single failed command in a pipeline (if supported)
+set -o pipefail
+
+# Save global script args, use "build" as default
+if [ -z "$1" ]; then
+    ARGS=("help")
+else
+    ARGS=("$@")
+fi
+
+# Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
+set -eu
+
+# Display a help message.
+display_help() {
+    local command="${1:-}"
+    local cmd_dir="$(basedir)/commands"
+    if [ -z "${command}" ] || [ "${command:-}" == "help" ]; then
+        cat <<EOT
+Citrus Dev Tools
+
+Usage: citrus <command> [... options ...]
+
+with the following commands
+
+EOT
+        for cmd in $(ls $cmd_dir); do
+          if [ -f $cmd_dir/$cmd ]; then
+              source $cmd_dir/$cmd
+              printf "   %-15s  %s\n" $cmd "$($cmd::description)"
+          fi
+        done
+        cat - <<EOT
+
+If no command is specified this help message is displayed.
+
+Global options:
+
+-h  --help                    Display this help message
+    --verbose                 Verbose script output (set -x)
+
+Call "citrus <module> --help" for module specific options.
+
+Prerequisites:
+
+- JAVA_HOME as the location of a JDK home dir
+
+EOT
+    else
+        source $cmd_dir/$command
+        cat <<EOT
+$($command::description)
+
+Usage: citrus $command [... options ...]
+
+EOT
+        echo "Options for $command:"
+        echo -e "$($command::usage)
+"
+    fi
+}
+
+# Dir where this script is located
+basedir() {
+    # Default is current directory
+    local script=${BASH_SOURCE[0]}
+
+    # Resolve symbolic links
+    if [ -L $script ]; then
+        if readlink -f $script >/dev/null 2>&1; then
+            script=$(readlink -f $script)
+        elif readlink $script >/dev/null 2>&1; then
+            script=$(readlink $script)
+        elif realpath $script >/dev/null 2>&1; then
+            script=$(realpath $script)
+        else
+            echo "ERROR: Cannot resolve symbolic link $script"
+            exit 1
+        fi
+    fi
+
+    local dir=$(dirname "$script")
+    local full_dir=$(cd "${dir}" && pwd)
+    echo ${full_dir}
+}
+
+appdir() {
+  local dir=$(basedir)
+  local full_dir=$(cd "$dir/.." && pwd)
+  echo ${full_dir}
+}
+
+run() {
+    local first_arg=${1:-}
+    local cmd_dir="$(basedir)/commands"
+    local command
+    if [ -n "${first_arg}" ] && [[ ${first_arg} != -* ]]; then
+        command="$first_arg"
+        if [ ! -f "$cmd_dir/$command" ] && [ "${command:-}" != "help" ]; then
+            echo
+            echo ">>>> Unknown command '$command'"
+            echo
+            display_help
+            exit 1
+        fi
+    fi
+
+    if [ -z "${command:-}" ]; then
+        # Try to detect command
+        for cand in $(ls $cmd_dir); do
+            if [ $(hasflag "--$cand") ]; then
+                command=$cand
+                break
+            fi
+        done
+    fi
+
+    if [ -z "${command:-}" ]; then
+        if [ $(hasflag --manual) ]; then
+            open_url "https://citrusframework.org/citrus/reference/html/index.html"
+            exit 0
+        else
+            command="help"
+        fi
+    fi
+
+    if [ "${command:-}" == "help" ] || [ $(hasflag --help -h) ]; then
+        display_help ${command:-}
+        exit 0
+    fi
+
+    source "$cmd_dir/$command"
+
+    eval "${command}::run"
+}
+
+source "$(basedir)/commands/util/common_funcs"
+
+ERROR_FILE="$(mktemp /tmp/citrus-output.XXXXXX)"
+trap "print_error $ERROR_FILE" EXIT
+
+if [ $(hasflag --verbose) ]; then
+    export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+    set -x
+fi
+
+run "$@"

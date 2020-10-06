@@ -1,0 +1,319 @@
+[[build-tool]]
+= Citrus Build CLI Tool
+
+This `citrus` script can be found in `$PROJECT_DIR/scripts` and helps with development related tasks such as performing an
+automated release. It requires bash and can be used on Linux or MacOS.
+
+To have this script handy all the time it is recommended to either add this `scripts/citrus` binary to the $PATH or add a
+symlink from `citrus` into a directory which is already on your execution path.
+
+[source,bash]
+----
+# Navigate to the Citrus project directory
+cd $PROJECT_DIR
+
+# Set path to include this project's tools directory
+$ export PATH=${PATH}:$(pwd)/scripts/citrus
+
+# Alternatively, set a symbolic link to the "citrus" script
+$ ln -s $(pwd)/scripts/citrus /usr/local/bin
+----
+
+The script can be used for various tasks which are selected by a so-called command which is the first argument to the script.
+
+Just type `citrus -h` to get an overview of the commands available:
+
+[source,indent=0,subs="verbatim,quotes"]
+.Usage message
+----
+Usage: citrus <command> [... options ...]
+
+with the following commands
+
+   help             Display this help message
+   release          Perform a release
+
+"help" is the default command if no command is specified.
+----
+
+There are a handful of global options which can be used:
+
+[cols="3,1,15"]
+|===
+| `--help`
+| `-h`
+| Print usage information. If a command is given print out commands specific options
+
+| `--manual`
+|
+| Open HTML documentation on citrusframework.org
+
+| `--verbose`
+|
+| Set verbose mode, which is useful mostly only for debugging the script itself.
+|===
+
+[[build-tool-commands]]
+.Commands
+All other options are specific to each command.
+You get a list of those options with `citrus <cmd> -h`.
+These options are described in detail in the next sections.
+
+The following commands are available:
+
+[cols="3,15",options="header"]
+|===
+| Command
+| Description
+
+| <<build-tool-release,**release**>>
+| Perform a release with given version and automated publishing of Maven artifacts
+|===
+
+If no command is given, `help` is the default.
+Remember a command must be the first argument, but there are additional possibilities to specify commands:
+
+* You can use the form `--command_name` anywhere as an option, too. E.g. using  `--release` is the same as specifying "release" as the first argument.
+
+To add a new command, just drop a script file into `$PROJECT_DIR/scripts/commands` directory with following structure:
+
+[source,bash]
+----
+#!/bin/bash
+
+yourscriptname::description() {
+    echo "Describe the command"
+}
+
+yourscriptname::usage() {
+    cat <<EOT
+    Describe the usage of the command
+EOT
+}
+
+yourscriptname::run() {
+    Do your stuff
+}
+----
+
+The following sections describe the commands in more detail.
+
+[[build-tool-release]]
+== Release
+
+Use `citrus release` for performing an automated release.
+A release consists of:
+
+* Bump versions to given release version in pom.xml and any other resources
+* Build and stage Maven artifacts
+* Git release commit and tag
+* Bump versions to given next snapshot version
+* Release Maven artifacts to Maven central and push changes to github repository
+
+This chapter describes how you can efficiently perform a release and how to troubleshoot if something goes wrong.
+
+[[build-tool-release-usage]]
+=== Usage
+
+This command performs a release but does *no automated rollback* when something goes wrong.
+Please refer to the <<build-tool-release-troubleshooting,*troubleshooting*>> section for more details and what needs
+to be cleaned up in case of an error.
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+Perform a release
+
+Usage: citrus release [... options ...]
+
+Options for release:
+-n  --dry-run                 Dry run, which performs the whole build but does no tagging, artifact
+                              upload or pushing Docker images
+    --release-version <ver>   Version to release (e.g. "1.2.1"). One version arg is mandatory
+    --snapshot-version <ver>  Current snapshot version to be replaced with the release version.
+    --next-version <ver>      Version to use after the release. Usually the next snapshot version.
+    --local-release           Release to local repository
+    --major-release           Marks a major release so snaphot version is automatically increased after release
+    --snapshot-release        Snapshot release which can be created on a daily basis.
+                              A timestamped version will be created automatically, and no Maven artifacts
+                              are pushed to maven central.
+    --settings <file>         Path to a custom settings.xml to use for the release.
+                              This file must contain all the credentials to be used for Sonatype.
+                              By default ~/.m2/settings.xml is used.
+    --local-maven-repo <dir>  Local dir for holding the local Maven repo cache. For a clean build
+                              just give the option without specifying any directory, then a new
+                              temporary directory will be used (and removed after the release)
+                              By default ~/.m2/repository is used.
+    --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
+    --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
+                              to the git remote to which the currently checked out branch is attached to.
+                              Works only when on a branch, not when checked out directly.
+    --log <log-file>          Write full log to <log-file>, only print progress to screen
+    --skip-tests              Do not run tests
+    --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
+-q  --quiet                   Adds quiet option to Maven options - only show errors
+----
+
+A lot of output is produced during a release.
+If you are only interested to see the major steps only, then you can use `--log` to redirect the output to a specific log file.
+This log file will contain all output (and if you add `--verbose` you see even more output), but on the console you will
+only see the current step that is actually performed.
+
+.Example
+An example dry run for release version `1.0.0` on the current branch looks like:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+./scripts/citrus release               \ <1>
+    --release-version 1.0.5            \ <2>
+    --local-maven-repo /tmp/clean-repo \ <3>
+    --log /tmp/build.log               \ <4>
+    --dry-run                            <5>
+----
+<1> Always run `citrus` from the repo and branch you want to release.
+<2> The release version is mandatory and must be in the format `<major>.<minor>.<patch>`.
+<3> Use a clean local Maven repository to avoid side effects (optional)
+<4> Redirect the full output to `/tmp/build.log` but still print the main steps to the console.
+<5> Make only a dry run, without pushing any artifacts out nor doing any commit/push of changed files.
+
+[[build-tool-release-preparations]]
+=== Preparations
+
+To perform a release, certain preconditions need to be given.
+
+First of all, you need to have access to the various systems to which release artifacts are uploaded:
+
+* You have to have `gpg` installed and set up a gpg-agent for being able to sign Maven artifacts during deployment in a non-interactive mode.
+* You need to have access to the "citrus" account on https://oss.sonatype.org/[oss.sonatype.org] for being able to publish Maven artifacts.
+This credential needs to be added to either your `~/.m2/settings.xml` or you can use an settings file with the `--settings-xml` option.
+The credential needs to be added to the server with the id `sonatype-nexus-staging`.
+
+You have to perform the release from a locally checked out project repository, which can be either checkout from a branch like `1.0.x` for a
+patch release or directly from `master`.
+It is highly recommended to run the release directly from a freshly cloned directory:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+# Go to a temporary directory
+cd /tmp
+
+# Clone repository afresh, but only use the last history entry (--depth=1)
+git clone --depth=1 https://github.com/citrusframework/citrus.git citrus-release
+
+# Jump into the directory
+cd citrus-release
+
+# Switch to the target branch if needed (or stay on master)
+git fetch --depth 1 origin 1.0.x:1.0.x
+git checkout 1.0.x
+
+# Call the build tool script from the checked out clone
+./scripts/citrus release --release-version 1.0.1 .....
+
+# When --no-git-push is specified consider pushing to origin after a successful release
+git push
+git push origin "v1.0.1"
+
+# Remove the temporary clone again
+cd ..
+rm -rf citrus-release
+----
+
+Please note that you should always call `citrus` out of the branch for which the release is for. You might need to
+adjust your local `$PATH` settings accordingly.
+
+[[build-tool-release-steps]]
+=== Release steps
+
+A release consist of several different steps, which can be grouped into two groups:
+
+* *Build steps* are performed to build the release and create the artifacts.
+Also during the build Maven artifacts are uploaded to the staging area for publishing to Maven central
+* *Persist steps* are then used for releasing objects, pushing Docker images to Docker Hub, committing and tagging in Git (but only when the build steps have been performed successfully).
+
+==== Build steps
+
+* Check whether the current local Git clone is _clean_, i.e. you should not have any modified files.
+The script will abort if this is the case.
+* Update the versions of all `pom.xml` to the version given with `--release-version`.
+If no `--release-version` is given, then the script aborts.
+* Run an `mvn clean install` to verify that the build is not broken and all tests succeed. You can skip tests with `--skip-tests` though.
+* Deploy all artifacts to a new staging repository on https://oss.sonatype.org/[oss.sonatype.org]. The staging repository on
+this Sonatype Nexus is validated and closed.
+
+If the option `--dry-run` (short: `-n`) is provided, the script drops the staging repository at Sonatype and stops. You can now examine the generated files before starting a real build.
+
+By default the builds are using your local Maven repository from `~/.m2/repository`.
+
+If you want to run the builds with a clean local Maven repository you can provide such a directory with `--local-maven-repo /tmp/my-clean-repo` which will be taken directly as Maven repo.
+This new local cache should ensure that we have a completely fresh build without interference from previous builds store in the local Maven cache in the home directory.
+
+If `--local-maven-repo` is provided but no directory path is given a new temporary directory is created and also _deleted_ after the release run.
+
+==== Persist steps
+
+* The staging repository on Sonatype is released.
+It will take a bit, but the artifact should then be downloadable from https://search.maven.org/[Maven central] soon after.
+* Update the versions of all `pom.xml` to the version given with `--next-version`. Usually the next snapshot version to use.
+If no `--next-version` is given, then the script will auto increment the last snapshot version when `--major-release` is set.
+* Commit all modified local files to the local Git repo.
+* Create a Git tag for the release version (e.g. `git tag v1.0.0`).
+
+Finally, the tags just created on the local Git repo is pushed to the remote repository.
+You can omit this with the option `--no-git-push`.
+If to so, the last step can also be performed manually afterwards with:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+git push
+git push origin "v1.0.1" <1>
+----
+<1> Tag name that was just created from the script.
+
+=== Snapshot Release
+
+With the option `--snapshot-release` a snapshot release can be created.
+
+The tag/version is read from `--snapshot-version` option or calculated automatically by
+reading the current version from Maven POM and replacing the "-SNAPSHOT" with a timestamp (e.g. 1.0.1-201804190805).
+According to https://semver.org/[Semantic Versioning 2.0] this is considered to be a version larger than 1.0.1 but https://semver.org/#spec-item-11[smaller] than 1.0.2.
+
+In detail, a snapshot release differs from a normal release as it force pushes the snapshot tag on GitHub so that multiple releases per day are allowed.
+Also release to Maven central is skipped by default and the current snapshot version is not increased but stays as is.
+
+.Example
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+citrus release \
+     --snapshot-release                 \ <1>
+     --local-maven-repo /tmp/clean-repo   <2>
+----
+<1> Enable snapshot release with a version in the format $release-version-$timestamp
+<2> Point to an empty repository to avoid side effects when building
+
+[[build-tool-release-troubleshooting]]
+=== Troubleshooting
+
+When you run the `citrus release` command and it should happen to fail, you might have to perform some cleanup steps manually
+as there is now automatic rollback.
+
+However care has been taken to move all persistent changes to the end of the release flow, so if something breaks early,
+you only need to clean up locally. If the process fails before the step _==== Releasing Sonatype staging repo_ you only need to:
+
+* Reset your local git repo with `git reset --hard`
+* Potentially remove the created staging repository on https://oss.sonatype.org/[oss.sonatype.org]
+
+The release of the staging repository on https://oss.sonatype.org/[oss.sonatype.org] is the point of no return. Once this is done the artifacts
+with that release version are publicly available on Maven central. If things go wrong after that step you will need to do the git steps by yourself.
+
+* make sure the release versions in pom.xml are committed
+* create a git release tag
+* update all pom.xml versions to the next snapshot version
+* commit and push to github
+
+[[build-tool-credits]]
+=== Credits
+
+This build tool script and this documentation is heavily based on the scripts used by the https://github.com/syndesisio/syndesis[Syndesis] team.
+A BIG thank you to the people there that took the effort to create this great tool and the bash scripting concepts behind it!
+
+They deserve reputation and of course some stars on github!

@@ -1,0 +1,294 @@
+#!/bin/bash
+
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+release::description() {
+    echo "Perform a release"
+}
+
+release::usage() {
+    cat - <<EOT
+-n  --dry-run                 Dry run, which performs the whole build but does no tagging, artifact
+                              upload or pushing Docker images
+    --release-version <ver>   Version to release (e.g. "1.2.1"). One version arg is mandatory
+    --snapshot-version <ver>  Current snapshot version to be replaced with the release version.
+    --next-version <ver>      Version to use after the release. Usually the next snapshot version.
+    --local-release           Release to local repository
+    --major-release           Marks a major release so snaphot version is automatically increased after release
+    --snapshot-release        Snapshot release which can be created on a daily basis.
+                              A timestamped version will be created automatically, and no Maven artifacts
+                              are pushed to maven central.
+    --settings <file>         Path to a custom settings.xml to use for the release.
+                              This file must contain all the credentials to be used for Sonatype.
+                              By default ~/.m2/settings.xml is used.
+    --local-maven-repo <dir>  Local dir for holding the local Maven repo cache. For a clean build
+                              just give the option without specifying any directory, then a new
+                              temporary directory will be used (and removed after the release)
+                              By default ~/.m2/repository is used.
+    --no-git-push             Don't push the release tag (and symbolic major.minor tag) at the end
+    --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
+                              to the git remote to which the currently checked out branch is attached to.
+                              Works only when on a branch, not when checked out directly.
+    --log <log-file>          Write full log to <log-file>, only print progress to screen
+    --skip-tests              Do not run tests
+    --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
+-q  --quiet                   Adds quiet option to Maven options - only show errors
+EOT
+}
+
+# Perform the release
+release::run() {
+    source "$(basedir)/commands/util/git_funcs"
+    source "$(basedir)/commands/util/version_funcs"
+    source "$(basedir)/commands/util/maven_central_funcs"
+
+    # Main application directory
+    local working_dir=$(appdir)
+
+    # Validate release versions. Release versions have the format "1.3.4"
+    local release_version=$(get_release_version "$working_dir")
+    check_error $release_version
+
+    local snapshot_version=$(get_snapshot_version "$working_dir")
+    check_error $snapshot_version
+
+    local next_version=$(get_next_snapshot_version "$working_dir")
+    check_error $next_version
+
+    echo "==== Starting release $release_version based on $snapshot_version ($working_dir)"
+
+    # Write to logfile if requested
+    if [ $(readopt --log) ]; then
+        local logfile=$(readopt --log)
+        touch $logfile
+        tail -f $logfile > >(grep ^====) &
+        local tail_pid=$!
+        trap "kill $tail_pid" EXIT
+
+        exec >>$logfile 2>&1
+        sleep 1
+    fi
+
+    # Verify that there are no modified file in git repo
+    check_git_clean "$working_dir"
+
+    # Temporary local repository to guarantee a clean build
+    local local_maven_repo=$(readopt --local-maven-repo)
+    if [ -z "$local_maven_repo" ]; then
+        local_maven_repo=$(mktemp -d 2>/dev/null || mktemp -d -t 'maven_repo')
+        trap "echo 'Removing temp maven repo $local_maven_repo' && rm -rf $local_maven_repo" "EXIT"
+    fi
+
+    # Calculate common maven options
+    local maven_opts="$(extract_maven_opts $local_maven_repo)"
+
+    # Clean Maven build
+    clean "$working_dir" "$maven_opts"
+
+    # Set release version in sources
+    set_version "$working_dir" "$release_version" "$snapshot_version"
+
+    # Commit spring.schemas for new version
+    git_commit "$working_dir" spring.schemas "Add Spring schemas for $release_version"
+
+    # Build and stage artifacts
+    build_and_stage_artifacts "$working_dir" "$maven_opts"
+
+    # For a test run, we are done
+    if [ $(hasflag --dry-run -n) ]; then
+        if [ ! $(hasflag --snapshot-release) ] && [ ! $(hasflag --local-release) ]; then
+            drop_staging_repo "$working_dir" "$maven_opts"
+        fi
+
+        echo "==== Dry run finished, nothing has been committed"
+        echo "==== Use 'git reset --hard' to cleanup"
+        exit 0
+    fi
+
+    # ========================================================================
+    # Commit, tag, release, push
+    # --------------------------
+
+    if [ ! $(hasflag --snapshot-release) ] && [ ! $(hasflag --local-release) ]; then
+        # Release staging repo
+        release_staging_repo "$working_dir" "$maven_opts"
+    fi
+
+    # Push everything (if configured)
+    git_push "$working_dir" "$release_version"
+
+    # Add SNAPSHOT version to spring.schemas
+    update_spring_schemas "$working_dir" "$release_version" "$snapshot_version"
+
+    # Use next snapshot version for major release only
+    if [ $(hasflag --major-release) ] && [ ! $(hasflag --snapshot-release) ]; then
+        # Set next snapshot version in sources
+        set_version "$working_dir" "$next_version" "$snapshot_version"
+
+        # Push new snapshot version (if configured)
+        git_push_next_snapshot "$working_dir" "$next_version"
+    else
+        # Commit spring.schemas for new version
+        git_commit "$working_dir" spring.schemas "Use $snapshot_version version in Spring schemas"
+    fi
+
+    echo "==== Finished release $release_version"
+}
+
+# ===================================================================================================
+# Prep actions:
+
+clean() {
+    local working_dir="$1"
+    local maven_opts="$2"
+
+    cd $working_dir
+    ./mvnw ${maven_opts} clean
+}
+
+build_and_stage_artifacts() {
+    local working_dir="$1"
+    local maven_opts="$2"
+
+    cd $working_dir
+    if [ $(hasflag --local-release) ]; then
+        echo "==== Release to local"
+        ./mvnw ${maven_opts} install
+    elif [ $(hasflag --snapshot-release) ]; then
+        echo "==== Release to consol.labs repository"
+        ./mvnw ${maven_opts} install deploy -Prelease-labs
+    else
+        echo "==== Release to Maven central and stage Maven artifacts to Sonatype"
+
+        local release_version = $(get_release_version "$workindgir")
+        ./mvnw ${maven_opts} install deploy -Prelease-central -DstagingDescription="Staging Syndesis for $release_version"
+    fi
+}
+
+# =======================================================================
+# Helper
+
+extract_maven_opts() {
+    local local_maven_repo="$1"
+    local maven_opts="--batch-mode -V -e"
+
+    if [ $(hasflag --quiet -q) ]; then
+        maven_opts="$maven_opts -q"
+    fi
+
+    if [ $(hasflag --local-maven-repo) ]; then
+        maven_opts="$maven_opts -Dmaven.repo.local=$local_maven_repo"
+    fi
+
+    local settings_xml=$(readopt --settings-xml --settings)
+    if [ -n "${settings_xml}" ]; then
+        maven_opts="$maven_opts -s $settings_xml"
+    fi
+
+    if [ $(hasflag --skip-tests) ]; then
+        # Do not run any tests but compile test sources
+        maven_opts="$maven_opts -Dtest -Dit.test -DfailIfNoTests=false"
+    fi
+
+    if [ ! $(hasflag --no-strict-checksums) ]; then
+        maven_opts="$maven_opts -C"
+    fi
+
+    echo $maven_opts
+}
+
+git_push() {
+    local working_dir="$1"
+    local release_version=${2:-}
+    local tag=v$release_version
+    local staging_branch="staging-v$release_version"
+    local original_branch=$(git rev-parse --abbrev-ref HEAD)
+
+    cd $working_dir
+    echo "==== Pushing to GitHub"
+    if [ -n "$release_version" ]; then
+        echo "* Pushing $release_version"
+        local remote=$(readopt --git-remote)
+        if [ -z "${remote}" ]; then
+            # Push to the remote attached to the local checkout branch
+            remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed -e 's/\([^\/]*\)\/.*/\1/')
+            if [ -z "${remote}" ]; then
+              echo "ERROR: Cannot find remote git repository to push to"
+              exit 1
+            fi
+        fi
+
+        echo "* Create staging branch $staging_branch"
+        # Create staging branch
+        git branch -D ${staging_branch} || true
+        git checkout -b ${staging_branch}
+        git add * || true
+        git commit -a -m "Release ${release_version}"
+
+        if [ ! $(hasflag --no-git-push) ]; then
+            echo "* Using remote git repository '$remote'"
+
+            # push tag to remote
+            git tag --force ${tag} ${staging_branch}
+            git push --force ${remote} ${tag}
+            echo "* Tag ${tag} pushed to ${remote}"
+        fi
+
+        # Check out original branch
+        git checkout ${original_branch}
+    fi
+}
+
+git_push_next_snapshot() {
+    local working_dir="$1"
+    local next_version="$2"
+
+    cd $working_dir
+    echo "==== Using next napshot version $next_version"
+    git add * || true
+    git commit -a -m "Use next snapshot version $next_version"
+
+    if [ ! $(hasflag --no-git-push) ]; then
+        # Push changes
+        git push
+    fi
+}
+
+update_spring_schemas() {
+    local working_dir="$1"
+    local version="$2"
+    local snapshot_version="$3"
+
+    local exclude=("./.mvn/wrapper" "./.git" "./.idea" "/target/")
+
+    for f in $(find ${working_dir} -type f -name "spring.schemas");
+    do
+      file_check=true
+      for b in ${exclude[*]}; do
+        if [[ "$f" == *"$b"* ]]; then
+          #echo "exclude $f"
+          file_check=false
+          break
+        fi
+      done
+
+      if [ "$file_check" = true ]; then
+          #echo "update $f"
+          sed -n "/$version/s/$version/$snapshot_version/gp" $f >> $f
+          sort -o $f $f
+      fi
+    done
+}

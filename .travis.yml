@@ -12,7 +12,7 @@ git:
 # Skip installation step
 install: true
 
-script: bash scripts/build.sh
+script: bash scripts/travis/build.sh
 
 cache:
   directories:

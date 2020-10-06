@@ -10,7 +10,7 @@ NOTE: The camel components in Citrus are kept in a separate Maven module. So you
 <dependency>
   <groupId>com.consol.citrus</groupId>
   <artifactId>citrus-camel</artifactId>
-  <version>3.0-SNAPSHOT</version>
+  <version>3.0.0-SNAPSHOT</version>
 </dependency>
 ----
 

@@ -16,6 +16,17 @@
 
 package com.consol.citrus.ws.message;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.mockito.Mockito;
@@ -23,13 +34,8 @@ import org.springframework.ws.mime.Attachment;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import java.io.*;
-import java.nio.file.*;
-import java.nio.charset.Charset;
-
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
 
 
 /**
@@ -71,16 +77,16 @@ public class SoapAttachmentTest {
 
         Assert.assertEquals(soapAttachment.getContentId(), "img");
         Assert.assertEquals(soapAttachment.getContentType(), "application/octet-stream");
-        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(Charset.forName("UTF-8"))));
+        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(StandardCharsets.UTF_8)));
         Assert.assertEquals(soapAttachment.getCharsetName(), Charset.defaultCharset().displayName());
         Assert.assertNotNull(soapAttachment.getDataHandler());
         Assert.assertEquals(soapAttachment.getSize(), 25L);
 
         soapAttachment.setEncodingType(SoapAttachment.ENCODING_BASE64_BINARY);
-        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(Charset.forName("UTF-8"))));
+        Assert.assertEquals(soapAttachment.getContent(), Base64.encodeBase64String("This is img text content!".getBytes(StandardCharsets.UTF_8)));
 
         soapAttachment.setEncodingType(SoapAttachment.ENCODING_HEX_BINARY);
-        Assert.assertEquals(soapAttachment.getContent(), Hex.encodeHexString("This is img text content!".getBytes(Charset.forName("UTF-8"))).toUpperCase());
+        Assert.assertEquals(soapAttachment.getContent(), Hex.encodeHexString("This is img text content!".getBytes(StandardCharsets.UTF_8)).toUpperCase());
 
     }
 
@@ -90,9 +96,9 @@ public class SoapAttachmentTest {
         soapAttachment.setContentResourcePath("classpath:com/consol/citrus/ws/actions/test-attachment.xml");
         soapAttachment.setContentType("text/xml");
 
-        Assert.assertEquals(soapAttachment.getContent(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
+        Assert.assertEquals(soapAttachment.getContent().trim(), "<TestAttachment><Message>Hello World!</Message></TestAttachment>");
         Assert.assertNotNull(soapAttachment.getDataHandler());
-        Assert.assertEquals(soapAttachment.getSize(), 64L);
+        Assert.assertEquals(soapAttachment.getSize(), 65L);
     }
 
     @Test
@@ -110,7 +116,7 @@ public class SoapAttachmentTest {
         Assert.assertEquals(soapAttachment.getSize(), resourceContent.length);
     }
 
-    private class StaticTextDataSource implements DataSource {
+    private static class StaticTextDataSource implements DataSource {
 
         private final String content;
         private final String contentType;

@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import com.consol.citrus.CitrusSettings;
@@ -175,10 +174,8 @@ public class SoapAttachment implements Attachment, Serializable {
             } else {
                 return getSizeOfContent(getDataHandler().getInputStream());
             }
-        } catch (UnsupportedEncodingException e) {
+        } catch (IOException e) {
             throw new CitrusRuntimeException(e);
-        } catch (IOException ioe) {
-            throw new CitrusRuntimeException(ioe);
         }
     }
 

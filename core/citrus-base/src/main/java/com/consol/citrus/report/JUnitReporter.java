@@ -123,9 +123,13 @@ public class JUnitReporter extends AbstractTestReporter {
                     cause.printStackTrace(new PrintWriter(writer));
                     return writer.toString();
                 }).orElse(Objects.toString(result.getFailureType(), "")));
-                reportDetails.append(PropertyUtils.replacePropertiesInString(templates.getFailedTemplate(), detailProps));
+                reportDetails.append(System.lineSeparator())
+                        .append("    ")
+                        .append(PropertyUtils.replacePropertiesInString(templates.getFailedTemplate(), detailProps));
             } else {
-                reportDetails.append(PropertyUtils.replacePropertiesInString(templates.getSuccessTemplate(), detailProps));
+                reportDetails.append(System.lineSeparator())
+                        .append("    ")
+                        .append(PropertyUtils.replacePropertiesInString(templates.getSuccessTemplate(), detailProps));
             }
         }
 
@@ -174,7 +178,7 @@ public class JUnitReporter extends AbstractTestReporter {
          */
         public String getReportTemplate() throws IOException {
             if (reportTemplateContent == null) {
-                reportTemplateContent = FileUtils.readToString(FileUtils.getFileResource(reportTemplate));
+                reportTemplateContent = FileUtils.readToString(FileUtils.getFileResource(reportTemplate)).trim();
             }
 
             return reportTemplateContent;
@@ -187,7 +191,7 @@ public class JUnitReporter extends AbstractTestReporter {
          */
         public String getSuccessTemplate() throws IOException {
             if (successTemplateContent == null) {
-                successTemplateContent = FileUtils.readToString(FileUtils.getFileResource(successTemplate));
+                successTemplateContent = FileUtils.readToString(FileUtils.getFileResource(successTemplate)).trim();
             }
 
             return successTemplateContent;
@@ -200,7 +204,7 @@ public class JUnitReporter extends AbstractTestReporter {
          */
         public String getFailedTemplate() throws IOException {
             if (failedTemplateContent == null) {
-                failedTemplateContent = FileUtils.readToString(FileUtils.getFileResource(failedTemplate));
+                failedTemplateContent = FileUtils.readToString(FileUtils.getFileResource(failedTemplate)).trim();
             }
 
             return failedTemplateContent;

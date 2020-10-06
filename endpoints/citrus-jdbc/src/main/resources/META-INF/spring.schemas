@@ -5,5 +5,5 @@ http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-2.7.7.xsd=
 http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-2.7.8.xsd=com/consol/citrus/schema/citrus-jdbc-config-2.7.8.xsd
 http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-2.8.0.xsd=com/consol/citrus/schema/citrus-jdbc-config-2.8.0.xsd
 http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-3.0.0-M1.xsd=com/consol/citrus/schema/citrus-jdbc-config-3.0.0-M1.xsd
-http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-3.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-jdbc-config-3.0-SNAPSHOT.xsd
+http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config-3.0.0-SNAPSHOT.xsd=com/consol/citrus/schema/citrus-jdbc-config-3.0.0-SNAPSHOT.xsd
 http\://www.citrusframework.org/schema/jdbc/config/citrus-jdbc-config.xsd=com/consol/citrus/schema/citrus-jdbc-config.xsd
