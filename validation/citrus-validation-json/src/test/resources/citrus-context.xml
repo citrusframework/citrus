@@ -2,12 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:citrus="http://www.citrusframework.org/schema/config"
+       xmlns:citrus-test="http://www.citrusframework.org/schema/testcase"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd">
+           http://www.citrusframework.org/schema/config http://www.citrusframework.org/schema/config/citrus-config.xsd
+           http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <citrus:direct-endpoint id="helloEndpoint"
                             queue="helloQueue"/>
 
     <citrus:queue id="helloQueue"/>
+
+    <citrus:before-test id="purgeEndpoints">
+        <citrus:actions>
+            <citrus-test:purge-endpoint>
+                <citrus-test:endpoint name="helloEndpoint"/>
+            </citrus-test:purge-endpoint>
+        </citrus:actions>
+    </citrus:before-test>
 
 </beans>
