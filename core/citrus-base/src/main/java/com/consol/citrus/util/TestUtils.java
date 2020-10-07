@@ -85,6 +85,10 @@ public abstract class TestUtils {
     public static void waitForCompletion(final ScheduledExecutorService scheduledExecutor,
                                          final Completable container,
                                          final TestContext context, long timeout) {
+        if (container.isDone(context)) {
+            return;
+        }
+
         try {
             final CompletableFuture<Boolean> finished = new CompletableFuture<>();
             scheduledExecutor.scheduleAtFixedRate(() -> {
@@ -107,7 +111,12 @@ public abstract class TestUtils {
         } catch (ExecutionException | TimeoutException | InterruptedException e) {
             throw new CitrusRuntimeException("Failed to wait for test container to finish properly", e);
         } finally {
-            scheduledExecutor.shutdown();
+            try {
+                scheduledExecutor.awaitTermination((timeout / 10) / 2, TimeUnit.MICROSECONDS);
+            } catch (InterruptedException e) {
+                log.warn(String.format("Failed to await orderly termination of waiting tasks to complete, caused by %s", e.getMessage()));
+            }
+            scheduledExecutor.shutdownNow();
         }
     }
 

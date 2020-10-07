@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
 
 import com.consol.citrus.actions.AbstractAsyncTestAction;
 import com.consol.citrus.actions.AbstractTestAction;
@@ -105,6 +105,15 @@ public class TestCaseTest extends UnitTestSupport {
         }).build());
 
         testcase.execute(context);
+
+        // Make sure that waiting thread is completed
+        final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
+        Optional<Thread> waitingThread = threads.keySet().stream()
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("MyTestCase")))
+                .filter(Thread::isAlive)
+                .findAny();
+
+        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
     }
 
     @Test
@@ -202,19 +211,20 @@ public class TestCaseTest extends UnitTestSupport {
 
         //GIVEN
         final TestCase testcase = new DefaultTestCase();
-        testcase.setName("ThreadLeakTestCase");
+        testcase.setName("ThreadLeakTest");
         testcase.addTestAction(new EchoAction.Builder().build());
 
         //WHEN
         testcase.execute(context);
 
         //THEN
-        final Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
-        Assert.assertEquals(threadSet.stream()
-                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTestCase")))
+        final Map<Thread, StackTraceElement[]> threads = Thread.getAllStackTraces();
+        Optional<Thread> waitingThread = threads.keySet().stream()
+                .filter(t -> t.getName().startsWith(TestUtils.WAIT_THREAD_PREFIX.concat("ThreadLeakTest")))
                 .filter(Thread::isAlive)
-                .count(),
-                0);
+                .findAny();
+
+        waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
     }
 
 }
