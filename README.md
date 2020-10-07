@@ -1,8 +1,11 @@
 Citrus Integration Testing ![Logo][1]
 ==============
-
-master: ![build](https://github.com/citrusframework/citrus/workflows/build/badge.svg?branch=master) [![<Sonarcloud quality gate>](https://sonarcloud.io/api/project_badges/measure?project=citrus&metric=alert_status)](https://sonarcloud.io/dashboard?id=citrus)[![Javadocs](http://javadoc.io/badge/com.consol.citrus/citrus-core.svg)](http://javadoc.io/doc/com.consol.citrus/citrus-core)     
-2.x: [![Build Status](https://travis-ci.com/citrusframework/citrus.svg?branch=v2.7-bugfix)](https://travis-ci.com/citrusframework/citrus)
+ 
+[![build](https://github.com/citrusframework/citrus/workflows/build/badge.svg?branch=master)](https://github.com/citrusframework/citrus/actions) 
+[![<Sonarcloud quality gate>](https://sonarcloud.io/api/project_badges/measure?project=citrus&metric=alert_status)](https://sonarcloud.io/dashboard?id=citrus)
+[![Javadocs](http://javadoc.io/badge/com.consol.citrus/citrus-core.svg)](http://javadoc.io/doc/com.consol.citrus/citrus-core)
+[![Licensed under Apache License version 2.0](https://img.shields.io/github/license/openshift/origin.svg?maxAge=2592000)](https://www.apache.org/licenses/LICENSE-2.0")
+[![Chat on Zulip](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://citrusframework.zulipchat.com)
 
 Welcome to Citrus
 ---------
