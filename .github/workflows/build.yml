@@ -54,4 +54,4 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
       - name: Build Citrus
         run: |
-          ./mvnw --no-transfer-progress verify
+          ./mvnw --no-transfer-progress install
