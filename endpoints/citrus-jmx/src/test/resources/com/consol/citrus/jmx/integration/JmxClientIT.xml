@@ -2,7 +2,7 @@
 <spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
               xmlns:spring="http://www.springframework.org/schema/beans"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://www.springframework.org/schema/beans 
+              xsi:schemaLocation="http://www.springframework.org/schema/beans
                                   http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase
                                   http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
@@ -76,5 +76,18 @@
         </message>
       </receive>
     </actions>
+
+    <finally>
+      <send endpoint="jmxClient">
+        <message>
+          <payload>
+            <mbean-invocation xmlns="http://www.citrusframework.org/schema/jmx/message">
+              <mbean>java.lang:type=Memory</mbean>
+              <attribute type="java.lang.Boolean" name="Verbose" value="false"/>
+            </mbean-invocation>
+          </payload>
+        </message>
+      </send>
+    </finally>
   </testcase>
 </spring:beans>
