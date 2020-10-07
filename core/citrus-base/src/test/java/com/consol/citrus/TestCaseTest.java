@@ -17,6 +17,7 @@
 package com.consol.citrus;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -31,6 +32,7 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.functions.core.CurrentDateFunction;
 import com.consol.citrus.util.TestUtils;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -113,6 +115,7 @@ public class TestCaseTest extends UnitTestSupport {
                 .filter(Thread::isAlive)
                 .findAny();
 
+        waitingThread.ifPresent(thread -> LoggerFactory.getLogger("TestWaitForFinishAsync").warn(Arrays.toString(threads.get(thread))));
         waitingThread.ifPresent(thread -> Assert.fail(String.format("Waiting thread still alive: %s", thread.toString())));
     }
 

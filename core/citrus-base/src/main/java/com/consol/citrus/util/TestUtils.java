@@ -20,6 +20,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -89,9 +90,10 @@ public abstract class TestUtils {
             return;
         }
 
+        ScheduledFuture<?> scheduler = null;
         try {
             final CompletableFuture<Boolean> finished = new CompletableFuture<>();
-            scheduledExecutor.scheduleAtFixedRate(() -> {
+             scheduler = scheduledExecutor.scheduleAtFixedRate(() -> {
                 try {
                     if (container.isDone(context)) {
                         finished.complete(true);
@@ -111,12 +113,20 @@ public abstract class TestUtils {
         } catch (ExecutionException | TimeoutException | InterruptedException e) {
             throw new CitrusRuntimeException("Failed to wait for test container to finish properly", e);
         } finally {
+            if (scheduler != null) {
+                scheduler.cancel(true);
+            }
+
             try {
+                scheduledExecutor.shutdown();
                 scheduledExecutor.awaitTermination((timeout / 10) / 2, TimeUnit.MICROSECONDS);
             } catch (InterruptedException e) {
                 log.warn(String.format("Failed to await orderly termination of waiting tasks to complete, caused by %s", e.getMessage()));
             }
-            scheduledExecutor.shutdownNow();
+
+            if (!scheduledExecutor.isTerminated()) {
+                scheduledExecutor.shutdownNow();
+            }
         }
     }
 
