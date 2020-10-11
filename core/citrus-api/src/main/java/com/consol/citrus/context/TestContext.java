@@ -45,6 +45,7 @@ import com.consol.citrus.functions.FunctionRegistry;
 import com.consol.citrus.functions.FunctionUtils;
 import com.consol.citrus.message.DefaultMessageStore;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageStore;
 import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.report.TestActionListener;
@@ -781,7 +782,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @param receivedMessage
      */
     public void onInboundMessage(Message receivedMessage) {
-        logMessage("Receive", receivedMessage);
+        logMessage("Receive", receivedMessage, MessageDirection.INBOUND);
     }
 
     /**
@@ -790,7 +791,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      * @param message
      */
     public void onOutboundMessage(Message message) {
-        logMessage("Send", message);
+        logMessage("Send", message, MessageDirection.OUTBOUND);
     }
 
     /**
@@ -798,13 +799,15 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
      *
      * @param message
      */
-    private void logMessage(String operation, Message message) {
+    private void logMessage(String operation, Message message, MessageDirection direction) {
         if (messageListeners != null && !messageListeners.isEmpty()) {
-            messageListeners.onOutboundMessage(message, this);
-        } else {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
+            if (MessageDirection.OUTBOUND.equals(direction)) {
+                messageListeners.onOutboundMessage(message, this);
+            } else if (MessageDirection.INBOUND.equals(direction)) {
+                messageListeners.onInboundMessage(message, this);
             }
+        } else if (log.isDebugEnabled()) {
+            log.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
         }
     }
 

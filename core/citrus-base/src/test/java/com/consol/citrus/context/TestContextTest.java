@@ -22,19 +22,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.DefaultTestCase;
 import com.consol.citrus.TestCase;
+import com.consol.citrus.UnitTestSupport;
 import com.consol.citrus.actions.CreateVariablesAction;
 import com.consol.citrus.container.StopTimer;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.VariableNullValueException;
+import com.consol.citrus.message.DefaultMessage;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.report.MessageListeners;
 import com.consol.citrus.variable.GlobalVariables;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.fail;
@@ -360,6 +365,20 @@ public class TestContextTest extends UnitTestSupport {
         context.stopTimers();
 
         verify(timer, times(2)).stopTimer();
+    }
+
+    @Test
+    public void shouldCallMessageListeners() {
+        MessageListeners listeners = Mockito.mock(MessageListeners.class);
+        context.setMessageListeners(listeners);
+
+        Message inbound = new DefaultMessage("INBOUND");
+        Message outbound = new DefaultMessage("OUTBOUND");
+        context.onInboundMessage(inbound);
+        context.onOutboundMessage(outbound);
+
+        verify(listeners).onInboundMessage(same(inbound), eq(context));
+        verify(listeners).onOutboundMessage(same(outbound), eq(context));
     }
 
     /**
