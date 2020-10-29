@@ -61,8 +61,10 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
 
     @Override
     public void send(final Message message, final TestContext context) {
+        String endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+
         if (log.isDebugEnabled()) {
-            log.debug("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+            log.debug("Sending message to camel endpoint: '" + endpointUri + "'");
         }
 
         String correlationKeyName = endpointConfiguration.getCorrelator().getCorrelationKeyName(getName());
@@ -72,16 +74,16 @@ public class CamelSyncProducer extends CamelProducer implements ReplyConsumer {
         context.onOutboundMessage(message);
 
         Exchange response = getProducerTemplate()
-                .request(endpointConfiguration.getEndpointUri(), new Processor() {
+                .request(endpointUri, new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
-                        log.info("Message was sent to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+                        log.info("Message was sent to camel endpoint: '" + endpointUri + "'");
                     }
                 });
 
 
-        log.info("Received synchronous reply message on camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+        log.info("Received synchronous reply message on camel endpoint: '" + endpointUri + "'");
         Message replyMessage = endpointConfiguration.getMessageConverter().convertInbound(response, endpointConfiguration, context);
         context.onInboundMessage(replyMessage);
         correlationManager.store(correlationKey, replyMessage);

@@ -54,12 +54,14 @@ public class CamelProducer implements Producer {
 
     @Override
     public void send(final Message message, final TestContext context) {
+        String endpointUri = context.replaceDynamicContentInString(endpointConfiguration.getEndpointUri());
+
         if (log.isDebugEnabled()) {
-            log.debug("Sending message to camel endpoint: '" + endpointConfiguration.getEndpointUri() + "'");
+            log.debug("Sending message to camel endpoint: '" + endpointUri + "'");
         }
 
         Exchange camelExchange = getProducerTemplate()
-                .send(endpointConfiguration.getEndpointUri(), new Processor() {
+                .send(endpointUri, new Processor() {
                     @Override
                     public void process(Exchange exchange) throws Exception {
                         endpointConfiguration.getMessageConverter().convertOutbound(exchange, message, endpointConfiguration, context);
@@ -72,7 +74,7 @@ public class CamelProducer implements Producer {
 
         context.onOutboundMessage(message);
 
-        log.info("Message was sent to camel endpoint '" + endpointConfiguration.getEndpointUri() + "'");
+        log.info("Message was sent to camel endpoint '" + endpointUri + "'");
     }
 
     /**
