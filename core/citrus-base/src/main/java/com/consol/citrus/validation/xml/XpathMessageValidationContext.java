@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.consol.citrus.builder.WithExpressions;
+import org.springframework.util.StringUtils;
 
 /**
  * Specialised Xml validation context adds XPath expression evaluation.
@@ -88,5 +89,14 @@ public class XpathMessageValidationContext extends XmlMessageValidationContext {
      */
     public Map<String, Object> getXpathExpressions() {
         return xPathExpressions;
+    }
+
+    /**
+     * Check whether given path expression is a JSONPath expression.
+     * @param pathExpression
+     * @return
+     */
+    public static boolean isXpathExpression(String pathExpression) {
+        return StringUtils.hasText(pathExpression) && (pathExpression.startsWith("/"));
     }
 }

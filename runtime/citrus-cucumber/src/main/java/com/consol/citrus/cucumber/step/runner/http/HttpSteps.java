@@ -43,6 +43,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 
 import static com.consol.citrus.http.actions.HttpActionBuilder.http;
+import static com.consol.citrus.validation.PathExpressionValidationContext.Builder.pathExpression;
 import static com.consol.citrus.validation.json.JsonPathMessageValidationContext.Builder.jsonPath;
 import static com.consol.citrus.validation.xml.XpathMessageValidationContext.Builder.xpath;
 
@@ -284,19 +285,7 @@ public class HttpSteps {
                 .message(response);
 
         for (Map.Entry<String, String> pathValidation : pathValidations.entrySet()) {
-            ValidationContext validationContext;
-
-            if (JsonPathMessageValidationContext.isJsonPathExpression(pathValidation.getKey())) {
-                validationContext = jsonPath()
-                        .expression(pathValidation.getKey(), pathValidation.getValue())
-                        .build();
-            } else {
-                validationContext = xpath()
-                        .expression(pathValidation.getKey(), pathValidation.getValue())
-                        .build();
-            }
-
-            responseBuilder.validate(validationContext);
+            responseBuilder.validate(pathExpression().expression(pathValidation.getKey(), pathValidation.getValue()));
         }
         pathValidations.clear();
 

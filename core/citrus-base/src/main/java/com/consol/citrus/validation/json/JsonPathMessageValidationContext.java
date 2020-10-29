@@ -31,7 +31,7 @@ import org.springframework.util.StringUtils;
  */
 public class JsonPathMessageValidationContext extends DefaultValidationContext {
 
-    /** Map holding xpath expressions as key and expected values as values */
+    /** Map holding jsonPath expressions as key and expected values as values */
     private final Map<String, Object> jsonPathExpressions;
 
     /**
