@@ -23,6 +23,7 @@ on:
       - master
     paths-ignore:
       - '**.adoc'
+      - '**.md'
       - 'KEYS'
       - 'LICENSE'
       - 'NOTICE'
@@ -31,6 +32,7 @@ on:
       - master
     paths-ignore:
       - '**.adoc'
+      - '**.md'
       - 'KEYS'
       - 'LICENSE'
       - 'NOTICE'
