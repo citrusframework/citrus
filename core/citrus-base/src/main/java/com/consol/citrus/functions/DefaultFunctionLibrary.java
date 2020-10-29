@@ -91,7 +91,9 @@ public class DefaultFunctionLibrary extends FunctionLibrary {
     private void lookupFunctions() {
         Function.lookup().forEach((k, m) -> {
             getMembers().put(k, m);
-            log.info(String.format("Register function '%s' as %s", k, m.getClass()));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Register function '%s' as %s", k, m.getClass()));
+            }
         });
     }
 }

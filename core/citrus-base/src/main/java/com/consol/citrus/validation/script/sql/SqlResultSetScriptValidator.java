@@ -56,7 +56,9 @@ public interface SqlResultSetScriptValidator {
         if (validators.isEmpty()) {
             validators.putAll(TYPE_RESOLVER.resolveAll("", TypeResolver.DEFAULT_TYPE_PROPERTY, "name"));
 
-            validators.forEach((k, v) -> LOG.info(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+            if (LOG.isDebugEnabled()) {
+                validators.forEach((k, v) -> LOG.debug(String.format("Found SQL result set validator '%s' as %s", k, v.getClass())));
+            }
         }
         return validators;
     }

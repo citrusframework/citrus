@@ -49,7 +49,9 @@ public interface Function {
         if (functions.isEmpty()) {
             functions.putAll(new ResourcePathTypeResolver().resolveAll(RESOURCE_PATH));
 
-            functions.forEach((k, v) -> LOG.info(String.format("Found function '%s' as %s", k, v.getClass())));
+            if (LOG.isDebugEnabled()) {
+                functions.forEach((k, v) -> LOG.debug(String.format("Found function '%s' as %s", k, v.getClass())));
+            }
         }
 
         return functions;

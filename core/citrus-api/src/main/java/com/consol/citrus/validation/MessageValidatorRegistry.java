@@ -171,8 +171,8 @@ public class MessageValidatorRegistry {
      * @param messageValidator
      */
     public void addMessageValidator(String name, MessageValidator<? extends ValidationContext> messageValidator) {
-        if (this.messageValidators.containsKey(name)) {
-            log.warn(String.format("Overwriting message validator '%s' in registry", name));
+        if (this.messageValidators.containsKey(name) && log.isDebugEnabled()) {
+            log.debug(String.format("Overwriting message validator '%s' in registry", name));
         }
 
         this.messageValidators.put(name, messageValidator);

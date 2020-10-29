@@ -141,7 +141,9 @@ public class JmsTopicSubscriber extends JmsConsumer implements Runnable {
                     }
                     messageQueue.createProducer().send(message, context);
                 } else {
-                    log.warn("Topic subscriber received null message - continue after " + endpointConfiguration.getPollingInterval() + " milliseconds");
+                    if (log.isDebugEnabled()) {
+                        log.debug("Topic subscriber received null message - continue after " + endpointConfiguration.getPollingInterval() + " milliseconds");
+                    }
 
                     try {
                         Thread.sleep(endpointConfiguration.getPollingInterval());

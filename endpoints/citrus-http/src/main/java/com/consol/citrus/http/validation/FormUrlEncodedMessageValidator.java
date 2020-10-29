@@ -124,12 +124,9 @@ public class FormUrlEncodedMessageValidator implements MessageValidator<Validati
         // try to find xml message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_XML_MESSAGE_VALIDATOR);
 
-        if (!defaultMessageValidator.isPresent()) {
-            try {
-                defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
-            } catch (CitrusRuntimeException e) {
-                log.warn("Unable to find default XML message validator in message validator registry");
-            }
+        if (!defaultMessageValidator.isPresent()
+                && context.getReferenceResolver().isResolvable(DEFAULT_XML_MESSAGE_VALIDATOR)) {
+            defaultMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_XML_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
         if (!defaultMessageValidator.isPresent()) {
