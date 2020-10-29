@@ -14,7 +14,7 @@
 # limitations under the License.
 
 VERSION := 3.0.0-SNAPSHOT
-RELEASE_GIT_REMOTE := upstream
+RELEASE_GIT_REMOTE := origin
 GIT_COMMIT := $(shell git rev-list -1 HEAD)
 
 default: help
@@ -23,10 +23,13 @@ help:
 	./scripts/citrus -h
 
 release:
-	./scripts/citrus release --remote $RELEASE_GIT_REMOTE --release-version $VERSION
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --release-version $(VERSION)
 
 release-snapshot:
-	./scripts/citrus release --remote $RELEASE_GIT_REMOTE --snapshot-release
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --snapshot-release
 
 release-local:
-	./scripts/citrus release --remote $RELEASE_GIT_REMOTE --local-release --no-git-push
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --local-release --no-git-push --release-version $(VERSION)
+
+release-major:
+	./scripts/citrus release --git-remote $(RELEASE_GIT_REMOTE) --major-release --release-version $(VERSION)
