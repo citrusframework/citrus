@@ -45,3 +45,17 @@ git_commit() {
         git ls-files --modified | grep $pattern | xargs git commit --amend --no-edit
     fi
 }
+
+get_git_remote() {
+  local remote=$(readopt --git-remote)
+
+  if [ -z "${remote}" ]; then
+      # Push to the remote attached to the local checkout branch
+      remote=$(git for-each-ref --format='%(upstream:short)' $(git symbolic-ref -q HEAD) | sed -e 's/\([^\/]*\)\/.*/\1/')
+      if [ -z "${remote}" ]; then
+        echo "ERROR: Cannot find remote git repository to push to"
+        exit 1
+      fi
+  fi
+  echo $remote
+}
