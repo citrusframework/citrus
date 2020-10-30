@@ -28,7 +28,7 @@
     </Root>
 
     <!-- Our own classes-->
-    <Logger name="com.consol.citrus" additivity="false" level="INFO">
+    <Logger name="com.consol.citrus" additivity="false" level="DEBUG">
       <AppenderRef ref="STDOUT"/>
     </Logger>
 
