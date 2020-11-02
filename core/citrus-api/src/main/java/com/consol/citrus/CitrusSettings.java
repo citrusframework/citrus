@@ -125,6 +125,11 @@ public final class CitrusSettings {
     public static final String MESSAGE_TRACE_DIRECTORY_ENV = "CITRUS_MESSAGE_TRACE_DIRECTORY";
     public static final String MESSAGE_TRACE_DIRECTORY_DEFAULT = "target/citrus-logs/trace/messages";
 
+    /** Default type converter */
+    public static final String TYPE_CONVERTER_PROPERTY = "citrus.type.converter";
+    public static final String TYPE_CONVERTER_ENV = "CITRUS_TYPE_CONVERTER";
+    public static final String TYPE_CONVERTER_DEFAULT = "default";
+
     /**
      * Gets set of file name patterns for XML test files.
      * @return
@@ -148,5 +153,14 @@ public final class CitrusSettings {
     public static String getMessageTraceDirectory() {
         return System.getProperty(MESSAGE_TRACE_DIRECTORY_PROPERTY,  System.getenv(MESSAGE_TRACE_DIRECTORY_ENV) != null ?
                 System.getenv(MESSAGE_TRACE_DIRECTORY_ENV) : MESSAGE_TRACE_DIRECTORY_DEFAULT);
+    }
+
+    /**
+     * Gets the type converter to use by default.
+     * @return
+     */
+    public static String getTypeConverter() {
+        return System.getProperty(TYPE_CONVERTER_PROPERTY,  System.getenv(TYPE_CONVERTER_ENV) != null ?
+                System.getenv(TYPE_CONVERTER_ENV) : TYPE_CONVERTER_DEFAULT);
     }
 }

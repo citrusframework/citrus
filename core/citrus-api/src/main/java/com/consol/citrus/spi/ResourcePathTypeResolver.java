@@ -3,6 +3,8 @@ package com.consol.citrus.spi;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -30,7 +32,10 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 public class ResourcePathTypeResolver implements TypeResolver {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(ResourcePathTypeResolver.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ResourcePathTypeResolver.class);
+
+    /** Supported static instance field in target - used as a fallback to the default constructor */
+    private static final String INSTANCE = "INSTANCE";
 
     /** Base path for resources */
     private final String resourceBasePath;
@@ -62,9 +67,22 @@ public class ResourcePathTypeResolver implements TypeResolver {
     @Override
     public <T> T resolve(String resourcePath, String property) {
         String type = resolveProperty(resourcePath, property);
+
         try {
             return (T) Class.forName(type).getDeclaredConstructor().newInstance();
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException |
+                NoSuchMethodException | InvocationTargetException e) {
+
+            try {
+                if (Arrays.stream(Class.forName(type).getFields()).anyMatch(f -> f.getName().equals(INSTANCE) &&
+                        Modifier.isStatic(f.getModifiers()))) {
+                    return (T) Class.forName(type).getField(INSTANCE).get(null);
+                }
+            } catch (IllegalAccessException | NoSuchFieldException | ClassNotFoundException e1) {
+                throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e1);
+            }
+
+            LOG.warn(String.format("Neither static instance nor accessible default constructor is given on type '%s'", type));
             throw new CitrusRuntimeException(String.format("Failed to resolve classpath resource of type '%s'", type), e);
         }
     }
@@ -79,7 +97,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                     .forEach(file -> {
                         Optional<String> resourceName = Optional.ofNullable(file.getFilename());
                         if (!resourceName.isPresent()) {
-                            log.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
+                            LOG.warn(String.format("Skip unsupported resource '%s' for resource lookup", file));
                             return;
                         }
 
@@ -100,7 +118,7 @@ public class ResourcePathTypeResolver implements TypeResolver {
                         }
                     });
         } catch (IOException e) {
-            log.warn(String.format("Failed to resolve resources in '%s'", path), e);
+            LOG.warn(String.format("Failed to resolve resources in '%s'", path), e);
         }
 
         return resources;
