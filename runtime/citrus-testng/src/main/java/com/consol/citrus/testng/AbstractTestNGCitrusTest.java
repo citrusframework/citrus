@@ -53,9 +53,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
 import org.testng.IHookCallBack;
 import org.testng.ITestContext;
-import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
-import org.testng.Reporter;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.DataProvider;
@@ -312,32 +310,6 @@ public abstract class AbstractTestNGCitrusTest extends AbstractTestNGSpringConte
         if (citrus != null) {
             citrus.afterSuite(testContext.getSuite().getName(), testContext.getIncludedGroups());
         }
-    }
-
-    /**
-     * Executes the test case.
-     * @deprecated in favor of using {@link com.consol.citrus.annotations.CitrusXmlTest} or {@link com.consol.citrus.annotations.CitrusTest} annotations on test methods.
-     */
-    @Deprecated
-    protected void executeTest() {
-        if (citrus == null) {
-            citrus = Citrus.newInstance(CitrusSpringContext.create(applicationContext));
-        }
-
-        ITestResult result = Reporter.getCurrentTestResult();
-        ITestNGMethod testNGMethod = result.getMethod();
-
-        TestContext context = prepareTestContext(citrus.getCitrusContext().createTestContext());
-        TestLoader testLoader = createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName());
-        TestCase testCase = testLoader.load();
-
-        if (testCase instanceof TestGroupAware) {
-            ((TestGroupAware) testCase).setGroups(testNGMethod.getGroups());
-        }
-
-        resolveParameter(result, testNGMethod.getConstructorOrMethod().getMethod(), testCase, context, testNGMethod.getCurrentInvocationCount());
-
-        citrus.run(testCase, context);
     }
 
     /**
