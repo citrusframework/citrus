@@ -16,11 +16,15 @@
 
 package com.consol.citrus.container;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
-
-import java.util.*;
+import org.springframework.util.PatternMatchUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Abstract test action container describes methods to enable/disable container execution based on given test name, package
@@ -41,7 +45,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
     private String packageNamePattern;
 
     /** List of test group names that match for this container */
-    private List<String> testGroups = new ArrayList<String>();
+    private List<String> testGroups = new ArrayList<>();
 
     /** Optional env parameters */
     private Map<String, String> env = new HashMap<>();
@@ -57,39 +61,31 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
      * @return
      */
     public boolean shouldExecute(String testName, String packageName, String[] includedGroups) {
-        String baseErrorMessage = "Before test container restrictions did not match given %s - do not execute container '%s'";
+        String baseErrorMessage = "Skip before test container because of %s restrictions - do not execute container '%s'";
 
         if (StringUtils.hasText(packageNamePattern)) {
-            if (packageName == null || !PatternMatchUtils.simpleMatch(packageNamePattern, packageName)) {
-                if (log.isDebugEnabled())  {
-                    log.debug(String.format(baseErrorMessage, "test package", getName()));
-                }
+            if (!PatternMatchUtils.simpleMatch(packageNamePattern, packageName)) {
+                log.warn(String.format(baseErrorMessage, "test package", getName()));
                 return false;
             }
         }
 
         if (StringUtils.hasText(namePattern)) {
-            if (testName == null || !PatternMatchUtils.simpleMatch(namePattern, testName)) {
-                if (log.isDebugEnabled())  {
-                    log.debug(String.format(baseErrorMessage, "test name", getName()));
-                }
+            if (!PatternMatchUtils.simpleMatch(namePattern, testName)) {
+                log.warn(String.format(baseErrorMessage, "test name", getName()));
                 return false;
             }
         }
 
         if (!checkTestGroups(includedGroups)) {
-            if (log.isDebugEnabled())  {
-                log.debug(String.format(baseErrorMessage, "test groups", getName()));
-            }
+            log.warn(String.format(baseErrorMessage, "test groups", getName()));
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
             if (!System.getenv().containsKey(envEntry.getKey()) ||
                     (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                if (log.isDebugEnabled())  {
-                    log.debug(String.format(baseErrorMessage, "env properties", getName()));
-                }
+                log.warn(String.format(baseErrorMessage, "env properties", getName()));
                 return false;
             }
         }
@@ -97,9 +93,7 @@ public abstract class AbstractTestBoundaryActionContainer extends AbstractAction
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
             if (!System.getProperties().containsKey(systemProperty.getKey()) ||
                     (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                if (log.isDebugEnabled())  {
-                    log.debug(String.format(baseErrorMessage, "system properties", getName()));
-                }
+                log.warn(String.format(baseErrorMessage, "system properties", getName()));
                 return false;
             }
         }
