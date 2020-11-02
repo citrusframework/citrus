@@ -22,7 +22,7 @@ import com.consol.citrus.testng.CitrusParameters;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class TestParameterIT extends AbstractTestNGCitrusTest {
+public class ParameterIT extends AbstractTestNGCitrusTest {
 
     @DataProvider(name = "someDataProvider")
     public Object[][] someDataProvider() {
