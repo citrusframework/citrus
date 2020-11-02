@@ -32,7 +32,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.AbstractJUnit4SpringContextTests;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * Abstract base test implementation for test cases that rather use JUnit testing framework. Class also provides
@@ -104,14 +103,6 @@ public abstract class AbstractJUnit4CitrusTest extends AbstractJUnit4SpringConte
         } else {
             throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + parameterType);
         }
-    }
-
-    /**
-     * Execute the test case.
-     */
-    protected void executeTest() {
-        run(new CitrusJUnit4Runner.CitrusFrameworkMethod(ReflectionUtils.findMethod(this.getClass(), "executeTest"),
-                this.getClass().getSimpleName(), this.getClass().getPackage().getName()));
     }
 
     /**

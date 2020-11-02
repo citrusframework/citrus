@@ -83,7 +83,6 @@ import com.consol.citrus.junit.CitrusJUnit4Runner;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * JUnit Citrus test provides Java DSL access to builder pattern methods in
@@ -130,12 +129,6 @@ public class JUnit4CitrusTestDesigner extends JUnit4CitrusTest implements TestDe
     @Override
     protected final boolean isRunnerMethod(Method method) {
         return false;
-    }
-
-    @Override
-    protected void executeTest() {
-        run(new CitrusJUnit4Runner.CitrusFrameworkMethod(ReflectionUtils.findMethod(this.getClass(), "configure"),
-                this.getClass().getSimpleName(), this.getClass().getPackage().getName()));
     }
 
     /**
