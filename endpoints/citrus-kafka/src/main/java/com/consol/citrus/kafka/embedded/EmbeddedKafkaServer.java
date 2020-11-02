@@ -98,7 +98,7 @@ public class EmbeddedKafkaServer implements InitializingBean, DisposableBean {
      */
     public void start() {
         if (kafkaServer != null) {
-            log.warn("Found instance of Kafka server - avoid duplicate Kafka server startup");
+            log.debug("Found instance of Kafka server - avoid duplicate Kafka server startup");
             return;
         }
 
@@ -275,7 +275,9 @@ public class EmbeddedKafkaServer implements InitializingBean, DisposableBean {
 
         props.put(KafkaConfig.ListenersProp(), SecurityProtocol.PLAINTEXT.name + "://localhost:" + kafkaServerPort);
 
-        props.forEach((key, value) -> log.debug(String.format("Using default Kafka broker property %s='%s'", key ,value)));
+        if (log.isDebugEnabled()) {
+            props.forEach((key, value) -> log.debug(String.format("Using default Kafka broker property %s='%s'", key, value)));
+        }
 
         return props;
     }

@@ -147,7 +147,7 @@
     <vertx.version>3.9.2</vertx.version>
     <groovy.version>2.5.13</groovy.version>
     <jetty.version>9.4.31.v20200723</jetty.version>
-    <testng.version>7.1.0</testng.version>
+    <testng.version>7.3.0</testng.version>
     <junit.version>4.13.1</junit.version>
     <junit.jupiter.version>5.6.2</junit.jupiter.version>
     <slf4j.version>1.7.30</slf4j.version>
@@ -181,7 +181,6 @@
     <skip.integration.tests>false</skip.integration.tests>
     <skip.unit.tests>false</skip.unit.tests>
     <skip.gpg>false</skip.gpg>
-    <reuseForks>true</reuseForks>
   </properties>
 
   <dependencyManagement>
@@ -1213,41 +1212,10 @@
           <artifactId>maven-surefire-plugin</artifactId>
           <version>${surefire.version}</version>
           <configuration>
-            <properties>
-              <property>
-                <name>junit</name>
-                <value>false</value>
-              </property>
-            </properties>
-            <threadCount>1</threadCount>
-            <systemProperties>
-              <property>
-                <name>javax.xml.parsers.SAXParserFactory</name>
-                <value>org.apache.xerces.jaxp.SAXParserFactoryImpl</value>
-              </property>
-              <property>
-                <name>user.language</name>
-                <value>en</value>
-              </property>
-            </systemProperties>
-            <forkCount>1</forkCount>
-            <reuseForks>${reuseForks}</reuseForks>
             <failIfNoTests>false</failIfNoTests>
             <skipTests>${skip.unit.tests}</skipTests>
             <workingDirectory>${project.build.directory}</workingDirectory>
           </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-junit-platform</artifactId>
-              <version>${surefire.version}</version>
-            </dependency>
-            <dependency>
-              <groupId>org.apache.maven.surefire</groupId>
-              <artifactId>surefire-testng</artifactId>
-              <version>${surefire.version}</version>
-            </dependency>
-          </dependencies>
         </plugin>
 
         <plugin>
@@ -1264,8 +1232,6 @@
               <configuration>
                 <failIfNoTests>false</failIfNoTests>
                 <skipTests>${skip.integration.tests}</skipTests>
-                <forkCount>1</forkCount>
-                <threadCount>1</threadCount>
               </configuration>
             </execution>
           </executions>

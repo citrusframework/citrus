@@ -16,12 +16,15 @@
 
 package com.consol.citrus.container;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
-
-import java.util.*;
 
 /**
  * Abstract suit container actions executed before and after test suite run. Container decides
@@ -36,10 +39,10 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
     private static Logger log = LoggerFactory.getLogger(AbstractSuiteActionContainer.class);
 
     /** List of suite names that match for this container */
-    private List<String> suiteNames = new ArrayList<String>();
+    private List<String> suiteNames = new ArrayList<>();
 
     /** List of test group names that match for this container */
-    private List<String> testGroups = new ArrayList<String>();
+    private List<String> testGroups = new ArrayList<>();
 
     /** Optional env parameters */
     private Map<String, String> env = new HashMap<>();
@@ -54,29 +57,23 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
      * @return
      */
     public boolean shouldExecute(String suiteName, String[] includedGroups) {
-        String baseErrorMessage = "Suite container restrictions did not match %s - do not execute container '%s'";
+        String baseErrorMessage = "Skip before/after suite container because of %s restriction - do not execute container '%s'";
 
         if (StringUtils.hasText(suiteName) &&
                 !CollectionUtils.isEmpty(suiteNames) && ! suiteNames.contains(suiteName)) {
-            if (log.isDebugEnabled())  {
-                log.debug(String.format(baseErrorMessage, "suite name", getName()));
-            }
+            log.warn(String.format(baseErrorMessage, "suite name", getName()));
             return false;
         }
 
         if (!checkTestGroups(includedGroups)) {
-            if (log.isDebugEnabled())  {
-                log.debug(String.format(baseErrorMessage, "test groups", getName()));
-            }
+            log.warn(String.format(baseErrorMessage, "test groups", getName()));
             return false;
         }
 
         for (Map.Entry<String, String> envEntry : env.entrySet()) {
             if (!System.getenv().containsKey(envEntry.getKey()) ||
                     (StringUtils.hasText(envEntry.getValue()) && !System.getenv().get(envEntry.getKey()).equals(envEntry.getValue()))) {
-                if (log.isDebugEnabled())  {
-                    log.debug(String.format(baseErrorMessage, "env properties", getName()));
-                }
+                log.warn(String.format(baseErrorMessage, "env properties", getName()));
                 return false;
             }
         }
@@ -84,9 +81,7 @@ public abstract class AbstractSuiteActionContainer extends AbstractActionContain
         for (Map.Entry<String, String> systemProperty : systemProperties.entrySet()) {
             if (!System.getProperties().containsKey(systemProperty.getKey()) ||
                     (StringUtils.hasText(systemProperty.getValue()) && !System.getProperties().get(systemProperty.getKey()).equals(systemProperty.getValue()))) {
-                if (log.isDebugEnabled())  {
-                    log.debug(String.format(baseErrorMessage, "system properties", getName()));
-                }
+                log.warn(String.format(baseErrorMessage, "system properties", getName()));
                 return false;
             }
         }

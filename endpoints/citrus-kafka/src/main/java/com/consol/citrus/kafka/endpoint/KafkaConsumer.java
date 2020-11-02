@@ -81,7 +81,9 @@ public class KafkaConsumer extends AbstractMessageConsumer {
             throw new MessageTimeoutException(timeout, topic);
         }
 
-        records.forEach(record -> log.debug("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset()));
+        if (log.isDebugEnabled()) {
+            records.forEach(record -> log.debug("Received message: (" + record.key() + ", " + record.value() + ") at offset " + record.offset()));
+        }
 
         Message received = endpointConfiguration.getMessageConverter()
                                                 .convertInbound(records.iterator().next(), endpointConfiguration, context);

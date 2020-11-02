@@ -152,12 +152,9 @@ public class DockerExecuteAction extends AbstractTestAction {
         // try to find json message validator in registry
         Optional<MessageValidator<? extends ValidationContext>> defaultJsonMessageValidator = context.getMessageValidatorRegistry().findMessageValidator(DEFAULT_JSON_MESSAGE_VALIDATOR);
 
-        if (!defaultJsonMessageValidator.isPresent()) {
-            try {
-                defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class));
-            } catch (CitrusRuntimeException e) {
-                log.warn("Unable to find default JSON message validator in message validator registry");
-            }
+        if (!defaultJsonMessageValidator.isPresent()
+                && context.getReferenceResolver().isResolvable(DEFAULT_JSON_MESSAGE_VALIDATOR)) {
+            defaultJsonMessageValidator = Optional.of(context.getReferenceResolver().resolve(DEFAULT_JSON_MESSAGE_VALIDATOR, MessageValidator.class));
         }
 
         if (!defaultJsonMessageValidator.isPresent()) {

@@ -33,12 +33,6 @@ public class DataProviderIT extends AbstractTestNGCitrusTest {
     public void DataProviderIT(String message) {
     }
 
-    @Parameters( "message" )
-    @Test(dataProvider = "citrusDataProvider")
-    public void dataProviderIT(String message) {
-        executeTest();
-    }
-
     @DataProvider
     public Object[][] citrusDataProvider() {
         return new Object[][] {

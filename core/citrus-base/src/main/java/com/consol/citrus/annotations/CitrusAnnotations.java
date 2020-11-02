@@ -92,7 +92,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
-                log.debug(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
+                log.trace(String.format("Injecting Citrus framework instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, testCase, citrusFramework);
             }
         }, new ReflectionUtils.FieldFilter() {
@@ -121,7 +121,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestContext.class.isAssignableFrom(type)) {
-                log.debug(String.format("Injecting test context instance on test class field '%s'", field.getName()));
+                log.trace(String.format("Injecting test context instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, context);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -148,7 +148,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestCaseRunner.class.isAssignableFrom(type)) {
-                log.debug(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
+                log.trace(String.format("Injecting test runner instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -178,7 +178,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (TestActionRunner.class.isAssignableFrom(type)) {
-                log.debug(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
+                log.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);
@@ -205,7 +205,7 @@ public abstract class CitrusAnnotations {
         ReflectionUtils.doWithFields(target.getClass(), field -> {
             Class<?> type = field.getType();
             if (GherkinTestActionRunner.class.isAssignableFrom(type)) {
-                log.debug(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
+                log.trace(String.format("Injecting test action runner instance on test class field '%s'", field.getName()));
                 ReflectionUtils.setField(field, target, runner);
             } else {
                 throw new CitrusRuntimeException("Not able to provide a Citrus resource injection for type " + type);

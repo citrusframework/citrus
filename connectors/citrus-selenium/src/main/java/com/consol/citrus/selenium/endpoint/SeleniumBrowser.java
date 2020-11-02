@@ -118,7 +118,7 @@ public class SeleniumBrowser extends AbstractEndpoint implements Producer {
                 }
             }
         } else {
-            log.warn("Browser already started");
+            log.debug("Browser already started");
         }
     }
 

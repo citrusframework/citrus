@@ -78,10 +78,7 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.script.GroovyAction;
 import com.consol.citrus.server.Server;
 import org.springframework.core.io.Resource;
-import org.springframework.util.ReflectionUtils;
-import org.testng.ITestNGMethod;
 import org.testng.ITestResult;
-import org.testng.Reporter;
 
 /**
  * TestNG Citrus test provides Java DSL access to builder pattern methods in
@@ -119,13 +116,6 @@ public class TestNGCitrusTestDesigner extends TestNGCitrusTest implements TestDe
     @Override
     protected final boolean isRunnerMethod(Method method) {
         return false;
-    }
-
-    @Override
-    protected void executeTest() {
-        ITestNGMethod testNGMethod = Reporter.getCurrentTestResult().getMethod();
-        run(Reporter.getCurrentTestResult(), ReflectionUtils.findMethod(this.getClass(), "configure"),
-                createTestLoader(this.getClass().getSimpleName(), this.getClass().getPackage().getName()), testNGMethod.getCurrentInvocationCount());
     }
 
     /**

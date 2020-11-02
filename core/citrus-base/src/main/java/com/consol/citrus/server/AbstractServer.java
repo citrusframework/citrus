@@ -168,7 +168,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
             return applicationContext.getBean(TestContextFactory.class);
         }
 
-        log.warn("Unable to create test context factory from Spring application context - " +
+        log.debug("Unable to create test context factory from Spring application context - " +
                 "using minimal test context factory");
         return TestContextFactory.newInstance();
     }
