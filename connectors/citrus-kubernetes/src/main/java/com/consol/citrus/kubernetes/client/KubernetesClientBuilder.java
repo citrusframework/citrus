@@ -83,12 +83,12 @@ public class KubernetesClientBuilder extends AbstractEndpointBuilder<KubernetesC
     }
 
     /**
-     * Sets the client email.
-     * @param email
+     * Sets the client namespace.
+     * @param namespace
      * @return
      */
-    public KubernetesClientBuilder namespace(String email) {
-        config.withNamespace(email);
+    public KubernetesClientBuilder namespace(String namespace) {
+        config.withNamespace(namespace);
         return this;
     }
 
