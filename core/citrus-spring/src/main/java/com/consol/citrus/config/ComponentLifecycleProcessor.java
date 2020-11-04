@@ -20,6 +20,7 @@
 package com.consol.citrus.config;
 
 import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -42,7 +43,11 @@ public class ComponentLifecycleProcessor implements DestructionAwareBeanPostProc
     private final static Logger LOG = LoggerFactory.getLogger(ComponentLifecycleProcessor.class);
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        if (bean instanceof Named) {
+            ((Named) bean).setName(beanName);
+        }
+
         if (bean instanceof ReferenceResolverAware) {
             ((ReferenceResolverAware) bean).setReferenceResolver(referenceResolver);
         }

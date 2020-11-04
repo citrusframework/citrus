@@ -16,31 +16,39 @@
 
 package com.consol.citrus.xml.schema;
 
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.*;
-import org.springframework.util.Assert;
-import org.springframework.xml.validation.XmlValidator;
-import org.springframework.xml.validation.XmlValidatorFactory;
-import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.xml.sax.SAXException;
-
 import javax.wsdl.WSDLException;
-import javax.wsdl.extensions.schema.*;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.*;
+import javax.wsdl.extensions.schema.Schema;
+import javax.wsdl.extensions.schema.SchemaImport;
+import javax.wsdl.extensions.schema.SchemaReference;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
+
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
+import org.springframework.xml.validation.XmlValidator;
+import org.springframework.xml.validation.XmlValidatorFactory;
+import org.springframework.xml.xsd.SimpleXsdSchema;
 
 /**
  * @author Christoph Deppisch
  * @since 2.4
  */
-public abstract class AbstractSchemaCollection extends SimpleXsdSchema implements InitializingBean {
+public abstract class AbstractSchemaCollection extends SimpleXsdSchema implements InitializingPhase {
 
     /** List of schema resources */
     protected List<Resource> schemaResources = new ArrayList<>();
@@ -110,7 +118,7 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
     }
 
     @Override
-    public void afterPropertiesSet() throws ParserConfigurationException, IOException, SAXException {
+    public void initialize() {
         Resource targetXsd = loadSchemaResources();
 
         if (targetXsd == null) {
@@ -119,8 +127,6 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
 
         Assert.isTrue(!schemaResources.isEmpty(), "At least one schema xsd file resource is required");
         setXsd(targetXsd);
-
-        super.afterPropertiesSet();
     }
 
     /**

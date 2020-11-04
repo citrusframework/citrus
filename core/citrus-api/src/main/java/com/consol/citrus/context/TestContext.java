@@ -77,7 +77,7 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(TestContext.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestContext.class);
 
     /**
      * Local variables
@@ -277,8 +277,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             throw new VariableNullValueException("Trying to set variable: " + VariableUtils.cutOffVariablesPrefix(variableName) + ", but variable value is null");
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("Setting variable: %s with value: '%s'", VariableUtils.cutOffVariablesPrefix(variableName), value));
         }
 
         variables.put(VariableUtils.cutOffVariablesPrefix(variableName), value);
@@ -806,8 +806,8 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
             } else if (MessageDirection.INBOUND.equals(direction)) {
                 messageListeners.onInboundMessage(message, this);
             }
-        } else if (log.isDebugEnabled()) {
-            log.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
+        } else if (LOG.isDebugEnabled()) {
+            LOG.debug(String.format("%s message:%n%s", operation, Optional.ofNullable(message).map(Message::toString).orElse("")));
         }
     }
 
@@ -961,11 +961,6 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         }
 
         @Override
-        public TestAction setName(String name) {
-            return this;
-        }
-
-        @Override
         public String getDescription() {
             return "Empty test";
         }
@@ -988,6 +983,11 @@ public class TestContext implements ReferenceResolverAware, TestActionListenerAw
         @Override
         public TestAction setActor(TestActor actor) {
             return this;
+        }
+
+        @Override
+        public void setName(String name) {
+            // do nothing
         }
 
         @Override

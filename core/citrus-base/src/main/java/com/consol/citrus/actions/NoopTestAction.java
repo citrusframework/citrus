@@ -15,6 +15,7 @@ public class NoopTestAction implements TestAction {
 
     @Override
     public void execute(TestContext context) {
+        // do nothing
     }
 
     @Override
@@ -23,8 +24,8 @@ public class NoopTestAction implements TestAction {
     }
 
     @Override
-    public TestAction setName(String name) {
-        return null;
+    public void setName(String name) {
+        // do nothing
     }
 
     @Override

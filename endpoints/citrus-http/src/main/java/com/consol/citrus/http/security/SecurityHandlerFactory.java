@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.consol.citrus.common.InitializingPhase;
 import org.eclipse.jetty.security.AbstractLoginService;
 import org.eclipse.jetty.security.Authenticator;
 import org.eclipse.jetty.security.ConstraintMapping;
@@ -38,7 +39,6 @@ import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * Factory bean constructs a security handler for usage in Jetty servlet container. Security handler
@@ -47,7 +47,7 @@ import org.springframework.beans.factory.InitializingBean;
  * @author Christoph Deppisch
  * @since 1.3
  */
-public class SecurityHandlerFactory implements InitializingBean, FactoryBean<SecurityHandler> {
+public class SecurityHandlerFactory implements FactoryBean<SecurityHandler>, InitializingPhase {
 
     /** User credentials known to login service */
     private List<User> users = new ArrayList<>();
@@ -85,11 +85,8 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
         return securityHandler;
     }
 
-    /**
-     * Initialize member variables if not set by user in application context.
-     */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (loginService == null) {
             loginService = new SimpleLoginService();
             ((SimpleLoginService) loginService).setName(realm);

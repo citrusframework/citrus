@@ -16,14 +16,16 @@
 
 package com.consol.citrus.json;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.common.Named;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.json.schema.SimpleJsonSchema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -31,7 +33,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
  * Schema repository holding a set of json schema resources known in the test scope.
  * @since 2.7.3
  */
-public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
+public class JsonSchemaRepository  implements Named, InitializingPhase {
 
     /** This repositories name in the Spring application context */
     private String name;
@@ -45,38 +47,35 @@ public class JsonSchemaRepository  implements BeanNameAware, InitializingBean {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(JsonSchemaRepository.class);
 
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void setBeanName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void afterPropertiesSet() throws Exception {
-        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+    public void initialize() {
+        try {
+            PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
-        for (String location : locations) {
-            Resource[] findings = resourcePatternResolver.getResources(location);
+            for (String location : locations) {
+                Resource[] findings = resourcePatternResolver.getResources(location);
 
-            for (Resource resource : findings) {
-                addSchemas(resource);
+                for (Resource resource : findings) {
+                    addSchemas(resource);
+                }
             }
+        } catch (IOException e) {
+            throw new CitrusRuntimeException("Failed to initialize Json schema repository", e);
         }
     }
 
-    private void addSchemas(Resource resource) throws Exception {
+    private void addSchemas(Resource resource) {
         if (resource.getFilename().endsWith(".json")) {
             if (log.isDebugEnabled()) {
                 log.debug("Loading json schema resource " + resource.getFilename());
             }
             SimpleJsonSchema simpleJsonSchema = new SimpleJsonSchema(resource);
-            simpleJsonSchema.afterPropertiesSet();
+            simpleJsonSchema.initialize();
             schemas.add(simpleJsonSchema);
         } else {
             log.warn("Skipped resource other than json schema for repository (" + resource.getFilename() + ")");

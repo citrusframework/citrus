@@ -21,13 +21,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.common.Named;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.xml.schema.TargetNamespaceSchemaMappingStrategy;
 import com.consol.citrus.xml.schema.WsdlXsdSchema;
 import com.consol.citrus.xml.schema.XsdSchemaMappingStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.BeanNameAware;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.xml.xsd.SimpleXsdSchema;
@@ -41,7 +42,7 @@ import org.xml.sax.SAXException;
  * @author Christoph Deppisch
  */
 @SuppressWarnings("unused")
-public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
+public class XsdSchemaRepository implements Named, InitializingPhase {
     /** This repositories name in the Spring application context */
     private String name = "schemaRepository";
 
@@ -55,7 +56,7 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
     private XsdSchemaMappingStrategy schemaMappingStrategy = new TargetNamespaceSchemaMappingStrategy();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XsdSchemaRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XsdSchemaRepository.class);
 
     /**
      * Find the matching schema for document using given schema mapping strategy.
@@ -67,28 +68,30 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         return schema != null;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void afterPropertiesSet() throws Exception {
-        PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+    @Override
+    public void initialize() {
+        try {
+            PathMatchingResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
-        for (String location : locations) {
-            Resource[] findings = resourcePatternResolver.getResources(location);
+            for (String location : locations) {
+                Resource[] findings = resourcePatternResolver.getResources(location);
 
-            for (Resource resource : findings) {
-                addSchemas(resource);
+                for (Resource resource : findings) {
+                    addSchemas(resource);
+                }
             }
-        }
 
-        // Add default Citrus message schemas if available on classpath
-        addCitrusSchema("citrus-http-message");
-        addCitrusSchema("citrus-mail-message");
-        addCitrusSchema("citrus-ftp-message");
-        addCitrusSchema("citrus-jdbc-message");
-        addCitrusSchema("citrus-ssh-message");
-        addCitrusSchema("citrus-rmi-message");
-        addCitrusSchema("citrus-jmx-message");
+            // Add default Citrus message schemas if available on classpath
+            addCitrusSchema("citrus-http-message");
+            addCitrusSchema("citrus-mail-message");
+            addCitrusSchema("citrus-ftp-message");
+            addCitrusSchema("citrus-jdbc-message");
+            addCitrusSchema("citrus-ssh-message");
+            addCitrusSchema("citrus-rmi-message");
+            addCitrusSchema("citrus-jmx-message");
+        } catch (SAXException | ParserConfigurationException | IOException e) {
+            throw new CitrusRuntimeException("Failed to initialize Xsd schema repository", e);
+        }
     }
 
     /**
@@ -102,33 +105,37 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         }
     }
 
-    private void addSchemas(Resource resource) throws ParserConfigurationException, IOException, SAXException {
+    private void addSchemas(Resource resource) {
         if (resource.getFilename().endsWith(".xsd")) {
             addXsdSchema(resource);
         } else if (resource.getFilename().endsWith(".wsdl")) {
             addWsdlSchema(resource);
         } else {
-            log.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
+            LOG.warn("Skipped resource other than XSD schema for repository (" + resource.getFilename() + ")");
         }
     }
 
-    private void addWsdlSchema(Resource resource) throws ParserConfigurationException, IOException, SAXException {
-        if (log.isDebugEnabled()) {
-            log.debug("Loading WSDL schema resource " + resource.getFilename());
+    private void addWsdlSchema(Resource resource) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Loading WSDL schema resource " + resource.getFilename());
         }
 
         WsdlXsdSchema wsdl = new WsdlXsdSchema(resource);
-        wsdl.afterPropertiesSet();
+        wsdl.initialize();
         schemas.add(wsdl);
     }
 
-    private void addXsdSchema(Resource resource) throws ParserConfigurationException, IOException, SAXException {
-        if (log.isDebugEnabled()) {
-            log.debug("Loading XSD schema resource " + resource.getFilename());
+    private void addXsdSchema(Resource resource) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Loading XSD schema resource " + resource.getFilename());
         }
 
         SimpleXsdSchema schema = new SimpleXsdSchema(resource);
-        schema.afterPropertiesSet();
+        try {
+            schema.afterPropertiesSet();
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new CitrusRuntimeException("Failed to initialize xsd schema", e);
+        }
         schemas.add(schema);
     }
 
@@ -164,10 +171,8 @@ public class XsdSchemaRepository implements BeanNameAware, InitializingBean {
         return schemaMappingStrategy;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void setBeanName(String name) {
+    @Override
+    public void setName(String name) {
         this.name = name;
     }
 

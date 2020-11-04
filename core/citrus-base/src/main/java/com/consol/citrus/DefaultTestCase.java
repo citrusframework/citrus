@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.consol.citrus.common.Named;
 import com.consol.citrus.container.AbstractActionContainer;
 import com.consol.citrus.container.AfterTest;
 import com.consol.citrus.container.BeforeTest;
@@ -13,14 +14,13 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.TestCaseFailedException;
 import com.consol.citrus.util.TestUtils;
-import org.springframework.beans.factory.BeanNameAware;
 
 /**
  * Default test case implementation holding a list of test actions to execute. Test case also holds variable definitions and
  * performs the test lifecycle such as start, finish, before and after test.
  * @author Christoph Deppisch
  */
-public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware, BeanNameAware {
+public class DefaultTestCase extends AbstractActionContainer implements TestCase, TestGroupAware, TestParameterAware, Named {
 
     /** Further chain of test actions to be executed in any case (success, error)
      * Usually used to clean up database in any case of test result */
@@ -39,7 +39,7 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
     private String packageName = this.getClass().getPackage().getName();
 
     /** In case test was called with parameters from outside */
-    private Map<String, Object> parameters = new LinkedHashMap<>();
+    private final Map<String, Object> parameters = new LinkedHashMap<>();
 
     /** The result of this test case */
     private TestResult testResult;
@@ -341,13 +341,6 @@ public class DefaultTestCase extends AbstractActionContainer implements TestCase
      */
     public List<TestAction> getFinalActions() {
         return finalActions.stream().map(TestActionBuilder::build).collect(Collectors.toList());
-    }
-
-    @Override
-    public void setBeanName(final String name) {
-        if (getName() == null) {
-            setName(name);
-        }
     }
 
     @Override

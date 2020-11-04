@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.consol.citrus.common.InitializingPhase;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
@@ -27,13 +28,14 @@ import org.apache.http.client.AuthCache;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.impl.auth.BasicScheme;
-import org.apache.http.impl.client.*;
+import org.apache.http.impl.client.AbstractHttpClient;
+import org.apache.http.impl.client.BasicAuthCache;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.Assert;
@@ -45,7 +47,7 @@ import org.springframework.util.Assert;
  * @author Christoph Deppisch
  * @since 1.2
  */
-public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingBean {
+public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpComponentsClientHttpRequestFactory>, InitializingPhase {
 
     /** Custom Http params */
     private Map<String, Object> params;
@@ -111,7 +113,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (httpClient == null) {
             httpClient = new DefaultHttpClient();
         }

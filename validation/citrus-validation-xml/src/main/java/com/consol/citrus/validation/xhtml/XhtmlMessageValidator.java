@@ -16,6 +16,7 @@
 
 package com.consol.citrus.validation.xhtml;
 
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
@@ -24,7 +25,6 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
-import org.springframework.beans.factory.InitializingBean;
 
 /**
  * XHTML message validator using W3C jtidy to automatically convert HTML content to XHTML fixing most common
@@ -32,7 +32,7 @@ import org.springframework.beans.factory.InitializingBean;
  *
  * @author Christoph Deppisch
  */
-public class XhtmlMessageValidator extends DomXmlMessageValidator implements InitializingBean {
+public class XhtmlMessageValidator extends DomXmlMessageValidator implements InitializingPhase {
 
     /** Message converter for XHTML content */
     private XhtmlMessageConverter messageConverter = new XhtmlMessageConverter();
@@ -53,7 +53,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         messageConverter.initialize();
     }
 

@@ -49,10 +49,10 @@ public class JsonSchemaValidationTest {
         //GIVEN
         //Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository1");
+        jsonSchemaRepository.setName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
         //Add json schema repositories to a list
@@ -95,10 +95,10 @@ public class JsonSchemaValidationTest {
         //GIVEN
         //Setup json schema repositories
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository1");
+        jsonSchemaRepository.setName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
         //Add json schema repositories to a list
@@ -137,16 +137,16 @@ public class JsonSchemaValidationTest {
 
         //GIVEN
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository1");
+        jsonSchemaRepository.setName("schemaRepository1");
 
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/BookSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
         schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
 
         //Add json schema repositories to a list
@@ -189,21 +189,21 @@ public class JsonSchemaValidationTest {
 
         //Setup Repository 1 - does not contain the valid schema
         JsonSchemaRepository jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository1");
+        jsonSchemaRepository.setName("schemaRepository1");
 
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/BookSchema.json");
         SimpleJsonSchema schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
         repositoryList.add(jsonSchemaRepository);
 
         //Setup Repository 2 - contains the valid schema
         jsonSchemaRepository = new JsonSchemaRepository();
-        jsonSchemaRepository.setBeanName("schemaRepository2");
+        jsonSchemaRepository.setName("schemaRepository2");
 
         schemaResource = new ClassPathResource("com/consol/citrus/validation/ProductsSchema.json");
         schema = new SimpleJsonSchema(schemaResource);
-        schema.afterPropertiesSet();
+        schema.initialize();
         jsonSchemaRepository.getSchemas().add(schema);
         repositoryList.add(jsonSchemaRepository);
 

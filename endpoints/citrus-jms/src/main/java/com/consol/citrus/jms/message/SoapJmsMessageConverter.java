@@ -29,19 +29,18 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.jms.endpoint.JmsEndpointConfiguration;
 import com.consol.citrus.message.MessageHeaderUtils;
 import com.consol.citrus.message.MessageHeaders;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.xml.StringResult;
 import com.consol.citrus.xml.StringSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.springframework.ws.soap.SoapHeader;
 import org.springframework.ws.soap.SoapHeaderElement;
@@ -57,16 +56,16 @@ import org.springframework.ws.soap.SoapMessageFactory;
  * @author Christoph Deppisch
  * @since 2.0
  */
-public class SoapJmsMessageConverter extends JmsMessageConverter implements InitializingBean, ApplicationContextAware {
+public class SoapJmsMessageConverter extends JmsMessageConverter implements InitializingPhase, ReferenceResolverAware {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(SoapJmsMessageConverter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(SoapJmsMessageConverter.class);
 
     /** Soap message factory - either set explicitly or auto configured through application context */
     private SoapMessageFactory soapMessageFactory;
 
-    /** Spring application context used for auto configuration of soap message factory */
-    private ApplicationContext applicationContext;
+    /** Reference resolver used for auto configuration of soap message factory */
+    private ReferenceResolver referenceResolver;
 
     /** Message transformer */
     private TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -124,7 +123,7 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     public Message createJmsMessage(com.consol.citrus.message.Message message, Session session, JmsEndpointConfiguration endpointConfiguration, TestContext context) {
         String payload = message.getPayload(String.class);
 
-        log.debug("Creating SOAP message from payload: " + payload);
+        LOG.debug("Creating SOAP message from payload: " + payload);
 
         try {
             SoapMessage soapMessage = soapMessageFactory.createWebServiceMessage();
@@ -179,16 +178,16 @@ public class SoapJmsMessageConverter extends JmsMessageConverter implements Init
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (soapMessageFactory == null) {
-            Assert.notNull(applicationContext, "Missing Spring application context for auto configuration of soap message factory");
-            soapMessageFactory = applicationContext.getBean(SoapMessageFactory.class);
+            Assert.notNull(referenceResolver, "Missing reference resolver for auto configuration of soap message factory");
+            soapMessageFactory = referenceResolver.resolve(SoapMessageFactory.class);
         }
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
     /**

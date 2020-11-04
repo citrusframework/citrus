@@ -137,7 +137,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         validator.addSchemaRepository(schemaRepository);
 
@@ -166,7 +166,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         validator.addSchemaRepository(schemaRepository);
 
@@ -195,7 +195,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         validator.addSchemaRepository(schemaRepository);
 
@@ -224,7 +224,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
 
         schemaRepository.getSchemas().add(schema);
         schemaRepository.getLocations().add("schemas/soap-1.1.xsd");
-        schemaRepository.afterPropertiesSet();
+        schemaRepository.initialize();
 
         validator.addSchemaRepository(schemaRepository);
 
@@ -295,7 +295,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
-        schemaRepository.setBeanName("schemaRepository1");
+        schemaRepository.setName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
         SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
         schema.afterPropertiesSet();
@@ -305,7 +305,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         validator.addSchemaRepository(schemaRepository);
 
         XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
-        schemaRepository2.setBeanName("schemaRepository2");
+        schemaRepository2.setName("schemaRepository2");
         Resource schemaResource2 = new ClassPathResource("com/consol/citrus/validation/sample.xsd");
         SimpleXsdSchema schema2 = new SimpleXsdSchema(schemaResource2);
         schema2.afterPropertiesSet();
@@ -336,7 +336,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
-        schemaRepository.setBeanName("schemaRepository1");
+        schemaRepository.setName("schemaRepository1");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
         SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
         schema.afterPropertiesSet();
@@ -346,7 +346,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         validator.addSchemaRepository(schemaRepository);
 
         XsdSchemaRepository schemaRepository2 = new XsdSchemaRepository();
-        schemaRepository2.setBeanName("schemaRepository2");
+        schemaRepository2.setName("schemaRepository2");
         Resource schemaResource2 = new ClassPathResource("com/consol/citrus/validation/sample.xsd");
         SimpleXsdSchema schema2 = new SimpleXsdSchema(schemaResource2);
         schema2.afterPropertiesSet();
@@ -374,7 +374,7 @@ public class DomXmlMessageValidatorTest extends UnitTestSupport {
         DomXmlMessageValidator validator = new DomXmlMessageValidator();
 
         XsdSchemaRepository schemaRepository = new XsdSchemaRepository();
-        schemaRepository.setBeanName("schemaRepository");
+        schemaRepository.setName("schemaRepository");
         Resource schemaResource = new ClassPathResource("com/consol/citrus/validation/test.xsd");
         SimpleXsdSchema schema = new SimpleXsdSchema(schemaResource);
         schema.afterPropertiesSet();

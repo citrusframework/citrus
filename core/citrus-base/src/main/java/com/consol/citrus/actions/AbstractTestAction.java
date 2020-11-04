@@ -98,9 +98,8 @@ public abstract class AbstractTestAction implements TestAction {
     }
 
     @Override
-    public AbstractTestAction setName(String name) {
+    public void setName(String name) {
         this.name = name;
-        return this;
     }
 
     /**
