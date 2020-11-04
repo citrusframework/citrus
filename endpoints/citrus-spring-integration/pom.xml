@@ -52,6 +52,19 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-json</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-validation-xml</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
+    </dependency>
+
     <!-- Spring Framework -->
     <dependency>
       <groupId>org.springframework.integration</groupId>
@@ -72,12 +85,6 @@
     <dependency>
       <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-test-support</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-validation-xml</artifactId>
       <version>${project.version}</version>
       <scope>test</scope>
     </dependency>

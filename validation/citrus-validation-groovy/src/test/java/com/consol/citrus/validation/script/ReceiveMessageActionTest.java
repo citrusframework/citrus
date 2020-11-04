@@ -34,7 +34,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
 import com.consol.citrus.validation.MessageValidatorRegistry;
@@ -241,7 +241,9 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
         when(endpoint.getActor()).thenReturn(null);
 
         context.getMessageValidatorRegistry().addMessageValidator("xml", xmlMessageValidator);
-        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name()) && XMLUtils.hasXmlPayload(invocation.getArgument(1)));
+        when(xmlMessageValidator.supportsMessageType(any(String.class), any(Message.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0).equals(MessageType.XML.name())
+                        && MessageUtils.hasXmlPayload(invocation.getArgument(1)));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -267,7 +269,8 @@ public class ReceiveMessageActionTest extends AbstractTestNGUnitTest {
                 .build();
         receiveAction.execute(context);
 
-        verify(xmlMessageValidator, times(2)).validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
+        verify(xmlMessageValidator, times(2))
+                .validateMessage(any(Message.class), any(Message.class), eq(context), any(List.class));
 
     }
 }

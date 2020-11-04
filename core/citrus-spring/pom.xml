@@ -61,6 +61,11 @@
       <artifactId>spring-context</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>xerces</groupId>
+      <artifactId>xercesImpl</artifactId>
+    </dependency>
+
     <!-- Optional dependencies -->
     <dependency>
       <groupId>org.apache.ant</groupId>

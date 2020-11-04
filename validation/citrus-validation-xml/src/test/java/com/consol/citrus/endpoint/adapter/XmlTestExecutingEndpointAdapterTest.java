@@ -17,6 +17,7 @@
 package com.consol.citrus.endpoint.adapter;
 
 import com.consol.citrus.UnitTestSupport;
+import com.consol.citrus.config.CitrusSpringConfig;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.context.TestContextFactoryBean;
 import com.consol.citrus.endpoint.adapter.mapping.XPathPayloadMappingKeyExtractor;
@@ -47,7 +48,7 @@ import static org.mockito.Mockito.when;
  * @author Christoph Deppisch
  * @since 1.4
  */
-@ContextConfiguration(classes = XmlTestExecutingEndpointAdapterTest.EndpointConfig.class)
+@ContextConfiguration(classes = { CitrusSpringConfig.class, XmlTestExecutingEndpointAdapterTest.EndpointConfig.class })
 public class XmlTestExecutingEndpointAdapterTest extends UnitTestSupport {
 
     @Autowired

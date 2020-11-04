@@ -16,9 +16,9 @@
 
 package com.consol.citrus.validation.script;
 
-import com.consol.citrus.json.JsonUtils;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.util.MessageUtils;
 import org.springframework.core.io.ClassPathResource;
 
 /**
@@ -40,6 +40,6 @@ public class GroovyJsonMessageValidator extends GroovyScriptMessageValidator {
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
         // only support json message type
-        return messageType.equalsIgnoreCase(MessageType.JSON.name()) && JsonUtils.hasJsonPayload(message);
+        return messageType.equalsIgnoreCase(MessageType.JSON.name()) && MessageUtils.hasJsonPayload(message);
     }
 }

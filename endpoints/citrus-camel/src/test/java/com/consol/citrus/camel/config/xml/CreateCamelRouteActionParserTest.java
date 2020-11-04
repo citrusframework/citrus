@@ -33,7 +33,8 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
         CreateCamelRouteAction action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("citrusCamelContext", CamelContext.class));
-        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+                "<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route id=\"route_1\">" +
                         "<from uri=\"direct:test1\"/>" +
                         "<to uri=\"mock:test1\"/>" +
@@ -48,7 +49,8 @@ public class CreateCamelRouteActionParserTest extends AbstractActionParserTest<C
         action = getNextTestActionFromTest();
         Assert.assertNotNull(action.getCamelContext());
         Assert.assertEquals(action.getCamelContext(), beanDefinitionContext.getBean("camelContext", CamelContext.class));
-        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<?xml version=\"1.0\" encoding=\"UTF-8\"?><routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
+        Assert.assertEquals(StringUtils.trimAllWhitespace(action.getRouteContext()), ("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>" +
+                "<routeContext xmlns=\"http://camel.apache.org/schema/spring\">" +
                     "<route>" +
                         "<from uri=\"direct:test3\"/>" +
                         "<to uri=\"mock:test3\"/>" +

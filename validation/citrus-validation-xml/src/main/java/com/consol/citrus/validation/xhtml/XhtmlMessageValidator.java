@@ -22,7 +22,7 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.util.XMLUtils;
+import com.consol.citrus.util.MessageUtils;
 import com.consol.citrus.validation.xml.DomXmlMessageValidator;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 
@@ -49,7 +49,7 @@ public class XhtmlMessageValidator extends DomXmlMessageValidator implements Ini
 
     @Override
     public boolean supportsMessageType(String messageType, Message message) {
-        return messageType.equalsIgnoreCase(MessageType.XHTML.name()) && XMLUtils.hasXmlPayload(message);
+        return messageType.equalsIgnoreCase(MessageType.XHTML.name()) && MessageUtils.hasXmlPayload(message);
     }
 
     @Override
