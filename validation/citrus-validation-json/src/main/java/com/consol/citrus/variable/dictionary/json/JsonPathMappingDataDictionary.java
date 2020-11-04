@@ -58,14 +58,14 @@ public class JsonPathMappingDataDictionary extends AbstractJsonDataDictionary {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (getPathMappingStrategy() != null &&
                 !getPathMappingStrategy().equals(PathMappingStrategy.EXACT)) {
             log.warn(String.format("%s ignores path mapping strategy other than %s",
                     getClass().getSimpleName(), PathMappingStrategy.EXACT));
         }
 
-        super.afterPropertiesSet();
+        super.initialize();
     }
 
 }

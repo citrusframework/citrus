@@ -16,29 +16,29 @@
 
 package com.consol.citrus.mail.client;
 
-import com.consol.citrus.context.TestContext;
-import com.consol.citrus.endpoint.AbstractEndpoint;
-import com.consol.citrus.exceptions.CitrusRuntimeException;
-import com.consol.citrus.message.RawMessage;
-import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.messaging.Producer;
-import com.consol.citrus.message.Message;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.mail.javamail.MimeMailMessage;
-import org.springframework.util.StringUtils;
-
 import javax.mail.MessagingException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.context.TestContext;
+import com.consol.citrus.endpoint.AbstractEndpoint;
+import com.consol.citrus.exceptions.CitrusRuntimeException;
+import com.consol.citrus.message.Message;
+import com.consol.citrus.message.RawMessage;
+import com.consol.citrus.messaging.Consumer;
+import com.consol.citrus.messaging.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.mail.javamail.MimeMailMessage;
+import org.springframework.util.StringUtils;
+
 /**
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class MailClient extends AbstractEndpoint implements Producer, InitializingBean {
+public class MailClient extends AbstractEndpoint implements Producer, InitializingPhase {
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(MailClient.class);
 
@@ -114,14 +114,11 @@ public class MailClient extends AbstractEndpoint implements Producer, Initializi
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (StringUtils.hasText(getEndpointConfiguration().getJavaMailSender().getUsername()) ||
                 StringUtils.hasText(getEndpointConfiguration().getJavaMailSender().getPassword())) {
 
             Properties javaMailProperties = getEndpointConfiguration().getJavaMailSender().getJavaMailProperties();
-            if (javaMailProperties == null) {
-                javaMailProperties = new Properties();
-            }
 
             javaMailProperties.setProperty("mail.smtp.auth", "true");
             getEndpointConfiguration().getJavaMailSender().setJavaMailProperties(javaMailProperties);

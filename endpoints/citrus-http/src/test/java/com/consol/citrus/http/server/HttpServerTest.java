@@ -18,6 +18,7 @@ package com.consol.citrus.http.server;
 
 import java.util.Random;
 
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.EndpointAdapter;
 import com.consol.citrus.http.client.HttpClient;
@@ -65,7 +66,7 @@ public class HttpServerTest extends AbstractTestNGUnitTest {
         client = new HttpClient(endpointConfiguration);
 
         server.setPort(port);
-        server.setApplicationContext(applicationContext);
+        server.setReferenceResolver(new SpringBeanReferenceResolver(applicationContext));
         server.setUseRootContextAsParent(true);
         server.setContextConfigLocation("classpath:com/consol/citrus/http/HttpServerTest-http-servlet.xml");
 

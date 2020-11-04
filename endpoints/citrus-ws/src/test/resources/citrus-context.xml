@@ -143,7 +143,7 @@
                     port="13080"
                     auto-start="true"
                     context-config-location="classpath:com/consol/citrus/ws/citrus-ws-servlet.xml"
-                    resource-base="src/it/resources"/>
+                    resource-base="src/test/resources"/>
 
   <citrus-jms:endpoint id="soapRequestEndpoint"
                        destination-name="SoapServer.inbound"/>
@@ -167,7 +167,7 @@
                     handle-mime-headers="true"
                     handle-header-attributes="true"
                     timeout="3000"
-                    resource-base="src/it/resources"/>
+                    resource-base="src/test/resources"/>
 
   <citrus-ws:client id="echoSoap12Client"
                     request-url="http://localhost:14081/echo"
@@ -180,6 +180,6 @@
                     root-parent-context="true"
                     message-factory="soap12MessageFactory"
                     timeout="3000"
-                    resource-base="src/it/resources"/>
+                    resource-base="src/test/resources"/>
 
 </beans>

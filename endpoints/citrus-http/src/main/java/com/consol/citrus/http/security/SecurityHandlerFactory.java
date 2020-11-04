@@ -16,23 +16,34 @@
 
 package com.consol.citrus.http.security;
 
-import org.eclipse.jetty.security.*;
+import javax.security.auth.Subject;
+import java.io.IOException;
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.eclipse.jetty.security.AbstractLoginService;
+import org.eclipse.jetty.security.Authenticator;
+import org.eclipse.jetty.security.ConstraintMapping;
+import org.eclipse.jetty.security.ConstraintSecurityHandler;
+import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.IdentityService;
+import org.eclipse.jetty.security.LoginService;
+import org.eclipse.jetty.security.PropertyUserStore;
+import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
-import javax.security.auth.Subject;
-import java.io.IOException;
-import java.security.Principal;
-import java.util.*;
-import java.util.Map.Entry;
-
 /**
  * Factory bean constructs a security handler for usage in Jetty servlet container. Security handler
  * holds one to many constraints and a set of users known to a user login service for authentication.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.3
  */
@@ -77,6 +88,7 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
     /**
      * Initialize member variables if not set by user in application context.
      */
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (loginService == null) {
             loginService = new SimpleLoginService();
@@ -84,16 +96,12 @@ public class SecurityHandlerFactory implements InitializingBean, FactoryBean<Sec
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public Class<?> getObjectType() {
         return SecurityHandler.class;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    @Override
     public boolean isSingleton() {
         return true;
     }

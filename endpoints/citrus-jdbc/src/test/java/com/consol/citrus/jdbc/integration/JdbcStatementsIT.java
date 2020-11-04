@@ -48,11 +48,12 @@ public class JdbcStatementsIT extends TestNGCitrusSupport {
             databaseName = "testdb",
             autoStart = true,
             port = 4568,
+            timeout = 1000L,
             autoCreateStatement = false)
     private JdbcServer jdbcServer;
 
-    private JdbcDriver jdbcDriver = new JdbcDriver();
-    private String serverUrl = "jdbc:citrus:localhost:4568?database=testdb";
+    private final JdbcDriver jdbcDriver = new JdbcDriver();
+    private final String serverUrl = "jdbc:citrus:localhost:4568?database=testdb";
 
     @AfterMethod
     public void teardown(){

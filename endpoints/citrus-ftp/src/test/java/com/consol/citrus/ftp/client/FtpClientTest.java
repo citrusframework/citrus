@@ -16,30 +16,45 @@
 
 package com.consol.citrus.ftp.client;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
-import com.consol.citrus.ftp.model.*;
+import com.consol.citrus.ftp.model.DeleteCommand;
+import com.consol.citrus.ftp.model.DeleteCommandResult;
+import com.consol.citrus.ftp.model.ListCommandResult;
+import com.consol.citrus.ftp.model.PutCommandResult;
 import com.consol.citrus.message.ErrorHandlingStrategy;
 import com.consol.citrus.message.Message;
 import org.apache.commons.net.ProtocolCommandListener;
-import org.apache.commons.net.ftp.*;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPClientConfig;
+import org.apache.commons.net.ftp.FTPCmd;
 import org.mockftpserver.fake.FakeFtpServer;
 import org.mockftpserver.fake.UserAccount;
-import org.mockftpserver.fake.filesystem.*;
+import org.mockftpserver.fake.filesystem.DirectoryEntry;
+import org.mockftpserver.fake.filesystem.FileEntry;
 import org.mockftpserver.fake.filesystem.FileSystem;
+import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.*;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.*;
-import java.util.Arrays;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 
 import static org.apache.commons.net.ftp.FTPReply.CLOSING_DATA_CONNECTION;
 import static org.apache.commons.net.ftp.FTPReply.FILE_ACTION_OK;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author Christoph Deppisch
@@ -76,7 +91,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
         endpointConfiguration.setPassword("ftp_password");
 
         ftpClient = new FtpClient(endpointConfiguration);
-        ftpClient.afterPropertiesSet();
+        ftpClient.initialize();
         ftpClient.connectAndLogin();
     }
 
@@ -225,7 +240,7 @@ public class FtpClientTest extends AbstractFtpClientTest {
         when(apacheFtpClient.getReplyCode()).thenReturn(200);
         when(apacheFtpClient.logout()).thenReturn(true);
 
-        ftpClient.afterPropertiesSet();
+        ftpClient.initialize();
         ftpClient.connectAndLogin();
         ftpClient.destroy();
 

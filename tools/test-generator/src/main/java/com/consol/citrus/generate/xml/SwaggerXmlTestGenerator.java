@@ -16,23 +16,48 @@
 
 package com.consol.citrus.generate.xml;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.generate.SwaggerTestGenerator;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.model.testcase.http.ObjectFactory;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.variable.dictionary.json.JsonPathMappingDataDictionary;
-import io.swagger.models.*;
-import io.swagger.models.parameters.*;
-import io.swagger.models.properties.*;
+import io.swagger.models.ArrayModel;
+import io.swagger.models.HttpMethod;
+import io.swagger.models.Model;
+import io.swagger.models.Operation;
+import io.swagger.models.Path;
+import io.swagger.models.RefModel;
+import io.swagger.models.Response;
+import io.swagger.models.Swagger;
+import io.swagger.models.parameters.AbstractSerializableParameter;
+import io.swagger.models.parameters.BodyParameter;
+import io.swagger.models.parameters.HeaderParameter;
+import io.swagger.models.parameters.Parameter;
+import io.swagger.models.parameters.PathParameter;
+import io.swagger.models.parameters.QueryParameter;
+import io.swagger.models.properties.ArrayProperty;
+import io.swagger.models.properties.BooleanProperty;
+import io.swagger.models.properties.DateProperty;
+import io.swagger.models.properties.DateTimeProperty;
+import io.swagger.models.properties.DoubleProperty;
+import io.swagger.models.properties.FloatProperty;
+import io.swagger.models.properties.IntegerProperty;
+import io.swagger.models.properties.LongProperty;
+import io.swagger.models.properties.Property;
+import io.swagger.models.properties.RefProperty;
+import io.swagger.models.properties.StringProperty;
 import io.swagger.parser.SwaggerParser;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.http.HttpStatus;
-import org.springframework.util.*;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * Test generator creates one to many test cases based on operations defined in a XML schema XSD.
@@ -589,11 +614,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      */
     public SwaggerXmlTestGenerator withInboundMappingFile(String mappingFile) {
         this.inboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.inboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.inboundDataDictionary.initialize();
         return this;
     }
 
@@ -604,11 +625,7 @@ public class SwaggerXmlTestGenerator extends MessagingXmlTestGenerator<SwaggerXm
      */
     public SwaggerXmlTestGenerator withOutboundMappingFile(String mappingFile) {
         this.outboundDataDictionary.setMappingFile(new PathMatchingResourcePatternResolver().getResource(mappingFile));
-        try {
-            this.outboundDataDictionary.afterPropertiesSet();
-        } catch (Exception e) {
-            throw new CitrusRuntimeException("Failed to read mapping file", e);
-        }
+        this.outboundDataDictionary.initialize();
         return this;
     }
 

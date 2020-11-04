@@ -42,7 +42,7 @@ public class FtpEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), FtpClient.class);
 
         Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), new Integer(2221));
+        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), 2221);
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getUser());
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getPassword());
         Assert.assertEquals(((FtpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
@@ -52,7 +52,7 @@ public class FtpEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), FtpClient.class);
 
         Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getHost(), "ftp.consol.de");
-        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), 22222);
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getUser());
         Assert.assertNull(((FtpClient) endpoint).getEndpointConfiguration().getPassword());
         Assert.assertEquals(((FtpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
@@ -67,7 +67,7 @@ public class FtpEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), FtpClient.class);
 
         Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), new Integer(22220));
+        Assert.assertEquals(((FtpClient)endpoint).getEndpointConfiguration().getPort(), 22220);
         Assert.assertEquals(((FtpClient) endpoint).getEndpointConfiguration().getUser(), "admin");
         Assert.assertEquals(((FtpClient) endpoint).getEndpointConfiguration().getPassword(), "consol");
         Assert.assertEquals(((FtpClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);

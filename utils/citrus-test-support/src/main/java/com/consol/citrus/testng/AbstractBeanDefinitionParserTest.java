@@ -30,19 +30,19 @@ public abstract class AbstractBeanDefinitionParserTest extends AbstractTestNGUni
 
     /** Application context holding bean definitions parsed */
     protected ApplicationContext beanDefinitionContext;
-    
+
     /**
      * Creates the application context with bean definitions parsed. By default searches
-     * for SimpleClassName-context.xml application context file in test package and 
+     * for SimpleClassName-context.xml application context file in test package and
      * builds child application context.
-     * 
+     *
      * @return
      */
     @BeforeClass(alwaysRun = true, dependsOnMethods = "springTestContextPrepareTestInstance")
     protected void parseBeanDefinitions() {
         beanDefinitionContext = createApplicationContext("context");
     }
-    
+
     /**
      * Creates a new application context with specified child application context. Child application context
      * is named SimpleClassName-[suffix].xml and is located in test class package.
@@ -52,6 +52,7 @@ public abstract class AbstractBeanDefinitionParserTest extends AbstractTestNGUni
     protected ApplicationContext createApplicationContext(String suffix) {
         return new ClassPathXmlApplicationContext(
                 new String[] {
+                        "component-lifecycle-context.xml",
                         this.getClass().getPackage().getName().replace('.', '/')
                                 + "/" + getClass().getSimpleName() + "-" + suffix + ".xml"},
                 true, applicationContext);

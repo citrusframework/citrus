@@ -152,7 +152,7 @@ public class NodeMappingDataDictionaryTest extends UnitTestSupport {
 
         NodeMappingDataDictionary dictionary = new NodeMappingDataDictionary();
         dictionary.setMappingFile(new ClassPathResource("mapping.properties", DataDictionary.class));
-        dictionary.afterPropertiesSet();
+        dictionary.initialize();
 
         dictionary.processMessage(message, context);
         Assert.assertEquals(message.getPayload(String.class).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestMessage>" + System.getProperty("line.separator") +

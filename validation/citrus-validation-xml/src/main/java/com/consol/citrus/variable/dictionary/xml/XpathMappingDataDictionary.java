@@ -20,6 +20,7 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.xpath.XPathConstants;
 import java.util.Map;
 
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.util.XMLUtils;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -27,7 +28,6 @@ import com.consol.citrus.xml.namespace.NamespaceContextBuilder;
 import com.consol.citrus.xml.xpath.XPathUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.xml.SimpleNamespaceContext;
 import org.w3c.dom.Node;
@@ -41,13 +41,13 @@ import org.w3c.dom.NodeList;
  * @author Christoph Deppisch
  * @since 1.4
  */
-public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingBean {
+public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implements InitializingPhase {
 
     @Autowired(required = false)
     private NamespaceContextBuilder namespaceContextBuilder = new NamespaceContextBuilder();
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
+    private static final Logger LOG = LoggerFactory.getLogger(XpathMappingDataDictionary.class);
 
     @Override
     public <T> T translate(Node node, T value, TestContext context) {
@@ -57,8 +57,8 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
             NodeList findings = (NodeList) XPathUtils.evaluateExpression(node.getOwnerDocument(), expression, buildNamespaceContext(node), XPathConstants.NODESET);
 
             if (findings != null && containsNode(findings, node)) {
-                if (log.isDebugEnabled()) {
-                    log.debug(String.format("Data dictionary setting element '%s' value: %s", XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug(String.format("Data dictionary setting element '%s' value: %s", XMLUtils.getNodesPathName(node), expressionEntry.getValue()));
                 }
                 return convertIfNecessary(expressionEntry.getValue(), value, context);
             }
@@ -102,17 +102,18 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (getPathMappingStrategy() != null &&
                 !getPathMappingStrategy().equals(DataDictionary.PathMappingStrategy.EXACT)) {
-            log.warn(String.format("%s ignores path mapping strategy other than %s",
+            LOG.warn(String.format("%s ignores path mapping strategy other than %s",
                     getClass().getSimpleName(), DataDictionary.PathMappingStrategy.EXACT));
         }
 
-        super.afterPropertiesSet();
+        super.initialize();
     }
 
     /**
+     * Gets the namespace context builder.
      * @return
      */
     public NamespaceContextBuilder getNamespaceContextBuilder() {
@@ -120,6 +121,7 @@ public class XpathMappingDataDictionary extends AbstractXmlDataDictionary implem
     }
 
     /**
+     * Sets the namespace context builder.
      * @param namespaceContextBuilder
      */
     public void setNamespaceContextBuilder(NamespaceContextBuilder namespaceContextBuilder) {

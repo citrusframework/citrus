@@ -50,7 +50,12 @@ import org.w3c.dom.ls.LSSerializer;
 public final class XMLUtils {
 
     /** Configurer instance */
-    private static XmlConfigurer configurer = new XmlConfigurer();
+    private static XmlConfigurer configurer;
+
+    static {
+        configurer = new XmlConfigurer();
+        configurer.initialize();
+    }
 
     /**
      * Prevent instantiation.

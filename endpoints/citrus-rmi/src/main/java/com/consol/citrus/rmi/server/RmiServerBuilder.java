@@ -16,36 +16,29 @@
 
 package com.consol.citrus.rmi.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.endpoint.EndpointAdapter;
-import com.consol.citrus.message.MessageCorrelator;
-import com.consol.citrus.rmi.message.RmiMessageConverter;
-
 import java.rmi.Remote;
+import java.rmi.registry.Registry;
 import java.util.Arrays;
+import java.util.List;
+
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.rmi.endpoint.RmiEndpointUtils;
+import com.consol.citrus.rmi.message.RmiMessageConverter;
+import com.consol.citrus.rmi.model.RmiMarshaller;
+import com.consol.citrus.server.AbstractServerBuilder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
+public class RmiServerBuilder  extends AbstractServerBuilder<RmiServer, RmiServerBuilder> {
 
     /** Endpoint target */
-    private RmiServer endpoint = new RmiServer();
+    private final RmiServer endpoint = new RmiServer();
 
     @Override
     protected RmiServer getEndpoint() {
         return endpoint;
-    }
-
-    /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public RmiServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
-        return this;
     }
 
     /**
@@ -55,6 +48,10 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
      */
     public RmiServerBuilder serverUrl(String serverUrl) {
         endpoint.getEndpointConfiguration().setServerUrl(serverUrl);
+
+        host(RmiEndpointUtils.getHost(serverUrl.substring("rmi://".length())));
+        port(RmiEndpointUtils.getPort(serverUrl.substring("rmi://".length()), getEndpoint().getEndpointConfiguration()));
+        binding(RmiEndpointUtils.getBinding(serverUrl.substring("rmi://".length())));
         return this;
     }
 
@@ -79,12 +76,32 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
     }
 
     /**
+     * Sets the registry property.
+     * @param registry
+     * @return
+     */
+    public RmiServerBuilder registry(Registry registry) {
+        endpoint.getEndpointConfiguration().setRegistry(registry);
+        return this;
+    }
+
+    /**
      * Sets the binding property.
      * @param binding
      * @return
      */
     public RmiServerBuilder binding(String binding) {
         endpoint.getEndpointConfiguration().setBinding(binding);
+        return this;
+    }
+
+    /**
+     * Sets the method property.
+     * @param method
+     * @return
+     */
+    public RmiServerBuilder method(String method) {
+        endpoint.getEndpointConfiguration().setMethod(method);
         return this;
     }
 
@@ -109,6 +126,26 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
     }
 
     /**
+     * Sets the remote interfaces property.
+     * @param remoteInterfaces
+     * @return
+     */
+    public RmiServerBuilder remoteInterfaces(List<Class<? extends Remote>> remoteInterfaces) {
+        endpoint.setRemoteInterfaces(remoteInterfaces);
+        return this;
+    }
+
+    /**
+     * Sets the marshaller.
+     * @param marshaller
+     * @return
+     */
+    public RmiServerBuilder marshaller(RmiMarshaller marshaller) {
+        endpoint.getEndpointConfiguration().setMarshaller(marshaller);
+        return this;
+    }
+
+    /**
      * Sets the message converter.
      * @param messageConverter
      * @return
@@ -129,26 +166,6 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
     }
 
     /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
-     * @return
-     */
-    public RmiServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
-        return this;
-    }
-
-    /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
-     * @return
-     */
-    public RmiServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
-        return this;
-    }
-
-    /**
      * Sets the polling interval.
      * @param pollingInterval
      * @return
@@ -157,15 +174,4 @@ public class RmiServerBuilder  extends AbstractEndpointBuilder<RmiServer> {
         endpoint.getEndpointConfiguration().setPollingInterval(pollingInterval);
         return this;
     }
-
-    /**
-     * Sets the default timeout.
-     * @param timeout
-     * @return
-     */
-    public RmiServerBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
-        return this;
-    }
-
 }

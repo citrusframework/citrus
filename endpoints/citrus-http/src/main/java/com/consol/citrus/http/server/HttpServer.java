@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.consol.citrus.context.SpringBeanReferenceResolver;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.http.context.ParentDelegatingWebApplicationContext;
 import com.consol.citrus.http.interceptor.LoggingHandlerInterceptor;
@@ -159,9 +160,9 @@ public class HttpServer extends AbstractServer {
             contextHandler.setResourceBase(resourceBase);
 
             //add the root application context as parent to the constructed WebApplicationContext
-            if (useRootContextAsParent) {
+            if (useRootContextAsParent && getReferenceResolver() instanceof SpringBeanReferenceResolver) {
                 contextHandler.setAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE,
-                        new ParentDelegatingWebApplicationContext(getApplicationContext()));
+                        new ParentDelegatingWebApplicationContext(((SpringBeanReferenceResolver) getReferenceResolver()).getApplicationContext()));
             }
 
             if (servletHandler == null) {
@@ -211,11 +212,11 @@ public class HttpServer extends AbstractServer {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
+    public void initialize() {
+        super.initialize();
 
-        if (getApplicationContext() != null && getApplicationContext().getBeansOfType(MessageListeners.class).size() == 1) {
-            MessageListeners messageListeners = getApplicationContext().getBean(MessageListeners.class);
+        if (getReferenceResolver() != null && getReferenceResolver().resolveAll(MessageListeners.class).size() == 1) {
+            MessageListeners messageListeners = getReferenceResolver().resolve(MessageListeners.class);
 
             getInterceptors().stream()
                     .filter(LoggingHandlerInterceptor.class::isInstance)

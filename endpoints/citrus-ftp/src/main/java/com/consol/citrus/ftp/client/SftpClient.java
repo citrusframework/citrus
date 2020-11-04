@@ -16,12 +16,35 @@
 
 package com.consol.citrus.ftp.client;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+import java.util.Vector;
+
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
-import com.consol.citrus.ftp.model.*;
+import com.consol.citrus.ftp.model.CommandType;
+import com.consol.citrus.ftp.model.DeleteCommand;
+import com.consol.citrus.ftp.model.GetCommand;
+import com.consol.citrus.ftp.model.ListCommand;
+import com.consol.citrus.ftp.model.PutCommand;
 import com.consol.citrus.util.FileUtils;
-import com.jcraft.jsch.*;
+import com.jcraft.jsch.Channel;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.Session;
+import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.UserInfo;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.commons.net.ftp.FTPReply;
@@ -29,11 +52,9 @@ import org.apache.ftpserver.ftplet.DataType;
 import org.apache.sshd.client.keyverifier.KnownHostsServerKeyVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.util.*;
-
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.ResourceUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -335,14 +356,14 @@ public class SftpClient extends FtpClient {
     }
 
     @Override
-    public void afterPropertiesSet() {
+    public void initialize() {
         if (ssh == null) {
             ssh = new JSch();
         }
     }
 
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         if (session != null && session.isConnected()) {
             session.disconnect();
             log.info("Closed connection to FTP server");

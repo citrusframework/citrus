@@ -16,17 +16,20 @@
 
 package com.consol.citrus.validation.xhtml;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import com.consol.citrus.common.InitializingPhase;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import org.springframework.core.io.Resource;
 import org.w3c.tidy.Tidy;
-
-import java.io.*;
 
 /**
  * @author Christoph Deppisch
  * @since 2.6
  */
-public class XhtmlMessageConverter {
+public class XhtmlMessageConverter implements InitializingPhase {
 
     /** W3C Tidy implementation for parsing HTML as XHTML */
     private Tidy tidyInstance;
@@ -62,10 +65,7 @@ public class XhtmlMessageConverter {
         }
     }
 
-    /**
-     * Initialize tidy from configuration.
-     * @throws IOException
-     */
+    @Override
     public void initialize() {
         try {
             if (tidyInstance == null) {

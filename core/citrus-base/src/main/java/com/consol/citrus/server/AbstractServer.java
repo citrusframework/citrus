@@ -19,6 +19,8 @@ package com.consol.citrus.server;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.consol.citrus.common.InitializingPhase;
+import com.consol.citrus.common.ShutdownPhase;
 import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.AbstractEndpoint;
 import com.consol.citrus.endpoint.EndpointAdapter;
@@ -29,19 +31,18 @@ import com.consol.citrus.message.DefaultMessageQueue;
 import com.consol.citrus.message.MessageQueue;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.Producer;
+import com.consol.citrus.spi.ReferenceResolver;
+import com.consol.citrus.spi.ReferenceResolverAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.DisposableBean;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
 /**
  * Abstract base class for {@link Server} implementations.
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractServer extends AbstractEndpoint implements Server, InitializingBean, DisposableBean, ApplicationContextAware {
+public abstract class AbstractServer extends AbstractEndpoint
+        implements Server, InitializingPhase, ShutdownPhase, ReferenceResolverAware {
 
     /** Default in memory queue suffix */
     public static final String DEFAULT_CHANNEL_ID_SUFFIX = ".inbound";
@@ -58,8 +59,8 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     /**  Monitor for startup and running lifecycle */
     private final Object runningLock = new Object();
 
-    /** Spring bean factory injected */
-    private ApplicationContext applicationContext;
+    /** Reference resolver injected */
+    private ReferenceResolver referenceResolver;
 
     /** Message endpoint adapter for incoming requests */
     private EndpointAdapter endpointAdapter;
@@ -74,7 +75,7 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     private boolean debugLogging = false;
 
     /** Logger */
-    private Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger LOG = LoggerFactory.getLogger(getClass());
 
     /**
      * Default constructor using endpoint configuration.
@@ -85,8 +86,8 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
 
     @Override
     public void start() {
-        if (log.isDebugEnabled()) {
-            log.debug("Starting server: " + getName() + " ...");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Starting server: " + getName() + " ...");
         }
 
         startup();
@@ -99,24 +100,26 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
         thread.setDaemon(false);
         thread.start();
 
-        log.info("Started server: " + getName());
+        LOG.info("Started server: " + getName());
     }
 
     @Override
     public void stop() {
-        if (log.isDebugEnabled()) {
-            log.debug("Stopping server: " + getName() + " ...");
+        if (isRunning()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Stopping server: " + getName() + " ...");
+            }
+
+            shutdown();
+
+            synchronized (runningLock) {
+                running = false;
+            }
+
+            thread = null;
+
+            LOG.info("Stopped server: " + getName());
         }
-
-        shutdown();
-
-        synchronized (runningLock) {
-            running = false;
-        }
-
-        thread = null;
-
-        log.info("Stopped server: " + getName());
     }
 
     /**
@@ -135,12 +138,12 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     protected abstract void shutdown();
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (endpointAdapter == null) {
             /* The server inbound queue */
             MessageQueue inboundQueue;
-            if (applicationContext != null && applicationContext.containsBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
-                inboundQueue = applicationContext.getBean(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageQueue.class);
+            if (referenceResolver != null && referenceResolver.isResolvable(getName() + DEFAULT_CHANNEL_ID_SUFFIX)) {
+                inboundQueue = referenceResolver.resolve(getName() + DEFAULT_CHANNEL_ID_SUFFIX, MessageQueue.class);
             } else {
                 inboundQueue = new DefaultMessageQueue(getName() + DEFAULT_CHANNEL_ID_SUFFIX);
             }
@@ -164,19 +167,17 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
     }
 
     private TestContextFactory getTestContextFactory() {
-        if (applicationContext != null && !applicationContext.getBeansOfType(TestContextFactory.class).isEmpty()) {
-            return applicationContext.getBean(TestContextFactory.class);
+        if (referenceResolver != null && !referenceResolver.resolveAll(TestContextFactory.class).isEmpty()) {
+            return referenceResolver.resolve(TestContextFactory.class);
         }
 
-        log.debug("Unable to create test context factory from Spring application context - " +
+        LOG.debug("Unable to create test context factory from Spring application context - " +
                 "using minimal test context factory");
         return TestContextFactory.newInstance();
     }
 
-    /**
-     * @see org.springframework.beans.factory.DisposableBean#destroy()
-     */
-    public void destroy() throws Exception {
+    @Override
+    public void destroy() {
         if (isRunning()) {
             shutdown();
         }
@@ -189,13 +190,11 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
         try {
             thread.join();
         } catch (InterruptedException e) {
-            log.error("Error occured", e);
+            LOG.error("Error occured", e);
         }
     }
 
-    /**
-     * @see com.consol.citrus.server.Server#isRunning()
-     */
+    @Override
     public boolean isRunning() {
         synchronized (runningLock) {
             return running;
@@ -241,17 +240,13 @@ public abstract class AbstractServer extends AbstractEndpoint implements Server,
         this.running = running;
     }
 
-    /**
-     * Gets the Spring application context.
-     * @return
-     */
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
+    public ReferenceResolver getReferenceResolver() {
+        return referenceResolver;
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
+    public void setReferenceResolver(ReferenceResolver referenceResolver) {
+        this.referenceResolver = referenceResolver;
     }
 
     /**

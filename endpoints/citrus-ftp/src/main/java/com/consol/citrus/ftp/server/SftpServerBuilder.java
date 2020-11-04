@@ -16,18 +16,19 @@
 
 package com.consol.citrus.ftp.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.endpoint.EndpointAdapter;
+import java.util.Map;
+
 import com.consol.citrus.ftp.client.SftpEndpointConfiguration;
+import com.consol.citrus.server.AbstractServerBuilder;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class SftpServerBuilder extends AbstractEndpointBuilder<SftpServer> {
+public class SftpServerBuilder extends AbstractServerBuilder<SftpServer, SftpServerBuilder> {
 
     /** Endpoint target */
-    private SftpServer endpoint = new SftpServer();
+    private final SftpServer endpoint = new SftpServer();
 
     @Override
     protected SftpServer getEndpoint() {
@@ -125,42 +126,62 @@ public class SftpServerBuilder extends AbstractEndpointBuilder<SftpServer> {
     }
 
     /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
+     * Sets the strictHostChecking property.
+     * @param strictHostChecking
      * @return
      */
-    public SftpServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
+    public SftpServerBuilder strictHostChecking(boolean strictHostChecking) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setStrictHostChecking(strictHostChecking);
         return this;
     }
 
     /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
+     * Sets the knownHosts property.
+     * @param knownHosts
      * @return
      */
-    public SftpServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
+    public SftpServerBuilder knownHosts(String knownHosts) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setKnownHosts(knownHosts);
         return this;
     }
 
     /**
-     * Sets the default timeout.
-     * @param timeout
+     * Sets the privateKeyPath property.
+     * @param privateKeyPath
      * @return
      */
-    public SftpServerBuilder timeout(long timeout) {
-        endpoint.getEndpointConfiguration().setTimeout(timeout);
+    public SftpServerBuilder privateKeyPath(String privateKeyPath) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setPrivateKeyPath(privateKeyPath);
         return this;
     }
 
     /**
-     * Sets the autoStart property.
-     * @param autoStart
+     * Sets the privateKeyPassword property.
+     * @param privateKeyPassword
      * @return
      */
-    public SftpServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
+    public SftpServerBuilder privateKeyPassword(String privateKeyPassword) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setPrivateKeyPassword(privateKeyPassword);
+        return this;
+    }
+
+    /**
+     * Sets the preferredAuthentications property.
+     * @param preferredAuthentications
+     * @return
+     */
+    public SftpServerBuilder preferredAuthentications(String preferredAuthentications) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setPreferredAuthentications(preferredAuthentications);
+        return this;
+    }
+
+    /**
+     * Sets the sessionConfigs property.
+     * @param sessionConfigs
+     * @return
+     */
+    public SftpServerBuilder sessionConfigs(Map<String, String> sessionConfigs) {
+        ((SftpEndpointConfiguration) endpoint.getEndpointConfiguration()).setSessionConfigs(sessionConfigs);
         return this;
     }
 }

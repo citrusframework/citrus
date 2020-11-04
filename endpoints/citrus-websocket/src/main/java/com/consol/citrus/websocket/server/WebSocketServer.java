@@ -48,8 +48,8 @@ public class WebSocketServer extends HttpServer {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        super.afterPropertiesSet();
+    public void initialize() {
+        super.initialize();
 
         for (WebSocketEndpoint webSocket : webSockets) {
             webSocket.setActor(getActor());

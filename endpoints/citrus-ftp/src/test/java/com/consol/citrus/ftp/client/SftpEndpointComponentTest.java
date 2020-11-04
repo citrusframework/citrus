@@ -42,7 +42,7 @@ public class SftpEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), SftpClient.class);
 
         Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), new Integer(2221));
+        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), 2221);
         Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getUser());
         Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getPassword());
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
@@ -52,7 +52,7 @@ public class SftpEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), SftpClient.class);
 
         Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getHost(), "ftp.consol.de");
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), new Integer(22222));
+        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), 22222);
         Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getUser());
         Assert.assertNull(((SftpClient) endpoint).getEndpointConfiguration().getPassword());
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 5000L);
@@ -67,7 +67,7 @@ public class SftpEndpointComponentTest {
         Assert.assertEquals(endpoint.getClass(), SftpClient.class);
 
         Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getHost(), "localhost");
-        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), new Integer(22220));
+        Assert.assertEquals(((SftpClient)endpoint).getEndpointConfiguration().getPort(), 22220);
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getUser(), "admin");
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getPassword(), "consol");
         Assert.assertEquals(((SftpClient) endpoint).getEndpointConfiguration().getTimeout(), 10000L);

@@ -39,9 +39,9 @@ import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.util.Assert;
 
 /**
- * Factory bean constructing a client request factory with 
+ * Factory bean constructing a client request factory with
  * user credentials for basic authentication.
- * 
+ *
  * @author Christoph Deppisch
  * @since 1.2
  */
@@ -49,16 +49,16 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
 
     /** Custom Http params */
     private Map<String, Object> params;
-    
+
     /** The target request factory */
     private HttpClient httpClient;
-    
+
     /** User credentials for basic authentication */
     private Credentials credentials;
-    
+
     /** Authentiacation scope */
     private AuthScope authScope = new AuthScope("localhost", 8080, AuthScope.ANY_REALM, AuthScope.ANY_SCHEME);
-    
+
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(BasicAuthClientHttpRequestFactory.class);
 
@@ -67,7 +67,7 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
      */
     public HttpComponentsClientHttpRequestFactory getObject() throws Exception {
         Assert.notNull(credentials, "User credentials not set properly!");
-        
+
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory(httpClient) {
             @Override
             protected HttpContext createHttpContext(HttpMethod httpMethod, URI uri) {
@@ -75,24 +75,24 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
                 // therefore add some basic auth cache to the local context
                 AuthCache authCache = new BasicAuthCache();
                 BasicScheme basicAuth = new BasicScheme();
-                
+
                 authCache.put(new HttpHost(authScope.getHost(), authScope.getPort(), "http"), basicAuth);
                 authCache.put(new HttpHost(authScope.getHost(), authScope.getPort(), "https"), basicAuth);
-                
+
                 BasicHttpContext localcontext = new BasicHttpContext();
                 localcontext.setAttribute(ClientContext.AUTH_CACHE, authCache);
-                
+
                 return localcontext;
             }
         };
-        
+
         if (httpClient instanceof AbstractHttpClient) {
             ((AbstractHttpClient)httpClient).getCredentialsProvider().setCredentials(authScope, credentials);
         } else {
             log.warn("Unable to set username password credentials for basic authentication, " +
             		"because nested HttpClient implementation does not support a credentials provider!");
         }
-        
+
         return requestFactory;
     }
 
@@ -109,15 +109,13 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     public boolean isSingleton() {
         return false;
     }
-    
-    /**
-     * {@inheritDoc}
-     */
+
+    @Override
     public void afterPropertiesSet() throws Exception {
         if (httpClient == null) {
             httpClient = new DefaultHttpClient();
         }
-        
+
         if (params != null) {
             for (Entry<String, Object> param : params.entrySet()) {
                 log.debug("Setting custom Http param on client: '" + param.getKey() + "'='" + param.getValue() + "'");
@@ -157,5 +155,5 @@ public class BasicAuthClientHttpRequestFactory implements FactoryBean<HttpCompon
     public void setParams(Map<String, Object> params) {
         this.params = params;
     }
-    
+
 }

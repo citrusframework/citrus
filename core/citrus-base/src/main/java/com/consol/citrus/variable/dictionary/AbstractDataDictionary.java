@@ -17,7 +17,6 @@
 package com.consol.citrus.variable.dictionary;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -27,7 +26,6 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.AbstractMessageProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 
@@ -35,7 +33,7 @@ import org.springframework.core.io.support.PropertiesLoaderUtils;
  * Abstract data dictionary implementation provides global scope handling.
  * @author Christoph Deppisch
  */
-public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor implements DataDictionary<T>, InitializingBean {
+public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor implements DataDictionary<T> {
 
     /** Logger */
     private static Logger log = LoggerFactory.getLogger(AbstractDataDictionary.class);
@@ -60,20 +58,20 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
      * @param value
      * @param originalValue
      * @param context
-     * @param <T>
+     * @param <V>
      * @return
      */
-    protected <T> T convertIfNecessary(String value, T originalValue, TestContext context) {
+    protected <V> V convertIfNecessary(String value, V originalValue, TestContext context) {
         if (originalValue == null) {
-            return (T) context.replaceDynamicContentInString(value);
+            return (V) context.replaceDynamicContentInString(value);
         }
 
         return context.getTypeConverter().convertIfNecessary(context.replaceDynamicContentInString(value),
-                                                            (Class<T>) originalValue.getClass());
+                                                            (Class<V>) originalValue.getClass());
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void initialize() {
         if (mappingFile != null) {
 
             if (log.isDebugEnabled()) {
@@ -87,8 +85,8 @@ public abstract class AbstractDataDictionary<T> extends AbstractMessageProcessor
                 throw new CitrusRuntimeException(e);
             }
 
-            for (Iterator<Map.Entry<Object, Object>> iter = props.entrySet().iterator(); iter.hasNext();) {
-                String key = iter.next().getKey().toString();
+            for (Map.Entry<Object, Object> entry : props.entrySet()) {
+                String key = entry.getKey().toString();
 
                 if (log.isDebugEnabled()) {
                     log.debug("Loading data dictionary mapping: " + key + "=" + props.getProperty(key));

@@ -16,25 +16,24 @@
 
 package com.consol.citrus.ws.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.endpoint.EndpointAdapter;
+import java.util.Arrays;
+import java.util.List;
+
+import com.consol.citrus.server.AbstractServerBuilder;
 import com.consol.citrus.ws.message.converter.WebServiceMessageConverter;
 import org.eclipse.jetty.security.SecurityHandler;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.servlet.ServletHandler;
 import org.springframework.ws.server.EndpointInterceptor;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class WebServiceServerBuilder extends AbstractEndpointBuilder<WebServiceServer> {
+public class WebServiceServerBuilder extends AbstractServerBuilder<WebServiceServer, WebServiceServerBuilder> {
 
     /** Endpoint target */
-    private WebServiceServer endpoint = new WebServiceServer();
+    private final WebServiceServer endpoint = new WebServiceServer();
 
     @Override
     protected WebServiceServer getEndpoint() {
@@ -48,16 +47,6 @@ public class WebServiceServerBuilder extends AbstractEndpointBuilder<WebServiceS
      */
     public WebServiceServerBuilder port(int port) {
         endpoint.setPort(port);
-        return this;
-    }
-
-    /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public WebServiceServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
         return this;
     }
 
@@ -171,33 +160,9 @@ public class WebServiceServerBuilder extends AbstractEndpointBuilder<WebServiceS
         return this;
     }
 
-    /**
-     * Sets the default timeout.
-     * @param timeout
-     * @return
-     */
+    @Override
     public WebServiceServerBuilder timeout(long timeout) {
         endpoint.setDefaultTimeout(timeout);
-        return this;
-    }
-
-    /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
-     * @return
-     */
-    public WebServiceServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
-        return this;
-    }
-
-    /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
-     * @return
-     */
-    public WebServiceServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
         return this;
     }
 

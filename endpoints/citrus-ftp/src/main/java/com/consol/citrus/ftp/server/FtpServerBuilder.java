@@ -16,19 +16,22 @@
 
 package com.consol.citrus.ftp.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.endpoint.EndpointAdapter;
+import com.consol.citrus.ftp.message.FtpMarshaller;
+import com.consol.citrus.message.ErrorHandlingStrategy;
+import com.consol.citrus.message.MessageCorrelator;
+import com.consol.citrus.server.AbstractServerBuilder;
 import org.apache.ftpserver.ftplet.UserManager;
+import org.apache.ftpserver.listener.ListenerFactory;
 import org.springframework.core.io.Resource;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class FtpServerBuilder extends AbstractEndpointBuilder<FtpServer> {
+public class FtpServerBuilder extends AbstractServerBuilder<FtpServer, FtpServerBuilder> {
 
     /** Endpoint target */
-    private FtpServer endpoint = new FtpServer();
+    private final FtpServer endpoint = new FtpServer();
 
     @Override
     protected FtpServer getEndpoint() {
@@ -42,16 +45,6 @@ public class FtpServerBuilder extends AbstractEndpointBuilder<FtpServer> {
      */
     public FtpServerBuilder port(int port) {
         endpoint.getEndpointConfiguration().setPort(port);
-        return this;
-    }
-
-    /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public FtpServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
         return this;
     }
 
@@ -76,12 +69,62 @@ public class FtpServerBuilder extends AbstractEndpointBuilder<FtpServer> {
     }
 
     /**
+     * Sets the host property.
+     * @param host
+     * @return
+     */
+    public FtpServerBuilder host(String host) {
+        endpoint.getEndpointConfiguration().setHost(host);
+        return this;
+    }
+
+    /**
+     * Sets the user property.
+     * @param user
+     * @return
+     */
+    public FtpServerBuilder user(String user) {
+        endpoint.getEndpointConfiguration().setUser(user);
+        return this;
+    }
+
+    /**
+     * Sets the password property.
+     * @param password
+     * @return
+     */
+    public FtpServerBuilder password(String password) {
+        endpoint.getEndpointConfiguration().setPassword(password);
+        return this;
+    }
+
+    /**
      * Sets the autoHandleCommands property.
      * @param autoHandleCommands
      * @return
      */
     public FtpServerBuilder autoHandleCommands(String autoHandleCommands) {
         endpoint.getEndpointConfiguration().setAutoHandleCommands(autoHandleCommands);
+        return this;
+    }
+
+    /**
+     * Sets the autoReadFiles property.
+     * @param autoReadFiles
+     * @return
+     */
+    public FtpServerBuilder autoReadFiles(boolean autoReadFiles) {
+        endpoint.getEndpointConfiguration().setAutoReadFiles(autoReadFiles);
+        return this;
+    }
+
+    /**
+     * Sets the localPassiveMode property.
+     * @param localPassiveMode
+     * @return
+     */
+    public FtpServerBuilder localPassiveMode(boolean localPassiveMode) {
+        endpoint.getEndpointConfiguration().setLocalPassiveMode(localPassiveMode);
         return this;
     }
 
@@ -106,6 +149,16 @@ public class FtpServerBuilder extends AbstractEndpointBuilder<FtpServer> {
     }
 
     /**
+     * Sets the listener factory property.
+     * @param factory
+     * @return
+     */
+    public FtpServerBuilder listenerFactory(ListenerFactory factory) {
+        endpoint.setListenerFactory(factory);
+        return this;
+    }
+
+    /**
      * Sets the userManager properties.
      * @param userManagerProperties
      * @return
@@ -116,33 +169,32 @@ public class FtpServerBuilder extends AbstractEndpointBuilder<FtpServer> {
     }
 
     /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
+     * Sets the marshaller.
+     * @param marshaller
      * @return
      */
-    public FtpServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
+    public FtpServerBuilder marshaller(FtpMarshaller marshaller) {
+        endpoint.getEndpointConfiguration().setMarshaller(marshaller);
         return this;
     }
 
     /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
+     * Sets the correlator.
+     * @param correlator
      * @return
      */
-    public FtpServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
+    public FtpServerBuilder correlator(MessageCorrelator correlator) {
+        endpoint.getEndpointConfiguration().setCorrelator(correlator);
         return this;
     }
 
     /**
-     * Sets the default timeout.
-     * @param timeout
+     * Sets the error handling strategy.
+     * @param errorHandlingStrategy
      * @return
      */
-    public FtpServerBuilder timeout(long timeout) {
-        endpoint.setDefaultTimeout(timeout);
+    public FtpServerBuilder errorHandlingStrategy(ErrorHandlingStrategy errorHandlingStrategy) {
+        endpoint.getEndpointConfiguration().setErrorHandlingStrategy(errorHandlingStrategy);
         return this;
     }
-
 }

@@ -16,12 +16,12 @@
 
 package com.consol.citrus.mail.client;
 
+import java.util.Properties;
+
 import com.consol.citrus.endpoint.AbstractEndpointConfiguration;
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-
-import java.util.Properties;
 
 /**
  * @author Christoph Deppisch

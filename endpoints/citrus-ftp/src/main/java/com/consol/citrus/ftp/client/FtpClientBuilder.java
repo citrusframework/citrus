@@ -27,7 +27,7 @@ import com.consol.citrus.message.MessageCorrelator;
 public class FtpClientBuilder extends AbstractEndpointBuilder<FtpClient> {
 
     /** Endpoint target */
-    private FtpClient endpoint = new FtpClient();
+    private final FtpClient endpoint = new FtpClient();
 
     @Override
     protected FtpClient getEndpoint() {

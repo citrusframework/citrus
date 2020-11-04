@@ -16,21 +16,21 @@
 
 package com.consol.citrus.mail.server;
 
-import com.consol.citrus.endpoint.AbstractEndpointBuilder;
-import com.consol.citrus.endpoint.EndpointAdapter;
+import java.util.Properties;
+
 import com.consol.citrus.mail.message.MailMessageConverter;
 import com.consol.citrus.mail.model.MailMarshaller;
-
-import java.util.Properties;
+import com.consol.citrus.server.AbstractServerBuilder;
+import org.subethamail.smtp.server.SMTPServer;
 
 /**
  * @author Christoph Deppisch
  * @since 2.5
  */
-public class MailServerBuilder extends AbstractEndpointBuilder<MailServer> {
+public class MailServerBuilder extends AbstractServerBuilder<MailServer, MailServerBuilder> {
 
     /** Endpoint target */
-    private MailServer endpoint = new MailServer();
+    private final MailServer endpoint = new MailServer();
 
     @Override
     protected MailServer getEndpoint() {
@@ -44,16 +44,6 @@ public class MailServerBuilder extends AbstractEndpointBuilder<MailServer> {
      */
     public MailServerBuilder port(int port) {
         endpoint.setPort(port);
-        return this;
-    }
-
-    /**
-     * Sets the autoStart property.
-     * @param autoStart
-     * @return
-     */
-    public MailServerBuilder autoStart(boolean autoStart) {
-        endpoint.setAutoStart(autoStart);
         return this;
     }
 
@@ -98,42 +88,22 @@ public class MailServerBuilder extends AbstractEndpointBuilder<MailServer> {
     }
 
     /**
+     * Sets the smtpServer property.
+     * @param smtpServer
+     * @return
+     */
+    public MailServerBuilder smtp(SMTPServer smtpServer) {
+        endpoint.setSmtpServer(smtpServer);
+        return this;
+    }
+
+    /**
      * Sets the message converter.
      * @param messageConverter
      * @return
      */
     public MailServerBuilder messageConverter(MailMessageConverter messageConverter) {
         endpoint.setMessageConverter(messageConverter);
-        return this;
-    }
-
-    /**
-     * Sets the default timeout.
-     * @param timeout
-     * @return
-     */
-    public MailServerBuilder timeout(long timeout) {
-        endpoint.setDefaultTimeout(timeout);
-        return this;
-    }
-
-    /**
-     * Sets the endpoint adapter.
-     * @param endpointAdapter
-     * @return
-     */
-    public MailServerBuilder endpointAdapter(EndpointAdapter endpointAdapter) {
-        endpoint.setEndpointAdapter(endpointAdapter);
-        return this;
-    }
-
-    /**
-     * Sets the debug logging enabled flag.
-     * @param enabled
-     * @return
-     */
-    public MailServerBuilder debugLogging(boolean enabled) {
-        endpoint.setDebugLogging(enabled);
         return this;
     }
 }
