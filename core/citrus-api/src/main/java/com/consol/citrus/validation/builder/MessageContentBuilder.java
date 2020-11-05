@@ -20,7 +20,7 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 
 /**
- * Interface for classes beeing able to build control messages for validation.
+ * Interface for classes being able to build control messages for validation.
  *
  * @author Christoph Deppisch
  */

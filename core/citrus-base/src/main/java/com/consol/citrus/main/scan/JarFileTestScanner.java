@@ -16,18 +16,20 @@
 
 package com.consol.citrus.main.scan;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+
 import com.consol.citrus.TestClass;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.AntPathMatcher;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -36,7 +38,7 @@ import java.util.jar.JarFile;
 public class JarFileTestScanner extends AbstractTestScanner {
 
     /** Logger */
-    private static Logger log = LoggerFactory.getLogger(JarFileTestScanner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JarFileTestScanner.class);
 
     /** Jar file resource to search in */
     private final File artifact;
@@ -53,9 +55,9 @@ public class JarFileTestScanner extends AbstractTestScanner {
             try (JarFile jar = new JarFile(artifact)) {
                 for (Enumeration<JarEntry> entries = jar.entries(); entries.hasMoreElements();) {
                     JarEntry entry = entries.nextElement();
-                    String className = StringUtils.removeEnd(entry.getName(), ".class" ).replace( "/", "." );
+                    String className = StringUtils.stripFilenameExtension(entry.getName()).replace( "/", "." );
                     if (new AntPathMatcher().matchStart(packageToScan.replace( ".", "/" ), entry.getName()) && isIncluded(className)) {
-                        log.info("Found test class candidate in test jar file: " +  entry.getName());
+                        LOG.info("Found test class candidate in test jar file: " +  entry.getName());
                         testClasses.add(new TestClass(className));
                     }
                 }
