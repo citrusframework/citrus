@@ -24,7 +24,6 @@ import com.consol.citrus.context.TestContext;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageHeaders;
 import com.consol.citrus.message.MessageType;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -112,7 +111,6 @@ public class HttpMessageContentBuilderTest {
 
         final HttpMessageContentBuilder builder = new HttpMessageContentBuilder(
                 message,
-                new StaticMessageContentBuilder(message),
                 cookieEnricherMock);
 
         //WHEN
@@ -127,7 +125,6 @@ public class HttpMessageContentBuilderTest {
     private HttpMessageContentBuilder getBuilder() {
         return new HttpMessageContentBuilder(
                 message,
-                new StaticMessageContentBuilder(message),
                 mock(CookieEnricher.class));
     }
 }

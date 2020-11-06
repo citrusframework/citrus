@@ -25,8 +25,9 @@ import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
@@ -68,12 +69,12 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.getXpathExpressions().put("/xh:html/xh:head/xh:title", "Sample XHTML content");
         validationContext.getXpathExpressions().put("//xh:p", "Hello TestFramework!");
         validationContext.getNamespaces().put("xh", "http://www.w3.org/1999/xhtml");
-        controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
                                 + "<title>Sample XHTML content</title>"
@@ -84,7 +85,7 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
                                     + "<input name=\"foo\" type=\"text\" />"
                                 + "</form>"
                             + "</body>"
-                        + "</html>");
+                        + "</html>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -116,11 +117,11 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext();
         validationContext.getXpathExpressions().put("//xh:h1", "Failed!");
         validationContext.getNamespaces().put("xh", "http://www.w3.org/1999/xhtml");
-        controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
                                 + "<title>Sample XHTML content</title>"
@@ -128,7 +129,7 @@ public class XhtmlXpathMessageValidatorTest extends UnitTestSupport {
                             + "<body>"
                                 + "<h1>Hello TestFramework!</h1>"
                             + "</body>"
-                        + "</html>");
+                        + "</html>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)

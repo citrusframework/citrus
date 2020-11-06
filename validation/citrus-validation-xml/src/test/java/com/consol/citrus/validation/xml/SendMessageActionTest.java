@@ -27,10 +27,11 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.functions.DefaultFunctionLibrary;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.matcher.DefaultValidationMatcherLibrary;
 import org.mockito.Mockito;
@@ -62,8 +63,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPath() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("/TestRequest/Message", "Hello World!");
@@ -99,8 +100,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsDotNotation() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest><Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest><Message>?</Message></TestRequest>"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("TestRequest.Message", "Hello World!");
@@ -136,9 +137,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPathWithNamespace() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
-                "<ns0:Message>?</ns0:Message></ns0:TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<ns0:TestRequest xmlns:ns0=\"http://citrusframework.org/unittest\">" +
+                "<ns0:Message>?</ns0:Message></ns0:TestRequest>"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("/ns0:TestRequest/ns0:Message", "Hello World!");
@@ -175,9 +176,9 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageOverwriteMessageElementsXPathWithDefaultNamespace() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
-                "<Message>?</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<TestRequest xmlns=\"http://citrusframework.org/unittest\">" +
+                "<Message>?</Message></TestRequest>"));
 
         Map<String, Object> overwriteElements = new HashMap<>();
         overwriteElements.put("/:TestRequest/:Message", "Hello World!");
@@ -214,8 +215,8 @@ public class SendMessageActionTest extends AbstractTestNGUnitTest {
     @Test
     @SuppressWarnings("rawtypes")
     public void testSendMessageWithXmlDeclaration() {
-        PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-        messageBuilder.setPayloadData("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
+        DefaultMessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
+        messageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>"));
 
         final Message controlMessage = new DefaultMessage("<?xml version=\"1.0\" encoding=\"UTF-8\"?><TestRequest><Message>Hello World!</Message></TestRequest>");
 

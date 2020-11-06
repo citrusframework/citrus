@@ -19,6 +19,7 @@ package com.consol.citrus.actions;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,20 +29,25 @@ import java.util.concurrent.CompletableFuture;
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
 import com.consol.citrus.Completable;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageDirectionAware;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.WithHeaderBuilder;
+import com.consol.citrus.message.WithPayloadBuilder;
+import com.consol.citrus.message.builder.DefaultHeaderBuilder;
+import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import com.consol.citrus.variable.dictionary.DataDictionary;
@@ -356,7 +362,7 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         protected String endpointUri;
         protected List<VariableExtractor> variableExtractors = new ArrayList<>();
         protected List<MessageProcessor> messageProcessors = new ArrayList<>();
-        protected MessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        protected MessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
         protected boolean forkMode = false;
         protected CompletableFuture<Void> finished;
         protected String messageType = CitrusSettings.DEFAULT_MESSAGE_TYPE;
@@ -416,7 +422,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          */
         public B message(Message message) {
             StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(message);
-            staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
+
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageContentBuilder::addHeaderBuilder);
+            }
+
             message(staticMessageContentBuilder);
             messageType(message.getType());
             return self;
@@ -428,14 +438,10 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         protected void setPayload(String payload) {
-            MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
-
-            if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
-                ((PayloadTemplateMessageBuilder) messageContentBuilder).setPayloadData(payload);
-            } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
-                ((StaticMessageContentBuilder) messageContentBuilder).getMessage().setPayload(payload);
+            if (messageBuilder instanceof WithPayloadBuilder) {
+                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(new DefaultPayloadBuilder(payload));
             } else {
-                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
+                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageBuilder.getClass());
             }
         }
 
@@ -445,7 +451,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @return
          */
         public B messageName(String name) {
-            getMessageContentBuilder().setMessageName(name);
+            if (messageBuilder instanceof Named) {
+                ((Named) messageBuilder).setName(name);
+            } else {
+                throw new CitrusRuntimeException("Unable to set message name on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -480,7 +490,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read payload resource", e);
             }
-
             return self;
         }
 
@@ -552,7 +561,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param value
          */
         public B header(String name, Object value) {
-            getMessageContentBuilder().getMessageHeaders().put(name, value);
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(Collections.singletonMap(name, value)));
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -561,7 +574,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param headers
          */
         public B headers(Map<String, Object> headers) {
-            getMessageContentBuilder().getMessageHeaders().putAll(headers);
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(headers));
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -571,7 +588,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          * @param data
          */
         public B header(String data) {
-            getMessageContentBuilder().getHeaderData().add(data);
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(data));
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -592,7 +613,11 @@ public class SendMessageAction extends AbstractTestAction implements Completable
          */
         public B header(Resource resource, Charset charset) {
             try {
-                getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource, charset));
+                if (messageBuilder instanceof WithHeaderBuilder) {
+                    ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(FileUtils.readToString(resource, charset)));
+                } else {
+                    throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
+                }
             } catch (IOException e) {
                 throw new CitrusRuntimeException("Failed to read header resource", e);
             }
@@ -676,21 +701,6 @@ public class SendMessageAction extends AbstractTestAction implements Completable
         public B messageType(String messageType) {
             this.messageType = messageType;
             return self;
-        }
-
-        /**
-         * Get message builder, if already registered or create a new message builder and register it
-         *
-         * @return the message builder in use
-         */
-        protected AbstractMessageContentBuilder getMessageContentBuilder() {
-            if (this.messageBuilder != null && this.messageBuilder instanceof AbstractMessageContentBuilder) {
-                return (AbstractMessageContentBuilder) this.messageBuilder;
-            } else {
-                PayloadTemplateMessageBuilder messageBuilder = new PayloadTemplateMessageBuilder();
-                message(messageBuilder);
-                return messageBuilder;
-            }
         }
 
         /**

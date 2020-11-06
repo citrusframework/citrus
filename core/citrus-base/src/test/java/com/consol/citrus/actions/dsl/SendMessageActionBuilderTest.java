@@ -39,7 +39,7 @@ import com.consol.citrus.messaging.Producer;
 import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import com.consol.citrus.variable.VariableExtractor;
@@ -114,9 +114,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         final StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "additionalValue");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "Foo");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
 
     }
 
@@ -148,9 +148,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         final StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), message.getPayload());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessage().getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
 
@@ -192,10 +192,10 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getMessageBuilder().getClass(), StaticMessageContentBuilder.class);
 
         final StaticMessageContentBuilder messageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getMessage().getPayload(), 10);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("additional"), "new");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), message.getHeaders().size());
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), 10);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "new");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
         Assert.assertEquals(messageBuilder.getMessage().getHeader(MessageHeaders.ID), message.getHeader(MessageHeaders.ID));
         Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
 
@@ -237,11 +237,11 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -268,11 +268,11 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -307,11 +307,11 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello Citrus!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -338,11 +338,11 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -371,11 +371,11 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
 
     }
 
@@ -441,14 +441,14 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 3L);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("some"), "value");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("language"), "eng");
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("some"), "value");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("language"), "eng");
 
     }
 
@@ -484,14 +484,13 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getHeaderData().size(), 1L);
-        Assert.assertEquals(messageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
 
         action = ((SendMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
@@ -501,10 +500,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         final StaticMessageContentBuilder staticMessageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(staticMessageBuilder.getMessage().getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(staticMessageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().size(), 1L);
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
-        Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo</Value></Header>");
 
     }
 
@@ -543,15 +541,14 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getHeaderData().size(), 2L);
-        Assert.assertEquals(messageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(messageBuilder.getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
-        Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 2L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
 
         action = ((SendMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
@@ -561,11 +558,10 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         final StaticMessageContentBuilder staticMessageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(staticMessageBuilder.getMessage().getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(staticMessageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().size(), 2L);
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
-        Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).size(), 2L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(1), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
 
     }
 
@@ -610,14 +606,13 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(action.getName(), "send");
 
         Assert.assertEquals(action.getEndpoint(), messageEndpoint);
-        Assert.assertEquals(action.getMessageBuilder().getClass(), PayloadTemplateMessageBuilder.class);
+        Assert.assertEquals(action.getMessageBuilder().getClass(), DefaultMessageContentBuilder.class);
 
-        final PayloadTemplateMessageBuilder messageBuilder = (PayloadTemplateMessageBuilder) action.getMessageBuilder();
-        Assert.assertEquals(messageBuilder.getPayloadData(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(messageBuilder.getHeaderData().size(), 1L);
-        Assert.assertEquals(messageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
-        Assert.assertEquals(messageBuilder.getHeaderResources().size(), 0L);
+        final DefaultMessageContentBuilder messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo1</Value></Header>");
 
         action = ((SendMessageAction)test.getActions().get(1));
         Assert.assertEquals(action.getName(), "send");
@@ -627,10 +622,9 @@ public class SendMessageActionBuilderTest extends AbstractTestNGUnitTest {
 
         final StaticMessageContentBuilder staticMessageBuilder = (StaticMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(staticMessageBuilder.getMessage().getPayload(String.class), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(staticMessageBuilder.getMessageHeaders().size(), 0L);
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().size(), 1L);
-        Assert.assertEquals(staticMessageBuilder.getHeaderData().get(0), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
-        Assert.assertEquals(staticMessageBuilder.getHeaderResources().size(), 0L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaders(context).size(), 0L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).size(), 1L);
+        Assert.assertEquals(staticMessageBuilder.buildMessageHeaderData(context).get(0), "<Header><Name>operation</Name><Value>foo2</Value></Header>");
 
     }
 

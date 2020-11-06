@@ -24,8 +24,9 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -65,8 +66,8 @@ public class DTDValidationTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE root [ "
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE root [ "
                 + "<!ELEMENT root (message)>"
                 + "<!ELEMENT message (text)>"
                 + "<!ELEMENT text (#PCDATA)>"
@@ -75,7 +76,7 @@ public class DTDValidationTest extends UnitTestSupport {
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>");
+                        + "</root>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -102,13 +103,13 @@ public class DTDValidationTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE root SYSTEM \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>");
+                        + "</root>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -135,13 +136,13 @@ public class DTDValidationTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE root PUBLIC \"example\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>");
+                        + "</root>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -168,13 +169,13 @@ public class DTDValidationTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"foo\" \"com/consol/citrus/validation/example.dtd\">"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE root PUBLIC \"foo\" \"com/consol/citrus/validation/example.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>");
+                        + "</root>"));
 
 
         try {
@@ -207,13 +208,13 @@ public class DTDValidationTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE root PUBLIC \"example\" \"org/w3/xhtml/xhtml1-transitional.dtd\">"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE root PUBLIC \"example\" \"org/w3/xhtml/xhtml1-transitional.dtd\">"
                         + "<root>"
                             + "<message>"
                                 + "<text>Hello TestFramework!</text>"
                             + "</message>"
-                        + "</root>");
+                        + "</root>"));
 
 
         try {

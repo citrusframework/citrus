@@ -16,20 +16,27 @@
 
 package com.consol.citrus.validation.builder;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageContentBuilder;
+import com.consol.citrus.message.MessageHeaderBuilder;
+import com.consol.citrus.message.MessageHeaderDataBuilder;
 import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.message.MessageHeaderUtils;
-import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.message.MessagePayloadBuilder;
+import com.consol.citrus.message.MessageTypeAware;
+import com.consol.citrus.message.WithHeaderBuilder;
+import com.consol.citrus.message.WithPayloadBuilder;
 
 /**
  * Abstract control message builder is aware of message headers and delegates message payload
@@ -37,19 +44,13 @@ import com.consol.citrus.util.FileUtils;
  *
  * @author Christoph Deppisch
  */
-public abstract class AbstractMessageContentBuilder implements MessageContentBuilder {
+public class DefaultMessageContentBuilder implements MessageContentBuilder, WithPayloadBuilder, WithHeaderBuilder, Named {
 
     /** Optional message name */
-    private String messageName = "";
+    private String name = "";
 
-    /** The control headers expected for this message */
-    private Map<String, Object> messageHeaders = new LinkedHashMap<>();
-
-    /** The message header as a file resource path */
-    private List<String> headerResources = new ArrayList<>();
-
-    /** The message header as inline data */
-    private List<String> headerData = new ArrayList<>();
+    private MessagePayloadBuilder payloadBuilder;
+    private final List<MessageHeaderBuilder> headerBuilders = new ArrayList<>();
 
     /**
      * Constructs the control message with headers and payload coming from
@@ -61,7 +62,7 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
 
         try {
             Message message = new DefaultMessage(payload, buildMessageHeaders(context));
-            message.setName(messageName);
+            message.setName(name);
             message.setType(messageType);
             message.getHeaderData().addAll(buildMessageHeaderData(context));
             return message;
@@ -79,7 +80,16 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * @param messageType
      * @return
      */
-    public abstract Object buildMessagePayload(TestContext context, String messageType);
+    public Object buildMessagePayload(TestContext context, String messageType) {
+        if (payloadBuilder == null) {
+            return "";
+        }
+
+        if (payloadBuilder instanceof MessageTypeAware) {
+            ((MessageTypeAware) payloadBuilder).setMessageType(messageType);
+        }
+        return payloadBuilder.buildPayload(context);
+    }
 
     /**
      * Build message headers.
@@ -88,10 +98,16 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      */
     public Map<String, Object> buildMessageHeaders(final TestContext context) {
         try {
-            final Map<String, Object> headers = context.resolveDynamicValuesInMap(messageHeaders);
+            final Map<String, Object> headers = new LinkedHashMap<>();
+            for (MessageHeaderBuilder builder : headerBuilders) {
+                headers.putAll(builder.builderHeaders(context));
+            }
 
             for (final Map.Entry<String, Object> entry : headers.entrySet()) {
-                final String value = entry.getValue().toString();
+                final String value = Optional.ofNullable(entry.getValue())
+                        .filter(String.class::isInstance)
+                        .map(Object::toString)
+                        .orElse("");
 
                 if (MessageHeaderType.isTyped(value)) {
                     final MessageHeaderType type = MessageHeaderType.fromTypedValue(value);
@@ -116,90 +132,40 @@ public abstract class AbstractMessageContentBuilder implements MessageContentBui
      * @return
      */
     public List<String> buildMessageHeaderData(final TestContext context) {
-        final List<String> headerDataList = new ArrayList<>();
-        for (final String headerResourcePath : headerResources) {
-            try {
-                headerDataList.add(
-                        context.replaceDynamicContentInString(
-                                FileUtils.readToString(
-                                        FileUtils.getFileResource(headerResourcePath, context),
-                                        FileUtils.getCharset(headerResourcePath))));
-            } catch (final IOException e) {
-                throw new CitrusRuntimeException("Failed to read message header data resource", e);
+        final List<String> headerData = new ArrayList<>();
+        for (MessageHeaderBuilder builder : headerBuilders) {
+            if (builder instanceof MessageHeaderDataBuilder) {
+                headerData.add(((MessageHeaderDataBuilder) builder).buildHeaderData(context));
             }
         }
 
-        for (final String data : headerData) {
-            headerDataList.add(context.replaceDynamicContentInString(data.trim()));
-        }
-
-        return headerDataList;
-    }
-
-    /**
-     * Sets the messageName property.
-     *
-     * @param messageName
-     */
-    public void setMessageName(final String messageName) {
-        this.messageName = messageName;
-    }
-
-    /**
-     * Gets the value of the messageName property.
-     *
-     * @return the messageName
-     */
-    public String getMessageName() {
-        return messageName;
-    }
-
-    /**
-     * Sets the message headers for this control message.
-     * @param messageHeaders the controlMessageHeaders to set
-     */
-    public void setMessageHeaders(final Map<String, Object> messageHeaders) {
-        this.messageHeaders = messageHeaders;
-    }
-
-    /**
-     * Sets the message header resource paths.
-     * @param headerResources the messageHeaderResource to set
-     */
-    public void setHeaderResources(final List<String> headerResources) {
-        this.headerResources = headerResources;
-    }
-
-    /**
-     * Sets the message header data.
-     * @param headerData
-     */
-    public void setHeaderData(final List<String> headerData) {
-        this.headerData = headerData;
-    }
-
-    /**
-     * Gets the messageHeaders.
-     * @return the messageHeaders
-     */
-    public Map<String, Object> getMessageHeaders() {
-        return messageHeaders;
-    }
-
-    /**
-     * Gets the message header resource paths.
-     * @return the header resources.
-     */
-    public List<String> getHeaderResources() {
-        return headerResources;
-    }
-
-    /**
-     * Gets the message header data.
-     * @return the headerData.
-     */
-    public List<String> getHeaderData() {
         return headerData;
     }
 
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public void addHeaderBuilder(MessageHeaderBuilder headerBuilder) {
+        this.headerBuilders.add(headerBuilder);
+    }
+
+    @Override
+    public void setPayloadBuilder(MessagePayloadBuilder payloadBuilder) {
+        this.payloadBuilder = payloadBuilder;
+    }
+
+    public MessagePayloadBuilder getPayloadBuilder() {
+        return payloadBuilder;
+    }
+
+    public List<MessageHeaderBuilder> getHeaderBuilders() {
+        return headerBuilders;
+    }
 }

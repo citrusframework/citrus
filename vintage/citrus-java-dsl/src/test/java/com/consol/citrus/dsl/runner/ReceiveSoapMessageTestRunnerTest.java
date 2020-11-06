@@ -110,7 +110,7 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "Foo");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "Foo");
         Assert.assertNotNull(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
@@ -156,7 +156,7 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
         Assert.assertNotNull(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getHeader("operation"));
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
@@ -202,7 +202,7 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Assert.assertEquals(action.getAttachments().size(), 1L);
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());
@@ -253,7 +253,7 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Assert.assertEquals(action.getAttachments().get(0).getContent(), "This is an attachment");
         Assert.assertEquals(action.getAttachments().get(0).getContentId(), testAttachment.getContentId());
@@ -310,7 +310,7 @@ public class ReceiveSoapMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getValidationContexts().get(2).getClass(), JsonMessageValidationContext.class);
 
         Assert.assertTrue(action.getMessageBuilder() instanceof StaticMessageContentBuilder);
-        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
+        Assert.assertEquals(((StaticMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "<TestRequest><Message>Hello World!</Message></TestRequest>");
 
         Assert.assertEquals(action.getAttachments().size(), 2L);
         Assert.assertNull(action.getAttachments().get(0).getContentResourcePath());

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<spring:beans xmlns="http://www.citrusframework.org/schema/testcase" 
-              xmlns:spring="http://www.springframework.org/schema/beans" 
-              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd 
+<spring:beans xmlns="http://www.citrusframework.org/schema/testcase"
+              xmlns:spring="http://www.springframework.org/schema/beans"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                                   http://www.citrusframework.org/schema/testcase http://www.citrusframework.org/schema/testcase/citrus-testcase.xsd">
 
     <testcase name="SendMessageActionParserTest">
@@ -33,18 +33,18 @@
                     <element name="operation" value="Test"/>
                 </header>
             </send>
-            
+
             <send endpoint="myMessageEndpoint">
                 <message>
                     <resource file="classpath:com/consol/citrus/actions/test-request-payload.xml"/>
                 </message>
             </send>
-            
+
             <send endpoint="myMessageEndpoint">
                 <message>
                     <builder type="groovy">
                         <![CDATA[
-                            println '<TestMessage>Hello Citrus</TestMessage>'
+                            markupBuilder.TestMessage('Hello Citrus')
                         ]]>
                     </builder>
                 </message>
@@ -53,13 +53,13 @@
                     <element name="header2" value="Test"/>
                 </header>
             </send>
-            
+
             <send endpoint="myMessageEndpoint">
                 <message>
-                    <builder type="groovy" file="classpath:com/consol/citrus/script/example.groovy"/>
+                    <builder type="groovy" file="classpath:com/consol/citrus/actions/payload.groovy"/>
                 </message>
             </send>
-            
+
             <send endpoint="myMessageEndpoint">
                 <message data-dictionary="myDataDictionary">
                     <data>
@@ -73,7 +73,7 @@
                     <header name="operation" variable="operation"/>
                 </extract>
             </send>
-            
+
             <send endpoint="channel:myMessageEndpoint">
                 <message>
                     <data>
@@ -107,7 +107,7 @@
 
         </actions>
     </testcase>
-    
+
     <spring:bean id="myMessageEndpoint" class="org.mockito.Mockito" factory-method="mock">
         <spring:constructor-arg value="com.consol.citrus.endpoint.Endpoint"/>
     </spring:bean>
@@ -115,5 +115,5 @@
     <spring:bean id="myDataDictionary" class="org.mockito.Mockito" factory-method="mock">
       <spring:constructor-arg value="com.consol.citrus.variable.dictionary.DataDictionary"/>
     </spring:bean>
-    
+
 </spring:beans>

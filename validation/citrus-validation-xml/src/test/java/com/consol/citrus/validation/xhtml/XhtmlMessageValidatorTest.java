@@ -24,8 +24,9 @@ import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;
 
@@ -64,8 +65,8 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
                                 + "<title/>"
@@ -77,7 +78,7 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
                                     + "<input name=\"foo\" type=\"text\" />"
                                 + "</form>"
                             + "</body>"
-                        + "</html>");
+                        + "</html>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)
@@ -111,8 +112,8 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"org/w3/xhtml/xhtml1-strict.dtd\">"
                         + "<html xmlns=\"http://www.w3.org/1999/xhtml\">"
                             + "<head>"
                                 + "<title>Sample XHTML content</title>"
@@ -123,7 +124,7 @@ public class XhtmlMessageValidatorTest extends UnitTestSupport {
                                     + "<input name=\"foo\" type=\"text\" />"
                                 + "</form>"
                             + "</body>"
-                        + "</html>");
+                        + "</html>"));
 
         ReceiveMessageAction receiveAction = new ReceiveMessageAction.Builder()
                 .endpoint(endpoint)

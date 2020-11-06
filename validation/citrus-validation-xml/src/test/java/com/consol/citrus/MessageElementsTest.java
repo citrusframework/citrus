@@ -26,8 +26,9 @@ import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.exceptions.ValidationException;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.xml.XpathMessageProcessor;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathPayloadVariableExtractor;
@@ -71,7 +72,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "text-value");
         validateMessageElements.put("//sub-elementB", "text-value");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -107,7 +108,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "");
         validateMessageElements.put("//sub-elementB", "");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -144,7 +145,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementB/@attribute", "");
         validateMessageElements.put("//root/element/sub-elementC/@attribute", "");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -180,7 +181,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "null");
         validateMessageElements.put("//sub-elementB", "null");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -216,7 +217,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "A");
         validateMessageElements.put("//sub-elementB/@attribute", "B");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -252,7 +253,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-element-wrong", "text-value");
         validateMessageElements.put("//sub-element-wrong", "text-value");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -288,7 +289,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA", "text-value-wrong");
         validateMessageElements.put("//sub-elementB", "text-value-wrong");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -324,7 +325,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA/@attribute", "wrong-value");
         validateMessageElements.put("//sub-elementB/@attribute", "wrong-value");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -360,7 +361,7 @@ public class MessageElementsTest extends UnitTestSupport {
         validateMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
         validateMessageElements.put("//sub-elementB/@attribute-wrong", "B");
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
         XpathMessageValidationContext validationContext = new XpathMessageValidationContext.Builder()
                 .expressions(validateMessageElements)
                 .build();
@@ -392,15 +393,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-elementA", "text-value");
@@ -437,15 +438,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-elementA", "");
@@ -482,15 +483,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-elementA", "text-value");
@@ -536,15 +537,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-elementA/@attribute", "A");
@@ -581,15 +582,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='A'>to be overwritten</sub-elementA>"
                             + "<sub-elementB attribute='B'>to be overwritten</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-element-wrong", "text-value");
@@ -626,15 +627,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-elementA/@attribute-wrong", "A");
@@ -671,15 +672,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                             + "<sub-elementA attribute='to be overwritten'>text-value</sub-elementA>"
                             + "<sub-elementB attribute='to be overwritten'>text-value</sub-elementB>"
                             + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                         + "</element>"
-                        + "</root>");
+                        + "</root>"));
 
         HashMap<String, Object> messageElements = new HashMap<>();
         messageElements.put("//root/element/sub-elementA-wrong/@attribute", "A");
@@ -716,15 +717,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA", "${valueA}");
@@ -766,15 +767,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute", "${valueA}");
@@ -816,15 +817,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-element-wrong", "${valueA}");
@@ -864,15 +865,15 @@ public class MessageElementsTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
 
-        controlMessageBuilder.setPayloadData("<root>"
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                     + "<sub-elementA attribute='A'>text-value</sub-elementA>"
                     + "<sub-elementB attribute='B'>text-value</sub-elementB>"
                     + "<sub-elementC attribute='C'>text-value</sub-elementC>"
                 + "</element>"
-                + "</root>");
+                + "</root>"));
 
         HashMap<String, String> extractMessageElements = new HashMap<String, String>();
         extractMessageElements.put("//root/element/sub-elementA/@attribute-wrong", "${attributeA}");

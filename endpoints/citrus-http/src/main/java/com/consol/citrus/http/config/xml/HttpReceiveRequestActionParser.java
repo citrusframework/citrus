@@ -26,6 +26,7 @@ import com.consol.citrus.config.xml.ReceiveMessageActionParser;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpQueryParamHeaderValidator;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.context.ValidationContext;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -120,7 +121,14 @@ public class HttpReceiveRequestActionParser extends ReceiveMessageActionParser {
 
         MessageSelectorParser.doParse(element, builder);
 
-        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body, builder)));
+        HttpMessageContentBuilder httpMessageContentBuilder = new HttpMessageContentBuilder(httpMessage);
+        DefaultMessageContentBuilder messageContentBuilder = constructMessageBuilder(body, builder);
+
+        httpMessageContentBuilder.setName(messageContentBuilder.getName());
+        httpMessageContentBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
+        messageContentBuilder.getHeaderBuilders().forEach(httpMessageContentBuilder::addHeaderBuilder);
+
+        builder.addPropertyValue("messageBuilder", httpMessageContentBuilder);
         builder.addPropertyValue("validationContexts", validationContexts);
         builder.addPropertyValue("variableExtractors", getVariableExtractors(element));
 

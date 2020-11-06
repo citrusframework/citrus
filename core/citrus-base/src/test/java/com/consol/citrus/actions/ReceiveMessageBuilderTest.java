@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.consol.citrus.context.TestContext;
+import com.consol.citrus.context.TestContextFactory;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.DefaultMessage;
@@ -34,8 +35,7 @@ import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -81,6 +81,8 @@ class ReceiveMessageBuilderTest {
 
 	@Mock
 	private Resource resource;
+
+	private TestContext context = TestContextFactory.newInstance().getObject();
 
 	@Test
 	void constructor() {
@@ -155,8 +157,8 @@ class ReceiveMessageBuilderTest {
 
         //THEN
 		assertSame(copy, builder);
-		assertTrue(builder.build().getMessageBuilder() instanceof AbstractMessageContentBuilder);
-		assertEquals("foo", ((AbstractMessageContentBuilder) builder.build().getMessageBuilder()).getMessageName());
+		assertTrue(builder.build().getMessageBuilder() instanceof DefaultMessageContentBuilder);
+		assertEquals("foo", ((DefaultMessageContentBuilder) builder.build().getMessageBuilder()).buildMessageContent(context, MessageType.PLAINTEXT.name()).getName());
 	}
 
 	@Test
@@ -209,9 +211,9 @@ class ReceiveMessageBuilderTest {
 
 		//GIVEN
 		final ReceiveMessageAction.Builder builder = new ReceiveMessageAction.Builder();
-		builder.message(new AbstractMessageContentBuilder() {
+		builder.message(new DefaultMessageContentBuilder() {
 			@Override
-			public Object buildMessagePayload(final TestContext context, final String messageType) {
+			public Object buildMessagePayload(final TestContext context, String messageType) {
 				return null;
 			}
 		});
@@ -460,7 +462,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(headerValue, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getMessageHeaders().get(headerName));
+		assertEquals(headerValue, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context).get(headerName));
 	}
 
 	@Test
@@ -477,7 +479,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(headers, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getMessageHeaders());
+		assertEquals(headers, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaders(context));
 	}
 
 	@Test
@@ -494,7 +496,7 @@ class ReceiveMessageBuilderTest {
 		//THEN
 		assertSame(copy, builder);
 		assertEquals(Collections.singletonList(data),
-				((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+				((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -515,7 +517,7 @@ class ReceiveMessageBuilderTest {
 		//THEN
 		assertSame(copy, builder);
 		assertEquals(Collections.singletonList("hello"),
-				((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+				((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -536,7 +538,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expectedHeaderData, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expectedHeaderData, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -563,7 +565,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expected, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -589,7 +591,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expected, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -617,7 +619,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expected, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -646,7 +648,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expected, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -661,7 +663,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expected, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -676,7 +678,7 @@ class ReceiveMessageBuilderTest {
 
 		//THEN
 		assertSame(copy, builder);
-		assertEquals(expected, ((AbstractMessageContentBuilder)builder.build().getMessageBuilder()).getHeaderData());
+		assertEquals(expected, ((DefaultMessageContentBuilder)builder.build().getMessageBuilder()).buildMessageHeaderData(context));
 	}
 
 	@Test
@@ -1352,7 +1354,7 @@ class ReceiveMessageBuilderTest {
 	}
 
 	private String getPayloadData(ReceiveMessageAction.Builder builder) {
-		return ((PayloadTemplateMessageBuilder) builder.build().getMessageBuilder())
-				.getPayloadData();
+		return ((DefaultMessageContentBuilder) builder.build().getMessageBuilder())
+				.buildMessagePayload(context, "").toString();
 	}
 }

@@ -25,7 +25,6 @@ import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.http.message.HttpQueryParamHeaderValidator;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpMethod;
 
 /**
@@ -41,10 +40,7 @@ public class HttpServerRequestActionBuilder extends ReceiveMessageAction.Receive
      * Default constructor.
      */
     public HttpServerRequestActionBuilder() {
-        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
-        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        message(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
-
+        message(new HttpMessageContentBuilder(httpMessage));
         headerNameIgnoreCase(true);
         validator(new HttpQueryParamHeaderValidator());
     }

@@ -34,7 +34,7 @@ import com.consol.citrus.report.TestActionListeners;
 import com.consol.citrus.script.ScriptTypes;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.testng.AbstractTestNGUnitTest;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.context.HeaderValidationContext;
 import com.consol.citrus.validation.script.GroovyJsonMessageValidator;
 import com.consol.citrus.validation.script.ScriptValidationContext;
@@ -261,10 +261,9 @@ public class ReceiveMessageActionBuilderTest extends AbstractTestNGUnitTest {
         Assert.assertEquals(validationContext.getValidationScript().trim(), "assert json.message == 'Hello Citrus!'");
         Assert.assertNull(validationContext.getValidationScriptResourcePath());
 
-        Assert.assertTrue(action.getMessageBuilder() instanceof PayloadTemplateMessageBuilder);
-        Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadData());
-        Assert.assertNull(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getPayloadResourcePath());
-        Assert.assertTrue(((PayloadTemplateMessageBuilder)action.getMessageBuilder()).getMessageHeaders().containsKey("operation"));
+        Assert.assertTrue(action.getMessageBuilder() instanceof DefaultMessageContentBuilder);
+        Assert.assertEquals(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessagePayload(context, action.getMessageType()), "");
+        Assert.assertTrue(((DefaultMessageContentBuilder)action.getMessageBuilder()).buildMessageHeaders(context).containsKey("operation"));
 
     }
 }

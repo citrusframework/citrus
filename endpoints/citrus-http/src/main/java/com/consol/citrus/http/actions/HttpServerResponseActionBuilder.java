@@ -23,7 +23,6 @@ import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageUtils;
 import com.consol.citrus.message.Message;
-import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -39,9 +38,7 @@ public class HttpServerResponseActionBuilder extends SendMessageAction.SendMessa
      * Default constructor.
      */
     public HttpServerResponseActionBuilder() {
-        StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(httpMessage);
-        staticMessageContentBuilder.setMessageHeaders(httpMessage.getHeaders());
-        message(new HttpMessageContentBuilder(httpMessage, staticMessageContentBuilder));
+        message(new HttpMessageContentBuilder(httpMessage));
     }
 
     @Override

@@ -27,8 +27,9 @@ import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.endpoint.EndpointConfiguration;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.xml.XmlMessageValidationContext;
 import com.consol.citrus.validation.xml.XpathMessageValidationContext;
 import org.mockito.Mockito;
@@ -70,14 +71,14 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreElements() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>no validation</sub-elementA>"
                 + "<sub-elementB attribute='B'>no validation</sub-elementB>"
                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
             + "</element>"
-            + "</root>");
+            + "</root>"));
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root.element.sub-elementA");
@@ -97,14 +98,14 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreAttributes() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='no validation'>text-value</sub-elementA>"
                 + "<sub-elementB attribute='no validation'>text-value</sub-elementB>"
                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
             + "</element>"
-            + "</root>");
+            + "</root>"));
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root.element.sub-elementA.attribute");
@@ -137,10 +138,10 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
         when(consumer.receive(any(TestContext.class), anyLong())).thenReturn(message);
         when(endpoint.getActor()).thenReturn(null);
 
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                         + "<element additonal-attribute='some'>Wrong text</element>"
-                        + "</root>");
+                        + "</root>"));
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root");
@@ -159,14 +160,14 @@ public class IgnoreElementsLegacyTest extends UnitTestSupport {
 
     @Test
     public void testIgnoreElementsAndValidate() {
-        PayloadTemplateMessageBuilder controlMessageBuilder = new PayloadTemplateMessageBuilder();
-        controlMessageBuilder.setPayloadData("<root>"
+        DefaultMessageContentBuilder controlMessageBuilder = new DefaultMessageContentBuilder();
+        controlMessageBuilder.setPayloadBuilder(new DefaultPayloadBuilder("<root>"
                 + "<element attributeA='attribute-value' attributeB='attribute-value' >"
                 + "<sub-elementA attribute='A'>no validation</sub-elementA>"
                 + "<sub-elementB attribute='B'>no validation</sub-elementB>"
                 + "<sub-elementC attribute='C'>text-value</sub-elementC>"
             + "</element>"
-            + "</root>");
+            + "</root>"));
 
         Set<String> ignoreMessageElements = new HashSet<String>();
         ignoreMessageElements.add("root.element.sub-elementA");

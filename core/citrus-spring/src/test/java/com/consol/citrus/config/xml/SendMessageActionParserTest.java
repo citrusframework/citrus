@@ -16,13 +16,14 @@
 
 package com.consol.citrus.config.xml;
 
+import java.io.IOException;
+
 import com.consol.citrus.actions.SendMessageAction;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.message.DelegatingPathExpressionProcessor;
-import com.consol.citrus.message.MessageHeaderType;
 import com.consol.citrus.testng.AbstractActionParserTest;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
-import com.consol.citrus.validation.script.GroovyScriptMessageBuilder;
+import com.consol.citrus.util.FileUtils;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.variable.MessageHeaderVariableExtractor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -33,22 +34,19 @@ import org.testng.annotations.Test;
 public class SendMessageActionParserTest extends AbstractActionParserTest<SendMessageAction> {
 
     @Test
-    public void testSendMessageActionParser() {
+    public void testSendMessageActionParser() throws IOException {
         assertActionCount(8);
         assertActionClassAndName(SendMessageAction.class, "send");
 
-        PayloadTemplateMessageBuilder messageBuilder;
-        GroovyScriptMessageBuilder groovyMessageBuilder;
+        DefaultMessageContentBuilder messageBuilder;
 
         // 1st action
         SendMessageAction action = getNextTestActionFromTest();
-        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(messageBuilder.getPayloadResourcePath());
-        Assert.assertNotNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "Test");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
@@ -57,15 +55,13 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         //2nd action
         action = getNextTestActionFromTest();
-        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(messageBuilder.getPayloadResourcePath());
-        Assert.assertNotNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 1);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("operation"), "Test");
-        Assert.assertEquals(messageBuilder.getHeaderData().size(), 1);
-        Assert.assertEquals(messageBuilder.getHeaderData().get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<Header xmlns=\"http://citrusframework.org/test\">\n  <operation>hello</operation>\n</Header>");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<TestMessage xmlns=\"http://citrusframework.org/test\">Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "Test");
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).size(), 1);
+        Assert.assertEquals(messageBuilder.buildMessageHeaderData(context).get(0).trim(), "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<Header xmlns=\"http://citrusframework.org/test\">\n  <operation>hello</operation>\n</Header>");
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
@@ -74,36 +70,31 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         // 3rd action
         action = getNextTestActionFromTest();
-        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNotNull(messageBuilder.getPayloadResourcePath());
-        Assert.assertEquals(messageBuilder.getPayloadResourcePath(), "classpath:com/consol/citrus/actions/test-request-payload.xml");
-        Assert.assertNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 0);
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()),
+                FileUtils.readToString(FileUtils.getFileResource("classpath:com/consol/citrus/actions/test-request-payload.xml")));
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 0);
         Assert.assertEquals(action.getMessageProcessors().size(), 0);
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
         // 4th action
         action = getNextTestActionFromTest();
-        groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(groovyMessageBuilder.getScriptResourcePath());
-        Assert.assertNotNull(groovyMessageBuilder.getScriptData());
-        Assert.assertEquals(groovyMessageBuilder.getScriptData().trim(), "println '<TestMessage>Hello Citrus</TestMessage>'");
-        Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().size(), 2);
-        Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().get("header1"), "Test");
-        Assert.assertEquals(groovyMessageBuilder.getMessageHeaders().get("header2"), "Test");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 2);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header1"), "Test");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("header2"), "Test");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
         // 5th action
         action = getNextTestActionFromTest();
-        groovyMessageBuilder = (GroovyScriptMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder) action.getMessageBuilder();
 
-        Assert.assertNotNull(groovyMessageBuilder.getScriptResourcePath());
-        Assert.assertEquals(groovyMessageBuilder.getScriptResourcePath(), "classpath:com/consol/citrus/script/example.groovy");
-        Assert.assertNull(groovyMessageBuilder.getScriptData());
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
@@ -118,11 +109,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(messageBuilder.getPayloadResourcePath());
-        Assert.assertNotNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
 
         Assert.assertEquals(action.getMessageProcessors().size(), 1);
         Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);
@@ -135,20 +124,18 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
 
         // 7th action
         action = getNextTestActionFromTest();
-        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(messageBuilder.getPayloadResourcePath());
-        Assert.assertNotNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "<TestMessage>Hello Citrus</TestMessage>");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().size(), 8);
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("intValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.INTEGER.getName() + MessageHeaderType.TYPE_SUFFIX + "5");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("longValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.LONG.getName() + MessageHeaderType.TYPE_SUFFIX + "10");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("floatValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.FLOAT.getName() + MessageHeaderType.TYPE_SUFFIX + "10.0");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("doubleValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.DOUBLE.getName() + MessageHeaderType.TYPE_SUFFIX + "10.0");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("byteValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.BYTE.getName() + MessageHeaderType.TYPE_SUFFIX + "1");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("shortValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.SHORT.getName() + MessageHeaderType.TYPE_SUFFIX + "10");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("boolValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.BOOLEAN.getName() + MessageHeaderType.TYPE_SUFFIX + "true");
-        Assert.assertEquals(messageBuilder.getMessageHeaders().get("stringValue"), MessageHeaderType.TYPE_PREFIX + MessageHeaderType.STRING.getName() + MessageHeaderType.TYPE_SUFFIX + "Hello Citrus");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "<TestMessage>Hello Citrus</TestMessage>");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 8);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("intValue"), 5);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("longValue"), 10L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("floatValue"), 10.0F);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("doubleValue"), 10.0D);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("byteValue"), (byte) 1);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("shortValue"), (short) 10);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("boolValue"), true);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("stringValue"), "Hello Citrus");
 
         Assert.assertNull(action.getEndpoint());
         Assert.assertEquals(action.getEndpointUri(), "channel:myMessageEndpoint");
@@ -160,11 +147,9 @@ public class SendMessageActionParserTest extends AbstractActionParserTest<SendMe
         Assert.assertEquals(action.getEndpoint(), beanDefinitionContext.getBean("myMessageEndpoint", Endpoint.class));
         Assert.assertNull(action.getEndpointUri());
 
-        messageBuilder = (PayloadTemplateMessageBuilder)action.getMessageBuilder();
+        messageBuilder = (DefaultMessageContentBuilder)action.getMessageBuilder();
 
-        Assert.assertNull(messageBuilder.getPayloadResourcePath());
-        Assert.assertNotNull(messageBuilder.getPayloadData());
-        Assert.assertEquals(messageBuilder.getPayloadData().trim(), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
+        Assert.assertEquals(messageBuilder.buildMessagePayload(context, action.getMessageType()), "{ \"FooMessage\": { \"foo\": \"Hello World!\" }, { \"bar\": \"@ignore@\" }}");
 
         Assert.assertEquals(action.getMessageProcessors().size(), 1);
         Assert.assertTrue(action.getMessageProcessors().get(0) instanceof DelegatingPathExpressionProcessor);

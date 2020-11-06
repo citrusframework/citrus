@@ -30,15 +30,23 @@ import java.util.stream.Stream;
 
 import com.consol.citrus.AbstractTestActionBuilder;
 import com.consol.citrus.CitrusSettings;
+import com.consol.citrus.common.Named;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.endpoint.Endpoint;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.message.Message;
+import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.message.MessageDirection;
 import com.consol.citrus.message.MessageDirectionAware;
+import com.consol.citrus.message.MessagePayloadBuilder;
 import com.consol.citrus.message.MessageProcessor;
 import com.consol.citrus.message.MessageSelectorBuilder;
 import com.consol.citrus.message.MessageType;
+import com.consol.citrus.message.WithHeaderBuilder;
+import com.consol.citrus.message.WithPayloadBuilder;
+import com.consol.citrus.message.builder.DefaultHeaderBuilder;
+import com.consol.citrus.message.builder.DefaultHeaderDataBuilder;
+import com.consol.citrus.message.builder.DefaultPayloadBuilder;
 import com.consol.citrus.messaging.Consumer;
 import com.consol.citrus.messaging.SelectiveConsumer;
 import com.consol.citrus.spi.ReferenceResolver;
@@ -47,9 +55,7 @@ import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.DefaultMessageHeaderValidator;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
-import com.consol.citrus.validation.builder.PayloadTemplateMessageBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.builder.StaticMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.HeaderValidationContext;
@@ -497,7 +503,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
         private long receiveTimeout = 0L;
         private Map<String, Object> messageSelectorMap = new HashMap<>();
         private String messageSelector;
-        private AbstractMessageContentBuilder messageBuilder = new PayloadTemplateMessageBuilder();
+        private MessageContentBuilder messageBuilder = new DefaultMessageContentBuilder();
         private List<MessageValidator<? extends ValidationContext>> validators = new ArrayList<>();
         private DataDictionary<?> dataDictionary;
         private String dataDictionaryName;
@@ -557,7 +563,7 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @param messageBuilder
          * @return
          */
-        public B message(AbstractMessageContentBuilder messageBuilder) {
+        public B message(MessageContentBuilder messageBuilder) {
             this.messageBuilder = messageBuilder;
             return self;
         }
@@ -570,7 +576,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B message(final Message controlMessage) {
             final StaticMessageContentBuilder staticMessageContentBuilder = StaticMessageContentBuilder.withMessage(controlMessage);
-            staticMessageContentBuilder.setMessageHeaders(getMessageContentBuilder().getMessageHeaders());
+
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).getHeaderBuilders().forEach(staticMessageContentBuilder::addHeaderBuilder);
+            }
+
             message(staticMessageContentBuilder);
             messageType(controlMessage.getType());
             return self;
@@ -583,14 +593,10 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         protected void setPayload(final String payload) {
-            final MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
-
-            if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
-                ((PayloadTemplateMessageBuilder) messageContentBuilder).setPayloadData(payload);
-            } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
-                ((StaticMessageContentBuilder) messageContentBuilder).getMessage().setPayload(payload);
+            if (messageBuilder instanceof WithPayloadBuilder) {
+                ((WithPayloadBuilder) messageBuilder).setPayloadBuilder(new DefaultPayloadBuilder(payload));
             } else {
-                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageContentBuilder.getClass());
+                throw new CitrusRuntimeException("Unable to set payload on message builder type: " + messageBuilder.getClass());
             }
         }
 
@@ -601,7 +607,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B messageName(final String name) {
-            getMessageContentBuilder().setMessageName(name);
+            if (messageBuilder instanceof Named) {
+                ((Named) messageBuilder).setName(name);
+            } else {
+                throw new CitrusRuntimeException("Unable to set message name on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -718,7 +728,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B header(final String name, final Object value) {
-            getMessageContentBuilder().getMessageHeaders().put(name, value);
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(Collections.singletonMap(name, value)));
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -729,7 +743,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B headers(final Map<String, Object> headers) {
-            getMessageContentBuilder().getMessageHeaders().putAll(headers);
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderBuilder(headers));
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -741,7 +759,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         public B header(final String data) {
-            getMessageContentBuilder().getHeaderData().add(data);
+            if (messageBuilder instanceof WithHeaderBuilder) {
+                ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(data));
+            } else {
+                throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
+            }
             return self;
         }
 
@@ -828,7 +850,11 @@ public class ReceiveMessageAction extends AbstractTestAction {
          */
         public B header(final Resource resource, final Charset charset) {
             try {
-                getMessageContentBuilder().getHeaderData().add(FileUtils.readToString(resource, charset));
+                if (messageBuilder instanceof WithHeaderBuilder) {
+                    ((WithHeaderBuilder) messageBuilder).addHeaderBuilder(new DefaultHeaderDataBuilder(FileUtils.readToString(resource, charset)));
+                } else {
+                    throw new CitrusRuntimeException("Unable to set message header data on builder type: " + messageBuilder.getClass());
+                }
             } catch (final IOException e) {
                 throw new CitrusRuntimeException("Failed to read header resource", e);
             }
@@ -1152,19 +1178,6 @@ public class ReceiveMessageAction extends AbstractTestAction {
         protected abstract T doBuild();
 
         /**
-         * Get message builder, if already registered or create a new message builder and register it
-         *
-         * @return the message builder in use
-         */
-        public AbstractMessageContentBuilder getMessageContentBuilder() {
-            if (this.messageBuilder == null) {
-                message(new PayloadTemplateMessageBuilder());
-            }
-
-            return messageBuilder;
-        }
-
-        /**
          * Creates new header validation context if not done before and gets the header validation context.
          */
         public HeaderValidationContext getHeaderValidationContext() {
@@ -1225,13 +1238,16 @@ public class ReceiveMessageAction extends AbstractTestAction {
          * @return
          */
         protected Optional<String> getMessagePayload() {
-            final MessageContentBuilder messageContentBuilder = getMessageContentBuilder();
-            if (messageContentBuilder instanceof PayloadTemplateMessageBuilder) {
-                return Optional.ofNullable(((PayloadTemplateMessageBuilder) messageContentBuilder).getPayloadData());
-            } else if (messageContentBuilder instanceof StaticMessageContentBuilder) {
-                Message message = ((StaticMessageContentBuilder) messageContentBuilder).getMessage();
+            if (messageBuilder instanceof StaticMessageContentBuilder) {
+                Message message = ((StaticMessageContentBuilder) messageBuilder).getMessage();
                 if (message.getPayload() instanceof String) {
                     return Optional.of(message.getPayload(String.class));
+                }
+            } else if (messageBuilder instanceof WithPayloadBuilder) {
+                MessagePayloadBuilder payloadBuilder = ((WithPayloadBuilder) messageBuilder).getPayloadBuilder();
+                if (payloadBuilder instanceof DefaultPayloadBuilder) {
+                    return Optional.ofNullable(((DefaultPayloadBuilder) payloadBuilder).getPayload())
+                            .map(Object::toString);
                 }
             }
 

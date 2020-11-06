@@ -10,7 +10,7 @@ import com.consol.citrus.message.Message;
 import com.consol.citrus.message.MessageType;
 import com.consol.citrus.spi.ReferenceResolver;
 import com.consol.citrus.util.FileUtils;
-import com.consol.citrus.validation.builder.MessageContentBuilder;
+import com.consol.citrus.message.MessageContentBuilder;
 import com.consol.citrus.validation.interceptor.BinaryMessageProcessor;
 import com.consol.citrus.validation.interceptor.GzipMessageProcessor;
 import com.consol.citrus.validation.json.JsonPathMessageProcessor;

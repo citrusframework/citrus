@@ -19,7 +19,7 @@ import com.consol.citrus.spi.ReferenceResolverAware;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.HeaderValidator;
 import com.consol.citrus.validation.MessageValidator;
-import com.consol.citrus.validation.builder.AbstractMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.validation.callback.ValidationCallback;
 import com.consol.citrus.validation.context.ValidationContext;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -103,7 +103,7 @@ public class ReceiveMessageActionBuilder<B extends ReceiveMessageActionBuilder<B
      * @param messageBuilder
      * @return
      */
-    public B messageBuilder(AbstractMessageContentBuilder messageBuilder) {
+    public B messageBuilder(DefaultMessageContentBuilder messageBuilder) {
         delegate.message(messageBuilder);
         return self;
     }

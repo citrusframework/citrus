@@ -26,6 +26,7 @@ import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.endpoint.resolver.EndpointUriResolver;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import com.consol.citrus.variable.VariableExtractor;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -124,7 +125,14 @@ public class HttpSendRequestActionParser extends SendMessageActionParser {
             }
         }
 
-        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body, builder)));
+        HttpMessageContentBuilder httpMessageContentBuilder = new HttpMessageContentBuilder(httpMessage);
+        DefaultMessageContentBuilder messageContentBuilder = constructMessageBuilder(body, builder);
+
+        httpMessageContentBuilder.setName(messageContentBuilder.getName());
+        httpMessageContentBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
+        messageContentBuilder.getHeaderBuilders().forEach(httpMessageContentBuilder::addHeaderBuilder);
+
+        builder.addPropertyValue("messageBuilder", httpMessageContentBuilder);
 
         List<VariableExtractor> variableExtractors = new ArrayList<VariableExtractor>();
         parseExtractHeaderElements(element, variableExtractors);

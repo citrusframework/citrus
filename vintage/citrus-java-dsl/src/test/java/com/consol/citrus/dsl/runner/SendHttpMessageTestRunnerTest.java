@@ -60,6 +60,10 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
             Message message = (Message) invocation.getArguments()[0];
             Assert.assertEquals(message.getPayload(String.class), "Foo");
             return null;
+        }).doAnswer(invocation -> {
+            Message message = (Message) invocation.getArguments()[0];
+            Assert.assertEquals(message.getPayload(String.class), "Bar");
+            return null;
         }).when(messageProducer).send(any(Message.class), any(TestContext.class));
         MockTestRunner builder = new MockTestRunner(getClass().getSimpleName(), context) {
             @Override
@@ -93,13 +97,11 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("additional"), "additionalValue");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 4L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
 
         Assert.assertFalse(action.isForkMode());
 
@@ -110,12 +112,10 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
         Assert.assertEquals(action.getEndpoint(), httpClient);
         Assert.assertEquals(action.getMessageBuilder().getClass(), HttpMessageContentBuilder.class);
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Bar");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 5L);
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "bar");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 3L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT.name());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.POST.name());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "bar");
 
         Assert.assertTrue(action.isForkMode());
     }
@@ -158,16 +158,14 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(String.class), "Foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 9L);
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.ID));
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.MESSAGE_TYPE));
-        Assert.assertNotNull(messageBuilder.getMessage().getHeader(MessageHeaders.TIMESTAMP));
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("Content-Type"), ContentType.APPLICATION_JSON.getMimeType());
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("operation"), "foo");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader("additional"), "additionalValue");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Foo"), "Foo=123456");
-        Assert.assertEquals(messageBuilder.getMessage().getHeader(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Bar"), "Bar=987654");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 7L);
+        Assert.assertNotEquals(messageBuilder.buildMessageHeaders(context).get(MessageHeaders.MESSAGE_TYPE), MessageType.PLAINTEXT);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("Content-Type"), ContentType.APPLICATION_JSON.getMimeType());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("operation"), "foo");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get("additional"), "additionalValue");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Foo"), "Foo=123456");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_COOKIE_PREFIX + "Bar"), "Bar=987654");
         Assert.assertEquals(((HttpMessage) messageBuilder.getMessage()).getCookies().size(), 2L);
         Assert.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Foo")));
         Assert.assertTrue(((HttpMessage) messageBuilder.getMessage()).getCookies().stream().anyMatch(cookie -> cookie.getName().equals("Bar")));
@@ -207,8 +205,8 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 3L);
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 1L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), HttpMethod.GET.name());
     }
 
     @Test
@@ -247,10 +245,11 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 6L);
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 4L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), "GET");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.REQUEST_PATH_HEADER_NAME), "/test");
     }
 
     @Test
@@ -290,10 +289,12 @@ public class SendHttpMessageTestRunnerTest extends UnitTestSupport {
 
         HttpMessageContentBuilder messageBuilder = (HttpMessageContentBuilder) action.getMessageBuilder();
         Assert.assertEquals(messageBuilder.getMessage().getPayload(), "<TestRequest><Message>Hello World!</Message></TestRequest>");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().size(), 7L);
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
-        Assert.assertEquals(messageBuilder.getMessage().getHeaders().get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).size(), 5L);
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_METHOD), "GET");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_REQUEST_URI), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(HttpMessageHeaders.HTTP_QUERY_PARAMS), "param1=value1,param2=value2");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.ENDPOINT_URI_HEADER_NAME), "http://localhost:8080/");
+        Assert.assertEquals(messageBuilder.buildMessageHeaders(context).get(EndpointUriResolver.QUERY_PARAM_HEADER_NAME), "param1=value1,param2=value2");
     }
 
 }

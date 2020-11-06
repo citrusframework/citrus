@@ -25,6 +25,7 @@ import com.consol.citrus.config.xml.SendMessageActionParser;
 import com.consol.citrus.http.message.HttpMessage;
 import com.consol.citrus.http.message.HttpMessageContentBuilder;
 import com.consol.citrus.http.message.HttpMessageHeaders;
+import com.consol.citrus.validation.builder.DefaultMessageContentBuilder;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -120,7 +121,14 @@ public class HttpSendResponseActionParser extends SendMessageActionParser {
             }
         }
 
-        builder.addPropertyValue("messageBuilder", new HttpMessageContentBuilder(httpMessage, constructMessageBuilder(body, builder)));
+        HttpMessageContentBuilder httpMessageContentBuilder = new HttpMessageContentBuilder(httpMessage);
+        DefaultMessageContentBuilder messageContentBuilder = constructMessageBuilder(body, builder);
+
+        httpMessageContentBuilder.setName(messageContentBuilder.getName());
+        httpMessageContentBuilder.setPayloadBuilder(messageContentBuilder.getPayloadBuilder());
+        messageContentBuilder.getHeaderBuilders().forEach(httpMessageContentBuilder::addHeaderBuilder);
+
+        builder.addPropertyValue("messageBuilder", httpMessageContentBuilder);
 
         return builder.getBeanDefinition();
     }
