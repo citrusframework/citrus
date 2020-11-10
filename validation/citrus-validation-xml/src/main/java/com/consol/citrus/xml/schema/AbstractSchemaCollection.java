@@ -20,6 +20,7 @@ import javax.wsdl.WSDLException;
 import javax.wsdl.extensions.schema.Schema;
 import javax.wsdl.extensions.schema.SchemaImport;
 import javax.wsdl.extensions.schema.SchemaReference;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Result;
 import javax.xml.transform.Source;
 import javax.xml.transform.TransformerException;
@@ -43,6 +44,7 @@ import org.springframework.util.Assert;
 import org.springframework.xml.validation.XmlValidator;
 import org.springframework.xml.validation.XmlValidatorFactory;
 import org.springframework.xml.xsd.SimpleXsdSchema;
+import org.xml.sax.SAXException;
 
 /**
  * @author Christoph Deppisch
@@ -127,6 +129,12 @@ public abstract class AbstractSchemaCollection extends SimpleXsdSchema implement
 
         Assert.isTrue(!schemaResources.isEmpty(), "At least one schema xsd file resource is required");
         setXsd(targetXsd);
+
+        try {
+            super.afterPropertiesSet();
+        } catch (ParserConfigurationException | IOException | SAXException e) {
+            throw new CitrusRuntimeException("Failed to initialize schema collection", e);
+        }
     }
 
     /**
